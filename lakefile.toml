@@ -1,0 +1,18 @@
+name = "TorusHamiltonDecompositionProgram"
+version = "0.1.0"
+keywords = ["lean4", "mathlib", "graph-theory", "hamiltonian-cycles", "cayley-digraphs"]
+defaultTargets = ["D5Odd"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.30.0-rc2"
+
+[[lean_lib]]
+name = "D5Odd"

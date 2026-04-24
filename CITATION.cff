@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this Lean formalization, please cite it using the metadata below."
+title: "Torus Hamilton Decomposition Program"
+type: software
+authors:
+  - alias: "aria1th"
+repository-code: "https://github.com/aria1th/Torus-Hamilton-Decomposition-Program"
+url: "https://github.com/aria1th/Torus-Hamilton-Decomposition-Program"
+version: "0.1.0"
+date-released: "2026-04-24"
+abstract: "Lean 4 formalization and audit artifacts for Hamilton decompositions of directed torus/Cayley digraphs, including an odd-modulus directed 5-torus Cayley-edge decomposition theorem."
+keywords:
+  - "Lean 4"
+  - "mathlib"
+  - "Hamilton decomposition"
+  - "directed torus"
+  - "Cayley digraph"
+  - "formalization"

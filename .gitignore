@@ -1,0 +1,13 @@
+.lake/
+lake-packages/
+build/
+*.olean
+*.ilean
+*.c
+*.bc
+*.o
+*.so
+*.tar
+*.tar.gz
+__pycache__/
+*.pyc
