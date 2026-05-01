@@ -230,6 +230,15 @@ formulas without emitting the large diagnostics from
 `scripts/analyze_targetA_section.py`.  It passes for every odd
 `m = 5,7,...,51` for both `23` and `32`.
 
+`scripts/analyze_targetA_23_32_seams.py` separates the same data into the
+proof-facing seam statement.  For every tested odd `m = 5,7,...,51`, it
+confirms:
+
+- if `m != 2 mod 5`, the whole `Sigma` cycle is the component meeting
+  `Sigma0`;
+- if `m == 2 mod 5`, there is exactly one `Sigma0` component and four
+  off-`Sigma0` cycles with the predicted lengths.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -342,6 +351,9 @@ python3 scripts/analyze_targetA_section.py \
 python3 scripts/verify_targetA_23_32.py \
   --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
   --json-out /tmp/targetA_23_32_5_to_51.json
+python3 scripts/analyze_targetA_23_32_seams.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/targetA_23_32_seams_5_to_51.json
 git diff --check
 ```
 

@@ -88,6 +88,10 @@ when `m` is odd and `m >= 3`.
 - `scripts/verify_targetA_23_32.py`: concise verifier for the post-update
   Target-A `23/32` theorem candidate, checking section cycles, `sum ell =
   m^4`, the `Sigma0` return law, and the bad-class five-cycle formulas.
+- `scripts/analyze_targetA_23_32_seams.py`: seam-decomposition reporter for
+  the same `23/32` target, separating the `Sigma0` component from off-`Sigma0`
+  bad-class cycles and checking the good-class connectivity/bad-class
+  decomposition gates.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.
@@ -181,6 +185,14 @@ m^4`.  A larger comparison matching the post-update bundle range is:
 python3 scripts/verify_targetA_23_32.py \
   --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
   --json-out /tmp/d7_targetA_23_32_5_to_51.json
+```
+
+The corresponding seam decomposition can be inspected with:
+
+```bash
+python3 scripts/analyze_targetA_23_32_seams.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/d7_targetA_23_32_seams_5_to_51.json
 ```
 
 For larger exceptional moduli, compile the faster C++ search helper:

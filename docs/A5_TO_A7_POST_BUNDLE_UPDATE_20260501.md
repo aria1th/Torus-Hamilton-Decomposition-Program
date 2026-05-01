@@ -187,3 +187,24 @@ python3 scripts/verify_targetA_23_32.py \
 ```
 
 Both runs reported `all_ok=True`.
+
+The seam decomposition was then separated with
+`scripts/analyze_targetA_23_32_seams.py`:
+
+```bash
+python3 scripts/analyze_targetA_23_32_seams.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/targetA_23_32_seams_5_to_51.json
+```
+
+This also reported `all_ok=True`.  Its gate is slightly different from the
+cycle verifier:
+
+- if `m != 2 mod 5`, every point of `Sigma` lies in the single component that
+  meets `Sigma0`;
+- if `m == 2 mod 5`, exactly one component meets `Sigma0`, and the remaining
+  four components avoid `b = 0` and have the predicted off-cycle lengths.
+
+For example, at `m = 17`, `W = 23` has `Sigma0` component length `88` and
+off-`Sigma0` lengths `37,38,54,55`; `W = 32` has `Sigma0` component length
+`86` and off-`Sigma0` lengths `38,38,54,56`.
