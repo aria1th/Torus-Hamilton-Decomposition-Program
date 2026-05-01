@@ -73,6 +73,10 @@ when `m` is odd and `m >= 3`.
   `d5_even_routeE_bundle_v0_1.zip`, sharpening the D7 odd bridge into
   Target-A base rows plus Target-B' zero-set scalar fiber compiler and moving
   D5 even to the Route-E periodic-excursion track.
+- `docs/A5_TO_A7_POST_BUNDLE_UPDATE_20260501.md`: absorption note for
+  `A5_to_A7_post_bundle_update_v0_2.zip`, recording the `23/32` Target-A
+  generic branch, the `m == 2 mod 5` five-cycle obstruction, and the revised
+  seam-splicing proof obligations.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
@@ -157,6 +161,21 @@ python3 scripts/analyze_targetA_section.py \
   --words 332,01302,4204204 \
   --json-out /tmp/d7_targetA_section_candidates.json
 ```
+
+The current generic Target-A candidates from the post-update bundle are
+`23` and `32`.  A lightweight local cross-check is:
+
+```bash
+python3 scripts/analyze_targetA_section.py \
+  --moduli 5,7,9,17 \
+  --words 23,32 \
+  --json-out /tmp/d7_targetA_23_32_small.json
+```
+
+Expected pattern: one section cycle at `m = 5,9`, five section cycles at
+`m = 7,17`, and `return_time_sum = m^4` throughout.  Larger ranges should use
+the bundled fast outputs or the C++ helper, because the Python analyzer emits
+large diagnostics.
 
 For larger exceptional moduli, compile the faster C++ search helper:
 

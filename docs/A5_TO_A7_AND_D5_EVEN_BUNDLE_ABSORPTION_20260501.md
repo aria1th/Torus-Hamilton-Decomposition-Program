@@ -7,6 +7,10 @@ Source bundles:
 - `/data/angel/repos/etc/A5_to_A7_induction_hypothesis_bundle_v0_1.zip`
 - `/data/angel/repos/etc/d5_even_routeE_bundle_v0_1.zip`
 
+Post-update bundle absorbed later:
+
+- `/data/angel/repos/etc/A5_to_A7_post_bundle_update_v0_2.zip`
+
 This note records the goal-level changes after reading both bundles.  It is a
 research-state update, not a completion certificate.
 
@@ -136,8 +140,9 @@ nuanced picture:
 - the `m = 17` length-5 examples are not reusable unchanged at
   `m = 5,7,9,11,13,15`.
 - direct testing of the short core `23` through odd `m <= 37` shows failures
-  exactly at `m = 7,17,27,37` in that range, suggesting an
-  `m ≡ 7 mod 10` exceptional family;
+  exactly at `m = 7,17,27,37` in that range.  The later post-update bundle
+  sharpens this into the structural class `m == 2 mod 5`, equivalently
+  `m == 7 mod 10` among odd moduli;
 - the currently recorded `m = 7` and `m = 17` exceptional primitive words do
   not work unchanged at `m = 27` or `m = 37`.
 - a faster C++ helper, `scripts/search_targetA_primitive_words.cpp`, found
@@ -154,10 +159,24 @@ nuanced picture:
   `404432`, `044324`, `324044`, `432404`, and `443240`; all five pass the
   `Sigma` section audit at `m = 37`.
 
-So a plausible Target-A route is not a single base word.  It is either a
-finite congruence family of primitive words, or a constructive/padding theorem
-that produces seven exact-cover rows from a small pool of modulus-dependent
-primitive words.
+The post-update bundle refines this conclusion.  A plausible Target-A route is
+not a single base word for all odd `m`, but it may have a single generic short
+core: `23` and `32` appear to work for all odd `m >= 5` with `m != 2 mod 5`.
+The bad class `m == 2 mod 5` should be treated as a five-component seam
+splicing problem, not just as a blind primitive-word search.
+
+For both `23` and `32`, the post bundle records that the total excursion
+length over
+
+```text
+Sigma = {(0,a,b,0,-a-b) : a+b != 0}
+```
+
+remains `m^4` in all tested odd moduli.  The failure in the bad class is that
+the induced map on `Sigma` splits into five cycles.  The transversal
+`Sigma0 = {(a,0) : a != 0}` has return law `a -> a+1`, so the generic proof
+target is now seam connectivity to `Sigma0`, and the exceptional proof target
+is the explicit five-cycle decomposition and a correction-word splice.
 
 ## D5 Even Route-E Findings
 
@@ -219,7 +238,8 @@ The clearest proof obligations are now:
 
 1. **D7 Target A:** for every odd `m >= 5`, construct seven all-zero-set
    `A5` base rows with column exact cover and base rank step into
-   `ZMod (m^4)`.
+   `ZMod (m^4)`.  The current split is: prove the `23/32` section theorem
+   for `m != 2 mod 5`, and construct correction rows for `m == 2 mod 5`.
 2. **D7 Target B':** for each Target-A schedule family, construct a
    zero-set-only or finite congruence-family `K_m(Z)` and prove the stratum
    scalar unit conditions giving the `A3` fiber rank step into `ZMod (m^2)`.

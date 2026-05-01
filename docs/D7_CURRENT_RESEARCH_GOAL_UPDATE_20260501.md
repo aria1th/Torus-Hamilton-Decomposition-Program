@@ -6,6 +6,12 @@ Source bundle:
 
 - `/data/angel/repos/etc/D7_current_research_note_bundle_v1_1.zip`
 
+Later absorbed goal updates:
+
+- `/data/angel/repos/etc/A5_to_A7_induction_hypothesis_bundle_v0_1.zip`
+- `/data/angel/repos/etc/d5_even_routeE_bundle_v0_1.zip`
+- `/data/angel/repos/etc/A5_to_A7_post_bundle_update_v0_2.zip`
+
 This note records the revised project goal after reading the current D7 research
 bundle. It is meant to keep the Lean state, the mathematical story, and the
 next proof obligations in one place.
@@ -187,6 +193,23 @@ For every odd `m >= 5`, construct seven row words over slots `0..6` such that:
 - the induced base return on `A5(m)` has the required primitive behavior.
 
 This is the first main open lemma for the structural D7 story.
+
+The post-update A5-to-A7 bundle sharpens this lemma into a two-branch Target-A
+program.  The short words `23` and `32` are the leading generic section-return
+candidates: in the tested odd range, their induced first-return map on
+
+```text
+Sigma = {(0,a,b,0,-a-b) : a+b != 0}
+```
+
+is one cycle exactly when `m != 2 mod 5`, while the total excursion length
+remains `m^4` even in the failing class.  For `m == 2 mod 5`, the induced
+map splits into five cycles.  The proof target is therefore:
+
+- prove the `23/32` first-return table and seam connectivity for
+  `m != 2 mod 5`;
+- prove the five-cycle decomposition for `m == 2 mod 5`;
+- construct correction rows that splice those five seam components.
 
 ### All-Zero-Set `4+2` Fiber Compiler
 

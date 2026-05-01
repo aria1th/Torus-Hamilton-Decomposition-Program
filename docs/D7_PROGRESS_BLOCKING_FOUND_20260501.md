@@ -8,6 +8,7 @@ Additional absorbed bundles:
 
 - `/data/angel/repos/etc/A5_to_A7_induction_hypothesis_bundle_v0_1.zip`
 - `/data/angel/repos/etc/d5_even_routeE_bundle_v0_1.zip`
+- `/data/angel/repos/etc/A5_to_A7_post_bundle_update_v0_2.zip`
 
 ## Current Progress
 
@@ -176,8 +177,9 @@ family.
   points toward a congruence-dependent or constructive Target-A row family
   rather than one fixed short base word.
 - Direct testing of `23` through odd `m <= 37` fails exactly at
-  `m = 7,17,27,37` in that range, suggesting an `m ≡ 7 mod 10` exceptional
-  family.  The known `m = 7` and `m = 17` exceptional primitive words do not
+  `m = 7,17,27,37` in that range.  The post-update bundle sharpens this into
+  the structural class `m == 2 mod 5`, equivalently `m == 7 mod 10` among odd
+  moduli.  The known `m = 7` and `m = 17` exceptional primitive words do not
   work unchanged for `m = 27` or `m = 37`.
 - `scripts/search_targetA_primitive_words.cpp` provides a faster C++ search
   path for these exceptional moduli.  With random sampling at `m = 27`, it
@@ -190,6 +192,36 @@ family.
   chunk search then finds primitive words `404432`, `044324`, `324044`,
   `432404`, and `443240`; all five pass the `Sigma` section audit at
   `m = 37`.
+
+The post-update bundle changes how these facts should be interpreted.  The
+short words `23` and `32` are now the leading generic Target-A candidates:
+
+```text
+Phi_23 and Phi_32 one-cycle on Sigma  iff  m != 2 mod 5
+```
+
+in the tested odd range, with the excursion identity `sum ell = m^4` still
+holding in both good and bad classes.  In the bad class `m == 2 mod 5`, the
+induced `Sigma` map splits into five cycles.  For `W = 23`, the observed
+lengths are:
+
+```text
+(m^2 + 9m - 2) / 5, (m^2 - m + 3) / 5, (m^2 - m - 2) / 5,
+(m^2 - 6m + 3) / 5, (m^2 - 6m - 2) / 5.
+```
+
+For `W = 32`, the observed lengths are:
+
+```text
+(m^2 + 9m - 12) / 5, (m^2 - m + 8) / 5, (m^2 - m - 2) / 5,
+(m^2 - 6m + 3) / 5, (m^2 - 6m + 3) / 5.
+```
+
+The key symbolic mechanism is the transversal
+`Sigma0 = {(a,0) : a != 0}`, where the return acts as `a -> a+1`.  Thus
+Target A should now be attacked as a seam-connectivity theorem for the generic
+class, plus a five-cycle seam-splicing theorem for `m == 2 mod 5`, rather than
+as an unstructured primitive-word search.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -257,6 +289,9 @@ When new bundles arrive, compare them against this baseline:
   and full residues modulo `3`?
 - Do they include a uniform or congruence-dependent base-row family that covers
   the `m = 17` length-5 onset?
+- Do they prove or further compress the `23/32` first-return table, especially
+  the `Sigma0` law and the `m == 2 mod 5` five-cycle decomposition?
+- Do they provide a correction family for the `m == 2 mod 5` seam components?
 - Do they expose explicit `baseRank` or `fiberRank` formulas compatible with
   `BridgeConcreteFullRankPackage`?
 - Do they separate D5 even and D7 even certificate tracks from the D7 odd
