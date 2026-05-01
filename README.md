@@ -124,6 +124,7 @@ The base-row side can be inspected separately:
 ```bash
 python3 scripts/analyze_4plus2_base_rows.py \
   --scan-moduli 5,7,9,11,13,15,17 --max-len 3 \
+  --cover-from-bundled \
   --json-out /tmp/d7_4plus2_base_rows.json
 ```
 
