@@ -1,6 +1,6 @@
 import D7Odd.ReturnEngine
 import D7Odd.Handoff.CanonicalFamily
-import Shared.ReturnLift
+import Shared.RootFlat
 
 namespace D7Odd
 
@@ -101,117 +101,21 @@ def rootFlatLayerStep {m : Nat} (S : Handoff.RootFlatSchedule m) (c : Color) :
     ZMod m × Handoff.RootState7 m → ZMod m × Handoff.RootState7 m :=
   fun tw => (tw.1 + 1, S.layerMap tw.1 c tw.2)
 
-theorem rootFlatLayerStep_bijective {m : Nat}
-    {S : Handoff.RootFlatSchedule m} (hLayer : S.layerBijective) (c : Color) :
-    Function.Bijective (rootFlatLayerStep S c) := by
-  constructor
-  · intro x y hxy
-    rcases x with ⟨tx, wx⟩
-    rcases y with ⟨ty, wy⟩
-    have htSucc : tx + 1 = ty + 1 := congrArg Prod.fst hxy
-    have ht : tx = ty := add_right_cancel htSucc
-    subst ty
-    have hw :
-        S.layerMap tx c wx = S.layerMap tx c wy := by
-      simpa [rootFlatLayerStep] using congrArg Prod.snd hxy
-    exact Prod.ext rfl ((hLayer tx c).1 hw)
-  · intro y
-    rcases y with ⟨ty, wy⟩
-    let tx : ZMod m := ty - 1
-    rcases (hLayer tx c).2 wy with ⟨wx, hwx⟩
-    refine ⟨(tx, wx), ?_⟩
-    ext <;> simp [rootFlatLayerStep, tx, hwx]
-
-theorem rootFlatLayerStep_iterate_zero_range {m : Nat}
-    (S : Handoff.RootFlatSchedule m) (c : Color) (n : Nat)
-    (w : Handoff.RootState7 m) :
-    (rootFlatLayerStep S c)^[n] ((0 : ZMod m), w) =
-      ((n : ZMod m),
-        (List.range n).foldl
-          (fun x (k : Nat) => S.layerMap (k : ZMod m) c x) w) := by
-  induction n with
-  | zero =>
-      simp
-  | succ n ih =>
-      rw [Function.iterate_succ_apply']
-      rw [ih]
-      ext
-      · simp [rootFlatLayerStep, Nat.cast_add, Nat.cast_one]
-      · simp [rootFlatLayerStep, List.range_succ, List.foldl_append]
-
-theorem rootFlatLayerStep_m_return {m : Nat} [NeZero m]
-    (S : Handoff.RootFlatSchedule m) (c : Color)
-    (w : Handoff.RootState7 m) :
-    (rootFlatLayerStep S c)^[m] ((0 : ZMod m), w) =
-      ((0 : ZMod m), S.returnMap c w) := by
-  rw [rootFlatLayerStep_iterate_zero_range]
-  apply Prod.ext
-  · simp
-  · rfl
-
-theorem rootFlatPrefixFold_surjective {m : Nat}
-    {S : Handoff.RootFlatSchedule m} (hLayer : S.layerBijective)
-    (c : Color) (n : Nat) :
-    Function.Surjective fun w : Handoff.RootState7 m =>
-      (List.range n).foldl
-        (fun x (k : Nat) => S.layerMap (k : ZMod m) c x) w := by
-  induction n with
-  | zero =>
-      intro y
-      exact ⟨y, rfl⟩
-  | succ n ih =>
-      intro y
-      rcases (hLayer (n : ZMod m) c).2 y with ⟨z, hz⟩
-      rcases ih z with ⟨w, hw⟩
-      refine ⟨w, ?_⟩
-      simpa [List.range_succ, List.foldl_append, hw] using hz
-
-theorem rootFlatLayerStep_cover {m : Nat} [NeZero m]
-    {S : Handoff.RootFlatSchedule m} (hLayer : S.layerBijective)
-    (c : Color) :
-    ∀ x : ZMod m × Handoff.RootState7 m, ∃ w : Handoff.RootState7 m,
-      (rootFlatLayerStep S c)^[x.1.val] ((0 : ZMod m), w) = x := by
-  intro x
-  rcases x with ⟨t, y⟩
-  rcases rootFlatPrefixFold_surjective hLayer c t.val y with ⟨w, hw⟩
-  refine ⟨w, ?_⟩
-  rw [rootFlatLayerStep_iterate_zero_range]
-  apply Prod.ext
-  · exact ZMod.natCast_zmod_val t
-  · exact hw
-
-theorem single_cycle_of_zmod_layer_zero_return {m : Nat} [NeZero m]
-    {β : Type*} (S : ZMod m × β → ZMod m × β) (R : β → β)
-    (hS : Function.Bijective S)
-    (hreturn : ∀ w : β, S^[m] ((0 : ZMod m), w) = ((0 : ZMod m), R w))
-    (hR : Handoff.IsSingleCycleMap R)
-    (hcover : ∀ x : ZMod m × β, ∃ w : β,
-      S^[x.1.val] ((0 : ZMod m), w) = x) :
-    Handoff.IsSingleCycleMap S := by
-  have hRShared : Shared.IsSingleCycleMap R := by
-    simpa [Shared.IsSingleCycleMap, Handoff.IsSingleCycleMap] using hR
-  have hcoverShared :
-      ∀ x : ZMod m × β, ∃ w : β, ∃ k : Nat,
-        k < m ∧ S^[k] ((0 : ZMod m), w) = x := by
-    intro x
-    rcases hcover x with ⟨w, hw⟩
-    exact ⟨w, x.1.val, ZMod.val_lt x.1, hw⟩
-  have h := Shared.single_cycle_of_periodic_return_cover
-    (S := S) (base := fun w : β => ((0 : ZMod m), w)) (R := R)
-    (period := m) hS hreturn hRShared hcoverShared
-  simpa [Shared.IsSingleCycleMap, Handoff.IsSingleCycleMap] using h
-
 theorem rootFlatLayerStep_single_cycle {m : Nat} [NeZero m]
     {S : Handoff.RootFlatSchedule m}
     (hLayer : S.layerBijective) (hReturn : S.returnsSingleCycle)
     (c : Color) :
     Handoff.IsSingleCycleMap (rootFlatLayerStep S c) := by
-  exact single_cycle_of_zmod_layer_zero_return
-    (S := rootFlatLayerStep S c) (R := S.returnMap c)
-    (rootFlatLayerStep_bijective hLayer c)
-    (rootFlatLayerStep_m_return S c)
-    (hReturn c)
-    (rootFlatLayerStep_cover hLayer c)
+  have hSharedLayer : S.toShared.layerBijective :=
+    (Handoff.RootFlatSchedule.toShared_layerBijective S).2 hLayer
+  have hSharedReturn : S.toShared.returnsSingleCycle :=
+    (Handoff.RootFlatSchedule.toShared_returnsSingleCycle S).2 hReturn
+  have hCycle : Shared.IsSingleCycleMap (S.toShared.fullStep c) :=
+    Shared.RootFlatSchedule.fullStep_singleCycle_of_return
+      S.toShared hSharedLayer (hSharedReturn c)
+  simpa [Shared.IsSingleCycleMap, Handoff.IsSingleCycleMap,
+    Handoff.RootFlatSchedule.toShared, Shared.RootFlatSchedule.fullStep,
+    Shared.RootFlatSchedule.layerMap, rootFlatLayerStep] using hCycle
 
 theorem torusOfLayerRoot_add_direction {m : Nat} (t : ZMod m)
     (w : Handoff.RootState7 m) (i : Direction) :

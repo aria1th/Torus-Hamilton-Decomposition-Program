@@ -85,8 +85,10 @@ D=3 supplies the original odometer and even-splice evidence.  D=5 odd shows the
 first large prime case where this strategy closes all the way to the Cayley
 statement.  D=7 odd shows that the construction can be recast as a root-flat
 certificate: once row Latin, layer bijective, and return-single-cycle facts are
-proved, `rootFlatCertificate_to_hamiltonDecomposition` supplies the full torus
-decomposition and `D7_odd_cayley_unconditional` supplies the Cayley wrapper.
+proved, the shared `rootFlatLayeredDecomposition_of_schedule` gives the
+abstract layered Hamiltonian full-step lift, `D7Odd/Torus.lean` transports this
+to the concrete torus, and `D7_odd_cayley_unconditional` supplies the Cayley
+wrapper.
 
 ## What D=3 contributes
 
@@ -172,7 +174,9 @@ The reusable abstraction is:
 - `returnMap`: the m-step first return to the root layer;
 - `returnsSingleCycle`: every color return map is a single cycle;
 - `RootFlatCertificate`: the certificate packaging the above;
-- `rootFlatCertificate_to_hamiltonDecomposition`: the full torus lift.
+- `rootFlatLayeredDecomposition_of_schedule`: the shared layered full-step
+  Hamiltonian lift, with D7's torus file providing the concrete coordinate
+  transport.
 
 The generic odd branch in `D7Odd/Handoff/CanonicalFamily.lean` suggests the
 right higher-prime architecture: prefix coordinates, a canonical rho/first-hit

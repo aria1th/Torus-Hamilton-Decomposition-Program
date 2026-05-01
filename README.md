@@ -38,8 +38,8 @@ when `m` is odd and `m >= 3`.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
-  `rootFlatReturnCriterion_of_schedule` theorem for packaging row Latin,
-  layer bijective, and return single-cycle data.
+  layered full-step lift: row Latin gives edge partition, and layer bijective
+  plus return single-cycle gives Hamiltonian full color steps.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
