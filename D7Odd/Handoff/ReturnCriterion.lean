@@ -1,4 +1,5 @@
 import D7Odd.Basic
+import Shared.RootFlat
 
 namespace D7Odd
 namespace Handoff
@@ -97,11 +98,65 @@ def returnsSingleCycle {m : Nat} [NeZero m] (S : RootFlatSchedule m) : Prop :=
 
 end RootFlatSchedule
 
+namespace RootFlatSchedule
+
+def toShared {m : Nat} (S : RootFlatSchedule m) :
+    Shared.RootFlatSchedule Color Direction (RootState7 m) m where
+  dir := S.dir
+  step := fun i w => addQRoot m i w
+
+theorem toShared_rowLatin {m : Nat} (S : RootFlatSchedule m) :
+    S.toShared.rowLatin ↔ S.rowLatin := by
+  rfl
+
+theorem toShared_layerMap {m : Nat} (S : RootFlatSchedule m)
+    (t : ZMod m) (c : Color) (w : RootState7 m) :
+    S.toShared.layerMap t c w = S.layerMap t c w := by
+  rfl
+
+theorem toShared_layerBijective {m : Nat} (S : RootFlatSchedule m) :
+    S.toShared.layerBijective ↔ S.layerBijective := by
+  rfl
+
+theorem toShared_returnMap {m : Nat} [NeZero m]
+    (S : RootFlatSchedule m) (c : Color) :
+    S.toShared.returnMap c = S.returnMap c := by
+  funext w
+  rfl
+
+theorem toShared_returnsSingleCycle {m : Nat} [NeZero m]
+    (S : RootFlatSchedule m) :
+    S.toShared.returnsSingleCycle ↔ S.returnsSingleCycle := by
+  constructor
+  · intro h c
+    simpa [toShared_returnMap S c, Shared.IsSingleCycleMap, IsSingleCycleMap]
+      using h c
+  · intro h c
+    simpa [toShared_returnMap S c, Shared.IsSingleCycleMap, IsSingleCycleMap]
+      using h c
+
+end RootFlatSchedule
+
 structure RootFlatCertificate (m : Nat) [NeZero m] where
   schedule : RootFlatSchedule m
   rowLatin : schedule.rowLatin
   layerBijective : schedule.layerBijective
   returnsSingleCycle : schedule.returnsSingleCycle
+
+namespace RootFlatCertificate
+
+def toShared {m : Nat} [NeZero m] (cert : RootFlatCertificate m) :
+    Shared.RootFlatCertificate Color Direction (RootState7 m) m where
+  schedule := cert.schedule.toShared
+  rowLatin := (RootFlatSchedule.toShared_rowLatin cert.schedule).2
+    cert.rowLatin
+  layerBijective := (RootFlatSchedule.toShared_layerBijective cert.schedule).2
+    cert.layerBijective
+  returnsSingleCycle :=
+    (RootFlatSchedule.toShared_returnsSingleCycle cert.schedule).2
+      cert.returnsSingleCycle
+
+end RootFlatCertificate
 
 def HamiltonDecompositionD7 (m : Nat) [NeZero m] : Prop :=
   Nonempty (RootFlatCertificate m)
@@ -110,6 +165,12 @@ theorem certificate_implies_hamilton {m : Nat} [NeZero m]
     (cert : RootFlatCertificate m) :
     HamiltonDecompositionD7 m := by
   exact ⟨cert⟩
+
+theorem rootFlatReturnCriterion_of_hamiltonDecompositionD7
+    {m : Nat} [NeZero m] (h : HamiltonDecompositionD7 m) :
+    Shared.RootFlatReturnCriterion Color Direction (RootState7 m) m := by
+  rcases h with ⟨cert⟩
+  exact Shared.rootFlatReturnCriterion_of_certificate cert.toShared
 
 theorem iterate_rank_add_one
     {α : Type*} {N : Nat} [NeZero N] (f : α → α) (rank : α → ZMod N)
