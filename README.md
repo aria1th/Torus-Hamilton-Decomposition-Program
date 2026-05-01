@@ -152,13 +152,16 @@ To inspect an existing kappa table without running the formula search:
 ```bash
 python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
   --diagnostics-only \
+  --diagnostic-profile all \
   --json-out /tmp/d7_kappa_diag_m9.json
 ```
 
 For the bundled `m=9` table, the current diagnostics show no pure classes for
 `zero_mask`, `zero_count`, `p`, `p_zero_count`,
 `layer_mod3_pmod3_zmod3`, or `layer_mod3_zero_mask`; `layer_zero_mask` has
-only `9/243` pure classes, with majority fraction `0.188843`.  This is not an
+only `9/243` pure classes, with majority fraction `0.188843`.  In the residue
+profile, `layer_full_mod3` also has `0/729` pure classes, and even
+`layer_zero_mask_full_mod3` has only `44/3033` pure classes.  This is not an
 impossibility proof, but it records why the bundled table should be treated as
 opaque relative to these coarse features.
 

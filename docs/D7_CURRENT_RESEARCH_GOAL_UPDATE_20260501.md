@@ -416,7 +416,11 @@ Implementation progress after this goal update:
   pure classes, while `layer_zero_mask` has only `9/243` pure classes and
   majority fraction `0.188843`.  This supports treating `m=9` as the first
   genuinely opaque fiber-compiler obstruction, rather than merely a missed
-  four-parameter affine formula.
+  four-parameter affine formula.  The optional residue profile strengthens
+  this diagnostic: `layer_full_mod3` has `0/729` pure classes, and
+  `layer_zero_mask_full_mod3` has only `44/3033` pure classes, so the bundled
+  table is not explained by adding coordinate residues modulo 3 to the coarse
+  zero-set features.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without
@@ -525,7 +529,8 @@ directly; it is to prove the base rank-step theorem and the fiber section
 rank-step theorem for a uniform all-zero-set compiler.  The current finite
 evidence shows the intended ranks for `m=5,7,9`, while the new kappa
 diagnostics show that the bundled `m=9` fiber table is opaque to the simplest
-zero-set feature partitions.
+zero-set feature partitions and remains opaque after adding full root
+coordinate residues modulo 3.
 
 The next useful Lean/research steps are:
 

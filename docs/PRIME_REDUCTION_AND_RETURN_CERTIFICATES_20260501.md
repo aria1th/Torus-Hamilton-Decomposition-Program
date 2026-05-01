@@ -279,7 +279,9 @@ verifier-ready certificate JSON files for formula hits, and can run
 `--diagnostics-only` to inspect existing kappa tables without replaying the
 formula search.  The bundled `m=9` table is not pure on the current coarse
 feature partitions; for example, `layer_zero_mask` has only `9/243` pure
-classes and majority fraction `0.188843`.
+classes and majority fraction `0.188843`.  The residue profile also leaves it
+opaque: `layer_full_mod3` has `0/729` pure classes, and
+`layer_zero_mask_full_mod3` has only `44/3033` pure classes.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

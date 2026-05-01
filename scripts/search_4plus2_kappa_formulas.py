@@ -34,6 +34,11 @@ def zero_mask(xs: tuple[int, int, int, int], m: int) -> tuple[bool, bool, bool, 
     return tuple(value == 0 for value in full)
 
 
+def full_residues_mod3(xs: tuple[int, int, int, int], m: int) -> tuple[int, int, int, int, int]:
+    full = (xs[0], xs[1], xs[2], xs[3], (-sum(xs)) % m)
+    return tuple(value % 3 for value in full)
+
+
 def rotation_perm_index(r: int, reflected: bool) -> int:
     if reflected:
         perm = tuple((r - j) % 3 for j in range(3))
@@ -72,8 +77,8 @@ def summarize_feature_dependency(
     }
 
 
-def kappa_dependency_diagnostics(m: int, kappa: list[list[int]]) -> dict:
-    features = [
+def kappa_diagnostic_features(m: int, profile: str) -> list[tuple[str, object]]:
+    basic_features = [
         ("zero_mask", lambda _t, xs: zero_mask(xs, m)),
         ("zero_count", lambda _t, xs: zero_count(xs, m)),
         ("p", lambda _t, xs: lambda1_direction(xs, 0, m)),
@@ -89,12 +94,48 @@ def kappa_dependency_diagnostics(m: int, kappa: list[list[int]]) -> dict:
         ),
         ("layer_mod3_zero_mask", lambda t, xs: (t % 3, zero_mask(xs, m))),
     ]
+    residue_features = [
+        ("layer_x_mod3", lambda t, xs: (t, tuple(value % 3 for value in xs))),
+        ("layer_full_mod3", lambda t, xs: (t, full_residues_mod3(xs, m))),
+        (
+            "layer_zero_mask_full_mod3",
+            lambda t, xs: (t, zero_mask(xs, m), full_residues_mod3(xs, m)),
+        ),
+        (
+            "layer_p_zero_count_full_mod3",
+            lambda t, xs: (
+                t,
+                lambda1_direction(xs, 0, m),
+                zero_count(xs, m),
+                full_residues_mod3(xs, m),
+            ),
+        ),
+        ("layer_mod3_x_mod3", lambda t, xs: (t % 3, tuple(value % 3 for value in xs))),
+        ("layer_mod3_full_mod3", lambda t, xs: (t % 3, full_residues_mod3(xs, m))),
+        (
+            "layer_mod3_zero_mask_full_mod3",
+            lambda t, xs: (t % 3, zero_mask(xs, m), full_residues_mod3(xs, m)),
+        ),
+    ]
+    if profile == "basic":
+        return basic_features
+    if profile == "residue":
+        return residue_features
+    if profile == "all":
+        return basic_features + residue_features
+    raise ValueError(f"unknown diagnostic profile: {profile}")
+
+
+def kappa_dependency_diagnostics(
+    m: int, kappa: list[list[int]], *, profile: str = "basic"
+) -> dict:
     flat_values = [value for layer in kappa for value in layer]
     return {
+        "profile": profile,
         "perm_counts": dict(sorted(Counter(flat_values).items())),
         "features": [
             summarize_feature_dependency(m, kappa, feature_name, key_fn)
-            for feature_name, key_fn in features
+            for feature_name, key_fn in kappa_diagnostic_features(m, profile)
         ],
     }
 
@@ -137,7 +178,12 @@ def test_formula(cert: dict, formula: dict) -> dict:
 
 
 def search_formulas(
-    cert: dict, *, stop_after_first: bool, include_failures: bool, diagnose_hits: bool
+    cert: dict,
+    *,
+    stop_after_first: bool,
+    include_failures: bool,
+    diagnose_hits: bool,
+    diagnostic_profile: str,
 ) -> dict:
     hits = []
     failures = []
@@ -153,7 +199,9 @@ def search_formulas(
             if result["ok"]:
                 if diagnose_hits:
                     record["formula_kappa_diagnostics"] = kappa_dependency_diagnostics(
-                        cert["m"], build_formula_kappa(cert["m"], **formula)
+                        cert["m"],
+                        build_formula_kappa(cert["m"], **formula),
+                        profile=diagnostic_profile,
                     )
                 hits.append(record)
                 if stop_after_first:
@@ -266,6 +314,12 @@ def main() -> None:
         action="store_true",
         help="only emit input kappa diagnostics; skip formula verification",
     )
+    parser.add_argument(
+        "--diagnostic-profile",
+        choices=("basic", "residue", "all"),
+        default="basic",
+        help="feature set for --diagnose-kappa or --diagnostics-only",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
     only = parse_only(args.only)
@@ -291,11 +345,14 @@ def main() -> None:
                 stop_after_first=not args.all_hits,
                 include_failures=args.include_failures,
                 diagnose_hits=args.diagnose_kappa,
+                diagnostic_profile=args.diagnostic_profile,
             )
         result["source"] = source
         if args.diagnose_kappa or args.diagnostics_only:
             result["input_kappa_diagnostics"] = kappa_dependency_diagnostics(
-                cert["m"], cert["kappa_perm_indices"]
+                cert["m"],
+                cert["kappa_perm_indices"],
+                profile=args.diagnostic_profile,
             )
         if args.emit_hit_cert_dir is not None and result["hits"]:
             result["emitted_cert_json"] = write_hit_certificates(
