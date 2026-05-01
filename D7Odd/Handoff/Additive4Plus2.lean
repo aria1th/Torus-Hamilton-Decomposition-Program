@@ -1,5 +1,6 @@
 import D5Odd.Basic
 import D7Odd.Handoff.ReturnCriterion
+import Shared.Monodromy
 
 namespace D7Odd
 namespace Handoff
@@ -263,6 +264,22 @@ theorem rootEquiv_symm_layerMap {m : Nat} (S : RootFlatSchedule m)
       productLayerMap S t c bf := by
   simp [RootFlatSchedule.layerMap, productLayerMap,
     rootEquiv_symm_addQRoot_rootEquiv]
+
+theorem layerMap_bijective_of_productLayerMap_bijective {m : Nat}
+    (S : RootFlatSchedule m) (t : ZMod m) (c : Color)
+    (h : Function.Bijective (productLayerMap S t c)) :
+    Function.Bijective (S.layerMap t c) := by
+  exact Shared.bijective_of_equiv_conj
+    (e := rootEquiv m) (f := S.layerMap t c)
+    (g := productLayerMap S t c) h
+    (rootEquiv_symm_layerMap S t c)
+
+theorem layerBijective_of_productLayerMaps {m : Nat}
+    (S : RootFlatSchedule m)
+    (h : ∀ t c, Function.Bijective (productLayerMap S t c)) :
+    S.layerBijective := by
+  intro t c
+  exact layerMap_bijective_of_productLayerMap_bijective S t c (h t c)
 
 end Additive4Plus2
 end Handoff

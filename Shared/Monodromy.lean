@@ -26,6 +26,30 @@ theorem skewProductMap_bijective {Base Fiber : Type*}
     rcases (hfiber u).2 v' with ⟨v, hv⟩
     exact ⟨(u, v), Prod.ext hu hv⟩
 
+theorem bijective_of_equiv_conj {α β : Type*} (e : α ≃ β)
+    (f : β → β) (g : α → α)
+    (hg : Function.Bijective g)
+    (hconj : ∀ x : α, e.symm (f (e x)) = g x) :
+    Function.Bijective f := by
+  constructor
+  · intro y1 y2 hy
+    apply e.symm.injective
+    apply hg.1
+    calc
+      g (e.symm y1) = e.symm (f (e (e.symm y1))) := by
+        rw [hconj]
+      _ = e.symm (f y1) := by simp
+      _ = e.symm (f y2) := by rw [hy]
+      _ = e.symm (f (e (e.symm y2))) := by simp
+      _ = g (e.symm y2) := by rw [hconj]
+  · intro y
+    rcases hg.2 (e.symm y) with ⟨x, hx⟩
+    refine ⟨e x, ?_⟩
+    apply e.symm.injective
+    calc
+      e.symm (f (e x)) = g x := hconj x
+      _ = e.symm y := hx
+
 def sectionReturn {Base Fiber : Type*}
     (S : Base × Fiber → Base × Fiber) (base : Base) (period : Nat) :
     Fiber → Fiber :=
