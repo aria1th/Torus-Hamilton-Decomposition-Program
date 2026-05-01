@@ -99,6 +99,44 @@ theorem evenSchedule_exact {m : Nat} [NeZero m] (S : D5EvenSeamData m) :
     · intro i hi
       simpa [ht] using hi.symm
 
+def seamStepMap {m : Nat} (S : D5EvenSeamData m) (c : Color) :
+    Vec4 m → Vec4 m :=
+  fun z => z + b4 m (S.sigma c z)
+
+def seamRootReturn {m : Nat} (S : D5EvenSeamData m) (c : Color) :
+    Vec4 m → Vec4 m :=
+  fun z => seamStepMap S c (z - b4 m c)
+
+theorem vec4_sub_const_bijective {m : Nat} (v : Vec4 m) :
+    Function.Bijective fun z : Vec4 m => z - v := by
+  constructor
+  · intro x y hxy
+    funext k
+    have hk := congrArg (fun z : Vec4 m => z k) hxy
+    have hc := congrArg (fun a : ZMod m => a + v k) hk
+    simpa using hc
+  · intro y
+    exact ⟨y + v, by simp⟩
+
+theorem seamStepMap_bijective {m : Nat} (S : D5EvenSeamData m) (c : Color) :
+    Function.Bijective (seamStepMap S c) := by
+  simpa [seamStepMap] using S.step_bijective c
+
+theorem seamRootReturn_bijective {m : Nat} (S : D5EvenSeamData m) (c : Color) :
+    Function.Bijective (seamRootReturn S c) := by
+  exact (seamStepMap_bijective S c).comp
+    (vec4_sub_const_bijective (b4 m c))
+
+def D5EvenSeamReturnOrbitTarget (S : D5EvenSeamData m) : Prop :=
+  ∀ c : Color, ∀ x y : Vec4 m, ∃ n : Nat,
+    (seamRootReturn S c)^[n] x = y
+
+theorem seamRootReturn_single_cycle_of_orbit_target {m : Nat}
+    (S : D5EvenSeamData m) (hOrbit : D5EvenSeamReturnOrbitTarget S)
+    (c : Color) :
+    IsSingleCycleMap (seamRootReturn S c) := by
+  exact ⟨seamRootReturn_bijective S c, hOrbit c⟩
+
 def D5EvenSeamHamiltonian (S : D5EvenSeamData m) : Prop :=
   AllColorHamiltonian (evenSchedule S)
 
