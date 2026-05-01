@@ -501,6 +501,32 @@ The remaining D7-structure gap is not the abstract composite interface. It is
 the construction of the actual all-zero-set `4+2` product certificate for odd
 `m >= 5`, including the base rows and the fiber compiler/monodromy proof.
 
+## Current Missing Propositions
+
+After the `BridgeConcreteFullRankPackage` reduction, the open D7 odd bridge is
+equivalent to the following concrete data theorem.  For every odd `m >= 5`, one
+must construct
+
+- `row : Color -> ZMod m -> Direction` and
+  `baseRank : Color -> D5Odd.ARoot5 m -> ZMod (m ^ 4)` such that each time
+  slice is a direction bijection, each `baseRank c` is bijective, and the
+  canonical folded base return steps `baseRank c` by `+1`;
+- `fiberLayer : ZMod m -> D5Odd.ARoot5 m -> ZMod m`,
+  `perm : ZMod m -> D5Odd.ARoot5 m -> Direction3 -> Direction3`, and
+  `fiberRank : Color -> ARoot3 m -> ZMod (m ^ 2)` such that every `perm`
+  is bijective, every `fiberRank c` is bijective, and the section return over
+  the `m^4` base period steps `fiberRank c` by `+1`;
+- `basePoint : Color -> D5Odd.ARoot5 m`, the section point used to evaluate
+  the fiber monodromy.
+
+The local row/layer and abstract monodromy lemmas are already formalized around
+these fields.  Thus the missing mathematical work is no longer "prove D7 odd"
+directly; it is to prove the base rank-step theorem and the fiber section
+rank-step theorem for a uniform all-zero-set compiler.  The current finite
+evidence shows the intended ranks for `m=5,7,9`, while the new kappa
+diagnostics show that the bundled `m=9` fiber table is opaque to the simplest
+zero-set feature partitions.
+
 The next useful Lean/research steps are:
 
 1. Provide a uniform `BridgeConcreteFullRankPackage` for every odd `m >= 5`;
