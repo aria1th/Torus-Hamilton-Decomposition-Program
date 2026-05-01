@@ -15,6 +15,8 @@ def Root3 (m : Nat) (w : Vec3 m) : Prop :=
 
 abbrev ARoot3 (m : Nat) := { w : Vec3 m // Root3 m w }
 
+abbrev Direction3 := Fin 3
+
 theorem sum3_vec (m : Nat) (w : Vec3 m) :
     sum3 m w = w 0 + w 1 + w 2 := by
   simp [sum3, Fin.sum_univ_three]
@@ -26,6 +28,36 @@ theorem sum5_vec (m : Nat) (w : D5Odd.Vec5 m) :
 theorem sum7_vec (m : Nat) (w : Vec7 m) :
     sum7 m w = w 0 + w 1 + w 2 + w 3 + w 4 + w 5 + w 6 := by
   simp [sum7, Fin.sum_univ_succ, add_assoc]
+
+def e3 (m : Nat) (i : Direction3) : Vec3 m :=
+  fun j => if j = i then 1 else 0
+
+def q3 (m : Nat) (i : Direction3) : Vec3 m :=
+  e3 m i - e3 m 2
+
+theorem sum3_e3 (m : Nat) (i : Direction3) :
+    sum3 m (e3 m i) = 1 := by
+  simp [sum3, e3]
+
+theorem sum3_add (m : Nat) (x y : Vec3 m) :
+    sum3 m (x + y) = sum3 m x + sum3 m y := by
+  simp [sum3, Finset.sum_add_distrib]
+
+theorem sum3_q3 (m : Nat) (i : Direction3) :
+    sum3 m (q3 m i) = 0 := by
+  calc
+    sum3 m (q3 m i) = sum3 m (e3 m i) - sum3 m (e3 m 2) := by
+      simp [q3, sum3, Pi.sub_apply, Finset.sum_sub_distrib]
+    _ = 0 := by
+      rw [sum3_e3, sum3_e3]
+      simp
+
+theorem root3_add_q3 {m : Nat} {w : Vec3 m}
+    (hw : Root3 m w) (i : Direction3) :
+    Root3 m (w + q3 m i) := by
+  unfold Root3 at hw ⊢
+  rw [sum3_add, hw, sum3_q3]
+  simp
 
 def vec3OfPrefix {m : Nat} (x y : ZMod m) : ARoot3 m :=
   ⟨![x, y, -(x + y)], by
@@ -64,6 +96,35 @@ theorem targetVec_root {m : Nat}
 def targetRoot {m : Nat} (base : D5Odd.ARoot5 m) (fiber : ARoot3 m) :
     RootState7 m :=
   ⟨targetVec base fiber, targetVec_root base fiber⟩
+
+def baseAddQ {m : Nat} (i : D5Odd.Direction) (w : D5Odd.ARoot5 m) :
+    D5Odd.ARoot5 m :=
+  match i.val with
+  | 0 => vec5OfPrefix (w.1 0 + 1) (w.1 1) (w.1 2) (w.1 3)
+  | 1 => vec5OfPrefix (w.1 0) (w.1 1 + 1) (w.1 2) (w.1 3)
+  | 2 => vec5OfPrefix (w.1 0) (w.1 1) (w.1 2 + 1) (w.1 3)
+  | 3 => vec5OfPrefix (w.1 0) (w.1 1) (w.1 2) (w.1 3 + 1)
+  | _ => w
+
+def fiberAddQ {m : Nat} (i : Direction3) (w : ARoot3 m) : ARoot3 m :=
+  match i.val with
+  | 0 => vec3OfPrefix (w.1 0 + 1) (w.1 1)
+  | 1 => vec3OfPrefix (w.1 0) (w.1 1 + 1)
+  | _ => w
+
+def baseDirectionOfSlot (i : Direction) : D5Odd.Direction :=
+  match i.val with
+  | 0 => 0
+  | 1 => 1
+  | 2 => 2
+  | 3 => 3
+  | _ => 4
+
+def fiberDirectionOfSlot (i : Direction) : Direction3 :=
+  match i.val with
+  | 4 => 0
+  | 5 => 1
+  | _ => 2
 
 def baseRoot {m : Nat} (w : RootState7 m) : D5Odd.ARoot5 m :=
   vec5OfPrefix (w.1 0) (w.1 1) (w.1 2) (w.1 3)
@@ -146,6 +207,36 @@ def rootEquiv (m : Nat) :
     rcases bf with ⟨base, fiber⟩
     simp [baseRoot_targetRoot, fiberRoot_targetRoot]
   right_inv := targetRoot_base_fiber
+
+set_option linter.flexible false in
+theorem baseRoot_addQRoot {m : Nat}
+    (i : Direction) (w : RootState7 m) :
+    baseRoot (addQRoot m i w) =
+      baseAddQ (baseDirectionOfSlot i) (baseRoot w) := by
+  apply Subtype.ext
+  ext j
+  fin_cases i <;> fin_cases j <;>
+    simp [baseRoot, addQRoot, addQ, q7, e7, vec5OfPrefix, baseAddQ,
+      baseDirectionOfSlot]
+
+set_option linter.flexible false in
+theorem fiberRoot_addQRoot {m : Nat}
+    (i : Direction) (w : RootState7 m) :
+    fiberRoot (addQRoot m i w) =
+      fiberAddQ (fiberDirectionOfSlot i) (fiberRoot w) := by
+  apply Subtype.ext
+  ext j
+  fin_cases i <;> fin_cases j <;>
+    simp [fiberRoot, addQRoot, addQ, q7, e7, vec3OfPrefix, fiberAddQ,
+      fiberDirectionOfSlot]
+
+theorem rootEquiv_symm_addQRoot {m : Nat}
+    (i : Direction) (w : RootState7 m) :
+    (rootEquiv m).symm (addQRoot m i w) =
+      (baseAddQ (baseDirectionOfSlot i) (baseRoot w),
+        fiberAddQ (fiberDirectionOfSlot i) (fiberRoot w)) := by
+  ext <;>
+    simp [rootEquiv, baseRoot_addQRoot, fiberRoot_addQRoot]
 
 end Additive4Plus2
 end Handoff
