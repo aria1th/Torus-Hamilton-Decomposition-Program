@@ -298,6 +298,9 @@ Implementation progress after this goal update:
   `OddPointwiseCompositeExpansion StandardCayleySolved`, it derives shared
   Cayley composite endpoints for any nonempty product of factors each equal to
   `5` or `7`.
+  It also records the sharper 35/49 route obtained from the formalized
+  left-coordinatized product theorem, reducing that route's remaining
+  obligation to coordinatized D5/D7 odd base endpoints.
 
 The remaining gap is not the abstract interface. It is the construction of the
 actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the

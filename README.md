@@ -50,7 +50,8 @@ when `m` is odd and `m >= 3`.
 - `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and the left-coordinatized Cayley product adapter.
 - `RoundComposite/ConcreteEndpoints.lean`: conditional graph-level composite
   endpoints obtained from the formalized D5/D7 odd Cayley theorems once the
-  standard pointwise product expansion is supplied.
+  standard pointwise product expansion is supplied, plus 35/49 endpoints from
+  the stronger left-coordinatized base hypothesis.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates.

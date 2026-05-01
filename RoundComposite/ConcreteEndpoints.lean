@@ -31,6 +31,22 @@ theorem standard_cayley_odd_uniform_49_of_pointwise
     standard_cayley_odd_uniform_7
     standard_cayley_odd_uniform_7
 
+theorem standard_cayley_odd_uniform_35_of_left_coordinatized_5
+    (hCoord5 : OddUniformSolved StandardCoordinatizedCayleySolved 5) :
+    OddUniformSolved StandardCayleySolved (5 * 7) := by
+  exact odd_uniform_cayley_mul_of_left_coordinatized
+    (by decide) (by decide)
+    hCoord5
+    standard_cayley_odd_uniform_7
+
+theorem standard_cayley_odd_uniform_49_of_left_coordinatized_7
+    (hCoord7 : OddUniformSolved StandardCoordinatizedCayleySolved 7) :
+    OddUniformSolved StandardCayleySolved (7 * 7) := by
+  exact odd_uniform_cayley_mul_of_left_coordinatized
+    (by decide) (by decide)
+    hCoord7
+    standard_cayley_odd_uniform_7
+
 theorem standard_cayley_odd_uniform_product_of_5_7_list
     (hExp : OddPointwiseCompositeExpansion StandardCayleySolved)
     {ds : List Nat} (hne : ds ≠ [])

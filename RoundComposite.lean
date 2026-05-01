@@ -311,6 +311,16 @@ theorem standard_cayley_product_of_left_coordinatized
     StandardCayleySolved (a * b) m :=
   Shared.cayleyHamiltonDecomposition_product_of_left_coordinatized hA hB
 
+theorem odd_uniform_cayley_mul_of_left_coordinatized
+    {a b : Nat} (ha : 0 < a) (hb : 0 < b)
+    (hA : OddUniformSolved StandardCoordinatizedCayleySolved a)
+    (hB : OddUniformSolved StandardCayleySolved b) :
+    OddUniformSolved StandardCayleySolved (a * b) := by
+  intro m hm hodd
+  exact standard_cayley_product_of_left_coordinatized ha hb hm
+    (hA hm hodd)
+    (hB (three_le_pow_of_three_le hm ha) hodd.pow)
+
 theorem standard_cayley_prime_factor_reduction_of_torus_pointwise
     (hExp : PointwiseCompositeExpansion StandardTorusSolved)
     (hPrime : PrimeBaseSolved StandardTorusSolved) :

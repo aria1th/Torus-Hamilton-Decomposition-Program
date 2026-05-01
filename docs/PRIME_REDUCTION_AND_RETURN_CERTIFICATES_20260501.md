@@ -46,6 +46,9 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   Cayley endpoints to this shared proposition.  Conditional on the standard
   odd pointwise product expansion, it gives graph-level odd composite endpoints
   for any nonempty product of factors each equal to `5` or `7`.
+  The file also has direct 35/49 endpoints from the left-coordinatized product
+  theorem; these no longer assume the full pointwise expansion, but they do
+  require coordinatized D5/D7 base data.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
   `D5Odd/Main.lean`, `D5Odd/Torus.lean`, and `D5Odd/Cayley.lean`.
 - D=7 odd is Lean-formalized through a root-flat certificate and then lifted to
