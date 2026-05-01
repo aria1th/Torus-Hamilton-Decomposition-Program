@@ -312,8 +312,10 @@ top-boundary jump adds `3-h`.  Lean also proves
 `phi_single_cycle_iff_phiInv`, reducing the remaining orbit-stitching theorem
 to the inverse-map orbit proof.  The bad-class direction is now proved:
 `goodPhiClass_of_phi_single_cycle` shows that a single-cycle `phi_h` forces
-`h % 5 != 3`.  What remains is the good-class inverse orbit transitivity
-proof.
+`h % 5 != 3`.  The good-class residue quotient is also proved:
+`residueShift_add_single_cycle_of_good` shows that `r |-> r + (3-h)` is a
+single cycle on `ZMod 5`.  What remains is the good-class lift from this
+residue cycle and the internal `+5` lanes to full inverse orbit transitivity.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

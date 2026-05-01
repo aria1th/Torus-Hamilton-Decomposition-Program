@@ -46,7 +46,8 @@ when `m` is odd and `m >= 3`.
   `IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h)`, and packaging
   the remaining cycle/Q-hitting/length-sum obligations.  It also proves the
   bad-class necessary direction: if `phi h` is a single cycle, then
-  `h % 5 != 3`.
+  `h % 5 != 3`.  In the good class it proves the quotient residue map
+  `r |-> r + (3-h)` is a single cycle on `ZMod 5`.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

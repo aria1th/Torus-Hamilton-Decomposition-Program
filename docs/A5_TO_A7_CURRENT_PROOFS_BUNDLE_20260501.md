@@ -163,8 +163,11 @@ The file also proves `phi_single_cycle_iff_phiInv`, so the remaining
 arithmetic cycle theorem may be proved on the inverse map and transferred
 back to `phi_h`.  The bad-class direction is now closed as
 `goodPhiClass_of_phi_single_cycle`: if `phi_h` is a single cycle, then
-`h % 5 != 3`.  The remaining arithmetic gap is therefore the good-class
-inverse orbit transitivity theorem.
+`h % 5 != 3`.  The good-class quotient map on residues is also closed:
+`residueShift_add_single_cycle_of_good` proves
+`r |-> r + (3-h)` is a single cycle on `ZMod 5`.  The remaining arithmetic
+gap is therefore the good-class lift from this residue cycle and the internal
+`+5` lanes to full inverse orbit transitivity.
 
 ## Updated Target-A Interpretation
 

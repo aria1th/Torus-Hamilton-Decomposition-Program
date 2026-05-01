@@ -149,6 +149,52 @@ theorem residueShift_ne_zero_of_good {h : Nat} (hgood : goodPhiClass h) :
     residueShift h ≠ 0 :=
   (residueShift_ne_zero_iff_goodPhiClass h).2 hgood
 
+theorem zmod_add_single_cycle_of_isUnit
+    {m : Nat} [NeZero m] {a : ZMod m} (ha : IsUnit a) :
+    IsSingleCycleMap (fun x : ZMod m => x + a) := by
+  rcases ha with ⟨u, rfl⟩
+  let rank : ZMod m → ZMod m := Units.mulLeft u⁻¹
+  have hrank : Function.Bijective rank := by
+    exact Equiv.bijective (Units.mulLeft u⁻¹)
+  have hstep : ∀ x, rank (x + (u : ZMod m)) = rank x + 1 := by
+    intro x
+    dsimp [rank]
+    rw [mul_add]
+    rw [show (↑u⁻¹ : ZMod m) * (u : ZMod m) = 1 by simp]
+  have hf_inj : Function.Injective (fun x : ZMod m => x + (u : ZMod m)) := by
+    intro x y hxy
+    apply hrank.1
+    have h : rank x + (1 : ZMod m) = rank y + 1 := by
+      simpa [hstep x, hstep y] using congrArg rank hxy
+    exact add_right_cancel h
+  have hf_surj : Function.Surjective (fun x : ZMod m => x + (u : ZMod m)) := by
+    intro y
+    let target : ZMod m := rank y - 1
+    rcases hrank.2 target with ⟨x, hx⟩
+    refine ⟨x, ?_⟩
+    apply hrank.1
+    calc
+      rank (x + (u : ZMod m)) = rank x + 1 := hstep x
+      _ = target + 1 := by rw [hx]
+      _ = rank y := by simp [target]
+  refine ⟨⟨hf_inj, hf_surj⟩, ?_⟩
+  intro x y
+  rcases ZMod.natCast_zmod_surjective (rank y - rank x) with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  apply hrank.1
+  calc
+    rank (((fun x : ZMod m => x + (u : ZMod m))^[n]) x) =
+        rank x + (n : ZMod m) :=
+      Shared.iterate_rank_add_one _ rank hstep n x
+    _ = rank x + (rank y - rank x) := by rw [hn]
+    _ = rank y := by ring
+
+theorem residueShift_add_single_cycle_of_good {h : Nat}
+    (hgood : goodPhiClass h) :
+    IsSingleCycleMap (fun r : ZMod 5 => r + residueShift h) := by
+  exact zmod_add_single_cycle_of_isUnit
+    ((residueShift_isUnit_iff_goodPhiClass h).2 hgood)
+
 theorem phiInvNat_of_add_five_lt {h x : Nat} (hx : x + 5 < h) :
     phiInvNat h x = x + 5 := by
   unfold phiInvNat
