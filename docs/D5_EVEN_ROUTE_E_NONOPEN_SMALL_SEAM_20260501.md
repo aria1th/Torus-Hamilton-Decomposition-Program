@@ -97,6 +97,18 @@ Lean as `![a,0,0,-a]`.  The file now defines the underlying `Vec5` point
 - `Root5 m (routeEThetaVec slot a)`;
 - `rootZ (routeEThetaVec slot a) = routeEThetaPoint slot a`;
 - `(rootOfZ (routeEThetaPoint slot a)).1 = routeEThetaVec slot a`.
+- the coordinate identities `routeEThetaVec_pos_param`,
+  `routeEThetaVec_neg_param`, and `routeEThetaVec_port_zero`;
+- the verifier's `start_ok` port statement
+  `LambdaE (zeroMaskMinusOne (routeEThetaVec slot a)) slot = slot+2 mod 5`
+  for `a != 0`, as `LambdaE_routeEThetaVec` and
+  `LambdaE_routeEThetaSeam`.
+
+The Route-E zero-set table `LambdaE` is therefore no longer only an `m=4`
+implementation detail: it is part of the general Route-E interface in
+`D5Odd/EvenRouteE.lean`, where `LambdaE_latin` and `LambdaE_cyclic` record
+its finite table invariants.  `D5Odd/EvenRouteEM4.lean` reuses that
+definition.
 
 The canonical wrapper `RouteEThetaSmallSeamCertificate` now fixes both the
 seam type `RouteENonzeroSeam m` and the seam map

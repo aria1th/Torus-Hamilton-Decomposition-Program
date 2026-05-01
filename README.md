@@ -76,7 +76,11 @@ when `m` is odd and `m >= 3`.
   seam single-cyclicity, and the return-time sum before routing to the
   torus/Cayley endpoints.  It also defines the underlying `Vec5` seam point
   `routeEThetaVec` and proves its `rootZ`/`rootOfZ` equivalence with
-  `routeEThetaPoint`, making the bundle coordinate convention explicit.
+  `routeEThetaPoint`, making the bundle coordinate convention explicit.  The
+  Route-E table `LambdaE` now lives here, with
+  `LambdaE_latin` and `LambdaE_cyclic` recording its table invariants, and
+  `LambdaE_routeEThetaVec`/`LambdaE_routeEThetaSeam` proving the bundle's
+  `start_ok` port statement `p_s(Theta_s(a)) = s+2 mod 5`.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -479,7 +483,11 @@ which are the finite traces for the next one-dimensional block-splice proof.
 The Lean target also includes `RouteEThetaSmallSeamCertificate`, specialized
 to the canonical bundle seam
 `Theta_s = {rho_s(0,a,0,0,-a) : a != 0}` via
-`routeEThetaSeamPoint`.  It lowers to the more general
+`routeEThetaSeamPoint`.  The named lemmas
+`routeEThetaVec_port_zero`, `routeEThetaVec_pos_param`,
+`routeEThetaVec_neg_param`, and `LambdaE_routeEThetaSeam` record the exact
+coordinate and port facts used by the verifier's `start_ok` check.  It lowers
+to the more general
 `RouteENonopenSmallSeamCertificate` and proves that such a certificate gives
 the existing D5 even Hamilton, torus, and Cayley endpoints.
 It also fixes the branch combinatorics: a separate
