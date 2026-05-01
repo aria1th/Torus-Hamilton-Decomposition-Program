@@ -125,6 +125,12 @@ So `m = 9` is no longer evidence that the bridge needs arbitrary opaque
 state-dependence.  It is evidence that the needed compiler may be a finite
 zero-set table rather than a four-parameter affine formula.
 
+Applying this exact `m = 9` table unchanged to the existing bundled `m = 5`
+and `m = 7` row choices does not work: it fails at color `2` for `m = 5` and
+at color `4` for `m = 7`.  So the current evidence does not yet give one
+global K-table for all moduli and all existing row choices; it gives a concrete
+zero-set-table target to explain and generalize.
+
 ### Base Row Side
 
 The base side is also not explained by a very short uniform primitive word

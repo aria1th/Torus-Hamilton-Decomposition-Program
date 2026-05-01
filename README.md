@@ -205,6 +205,9 @@ python3 scripts/d7_bridge_snapshot.py \
   --json-out /tmp/d7_m9_zero_set_K_snapshot.json
 ```
 
+The snapshot records whether a certificate-provided `K(Z)` table matches the
+shifted zero-set mask encoding used by the finite kappa table.
+
 It can also test row solutions exported by the base analyzer:
 
 ```bash

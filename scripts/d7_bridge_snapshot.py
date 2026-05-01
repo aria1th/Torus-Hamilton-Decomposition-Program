@@ -14,6 +14,7 @@ from search_4plus2_kappa_formulas import (
     section_trace_diagnostics,
 )
 from verify_4plus2_allN_bridge_cert import (
+    base_tuple,
     default_bundle_path,
     load_bundle,
     parse_only,
@@ -49,6 +50,54 @@ def row_summary(cert: dict) -> dict:
     }
 
 
+def shifted_zero_mask_code(base: int, m: int) -> int:
+    xs = base_tuple(base, m)
+    full = (xs[0], xs[1], xs[2], xs[3], (-sum(xs)) % m)
+    return sum((1 << i) for i in range(5) if full[(i + 1) % 5] == 0)
+
+
+def zero_set_k_table_summary(cert: dict) -> dict | None:
+    masks = cert.get("masks")
+    values = cert.get("kappa_perm_indices_by_mask")
+    if masks is None and values is None:
+        return None
+    if not isinstance(masks, list) or not isinstance(values, list):
+        return {"present": True, "valid": False, "error": "masks/table must be lists"}
+    if len(masks) != len(values):
+        return {"present": True, "valid": False, "error": "masks/table length mismatch"}
+    table = {int(mask): int(value) for mask, value in zip(masks, values)}
+    mismatches = []
+    missing = []
+    m = cert["m"]
+    for layer, layer_table in enumerate(cert["kappa_perm_indices"]):
+        for base, actual in enumerate(layer_table):
+            mask = shifted_zero_mask_code(base, m)
+            expected = table.get(mask)
+            if expected is None:
+                if len(missing) < 5:
+                    missing.append({"layer": layer, "base": base, "mask": mask})
+            elif expected != actual and len(mismatches) < 5:
+                mismatches.append(
+                    {
+                        "layer": layer,
+                        "base": base,
+                        "mask": mask,
+                        "actual": actual,
+                        "expected": expected,
+                    }
+                )
+    return {
+        "present": True,
+        "valid": True,
+        "note": cert.get("note"),
+        "mask_shift": "mask bit i records full[(i+1) % 5] == 0",
+        "table": sorted(table.items()),
+        "matches_shifted_zero_mask": not missing and not mismatches,
+        "missing_examples": missing,
+        "mismatch_examples": mismatches,
+    }
+
+
 def summarize_cert(cert: dict, args: argparse.Namespace) -> dict:
     m = cert.get("m")
     out = {"m": m}
@@ -60,6 +109,9 @@ def summarize_cert(cert: dict, args: argparse.Namespace) -> dict:
         return out
     out["valid"] = True
     out.update(row_summary(cert))
+    k_summary = zero_set_k_table_summary(cert)
+    if k_summary is not None:
+        out["zero_set_K_table"] = k_summary
     out["kappa_diagnostics"] = kappa_dependency_diagnostics(
         m, cert["kappa_perm_indices"], profile=args.diagnostic_profile
     )
