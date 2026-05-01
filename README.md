@@ -85,6 +85,9 @@ when `m` is odd and `m >= 3`.
   candidate all-zero-set A5 base words, reporting primitiveity, first return
   to `Sigma = {(0,a,b,0,-a-b) : a+b != 0}`, excursion coverage, and coarse
   diagnostics for symbolic first-return tables.
+- `scripts/verify_targetA_23_32.py`: concise verifier for the post-update
+  Target-A `23/32` theorem candidate, checking section cycles, `sum ell =
+  m^4`, the `Sigma0` return law, and the bad-class five-cycle formulas.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.
@@ -163,19 +166,22 @@ python3 scripts/analyze_targetA_section.py \
 ```
 
 The current generic Target-A candidates from the post-update bundle are
-`23` and `32`.  A lightweight local cross-check is:
+`23` and `32`.  Use the focused verifier for this theorem candidate:
 
 ```bash
-python3 scripts/analyze_targetA_section.py \
-  --moduli 5,7,9,17 \
-  --words 23,32 \
-  --json-out /tmp/d7_targetA_23_32_small.json
+python3 scripts/verify_targetA_23_32.py \
+  --json-out /tmp/d7_targetA_23_32.json
 ```
 
-Expected pattern: one section cycle at `m = 5,9`, five section cycles at
-`m = 7,17`, and `return_time_sum = m^4` throughout.  Larger ranges should use
-the bundled fast outputs or the C++ helper, because the Python analyzer emits
-large diagnostics.
+It checks the expected one-cycle pattern outside `m == 2 mod 5`, the
+bad-class five-cycle formulas, the `Sigma0` return law, and `return_time_sum =
+m^4`.  A larger comparison matching the post-update bundle range is:
+
+```bash
+python3 scripts/verify_targetA_23_32.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/d7_targetA_23_32_5_to_51.json
+```
 
 For larger exceptional moduli, compile the faster C++ search helper:
 

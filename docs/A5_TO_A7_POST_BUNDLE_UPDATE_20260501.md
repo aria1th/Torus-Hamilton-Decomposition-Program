@@ -165,6 +165,25 @@ The local output agrees with the bundle pattern in that range:
 - `m = 7,17`: five section cycles for both words;
 - `return_time_sum = m^4` in all four tested moduli.
 
-Larger-range confirmation should use the faster post-bundle outputs or a
-lighter summary mode, because the Python section analyzer emits large
-diagnostics and becomes slow for `m` near `51`.
+A focused verifier has now been added as
+`scripts/verify_targetA_23_32.py`.  It checks only the theorem-candidate
+conditions needed here: section cycle structure, `sum ell = m^4`, the
+`Sigma0` return law, and the bad-class five-cycle formulas.
+
+The default representative range passes:
+
+```bash
+python3 scripts/verify_targetA_23_32.py \
+  --json-out /tmp/targetA_23_32_default.json
+```
+
+The broader odd range matching the post-bundle evidence through `m = 51` also
+passes:
+
+```bash
+python3 scripts/verify_targetA_23_32.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/targetA_23_32_5_to_51.json
+```
+
+Both runs reported `all_ok=True`.

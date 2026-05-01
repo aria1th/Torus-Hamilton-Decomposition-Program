@@ -223,6 +223,13 @@ Target A should now be attacked as a seam-connectivity theorem for the generic
 class, plus a five-cycle seam-splicing theorem for `m == 2 mod 5`, rather than
 as an unstructured primitive-word search.
 
+`scripts/verify_targetA_23_32.py` now records this post-update target as a
+concise finite regression: it checks the expected section-cycle criterion,
+`sum ell = m^4`, the `Sigma0` return law, and the bad-class five-cycle
+formulas without emitting the large diagnostics from
+`scripts/analyze_targetA_section.py`.  It passes for every odd
+`m = 5,7,...,51` for both `23` and `32`.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -332,6 +339,9 @@ python3 scripts/analyze_targetA_section.py \
   --moduli 37 \
   --words 404432,044324,324044,432404,443240 \
   --json-out /tmp/d7_targetA_section_m37_len6_hits.json
+python3 scripts/verify_targetA_23_32.py \
+  --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
+  --json-out /tmp/targetA_23_32_5_to_51.json
 git diff --check
 ```
 
