@@ -13,6 +13,37 @@ def b4 (m : Nat) (i : Direction) : Vec4 m :=
 def rootZ (w : Vec5 m) : Vec4 m :=
   fun k => w (fin4ToFin5 k)
 
+def rootOfZ {m : Nat} (z : Vec4 m) : ARoot5 m :=
+  ⟨![ -(z 0 + z 1 + z 2 + z 3), z 0, z 1, z 2, z 3], by
+    unfold Root5 sum5
+    rw [Fin.sum_univ_five]
+    simp
+    ring⟩
+
+@[simp] theorem rootZ_rootOfZ {m : Nat} (z : Vec4 m) :
+    rootZ (rootOfZ z).1 = z := by
+  funext k
+  fin_cases k <;> simp [rootZ, rootOfZ, fin4ToFin5]
+
+@[simp] theorem rootOfZ_rootZ {m : Nat} (w : ARoot5 m) :
+    rootOfZ (rootZ w.1) = w := by
+  apply Subtype.ext
+  ext i
+  fin_cases i <;> simp [rootOfZ, rootZ, fin4ToFin5]
+  have hsum := w.2
+  unfold Root5 sum5 at hsum
+  rw [Fin.sum_univ_five] at hsum
+  linear_combination -hsum
+
+theorem rootOfZ_bijective {m : Nat} :
+    Function.Bijective (rootOfZ : Vec4 m → ARoot5 m) := by
+  constructor
+  · intro x y hxy
+    have hz := congrArg (fun w : ARoot5 m => rootZ w.1) hxy
+    simpa using hz
+  · intro w
+    exact ⟨rootZ w.1, rootOfZ_rootZ w⟩
+
 def zAtLayer {m : Nat} (t : Fin m) (w : Vec5 m) : Vec4 m :=
   fun k => rootZ w k + if k.val = 3 then (t.val : ZMod m) else 0
 
@@ -131,17 +162,40 @@ def D5EvenSeamReturnOrbitTarget (S : D5EvenSeamData m) : Prop :=
   ∀ c : Color, ∀ x y : Vec4 m, ∃ n : Nat,
     (seamRootReturn S c)^[n] x = y
 
+def D5EvenSeamHamiltonian (S : D5EvenSeamData m) : Prop :=
+  AllColorHamiltonian (evenSchedule S)
+
+def D5EvenSeamReturnCompatible (S : D5EvenSeamData m) : Prop :=
+  ∀ c : Color, ∀ z : Vec4 m,
+    rootOfZ (seamRootReturn S c z) =
+      colorReturn (evenSchedule S) c (rootOfZ z)
+
 theorem seamRootReturn_single_cycle_of_orbit_target {m : Nat}
     (S : D5EvenSeamData m) (hOrbit : D5EvenSeamReturnOrbitTarget S)
     (c : Color) :
     IsSingleCycleMap (seamRootReturn S c) := by
   exact ⟨seamRootReturn_bijective S c, hOrbit c⟩
 
-def D5EvenSeamHamiltonian (S : D5EvenSeamData m) : Prop :=
-  AllColorHamiltonian (evenSchedule S)
+theorem D5EvenSeamHamiltonian.of_return_orbit {m : Nat}
+    (S : D5EvenSeamData m)
+    (hCompat : D5EvenSeamReturnCompatible S)
+    (hOrbit : D5EvenSeamReturnOrbitTarget S) :
+    D5EvenSeamHamiltonian S := by
+  intro c
+  exact single_cycle_of_bijective_semiconj
+    (f := seamRootReturn S c)
+    (g := colorReturn (evenSchedule S) c)
+    (phi := (rootOfZ : Vec4 m → ARoot5 m))
+    rootOfZ_bijective
+    (hCompat c)
+    (seamRootReturn_single_cycle_of_orbit_target S hOrbit c)
 
 def D5EvenCertificateTarget (m : Nat) : Prop :=
   exists S : D5EvenSeamData m, D5EvenSeamHamiltonian S
+
+def D5EvenSeamReturnCertificateTarget (m : Nat) : Prop :=
+  exists S : D5EvenSeamData m,
+    D5EvenSeamReturnCompatible S ∧ D5EvenSeamReturnOrbitTarget S
 
 theorem D5_even_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
@@ -152,6 +206,13 @@ theorem D5_even_from_target {m : Nat} [NeZero m] (h : D5EvenCertificateTarget m)
     HamiltonDecompositionD5 m := by
   rcases h with ⟨S, hHam⟩
   exact D5_even_from_seam_data S hHam
+
+theorem D5_even_from_return_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamReturnCertificateTarget m) :
+    HamiltonDecompositionD5 m := by
+  rcases h with ⟨S, hCompat, hOrbit⟩
+  exact D5_even_from_seam_data S
+    (D5EvenSeamHamiltonian.of_return_orbit S hCompat hOrbit)
 
 theorem D5_even_torus_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
@@ -164,6 +225,11 @@ theorem D5_even_torus_from_target {m : Nat} [NeZero m]
     TorusHamiltonDecompositionD5 m := by
   exact torusHamiltonDecomposition_of_model (D5_even_from_target h)
 
+theorem D5_even_torus_from_return_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamReturnCertificateTarget m) :
+    TorusHamiltonDecompositionD5 m := by
+  exact torusHamiltonDecomposition_of_model (D5_even_from_return_certificate h)
+
 theorem D5_even_cayley_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
     CayleyHamiltonDecompositionD5 m := by
@@ -175,5 +241,11 @@ theorem D5_even_cayley_from_target {m : Nat} [NeZero m]
     CayleyHamiltonDecompositionD5 m := by
   exact cayleyHamiltonDecomposition_of_torus
     (D5_even_torus_from_target h)
+
+theorem D5_even_cayley_from_return_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamReturnCertificateTarget m) :
+    CayleyHamiltonDecompositionD5 m := by
+  exact cayleyHamiltonDecomposition_of_torus
+    (D5_even_torus_from_return_certificate h)
 
 end D5Odd
