@@ -94,16 +94,21 @@ the existing `D5Odd.Even` seam endpoint to D5 Hamilton, torus, and Cayley
 decompositions.
 
 It also records the finite-exception packaging shape.  The target
-`D5EvenRouteEM4FiniteTarget` is still a separate `m = 4` Hamilton witness, but
-Lean now proves that:
+`D5EvenRouteEM4FiniteTarget` is now closed in `D5Odd/EvenRouteEM4.lean` by a
+finite `C/E/O/O` four-layer schedule.  Lean verifies exact cover and Latin
+conditions by finite decision, proves the five color returns are single cycles
+using generated `ZMod 256` rank tables, and packages the unconditional
+Hamilton witness.
 
-- `D5EvenRouteEM4FiniteTarget` plus `D5EvenRouteEAllLargeEvenTarget` gives
+With that finite branch available, Lean proves that:
+
+- `D5EvenRouteEAllLargeEvenTarget` gives
   all even `m >= 4` Hamilton, torus, and Cayley targets;
 - the same conclusion follows from the non-open specialized target
   `D5EvenRouteENonopenAllLargeEvenTarget`.
 
-Thus the remaining `m = 4` obligation is isolated from the all-large Route-E
-small-seam proof.
+Thus the remaining D5 even Route-E obligation is isolated to the all-large
+`m >= 6` small-seam proof.
 
 The repo-side verification command used for this absorption was:
 
@@ -173,9 +178,10 @@ The remaining symbolic propositions are:
    `a = 1,...,m-1` is one cycle;
 3. prove the return-time sum identity `sum tau = m^4` for each family;
 4. provide the Lean first-return equations/minimality witnesses needed by
-   `RouteENonopenSmallSeamCertificate`;
-5. prove or import the finite `m = 4` witness required by
-   `D5EvenRouteEM4FiniteTarget`.
+   `RouteENonopenSmallSeamCertificate`.
+
+The finite `m = 4` witness required by `D5EvenRouteEM4FiniteTarget` is now
+closed separately and no longer belongs to the open symbolic gap.
 
 This is closer to the final lane-map proof shape in the D3 even Route-E
 argument than to a high-dimensional SAT/chart certificate.

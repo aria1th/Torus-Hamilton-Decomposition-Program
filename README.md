@@ -56,6 +56,11 @@ when `m` is odd and `m >= 3`.
   seam orbit target from first-return equations, first-return minimality,
   seam single-cyclicity, and the return-time sum before routing to the
   torus/Cayley endpoints.
+- `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
+  recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
+  conditions by finite decision, proves all five color returns are single
+  cycles using generated `ZMod 256` rank tables, and closes
+  `D5EvenRouteEM4FiniteTarget`.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
@@ -456,6 +461,9 @@ D5 even Hamilton, torus, and Cayley endpoints.
 It also fixes the branch combinatorics: a separate
 `D5EvenRouteEM4FiniteTarget` plus the all-large Route-E certificate target
 implies all even `m >= 4` Hamilton, torus, and Cayley targets.
+That finite branch is now closed unconditionally in
+`D5Odd/EvenRouteEM4.lean`; the remaining D5 even Route-E obligation is the
+all-large symbolic certificate for even `m >= 6`.
 
 The same table can be spot-checked through the standalone C++ verifier:
 
@@ -488,6 +496,7 @@ The corresponding Lean target interface builds with:
 
 ```bash
 lake build D5Odd.EvenRouteE
+lake build D5Odd.EvenRouteEM4
 ```
 
 ## Citation
