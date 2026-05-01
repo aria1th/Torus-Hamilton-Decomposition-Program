@@ -204,7 +204,8 @@ all-zero-set base slot step is bijective for `m >= 5`.
 `D7Odd/Handoff/Additive4Plus2D3Fiber.lean` now records the concrete odd-D3
 affine fiber packet used by the bundled bridge verifier and proves row Latin
 and layer-step bijectivity for the three D3 fiber slots whenever `0 != 1` in
-`ZMod m`.
+`ZMod m`; the same file packages these facts after any bijective S3
+precomposition of the fiber slots.
 `D7Odd/Handoff/Additive4Plus2BridgeKappa.lean` combines the D5 base slot rule
 with a bijective S3 fiber permutation and proves that the resulting
 state-dependent bridge `kappa` is bijective.  It also packages raw layerwise

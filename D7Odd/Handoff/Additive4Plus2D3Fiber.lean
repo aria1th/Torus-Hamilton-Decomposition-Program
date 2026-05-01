@@ -247,6 +247,49 @@ theorem d3OddStep_bijective_of_two_le {m : Nat}
   d3OddStep_bijective_of_zero_ne_one layer slot
     (zmod_zero_ne_one_of_two_le hm)
 
+def d3OddPermutedDirection {m : Nat}
+    (layer : ZMod m) (perm : Direction3 → Direction3)
+    (fiber : ARoot3 m) (slot : Direction3) : Direction3 :=
+  d3OddDirection layer fiber (perm slot)
+
+def d3OddPermutedStep {m : Nat}
+    (layer : ZMod m) (perm : Direction3 → Direction3)
+    (slot : Direction3) (fiber : ARoot3 m) : ARoot3 m :=
+  d3OddStep layer (perm slot) fiber
+
+theorem d3OddPermutedDirection_rowLatin_of_zero_ne_one {m : Nat}
+    (layer : ZMod m) (perm : Direction3 → Direction3)
+    (hperm : Function.Bijective perm) (fiber : ARoot3 m)
+    (h01 : (0 : ZMod m) ≠ 1) :
+    Function.Bijective fun slot : Direction3 =>
+      d3OddPermutedDirection layer perm fiber slot := by
+  exact Shared.composeRowDirection_bijective
+    perm (fun slot : Direction3 => d3OddDirection layer fiber slot)
+    hperm (d3OddDirection_rowLatin_of_zero_ne_one layer fiber h01)
+
+theorem d3OddPermutedDirection_rowLatin_of_two_le {m : Nat}
+    (hm : 2 ≤ m) (layer : ZMod m)
+    (perm : Direction3 → Direction3)
+    (hperm : Function.Bijective perm) (fiber : ARoot3 m) :
+    Function.Bijective fun slot : Direction3 =>
+      d3OddPermutedDirection layer perm fiber slot :=
+  d3OddPermutedDirection_rowLatin_of_zero_ne_one layer perm hperm fiber
+    (zmod_zero_ne_one_of_two_le hm)
+
+theorem d3OddPermutedStep_bijective_of_zero_ne_one {m : Nat} [NeZero m]
+    (layer : ZMod m) (perm : Direction3 → Direction3)
+    (slot : Direction3) (h01 : (0 : ZMod m) ≠ 1) :
+    Function.Bijective (d3OddPermutedStep (m := m) layer perm slot) :=
+  d3OddStep_bijective_of_zero_ne_one layer (perm slot) h01
+
+theorem d3OddPermutedStep_bijective_of_two_le {m : Nat}
+    (hm : 2 ≤ m) (layer : ZMod m)
+    (perm : Direction3 → Direction3) (slot : Direction3) :
+    Function.Bijective (d3OddPermutedStep (m := m) layer perm slot) :=
+  haveI : NeZero m := ⟨by omega⟩
+  d3OddPermutedStep_bijective_of_zero_ne_one layer perm slot
+    (zmod_zero_ne_one_of_two_le hm)
+
 end Additive4Plus2
 end Handoff
 end D7Odd
