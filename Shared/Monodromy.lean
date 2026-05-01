@@ -50,6 +50,38 @@ theorem bijective_of_equiv_conj {α β : Type*} (e : α ≃ β)
       e.symm (f (e x)) = g x := hconj x
       _ = e.symm y := hx
 
+theorem single_cycle_of_equiv_conj {α β : Type*} (e : α ≃ β)
+    (f : β → β) (g : α → α)
+    (hg : IsSingleCycleMap g)
+    (hconj : ∀ x : α, e.symm (f (e x)) = g x) :
+    IsSingleCycleMap f := by
+  have hiter :
+      ∀ n : Nat, ∀ x : α,
+        e.symm ((f^[n]) (e x)) = (g^[n]) x := by
+    intro n
+    induction n with
+    | zero =>
+        intro x
+        simp
+    | succ n ih =>
+        intro x
+        rw [Function.iterate_succ_apply']
+        have hstep : (f^[n]) (e x) = e ((g^[n]) x) := by
+          apply e.symm.injective
+          simpa using ih x
+        rw [hstep]
+        simpa [Function.iterate_succ_apply'] using hconj ((g^[n]) x)
+  refine ⟨bijective_of_equiv_conj e f g hg.1 hconj, ?_⟩
+  intro y1 y2
+  rcases hg.2 (e.symm y1) (e.symm y2) with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  apply e.symm.injective
+  calc
+    e.symm ((f^[n]) y1) =
+        e.symm ((f^[n]) (e (e.symm y1))) := by simp
+    _ = (g^[n]) (e.symm y1) := hiter n (e.symm y1)
+    _ = e.symm y2 := hn
+
 def sectionReturn {Base Fiber : Type*}
     (S : Base × Fiber → Base × Fiber) (base : Base) (period : Nat) :
     Fiber → Fiber :=

@@ -308,6 +308,16 @@ def layerMap {m : Nat} (P : ProductRootSchedule m)
 def layerBijective {m : Nat} (P : ProductRootSchedule m) : Prop :=
   ∀ t c, Function.Bijective (P.layerMap t c)
 
+def returnMap {m : Nat} [NeZero m]
+    (P : ProductRootSchedule m) (c : Color) :
+    ProductRoot m → ProductRoot m :=
+  fun bf => ((List.range m).foldl
+    (fun x (t : Nat) => P.layerMap (t : ZMod m) c x) bf)
+
+def returnsSingleCycle {m : Nat} [NeZero m]
+    (P : ProductRootSchedule m) : Prop :=
+  ∀ c : Color, IsSingleCycleMap (P.returnMap c)
+
 def toRootFlatSchedule {m : Nat} (P : ProductRootSchedule m) :
     RootFlatSchedule m where
   dir := fun t w c => P.dir t ((rootEquiv m).symm w) c
@@ -339,13 +349,61 @@ theorem toRootFlatSchedule_layerBijective {m : Nat}
     (g := P.layerMap t c) (h t c)
     (P.toRootFlatSchedule_layerMap_conj t c)
 
+theorem toRootFlatSchedule_returnMap_conj
+    {m : Nat} [NeZero m] (P : ProductRootSchedule m)
+    (c : Color) (bf : ProductRoot m) :
+    (rootEquiv m).symm
+        (P.toRootFlatSchedule.returnMap c ((rootEquiv m) bf)) =
+      P.returnMap c bf := by
+  unfold RootFlatSchedule.returnMap returnMap
+  let F : RootState7 m → Nat → RootState7 m :=
+    fun w (t : Nat) => P.toRootFlatSchedule.layerMap (t : ZMod m) c w
+  let G : ProductRoot m → Nat → ProductRoot m :=
+    fun bf (t : Nat) => P.layerMap (t : ZMod m) c bf
+  have hfold :
+      ∀ ts : List Nat, ∀ bf : ProductRoot m,
+        (rootEquiv m).symm (ts.foldl F ((rootEquiv m) bf)) =
+          ts.foldl G bf := by
+    intro ts
+    induction ts with
+    | nil =>
+        intro bf
+        simp [F, G]
+    | cons t ts ih =>
+        intro bf
+        rw [List.foldl_cons, List.foldl_cons]
+        have hstep :
+            F ((rootEquiv m) bf) t = (rootEquiv m) (G bf t) := by
+          simp only [F, G]
+          apply (rootEquiv m).symm.injective
+          simpa using P.toRootFlatSchedule_layerMap_conj (t : ZMod m) c bf
+        rw [hstep]
+        exact ih (G bf t)
+  simpa [F, G] using hfold (List.range m) bf
+
+theorem toRootFlatSchedule_returnsSingleCycle
+    {m : Nat} [NeZero m] (P : ProductRootSchedule m)
+    (h : P.returnsSingleCycle) :
+    P.toRootFlatSchedule.returnsSingleCycle := by
+  intro c
+  have hShared : Shared.IsSingleCycleMap (P.returnMap c) := by
+    simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using h c
+  have hCycle :=
+    Shared.single_cycle_of_equiv_conj
+      (e := rootEquiv m)
+      (f := P.toRootFlatSchedule.returnMap c)
+      (g := P.returnMap c)
+      hShared
+      (P.toRootFlatSchedule_returnMap_conj c)
+  simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using hCycle
+
 end ProductRootSchedule
 
 structure ProductRootCertificate (m : Nat) [NeZero m] where
   schedule : ProductRootSchedule m
   rowLatin : schedule.rowLatin
   layerBijective : schedule.layerBijective
-  returnsSingleCycle : schedule.toRootFlatSchedule.returnsSingleCycle
+  returnsSingleCycle : schedule.returnsSingleCycle
 
 def ProductRootCertificate.toRootFlatCertificate
     {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
@@ -356,7 +414,9 @@ def ProductRootCertificate.toRootFlatCertificate
   layerBijective :=
     ProductRootSchedule.toRootFlatSchedule_layerBijective cert.schedule
       cert.layerBijective
-  returnsSingleCycle := cert.returnsSingleCycle
+  returnsSingleCycle :=
+    ProductRootSchedule.toRootFlatSchedule_returnsSingleCycle cert.schedule
+      cert.returnsSingleCycle
 
 end Additive4Plus2
 end Handoff
