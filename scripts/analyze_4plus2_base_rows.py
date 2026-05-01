@@ -9,6 +9,7 @@ return induced by words over the five all-zero-set base slots.
 from __future__ import annotations
 
 import argparse
+import copy
 import itertools
 import json
 from pathlib import Path
@@ -19,6 +20,7 @@ from verify_4plus2_allN_bridge_cert import (
     default_bundle_path,
     load_bundle,
     parse_only,
+    verify_certificate,
 )
 
 
@@ -282,6 +284,28 @@ def cover_from_bundled(bundle: Path, only: set[int] | None, limit: int) -> list[
     return out
 
 
+def test_rows_with_bundled_kappa(cert: dict, rows: list[list[int]]) -> dict:
+    candidate = copy.deepcopy(cert)
+    candidate["rows"] = rows
+    try:
+        message, _summary = verify_certificate(candidate)
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+    return {"ok": True, "message": message}
+
+
+def annotate_with_bundled_kappa_tests(cover_searches: list[dict], bundle: Path) -> None:
+    cert_by_m = {cert["m"]: cert for cert in load_bundle(bundle, None)}
+    for search in cover_searches:
+        cert = cert_by_m.get(search["m"])
+        if cert is None:
+            continue
+        for solution in search["solutions"]:
+            solution["bundled_kappa_test"] = test_rows_with_bundled_kappa(
+                cert, solution["rows"]
+            )
+
+
 def parse_moduli(value: str | None) -> list[int]:
     if value is None:
         return []
@@ -327,6 +351,11 @@ def main() -> None:
     )
     parser.add_argument("--combo-limit", type=int, default=1000)
     parser.add_argument("--cover-limit", type=int, default=3)
+    parser.add_argument(
+        "--test-with-bundled-kappa",
+        action="store_true",
+        help="test cover solutions against the bundled kappa table for the same modulus",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
@@ -371,6 +400,8 @@ def main() -> None:
                 parse_lengths(args.cover_lengths),
             )
         )
+    if args.test_with_bundled_kappa:
+        annotate_with_bundled_kappa_tests(payload["cover_searches"], args.bundle)
 
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.json_out is None:

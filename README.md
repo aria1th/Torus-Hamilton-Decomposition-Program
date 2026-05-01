@@ -135,6 +135,7 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-primitive-m 5 --cover-primitive-max-len 5 \
   --cover-lengths 5,4,5,4,3,2,2 \
   --cover-pool-limit 200 --combo-limit 300000 \
+  --test-with-bundled-kappa \
   --json-out /tmp/d7_4plus2_base_pool_search.json
 ```
 

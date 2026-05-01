@@ -389,7 +389,10 @@ Implementation progress after this goal update:
   additional odd moduli and can run a bounded search that chooses seven words
   from the primitive-word pool before solving the extra-slot insertion problem;
   with the bundled `m=5` length pattern it finds an alternate base exact-cover
-  using base words `23,23,002,0111,3044,14413,43220`.  A length-three scan over
+  using base words `23,23,002,0111,3044,14413,43220`.  The optional bundled
+  kappa test shows that this alternate base cover does not work with the
+  original `m=5` kappa, so the fiber compiler must be constructed for the
+  chosen base row family rather than reused blindly.  A length-three scan over
   `m=5,7,9,11,13,15,17` reproduces the observed exceptional behavior at `m=7`
   and finds no length-three primitive word for `m=17`, matching the current
   need for a longer or congruence-dependent base row family.
