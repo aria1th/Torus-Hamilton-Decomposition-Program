@@ -159,6 +159,9 @@ from the top boundary `phi_h^{-1}(x)=x+5`, while the top five points
 `h-5,h-4,h-3,h-2,h-1` map to `3,4,0,1,2`.  Lean now also proves the
 residue transition lemma `phiInvNat_mod_five`: the inverse map preserves
 `x mod 5` before the top boundary and changes it by `3-h` at the boundary.
+The file also proves `phi_single_cycle_iff_phiInv`, so the remaining
+arithmetic cycle theorem may be proved on the inverse map and transferred
+back to `phi_h`.
 
 ## Updated Target-A Interpretation
 

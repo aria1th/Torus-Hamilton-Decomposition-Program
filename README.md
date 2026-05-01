@@ -42,8 +42,9 @@ when `m` is odd and `m >= 3`.
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
   good class `h % 5 != 3`, proving the inverse identities and bijectivity for
   `h >= 6`, proving the residue-shift unit gate in `ZMod 5`, proving the
-  inverse-map residue transition at the top boundary, and packaging the
-  remaining cycle/Q-hitting/length-sum obligations.
+  inverse-map residue transition at the top boundary, proving
+  `IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h)`, and packaging
+  the remaining cycle/Q-hitting/length-sum obligations.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

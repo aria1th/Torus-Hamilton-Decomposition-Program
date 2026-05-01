@@ -427,6 +427,55 @@ theorem phi_bijective_of_six_le {h : Nat} [NeZero h] (hh : 6 ≤ h) :
   bijective_of_inverse (phi h) (phiInv h)
     (phiInv_phi_of_six_le hh) (phi_phiInv_of_six_le hh)
 
+private theorem iterate_left_inverse {α : Type*} {f g : α → α}
+    (hright : Function.RightInverse g f) :
+    ∀ n x, (f^[n]) ((g^[n]) x) = x := by
+  intro n
+  induction n with
+  | zero => intro x; simp
+  | succ n ih =>
+      intro x
+      rw [Function.iterate_succ_apply]
+      rw [Function.iterate_succ_apply']
+      rw [hright]
+      exact ih x
+
+theorem single_cycle_of_inverse {α : Type*} {f g : α → α}
+    (hleft : Function.LeftInverse g f)
+    (hright : Function.RightInverse g f)
+    (hg : IsSingleCycleMap g) :
+    IsSingleCycleMap f := by
+  refine ⟨bijective_of_inverse f g hleft hright, ?_⟩
+  intro x y
+  rcases hg.2 y x with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  calc
+    (f^[n]) x = (f^[n]) ((g^[n]) y) := by rw [hn]
+    _ = y := iterate_left_inverse hright n y
+
+theorem single_cycle_iff_of_inverse {α : Type*} {f g : α → α}
+    (hleft : Function.LeftInverse g f)
+    (hright : Function.RightInverse g f) :
+    IsSingleCycleMap f ↔ IsSingleCycleMap g := by
+  constructor
+  · exact single_cycle_of_inverse hright hleft
+  · exact single_cycle_of_inverse hleft hright
+
+theorem phi_single_cycle_iff_phiInv {h : Nat} [NeZero h] (hh : 6 ≤ h) :
+    IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h) :=
+  single_cycle_iff_of_inverse
+    (phiInv_phi_of_six_le hh) (phi_phiInv_of_six_le hh)
+
+theorem phi_single_cycle_of_phiInv {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    (hinv : IsSingleCycleMap (phiInv h)) :
+    IsSingleCycleMap (phi h) :=
+  (phi_single_cycle_iff_phiInv hh).2 hinv
+
+theorem phiInv_single_cycle_of_phi {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    (hphi : IsSingleCycleMap (phi h)) :
+    IsSingleCycleMap (phiInv h) :=
+  (phi_single_cycle_iff_phiInv hh).1 hphi
+
 structure TargetASeamQuotientArithmetic (h : Nat) [NeZero h] : Type where
   hmin : 6 ≤ h
   single_cycle_iff : IsSingleCycleMap (phi h) ↔ goodPhiClass h
