@@ -313,6 +313,35 @@ Implementation progress after this goal update:
   now gives direct shared Cayley composite endpoints for `35`, `49`, and any
   nonempty product of factors each equal to `5` or `7`.
 
+## Artifact Checklist
+
+Current status against the revised goal:
+
+- D7 odd regression endpoint: closed in `D7Odd/Torus.lean` and
+  `D7Odd/Cayley.lean`; regression build target is `lake build D7Odd`.
+- Concrete composite Cayley theorem: closed for the shared standard Cayley
+  target by `standard_cayley_pointwise_composite_expansion` in
+  `RoundComposite.lean`, with D5/D7 odd concrete endpoints in
+  `RoundComposite/ConcreteEndpoints.lean`.
+- Shared root-flat return criterion: closed at the layered full-step level in
+  `Shared/RootFlat.lean`; D7-specific adapters are in
+  `D7Odd/Handoff/ReturnCriterion.lean` and `D7Odd/Torus.lean`.
+- Additive bridge interface: partially closed.  The `A7(m) ~= A5(m) x A3(m)`
+  root equivalence and product-certificate adapters are in
+  `D7Odd/Handoff/Additive4Plus2.lean`, while the all-odd `m >= 5` product
+  certificate is still open.
+- Local bridge and monodromy lemmas: available abstractly in
+  `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`; they still need to
+  be instantiated with the all-zero-set D5 rows and D3 fiber compiler.
+- D5 even: separate seam-orbit track remains open.  `D5Odd/Even.lean` proves
+  that a seam orbit certificate implies the model, torus, and Cayley endpoints,
+  but the actual orbit certificate is not constructed.
+- D7 even: separate `RootFlatSchedule` target remains open.
+  `D7Odd/Even.lean` routes a future even certificate through the shared
+  layered lift and then to torus/Cayley wrappers.
+- Prime-p abstraction: deferred; the fixed D7 prime-interface regression is
+  retained, but no general prime-p theorem is claimed.
+
 The remaining D7-structure gap is not the abstract composite interface. It is
 the construction of the actual all-zero-set `4+2` product certificate for odd
 `m >= 5`, including the base rows and the fiber compiler/monodromy proof.
