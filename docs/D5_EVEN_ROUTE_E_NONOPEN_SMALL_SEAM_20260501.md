@@ -1,0 +1,103 @@
+# D5 Even Route-E Non-Open Small Seam
+
+Date: 2026-05-01.
+
+Source bundle:
+
+- `/data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip`
+
+This note records the small-seam update for the D5 even Route-E track.  It is
+an audit and research-state note, not an all-even symbolic theorem.
+
+## Main Update
+
+For one-`Lambda_E` schedules
+
+```text
+C_0^nu0 C_1^nu1 C_2^nu2 C_3^nu3 C_4^nu4 E_s,
+sum_i nu_i = m - 1,
+```
+
+the normalized return is
+
+```text
+F_{nu,s}(w) = w + nu + e_{p_s(w)},
+p_s(w) = Lambda_E(Z(w)-1)(s).
+```
+
+The non-open schedules in the bundle do not require a large origin-excursion
+chart.  For each E-slot `s`, use the cyclically shifted seam
+
+```text
+Theta_s = { rho_s(0,a,0,0,-a) : a != 0 }.
+```
+
+This seam has size `m-1`.  It is a port line for coordinate
+
+```text
+j = s + 2 mod 5.
+```
+
+For example, `s = 0` gives `(0,a,0,0,-a)` and `j = 2`; `s = 4` gives
+`(a,0,0,-a,0)` and `j = 1`.
+
+## Direct Criterion
+
+Let `V` be the first-return map of `F_{nu,s}` to `Theta_s`.  If
+
+```text
+V is a single cycle on Theta_s
+sum_{theta in Theta_s} tau(theta) = m^4,
+```
+
+then `F_{nu,s}` is a single cycle on `A5(m)`.
+
+This is the standard first-return counting argument: one seam cycle stitches
+all excursions into one closed orbit, and the return-time sum equal to `m^4`
+forces that orbit to cover the whole root state space.
+
+## Verified Range
+
+The bundle supplies one-`Lambda_E` schedules for every even
+`m = 6,8,...,60`.  Each satisfies:
+
+- every seam start has the expected port `j = s+2`;
+- the first return on `Theta_s` is one cycle of length `m-1`;
+- the return-time sum is `m^4`.
+
+The schedule table from the bundle is now embedded in
+`scripts/verify_d5_even_routeE.py` as `SMALL_SEAM_CASES`.
+
+The repo-side verification command used for this absorption was:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --small-seam-moduli all \
+  --json-out /tmp/d5_even_routeE_small_seam_all.json
+```
+
+It reported:
+
+```text
+cases = 28
+range = 6..60
+all_ok = True
+```
+
+## Revised D5 Even Route-E Gap
+
+The non-open branch should no longer be described as an unresolved
+`m^4`-state chart problem.  The evidence now reduces it to a one-dimensional
+small-seam first-return problem.
+
+The remaining symbolic propositions are:
+
+1. construct residue-class formulas for `(s,nu)` covering every even
+   `m >= 6`;
+2. for each residue family, prove the induced small-seam map on
+   `a = 1,...,m-1` is one cycle;
+3. prove the return-time sum identity `sum tau = m^4` for each family;
+4. keep `m = 4` as a separate finite witness branch.
+
+This is closer to the final lane-map proof shape in the D3 even Route-E
+argument than to a high-dimensional SAT/chart certificate.

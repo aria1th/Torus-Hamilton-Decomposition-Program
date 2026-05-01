@@ -7,6 +7,9 @@ checks from `d5_even_routeE_bundle_v0_1.zip`:
 * finite schedules for m = 4,6,...,20;
 * the normalized Route-E core first-return check;
 * the open-port section formula/cycle check used by the periodic framework.
+
+It also absorbs the later `d5_even_routeE_nonopen_small_seam_v0_4.zip`
+small-seam criterion for non-open one-Lambda_E schedules.
 """
 from __future__ import annotations
 
@@ -15,7 +18,7 @@ import json
 from collections import Counter
 from math import gcd
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 MaskTable = Dict[int, Tuple[int, int, int, int, int]]
 State = Tuple[int, int, int, int, int]
@@ -52,6 +55,37 @@ ONE_E_SCHEDULES = {
     16: {"slot": 4, "counts": (13, 0, 1, 0, 1)},
     18: {"slot": 0, "counts": (4, 4, 0, 1, 8)},
     20: {"slot": 0, "counts": (4, 2, 4, 9, 0)},
+}
+
+SMALL_SEAM_CASES = {
+    6: {"slot": 0, "counts": (0, 0, 1, 3, 1)},
+    8: {"slot": 0, "counts": (2, 0, 0, 3, 2)},
+    10: {"slot": 0, "counts": (0, 3, 3, 2, 1)},
+    12: {"slot": 0, "counts": (1, 2, 3, 5, 0)},
+    14: {"slot": 0, "counts": (4, 2, 4, 1, 2)},
+    16: {"slot": 4, "counts": (13, 0, 1, 0, 1)},
+    18: {"slot": 0, "counts": (4, 4, 0, 1, 8)},
+    20: {"slot": 0, "counts": (4, 2, 4, 9, 0)},
+    22: {"slot": 4, "counts": (3, 0, 5, 0, 13)},
+    24: {"slot": 0, "counts": (17, 5, 0, 1, 0)},
+    26: {"slot": 2, "counts": (1, 12, 12, 0, 0)},
+    28: {"slot": 3, "counts": (0, 15, 0, 5, 7)},
+    30: {"slot": 3, "counts": (0, 13, 5, 11, 0)},
+    32: {"slot": 1, "counts": (16, 4, 0, 0, 11)},
+    34: {"slot": 2, "counts": (15, 14, 0, 0, 4)},
+    36: {"slot": 2, "counts": (19, 13, 3, 0, 0)},
+    38: {"slot": 3, "counts": (0, 5, 0, 17, 15)},
+    40: {"slot": 3, "counts": (5, 1, 0, 33, 0)},
+    42: {"slot": 0, "counts": (14, 0, 0, 1, 26)},
+    44: {"slot": 2, "counts": (29, 7, 7, 0, 0)},
+    46: {"slot": 3, "counts": (34, 11, 0, 0, 0)},
+    48: {"slot": 0, "counts": (21, 0, 0, 19, 7)},
+    50: {"slot": 1, "counts": (0, 37, 3, 0, 9)},
+    52: {"slot": 3, "counts": (0, 29, 2, 20, 0)},
+    54: {"slot": 4, "counts": (0, 0, 5, 20, 28)},
+    56: {"slot": 4, "counts": (33, 0, 19, 0, 3)},
+    58: {"slot": 4, "counts": (0, 0, 1, 26, 30)},
+    60: {"slot": 3, "counts": (0, 19, 0, 27, 13)},
 }
 
 SECTION_EXAMPLES = [
@@ -351,6 +385,106 @@ def one_e_return_step(
     return one_e_return_step_with_slot(m, 0, counts, w)
 
 
+def theta_state(m: int, slot: int, a: int) -> State:
+    w = [0, 0, 0, 0, 0]
+    w[(1 + slot) % 5] = a % m
+    w[(4 + slot) % 5] = (-a) % m
+    return tuple(w)  # type: ignore[return-value]
+
+
+def theta_param(m: int, slot: int, w: State) -> Optional[int]:
+    a = w[(1 + slot) % 5]
+    if a == 0:
+        return None
+    return a if theta_state(m, slot, a) == w else None
+
+
+def cycle_lengths_from_param_map(mapping: Dict[int, int], domain: Iterable[int]) -> List[int]:
+    domain_set = set(domain)
+    seen = set()
+    lengths = []
+    for start in sorted(domain_set):
+        if start in seen:
+            continue
+        x = start
+        length = 0
+        while x not in seen:
+            if x not in domain_set or x not in mapping:
+                raise RuntimeError(f"param map leaves domain at {x}")
+            seen.add(x)
+            length += 1
+            x = mapping[x]
+        lengths.append(length)
+    return sorted(lengths)
+
+
+def verify_small_seam_case(
+    m: int, slot: int, counts: Tuple[int, int, int, int, int]
+) -> dict:
+    assert sum(counts) == m - 1
+    seam_port = (slot + 2) % 5
+    first_return: Dict[int, int] = {}
+    return_times: Dict[int, int] = {}
+    start_ok = True
+    no_return = []
+    max_steps = m**4 + 5
+    for a in range(1, m):
+        w = theta_state(m, slot, a)
+        if lam(PERT, shifted_zero_mask(w), slot) != seam_port:
+            start_ok = False
+        for time in range(1, max_steps + 1):
+            w = one_e_return_step_with_slot(m, slot, counts, w)
+            b = theta_param(m, slot, w)
+            if b is not None:
+                first_return[a] = b
+                return_times[a] = time
+                break
+        else:
+            no_return.append(a)
+            if len(no_return) > 10:
+                break
+    cycle_lengths_small = (
+        cycle_lengths_from_param_map(first_return, range(1, m)) if not no_return else []
+    )
+    return_time_sum = sum(return_times.values())
+    ok = (
+        start_ok
+        and not no_return
+        and cycle_lengths_small == [m - 1]
+        and return_time_sum == m**4
+    )
+    return {
+        "m": m,
+        "slot": slot,
+        "counts": counts,
+        "seam_port": seam_port,
+        "seam_size": m - 1,
+        "start_ok": start_ok,
+        "cycle_lengths": cycle_lengths_small,
+        "return_time_sum": return_time_sum,
+        "expected_return_time_sum": m**4,
+        "time_distribution": dict(sorted(Counter(return_times.values()).items())),
+        "map_sample": {
+            a: {"to": first_return[a], "time": return_times[a]}
+            for a in range(1, min(m, 15))
+            if a in first_return
+        },
+        "no_return_examples": no_return,
+        "ok": ok,
+    }
+
+
+def verify_small_seam_cases(moduli: Iterable[int]) -> List[dict]:
+    results = []
+    for m in moduli:
+        if m not in SMALL_SEAM_CASES:
+            results.append({"m": m, "ok": False, "error": "no recorded small-seam case"})
+            continue
+        data = SMALL_SEAM_CASES[m]
+        results.append(verify_small_seam_case(m, data["slot"], data["counts"]))
+    return results
+
+
 def expected_section_h(m: int, a_count: int, b_count: int, a: int, b: int):
     if (a + b) % m != 0:
         return ((a + a_count + 1) % m, (b + b_count) % m)
@@ -562,6 +696,12 @@ def parse_moduli(text: str) -> List[int]:
     return [int(part) for part in text.split(",") if part.strip()]
 
 
+def parse_small_seam_moduli(text: str) -> List[int]:
+    if text.strip().lower() == "all":
+        return sorted(SMALL_SEAM_CASES)
+    return parse_moduli(text)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["all", "schedule", "core", "section"], default="all")
@@ -581,6 +721,13 @@ def main() -> None:
         help="comma-separated even moduli for full one-Lambda_E count/slot scans",
     )
     parser.add_argument("--count-scan-limit", type=int, default=10)
+    parser.add_argument(
+        "--small-seam-moduli",
+        help=(
+            "comma-separated even moduli, or 'all', for the non-open small-seam "
+            "criterion from d5_even_routeE_nonopen_small_seam_v0_4.zip"
+        ),
+    )
     parser.add_argument("--json-out")
     args = parser.parse_args()
 
@@ -602,6 +749,10 @@ def main() -> None:
     if args.count_scan_moduli:
         output["one_e_full_count_scan"] = scan_one_e_full_count_cases(
             parse_moduli(args.count_scan_moduli), args.count_scan_limit
+        )
+    if args.small_seam_moduli:
+        output["small_seam"] = verify_small_seam_cases(
+            parse_small_seam_moduli(args.small_seam_moduli)
         )
 
     text = json.dumps(output, indent=2)

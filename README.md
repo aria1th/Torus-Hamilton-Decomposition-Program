@@ -77,6 +77,14 @@ when `m` is odd and `m >= 3`.
   `A5_to_A7_post_bundle_update_v0_2.zip`, recording the `23/32` Target-A
   generic branch, the `m == 2 mod 5` five-cycle obstruction, and the revised
   seam-splicing proof obligations.
+- `docs/A5_TO_A7_CURRENT_PROOFS_BUNDLE_20260501.md`: absorption note for
+  `A5_to_A7_current_proofs_bundle_v0_3.zip` and its note, recording the
+  symbolic seam quotient `phi_h` for the `23/32` Target-A branch and the
+  reduced Q-hitting/length-sum obligations.
+- `docs/D5_EVEN_ROUTE_E_NONOPEN_SMALL_SEAM_20260501.md`: absorption note for
+  `d5_even_routeE_nonopen_small_seam_v0_4.zip`, recording the size `m-1`
+  small-seam criterion for non-open one-`Lambda_E` schedules and the verified
+  even range `m = 6,8,...,60`.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
@@ -92,6 +100,9 @@ when `m` is odd and `m >= 3`.
   the same `23/32` target, separating the `Sigma0` component from off-`Sigma0`
   bad-class cycles and checking the good-class connectivity/bad-class
   decomposition gates.
+- `scripts/verify_targetA_23_32_seam_quotient.py`: verifier for the current
+  `23/32` seam quotient proof target, checking the arithmetic `phi_h` cycle
+  theorem, finite Q-hitting, Q-first-return formulas, and length sums.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.
@@ -108,7 +119,8 @@ when `m` is odd and `m >= 3`.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `scripts/verify_d5_even_routeE.py`: audit verifier for the absorbed D5 even
   Route-E bundle, checking the finite schedule table, normalized core
-  first-return formula, and open-port section formula/cycle examples.
+  first-return formula, open-port section formula/cycle examples, and the
+  non-open small-seam criterion from the later small-seam bundle.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
@@ -201,6 +213,17 @@ The corresponding seam decomposition can be inspected with:
 python3 scripts/analyze_targetA_23_32_seams.py \
   --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
   --json-out /tmp/d7_targetA_23_32_seams_5_to_51.json
+```
+
+The current proof bundle further reduces the `23/32` branch to a seam quotient
+on `Q={B_i=(i,0)} union {A_j=(0,j)}` and the arithmetic map `phi_h`.  Check
+that quotient with:
+
+```bash
+python3 scripts/verify_targetA_23_32_seam_quotient.py \
+  --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \
+  --phi-max 200 \
+  --json-out /tmp/d7_targetA_23_32_seam_quotient.json
 ```
 
 For larger exceptional moduli, compile the faster C++ search helper:
@@ -388,6 +411,17 @@ The count scan reports both the raw `(slot, counts)` and
 It also reports the normalized support/zero positions and, when a bundled
 finite schedule exists for that modulus, whether a hit matches its normalized
 count vector.
+
+The later non-open small-seam bundle can be checked with:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --small-seam-moduli all \
+  --json-out /tmp/d5_even_routeE_small_seam_all.json
+```
+
+This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
+on the size `m-1` seam is a single cycle and has return-time sum `m^4`.
 
 ## Citation
 

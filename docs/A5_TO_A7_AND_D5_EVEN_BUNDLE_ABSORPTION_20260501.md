@@ -10,6 +10,9 @@ Source bundles:
 Post-update bundle absorbed later:
 
 - `/data/angel/repos/etc/A5_to_A7_post_bundle_update_v0_2.zip`
+- `/data/angel/repos/etc/A5_to_A7_current_proofs_bundle_v0_3.zip`
+- `/data/angel/repos/etc/A5_to_A7_current_proofs_bundle_note_v0_3.md`
+- `/data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip`
 
 This note records the goal-level changes after reading both bundles.  It is a
 research-state update, not a completion certificate.
@@ -240,10 +243,35 @@ hit matches the bundled finite schedule's normalized count vector.  This
 separates rotated copies of known witnesses from genuinely different
 count-vector hits, which is the data needed before guessing residue families.
 
-The all-even proof gap is therefore concrete:
+A later non-open small-seam bundle changes the shape of this gap.  For the
+one-`Lambda_E` schedule with E-slot `s`, the natural seam is
+
+```text
+Theta_s = { rho_s(0,a,0,0,-a) : a != 0 }.
+```
+
+It has size `m-1` and is a port line for `j = s+2 mod 5`.  The direct
+criterion is: if the first return to `Theta_s` is one cycle and the return-time
+sum is `m^4`, then the full normalized return is a single `m^4` cycle.
+
+The bundle verifies this criterion for recorded schedules at every even
+`m = 6,8,...,60`.  The repo verifier now embeds those cases and reproduces the
+check with:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --small-seam-moduli all \
+  --json-out /tmp/d5_even_routeE_small_seam_all.json
+```
+
+The local absorption run reported `28` cases, range `6..60`, and
+`all_ok=True`.
+
+The all-even proof gap is therefore more concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;
-- prove the origin-excursion affine chart certificates for those families;
+- prove the one-dimensional small-seam map and return-time sum identities for
+  those families;
 - package `m = 4` as a finite witness theorem.
 
 The bundle's periodic probe shows why this is not yet solved: one signed drift
@@ -270,6 +298,9 @@ The D5 even Route-E verifier from the bundle was absorbed as
   the expected `m = 2` failure;
 - the open-port section formula and `H`-cycle criterion on the bundle's
   recorded examples and the section-scan family through `m = 60`.
+- the later non-open small-seam criterion for the recorded schedules
+  `m = 6,8,...,60`, including seam port starts, first-return one-cycle, and
+  return-time sum `m^4`.
 
 ## Revised Missing Propositions
 
@@ -283,10 +314,11 @@ The clearest proof obligations are now:
    zero-set-only or finite congruence-family `K_m(Z)` and prove the stratum
    scalar unit conditions giving the `A3` fiber rank step into `ZMod (m^2)`.
 3. **D5 even Route-E count coverage:** for every even `m >= 6`, construct
-   one-`Lambda_E` counts/slot data satisfying the symbolic section hypotheses.
-4. **D5 even origin excursion:** prove the affine chart certificates that
-   cover the complement of the open-port section and return to the correct
-   re-entry point.
+   one-`Lambda_E` counts/slot data satisfying either the open-port section
+   hypotheses or the small-seam hypotheses.
+4. **D5 even small-seam arithmetic:** for each count/slot residue family,
+   prove the induced size `m-1` seam map is one cycle and prove the
+   return-time sum identity `m^4`.
 5. **Finite exceptional packaging:** keep D7 odd `m = 3` and D5 even `m = 4`
    as separate finite witness branches.
 

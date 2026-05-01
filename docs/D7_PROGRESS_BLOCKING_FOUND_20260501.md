@@ -9,6 +9,9 @@ Additional absorbed bundles:
 - `/data/angel/repos/etc/A5_to_A7_induction_hypothesis_bundle_v0_1.zip`
 - `/data/angel/repos/etc/d5_even_routeE_bundle_v0_1.zip`
 - `/data/angel/repos/etc/A5_to_A7_post_bundle_update_v0_2.zip`
+- `/data/angel/repos/etc/A5_to_A7_current_proofs_bundle_v0_3.zip`
+- `/data/angel/repos/etc/A5_to_A7_current_proofs_bundle_note_v0_3.md`
+- `/data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip`
 
 ## Current Progress
 
@@ -34,6 +37,9 @@ Additional absorbed bundles:
   has sharpened from a generic seam-orbit search into the Route-E
   one-`Lambda_E` periodic-excursion program recorded in
   `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`.
+  The later non-open small-seam bundle further reduces the non-open branch to
+  a size `m-1` direct first-return seam, verified for the recorded even cases
+  `m = 6,8,...,60`.
 
 ## Current Blocking Point
 
@@ -251,6 +257,35 @@ confirms:
 - if `m == 2 mod 5`, there is exactly one `Sigma0` component and four
   off-`Sigma0` cycles with the predicted lengths.
 
+The current-proofs bundle sharpens this again.  For `W = 23` or `W = 32`,
+set
+
+```text
+Q = {B_i=(i,0)} union {A_j=(0,j)}, 1 <= i,j <= m-1.
+```
+
+For odd `m = 2h+1`, `m >= 13`, the seam quotient collapses the common
+`B`-chain and the alternating `A`-line to the arithmetic map
+
+```text
+phi_h(x) = x - 3  for 1 <= x <= 3,
+         = x - 8  for 4 <= x <= 5,
+         = x - 5  for 6 <= x <= h,
+```
+
+with residues represented in `{1,...,h}`.  The quotient theorem is
+
+```text
+phi_h is one cycle iff h != 3 mod 5 iff m != 2 mod 5.
+```
+
+When `h == 3 mod 5`, the quotient has five cycles, explaining the bad class
+structurally.  `scripts/verify_targetA_23_32_seam_quotient.py` now checks the
+finite regression version: `phi_h` arithmetic, Q-hitting for computed first
+returns, the Q-first-return formulas, and `sum ell = m^4`.  The remaining
+proof-facing lemmas are Q-hitting and length-sum, plus the small moduli
+`m = 5,7,9,11`.
+
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
 condition is that each base slot `0..4` appears exactly `m` times across the
@@ -379,10 +414,22 @@ with a concrete Route-E program.
   the first ten hits.  For `m = 16`, the first ten slot-0 hits are all
   different from the bundled normalized count `(1,13,0,1,0)`, so the count
   space has additional non-open-port witnesses beyond the finite table entry.
+The non-open small-seam bundle reduces these non-open witnesses to a direct
+seam of size `m-1`:
+
+```text
+Theta_s = { rho_s(0,a,0,0,-a) : a != 0 }.
+```
+
+If the first-return map on `Theta_s` is one cycle and the return-time sum is
+`m^4`, the normalized return on `A5(m)` is a single `m^4` cycle.  The repo
+verifier now checks the bundled cases for all even `m = 6,8,...,60`; the local
+absorption run reported `28` cases and `all_ok=True`.
 
 The D5 even open tasks are now: find residue-class count/drift families
-covering every even `m >= 6`, prove origin-excursion affine chart
-certificates, and package `m = 4` as a finite witness theorem.
+covering every even `m >= 6`, prove the induced one-dimensional small-seam
+maps and return-time sums for those families, and package `m = 4` as a finite
+witness theorem.
 
 ## Next Bundle Checklist
 
