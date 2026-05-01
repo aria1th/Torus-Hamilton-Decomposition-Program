@@ -199,12 +199,26 @@ def search_cover_from_primitive_pool(
     pool_limit: int,
     combo_limit: int,
     solution_limit: int,
+    length_pattern: list[int] | None = None,
 ) -> dict:
     model = BridgeModel(m)
     pool = primitive_word_tuples(model, max_len, pool_limit)
     target_len = 5 * m
     solutions = []
     combos_checked = 0
+    pattern = sorted(length_pattern) if length_pattern is not None else None
+    if pattern is not None and (len(pattern) != 7 or sum(pattern) != target_len):
+        return {
+            "m": m,
+            "max_len": max_len,
+            "pool_limit": pool_limit,
+            "pool_size": len(pool),
+            "primitive_pool": [word_string(word) for word in pool],
+            "combo_limit": combo_limit,
+            "combos_checked": 0,
+            "length_pattern": pattern,
+            "solutions": [],
+        }
 
     def search_words(
         start: int, depth: int, total_len: int, words: list[tuple[int, ...]]
@@ -228,6 +242,8 @@ def search_cover_from_primitive_pool(
 
         for idx in range(start, len(pool)):
             word = pool[idx]
+            if pattern is not None and len(word) != pattern[depth]:
+                continue
             next_len = total_len + len(word)
             if next_len > target_len:
                 continue
@@ -246,6 +262,7 @@ def search_cover_from_primitive_pool(
         "primitive_pool": [word_string(word) for word in pool],
         "combo_limit": combo_limit,
         "combos_checked": combos_checked,
+        "length_pattern": pattern,
         "solutions": solutions,
     }
 
@@ -268,6 +285,12 @@ def cover_from_bundled(bundle: Path, only: set[int] | None, limit: int) -> list[
 def parse_moduli(value: str | None) -> list[int]:
     if value is None:
         return []
+    return [int(part) for part in value.split(",") if part]
+
+
+def parse_lengths(value: str | None) -> list[int] | None:
+    if value is None:
+        return None
     return [int(part) for part in value.split(",") if part]
 
 
@@ -298,6 +321,10 @@ def main() -> None:
     )
     parser.add_argument("--cover-primitive-max-len", type=int, default=5)
     parser.add_argument("--cover-pool-limit", type=int, default=60)
+    parser.add_argument(
+        "--cover-lengths",
+        help="comma-separated seven base-word lengths for primitive-pool cover search",
+    )
     parser.add_argument("--combo-limit", type=int, default=1000)
     parser.add_argument("--cover-limit", type=int, default=3)
     parser.add_argument("--json-out", type=Path)
@@ -341,6 +368,7 @@ def main() -> None:
                 args.cover_pool_limit,
                 args.combo_limit,
                 args.cover_limit,
+                parse_lengths(args.cover_lengths),
             )
         )
 

@@ -262,8 +262,10 @@ formulas.
 The companion `scripts/analyze_4plus2_base_rows.py` isolates the base side:
 it verifies bundled row projections as base-primitive and scans short A5 base
 words by modulus.  It also searches the column exact-cover insertion problem
-for fixed base words, and has a bounded primitive-pool assembly mode.  This
-separates the base row-family problem from the D3 fiber compiler problem.
+for fixed base words, and has a bounded primitive-pool assembly mode.  With
+the bundled `m=5` length pattern, that mode already finds an alternate base
+exact-cover, which separates the base row-family problem from the D3 fiber
+compiler problem.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

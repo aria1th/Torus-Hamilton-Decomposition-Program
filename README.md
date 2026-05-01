@@ -133,7 +133,8 @@ It can also try bounded exact-cover assembly from the primitive-word pool:
 ```bash
 python3 scripts/analyze_4plus2_base_rows.py \
   --cover-primitive-m 5 --cover-primitive-max-len 5 \
-  --cover-pool-limit 60 --combo-limit 5000 \
+  --cover-lengths 5,4,5,4,3,2,2 \
+  --cover-pool-limit 200 --combo-limit 300000 \
   --json-out /tmp/d7_4plus2_base_pool_search.json
 ```
 
