@@ -259,6 +259,11 @@ emits compact rank fingerprints and orbit prefixes, giving a concrete
 comparison target for proposed uniform `BridgeConcreteFullRankPackage`
 formulas.
 
+The companion `scripts/analyze_4plus2_base_rows.py` isolates the base side:
+it verifies bundled row projections as base-primitive and scans short A5 base
+words by modulus, which is useful for separating the base exact-cover problem
+from the D3 fiber compiler problem.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

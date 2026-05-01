@@ -68,6 +68,7 @@ when `m` is odd and `m >= 3`.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
+- `scripts/analyze_4plus2_base_rows.py`: base-only search aid for the all-zero-set `4+2` bridge; it summarizes bundled row projections and scans short primitive A5 base words.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
@@ -116,6 +117,14 @@ orbit prefixes:
 ```bash
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
   --rank-summary-json /tmp/d7_4plus2_rank_summary.json
+```
+
+The base-row side can be inspected separately:
+
+```bash
+python3 scripts/analyze_4plus2_base_rows.py \
+  --scan-moduli 5,7,9,11,13,15,17 --max-len 3 \
+  --json-out /tmp/d7_4plus2_base_rows.json
 ```
 
 Expected output:
