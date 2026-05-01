@@ -153,6 +153,18 @@ at color `4` for `m = 7`.  So the current evidence does not yet give one
 global K-table for all moduli and all existing row choices; it gives a concrete
 zero-set-table target to explain and generalize.
 
+`scripts/verify_zero_set_k_cert.py` now verifies the scalar-only version of
+this certificate.  It expands the shifted zero-set mask table into the full
+`kappa_perm_indices` table, checks the recorded scalar invariants
+
+```text
+A = (5,7,2,1,1,1,1)
+E = (2,2,2,4,4,5,8)
+```
+
+are all units modulo `9`, and then replays the full finite bridge verifier.
+This is the current Target-B' regression for zero-set-only scalar certificates.
+
 ### Base Row Side
 
 The base side is also not explained by a very short uniform primitive word
@@ -353,6 +365,9 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
+python3 scripts/verify_zero_set_k_cert.py \
+  /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
+  --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json
 python3 scripts/analyze_targetA_section.py \

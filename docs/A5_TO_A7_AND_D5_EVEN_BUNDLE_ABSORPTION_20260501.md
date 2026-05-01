@@ -84,9 +84,12 @@ A = (5,7,2,1,1,1,1)
 E = (2,2,2,4,4,5,8)
 ```
 
-All entries are units modulo `9`.  This strengthens the interpretation that
-the fiber problem is a finite mask-design problem once Target A supplies the
-base schedule.
+All entries are units modulo `9`.  `scripts/verify_zero_set_k_cert.py` now
+checks this scalar-only certificate directly: it expands the shifted-mask
+`K(Z)` table into a full kappa table, verifies these unit invariants, and then
+runs the full bridge verifier.  This strengthens the interpretation that the
+fiber problem is a finite mask-design problem once Target A supplies the base
+schedule.
 
 The current Target-A proof interface is a section-splice theorem on
 

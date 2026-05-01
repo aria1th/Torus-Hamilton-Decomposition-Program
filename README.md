@@ -100,6 +100,9 @@ when `m` is odd and `m >= 3`.
   enforcing aggregate slot counts `(m,m,m,m,m)`, then calling the column
   exact-cover placer.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
+- `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
+  zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
+  tables, checks scalar unit invariants, and can run the full bridge verifier.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `scripts/verify_d5_even_routeE.py`: audit verifier for the absorbed D5 even
@@ -294,6 +297,15 @@ python3 scripts/d7_bridge_snapshot.py \
 
 The snapshot records whether a certificate-provided `K(Z)` table matches the
 shifted zero-set mask encoding used by the finite kappa table.
+
+For scalar-only `K(Z)` certificates, expand the mask table and check the A3
+unit invariants directly:
+
+```bash
+python3 scripts/verify_zero_set_k_cert.py \
+  /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
+  --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
+```
 
 It can also test row solutions exported by the base analyzer:
 
