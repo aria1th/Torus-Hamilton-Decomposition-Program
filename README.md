@@ -468,10 +468,12 @@ This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
 on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
 same output includes maximal translation blocks for the induced seam map,
 which are the finite traces for the next one-dimensional block-splice proof.
-The Lean target also includes `RouteENonopenSmallSeamCertificate`, specialized
-to `{a : ZMod m // a != 0}`, with the explicit helper
-`routeEThetaSeamPoint`; it proves that such a certificate gives the existing
-D5 even Hamilton, torus, and Cayley endpoints.
+The Lean target also includes `RouteEThetaSmallSeamCertificate`, specialized
+to the canonical bundle seam
+`Theta_s = {rho_s(0,a,0,0,-a) : a != 0}` via
+`routeEThetaSeamPoint`.  It lowers to the more general
+`RouteENonopenSmallSeamCertificate` and proves that such a certificate gives
+the existing D5 even Hamilton, torus, and Cayley endpoints.
 It also fixes the branch combinatorics: a separate
 `D5EvenRouteEM4FiniteTarget` plus the all-large Route-E certificate target
 implies all even `m >= 4` Hamilton, torus, and Cayley targets.

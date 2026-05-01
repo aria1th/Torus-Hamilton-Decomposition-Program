@@ -255,6 +255,12 @@ theorem D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_unconditional_m4
   D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_and_m4
     D5EvenRouteEM4FiniteTarget_unconditional hlarge
 
+theorem D5EvenRouteEAllEvenHamiltonTarget.of_theta_unconditional_m4
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenHamiltonTarget :=
+  D5EvenRouteEAllEvenHamiltonTarget.of_theta_and_m4
+    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+
 theorem D5EvenRouteEAllEvenTorusTarget.of_large_unconditional_m4
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
     D5EvenRouteEAllEvenTorusTarget :=
@@ -267,6 +273,12 @@ theorem D5EvenRouteEAllEvenTorusTarget.of_nonopen_unconditional_m4
   D5EvenRouteEAllEvenTorusTarget.of_nonopen_and_m4
     D5EvenRouteEM4FiniteTarget_unconditional hlarge
 
+theorem D5EvenRouteEAllEvenTorusTarget.of_theta_unconditional_m4
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenTorusTarget :=
+  D5EvenRouteEAllEvenTorusTarget.of_theta_and_m4
+    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+
 theorem D5EvenRouteEAllEvenCayleyTarget.of_large_unconditional_m4
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
     D5EvenRouteEAllEvenCayleyTarget :=
@@ -277,6 +289,12 @@ theorem D5EvenRouteEAllEvenCayleyTarget.of_nonopen_unconditional_m4
     (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
     D5EvenRouteEAllEvenCayleyTarget :=
   D5EvenRouteEAllEvenCayleyTarget.of_nonopen_and_m4
+    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+
+theorem D5EvenRouteEAllEvenCayleyTarget.of_theta_unconditional_m4
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenCayleyTarget :=
+  D5EvenRouteEAllEvenCayleyTarget.of_theta_and_m4
     D5EvenRouteEM4FiniteTarget_unconditional hlarge
 
 end D5Odd

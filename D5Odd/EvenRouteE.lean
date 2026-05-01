@@ -251,6 +251,77 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
 
 end RouteENonopenSmallSeamCertificate
 
+structure RouteEThetaSmallSeamCertificate (m : Nat) [NeZero m] where
+  data : D5EvenSeamData m
+  routeCounts : RouteECounts m
+  slot : Color
+  routeCounts_slot : routeCounts.slot = slot
+  seamReturn : Color → RouteENonzeroSeam m → RouteENonzeroSeam m
+  returnTime : Color → RouteENonzeroSeam m → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] (routeEThetaSeamPoint slot a) =
+        routeEThetaSeamPoint slot (seamReturn c a)
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b, (seamRootReturn data c)^[k] (routeEThetaSeamPoint slot a) =
+        routeEThetaSeamPoint slot b
+  seamReturn_single :
+    ∀ c, IsSingleCycleMap (seamReturn c)
+  returnTime_sum :
+    ∀ c, Finset.univ.sum (fun a : RouteENonzeroSeam m => returnTime c a) = m ^ 4
+
+namespace RouteEThetaSmallSeamCertificate
+
+theorem seam_card {m : Nat} [NeZero m]
+    (_cert : RouteEThetaSmallSeamCertificate m) :
+    Fintype.card (RouteENonzeroSeam m) = m - 1 :=
+  card_routeENonzeroSeam m
+
+def toNonopenSmallSeamCertificate {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) :
+    RouteENonopenSmallSeamCertificate m where
+  data := cert.data
+  routeCounts := cert.routeCounts
+  slot := cert.slot
+  seamPoint := routeEThetaSeamPoint cert.slot
+  seamPoint_injective := routeEThetaSeamPoint_injective cert.slot
+  seamReturn := cert.seamReturn
+  returnTime := cert.returnTime
+  returnTime_pos := cert.returnTime_pos
+  firstReturn_equation := cert.firstReturn_equation
+  firstReturn_minimal := cert.firstReturn_minimal
+  seamReturn_single := cert.seamReturn_single
+  returnTime_sum := cert.returnTime_sum
+
+theorem seamRootReturn_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) (c : Color) :
+    IsSingleCycleMap (seamRootReturn cert.data c) :=
+  cert.toNonopenSmallSeamCertificate.seamRootReturn_single_cycle c
+
+theorem orbitTarget {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) :
+    D5EvenSeamReturnOrbitTarget cert.data :=
+  cert.toNonopenSmallSeamCertificate.orbitTarget
+
+theorem toHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) :
+    HamiltonDecompositionD5 m :=
+  cert.toNonopenSmallSeamCertificate.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) :
+    TorusHamiltonDecompositionD5 m :=
+  cert.toNonopenSmallSeamCertificate.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) :
+    CayleyHamiltonDecompositionD5 m :=
+  cert.toNonopenSmallSeamCertificate.toCayleyHamiltonDecomposition
+
+end RouteEThetaSmallSeamCertificate
+
 def D5EvenRouteEAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteESmallSeamCertificate m)
@@ -258,6 +329,10 @@ def D5EvenRouteEAllLargeEvenTarget : Prop :=
 def D5EvenRouteENonopenAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteENonopenSmallSeamCertificate m)
+
+def D5EvenRouteEThetaAllLargeEvenTarget : Prop :=
+  ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
+    Nonempty (RouteEThetaSmallSeamCertificate m)
 
 def D5EvenRouteEM4FiniteTarget : Prop :=
   Nonempty (HamiltonDecompositionD5 4)
@@ -281,6 +356,19 @@ theorem D5EvenRouteEAllLargeEvenTarget.of_nonopen
   rcases h m hmEven hm6 with ⟨cert⟩
   exact ⟨cert.toSmallSeamCertificate⟩
 
+theorem D5EvenRouteENonopenAllLargeEvenTarget.of_theta
+    (h : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteENonopenAllLargeEvenTarget := by
+  intro m _hm0 hmEven hm6
+  rcases h m hmEven hm6 with ⟨cert⟩
+  exact ⟨cert.toNonopenSmallSeamCertificate⟩
+
+theorem D5EvenRouteEAllLargeEvenTarget.of_theta
+    (h : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllLargeEvenTarget :=
+  D5EvenRouteEAllLargeEvenTarget.of_nonopen
+    (D5EvenRouteENonopenAllLargeEvenTarget.of_theta h)
+
 theorem D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
@@ -300,6 +388,13 @@ theorem D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_and_m4
     D5EvenRouteEAllEvenHamiltonTarget :=
   D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
+
+theorem D5EvenRouteEAllEvenHamiltonTarget.of_theta_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenHamiltonTarget :=
+  D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
 
 theorem D5EvenRouteEAllEvenTorusTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
@@ -322,6 +417,13 @@ theorem D5EvenRouteEAllEvenTorusTarget.of_nonopen_and_m4
   D5EvenRouteEAllEvenTorusTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
 
+theorem D5EvenRouteEAllEvenTorusTarget.of_theta_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenTorusTarget :=
+  D5EvenRouteEAllEvenTorusTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
+
 theorem D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
@@ -343,5 +445,12 @@ theorem D5EvenRouteEAllEvenCayleyTarget.of_nonopen_and_m4
     D5EvenRouteEAllEvenCayleyTarget :=
   D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
+
+theorem D5EvenRouteEAllEvenCayleyTarget.of_theta_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenCayleyTarget :=
+  D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
 
 end D5Odd

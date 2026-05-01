@@ -98,10 +98,12 @@ Lean as `![a,0,0,-a]`.  The file now defines the underlying `Vec5` point
 - `rootZ (routeEThetaVec slot a) = routeEThetaPoint slot a`;
 - `(rootOfZ (routeEThetaPoint slot a)).1 = routeEThetaVec slot a`.
 
-The non-open wrapper `RouteENonopenSmallSeamCertificate` fixes the seam type to
-`RouteENonzeroSeam m` and then routes any completed Route-E certificate through
-the existing `D5Odd.Even` seam endpoint to D5 Hamilton, torus, and Cayley
-decompositions.
+The canonical wrapper `RouteEThetaSmallSeamCertificate` now fixes both the
+seam type `RouteENonzeroSeam m` and the seam map
+`routeEThetaSeamPoint slot`, i.e. the exact `Theta_s` seam from the bundle.
+It lowers to `RouteENonopenSmallSeamCertificate` and then routes any completed
+Route-E certificate through the existing `D5Odd.Even` seam endpoint to D5
+Hamilton, torus, and Cayley decompositions.
 
 It also records the finite-exception packaging shape.  The target
 `D5EvenRouteEM4FiniteTarget` is now closed in `D5Odd/EvenRouteEM4.lean` by a
@@ -115,7 +117,9 @@ With that finite branch available, Lean proves that:
 - `D5EvenRouteEAllLargeEvenTarget` gives
   all even `m >= 4` Hamilton, torus, and Cayley targets;
 - the same conclusion follows from the non-open specialized target
-  `D5EvenRouteENonopenAllLargeEvenTarget`.
+  `D5EvenRouteENonopenAllLargeEvenTarget`;
+- and also from the canonical bundle-seam target
+  `D5EvenRouteEThetaAllLargeEvenTarget`.
 
 Thus the remaining D5 even Route-E obligation is isolated to the all-large
 `m >= 6` small-seam proof.
@@ -195,7 +199,7 @@ The remaining symbolic propositions are:
    `a = 1,...,m-1` is one cycle;
 3. prove the return-time sum identity `sum tau = m^4` for each family;
 4. provide the Lean first-return equations/minimality witnesses needed by
-   `RouteENonopenSmallSeamCertificate`.
+   `RouteEThetaSmallSeamCertificate`.
 
 The finite `m = 4` witness required by `D5EvenRouteEM4FiniteTarget` is now
 closed separately and no longer belongs to the open symbolic gap.
