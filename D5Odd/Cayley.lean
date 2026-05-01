@@ -1,4 +1,5 @@
 import D5Odd.Torus
+import Shared.TorusCayley
 
 namespace D5Odd
 
@@ -68,9 +69,31 @@ theorem cayleyHamiltonDecomposition_of_torus {m : Nat} [NeZero m]
   rcases h with ⟨F, _hExact, hLatin, hCycle⟩
   exact ⟨F, cayleyEdgePartition_of_latin hLatin, cayleyColorHamiltonian_of_torus hCycle⟩
 
+theorem sharedCayleyHamiltonDecomposition_of_cayley
+    {m : Nat} [NeZero m] (h : CayleyHamiltonDecompositionD5 m) :
+    Shared.CayleyHamiltonDecomposition 5 m := by
+  rcases h with ⟨F, hEdge, hHam⟩
+  refine ⟨{
+    colorDir := fun c x => cayleyColorDir F c x
+    edgePartition := ?_
+    colorHamiltonian := ?_
+  }⟩
+  · intro x i
+    exact hEdge x i
+  · intro c
+    simpa [Shared.IsSingleCycleMap, IsSingleCycleMap,
+      Shared.cayleyColorStep, Shared.torusBasis, cayleyColorStep, e5]
+      using hHam c
+
 theorem D5_odd_cayley_unconditional {m : Nat} [NeZero m]
     (hodd : Odd m) (hm3 : 3 <= m) :
     CayleyHamiltonDecompositionD5 m := by
   exact cayleyHamiltonDecomposition_of_torus (D5_odd_torus_unconditional hodd hm3)
+
+theorem D5_odd_shared_cayley_unconditional {m : Nat} [NeZero m]
+    (hodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition 5 m := by
+  exact sharedCayleyHamiltonDecomposition_of_cayley
+    (D5_odd_cayley_unconditional hodd hm3)
 
 end D5Odd

@@ -25,6 +25,11 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   endpoints such as D=5 and D=7: if the pointwise expansion and prime bases are
   known for odd moduli, then the prime-factor reduction is also available over
   odd moduli.
+- `Shared/TorusCayley.lean` supplies the standard dimension-indexed
+  torus/Cayley Hamilton-decomposition proposition, and `RoundComposite.lean`
+  now exposes named standard torus/Cayley instantiations of the abstract
+  reduction.  The actual graph-product construction proving the pointwise
+  expansion remains to be formalized.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
   `D5Odd/Main.lean`, `D5Odd/Torus.lean`, and `D5Odd/Cayley.lean`.
 - D=7 odd is Lean-formalized through a root-flat certificate and then lifted to

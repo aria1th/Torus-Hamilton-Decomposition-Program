@@ -1,4 +1,5 @@
 import Mathlib
+import Shared.TorusCayley
 
 namespace RoundComposite
 
@@ -234,6 +235,12 @@ theorem odd_prime_factor_reduction_of_pointwise
 
 namespace Concrete
 
+abbrev StandardTorusSolved : Nat → Nat → Prop :=
+  Shared.TorusHamiltonDecomposition
+
+abbrev StandardCayleySolved : Nat → Nat → Prop :=
+  Shared.CayleyHamiltonDecomposition
+
 variable (TorusSolved CayleySolved : Nat → Nat → Prop)
 
 def TorusToCayley : Prop :=
@@ -282,6 +289,25 @@ theorem cayley_odd_prime_factor_reduction_of_cayley_pointwise
     (hPrime : OddPrimeBaseSolved CayleySolved) :
     OddPrimeFactorReduction CayleySolved := by
   exact odd_prime_factor_reduction_of_pointwise CayleySolved hExp hPrime
+
+theorem standard_torus_to_cayley :
+    TorusToCayley StandardTorusSolved StandardCayleySolved := by
+  intro _d _m _hm h
+  exact h
+
+theorem standard_cayley_prime_factor_reduction_of_torus_pointwise
+    (hExp : PointwiseCompositeExpansion StandardTorusSolved)
+    (hPrime : PrimeBaseSolved StandardTorusSolved) :
+    PrimeFactorReduction StandardCayleySolved := by
+  exact cayley_prime_factor_reduction_of_torus_pointwise
+    StandardTorusSolved StandardCayleySolved hExp hPrime standard_torus_to_cayley
+
+theorem standard_cayley_odd_prime_factor_reduction_of_torus_pointwise
+    (hExp : OddPointwiseCompositeExpansion StandardTorusSolved)
+    (hPrime : OddPrimeBaseSolved StandardTorusSolved) :
+    OddPrimeFactorReduction StandardCayleySolved := by
+  exact cayley_odd_prime_factor_reduction_of_torus_pointwise
+    StandardTorusSolved StandardCayleySolved hExp hPrime standard_torus_to_cayley
 
 end Concrete
 

@@ -38,9 +38,11 @@ when `m` is odd and `m >= 3`.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
   `rootFlatReturnCriterion_of_schedule` theorem for packaging row Latin,
   layer bijective, and return single-cycle data.
+- `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
+  Hamilton-decomposition proposition used by the composite-reduction interface.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants and concrete torus-to-Cayley adapters.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants and concrete adapters for the shared standard torus/Cayley proposition.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates.

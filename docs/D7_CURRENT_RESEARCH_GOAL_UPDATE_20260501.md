@@ -264,6 +264,11 @@ Implementation progress after this goal update:
 - `Shared/AdditiveBridge.lean` now packages the local bridge obligations:
   state-dependent direction reindexing preserves row Latin, and skew-product
   layer maps are bijective when the base and all fiber branches are bijective.
+- `Shared/TorusCayley.lean` now supplies a standard dimension-indexed
+  directed torus/Cayley Hamilton-decomposition proposition. The existing D5
+  and D7 Cayley endpoints have adapters into this shared proposition, so the
+  `RoundComposite` `Solved : Nat -> Nat -> Prop` slot can now be instantiated
+  with an actual graph-level target rather than only a manuscript placeholder.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
@@ -272,8 +277,9 @@ Implementation progress after this goal update:
   bundled `m=5,7,9` all-zero-set `4+2` certificates and checks that all seven
   product returns are single cycles.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
-  interface, so odd-only prime endpoints such as the current D5/D7 theorems can
-  be connected without pretending that the even branches are solved.
+  interface, plus named standard torus/Cayley instantiations, so odd-only prime
+  endpoints such as the current D5/D7 theorems can be connected without
+  pretending that the even branches are solved.
 
 The remaining gap is not the abstract interface. It is the construction of the
 actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the
