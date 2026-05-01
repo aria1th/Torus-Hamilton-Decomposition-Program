@@ -33,7 +33,9 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/Additive4Plus2.lean`: root-state coordinate equivalence `A7(m) ~= A5(m) x A3(m)`, D7 slot-step conjugacy, and a product-side schedule wrapper for the additive bridge program.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
-- `D7Odd/Even.lean`: even-modulus D7 certificate targets via the `RootFlatSchedule` interface.
+- `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
+  `RootFlatSchedule` interface, with adapters to the shared layered lift and
+  torus/Cayley wrappers.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.

@@ -294,6 +294,9 @@ Implementation progress after this goal update:
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
   certificate to a D7 root-flat certificate.
+- `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
+  certificate track; its targets now also expose the shared layered full-step
+  lift before the existing torus/Cayley wrappers.
 - `scripts/verify_4plus2_allN_bridge_cert.py` now independently replays the
   bundled `m=5,7,9` all-zero-set `4+2` certificates and checks that all seven
   product returns are single cycles.
