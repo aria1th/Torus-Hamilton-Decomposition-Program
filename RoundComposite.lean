@@ -118,4 +118,35 @@ theorem prime_factor_reduction_of_pointwise
   intro d hfactor
   exact uniform_of_prime_factor_list Solved hExp hPrime hfactor
 
+namespace Concrete
+
+variable (TorusSolved CayleySolved : Nat → Nat → Prop)
+
+def TorusToCayley : Prop :=
+  ∀ {d m : Nat}, 3 ≤ m → TorusSolved d m → CayleySolved d m
+
+theorem uniform_cayley_of_uniform_torus
+    (hTC : TorusToCayley TorusSolved CayleySolved)
+    {d : Nat} (hTorus : UniformSolved TorusSolved d) :
+    UniformSolved CayleySolved d := by
+  intro m hm
+  exact hTC hm (hTorus hm)
+
+theorem cayley_prime_factor_reduction_of_torus_pointwise
+    (hExp : PointwiseCompositeExpansion TorusSolved)
+    (hPrime : PrimeBaseSolved TorusSolved)
+    (hTC : TorusToCayley TorusSolved CayleySolved) :
+    PrimeFactorReduction CayleySolved := by
+  intro d hfactor
+  exact uniform_cayley_of_uniform_torus TorusSolved CayleySolved hTC
+    (prime_factor_reduction_of_pointwise TorusSolved hExp hPrime hfactor)
+
+theorem cayley_prime_factor_reduction_of_cayley_pointwise
+    (hExp : PointwiseCompositeExpansion CayleySolved)
+    (hPrime : PrimeBaseSolved CayleySolved) :
+    PrimeFactorReduction CayleySolved := by
+  exact prime_factor_reduction_of_pointwise CayleySolved hExp hPrime
+
+end Concrete
+
 end RoundComposite
