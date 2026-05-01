@@ -1,5 +1,6 @@
 import D7Odd.Handoff.CanonicalFamily
 import D7Odd.Handoff.PrimeCanonicalData
+import D7Odd.Handoff.PrimeRootFlat
 import D7Odd.Handoff.PrimeRoot
 
 namespace D7Odd
@@ -127,6 +128,87 @@ def countMatrixScheduleFixedOfSeven {m : Nat}
 def canonicalSchedule7_prime_certified :
     seven.CountMatrixSchedule 7 :=
   countMatrixScheduleSevenOfFixed Handoff.canonicalSchedule7_certified
+
+theorem addQ_seven_eq_fixed (m : Nat) (i : Fin 7) (w : Vec7 m) :
+    seven.addQ m i w = Handoff.addQ m i w := by
+  rfl
+
+theorem subQ_seven_eq_fixed (m : Nat) (i : Fin 7) (w : Vec7 m) :
+    seven.subQ m i w = Handoff.subQ m i w := by
+  rfl
+
+theorem addQRoot_seven_eq_fixed (m : Nat)
+    (i : Fin 7) (w : seven.RootState m) :
+    seven.addQRoot m i w =
+      Handoff.addQRoot m i w := by
+  apply Subtype.ext
+  rfl
+
+theorem subQRoot_seven_eq_fixed (m : Nat)
+    (i : Fin 7) (w : seven.RootState m) :
+    seven.subQRoot m i w =
+      Handoff.subQRoot m i w := by
+  apply Subtype.ext
+  rfl
+
+def rootFlatScheduleSevenOfFixed {m : Nat}
+    (S : Handoff.RootFlatSchedule m) :
+    seven.RootFlatSchedule m where
+  dir := S.dir
+
+def rootFlatScheduleFixedOfSeven {m : Nat}
+    (S : seven.RootFlatSchedule m) :
+    Handoff.RootFlatSchedule m where
+  dir := S.dir
+
+theorem rootFlatSchedule_rowLatin_seven_eq_fixed {m : Nat}
+    (S : Handoff.RootFlatSchedule m) :
+    (rootFlatScheduleSevenOfFixed S).rowLatin ↔ S.rowLatin := by
+  rfl
+
+theorem rootFlatSchedule_layerBijective_seven_eq_fixed {m : Nat}
+    (S : Handoff.RootFlatSchedule m) :
+    (rootFlatScheduleSevenOfFixed S).layerBijective ↔ S.layerBijective := by
+  rfl
+
+theorem rootFlatSchedule_returnsSingleCycle_seven_eq_fixed {m : Nat} [NeZero m]
+    (S : Handoff.RootFlatSchedule m) :
+    (rootFlatScheduleSevenOfFixed S).returnsSingleCycle ↔
+      S.returnsSingleCycle := by
+  rfl
+
+def rootFlatCertificateSevenOfFixed {m : Nat} [NeZero m]
+    (C : Handoff.RootFlatCertificate m) :
+    seven.RootFlatCertificate m where
+  schedule := rootFlatScheduleSevenOfFixed C.schedule
+  rowLatin := (rootFlatSchedule_rowLatin_seven_eq_fixed C.schedule).2
+    C.rowLatin
+  layerBijective :=
+    (rootFlatSchedule_layerBijective_seven_eq_fixed C.schedule).2
+      C.layerBijective
+  returnsSingleCycle :=
+    (rootFlatSchedule_returnsSingleCycle_seven_eq_fixed C.schedule).2
+      C.returnsSingleCycle
+
+def rootFlatCertificateFixedOfSeven {m : Nat} [NeZero m]
+    (C : seven.RootFlatCertificate m) :
+    Handoff.RootFlatCertificate m where
+  schedule := rootFlatScheduleFixedOfSeven C.schedule
+  rowLatin := C.rowLatin
+  layerBijective := C.layerBijective
+  returnsSingleCycle := C.returnsSingleCycle
+
+theorem hamilton_seven_of_fixed {m : Nat} [NeZero m]
+    (h : Handoff.HamiltonDecompositionD7 m) :
+    seven.HamiltonDecomposition m := by
+  rcases h with ⟨C⟩
+  exact ⟨rootFlatCertificateSevenOfFixed C⟩
+
+theorem hamilton_fixed_of_seven {m : Nat} [NeZero m]
+    (h : seven.HamiltonDecomposition m) :
+    Handoff.HamiltonDecompositionD7 m := by
+  rcases h with ⟨C⟩
+  exact ⟨rootFlatCertificateFixedOfSeven C⟩
 
 end PrimeDimension
 end PrimeRoot
