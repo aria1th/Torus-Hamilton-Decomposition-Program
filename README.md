@@ -68,6 +68,11 @@ when `m` is odd and `m >= 3`.
 - `docs/D7_PROGRESS_BLOCKING_FOUND_20260501.md`: current progress, blockers,
   and found facts for the D7 additive `4+2` bridge before the next research
   bundle comparison.
+- `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`: absorption note
+  for `A5_to_A7_induction_hypothesis_bundle_v0_1.zip` and
+  `d5_even_routeE_bundle_v0_1.zip`, sharpening the D7 odd bridge into
+  Target-A base rows plus Target-B' zero-set scalar fiber compiler and moving
+  D5 even to the Route-E periodic-excursion track.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
@@ -75,6 +80,9 @@ when `m` is odd and `m >= 3`.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
+- `scripts/verify_d5_even_routeE.py`: audit verifier for the absorbed D5 even
+  Route-E bundle, checking the finite schedule table, normalized core
+  first-return formula, and open-port section formula/cycle examples.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
@@ -228,6 +236,18 @@ verified m=9 product_states=531441 rows=7 base_rank_steps=ok section_rank_steps=
 The D5 even SAT search requires `python-sat`; it is a witness/debugging tool
 for the seam target, not a Lean proof artifact.  The current seam encoding
 returns `unsat` for the small `m=2` smoke check.
+
+The absorbed D5 even Route-E bundle has an independent verifier:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode all \
+  --json-out /tmp/d5_even_routeE_verify.json
+```
+
+It checks the recorded finite schedules for `m = 4,6,...,20`, the normalized
+Route-E core first-return table through `m = 20`, and the open-port section
+formula/cycle examples.  It is an audit artifact for the current Route-E
+program, not an all-even symbolic theorem.
 
 ## Citation
 

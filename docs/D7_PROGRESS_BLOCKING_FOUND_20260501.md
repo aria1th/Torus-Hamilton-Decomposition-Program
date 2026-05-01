@@ -1,8 +1,13 @@
 # D7 Progress, Blocking, and Found Facts
 
-Status baseline before the next D7 research bundles.
+Status baseline before and after the next D7/D5-even research bundles.
 
 Date: 2026-05-01.
+
+Additional absorbed bundles:
+
+- `/data/angel/repos/etc/A5_to_A7_induction_hypothesis_bundle_v0_1.zip`
+- `/data/angel/repos/etc/d5_even_routeE_bundle_v0_1.zip`
 
 ## Current Progress
 
@@ -24,12 +29,16 @@ Date: 2026-05-01.
   endpoints.
 - The finite `m = 3` branch is kept separate through the small-certificate
   route; the bridge target is for odd `m >= 5`.
-- D5 even and D7 even remain separate certificate tracks.
+- D5 even and D7 even remain separate certificate tracks.  The D5 even track
+  has sharpened from a generic seam-orbit search into the Route-E
+  one-`Lambda_E` periodic-excursion program recorded in
+  `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`.
 
 ## Current Blocking Point
 
 The remaining D7 odd structural gap is the uniform construction of
-`BridgeConcreteFullRankPackage` for every odd `m >= 5`.
+`BridgeConcreteFullRankPackage` for every odd `m >= 5`.  After the A5-to-A7
+bundle, this should be treated as two independent targets.
 
 Concretely, this splits into two rank-step theorems:
 
@@ -39,6 +48,18 @@ Concretely, this splits into two rank-step theorems:
 - Fiber side: construct a D3 fiber compiler and
   `fiberRank : Color -> ARoot3 m -> ZMod (m ^ 2)` such that the section return
   over the `m^4` base period steps `fiberRank` by `+1`.
+
+The A5-to-A7 bundle sharpens the base side into **Target A**: construct
+multi-`P` all-zero-set base row schedules and prove primitiveity by a
+section-splice first-return theorem on
+`Sigma = {(0,a,b,0,-a-b) : a+b != 0}`.  The direct one-`P` lift of the mixed D5
+schedule is obstructed by the count equation `5k = 7`.
+
+It sharpens the fiber side into **Target B'**: once a Target-A schedule is
+fixed, construct a zero-set-only `K_m(Z)` or finite congruence family and prove
+that the two A3 scalar monodromy invariants are units.  In the zero-set-only
+model, these scalars reduce to finite mask sums using the `A5` stratum
+coefficients `4,-3,2,-1,0,1` by zero-set size.
 
 The previous live obstruction was the bundled fiber compiler at `m = 9`,
 especially color `0`.  The extracted certificate
@@ -143,6 +164,61 @@ family.
 - For `m = 17`, length `5` gives first examples, including
   `01121`, `01214`, `10112`, `11210`, and `12101`.
 
+### A5-to-A7 Target-A/Target-B Refinement
+
+The absorbed A5-to-A7 induction bundle records that the direct mixed D5
+schedule lift is impossible in the current local bridge model: one `P`-type
+bridge layer contributes five base `P` occurrences, while seven one-`P` rows
+would require seven occurrences, giving the impossible equation `5k = 7`.
+
+Thus the live route is the all-zero-set spread with multi-`P` row words.  The
+base proof target is a section-splice primitiveity proof on
+
+```text
+Sigma = {(0,a,b,0,-a-b) : a+b != 0}.
+```
+
+The desired facts for a row word family are positive first return to `Sigma`,
+one-cycle first-return map on `Sigma`, and total excursion length `m^4`.
+
+The fiber proof target is no longer an arbitrary state table.  For a
+zero-set-only `K_m(Z)`, the `A5` exact zero-set counts modulo `m` are determined
+by `|Z|`, with coefficients:
+
+```text
+0 ->  4
+1 -> -3
+2 ->  2
+3 -> -1
+4 ->  0
+5 ->  1
+```
+
+So the A3 fiber primitiveity condition becomes a finite scalar unit check for
+each color and chosen row schedule.
+
+### D5 Even Route-E Track
+
+The absorbed D5 even bundle replaces the earlier generic seam-orbit description
+with a concrete Route-E program.
+
+- The perturbed table `Lambda_E` changes exactly two cyclic representative rows
+  of the odd `Lambda_1` zero-set table.
+- For `m = 4`, the bundle gives a finite `C/E/O` schedule witness.
+- For tested even `m = 6,8,10,12,14,16,18,20`, the schedules have constant
+  layers plus one `Lambda_E` layer, and all five returns are single `m^4`
+  cycles.
+- Symbolically, one-`Lambda_E` schedules reduce to
+  `F_{nu,s}(w) = w + nu + e_{p_s(w)}` and color conjugacy reduces all colors
+  to one return map.
+- In the open-port family `s=0`, `nu=(0,A,B,C,0)`, the completed section map is
+  `H_{A,C}(sigma,a) = (sigma-C, a+A+1-1_{sigma=0})`, which is a single
+  `m^2` cycle when `gcd(C,m)=1`.
+
+The D5 even open tasks are now: find residue-class count/drift families
+covering every even `m >= 6`, prove origin-excursion affine chart
+certificates, and package `m = 4` as a finite witness theorem.
+
 ## Next Bundle Checklist
 
 When new bundles arrive, compare them against this baseline:
@@ -158,6 +234,8 @@ When new bundles arrive, compare them against this baseline:
   `BridgeConcreteFullRankPackage`?
 - Do they separate D5 even and D7 even certificate tracks from the D7 odd
   additive bridge?
+- For D5 even, do they provide count/drift families and origin-excursion
+  charts for the Route-E one-`Lambda_E` program?
 
 ## Verification Commands
 
@@ -179,6 +257,8 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
+python3 scripts/verify_d5_even_routeE.py --mode all \
+  --json-out /tmp/d5_even_routeE_verify.json
 git diff --check
 ```
 
