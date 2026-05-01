@@ -157,6 +157,11 @@ exists.  The missing mathematical object is a seam certificate:
 - prove `D5EvenSeamHamiltonian S`;
 - apply `D5_even_from_seam_data` or `D5_even_from_target`.
 
+The current SAT witness encoding for this exact seam target is useful as a
+debugging tool, but it is not a proof artifact.  In particular, the small
+`m=2` check currently returns `unsat` with both `cadical153` and `glucose3`, so
+it should not be read as evidence for a positive even certificate.
+
 The likely proof obligations are a parity obstruction ledger, an odometer
 normal form away from the seam, exact seam entry/exit counting, and a finite
 splice theorem on the reduced return index.

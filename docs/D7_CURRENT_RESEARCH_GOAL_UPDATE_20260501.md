@@ -38,8 +38,9 @@ The current committed Lean state contains these relevant pieces.
 - D7 even has a `RootFlatSchedule` target shape, but still needs an actual even
   certificate construction.
 - D5 even seam compatibility is now automatic in Lean, but the orbit/cycle
-  certificate is still missing. The small `m=2` SAT smoke test is not a proof
-  of the even theorem.
+  certificate is still missing. The current SAT seam encoding reports `unsat`
+  for the small `m=2` smoke check, so it is a negative/debugging check rather
+  than a positive certificate for the even theorem.
 - A generic composite product theorem exists in `RoundComposite.lean`. It is
   useful as an abstract reduction.  The concrete graph-level Cayley product is
   now formalized for the standard Cayley target: the left-coordinatized product
