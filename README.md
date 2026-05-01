@@ -35,7 +35,7 @@ when `m` is odd and `m >= 3`.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and return criterion interface.
-- `Shared/Monodromy.lean`: skew-product and monodromy lemmas for additive bridge proofs.
+- `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: state-dependent direction reindexing lemmas for local additive bridge row/source Latin conditions.
 - `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, plus a concrete torus-to-Cayley adapter.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.

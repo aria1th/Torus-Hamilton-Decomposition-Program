@@ -7,6 +7,21 @@ def skewProductMap {Base Fiber : Type*}
     Base × Fiber → Base × Fiber :=
   fun x => (baseStep x.1, fiberStep x.1 x.2)
 
+theorem skewProductMap_fst_iterate {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber) :
+    ∀ n : Nat, ∀ x : Base × Fiber,
+      ((skewProductMap baseStep fiberStep)^[n] x).1 =
+        (baseStep^[n]) x.1 := by
+  intro n
+  induction n with
+  | zero =>
+      intro x
+      simp
+  | succ n ih =>
+      intro x
+      rw [Function.iterate_succ_apply']
+      simp [skewProductMap, ih, Function.iterate_succ_apply']
+
 theorem skewProductMap_bijective {Base Fiber : Type*}
     (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
     (hbase : Function.Bijective baseStep)
@@ -106,5 +121,51 @@ theorem single_cycle_of_skewProduct_monodromy
     (S := S) (base := fun v : Fiber => (base, v))
     (R := sectionReturn S base period) (period := period)
     hS hreturn hmonodromy hcover
+
+theorem single_cycle_of_skewProduct_base_orbit_monodromy
+    {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (base : Base) (period : Nat)
+    (hbase : Function.Bijective baseStep)
+    (hfiber : ∀ u : Base, Function.Bijective (fiberStep u))
+    (hreturnBase : (baseStep^[period]) base = base)
+    (hbaseCover : ∀ b : Base, ∃ k : Nat,
+      k < period ∧ (baseStep^[k]) base = b)
+    (hmonodromy :
+      IsSingleCycleMap
+        (sectionReturn (skewProductMap baseStep fiberStep) base period)) :
+    IsSingleCycleMap (skewProductMap baseStep fiberStep) := by
+  let S : Base × Fiber → Base × Fiber :=
+    skewProductMap baseStep fiberStep
+  have hS : Function.Bijective S :=
+    skewProductMap_bijective baseStep fiberStep hbase hfiber
+  have hreturn : ∀ v : Fiber, (S^[period] (base, v)).1 = base := by
+    intro v
+    calc
+      (S^[period] (base, v)).1 = (baseStep^[period]) base := by
+        simpa [S] using
+          skewProductMap_fst_iterate baseStep fiberStep period (base, v)
+      _ = base := hreturnBase
+  have hcover : ∀ x : Base × Fiber, ∃ v : Fiber, ∃ k : Nat,
+      k < period ∧ S^[k] (base, v) = x := by
+    intro x
+    rcases x with ⟨b, v⟩
+    rcases hbaseCover b with ⟨k, hklt, hk⟩
+    rcases (Function.Bijective.iterate hS k).2 (b, v) with ⟨y, hy⟩
+    rcases y with ⟨yb, yf⟩
+    have hyb : yb = base := by
+      apply (Function.Bijective.iterate hbase k).1
+      calc
+        (baseStep^[k]) yb = (S^[k] (yb, yf)).1 := by
+          simpa [S] using
+            (skewProductMap_fst_iterate baseStep fiberStep k (yb, yf)).symm
+        _ = b := by
+          rw [hy]
+        _ = (baseStep^[k]) base := hk.symm
+    subst yb
+    exact ⟨yf, k, hklt, hy⟩
+  exact single_cycle_of_skewProduct_monodromy
+    (S := S) (base := base) (period := period)
+    hS hreturn (by simpa [S] using hmonodromy) hcover
 
 end Shared
