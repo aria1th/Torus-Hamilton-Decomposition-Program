@@ -210,7 +210,8 @@ precomposition of the fiber slots.
 with a bijective S3 fiber permutation and proves that the resulting
 state-dependent bridge `kappa` is bijective.  It also packages raw layerwise
 row permutations as concrete bridge schedules and proves the resulting
-row-Latin condition.
+row-Latin condition, and adapts base-dependent D3 fiber compilers into the
+bridge `phi` interface with the expected bijectivity facts.
 `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate root chart
 used by the bundled all-zero-set bridge certificates, where base non-root
 directions carry the forced D3 `q0` fiber move.  Its

@@ -1,4 +1,5 @@
 import D7Odd.Handoff.Additive4Plus2D5Base
+import D7Odd.Handoff.Additive4Plus2D3Fiber
 import D7Odd.Handoff.Additive4Plus2BridgeChart
 
 namespace D7Odd
@@ -160,6 +161,40 @@ theorem bridgeConcreteSchedule_rowLatin {m : Nat}
   · exact bridgeConcreteStateKappa_bijective phi hphi
   · intro t bf c
     rfl
+
+def bridgeD3Phi {m : Nat}
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3) :
+    ZMod m → ProductRoot m → Direction3 → Direction3 :=
+  fun t bf =>
+    d3OddPermutedDirection (fiberLayer t bf.1) (perm t bf.1) bf.2
+
+theorem bridgeD3Phi_bijective_of_two_le {m : Nat}
+    (hm : 2 ≤ m)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (hperm : ∀ t base, Function.Bijective (perm t base)) :
+    ∀ t bf, Function.Bijective (bridgeD3Phi fiberLayer perm t bf) := by
+  intro t bf
+  exact d3OddPermutedDirection_rowLatin_of_two_le hm
+    (fiberLayer t bf.1) (perm t bf.1) (hperm t bf.1) bf.2
+
+def bridgeD3FiberStep {m : Nat}
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (t : ZMod m) (base : D5Odd.ARoot5 m) (slot : Direction3) :
+    ARoot3 m → ARoot3 m :=
+  d3OddPermutedStep (fiberLayer t base) (perm t base) slot
+
+theorem bridgeD3FiberStep_bijective_of_two_le {m : Nat}
+    (hm : 2 ≤ m)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3) :
+    ∀ t base slot,
+      Function.Bijective (bridgeD3FiberStep fiberLayer perm t base slot) := by
+  intro t base slot
+  exact d3OddPermutedStep_bijective_of_two_le hm
+    (fiberLayer t base) (perm t base) slot
 
 end Additive4Plus2
 end Handoff
