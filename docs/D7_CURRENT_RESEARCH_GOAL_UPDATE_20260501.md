@@ -349,6 +349,32 @@ Current status against the revised goal:
 - Prime-p abstraction: deferred; the fixed D7 prime-interface regression is
   retained, but no general prime-p theorem is claimed.
 
+## Prompt-To-Artifact Audit
+
+This audit maps the current user-level goal to concrete repo evidence. It is
+not a completion certificate for the full research goal; it marks which parts
+are closed and which remain open.
+
+| Goal item | Current artifact evidence | Status |
+| --- | --- | --- |
+| Keep D7 odd as regression target | `D7Odd/Torus.lean`, `D7Odd/Cayley.lean`; checked by `lake build D7Odd RoundComposite.ConcreteEndpoints` on 2026-05-01 | Closed regression endpoint |
+| Raise composite theorem to concrete graph theorem | `RoundComposite.lean` has `standard_cayley_pointwise_composite_expansion` and `standard_torus_pointwise_composite_expansion`; `RoundComposite/ConcreteEndpoints.lean` has direct odd `35`, `49`, and 5/7-list Cayley/Torus endpoints | Closed for current shared standard Cayley/Torus target |
+| Extract common root-flat return criterion | `Shared/RootFlat.lean` has `rootFlatLayeredDecomposition_of_schedule` from row Latin, layer bijective, and return single-cycle | Closed at shared layered full-step level |
+| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence and product-certificate adapters; `Additive4Plus2Endpoints.lean` lifts product certificates to D7 torus/Cayley/shared Cayley | Interface closed; uniform all-odd certificate open |
+| Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective` and direction reindexing lemmas | Abstract lemma closed; D5 all-zero-set/D3 instantiation open |
+| Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy` | Abstract sufficient criterion closed; product-return instantiation open |
+| Keep D5 even separate | `D5Odd/Even.lean` exposes seam-orbit certificate endpoints; `scripts/d5_even_seam_sat_search.py` is currently a negative/debugging smoke check | Actual orbit certificate open |
+| Keep D7 even separate | `D7Odd/Even.lean` exposes `RootFlatSchedule` certificate endpoints and shared layered adapters | Actual even schedule certificate open |
+| Defer prime-p abstraction | `D7Odd/Handoff/PrimeRoot*.lean`, `PrimeCanonical*.lean`, and this note keep it as a regression/future interface | Deferred by design |
+
+Verification signals used in this audit:
+
+- `lake build D7Odd RoundComposite.ConcreteEndpoints` succeeds, with only
+  pre-existing `D5Odd/ReturnCycle.lean` linter warnings replayed.
+- `grep -R "sorry" -n -- *.lean Shared D5Odd D7Odd RoundComposite` finds no
+  Lean `sorry` in the active formalization files.
+- `git diff --check` succeeds for the current tracked edits.
+
 The remaining D7-structure gap is not the abstract composite interface. It is
 the construction of the actual all-zero-set `4+2` product certificate for odd
 `m >= 5`, including the base rows and the fiber compiler/monodromy proof.
