@@ -15,6 +15,7 @@ import D7Odd.Handoff.CanonicalBridge
 import D7Odd.Handoff.CanonicalFamily
 import D7Odd.Handoff.PrimeCanonicalBridge
 import D7Odd.Handoff.Additive4Plus2
+import D7Odd.Handoff.Additive4Plus2D5Base
 import D7Odd.Handoff.Additive4Plus2D3Fiber
 import D7Odd.Handoff.Additive4Plus2BridgeChart
 import D7Odd.Handoff.Additive4Plus2Goal

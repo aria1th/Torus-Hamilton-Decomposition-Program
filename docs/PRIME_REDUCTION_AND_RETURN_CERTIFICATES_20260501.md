@@ -197,6 +197,9 @@ from a state-dependent direction permutation, layer bijectivity from
 componentwise skew-product branches, and return single-cycle from the shared
 base-orbit monodromy criterion.  These hooks are bundled by
 `ProductRootCertificate.ofLocalBridgeAndSkewReturns`.
+`D7Odd/Handoff/Additive4Plus2D5Base.lean` records the concrete D5 all-zero-set
+base slot rule from `D5Odd.ZeroSetTable.Lambda1`, including its row-Latin
+proof.
 `D7Odd/Handoff/Additive4Plus2D3Fiber.lean` now records the concrete odd-D3
 affine fiber packet used by the bundled bridge verifier and proves row Latin
 for the three D3 fiber slots whenever `0 != 1` in `ZMod m`.
