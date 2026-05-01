@@ -110,6 +110,14 @@ Optional `4+2` additive bridge audit script, using
 python3 scripts/verify_4plus2_allN_bridge_cert.py
 ```
 
+For formula search, the same verifier can export compact rank fingerprints and
+orbit prefixes:
+
+```bash
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --rank-summary-json /tmp/d7_4plus2_rank_summary.json
+```
+
 Expected output:
 
 ```text

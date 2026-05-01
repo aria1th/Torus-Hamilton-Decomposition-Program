@@ -10,8 +10,10 @@ A5(m) x A3(m), using the D5 zero-set layer and the odd D3 affine packet.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import itertools
 import json
+from collections import Counter
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -187,6 +189,22 @@ def assert_single_cycle(size: int, start: int, step, label: str) -> None:
     cycle_rank(size, start, step, label)
 
 
+def hash_int_sequence(values: list[int]) -> str:
+    digest = hashlib.sha256()
+    for value in values:
+        digest.update(value.to_bytes(8, "little", signed=False))
+    return digest.hexdigest()
+
+
+def orbit_prefix(start: int, step, decode, limit: int) -> list:
+    out = []
+    state = start
+    for _ in range(limit):
+        out.append(list(decode(state)))
+        state = step(state)
+    return out
+
+
 class BridgeModel:
     def __init__(self, m: int):
         self.m = m
@@ -260,7 +278,9 @@ class BridgeModel:
         return state % self.fiber_size
 
 
-def verify_certificate(cert: dict) -> str:
+def verify_certificate(
+    cert: dict, *, rank_summary: bool = False
+) -> tuple[str, dict | None]:
     validate_certificate(cert)
     m = cert["m"]
     rows = cert["rows"]
@@ -268,6 +288,17 @@ def verify_certificate(cert: dict) -> str:
     total_states = m**6
     base_period = m**4
     model = BridgeModel(m)
+    summary = None
+    if rank_summary:
+        flat_kappa = [value for layer_table in kappa for value in layer_table]
+        summary = {
+            "m": m,
+            "base_period": base_period,
+            "fiber_period": model.fiber_size,
+            "product_states": total_states,
+            "kappa_perm_counts": dict(sorted(Counter(flat_kappa).items())),
+            "colors": [],
+        }
     for color, row in enumerate(rows):
         base_step = lambda base, row=row: model.base_return_step(base, row)
         base_rank = cycle_rank(
@@ -293,10 +324,36 @@ def verify_certificate(cert: dict) -> str:
             lambda state, row=row: model.return_step(state, row, kappa),
             f"m={m}: color {color} product return",
         )
-    return (
+        if summary is not None:
+            section_step_for_summary = section_step
+            summary["colors"].append(
+                {
+                    "color": color,
+                    "row": row,
+                    "base_word": [slot for slot in row if slot < 5],
+                    "extra_positions": [
+                        {"layer": layer, "slot": slot}
+                        for layer, slot in enumerate(row)
+                        if slot >= 5
+                    ],
+                    "base_rank_sha256": hash_int_sequence(base_rank),
+                    "fiber_rank_sha256": hash_int_sequence(fiber_rank),
+                    "base_orbit_prefix": orbit_prefix(
+                        0, base_step, lambda state: base_tuple(state, m), 16
+                    ),
+                    "fiber_section_orbit_prefix": orbit_prefix(
+                        0,
+                        section_step_for_summary,
+                        lambda state: fiber_tuple(state, m),
+                        min(16, model.fiber_size),
+                    ),
+                }
+            )
+    message = (
         f"verified m={m} product_states={total_states} rows=7 "
         "base_rank_steps=ok section_rank_steps=ok return_cycles=single"
     )
+    return message, summary
 
 
 def load_bundle(path: Path, only: set[int] | None) -> list[dict]:
@@ -342,14 +399,32 @@ def main() -> None:
         "--only",
         help="comma-separated subset of bundled moduli to verify, e.g. 5,7",
     )
+    parser.add_argument(
+        "--rank-summary-json",
+        type=Path,
+        help="write compact rank fingerprints and orbit prefixes for formula search",
+    )
     args = parser.parse_args()
     only = parse_only(args.only)
     if args.cert_json:
         certs = load_json_files(args.cert_json)
     else:
         certs = load_bundle(args.bundle, only)
+    summaries = []
     for cert in certs:
-        print(verify_certificate(cert))
+        message, summary = verify_certificate(
+            cert, rank_summary=args.rank_summary_json is not None
+        )
+        print(message)
+        if summary is not None:
+            summaries.append(summary)
+    if args.rank_summary_json is not None:
+        payload = {
+            "description": "Compact finite rank-step witnesses for the all-zero-set 4+2 bridge.",
+            "certificates": summaries,
+        }
+        args.rank_summary_json.parent.mkdir(parents=True, exist_ok=True)
+        args.rank_summary_json.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
 if __name__ == "__main__":

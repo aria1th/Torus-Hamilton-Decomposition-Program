@@ -378,7 +378,10 @@ Implementation progress after this goal update:
   bundled `m=5,7,9` all-zero-set `4+2` certificates and checks that all seven
   base returns have canonical `m^4` orbit ranks stepped by `+1`, all seven
   fiber section returns have canonical `m^2` orbit ranks stepped by `+1`, and
-  all seven product returns are single `m^6` cycles.
+  all seven product returns are single `m^6` cycles.  With
+  `--rank-summary-json`, it also exports compact rank fingerprints and orbit
+  prefixes for comparing future uniform formula candidates against the finite
+  witnesses.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

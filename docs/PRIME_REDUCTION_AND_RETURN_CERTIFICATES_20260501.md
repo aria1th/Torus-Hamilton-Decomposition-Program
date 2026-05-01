@@ -254,7 +254,10 @@ count for the D7 bridge.
 The bundled finite verifier now checks the same decomposition shape for
 `m=5,7,9`: base returns have canonical `m^4` orbit ranks stepped by `+1`,
 fiber section returns have canonical `m^2` orbit ranks stepped by `+1`, and
-product returns are single `m^6` cycles.
+product returns are single `m^6` cycles.  Its `--rank-summary-json` option
+emits compact rank fingerprints and orbit prefixes, giving a concrete
+comparison target for proposed uniform `BridgeConcreteFullRankPackage`
+formulas.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
