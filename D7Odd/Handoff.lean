@@ -1,4 +1,5 @@
 import D7Odd.Handoff.ReturnCriterion
+import D7Odd.Handoff.PrimeRoot
 import D7Odd.Handoff.CanonicalCountMatrices
 import D7Odd.Handoff.CanonicalSchedules
 import D7Odd.Handoff.CanonicalWords
