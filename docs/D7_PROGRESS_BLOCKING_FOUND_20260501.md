@@ -300,7 +300,9 @@ length-sum obligations for `23` and `32`.  The inverse identities and
 bijectivity of `phi_h` for `h >= 6` are already proved in Lean.  The residue
 gate `IsUnit (3-h : ZMod 5) ↔ h % 5 != 3` is also now proved, so the remaining
 arithmetic gap is the orbit-stitching theorem from this unit gate to
-`IsSingleCycleMap (phi h)`.
+`IsSingleCycleMap (phi h)`.  The Lean file also exposes branch lemmas for
+`phi_h^{-1}`: the internal step is `x -> x+5`, and the top five boundary
+points map to `3,4,0,1,2`.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

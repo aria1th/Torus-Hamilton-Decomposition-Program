@@ -132,6 +132,77 @@ theorem residueShift_isUnit_iff_goodPhiClass (h : Nat) :
       exact (ZMod.unitOfCoprime 4
         (by decide : Nat.Coprime 4 5)).isUnit
 
+theorem residueShift_ne_zero_iff_goodPhiClass (h : Nat) :
+    residueShift h ≠ 0 ↔ goodPhiClass h := by
+  rw [goodPhiClass]
+  constructor
+  · intro hne hbad
+    exact hne ((residueShift_eq_zero_iff h).2 hbad)
+  · intro hgood hzero
+    exact hgood ((residueShift_eq_zero_iff h).1 hzero)
+
+theorem residueShift_eq_zero_of_bad {h : Nat} (hbad : h % 5 = 3) :
+    residueShift h = 0 :=
+  (residueShift_eq_zero_iff h).2 hbad
+
+theorem residueShift_ne_zero_of_good {h : Nat} (hgood : goodPhiClass h) :
+    residueShift h ≠ 0 :=
+  (residueShift_ne_zero_iff_goodPhiClass h).2 hgood
+
+theorem phiInvNat_of_add_five_lt {h x : Nat} (hx : x + 5 < h) :
+    phiInvNat h x = x + 5 := by
+  unfold phiInvNat
+  rw [if_pos hx]
+  exact Nat.mod_eq_of_lt hx
+
+theorem phiInvNat_top_five {h : Nat} (hh : 6 ≤ h) :
+    phiInvNat h (h - 5) = 3 := by
+  unfold phiInvNat
+  have hnot : ¬ (h - 5 + 5 < h) := by omega
+  have hyes : h - 5 + 5 = h := by omega
+  rw [if_neg hnot, if_pos hyes]
+  exact Nat.mod_eq_of_lt (by omega : 3 < h)
+
+theorem phiInvNat_top_four {h : Nat} (hh : 6 ≤ h) :
+    phiInvNat h (h - 4) = 4 := by
+  unfold phiInvNat
+  have hnot1 : ¬ (h - 4 + 5 < h) := by omega
+  have hnot2 : ¬ (h - 4 + 5 = h) := by omega
+  have hyes : h - 4 + 4 = h := by omega
+  rw [if_neg hnot1, if_neg hnot2, if_pos hyes]
+  exact Nat.mod_eq_of_lt (by omega : 4 < h)
+
+theorem phiInvNat_top_three {h : Nat} (hh : 6 ≤ h) :
+    phiInvNat h (h - 3) = 0 := by
+  unfold phiInvNat
+  have hnot1 : ¬ (h - 3 + 5 < h) := by omega
+  have hnot2 : ¬ (h - 3 + 5 = h) := by omega
+  have hnot3 : ¬ (h - 3 + 4 = h) := by omega
+  have hyes : h - 3 + 3 = h := by omega
+  simp [hnot1, hnot2, hnot3, hyes]
+
+theorem phiInvNat_top_two {h : Nat} (hh : 6 ≤ h) :
+    phiInvNat h (h - 2) = 1 := by
+  unfold phiInvNat
+  have hnot1 : ¬ (h - 2 + 5 < h) := by omega
+  have hnot2 : ¬ (h - 2 + 5 = h) := by omega
+  have hnot3 : ¬ (h - 2 + 4 = h) := by omega
+  have hnot4 : ¬ (h - 2 + 3 = h) := by omega
+  have hyes : h - 2 + 2 = h := by omega
+  simp [hnot1, hnot2, hnot3, hnot4, hyes,
+    Nat.mod_eq_of_lt (by omega : 1 < h)]
+
+theorem phiInvNat_top_one {h : Nat} (hh : 6 ≤ h) :
+    phiInvNat h (h - 1) = 2 := by
+  unfold phiInvNat
+  have hnot1 : ¬ (h - 1 + 5 < h) := by omega
+  have hnot2 : ¬ (h - 1 + 5 = h) := by omega
+  have hnot3 : ¬ (h - 1 + 4 = h) := by omega
+  have hnot4 : ¬ (h - 1 + 3 = h) := by omega
+  have hnot5 : ¬ (h - 1 + 2 = h) := by omega
+  simp [hnot1, hnot2, hnot3, hnot4, hnot5,
+    Nat.mod_eq_of_lt (by omega : 2 < h)]
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega
