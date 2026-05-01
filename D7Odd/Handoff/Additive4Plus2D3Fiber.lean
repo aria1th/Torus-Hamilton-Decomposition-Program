@@ -55,6 +55,16 @@ theorem fiberAddQ_fiberSubQ {m : Nat}
     try rw [root3_sink_eq]
     ring
 
+theorem fiberAddQ_surjective {m : Nat} (i : Direction3) :
+    Function.Surjective (fiberAddQ (m := m) i) := by
+  intro target
+  exact ⟨fiberSubQ i target, fiberAddQ_fiberSubQ i target⟩
+
+theorem fiberAddQ_bijective {m : Nat} [NeZero m] (i : Direction3) :
+    Function.Bijective (fiberAddQ (m := m) i) :=
+  (Fintype.bijective_iff_surjective_and_card _).2
+    ⟨fiberAddQ_surjective i, rfl⟩
+
 set_option linter.flexible false in
 theorem d3OddSinkCoord_fiberSubQ_zero {m : Nat}
     (layer : ZMod m) (fiber : ARoot3 m) :

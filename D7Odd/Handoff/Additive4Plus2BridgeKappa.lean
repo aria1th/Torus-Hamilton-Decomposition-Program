@@ -18,6 +18,16 @@ def bridgeFiberGlobal (i : Direction3) : Direction :=
 @[simp] theorem bridgeFiberGlobal_two :
     bridgeFiberGlobal 2 = (6 : Direction) := rfl
 
+@[simp] theorem baseDirectionOfSlot_bridgeFiberGlobal
+    (i : Direction3) :
+    baseDirectionOfSlot (bridgeFiberGlobal i) = (4 : D5Odd.Direction) := by
+  fin_cases i <;> rfl
+
+@[simp] theorem bridgeFiberDirectionOfSlot_bridgeFiberGlobal
+    (i : Direction3) :
+    bridgeFiberDirectionOfSlot (bridgeFiberGlobal i) = i := by
+  fin_cases i <;> rfl
+
 def bridgeRawBaseSlot (slot : D5Odd.Color) : Direction :=
   ⟨slot.val, by omega⟩
 
@@ -31,6 +41,25 @@ def bridgeBaseOrFiberGlobal
   | 3 => 3
   | _ => bridgeFiberGlobal (phi 0)
 
+set_option linter.flexible false in
+@[simp] theorem baseDirectionOfSlot_bridgeBaseOrFiberGlobal
+    (phi : Direction3 → Direction3) (d : D5Odd.Direction) :
+    baseDirectionOfSlot (bridgeBaseOrFiberGlobal phi d) = d := by
+  fin_cases d <;>
+    simp [bridgeBaseOrFiberGlobal, baseDirectionOfSlot]
+  generalize hphi0 : phi 0 = i
+  fin_cases i <;> rfl
+
+set_option linter.flexible false in
+@[simp] theorem bridgeFiberDirectionOfSlot_bridgeBaseOrFiberGlobal
+    (phi : Direction3 → Direction3) (d : D5Odd.Direction) :
+    bridgeFiberDirectionOfSlot (bridgeBaseOrFiberGlobal phi d) =
+      if d = (4 : D5Odd.Direction) then phi 0 else 0 := by
+  fin_cases d <;>
+    simp [bridgeBaseOrFiberGlobal, bridgeFiberDirectionOfSlot]
+  generalize hphi0 : phi 0 = i
+  fin_cases i <;> rfl
+
 def bridgeConcreteKappa {m : Nat}
     (base : D5Odd.ARoot5 m) (phi : Direction3 → Direction3) :
     Direction → Direction :=
@@ -42,6 +71,85 @@ def bridgeConcreteKappa {m : Nat}
       bridgeFiberGlobal (phi 1)
     else
       bridgeFiberGlobal (phi 2)
+
+def bridgeConcreteBaseDirection {m : Nat}
+    (base : D5Odd.ARoot5 m) (raw : Direction) :
+    D5Odd.Direction :=
+  if hraw : raw.val < 5 then
+    d5BaseZeroSetDirection base ⟨raw.val, hraw⟩
+  else
+    4
+
+def bridgeConcreteFiberDirection {m : Nat}
+    (base : D5Odd.ARoot5 m) (phi : Direction3 → Direction3)
+    (raw : Direction) : Direction3 :=
+  if hraw : raw.val < 5 then
+    if d5BaseZeroSetDirection base ⟨raw.val, hraw⟩ = (4 : D5Odd.Direction) then
+      phi 0
+    else
+      0
+  else if raw = 5 then
+    phi 1
+  else
+    phi 2
+
+set_option linter.flexible false in
+theorem bridgeConcreteKappa_baseDirection {m : Nat}
+    (base : D5Odd.ARoot5 m) (phi : Direction3 → Direction3)
+    (raw : Direction) :
+    baseDirectionOfSlot (bridgeConcreteKappa base phi raw) =
+      bridgeConcreteBaseDirection base raw := by
+  fin_cases raw <;>
+    simp [bridgeConcreteKappa, bridgeConcreteBaseDirection]
+
+set_option linter.flexible false in
+theorem bridgeConcreteKappa_fiberDirection {m : Nat}
+    (base : D5Odd.ARoot5 m) (phi : Direction3 → Direction3)
+    (raw : Direction) :
+    bridgeFiberDirectionOfSlot (bridgeConcreteKappa base phi raw) =
+      bridgeConcreteFiberDirection base phi raw := by
+  fin_cases raw <;>
+    simp [bridgeConcreteKappa, bridgeConcreteFiberDirection]
+
+def bridgeConcreteBaseStepOfRaw {m : Nat}
+    (raw : Direction) : D5Odd.ARoot5 m → D5Odd.ARoot5 m :=
+  fun base => baseAddQ (bridgeConcreteBaseDirection base raw) base
+
+theorem bridgeConcreteBaseStepOfRaw_bijective {m : Nat} [NeZero m]
+    (hm : 5 ≤ m) (raw : Direction) :
+    Function.Bijective (bridgeConcreteBaseStepOfRaw (m := m) raw) := by
+  fin_cases raw
+  · simpa [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      d5BaseZeroSetStep] using
+      d5BaseZeroSetStep_bijective (m := m) hm (0 : D5Odd.Color)
+  · simpa [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      d5BaseZeroSetStep] using
+      d5BaseZeroSetStep_bijective (m := m) hm (1 : D5Odd.Color)
+  · simpa [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      d5BaseZeroSetStep] using
+      d5BaseZeroSetStep_bijective (m := m) hm (2 : D5Odd.Color)
+  · simpa [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      d5BaseZeroSetStep] using
+      d5BaseZeroSetStep_bijective (m := m) hm (3 : D5Odd.Color)
+  · simpa [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      d5BaseZeroSetStep] using
+      d5BaseZeroSetStep_bijective (m := m) hm (4 : D5Odd.Color)
+  · simp [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      baseAddQ]
+  · simp [bridgeConcreteBaseStepOfRaw, bridgeConcreteBaseDirection,
+      baseAddQ]
+
+def bridgeConcreteBaseStep {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (t : ZMod m) (c : Color) :
+    D5Odd.ARoot5 m → D5Odd.ARoot5 m :=
+  bridgeConcreteBaseStepOfRaw (row c t)
+
+theorem bridgeConcreteBaseStep_bijective {m : Nat} [NeZero m]
+    (hm : 5 ≤ m) (row : Color → ZMod m → Direction) :
+    ∀ t c, Function.Bijective (bridgeConcreteBaseStep (m := m) row t c) := by
+  intro t c
+  exact bridgeConcreteBaseStepOfRaw_bijective hm (row c t)
 
 theorem bridgeConcreteKappa_surjective {m : Nat}
     (base : D5Odd.ARoot5 m) (phi : Direction3 → Direction3)
@@ -195,6 +303,147 @@ theorem bridgeD3FiberStep_bijective_of_two_le {m : Nat}
   intro t base slot
   exact d3OddPermutedStep_bijective_of_two_le hm
     (fiberLayer t base) (perm t base) slot
+
+def bridgeConcreteFiberStepOfRaw {m : Nat}
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (t : ZMod m) (base : D5Odd.ARoot5 m) (raw : Direction) :
+    ARoot3 m → ARoot3 m :=
+  fun fiber =>
+    fiberAddQ
+      (bridgeConcreteFiberDirection base
+        (bridgeD3Phi fiberLayer perm t (base, fiber)) raw)
+      fiber
+
+theorem bridgeConcreteFiberStepOfRaw_bijective_of_two_le {m : Nat}
+    (hm : 2 ≤ m)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3) :
+    ∀ t base raw,
+      Function.Bijective
+        (bridgeConcreteFiberStepOfRaw fiberLayer perm t base raw) := by
+  haveI : NeZero m := ⟨by omega⟩
+  intro t base raw
+  fin_cases raw
+  · by_cases hroot :
+      d5BaseZeroSetDirection base (0 : D5Odd.Color) =
+        (4 : D5Odd.Direction)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+        d3OddStep, hroot] using
+        d3OddPermutedStep_bijective_of_two_le hm
+          (fiberLayer t base) (perm t base) (0 : Direction3)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        hroot] using fiberAddQ_bijective (m := m) (0 : Direction3)
+  · by_cases hroot :
+      d5BaseZeroSetDirection base (1 : D5Odd.Color) =
+        (4 : D5Odd.Direction)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+        d3OddStep, hroot] using
+        d3OddPermutedStep_bijective_of_two_le hm
+          (fiberLayer t base) (perm t base) (0 : Direction3)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        hroot] using fiberAddQ_bijective (m := m) (0 : Direction3)
+  · by_cases hroot :
+      d5BaseZeroSetDirection base (2 : D5Odd.Color) =
+        (4 : D5Odd.Direction)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+        d3OddStep, hroot] using
+        d3OddPermutedStep_bijective_of_two_le hm
+          (fiberLayer t base) (perm t base) (0 : Direction3)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        hroot] using fiberAddQ_bijective (m := m) (0 : Direction3)
+  · by_cases hroot :
+      d5BaseZeroSetDirection base (3 : D5Odd.Color) =
+        (4 : D5Odd.Direction)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+        d3OddStep, hroot] using
+        d3OddPermutedStep_bijective_of_two_le hm
+          (fiberLayer t base) (perm t base) (0 : Direction3)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        hroot] using fiberAddQ_bijective (m := m) (0 : Direction3)
+  · by_cases hroot :
+      d5BaseZeroSetDirection base (4 : D5Odd.Color) =
+        (4 : D5Odd.Direction)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+        d3OddStep, hroot] using
+        d3OddPermutedStep_bijective_of_two_le hm
+          (fiberLayer t base) (perm t base) (0 : Direction3)
+    · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+        hroot] using fiberAddQ_bijective (m := m) (0 : Direction3)
+  · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+      bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+      d3OddStep] using
+      d3OddPermutedStep_bijective_of_two_le hm
+        (fiberLayer t base) (perm t base) (1 : Direction3)
+  · simpa [bridgeConcreteFiberStepOfRaw, bridgeConcreteFiberDirection,
+      bridgeD3Phi, d3OddPermutedStep, d3OddPermutedDirection,
+      d3OddStep] using
+      d3OddPermutedStep_bijective_of_two_le hm
+        (fiberLayer t base) (perm t base) (2 : Direction3)
+
+def bridgeConcreteFiberStep {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (t : ZMod m) (c : Color) (base : D5Odd.ARoot5 m) :
+    ARoot3 m → ARoot3 m :=
+  bridgeConcreteFiberStepOfRaw fiberLayer perm t base (row c t)
+
+theorem bridgeConcreteFiberStep_bijective_of_two_le {m : Nat}
+    (hm : 2 ≤ m) (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3) :
+    ∀ t c base,
+      Function.Bijective
+        (bridgeConcreteFiberStep row fiberLayer perm t c base) := by
+  intro t c base
+  exact bridgeConcreteFiberStepOfRaw_bijective_of_two_le hm
+    fiberLayer perm t base (row c t)
+
+theorem bridgeConcreteSchedule_layerMap_eq_skewProductMap {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (t : ZMod m) (c : Color) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).layerMap t c =
+      Shared.skewProductMap
+        (bridgeConcreteBaseStep row t c)
+        (bridgeConcreteFiberStep row fiberLayer perm t c) := by
+  exact (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm))
+    |>.layerMap_eq_skewProductMap_of_components
+      (bridgeConcreteBaseStep row)
+      (bridgeConcreteFiberStep row fiberLayer perm)
+      (by
+        intro t c base fiber
+        simp [bridgeConcreteSchedule, bridgeConcreteStateKappa,
+          bridgeConcreteBaseStep, bridgeConcreteBaseStepOfRaw,
+          bridgeConcreteKappa_baseDirection])
+      (by
+        intro t c base fiber
+        simp [bridgeConcreteSchedule, bridgeConcreteStateKappa,
+          bridgeConcreteFiberStep, bridgeConcreteFiberStepOfRaw,
+          bridgeConcreteKappa_fiberDirection])
+      t c
+
+theorem bridgeConcreteSchedule_layerBijective {m : Nat} [NeZero m]
+    (hm : 5 ≤ m) (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).layerBijective := by
+  intro t c
+  rw [bridgeConcreteSchedule_layerMap_eq_skewProductMap
+    row fiberLayer perm t c]
+  exact Shared.skewProductMap_bijective
+    (bridgeConcreteBaseStep row t c)
+    (bridgeConcreteFiberStep row fiberLayer perm t c)
+    (bridgeConcreteBaseStep_bijective hm row t c)
+    (bridgeConcreteFiberStep_bijective_of_two_le (by omega)
+      row fiberLayer perm t c)
 
 end Additive4Plus2
 end Handoff
