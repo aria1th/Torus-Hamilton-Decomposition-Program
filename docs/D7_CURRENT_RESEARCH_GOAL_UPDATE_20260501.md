@@ -414,6 +414,14 @@ Implementation progress after this goal update:
   above is checked.  With `--emit-hit-cert-dir`, formula hits are materialized
   as verifier-ready JSON certificates, and the alternate `m=5` emitted
   certificate passes `scripts/verify_4plus2_allN_bridge_cert.py --cert-json`.
+  The script also has a larger dihedral family that lets the reflection bit be
+  affine modulo 2 while the rotation remains affine modulo 3; using
+  `--section-only`, this family is checked against the monodromy
+  section-return criterion instead of the full product-cycle audit.  It
+  reproduces the bundled `m=5` and `m=7` hits with constant reflection bit.
+  The complete bundled `m=9` dihedral sweep remains heavy in pure Python, so
+  bounded probes should use `--max-candidates` until this path is moved to a
+  compiled/vectorized backend.
   With `--diagnostics-only`, the same script now skips formula verification and
   measures whether an existing kappa table is a function of coarse features.
   For bundled `m=9`, the feature partitions `zero_mask`, `zero_count`, `p`,

@@ -285,6 +285,14 @@ classes and majority fraction `0.188843`.  The residue profile also leaves it
 opaque: `layer_full_mod3` has `0/729` pure classes, and
 `layer_zero_mask_full_mod3` has only `44/3033` pure classes.
 
+The same script now has a larger dihedral search family, where the S3
+permutation is encoded by an affine rotation modulo 3 and an affine reflection
+bit modulo 2.  With `--section-only`, the search tests the exact monodromy
+section-return criterion without replaying the product-cycle audit.  This
+reproduces the bundled `m=5` and `m=7` formulas with constant reflection bit;
+the full `m=9` dihedral sweep is still too slow in pure Python and should be
+treated as a candidate for a compiled/vectorized backend.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

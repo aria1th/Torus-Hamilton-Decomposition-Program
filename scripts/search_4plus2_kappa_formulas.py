@@ -11,12 +11,15 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from verify_4plus2_allN_bridge_cert import (
+    BridgeModel,
     PERMS3,
     base_tuple,
+    cycle_rank,
     default_bundle_path,
     lambda1_direction,
     load_bundle,
     parse_only,
+    validate_certificate,
     verify_certificate,
 )
 
@@ -45,6 +48,10 @@ def rotation_perm_index(r: int, reflected: bool) -> int:
     else:
         perm = tuple((r + j) % 3 for j in range(3))
     return PERM_INDEX[perm]
+
+
+def affine_value(features: tuple[int, ...], coeffs: tuple[int, ...], modulus: int) -> int:
+    return sum(c * x for c, x in zip(coeffs, features)) % modulus
 
 
 def summarize_feature_dependency(
@@ -162,19 +169,144 @@ def build_formula_kappa(
     return table
 
 
+def build_dihedral_formula_kappa(
+    m: int,
+    *,
+    rotation: tuple[int, int, int, int],
+    reflection: tuple[int, int, int, int],
+) -> list[list[int]]:
+    table = []
+    for t in range(m):
+        layer = []
+        for base in range(m**4):
+            xs = base_tuple(base, m)
+            features = (t, lambda1_direction(xs, 0, m), zero_count(xs, m), 1)
+            r = affine_value(features, rotation, 3)
+            reflected = affine_value(features, reflection, 2) == 1
+            layer.append(rotation_perm_index(r, reflected))
+        table.append(layer)
+    return table
+
+
+def build_kappa_from_formula(m: int, formula: dict) -> list[list[int]]:
+    if formula.get("family") == "dihedral":
+        return build_dihedral_formula_kappa(
+            m,
+            rotation=tuple(formula["rotation"]),
+            reflection=tuple(formula["reflection"]),
+        )
+    return build_formula_kappa(
+        m,
+        a=formula["a"],
+        b=formula["b"],
+        c=formula["c"],
+        d=formula["d"],
+        reflected=formula["reflected"],
+    )
+
+
 def formula_label(a: int, b: int, c: int, d: int, reflected: bool) -> str:
     orientation = "reflected" if reflected else "cyclic"
     return f"{orientation}: r = {a}*t + {b}*p + {c}*z + {d} mod 3"
 
 
-def test_formula(cert: dict, formula: dict) -> dict:
+def dihedral_formula_label(
+    rotation: tuple[int, int, int, int], reflection: tuple[int, int, int, int]
+) -> str:
+    return (
+        "dihedral: "
+        f"r = {rotation[0]}*t + {rotation[1]}*p + "
+        f"{rotation[2]}*z + {rotation[3]} mod 3; "
+        f"ref = {reflection[0]}*t + {reflection[1]}*p + "
+        f"{reflection[2]}*z + {reflection[3]} mod 2"
+    )
+
+
+def assert_single_cycle_perm(perm: list[int], label: str) -> None:
+    size = len(perm)
+    seen = bytearray(size)
+    state = 0
+    for step_count in range(size):
+        if not 0 <= state < size:
+            raise ValueError(f"{label}: state {state} is outside 0..{size - 1}")
+        if seen[state]:
+            raise ValueError(f"{label}: repeated state {state} after {step_count} steps")
+        seen[state] = 1
+        state = perm[state]
+    if state != 0:
+        raise ValueError(f"{label}: did not return to start 0; ended at {state}")
+
+
+def compose_section_perm(
+    model: BridgeModel,
+    row: list[int],
+    kappa: list[list[int]],
+    base_point: int,
+    base_period: int,
+) -> list[int]:
+    base = base_point
+    section_perm = list(range(model.fiber_size))
+    for _ in range(base_period):
+        for layer, output_slot in enumerate(row):
+            if output_slot < 5:
+                direction = model.base_direction[output_slot][base]
+                next_base = model.base_next[output_slot][base]
+                if direction == 4:
+                    perm = PERMS3[kappa[layer][base]]
+                    fiber_map = model.fiber_next[layer][perm[0]]
+                else:
+                    fiber_map = model.fiber_forced_q0
+                base = next_base
+            else:
+                perm = PERMS3[kappa[layer][base]]
+                fiber_map = model.fiber_next[layer][perm[output_slot - 4]]
+            section_perm = [fiber_map[state] for state in section_perm]
+    if base != base_point:
+        raise ValueError(f"section return left base point {base_point}; ended at base {base}")
+    return section_perm
+
+
+def test_kappa(cert: dict, kappa: list[list[int]], *, section_only: bool) -> dict:
     candidate = copy.deepcopy(cert)
-    candidate["kappa_perm_indices"] = build_formula_kappa(cert["m"], **formula)
+    candidate["kappa_perm_indices"] = kappa
     try:
-        message, _summary = verify_certificate(candidate)
+        if section_only:
+            validate_certificate(candidate)
+            m = candidate["m"]
+            model = BridgeModel(m)
+            base_period = m**4
+            for color, row in enumerate(candidate["rows"]):
+                base_step = lambda base, row=row: model.base_return_step(base, row)
+                cycle_rank(
+                    base_period,
+                    0,
+                    base_step,
+                    f"m={m}: color {color} base return",
+                )
+                section_perm = compose_section_perm(
+                    model, row, kappa, 0, base_period
+                )
+                assert_single_cycle_perm(
+                    section_perm,
+                    f"m={m}: color {color} fiber section return",
+                )
+            message = (
+                f"section-verified m={m} rows=7 "
+                "base_cycles=single section_cycles=single"
+            )
+        else:
+            message, _summary = verify_certificate(candidate)
     except Exception as exc:
         return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
     return {"ok": True, "message": message}
+
+
+def test_formula(cert: dict, formula: dict, *, section_only: bool) -> dict:
+    return test_kappa(
+        cert,
+        build_kappa_from_formula(cert["m"], formula),
+        section_only=section_only,
+    )
 
 
 def search_formulas(
@@ -184,13 +316,33 @@ def search_formulas(
     include_failures: bool,
     diagnose_hits: bool,
     diagnostic_profile: str,
+    section_only: bool,
+    max_candidates: int | None,
 ) -> dict:
     hits = []
     failures = []
+    candidates_checked = 0
     for reflected in (False, True):
         for a, b, c, d in itertools.product(range(3), repeat=4):
-            formula = {"a": a, "b": b, "c": c, "d": d, "reflected": reflected}
-            result = test_formula(cert, formula)
+            if max_candidates is not None and candidates_checked >= max_candidates:
+                return {
+                    "m": cert["m"],
+                    "family": "rotation",
+                    "candidates_checked": candidates_checked,
+                    "hits": hits,
+                    "failures": failures,
+                    "truncated": True,
+                }
+            formula = {
+                "family": "rotation",
+                "a": a,
+                "b": b,
+                "c": c,
+                "d": d,
+                "reflected": reflected,
+            }
+            candidates_checked += 1
+            result = test_formula(cert, formula, section_only=section_only)
             record = {
                 "formula": formula,
                 "label": formula_label(a, b, c, d, reflected),
@@ -200,15 +352,90 @@ def search_formulas(
                 if diagnose_hits:
                     record["formula_kappa_diagnostics"] = kappa_dependency_diagnostics(
                         cert["m"],
-                        build_formula_kappa(cert["m"], **formula),
+                        build_kappa_from_formula(cert["m"], formula),
                         profile=diagnostic_profile,
                     )
                 hits.append(record)
                 if stop_after_first:
-                    return {"m": cert["m"], "hits": hits, "failures": failures}
+                    return {
+                        "m": cert["m"],
+                        "family": "rotation",
+                        "candidates_checked": candidates_checked,
+                        "hits": hits,
+                        "failures": failures,
+                    }
             elif include_failures:
                 failures.append(record)
-    return {"m": cert["m"], "hits": hits, "failures": failures}
+    return {
+        "m": cert["m"],
+        "family": "rotation",
+        "candidates_checked": candidates_checked,
+        "hits": hits,
+        "failures": failures,
+    }
+
+
+def search_dihedral_formulas(
+    cert: dict,
+    *,
+    stop_after_first: bool,
+    include_failures: bool,
+    diagnose_hits: bool,
+    diagnostic_profile: str,
+    section_only: bool,
+    max_candidates: int | None,
+) -> dict:
+    hits = []
+    failures = []
+    candidates_checked = 0
+    for reflection in itertools.product(range(2), repeat=4):
+        for rotation in itertools.product(range(3), repeat=4):
+            if max_candidates is not None and candidates_checked >= max_candidates:
+                return {
+                    "m": cert["m"],
+                    "family": "dihedral",
+                    "candidates_checked": candidates_checked,
+                    "hits": hits,
+                    "failures": failures,
+                    "truncated": True,
+                }
+            formula = {
+                "family": "dihedral",
+                "rotation": list(rotation),
+                "reflection": list(reflection),
+            }
+            candidates_checked += 1
+            result = test_formula(cert, formula, section_only=section_only)
+            record = {
+                "formula": formula,
+                "label": dihedral_formula_label(rotation, reflection),
+                "result": result,
+            }
+            if result["ok"]:
+                if diagnose_hits:
+                    record["formula_kappa_diagnostics"] = kappa_dependency_diagnostics(
+                        cert["m"],
+                        build_kappa_from_formula(cert["m"], formula),
+                        profile=diagnostic_profile,
+                    )
+                hits.append(record)
+                if stop_after_first:
+                    return {
+                        "m": cert["m"],
+                        "family": "dihedral",
+                        "candidates_checked": candidates_checked,
+                        "hits": hits,
+                        "failures": failures,
+                    }
+            elif include_failures:
+                failures.append(record)
+    return {
+        "m": cert["m"],
+        "family": "dihedral",
+        "candidates_checked": candidates_checked,
+        "hits": hits,
+        "failures": failures,
+    }
 
 
 def bundled_cases(bundle: Path, only: set[int] | None) -> list[tuple[dict, dict]]:
@@ -269,7 +496,7 @@ def write_hit_certificates(
     for hit_index, hit in enumerate(hits):
         formula = hit["formula"]
         out_cert = copy.deepcopy(cert)
-        out_cert["kappa_perm_indices"] = build_formula_kappa(cert["m"], **formula)
+        out_cert["kappa_perm_indices"] = build_kappa_from_formula(cert["m"], formula)
         out_cert["formula_kappa"] = {
             "source": source,
             "formula": formula,
@@ -303,6 +530,22 @@ def main() -> None:
     parser.add_argument(
         "--all-hits", action="store_true", help="do not stop after first hit"
     )
+    parser.add_argument(
+        "--formula-family",
+        choices=("rotation", "dihedral"),
+        default="rotation",
+        help="formula family to search",
+    )
+    parser.add_argument(
+        "--section-only",
+        action="store_true",
+        help="during formula search, check base and fiber section cycles but skip product-cycle audit",
+    )
+    parser.add_argument(
+        "--max-candidates",
+        type=int,
+        help="stop each formula search after this many candidates",
+    )
     parser.add_argument("--include-failures", action="store_true")
     parser.add_argument(
         "--diagnose-kappa",
@@ -332,13 +575,23 @@ def main() -> None:
 
     payload = {
         "description": (
-            "Search kappa(t,u)=rotation(a*t+b*p(Z(u))+c*|Z(u)|+d mod 3)."
+            "Search simple zero-set kappa formula families for the 4+2 bridge."
         ),
         "searches": [],
     }
     for source, cert in cases:
         if args.diagnostics_only:
             result = {"m": cert["m"], "hits": [], "failures": []}
+        elif args.formula_family == "dihedral":
+            result = search_dihedral_formulas(
+                cert,
+                stop_after_first=not args.all_hits,
+                include_failures=args.include_failures,
+                diagnose_hits=args.diagnose_kappa,
+                diagnostic_profile=args.diagnostic_profile,
+                section_only=args.section_only,
+                max_candidates=args.max_candidates,
+            )
         else:
             result = search_formulas(
                 cert,
@@ -346,6 +599,8 @@ def main() -> None:
                 include_failures=args.include_failures,
                 diagnose_hits=args.diagnose_kappa,
                 diagnostic_profile=args.diagnostic_profile,
+                section_only=args.section_only,
+                max_candidates=args.max_candidates,
             )
         result["source"] = source
         if args.diagnose_kappa or args.diagnostics_only:
