@@ -73,6 +73,7 @@ when `m` is odd and `m >= 3`.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
 - `scripts/analyze_4plus2_base_rows.py`: base-only search aid for the all-zero-set `4+2` bridge; it summarizes bundled row projections and scans short primitive A5 base words.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
+- `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
@@ -186,6 +187,23 @@ profile, `layer_full_mod3` also has `0/729` pure classes, and even
 `layer_zero_mask_full_mod3` has only `44/3033` pure classes.  This is not an
 impossibility proof, but it records why the bundled table should be treated as
 opaque relative to these coarse features.
+
+Extracted certificate JSON files can be inspected directly.  For example,
+`bridge_4plus2_allN_m9_zero_set_K_cert.json` verifies as a full bridge
+certificate and its kappa table is pure on `zero_mask`:
+
+```bash
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
+  --json-out /tmp/d7_m9_zero_set_K_diag.json
+python3 scripts/d7_bridge_snapshot.py \
+  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --include-full-verify --include-section-trace \
+  --json-out /tmp/d7_m9_zero_set_K_snapshot.json
+```
 
 It can also test row solutions exported by the base analyzer:
 

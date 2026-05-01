@@ -298,6 +298,13 @@ the first section-cycle lengths are `27` for `664` candidates, `9` for `516`,
 `0`, `slot_by_layer_p_z_component` has only `5/55` pure classes, and adding
 full coordinate residues modulo `3` gives only `11/1235` pure classes.
 
+The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json` gives a
+finite replacement for this bundled `m=9` kappa table.  It keeps the same rows,
+passes the full bridge verifier, and is pure on `zero_mask`: `27/27` classes
+for `zero_mask`, `243/243` for `layer_zero_mask`, and `3033/3033` for
+`layer_zero_mask_full_mod3`.  This shifts the fiber question from opaque
+state-dependence to explaining a finite zero-set table `K(Z)`.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

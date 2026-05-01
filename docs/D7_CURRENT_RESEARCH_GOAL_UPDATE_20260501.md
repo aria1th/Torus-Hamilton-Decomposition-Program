@@ -444,6 +444,14 @@ Implementation progress after this goal update:
   `layer_zero_mask_full_mod3` has only `44/3033` pure classes, so the bundled
   table is not explained by adding coordinate residues modulo 3 to the coarse
   zero-set features.
+- The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json`
+  resolves this finite `m=9` obstruction with the same rows but a replacement
+  kappa table.  It passes the full bridge verifier, and its kappa table is
+  layer-independent and zero-set-only: `zero_mask` has `27/27` pure classes,
+  `layer_zero_mask` has `243/243`, and `layer_zero_mask_full_mod3` has
+  `3033/3033`.  The remaining fiber problem is therefore no longer "find an
+  arbitrary m=9 table"; it is to explain and generalize the finite zero-set
+  table `K(Z)`.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

@@ -40,8 +40,11 @@ Concretely, this splits into two rank-step theorems:
   `fiberRank : Color -> ARoot3 m -> ZMod (m ^ 2)` such that the section return
   over the `m^4` base period steps `fiberRank` by `+1`.
 
-The main live obstruction is the fiber compiler at bundled `m = 9`, especially
-color `0`.
+The previous live obstruction was the bundled fiber compiler at `m = 9`,
+especially color `0`.  The extracted certificate
+`bridge_4plus2_allN_m9_zero_set_K_cert.json` now gives a finite zero-set-only
+replacement for this case.  The remaining blocker is to explain and generalize
+that `K(Z)` table, and to combine it with a uniform base-row family.
 
 ## Found Facts
 
@@ -65,7 +68,7 @@ bridge certificates:
 The alternate `m = 5` base cover found by the base-row analyzer also admits a
 simple formula: `r = t + |Z| + 2 mod 3`.
 
-### Bundled m = 9 Fiber Obstruction
+### Bundled m = 9 Fiber Obstruction and Zero-Set K Replacement
 
 For bundled `m = 9`, the restricted cyclic/reflected affine family has no hit.
 The larger dihedral family also has no hit:
@@ -94,6 +97,34 @@ currently tested.  Along the color-0 section trace:
 This says that even after adding full coordinate residues modulo `3`, the
 observed finite witness still depends on finer base-state information.
 
+The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json` changes
+the picture.  It keeps the bundled `m = 9` rows, replaces the kappa table, and
+passes the full verifier:
+
+```text
+verified m=9 product_states=531441 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
+```
+
+The new kappa table is layer-independent and zero-set-only:
+
+- `zero_mask`: `27/27` pure classes;
+- `layer_zero_mask`: `243/243` pure classes;
+- `layer_zero_mask_full_mod3`: `3033/3033` pure classes.
+
+The certificate metadata records the table as `K(Z)` on the shifted zero-set
+mask `S = Z(u)-1`:
+
+```text
+0->1, 1->3, 2->2, 3->4, 4->5, 5->3, 6->0, 7->1, 8->3,
+9->0, 10->4, 11->5, 12->4, 13->4, 14->1, 16->1, 17->0,
+18->3, 19->3, 20->2, 21->4, 22->3, 24->3, 25->3, 26->2,
+28->1, 31->4
+```
+
+So `m = 9` is no longer evidence that the bridge needs arbitrary opaque
+state-dependence.  It is evidence that the needed compiler may be a finite
+zero-set table rather than a four-parameter affine formula.
+
 ### Base Row Side
 
 The base side is also not explained by a very short uniform primitive word
@@ -111,7 +142,8 @@ family.
 When new bundles arrive, compare them against this baseline:
 
 - Do they include a finer description of the bundled `m = 9` kappa table?
-- Do they explain color `0` section monodromy for `m = 9`?
+- Do they explain why the zero-set-only `K(Z)` replacement gives color `0`
+  section monodromy for `m = 9`?
 - Do they provide a candidate invariant finer than `(layer, p, |Z|, component)`
   and full residues modulo `3`?
 - Do they include a uniform or congruence-dependent base-row family that covers
@@ -135,6 +167,12 @@ python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
 python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
   --diagnostics-only --section-trace-diagnostics \
   --json-out /tmp/d7_m9_section_trace_diag_check.json
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
+  --json-out /tmp/d7_m9_zero_set_K_diag.json
 git diff --check
 ```
 

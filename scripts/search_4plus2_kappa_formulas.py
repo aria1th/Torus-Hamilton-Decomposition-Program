@@ -826,6 +826,17 @@ def bundled_cases(bundle: Path, only: set[int] | None) -> list[tuple[dict, dict]
     ]
 
 
+def cert_json_cases(paths: list[Path], only: set[int] | None) -> list[tuple[dict, dict]]:
+    cases = []
+    for path in paths:
+        cert = json.loads(path.read_text())
+        m = cert.get("m")
+        if only is not None and m not in only:
+            continue
+        cases.append(({"kind": "cert_json", "path": str(path), "m": m}, cert))
+    return cases
+
+
 def cover_json_cases(
     path: Path,
     bundle: Path,
@@ -894,6 +905,13 @@ def main() -> None:
     parser.add_argument("--bundle", type=Path, default=default_bundle_path())
     parser.add_argument("--only", help="comma-separated bundled moduli to test")
     parser.add_argument(
+        "--cert-json",
+        type=Path,
+        action="append",
+        default=[],
+        help="analyze one or more extracted bridge certificate JSON files",
+    )
+    parser.add_argument(
         "--cover-json",
         type=Path,
         help="analyze row solutions from scripts/analyze_4plus2_base_rows.py",
@@ -957,7 +975,9 @@ def main() -> None:
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
     only = parse_only(args.only)
-    if args.cover_json is None:
+    if args.cert_json:
+        cases = cert_json_cases(args.cert_json, only)
+    elif args.cover_json is None:
         cases = bundled_cases(args.bundle, only)
     else:
         cases = cover_json_cases(
