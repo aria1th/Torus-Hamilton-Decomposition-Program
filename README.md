@@ -33,6 +33,7 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/Additive4Plus2.lean`: root-state coordinate equivalence `A7(m) ~= A5(m) x A3(m)`, D7 slot-step conjugacy, product-side certificate adapters into the D7 root-flat and shared layered-lift targets, and local/skew-return criteria for constructing product certificates.
 - `D7Odd/Handoff/Additive4Plus2BridgeChart.lean`: alternate `4+2` bridge chart matching the bundled all-zero-set model, where base non-root directions carry the forced D3 `q0` fiber move, plus bridge-chart local/skew-return certificate adapters.
 - `D7Odd/Handoff/Additive4Plus2Endpoints.lean`: final torus/Cayley wrappers from direct-chart and bridge-chart `4+2` product-side certificates.
+- `D7Odd/Handoff/Additive4Plus2Goal.lean`: conditional odd D7 goal theorem: the finite `m = 3` branch plus bridge-chart certificates for all odd `m >= 5` imply the handoff, torus, Cayley, and shared Cayley endpoints.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
