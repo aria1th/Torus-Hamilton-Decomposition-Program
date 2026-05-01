@@ -291,7 +291,9 @@ bit modulo 2.  With `--section-only`, the search tests the exact monodromy
 section-return criterion without replaying the product-cycle audit.  This
 reproduces the bundled `m=5` and `m=7` formulas with constant reflection bit;
 the full `m=9` dihedral sweep checks all `1296` candidates and finds no
-section-return hit.
+section-return hit.  The failure summary is already concentrated at color `0`:
+the first section-cycle lengths are `27` for `664` candidates, `9` for `516`,
+`3` for `79`, and `1` for `37`.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

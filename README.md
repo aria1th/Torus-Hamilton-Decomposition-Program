@@ -158,7 +158,9 @@ python3 scripts/search_4plus2_kappa_formulas.py --only 5,7 \
 
 This reproduces the `m=5` and `m=7` hits with constant reflection bit.  Running
 the same command with `--only 9` checks all `1296` dihedral candidates and finds
-no section-return hit.
+no section-return hit.  With `--summarize-failures`, all bundled `m=9`
+dihedral candidates fail already at color `0`; the first section-cycle lengths
+are `27` for `664` candidates, `9` for `516`, `3` for `79`, and `1` for `37`.
 
 To inspect an existing kappa table without running the formula search:
 

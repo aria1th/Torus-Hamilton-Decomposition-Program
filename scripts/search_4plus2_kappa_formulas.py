@@ -237,6 +237,13 @@ def assert_single_cycle_perm(perm: list[int], label: str) -> None:
         raise ValueError(f"{label}: did not return to start 0; ended at {state}")
 
 
+def format_counter(counter: Counter) -> list[dict]:
+    return [
+        {"key": key, "count": count}
+        for key, count in sorted(counter.items(), key=lambda item: (-item[1], item[0]))
+    ]
+
+
 def compose_section_perm(
     model: BridgeModel,
     row: list[int],
@@ -351,15 +358,45 @@ def assert_single_cycle_from_events(
     maps: dict[int, list[int]],
     label: str,
 ) -> None:
-    seen = bytearray(model.fiber_size)
+    report = section_cycle_report(model, event_keys, maps)
+    if report["ok"]:
+        return
+    if report["kind"] == "repeat":
+        raise ValueError(
+            f"{label}: repeated state {report['state']} after {report['repeat_after']} steps"
+        )
+    raise ValueError(
+        f"{label}: did not return to start 0; ended at {report['end_state']}"
+    )
+
+
+def section_cycle_report(
+    model: BridgeModel,
+    event_keys: list[int],
+    maps: dict[int, list[int]],
+) -> dict:
+    seen_at = [-1] * model.fiber_size
     state = 0
     for step_count in range(model.fiber_size):
-        if seen[state]:
-            raise ValueError(f"{label}: repeated state {state} after {step_count} steps")
-        seen[state] = 1
+        if seen_at[state] != -1:
+            return {
+                "ok": False,
+                "kind": "repeat",
+                "state": state,
+                "cycle_start": seen_at[state],
+                "cycle_length": step_count - seen_at[state],
+                "repeat_after": step_count,
+            }
+        seen_at[state] = step_count
         state = section_step_from_events(model, event_keys, maps, state)
-    if state != 0:
-        raise ValueError(f"{label}: did not return to start 0; ended at {state}")
+    if state == 0:
+        return {"ok": True, "cycle_length": model.fiber_size}
+    return {
+        "ok": False,
+        "kind": "nonreturn",
+        "end_state": state,
+        "repeat_after": model.fiber_size,
+    }
 
 
 def section_contexts_for_cert(cert: dict) -> dict:
@@ -392,12 +429,24 @@ def test_formula_with_section_contexts(section_contexts: dict, formula: dict) ->
         model = section_contexts["model"]
         for context in section_contexts["contexts"]:
             maps = fiber_maps_for_formula(model, context["key_data"], formula)
-            assert_single_cycle_from_events(
-                model,
-                context["event_keys"],
-                maps,
-                f"m={section_contexts['m']}: color {context['color']} fiber section return",
-            )
+            report = section_cycle_report(model, context["event_keys"], maps)
+            if not report["ok"]:
+                label = (
+                    f"m={section_contexts['m']}: color {context['color']} "
+                    "fiber section return"
+                )
+                failure = {"color": context["color"], **report}
+                if report["kind"] == "repeat":
+                    error = (
+                        f"ValueError: {label}: repeated state {report['state']} "
+                        f"after {report['repeat_after']} steps"
+                    )
+                else:
+                    error = (
+                        f"ValueError: {label}: did not return to start 0; "
+                        f"ended at {report['end_state']}"
+                    )
+                return {"ok": False, "error": error, "failure": failure}
     except Exception as exc:
         return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
     return {
@@ -462,6 +511,45 @@ def test_formula(cert: dict, formula: dict, *, section_only: bool) -> dict:
     )
 
 
+def update_failure_summary(summary: dict, result: dict) -> None:
+    failure = result.get("failure")
+    if failure is None:
+        summary["unstructured"] += 1
+        return
+    color = str(failure.get("color"))
+    summary["by_color"][color] += 1
+    if failure.get("kind") == "repeat":
+        cycle_length = str(failure.get("cycle_length"))
+        repeat_after = str(failure.get("repeat_after"))
+        summary["by_cycle_length"][cycle_length] += 1
+        summary["by_color_cycle_length"][f"{color}:{cycle_length}"] += 1
+        summary["by_repeat_after"][repeat_after] += 1
+    else:
+        summary["nonreturn"] += 1
+
+
+def empty_failure_summary() -> dict:
+    return {
+        "by_color": Counter(),
+        "by_cycle_length": Counter(),
+        "by_color_cycle_length": Counter(),
+        "by_repeat_after": Counter(),
+        "nonreturn": 0,
+        "unstructured": 0,
+    }
+
+
+def finalize_failure_summary(summary: dict) -> dict:
+    return {
+        "by_color": format_counter(summary["by_color"]),
+        "by_cycle_length": format_counter(summary["by_cycle_length"]),
+        "by_color_cycle_length": format_counter(summary["by_color_cycle_length"]),
+        "by_repeat_after": format_counter(summary["by_repeat_after"]),
+        "nonreturn": summary["nonreturn"],
+        "unstructured": summary["unstructured"],
+    }
+
+
 def search_formulas(
     cert: dict,
     *,
@@ -471,9 +559,11 @@ def search_formulas(
     diagnostic_profile: str,
     section_only: bool,
     max_candidates: int | None,
+    summarize_failures: bool,
 ) -> dict:
     hits = []
     failures = []
+    failure_summary = empty_failure_summary() if summarize_failures else None
     candidates_checked = 0
     section_contexts = section_contexts_for_cert(cert) if section_only else None
     for reflected in (False, True):
@@ -486,6 +576,11 @@ def search_formulas(
                     "hits": hits,
                     "failures": failures,
                     "truncated": True,
+                    **(
+                        {"failure_summary": finalize_failure_summary(failure_summary)}
+                        if failure_summary is not None
+                        else {}
+                    ),
                 }
             formula = {
                 "family": "rotation",
@@ -523,12 +618,19 @@ def search_formulas(
                     }
             elif include_failures:
                 failures.append(record)
+            if (not result["ok"]) and failure_summary is not None:
+                update_failure_summary(failure_summary, result)
     return {
         "m": cert["m"],
         "family": "rotation",
         "candidates_checked": candidates_checked,
         "hits": hits,
         "failures": failures,
+        **(
+            {"failure_summary": finalize_failure_summary(failure_summary)}
+            if failure_summary is not None
+            else {}
+        ),
     }
 
 
@@ -541,9 +643,11 @@ def search_dihedral_formulas(
     diagnostic_profile: str,
     section_only: bool,
     max_candidates: int | None,
+    summarize_failures: bool,
 ) -> dict:
     hits = []
     failures = []
+    failure_summary = empty_failure_summary() if summarize_failures else None
     candidates_checked = 0
     section_contexts = section_contexts_for_cert(cert) if section_only else None
     for reflection in itertools.product(range(2), repeat=4):
@@ -556,6 +660,11 @@ def search_dihedral_formulas(
                     "hits": hits,
                     "failures": failures,
                     "truncated": True,
+                    **(
+                        {"failure_summary": finalize_failure_summary(failure_summary)}
+                        if failure_summary is not None
+                        else {}
+                    ),
                 }
             formula = {
                 "family": "dihedral",
@@ -590,12 +699,19 @@ def search_dihedral_formulas(
                     }
             elif include_failures:
                 failures.append(record)
+            if (not result["ok"]) and failure_summary is not None:
+                update_failure_summary(failure_summary, result)
     return {
         "m": cert["m"],
         "family": "dihedral",
         "candidates_checked": candidates_checked,
         "hits": hits,
         "failures": failures,
+        **(
+            {"failure_summary": finalize_failure_summary(failure_summary)}
+            if failure_summary is not None
+            else {}
+        ),
     }
 
 
@@ -707,6 +823,11 @@ def main() -> None:
         type=int,
         help="stop each formula search after this many candidates",
     )
+    parser.add_argument(
+        "--summarize-failures",
+        action="store_true",
+        help="summarize first section-return failures across formula candidates",
+    )
     parser.add_argument("--include-failures", action="store_true")
     parser.add_argument(
         "--diagnose-kappa",
@@ -752,6 +873,7 @@ def main() -> None:
                 diagnostic_profile=args.diagnostic_profile,
                 section_only=args.section_only,
                 max_candidates=args.max_candidates,
+                summarize_failures=args.summarize_failures,
             )
         else:
             result = search_formulas(
@@ -762,6 +884,7 @@ def main() -> None:
                 diagnostic_profile=args.diagnostic_profile,
                 section_only=args.section_only,
                 max_candidates=args.max_candidates,
+                summarize_failures=args.summarize_failures,
             )
         result["source"] = source
         if args.diagnose_kappa or args.diagnostics_only:
