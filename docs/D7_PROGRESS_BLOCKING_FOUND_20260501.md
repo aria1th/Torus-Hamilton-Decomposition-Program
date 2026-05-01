@@ -179,6 +179,11 @@ family.
   `m = 7,17,27,37` in that range, suggesting an `m ≡ 7 mod 10` exceptional
   family.  The known `m = 7` and `m = 17` exceptional primitive words do not
   work unchanged for `m = 27` or `m = 37`.
+- `scripts/search_targetA_primitive_words.cpp` provides a faster C++ search
+  path for these exceptional moduli.  With random sampling at `m = 27`, it
+  found primitive words `22414`, `24142`, `441144`, and `332332`; all four
+  pass the `Sigma` section audit at `m = 27`.  These do not work unchanged at
+  `m = 7,17,37`, and naive `m = 37` random search is already heavy.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -279,6 +284,9 @@ python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \
   --json-out /tmp/d7_targetA_section_candidates.json
+g++ -O3 -std=c++17 scripts/search_targetA_primitive_words.cpp \
+  -o /tmp/search_targetA_primitive_words
+/tmp/search_targetA_primitive_words 27 6 10 5 2000 27
 git diff --check
 ```
 

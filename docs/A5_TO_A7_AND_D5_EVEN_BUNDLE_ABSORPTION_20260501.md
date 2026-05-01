@@ -140,6 +140,13 @@ nuanced picture:
   `m ≡ 7 mod 10` exceptional family;
 - the currently recorded `m = 7` and `m = 17` exceptional primitive words do
   not work unchanged at `m = 27` or `m = 37`.
+- a faster C++ helper, `scripts/search_targetA_primitive_words.cpp`, found
+  `m = 27` primitive words `22414`, `24142`, `441144`, and `332332`; all four
+  pass the `Sigma` section audit at `m = 27`.
+- those `m = 27` words do not work unchanged at `m = 7,17,37`; naive random
+  search at `m = 37` is already heavy enough that the next search step should
+  add pruning or a structural parametrization rather than simply increasing
+  samples.
 
 So a plausible Target-A route is not a single base word.  It is either a
 finite congruence family of primitive words, or a constructive/padding theorem

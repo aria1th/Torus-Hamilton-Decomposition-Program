@@ -81,6 +81,9 @@ when `m` is odd and `m >= 3`.
   candidate all-zero-set A5 base words, reporting primitiveity, first return
   to `Sigma = {(0,a,b,0,-a-b) : a+b != 0}`, excursion coverage, and coarse
   diagnostics for symbolic first-return tables.
+- `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
+  search for Target-A exceptional moduli where the Python exhaustive scan is
+  too slow.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
@@ -153,6 +156,14 @@ python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \
   --json-out /tmp/d7_targetA_section_candidates.json
+```
+
+For larger exceptional moduli, compile the faster C++ search helper:
+
+```bash
+g++ -O3 -std=c++17 scripts/search_targetA_primitive_words.cpp \
+  -o /tmp/search_targetA_primitive_words
+/tmp/search_targetA_primitive_words 27 6 10 5 2000 27
 ```
 
 It can also try bounded exact-cover assembly from the primitive-word pool:
