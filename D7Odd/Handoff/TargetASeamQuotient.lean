@@ -201,6 +201,40 @@ theorem phiInvNat_of_add_five_lt {h x : Nat} (hx : x + 5 < h) :
   rw [if_pos hx]
   exact Nat.mod_eq_of_lt hx
 
+theorem phiInv_iterate_internal_val {h : Nat} [NeZero h] {x n : Nat}
+    (hxn : x + 5 * n < h) :
+    (((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h)).val = x + 5 * n := by
+  induction n generalizing x with
+  | zero => simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      have hxnext : x + 5 * n < h := by omega
+      have ihx := ih hxnext
+      have hinternal : x + 5 * n + 5 < h := by
+        simpa [Nat.mul_succ, Nat.add_assoc, Nat.add_comm,
+          Nat.add_left_comm] using hxn
+      apply Eq.trans ?_ (show x + 5 * (n + 1) = x + 5 * n + 5 by omega).symm
+      rw [show ((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h) =
+          (⟨x + 5 * n, hxnext⟩ : Fin h) by
+        apply Fin.ext
+        exact ihx]
+      change phiInvNat h (x + 5 * n) = x + 5 * n + 5
+      exact phiInvNat_of_add_five_lt hinternal
+
+theorem phiInv_reaches_internal_target {h : Nat} [NeZero h] {x y : Nat}
+    (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5)) (hy : y < h) :
+    ∃ n, ((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h) = (⟨y, hy⟩ : Fin h) := by
+  have hmodeq : y ≡ x [MOD 5] := (ZMod.natCast_eq_natCast_iff y x 5).1 hmod
+  have hdiv : 5 ∣ y - x := by
+    rw [Nat.ModEq] at hmodeq
+    exact Nat.dvd_of_mod_eq_zero (by omega : (y - x) % 5 = 0)
+  rcases hdiv with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  apply Fin.ext
+  have hy_eq : y = x + 5 * n := by omega
+  subst y
+  exact phiInv_iterate_internal_val (h := h) (x := x) (n := n) hy
+
 theorem phiInvNat_top_five {h : Nat} (hh : 6 ≤ h) :
     phiInvNat h (h - 5) = 3 := by
   unfold phiInvNat

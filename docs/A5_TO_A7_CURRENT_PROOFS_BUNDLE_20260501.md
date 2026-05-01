@@ -167,7 +167,11 @@ back to `phi_h`.  The bad-class direction is now closed as
 `residueShift_add_single_cycle_of_good` proves
 `r |-> r + (3-h)` is a single cycle on `ZMod 5`.  The remaining arithmetic
 gap is therefore the good-class lift from this residue cycle and the internal
-`+5` lanes to full inverse orbit transitivity.
+`+5` lanes to full inverse orbit transitivity.  The internal lane part is now
+partly closed: `phiInv_iterate_internal_val` proves that before the top
+boundary, `n` inverse steps send `x` to `x+5n`, and
+`phiInv_reaches_internal_target` packages reachability inside one residue
+lane.
 
 ## Updated Target-A Interpretation
 

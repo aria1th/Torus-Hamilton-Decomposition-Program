@@ -316,6 +316,9 @@ to the inverse-map orbit proof.  The bad-class direction is now proved:
 `residueShift_add_single_cycle_of_good` shows that `r |-> r + (3-h)` is a
 single cycle on `ZMod 5`.  What remains is the good-class lift from this
 residue cycle and the internal `+5` lanes to full inverse orbit transitivity.
+The internal lane traversal is now formalized by
+`phiInv_iterate_internal_val` and `phiInv_reaches_internal_target`; the
+remaining step is the boundary-jump stitching between lanes.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
