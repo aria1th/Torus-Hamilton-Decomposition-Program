@@ -197,6 +197,9 @@ from a state-dependent direction permutation, layer bijectivity from
 componentwise skew-product branches, and return single-cycle from the shared
 base-orbit monodromy criterion.  These hooks are bundled by
 `ProductRootCertificate.ofLocalBridgeAndSkewReturns`.
+`D7Odd/Handoff/Additive4Plus2D3Fiber.lean` now records the concrete odd-D3
+affine fiber packet used by the bundled bridge verifier and proves row Latin
+for the three D3 fiber slots whenever `0 != 1` in `ZMod m`.
 `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate root chart
 used by the bundled all-zero-set bridge certificates, where base non-root
 directions carry the forced D3 `q0` fiber move.  Its
