@@ -238,6 +238,32 @@ theorem rootEquiv_symm_addQRoot {m : Nat}
   ext <;>
     simp [rootEquiv, baseRoot_addQRoot, fiberRoot_addQRoot]
 
+abbrev ProductRoot (m : Nat) := D5Odd.ARoot5 m × ARoot3 m
+
+def productStep {m : Nat} (i : Direction) : ProductRoot m → ProductRoot m :=
+  fun bf =>
+    (baseAddQ (baseDirectionOfSlot i) bf.1,
+      fiberAddQ (fiberDirectionOfSlot i) bf.2)
+
+theorem rootEquiv_symm_addQRoot_rootEquiv {m : Nat}
+    (i : Direction) (bf : ProductRoot m) :
+    (rootEquiv m).symm (addQRoot m i ((rootEquiv m) bf)) =
+      productStep i bf := by
+  rcases bf with ⟨base, fiber⟩
+  rw [rootEquiv_symm_addQRoot]
+  simp [productStep, rootEquiv, baseRoot_targetRoot, fiberRoot_targetRoot]
+
+def productLayerMap {m : Nat} (S : RootFlatSchedule m)
+    (t : ZMod m) (c : Color) : ProductRoot m → ProductRoot m :=
+  fun bf => productStep (S.dir t ((rootEquiv m) bf) c) bf
+
+theorem rootEquiv_symm_layerMap {m : Nat} (S : RootFlatSchedule m)
+    (t : ZMod m) (c : Color) (bf : ProductRoot m) :
+    (rootEquiv m).symm (S.layerMap t c ((rootEquiv m) bf)) =
+      productLayerMap S t c bf := by
+  simp [RootFlatSchedule.layerMap, productLayerMap,
+    rootEquiv_symm_addQRoot_rootEquiv]
+
 end Additive4Plus2
 end Handoff
 end D7Odd
