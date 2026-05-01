@@ -1021,6 +1021,118 @@ def targetAQFirstReturn32Formula
     (m h : Nat) (actual : QRawLabel → QRawLabel) : Prop :=
   targetAQFirstReturnFormula m (targetAQExpected32 m h) actual
 
+theorem targetARep1ToH_pos (h value : Nat) :
+    1 ≤ targetARep1ToH h value := by
+  unfold targetARep1ToH
+  omega
+
+theorem targetARep1ToH_le {h value : Nat} [NeZero h] :
+    targetARep1ToH h value ≤ h := by
+  unfold targetARep1ToH
+  have hlt : (value - 1) % h < h := Nat.mod_lt _ (NeZero.pos h)
+  omega
+
+theorem targetAPhiOne_pos (h x : Nat) :
+    1 ≤ targetAPhiOne h x := by
+  unfold targetAPhiOne
+  omega
+
+theorem targetAPhiOne_le {h x : Nat} [NeZero h] :
+    targetAPhiOne h x ≤ h := by
+  unfold targetAPhiOne phiNat
+  split
+  · have hlt : (x - 1 + h - 3) % h < h := Nat.mod_lt _ (NeZero.pos h)
+    omega
+  · split
+    · have hlt : (x - 1 + h - 8) % h < h := Nat.mod_lt _ (NeZero.pos h)
+      omega
+    · have hlt : (x - 1 + h - 5) % h < h := Nat.mod_lt _ (NeZero.pos h)
+      omega
+
+theorem targetATau23One_pos {h x : Nat} [NeZero h] :
+    1 ≤ targetATau23One h x := by
+  unfold targetATau23One
+  by_cases hx3 : x ≤ 3
+  · simp [hx3, targetARep1ToH_pos]
+  · by_cases hx5 : x ≤ 5
+    · simp [hx3, hx5, targetARep1ToH_pos]
+    · by_cases hx6 : x = 6
+      · simp [hx6, targetARep1ToH_pos]
+      · simp [hx3, hx5, hx6]
+        omega
+
+theorem targetATau23One_le {h x : Nat} [NeZero h]
+    (hx : x ≤ h) :
+    targetATau23One h x ≤ h := by
+  unfold targetATau23One
+  by_cases hx3 : x ≤ 3
+  · simp [hx3, targetARep1ToH_le]
+  · by_cases hx5 : x ≤ 5
+    · simp [hx3, hx5, targetARep1ToH_le]
+    · by_cases hx6 : x = 6
+      · simp [hx6, targetARep1ToH_le]
+      · simp [hx3, hx5, hx6]
+        omega
+
+theorem targetAQExpectedB_valid {m value : Nat}
+    (hv : (QRawLabel.B value).valid m) :
+    (targetAQExpectedB m value).valid m := by
+  rcases hv with ⟨hv1, hvm⟩
+  by_cases hlt : value + 1 < m
+  · simp [targetAQExpectedB, QRawLabel.valid, QRawLabel.B, hlt]
+  · simp [targetAQExpectedB, QRawLabel.valid, QRawLabel.A, hlt]
+    omega
+
+theorem targetAQExpected23_valid {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QRawLabel)
+    (hv : label.valid m) :
+    (targetAQExpected23 m h label).valid m := by
+  subst m
+  rcases label with ⟨kind, value⟩
+  cases kind
+  · exact targetAQExpectedB_valid (m := 2 * h + 1) (value := value) hv
+  · rcases hv with ⟨hv1, hvm⟩
+    change 1 ≤ value at hv1
+    change value < 2 * h + 1 at hvm
+    unfold targetAQExpected23 QRawLabel.valid QRawLabel.A QRawLabel.B
+    by_cases heven : value % 2 = 0
+    · simp [heven]
+      by_cases hx : value / 2 ≤ h - 1
+      · simp [hx]
+        omega
+      · simp [hx]
+        omega
+    · simp [heven]
+      have hxle : (value + 1) / 2 ≤ h := by omega
+      have htpos := targetATau23One_pos (h := h) (x := (value + 1) / 2)
+      have htle := targetATau23One_le (h := h) (x := (value + 1) / 2) hxle
+      omega
+
+theorem targetAQExpected32_valid {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QRawLabel)
+    (hv : label.valid m) :
+    (targetAQExpected32 m h label).valid m := by
+  subst m
+  rcases label with ⟨kind, value⟩
+  cases kind
+  · exact targetAQExpectedB_valid (m := 2 * h + 1) (value := value) hv
+  · rcases hv with ⟨hv1, hvm⟩
+    change 1 ≤ value at hv1
+    change value < 2 * h + 1 at hvm
+    unfold targetAQExpected32 QRawLabel.valid QRawLabel.A QRawLabel.B
+    by_cases hodd : value % 2 = 1
+    · simp [hodd]
+      have hxle : (value + 1) / 2 ≤ h := by omega
+      omega
+    · simp [hodd]
+      by_cases hx6 : value / 2 = 6
+      · simp [hx6]
+        omega
+      · simp [hx6]
+        have hp := targetAPhiOne_pos h (value / 2)
+        have hl := targetAPhiOne_le (h := h) (x := value / 2)
+        omega
+
 example : targetAQExpected23 13 6 (QRawLabel.B 1) = QRawLabel.B 2 := rfl
 
 example : targetAQExpected23 13 6 (QRawLabel.B 12) = QRawLabel.A 1 := rfl

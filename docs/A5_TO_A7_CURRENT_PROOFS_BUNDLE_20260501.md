@@ -177,7 +177,9 @@ the older package automatically, leaving only the Q-hitting, Q-first-return,
 and length-sum fields for the `23/32` branch.  The Q-first-return formula
 itself is now named in Lean using one-based raw labels:
 `targetAQExpected23`, `targetAQExpected32`, and the formula predicates
-`targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`.
+`targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`.  The expected
+maps are now proved well-formed by `targetAQExpected23_valid` and
+`targetAQExpected32_valid`.
 
 ## Updated Target-A Interpretation
 

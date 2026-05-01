@@ -328,7 +328,9 @@ only needs to supply Q-hitting, Q-first-return, and length-sum proofs.  The
 Q-first-return target is now less opaque: `QRawLabel`, `targetAQExpected23`,
 `targetAQExpected32`, and `targetAQFirstReturn23Formula`/
 `targetAQFirstReturn32Formula` record the verifier's one-based Q-label
-formula directly in Lean.
+formula directly in Lean.  The validity lemmas `targetAQExpected23_valid` and
+`targetAQExpected32_valid` show these expected maps send valid labels back to
+valid labels under `m = 2h+1`, `h >= 6`.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

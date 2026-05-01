@@ -57,7 +57,8 @@ when `m` is odd and `m >= 3`.
   the older package automatically from `m = 2h+1` and `m >= 13`.  The
   verifier's one-based Q-label return formulas are also named in Lean as
   `targetAQExpected23`, `targetAQExpected32`, and
-  `targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`.
+  `targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`, with
+  validity lemmas showing that the expected formulas preserve valid Q labels.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
