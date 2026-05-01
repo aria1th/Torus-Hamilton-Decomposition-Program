@@ -117,6 +117,143 @@ theorem bridgeRootEquiv_symm_addQRoot_bridgeRootEquiv {m : Nat}
   simp [bridgeProductStep, bridgeRootEquiv, baseRoot_bridgeTargetRoot,
     bridgeFiberRoot_bridgeTargetRoot]
 
+structure BridgeProductRootSchedule (m : Nat) where
+  dir : ZMod m → ProductRoot m → Color → Direction
+
+namespace BridgeProductRootSchedule
+
+def rowLatin {m : Nat} (P : BridgeProductRootSchedule m) : Prop :=
+  ∀ t bf, Function.Bijective fun c : Color => P.dir t bf c
+
+def layerMap {m : Nat} (P : BridgeProductRootSchedule m)
+    (t : ZMod m) (c : Color) : ProductRoot m → ProductRoot m :=
+  fun bf => bridgeProductStep (P.dir t bf c) bf
+
+def layerBijective {m : Nat} (P : BridgeProductRootSchedule m) : Prop :=
+  ∀ t c, Function.Bijective (P.layerMap t c)
+
+def returnMap {m : Nat} [NeZero m]
+    (P : BridgeProductRootSchedule m) (c : Color) :
+    ProductRoot m → ProductRoot m :=
+  fun bf => ((List.range m).foldl
+    (fun x (t : Nat) => P.layerMap (t : ZMod m) c x) bf)
+
+def returnsSingleCycle {m : Nat} [NeZero m]
+    (P : BridgeProductRootSchedule m) : Prop :=
+  ∀ c : Color, IsSingleCycleMap (P.returnMap c)
+
+def toRootFlatSchedule {m : Nat} (P : BridgeProductRootSchedule m) :
+    RootFlatSchedule m where
+  dir := fun t w c => P.dir t ((bridgeRootEquiv m).symm w) c
+
+theorem toRootFlatSchedule_rowLatin {m : Nat}
+    (P : BridgeProductRootSchedule m) :
+    P.toRootFlatSchedule.rowLatin ↔ P.rowLatin := by
+  constructor
+  · intro h t bf
+    simpa [toRootFlatSchedule] using h t ((bridgeRootEquiv m) bf)
+  · intro h t w
+    exact h t ((bridgeRootEquiv m).symm w)
+
+theorem toRootFlatSchedule_layerMap_conj {m : Nat}
+    (P : BridgeProductRootSchedule m) (t : ZMod m) (c : Color)
+    (bf : ProductRoot m) :
+    (bridgeRootEquiv m).symm
+        (P.toRootFlatSchedule.layerMap t c ((bridgeRootEquiv m) bf)) =
+      P.layerMap t c bf := by
+  simp [toRootFlatSchedule, RootFlatSchedule.layerMap, layerMap,
+    bridgeRootEquiv_symm_addQRoot_bridgeRootEquiv]
+
+theorem toRootFlatSchedule_layerBijective {m : Nat}
+    (P : BridgeProductRootSchedule m) (h : P.layerBijective) :
+    P.toRootFlatSchedule.layerBijective := by
+  intro t c
+  exact Shared.bijective_of_equiv_conj
+    (e := bridgeRootEquiv m) (f := P.toRootFlatSchedule.layerMap t c)
+    (g := P.layerMap t c) (h t c)
+    (P.toRootFlatSchedule_layerMap_conj t c)
+
+theorem toRootFlatSchedule_returnMap_conj
+    {m : Nat} [NeZero m] (P : BridgeProductRootSchedule m)
+    (c : Color) (bf : ProductRoot m) :
+    (bridgeRootEquiv m).symm
+        (P.toRootFlatSchedule.returnMap c ((bridgeRootEquiv m) bf)) =
+      P.returnMap c bf := by
+  unfold RootFlatSchedule.returnMap returnMap
+  let F : RootState7 m → Nat → RootState7 m :=
+    fun w (t : Nat) => P.toRootFlatSchedule.layerMap (t : ZMod m) c w
+  let G : ProductRoot m → Nat → ProductRoot m :=
+    fun bf (t : Nat) => P.layerMap (t : ZMod m) c bf
+  have hfold :
+      ∀ ts : List Nat, ∀ bf : ProductRoot m,
+        (bridgeRootEquiv m).symm (ts.foldl F ((bridgeRootEquiv m) bf)) =
+          ts.foldl G bf := by
+    intro ts
+    induction ts with
+    | nil =>
+        intro bf
+        simp [F, G]
+    | cons t ts ih =>
+        intro bf
+        rw [List.foldl_cons, List.foldl_cons]
+        have hstep :
+            F ((bridgeRootEquiv m) bf) t =
+              (bridgeRootEquiv m) (G bf t) := by
+          simp only [F, G]
+          apply (bridgeRootEquiv m).symm.injective
+          simpa using P.toRootFlatSchedule_layerMap_conj (t : ZMod m) c bf
+        rw [hstep]
+        exact ih (G bf t)
+  simpa [F, G] using hfold (List.range m) bf
+
+theorem toRootFlatSchedule_returnsSingleCycle
+    {m : Nat} [NeZero m] (P : BridgeProductRootSchedule m)
+    (h : P.returnsSingleCycle) :
+    P.toRootFlatSchedule.returnsSingleCycle := by
+  intro c
+  have hShared : Shared.IsSingleCycleMap (P.returnMap c) := by
+    simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using h c
+  have hCycle :=
+    Shared.single_cycle_of_equiv_conj
+      (e := bridgeRootEquiv m)
+      (f := P.toRootFlatSchedule.returnMap c)
+      (g := P.returnMap c)
+      hShared
+      (P.toRootFlatSchedule_returnMap_conj c)
+  simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using hCycle
+
+end BridgeProductRootSchedule
+
+structure BridgeProductRootCertificate (m : Nat) [NeZero m] where
+  schedule : BridgeProductRootSchedule m
+  rowLatin : schedule.rowLatin
+  layerBijective : schedule.layerBijective
+  returnsSingleCycle : schedule.returnsSingleCycle
+
+def BridgeProductRootCertificate.toRootFlatCertificate
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
+    RootFlatCertificate m where
+  schedule := cert.schedule.toRootFlatSchedule
+  rowLatin := (BridgeProductRootSchedule.toRootFlatSchedule_rowLatin
+    cert.schedule).2 cert.rowLatin
+  layerBijective :=
+    BridgeProductRootSchedule.toRootFlatSchedule_layerBijective cert.schedule
+      cert.layerBijective
+  returnsSingleCycle :=
+    BridgeProductRootSchedule.toRootFlatSchedule_returnsSingleCycle
+      cert.schedule cert.returnsSingleCycle
+
+theorem BridgeProductRootCertificate.toHamiltonDecompositionD7
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
+    HamiltonDecompositionD7 m :=
+  certificate_implies_hamilton cert.toRootFlatCertificate
+
+theorem BridgeProductRootCertificate.toSharedLayeredHamilton
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
+    Shared.RootFlatLayeredHamiltonDecomposition
+      Color Direction (RootState7 m) m :=
+  cert.toRootFlatCertificate.toSharedLayeredHamilton
+
 end Additive4Plus2
 end Handoff
 end D7Odd

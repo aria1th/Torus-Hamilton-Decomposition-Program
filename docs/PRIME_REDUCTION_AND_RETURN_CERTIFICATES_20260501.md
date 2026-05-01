@@ -199,7 +199,9 @@ base-orbit monodromy criterion.  These hooks are bundled by
 `ProductRootCertificate.ofLocalBridgeAndSkewReturns`.
 `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate root chart
 used by the bundled all-zero-set bridge certificates, where base non-root
-directions carry the forced D3 `q0` fiber move.
+directions carry the forced D3 `q0` fiber move.  Its
+`BridgeProductRootCertificate` gives the same root-flat handoff endpoint for
+certificates stated in that chart.
 `D7Odd/Handoff/Additive4Plus2Endpoints.lean` then carries the same certificate
 through the D7 torus/Cayley wrappers and into the shared Cayley endpoint.
 

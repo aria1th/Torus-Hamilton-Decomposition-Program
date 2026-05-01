@@ -1,5 +1,6 @@
 import D7Odd.Cayley
 import D7Odd.Handoff.Additive4Plus2
+import D7Odd.Handoff.Additive4Plus2BridgeChart
 
 namespace D7Odd
 namespace Handoff
@@ -19,6 +20,24 @@ theorem ProductRootCertificate.toCayleyHamiltonDecompositionD7
 
 theorem ProductRootCertificate.toSharedCayleyHamiltonDecomposition
     {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
+    Shared.CayleyHamiltonDecomposition 7 m :=
+  D7Odd.sharedCayleyHamiltonDecomposition_of_cayley
+    cert.toCayleyHamiltonDecompositionD7
+
+theorem BridgeProductRootCertificate.toTorusHamiltonDecompositionD7
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
+    D7Odd.TorusHamiltonDecompositionD7 m :=
+  D7Odd.torusHamiltonDecompositionD7_of_handoff
+    cert.toHamiltonDecompositionD7
+
+theorem BridgeProductRootCertificate.toCayleyHamiltonDecompositionD7
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
+    D7Odd.CayleyHamiltonDecompositionD7 m :=
+  D7Odd.cayleyHamiltonDecomposition_of_torus
+    cert.toTorusHamiltonDecompositionD7
+
+theorem BridgeProductRootCertificate.toSharedCayleyHamiltonDecomposition
+    {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :
     Shared.CayleyHamiltonDecomposition 7 m :=
   D7Odd.sharedCayleyHamiltonDecomposition_of_cayley
     cert.toCayleyHamiltonDecompositionD7
