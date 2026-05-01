@@ -8,7 +8,7 @@ repository-code: "https://github.com/aria1th/Torus-Hamilton-Decomposition-Progra
 url: "https://github.com/aria1th/Torus-Hamilton-Decomposition-Program"
 version: "0.1.0"
 date-released: "2026-04-24"
-abstract: "Lean 4 formalization and audit artifacts for Hamilton decompositions of directed torus/Cayley digraphs, including an odd-modulus directed 5-torus Cayley-edge decomposition theorem."
+abstract: "Lean 4 formalization and audit artifacts for Hamilton decompositions of directed torus/Cayley digraphs, including odd-modulus directed 5-torus and 7-torus decomposition theorems."
 keywords:
   - "Lean 4"
   - "mathlib"
