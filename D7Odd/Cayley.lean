@@ -65,4 +65,11 @@ theorem D7_odd_shared_cayley_unconditional {m : Nat} [NeZero m]
   exact sharedCayleyHamiltonDecomposition_of_cayley
     (D7_odd_cayley_unconditional hodd hm3)
 
+theorem D7_odd_shared_cayley_uniform :
+    ∀ {m : Nat}, 3 <= m → Odd m →
+      Shared.CayleyHamiltonDecomposition 7 m := by
+  intro m hm3 hodd
+  haveI : NeZero m := ⟨by omega⟩
+  exact D7_odd_shared_cayley_unconditional hodd hm3
+
 end D7Odd
