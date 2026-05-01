@@ -40,6 +40,7 @@ when `m` is odd and `m >= 3`.
 - `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, plus a concrete torus-to-Cayley adapter.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
+- `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
@@ -72,6 +73,13 @@ m=3: matching=81, G-cycle=81
 m=5: matching=625, G-cycle=625
 m=7: matching=2401, G-cycle=2401
 m=9: matching=6561, G-cycle=6561
+```
+
+Optional `4+2` additive bridge audit script, using
+`D7_current_research_note_bundle_v1_1.zip` from the parent workspace:
+
+```bash
+python3 scripts/verify_4plus2_allN_bridge_cert.py
 ```
 
 ## Citation
