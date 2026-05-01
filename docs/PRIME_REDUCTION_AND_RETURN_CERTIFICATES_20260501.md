@@ -199,13 +199,16 @@ base-orbit monodromy criterion.  These hooks are bundled by
 `ProductRootCertificate.ofLocalBridgeAndSkewReturns`.
 `D7Odd/Handoff/Additive4Plus2D5Base.lean` records the concrete D5 all-zero-set
 base slot rule from `D5Odd.ZeroSetTable.Lambda1`, including its row-Latin
-proof.
+proof, and reuses the D5 exact-cover certificate to prove that each
+all-zero-set base slot step is bijective for `m >= 5`.
 `D7Odd/Handoff/Additive4Plus2D3Fiber.lean` now records the concrete odd-D3
 affine fiber packet used by the bundled bridge verifier and proves row Latin
 for the three D3 fiber slots whenever `0 != 1` in `ZMod m`.
 `D7Odd/Handoff/Additive4Plus2BridgeKappa.lean` combines the D5 base slot rule
 with a bijective S3 fiber permutation and proves that the resulting
-state-dependent bridge `kappa` is bijective.
+state-dependent bridge `kappa` is bijective.  It also packages raw layerwise
+row permutations as concrete bridge schedules and proves the resulting
+row-Latin condition.
 `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate root chart
 used by the bundled all-zero-set bridge certificates, where base non-root
 directions carry the forced D3 `q0` fiber move.  Its

@@ -1,4 +1,5 @@
 import D7Odd.Handoff.Additive4Plus2D5Base
+import D7Odd.Handoff.Additive4Plus2BridgeChart
 
 namespace D7Odd
 namespace Handoff
@@ -128,6 +129,37 @@ theorem bridgeConcreteStateKappa_bijective {m : Nat}
     ∀ t bf, Function.Bijective (bridgeConcreteStateKappa phi t bf) := by
   intro t bf
   exact bridgeConcreteKappa_bijective bf.1 (phi t bf) (hphi t bf)
+
+def bridgeConcreteRawDir {m : Nat}
+    (row : Color → ZMod m → Direction) :
+    ZMod m → ProductRoot m → Color → Direction :=
+  fun t _ c => row c t
+
+def bridgeConcreteSchedule {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (phi : ZMod m → ProductRoot m → Direction3 → Direction3) :
+    BridgeProductRootSchedule m where
+  dir := fun t bf c => bridgeConcreteStateKappa phi t bf (row c t)
+
+theorem bridgeConcreteRawDir_bijective {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (hrow : ∀ t, Function.Bijective fun c : Color => row c t) :
+    ∀ t bf, Function.Bijective (bridgeConcreteRawDir row t bf) := by
+  intro t bf
+  simpa [bridgeConcreteRawDir] using hrow t
+
+theorem bridgeConcreteSchedule_rowLatin {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (phi : ZMod m → ProductRoot m → Direction3 → Direction3)
+    (hrow : ∀ t, Function.Bijective fun c : Color => row c t)
+    (hphi : ∀ t bf, Function.Bijective (phi t bf)) :
+    (bridgeConcreteSchedule row phi).rowLatin := by
+  refine (bridgeConcreteSchedule row phi).rowLatin_of_stateDirectionPermutation
+    (bridgeConcreteRawDir row) (bridgeConcreteStateKappa phi) ?_ ?_ ?_
+  · exact bridgeConcreteRawDir_bijective row hrow
+  · exact bridgeConcreteStateKappa_bijective phi hphi
+  · intro t bf c
+    rfl
 
 end Additive4Plus2
 end Handoff
