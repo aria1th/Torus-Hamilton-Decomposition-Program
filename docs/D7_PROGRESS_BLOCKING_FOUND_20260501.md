@@ -247,6 +247,9 @@ count gate.  It confirms the bundled `m = 5,7,9` rows and the alternate
 `m = 5` cover `23,23,002,0111,3044,14413,43220` are balanced, while a toy
 `m = 11` construction using mostly powers of `23` has the correct total length
 `55` but fails the slot-count gate with counts `4,0,26,25,0`.
+The primitive-pool exact-cover search now uses this count gate before trying
+column placements; the recorded alternate `m = 5` cover is still found with
+the count-pruned search.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -370,6 +373,11 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-m 11 \
   --cover-words 23232323,23232323,23232323,23232323,23232323,2323232323,00002 \
   --cover-limit 1 --json-out /tmp/targetA_m11_power_bad_counts.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-primitive-m 5 --cover-primitive-max-len 5 \
+  --cover-lengths 5,4,5,4,3,2,2 \
+  --cover-pool-limit 200 --combo-limit 300000 --cover-limit 1 \
+  --json-out /tmp/targetA_m5_primitive_cover_count_pruned.json
 git diff --check
 ```
 

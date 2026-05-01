@@ -223,9 +223,16 @@ def search_cover_from_primitive_pool(
 ) -> dict:
     model = BridgeModel(m)
     pool = primitive_word_tuples(model, max_len, pool_limit)
+    pool_counts = [
+        [sum(1 for value in word if value == slot) for slot in range(5)]
+        for word in pool
+    ]
     target_len = 5 * m
+    target_counts = [m] * 5
     solutions = []
     combos_checked = 0
+    count_pruned_combos = 0
+    count_feasible_combos = 0
     pattern = sorted(length_pattern) if length_pattern is not None else None
     if pattern is not None and (len(pattern) != 7 or sum(pattern) != target_len):
         return {
@@ -236,21 +243,38 @@ def search_cover_from_primitive_pool(
             "primitive_pool": [word_string(word) for word in pool],
             "combo_limit": combo_limit,
             "combos_checked": 0,
+            "count_pruned_combos": 0,
+            "count_feasible_combos": 0,
             "length_pattern": pattern,
             "solutions": [],
         }
 
     def search_words(
-        start: int, depth: int, total_len: int, words: list[tuple[int, ...]]
+        start: int,
+        depth: int,
+        total_len: int,
+        counts: list[int],
+        words: list[tuple[int, ...]],
     ) -> None:
-        nonlocal combos_checked
+        nonlocal combos_checked, count_pruned_combos, count_feasible_combos
         if len(solutions) >= solution_limit or combos_checked >= combo_limit:
             return
+        if any(count > m for count in counts):
+            return
         remaining = 7 - depth
+        remaining_length_budget = (
+            sum(pattern[depth:]) if pattern is not None else remaining * max_len
+        )
+        if any(counts[slot] + remaining_length_budget < m for slot in range(5)):
+            return
         if remaining == 0:
             if total_len != target_len:
                 return
             combos_checked += 1
+            if counts != target_counts:
+                count_pruned_combos += 1
+                return
+            count_feasible_combos += 1
             cover_solutions = search_column_exact_cover(m, words, 1)
             if cover_solutions:
                 solutions.append(cover_solutions[0])
@@ -267,13 +291,15 @@ def search_cover_from_primitive_pool(
             next_len = total_len + len(word)
             if next_len > target_len:
                 continue
+            word_counts = pool_counts[idx]
+            next_counts = [counts[slot] + word_counts[slot] for slot in range(5)]
             words.append(word)
-            search_words(idx, depth + 1, next_len, words)
+            search_words(idx, depth + 1, next_len, next_counts, words)
             words.pop()
             if len(solutions) >= solution_limit or combos_checked >= combo_limit:
                 return
 
-    search_words(0, 0, 0, [])
+    search_words(0, 0, 0, [0] * 5, [])
     return {
         "m": m,
         "max_len": max_len,
@@ -282,6 +308,8 @@ def search_cover_from_primitive_pool(
         "primitive_pool": [word_string(word) for word in pool],
         "combo_limit": combo_limit,
         "combos_checked": combos_checked,
+        "count_pruned_combos": count_pruned_combos,
+        "count_feasible_combos": count_feasible_combos,
         "length_pattern": pattern,
         "solutions": solutions,
     }
