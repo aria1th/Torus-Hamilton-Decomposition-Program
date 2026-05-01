@@ -107,6 +107,25 @@ Candidate short patterns mentioned by the bundle include:
 The existing `m=5,7,9` finite rows should be used as trace data, not as a
 substitute for this symbolic Target-A proof.
 
+The repo now has `scripts/analyze_targetA_section.py` for this interface.  It
+checks a candidate base word for primitiveity, first return to `Sigma`,
+section-cycle structure, total excursion length, all-state segment coverage,
+and coarse partition diagnostics for possible symbolic first-return tables.
+
+Initial finite audit:
+
+- `01302` is primitive and passes the `Sigma` section audit at `m = 5`.
+- `332`, `01302`, and `4204204` are all primitive and pass the section audit
+  at `m = 9`.
+- none of `332`, `01302`, `4204204` is primitive for
+  `m = 7,11,13,15,17`.
+- the first length-5 `m = 17` primitive examples
+  `01121`, `01214`, `10112`, `11210`, and `12101` all pass the section audit
+  at `m = 17`, but do not work unchanged for `m = 5,7,9,11,13,15`.
+
+This reinforces that Target A likely needs a congruence-dependent or
+constructed row family, not one fixed short word.
+
 ## D5 Even Route-E Findings
 
 The Route-E bundle verifies finite schedules for

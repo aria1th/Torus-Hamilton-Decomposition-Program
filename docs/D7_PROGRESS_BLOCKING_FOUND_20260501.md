@@ -163,6 +163,13 @@ family.
 - For `m = 17`, no primitive base word appears up to length `4`.
 - For `m = 17`, length `5` gives first examples, including
   `01121`, `01214`, `10112`, `11210`, and `12101`.
+- `scripts/analyze_targetA_section.py` now audits primitive base words against
+  the intended `Sigma` section-splice interface.  The bundle-mentioned
+  candidates `332`, `01302`, and `4204204` are not uniform all-odd words:
+  `01302` works at `m = 5`; all three work at `m = 9`; none works unchanged
+  for `m = 7,11,13,15,17`.  The length-5 `m = 17` examples above all pass the
+  `Sigma` section audit at `m = 17`, but do not work unchanged for smaller odd
+  moduli.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -259,6 +266,10 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json
+python3 scripts/analyze_targetA_section.py \
+  --moduli 5,7,9,11,13,15,17 \
+  --words 332,01302,4204204 \
+  --json-out /tmp/d7_targetA_section_candidates.json
 git diff --check
 ```
 
