@@ -418,6 +418,17 @@ def ProductRootCertificate.toRootFlatCertificate
     ProductRootSchedule.toRootFlatSchedule_returnsSingleCycle cert.schedule
       cert.returnsSingleCycle
 
+theorem ProductRootCertificate.toHamiltonDecompositionD7
+    {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
+    HamiltonDecompositionD7 m :=
+  certificate_implies_hamilton cert.toRootFlatCertificate
+
+theorem ProductRootCertificate.toSharedLayeredHamilton
+    {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
+    Shared.RootFlatLayeredHamiltonDecomposition
+      Color Direction (RootState7 m) m :=
+  cert.toRootFlatCertificate.toSharedLayeredHamilton
+
 end Additive4Plus2
 end Handoff
 end D7Odd

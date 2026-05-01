@@ -188,6 +188,11 @@ right higher-prime architecture: prefix coordinates, a canonical rho/first-hit
 rule, count matrices or generated schedules, and a primitive-word theorem that
 proves the return map is one cycle.
 
+For the additive explanation route, `D7Odd/Handoff/Additive4Plus2.lean` now
+also makes the product-side endpoint explicit: a `ProductRootCertificate`
+transports through `A7(m) ~= A5(m) x A3(m)` to the D7 root-flat certificate,
+the D7 handoff Hamilton target, and the shared layered full-step lift.
+
 For D=7 even, there is no separate Lean module analogous to `D5Odd/Even.lean`.
 The next theorem should probably be a D7-even certificate target around
 `RootFlatSchedule`, with the same three obligations:

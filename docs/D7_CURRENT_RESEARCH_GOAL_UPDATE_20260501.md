@@ -294,7 +294,8 @@ Implementation progress after this goal update:
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
-  certificate to a D7 root-flat certificate.
+  certificate to the D7 root-flat, D7 handoff Hamilton, and shared layered-lift
+  targets.
 - `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
   certificate track; its targets now also expose the shared layered full-step
   lift before the existing torus/Cayley wrappers.
