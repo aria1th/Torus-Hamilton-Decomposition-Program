@@ -254,6 +254,18 @@ theorem rootEquiv_symm_addQRoot_rootEquiv {m : Nat}
   rw [rootEquiv_symm_addQRoot]
   simp [productStep, rootEquiv, baseRoot_targetRoot, fiberRoot_targetRoot]
 
+theorem productStep_bijective {m : Nat} (i : Direction) :
+    Function.Bijective (productStep (m := m) i) := by
+  have h :
+      productStep (m := m) i =
+        fun bf : ProductRoot m =>
+          (rootEquiv m).symm (addQRoot m i ((rootEquiv m) bf)) := by
+    funext bf
+    exact (rootEquiv_symm_addQRoot_rootEquiv i bf).symm
+  rw [h]
+  exact (rootEquiv m).symm.bijective.comp
+    ((addQRoot_bijective (m := m) i).comp (rootEquiv m).bijective)
+
 def productLayerMap {m : Nat} (S : RootFlatSchedule m)
     (t : ZMod m) (c : Color) : ProductRoot m → ProductRoot m :=
   fun bf => productStep (S.dir t ((rootEquiv m) bf) c) bf
