@@ -269,6 +269,9 @@ Implementation progress after this goal update:
   and D7 Cayley endpoints have adapters into this shared proposition, so the
   `RoundComposite` `Solved : Nat -> Nat -> Prop` slot can now be instantiated
   with an actual graph-level target rather than only a manuscript placeholder.
+  It also contains the block-coordinate equivalence
+  `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and the corresponding
+  basis-coordinate lemma needed by the graph-product construction.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle

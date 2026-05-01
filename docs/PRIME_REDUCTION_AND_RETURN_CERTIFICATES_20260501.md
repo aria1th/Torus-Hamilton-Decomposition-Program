@@ -30,6 +30,10 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   now exposes named standard torus/Cayley instantiations of the abstract
   reduction.  The actual graph-product construction proving the pointwise
   expansion remains to be formalized.
+- The same shared file now identifies composite torus coordinates by the block
+  equivalence `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and records
+  how a standard basis direction lands in one block.  This is the concrete
+  graph-isomorphism layer needed before transporting Hamilton factors.
 - `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
   Cayley endpoints to this shared proposition.  Conditional on the standard
   odd pointwise product expansion, it gives graph-level odd composite endpoints
