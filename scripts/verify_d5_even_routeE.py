@@ -391,6 +391,40 @@ def check_section_case(m: int, a_count: int, b_count: int, c_count: int) -> dict
     }
 
 
+def scan_open_port_section_cases(moduli: Iterable[int], limit: int) -> List[dict]:
+    results = []
+    for m in moduli:
+        hits = []
+        checked = 0
+        for c_count in range(1, m):
+            if gcd(c_count, m) != 1:
+                continue
+            for a_count in range(m - c_count):
+                b_count = m - 1 - a_count - c_count
+                checked += 1
+                result = check_section_case(m, a_count, b_count, c_count)
+                if (
+                    result["C_unit"]
+                    and result["section_formula_ok"]
+                    and result["H_single"]
+                ):
+                    hits.append(result)
+                    if len(hits) >= limit:
+                        break
+            if len(hits) >= limit:
+                break
+        results.append(
+            {
+                "m": m,
+                "checked": checked,
+                "hit_count": len(hits),
+                "first_hits": hits,
+                "ok": bool(hits),
+            }
+        )
+    return results
+
+
 def parse_moduli(text: str) -> List[int]:
     return [int(part) for part in text.split(",") if part.strip()]
 
@@ -399,6 +433,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["all", "schedule", "core", "section"], default="all")
     parser.add_argument("--core-moduli", default="2,4,6,8,10,12,14,16,18,20")
+    parser.add_argument(
+        "--section-scan-moduli",
+        help="comma-separated even moduli for open-port section triple search",
+    )
+    parser.add_argument("--section-scan-limit", type=int, default=3)
     parser.add_argument("--json-out")
     args = parser.parse_args()
 
@@ -409,6 +448,10 @@ def main() -> None:
         output["core"] = verify_core(parse_moduli(args.core_moduli))
     if args.mode in {"all", "section"}:
         output["section"] = [check_section_case(*case) for case in SECTION_EXAMPLES]
+    if args.section_scan_moduli:
+        output["section_scan"] = scan_open_port_section_cases(
+            parse_moduli(args.section_scan_moduli), args.section_scan_limit
+        )
 
     text = json.dumps(output, indent=2)
     if args.json_out:

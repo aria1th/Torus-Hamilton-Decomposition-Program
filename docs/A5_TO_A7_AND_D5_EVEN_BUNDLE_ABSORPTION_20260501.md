@@ -204,6 +204,18 @@ The symbolic core now written down is:
 - the remaining primitiveity proof is the origin-excursion lemma outside the
   section.
 
+The verifier now also has a section-scan mode.  In the tested even range
+`m = 6,8,...,60`, the uniform open-port triple
+
+```text
+(A,B,C) = (0,m-2,1)
+```
+
+passes the section formula and gives a single `H` cycle, with one exception
+point `(m-1,2)`.  This supports the current split: the open-port section
+problem is easy, while the all-even proof still needs the origin-excursion
+affine chart that returns through the exceptional point correctly.
+
 The all-even proof gap is therefore concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;
@@ -233,7 +245,7 @@ The D5 even Route-E verifier from the bundle was absorbed as
 - the normalized Route-E core first-return formula through `m = 20`, including
   the expected `m = 2` failure;
 - the open-port section formula and `H`-cycle criterion on the bundle's
-  recorded examples.
+  recorded examples and the section-scan family through `m = 60`.
 
 ## Revised Missing Propositions
 

@@ -319,6 +319,12 @@ with a concrete Route-E program.
 - In the open-port family `s=0`, `nu=(0,A,B,C,0)`, the completed section map is
   `H_{A,C}(sigma,a) = (sigma-C, a+A+1-1_{sigma=0})`, which is a single
   `m^2` cycle when `gcd(C,m)=1`.
+- `scripts/verify_d5_even_routeE.py` now has a section-scan mode.  Through
+  even `m = 6,8,...,60`, it finds the uniform open-port section triple
+  `(A,B,C) = (0,m-2,1)`: the section formula holds, `H` is a single `m^2`
+  cycle, and the only exception point is `(m-1,2)`.  This does not prove the
+  full return is primitive; it isolates the remaining obstruction in the
+  origin-excursion/full-return chart.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove origin-excursion affine chart
@@ -370,6 +376,10 @@ python3 scripts/verify_zero_set_k_cert.py \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --section-scan-moduli 6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60 \
+  --section-scan-limit 1 \
+  --json-out /tmp/d5_even_routeE_section_scan_6_60.json
 python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \

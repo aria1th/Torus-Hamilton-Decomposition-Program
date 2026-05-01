@@ -340,6 +340,15 @@ Route-E core first-return table through `m = 20`, and the open-port section
 formula/cycle examples.  It is an audit artifact for the current Route-E
 program, not an all-even symbolic theorem.
 
+The open-port section search can also be scanned separately:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --section-scan-moduli 6,8,10,12,14,16,18,20,22,24,26,28,30 \
+  --section-scan-limit 1 \
+  --json-out /tmp/d5_even_routeE_section_scan.json
+```
+
 ## Citation
 
 If you use this formalization, cite the repository using `CITATION.cff`.
