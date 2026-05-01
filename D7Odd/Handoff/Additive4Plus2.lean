@@ -522,6 +522,55 @@ structure ProductRootCertificate (m : Nat) [NeZero m] where
   layerBijective : schedule.layerBijective
   returnsSingleCycle : schedule.returnsSingleCycle
 
+def ProductRootCertificate.ofLocalBridgeAndSkewReturns
+    {m : Nat} [NeZero m]
+    (P : ProductRootSchedule m)
+    (rawDir : ZMod m → ProductRoot m → Color → Direction)
+    (kappa : ZMod m → ProductRoot m → Direction → Direction)
+    (baseStep :
+      ZMod m → Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberStep :
+      ZMod m → Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (baseReturn : Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberReturn : Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (base : Color → D5Odd.ARoot5 m) (period : Color → Nat)
+    (hdir : ∀ t bf, Function.Bijective (rawDir t bf))
+    (hkappa : ∀ t bf, Function.Bijective (kappa t bf))
+    (hP : ∀ t bf c, P.dir t bf c = kappa t bf (rawDir t bf c))
+    (hbaseLayer : ∀ t c base fiber,
+      baseAddQ (baseDirectionOfSlot (P.dir t (base, fiber) c)) base =
+        baseStep t c base)
+    (hfiberLayer : ∀ t c base fiber,
+      fiberAddQ (fiberDirectionOfSlot (P.dir t (base, fiber) c)) fiber =
+        fiberStep t c base fiber)
+    (hbaseLayerBij : ∀ t c, Function.Bijective (baseStep t c))
+    (hfiberLayerBij : ∀ t c base, Function.Bijective (fiberStep t c base))
+    (hReturn : ∀ c bf,
+      P.returnMap c bf =
+        Shared.skewProductMap (baseReturn c) (fiberReturn c) bf)
+    (hbaseReturnBij : ∀ c, Function.Bijective (baseReturn c))
+    (hfiberReturnBij : ∀ c u, Function.Bijective (fiberReturn c u))
+    (hreturnBase : ∀ c, ((baseReturn c)^[period c]) (base c) = base c)
+    (hbaseCover : ∀ c b, ∃ k : Nat,
+      k < period c ∧ ((baseReturn c)^[k]) (base c) = b)
+    (hmonodromy : ∀ c,
+      IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap (baseReturn c) (fiberReturn c))
+          (base c) (period c))) :
+    ProductRootCertificate m where
+  schedule := P
+  rowLatin :=
+    P.rowLatin_of_stateDirectionPermutation rawDir kappa hdir hkappa hP
+  layerBijective :=
+    P.layerBijective_of_skewProductComponents
+      baseStep fiberStep hbaseLayer hfiberLayer hbaseLayerBij
+      hfiberLayerBij
+  returnsSingleCycle :=
+    P.returnsSingleCycle_of_skewReturns
+      baseReturn fiberReturn base period hReturn hbaseReturnBij
+      hfiberReturnBij hreturnBase hbaseCover hmonodromy
+
 def ProductRootCertificate.toRootFlatCertificate
     {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
     RootFlatCertificate m where

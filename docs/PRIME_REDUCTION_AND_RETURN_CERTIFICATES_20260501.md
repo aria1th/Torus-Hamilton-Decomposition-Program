@@ -195,7 +195,8 @@ the D7 handoff Hamilton target, and the shared layered full-step lift.  The
 same file also exposes the local proof hooks for such a certificate: row Latin
 from a state-dependent direction permutation, layer bijectivity from
 componentwise skew-product branches, and return single-cycle from the shared
-base-orbit monodromy criterion.
+base-orbit monodromy criterion.  These hooks are bundled by
+`ProductRootCertificate.ofLocalBridgeAndSkewReturns`.
 `D7Odd/Handoff/Additive4Plus2Endpoints.lean` then carries the same certificate
 through the D7 torus/Cayley wrappers and into the shared Cayley endpoint.
 
