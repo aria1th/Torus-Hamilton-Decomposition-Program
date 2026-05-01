@@ -213,7 +213,8 @@ row permutations as concrete bridge schedules and proves the resulting
 row-Latin condition, and adapts base-dependent D3 fiber compilers into the
 bridge `phi` interface with the expected bijectivity facts.  It now also
 projects the selected global direction back to its D5/D3 components and proves
-that the concrete bridge schedule has bijective layers for `m >= 5`.
+that the concrete bridge schedule has bijective layers for `m >= 5`, packaged
+together with row-Latin as a concrete local-facts theorem.
 `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate root chart
 used by the bundled all-zero-set bridge certificates, where base non-root
 directions carry the forced D3 `q0` fiber move.  Its

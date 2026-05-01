@@ -445,6 +445,30 @@ theorem bridgeConcreteSchedule_layerBijective {m : Nat} [NeZero m]
     (bridgeConcreteFiberStep_bijective_of_two_le (by omega)
       row fiberLayer perm t c)
 
+theorem bridgeConcreteSchedule_rowLatin_of_d3Phi {m : Nat}
+    (hm : 2 ≤ m) (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (hrow : ∀ t, Function.Bijective fun c : Color => row c t)
+    (hperm : ∀ t base, Function.Bijective (perm t base)) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).rowLatin :=
+  bridgeConcreteSchedule_rowLatin row (bridgeD3Phi fiberLayer perm)
+    hrow (bridgeD3Phi_bijective_of_two_le hm fiberLayer perm hperm)
+
+theorem bridgeConcreteSchedule_localFacts {m : Nat}
+    (hm : 5 ≤ m) (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (hrow : ∀ t, Function.Bijective fun c : Color => row c t)
+    (hperm : ∀ t base, Function.Bijective (perm t base)) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).rowLatin ∧
+      (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).layerBijective := by
+  haveI : NeZero m := ⟨by omega⟩
+  exact ⟨
+    bridgeConcreteSchedule_rowLatin_of_d3Phi (by omega)
+      row fiberLayer perm hrow hperm,
+    bridgeConcreteSchedule_layerBijective hm row fiberLayer perm⟩
+
 end Additive4Plus2
 end Handoff
 end D7Odd

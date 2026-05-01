@@ -326,7 +326,8 @@ Implementation progress after this goal update:
   fiber-branch bijectivity facts.  The same file now records the component
   projection lemmas for the actual global direction selected by `kappa`, and
   proves that the resulting concrete bridge schedule has bijective layers for
-  `m >= 5`.
+  `m >= 5`.  These are bundled in a single concrete row/layer local-facts
+  theorem.
 - `D7Odd/Handoff/Additive4Plus2BridgeChart.lean` records the alternate `4+2`
   root chart used by the bundled all-zero-set bridge model.  In this chart,
   global D7 directions `0..3` act as the corresponding D5 base move together
