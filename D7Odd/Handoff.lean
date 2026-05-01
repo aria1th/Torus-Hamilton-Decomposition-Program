@@ -13,3 +13,4 @@ import D7Odd.Handoff.SmallBranches
 import D7Odd.Handoff.Main
 import D7Odd.Handoff.CanonicalBridge
 import D7Odd.Handoff.CanonicalFamily
+import D7Odd.Handoff.PrimeCanonicalBridge

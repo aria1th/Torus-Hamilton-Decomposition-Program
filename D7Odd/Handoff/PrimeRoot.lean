@@ -42,6 +42,41 @@ abbrev Prefix (D : PrimeDimension) (m : Nat) :=
 abbrev Rho (D : PrimeDimension) :=
   {r : Fin D.p // 1 ≤ r.val}
 
+def zero (D : PrimeDimension) : Fin D.p :=
+  ⟨0, D.prime.pos⟩
+
+def one (D : PrimeDimension) : Fin D.p :=
+  ⟨1, D.prime.one_lt⟩
+
+abbrev CanonSym (D : PrimeDimension) :=
+  Fin D.p
+
+def prefixLabelToDirection (D : PrimeDimension) (r : Fin D.p) : D.Direction :=
+  ⟨D.p - 1 - r.val, by
+    have hp : 0 < D.p := D.prime.pos
+    omega⟩
+
+def prefixLabelStep (D : PrimeDimension) {m : Nat}
+    (r : Fin D.p) (z : D.Prefix m) : D.Prefix m :=
+  fun k => z k - if k.val < r.val then 1 else 0
+
+def prefixLabelUnstep (D : PrimeDimension) {m : Nat}
+    (r : Fin D.p) (z : D.Prefix m) : D.Prefix m :=
+  fun k => z k + if k.val < r.val then 1 else 0
+
+def canonicalPrefixLabelOfRho (D : PrimeDimension)
+    (rho : D.Rho) (sym : D.CanonSym) : Fin D.p :=
+  if sym = D.zero then D.zero
+  else if sym = D.one then rho.1
+  else if rho.1.val < sym.val then sym
+  else ⟨sym.val - 1, by
+    have hs : sym.val < D.p := sym.isLt
+    omega⟩
+
+def canonicalDirOfRho (D : PrimeDimension)
+    (rho : D.Rho) (sym : D.CanonSym) : D.Direction :=
+  D.prefixLabelToDirection (D.canonicalPrefixLabelOfRho rho sym)
+
 def seven : PrimeDimension where
   p := 7
   prime := by norm_num
@@ -49,6 +84,10 @@ def seven : PrimeDimension where
 @[simp] theorem seven_p : seven.p = 7 := rfl
 
 @[simp] theorem seven_sink_val : seven.sink.val = 6 := rfl
+
+@[simp] theorem seven_zero : seven.zero = (0 : Fin 7) := rfl
+
+@[simp] theorem seven_one : seven.one = (1 : Fin 7) := rfl
 
 @[simp] theorem e_seven (m : Nat) (i : Fin 7) :
     seven.e m i = e7 m i := by
@@ -99,6 +138,26 @@ def rhoSevenEquiv :
   right_inv := by
     intro r
     rfl
+
+theorem prefixLabelToDirection_seven (r : Fin 7) :
+    seven.prefixLabelToDirection r =
+      (⟨6 - r.val, by
+        have hr : r.val < 7 := r.isLt
+        omega⟩ : Fin 7) := by
+  apply Fin.ext
+  simp [prefixLabelToDirection, seven]
+
+theorem prefixLabelStep_seven {m : Nat}
+    (r : Fin 7) (z : seven.Prefix m) :
+    seven.prefixLabelStep r z =
+      fun k : Fin 6 => z k - if k.val < r.val then 1 else 0 := by
+  rfl
+
+theorem prefixLabelUnstep_seven {m : Nat}
+    (r : Fin 7) (z : seven.Prefix m) :
+    seven.prefixLabelUnstep r z =
+      fun k : Fin 6 => z k + if k.val < r.val then 1 else 0 := by
+  rfl
 
 end PrimeDimension
 
