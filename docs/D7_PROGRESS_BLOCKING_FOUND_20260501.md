@@ -321,8 +321,11 @@ The internal lane traversal is now formalized by
 boundary jump is isolated by `phiInv_reaches_boundary_jump_residue`, which
 moves from a lane top to residue `x + (3-h)`.  The exact low representative
 landing is now formalized by `phiInv_reaches_boundary_jump_low`.  The
-remaining step is to compose these lane pieces along the residue cycle into
-full orbit transitivity.
+lane-top formula `laneTop` and `phiInv_reaches_next_low` now package one
+complete residue-edge lift from an arbitrary point to the low representative
+of the next lane.  The remaining step is to compose these lifted edges along
+the residue cycle and then use internal lane reachability to hit the final
+target.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

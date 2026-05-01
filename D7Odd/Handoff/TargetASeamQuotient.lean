@@ -421,6 +421,52 @@ theorem phiInv_reaches_boundary_jump_low {h : Nat} [NeZero h] {x y b : Nat}
     (((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h)).val = phiInvNat h y := hn
     _ = b := heq
 
+def laneTop (h x : Nat) : Nat :=
+  x + 5 * ((h - 1 - x) / 5)
+
+theorem laneTop_ge (h x : Nat) :
+    x ≤ laneTop h x := by
+  unfold laneTop
+  omega
+
+theorem laneTop_lt {h x : Nat} (hx : x < h) :
+    laneTop h x < h := by
+  unfold laneTop
+  have hmul : 5 * ((h - 1 - x) / 5) ≤ h - 1 - x :=
+    Nat.mul_div_le (h - 1 - x) 5
+  omega
+
+theorem laneTop_boundary {h x : Nat} (hx : x < h) :
+    ¬ laneTop h x + 5 < h := by
+  intro hb
+  unfold laneTop at hb
+  let d := h - 1 - x
+  have hdecomp : d % 5 + 5 * (d / 5) = d := Nat.mod_add_div d 5
+  have hmodlt : d % 5 < 5 := Nat.mod_lt d (by decide)
+  have hlarge : 5 * (d / 5) + 5 ≤ d := by omega
+  omega
+
+theorem laneTop_mod_eq {h x : Nat} :
+    ((laneTop h x : Nat) : ZMod 5) = (x : ZMod 5) := by
+  unfold laneTop
+  rw [Nat.cast_add, Nat.cast_mul]
+  change (x : ZMod 5) +
+    (5 : ZMod 5) * (((h - 1 - x) / 5 : Nat) : ZMod 5) = (x : ZMod 5)
+  rw [show (5 : ZMod 5) = 0 by exact ZMod.natCast_self 5]
+  simp
+
+theorem phiInv_reaches_next_low {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    {x b : Nat} (hx : x < h) (hb : b < 5)
+    (hbmod : (b : ZMod 5) = (x : ZMod 5) + residueShift h) :
+    ∃ n, ((phiInv h)^[n]) (⟨x, hx⟩ : Fin h) =
+      (⟨b, by omega⟩ : Fin h) := by
+  rcases phiInv_reaches_boundary_jump_low (h := h) (x := x)
+      (y := laneTop h x) (b := b) hh
+      (laneTop_ge h x) laneTop_mod_eq (laneTop_lt hx) (laneTop_boundary hx)
+      hb hbmod with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  simpa using hn
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega

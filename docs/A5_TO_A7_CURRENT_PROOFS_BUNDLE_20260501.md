@@ -176,7 +176,10 @@ lane.  The boundary jump is also isolated:
 top boundary, the next inverse step lands in residue `x + (3-h)`.  The
 stronger `phiInv_reaches_boundary_jump_low` identifies the exact low
 representative of that next lane, using injectivity of `Nat -> ZMod 5` on
-`0..4`.
+`0..4`.  The lane-top formula is now explicit as `laneTop`, and
+`phiInv_reaches_next_low` packages one full residue-edge lift: from any point,
+move to the top of its lane and land at the low representative of the next
+residue.  The remaining stitching is an induction over the residue-cycle path.
 
 ## Updated Target-A Interpretation
 
