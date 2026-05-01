@@ -84,6 +84,22 @@ range = 6..60
 all_ok = True
 ```
 
+The verifier now also emits proof-facing data for the induced seam map:
+
+- `translation_blocks`: maximal intervals in `a = 1,...,m-1` on which
+  `V(a)-a mod m` is constant;
+- `translation_block_count`: the number of such blocks;
+- `orbit_prefix_from_1`: a short prefix of the single seam cycle.
+
+This is intended as the finite trace format for the next symbolic
+block-splice proof.  For example, the recorded `m = 44` schedule has only two
+translation blocks:
+
+```text
+[1,20]  -> delta 23
+[21,43] -> delta 24
+```
+
 ## Revised D5 Even Route-E Gap
 
 The non-open branch should no longer be described as an unresolved

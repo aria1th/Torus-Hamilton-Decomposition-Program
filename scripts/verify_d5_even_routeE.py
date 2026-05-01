@@ -418,6 +418,45 @@ def cycle_lengths_from_param_map(mapping: Dict[int, int], domain: Iterable[int])
     return sorted(lengths)
 
 
+def translation_blocks(m: int, mapping: Dict[int, int]) -> List[dict]:
+    blocks = []
+    start = 1
+    current_delta = (mapping[start] - start) % m
+    previous = start
+    for a in range(2, m):
+        delta = (mapping[a] - a) % m
+        if delta != current_delta:
+            blocks.append(
+                {
+                    "start": start,
+                    "end": previous,
+                    "delta": current_delta,
+                    "length": previous - start + 1,
+                }
+            )
+            start = a
+            current_delta = delta
+        previous = a
+    blocks.append(
+        {
+            "start": start,
+            "end": previous,
+            "delta": current_delta,
+            "length": previous - start + 1,
+        }
+    )
+    return blocks
+
+
+def orbit_prefix(mapping: Dict[int, int], start: int, limit: int) -> List[int]:
+    out = []
+    x = start
+    for _ in range(limit):
+        out.append(x)
+        x = mapping[x]
+    return out
+
+
 def verify_small_seam_case(
     m: int, slot: int, counts: Tuple[int, int, int, int, int]
 ) -> dict:
@@ -446,6 +485,7 @@ def verify_small_seam_case(
     cycle_lengths_small = (
         cycle_lengths_from_param_map(first_return, range(1, m)) if not no_return else []
     )
+    blocks = translation_blocks(m, first_return) if not no_return else []
     return_time_sum = sum(return_times.values())
     ok = (
         start_ok
@@ -464,6 +504,11 @@ def verify_small_seam_case(
         "return_time_sum": return_time_sum,
         "expected_return_time_sum": m**4,
         "time_distribution": dict(sorted(Counter(return_times.values()).items())),
+        "translation_block_count": len(blocks),
+        "translation_blocks": blocks,
+        "orbit_prefix_from_1": orbit_prefix(first_return, 1, min(m - 1, 20))
+        if not no_return
+        else [],
         "map_sample": {
             a: {"to": first_return[a], "time": return_times[a]}
             for a in range(1, min(m, 15))

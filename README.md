@@ -421,7 +421,9 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
 ```
 
 This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
-on the size `m-1` seam is a single cycle and has return-time sum `m^4`.
+on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
+same output includes maximal translation blocks for the induced seam map,
+which are the finite traces for the next one-dimensional block-splice proof.
 
 ## Citation
 

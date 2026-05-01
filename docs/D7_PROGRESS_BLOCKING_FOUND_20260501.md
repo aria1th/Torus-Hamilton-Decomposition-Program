@@ -424,7 +424,10 @@ Theta_s = { rho_s(0,a,0,0,-a) : a != 0 }.
 If the first-return map on `Theta_s` is one cycle and the return-time sum is
 `m^4`, the normalized return on `A5(m)` is a single `m^4` cycle.  The repo
 verifier now checks the bundled cases for all even `m = 6,8,...,60`; the local
-absorption run reported `28` cases and `all_ok=True`.
+absorption run reported `28` cases and `all_ok=True`.  It now also emits the
+maximal translation blocks of the induced seam map, i.e. intervals on which
+`V(a)-a mod m` is constant.  These blocks are the finite trace data for the
+next one-dimensional block-splice proof.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove the induced one-dimensional small-seam
