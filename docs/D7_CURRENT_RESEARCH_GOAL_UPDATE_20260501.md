@@ -275,12 +275,16 @@ Implementation progress after this goal update:
   basis-coordinate lemma needed by the graph-product construction.
   The `CycleCoordinate` structure records the extra coordinate data needed to
   identify an abstract Hamilton color with the standard `ZMod n` cycle used by
-  the auxiliary dimension-`b` decomposition.
+  the auxiliary dimension-`b` decomposition.  It now has constructors from
+  rank-equivalence/rank-bijection data, matching the style of the existing
+  generated rank certificates.
 - `Shared/CayleyProduct.lean` begins the concrete graph-product formalization:
   it packages coordinate-bearing Cayley decompositions, turns A-color cycle
   coordinates into block-rank coordinates, defines the product color direction,
   and proves both its edge-partition condition and its color-wise Hamiltonian
-  conjugacy to the auxiliary B-cycle.
+  conjugacy to the auxiliary B-cycle.  It also has an adapter from a Cayley
+  decomposition plus color-wise rank-step data to a coordinatized Cayley
+  endpoint.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
@@ -316,6 +320,8 @@ The next useful Lean/research steps are:
    compiler `kappa`.
 4. Finish the concrete composite Cayley/torus endpoint from the existing
    product reduction by supplying or deriving the left-factor cycle-coordinate
-   data required by the formalized graph-product construction.
+   data required by the formalized graph-product construction.  The nearest
+   Lean shape is now a color-wise rank function whose successor identity is
+   `rank (step x) = rank x + 1`.
 5. Keep D7 even and D5 even on separate certificate tracks so their open
    obligations do not obscure the D7 odd structural bridge.

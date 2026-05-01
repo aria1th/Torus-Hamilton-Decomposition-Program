@@ -37,11 +37,14 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
 - It also introduces `CycleCoordinate`, the product-lift data that turns a
   Hamilton color into an explicit `ZMod n` cycle coordinate.  This isolates the
   remaining transport problem from the already-formalized single-cycle
-  endpoint.
+  endpoint.  Rank-equivalence/rank-bijection constructors now make this
+  compatible with existing rank-certificate proofs.
 - `Shared/CayleyProduct.lean` now formalizes the first concrete graph-product
   layer: coordinate-bearing Cayley decompositions, block-rank coordinates, the
   product color-direction map, its edge-partition proof, and the color-wise
-  Hamiltonian conjugacy from the product step to the auxiliary B-cycle.
+  Hamiltonian conjugacy from the product step to the auxiliary B-cycle.  It
+  also packages a Cayley decomposition with color-wise rank-step data as a
+  coordinatized endpoint.
 - `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
   Cayley endpoints to this shared proposition.  Conditional on the standard
   odd pointwise product expansion, it gives graph-level odd composite endpoints
@@ -206,7 +209,8 @@ that statement first, before trying to formalize full torus-level behavior.
 
 1. Connect existing D5/D7 Cayley endpoints to the coordinate-bearing product
    theorem, either by carrying explicit `CycleCoordinate` data in the endpoint
-   or by extracting it from the current single-cycle proof.
+   or by proving color-wise rank functions and using the shared rank-to-cycle
+   adapter.
 2. Extract a shared return-lift library from the D3, D5, and D7 lift arguments.
 3. Turn `D5Odd/Even.lean` into an actual D=5 even seam certificate proof.
 4. Add a D7-even certificate target using the D7 `RootFlatSchedule` interface.

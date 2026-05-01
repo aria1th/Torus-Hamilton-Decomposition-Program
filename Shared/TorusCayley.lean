@@ -95,6 +95,26 @@ structure CycleCoordinate (n : Nat) [NeZero n]
 
 namespace CycleCoordinate
 
+noncomputable def ofRankEquiv {n : Nat} [NeZero n] {α : Type*} {f : α → α}
+    (rank : α ≃ ZMod n)
+    (hstep : ∀ x : α, rank (f x) = rank x + 1) :
+    CycleCoordinate n f where
+  equiv := rank.symm
+  step := by
+    intro z
+    apply rank.injective
+    calc
+      rank (rank.symm (z + 1)) = z + 1 := by simp
+      _ = rank (rank.symm z) + 1 := by simp
+      _ = rank (f (rank.symm z)) := by rw [hstep]
+
+noncomputable def ofRank {n : Nat} [NeZero n] {α : Type*} {f : α → α}
+    (rank : α → ZMod n)
+    (hrank : Function.Bijective rank)
+    (hstep : ∀ x : α, rank (f x) = rank x + 1) :
+    CycleCoordinate n f :=
+  ofRankEquiv (Equiv.ofBijective rank hrank) hstep
+
 theorem rank_step {n : Nat} [NeZero n] {α : Type*} {f : α → α}
     (C : CycleCoordinate n f) (x : α) :
     C.equiv.symm (f x) = C.equiv.symm x + 1 := by

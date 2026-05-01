@@ -41,10 +41,11 @@ when `m` is odd and `m >= 3`.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
-  data for product lifts.
+  data for product lifts, including constructors from rank-equivalence data.
 - `Shared/CayleyProduct.lean`: coordinate-bearing Cayley decompositions and the
   concrete graph-product transport theorem, including product color-direction
-  edge partition and Hamiltonian conjugacy.
+  edge partition, Hamiltonian conjugacy, and adapters from color-wise rank
+  functions.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
 - `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and the left-coordinatized Cayley product adapter.

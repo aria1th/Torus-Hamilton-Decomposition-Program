@@ -18,6 +18,29 @@ theorem cayleyHamiltonDecomposition_of_coordinatized
   rintro ⟨_h, ⟨D⟩⟩
   exact ⟨D.toCayleyDecomposition⟩
 
+noncomputable def coordinatizedCayleyDecomposition_of_rank
+    {d m : Nat} [NeZero (m ^ d)]
+    (D : CayleyDecomposition d m)
+    (rank : TorusColor d → TorusVertex d m → ZMod (m ^ d))
+    (hrank : ∀ c : TorusColor d, Function.Bijective (rank c))
+    (hstep : ∀ c : TorusColor d, ∀ x : TorusVertex d m,
+      rank c (cayleyColorStep D.colorDir c x) = rank c x + 1) :
+    CoordinatizedCayleyDecomposition d m where
+  toCayleyDecomposition := D
+  cycleCoordinate := fun c =>
+    CycleCoordinate.ofRank (rank c) (hrank c) (hstep c)
+
+theorem coordinatizedCayleyHamiltonDecomposition_of_rank
+    {d m : Nat} [NeZero (m ^ d)]
+    (D : CayleyDecomposition d m)
+    (rank : TorusColor d → TorusVertex d m → ZMod (m ^ d))
+    (hrank : ∀ c : TorusColor d, Function.Bijective (rank c))
+    (hstep : ∀ c : TorusColor d, ∀ x : TorusVertex d m,
+      rank c (cayleyColorStep D.colorDir c x) = rank c x + 1) :
+    CoordinatizedCayleyHamiltonDecomposition d m := by
+  exact ⟨inferInstance,
+    ⟨coordinatizedCayleyDecomposition_of_rank D rank hrank hstep⟩⟩
+
 def torusVertexBlockRankEquiv
     {a b m n : Nat} [NeZero n]
     {f : TorusVertex a m → TorusVertex a m}
