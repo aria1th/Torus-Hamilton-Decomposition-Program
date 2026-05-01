@@ -1,5 +1,6 @@
 import D7Odd.ReturnEngine
 import D7Odd.Handoff.CanonicalFamily
+import Shared.ReturnLift
 
 namespace D7Odd
 
@@ -187,85 +188,18 @@ theorem single_cycle_of_zmod_layer_zero_return {m : Nat} [NeZero m]
     (hcover : ∀ x : ZMod m × β, ∃ w : β,
       S^[x.1.val] ((0 : ZMod m), w) = x) :
     Handoff.IsSingleCycleMap S := by
-  have hreturn_iter :
-      ∀ n : Nat, ∀ w : β,
-        S^[n * m] ((0 : ZMod m), w) = ((0 : ZMod m), R^[n] w) := by
-    intro n
-    induction n with
-    | zero =>
-        intro w
-        simp
-    | succ n ih =>
-        intro w
-        calc
-          S^[(n + 1) * m] ((0 : ZMod m), w)
-              = S^[n * m + m] ((0 : ZMod m), w) := by
-                  congr 1
-                  ring
-          _ = S^[n * m] (S^[m] ((0 : ZMod m), w)) := by
-                  rw [Function.iterate_add_apply]
-          _ = S^[n * m] ((0 : ZMod m), R w) := by
-                  rw [hreturn]
-          _ = ((0 : ZMod m), R^[n] (R w)) := ih (R w)
-          _ = ((0 : ZMod m), R^[n + 1] w) := by
-                  rw [Function.iterate_succ_apply]
-  refine ⟨hS, ?_⟩
-  intro x y
-  rcases hcover x with ⟨a, hx⟩
-  rcases hcover y with ⟨b, hy⟩
-  let r := x.1.val
-  let s := y.1.val
-  by_cases hrs : r <= s
-  · rcases hR.2 a b with ⟨q, hq⟩
-    refine ⟨q * m + (s - r), ?_⟩
-    rw [← hx, ← hy]
-    calc
-      S^[q * m + (s - r)] (S^[r] ((0 : ZMod m), a))
-          = S^[q * m + s] ((0 : ZMod m), a) := by
-              rw [← Function.iterate_add_apply]
-              congr 1
-              omega
-      _ = S^[s + q * m] ((0 : ZMod m), a) := by
-              congr 1
-              omega
-      _ = S^[s] (S^[q * m] ((0 : ZMod m), a)) := by
-              rw [Function.iterate_add_apply]
-      _ = S^[s] ((0 : ZMod m), R^[q] a) := by
-              rw [hreturn_iter]
-      _ = S^[s] ((0 : ZMod m), b) := by
-              rw [hq]
-  · have hsr : s < r := by omega
-    have hrlt : r < m := by
-      exact ZMod.val_lt x.1
-    have hslt : s < m := by
-      exact ZMod.val_lt y.1
-    rcases hR.2 (R a) b with ⟨q, hq⟩
-    have hq' : R^[q + 1] a = b := by
-      rw [Function.iterate_succ_apply]
-      exact hq
-    refine ⟨q * m + (m + s - r), ?_⟩
-    rw [← hx, ← hy]
-    calc
-      S^[q * m + (m + s - r)] (S^[r] ((0 : ZMod m), a))
-          = S^[(q + 1) * m + s] ((0 : ZMod m), a) := by
-              rw [← Function.iterate_add_apply]
-              congr 1
-              calc
-                q * m + (m + s - r) + r = q * m + (m + s) := by
-                  rw [Nat.add_assoc]
-                  rw [Nat.sub_add_cancel]
-                  omega
-                _ = (q + 1) * m + s := by
-                  ring
-      _ = S^[s + (q + 1) * m] ((0 : ZMod m), a) := by
-              congr 1
-              omega
-      _ = S^[s] (S^[(q + 1) * m] ((0 : ZMod m), a)) := by
-              rw [Function.iterate_add_apply]
-      _ = S^[s] ((0 : ZMod m), R^[q + 1] a) := by
-              rw [hreturn_iter]
-      _ = S^[s] ((0 : ZMod m), b) := by
-              rw [hq']
+  have hRShared : Shared.IsSingleCycleMap R := by
+    simpa [Shared.IsSingleCycleMap, Handoff.IsSingleCycleMap] using hR
+  have hcoverShared :
+      ∀ x : ZMod m × β, ∃ w : β, ∃ k : Nat,
+        k < m ∧ S^[k] ((0 : ZMod m), w) = x := by
+    intro x
+    rcases hcover x with ⟨w, hw⟩
+    exact ⟨w, x.1.val, ZMod.val_lt x.1, hw⟩
+  have h := Shared.single_cycle_of_periodic_return_cover
+    (S := S) (base := fun w : β => ((0 : ZMod m), w)) (R := R)
+    (period := m) hS hreturn hRShared hcoverShared
+  simpa [Shared.IsSingleCycleMap, Handoff.IsSingleCycleMap] using h
 
 theorem rootFlatLayerStep_single_cycle {m : Nat} [NeZero m]
     {S : Handoff.RootFlatSchedule m}

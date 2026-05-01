@@ -1,4 +1,5 @@
 import D5Odd.Main
+import Shared.ReturnLift
 
 namespace D5Odd
 
@@ -131,83 +132,18 @@ theorem single_cycle_of_layer_zero_return_cover {m : Nat} [NeZero m]
     (hcover : forall x : Fin m × beta, exists w : beta,
       S^[x.1.val] ((0 : Fin m), w) = x) :
     IsSingleCycleMap S := by
-  have hreturn_iter :
-      forall n : Nat, forall w : beta,
-        S^[n * m] ((0 : Fin m), w) = ((0 : Fin m), R^[n] w) := by
-    intro n
-    induction n with
-    | zero =>
-        intro w
-        simp
-    | succ n ih =>
-        intro w
-        calc
-          S^[(n + 1) * m] ((0 : Fin m), w)
-              = S^[n * m + m] ((0 : Fin m), w) := by
-                  congr 1
-                  ring
-          _ = S^[n * m] (S^[m] ((0 : Fin m), w)) := by
-                  rw [Function.iterate_add_apply]
-          _ = S^[n * m] ((0 : Fin m), R w) := by
-                  rw [hreturn]
-          _ = ((0 : Fin m), R^[n] (R w)) := ih (R w)
-          _ = ((0 : Fin m), R^[n + 1] w) := by
-                  rw [Function.iterate_succ_apply]
-  refine ⟨hS, ?_⟩
-  intro x y
-  rcases hcover x with ⟨a, hx⟩
-  rcases hcover y with ⟨b, hy⟩
-  let r := x.1.val
-  let s := y.1.val
-  by_cases hrs : r <= s
-  · rcases hR.2 a b with ⟨q, hq⟩
-    refine ⟨q * m + (s - r), ?_⟩
-    rw [← hx, ← hy]
-    calc
-      S^[q * m + (s - r)] (S^[r] ((0 : Fin m), a))
-          = S^[q * m + s] ((0 : Fin m), a) := by
-              rw [← Function.iterate_add_apply]
-              congr 1
-              omega
-      _ = S^[s + q * m] ((0 : Fin m), a) := by
-              congr 1
-              omega
-      _ = S^[s] (S^[q * m] ((0 : Fin m), a)) := by
-              rw [Function.iterate_add_apply]
-      _ = S^[s] ((0 : Fin m), R^[q] a) := by
-              rw [hreturn_iter]
-      _ = S^[s] ((0 : Fin m), b) := by
-              rw [hq]
-  · have hsr : s < r := by omega
-    have hrlt : r < m := by simp [r]
-    have hslt : s < m := by simp [s]
-    rcases hR.2 (R a) b with ⟨q, hq⟩
-    have hq' : R^[q + 1] a = b := by
-      rw [Function.iterate_succ_apply]
-      exact hq
-    refine ⟨q * m + (m + s - r), ?_⟩
-    rw [← hx, ← hy]
-    calc
-      S^[q * m + (m + s - r)] (S^[r] ((0 : Fin m), a))
-          = S^[(q + 1) * m + s] ((0 : Fin m), a) := by
-              rw [← Function.iterate_add_apply]
-              congr 1
-              calc
-                q * m + (m + s - r) + r = q * m + (m + s) := by
-                  rw [Nat.add_assoc]
-                  rw [Nat.sub_add_cancel]
-                  omega
-                _ = (q + 1) * m + s := by
-                  ring
-      _ = S^[s + (q + 1) * m] ((0 : Fin m), a) := by
-              congr 1
-              omega
-      _ = S^[s] (S^[(q + 1) * m] ((0 : Fin m), a)) := by
-              rw [Function.iterate_add_apply]
-      _ = S^[s] ((0 : Fin m), R^[q + 1] a) := by
-              rw [hreturn_iter]
-      _ = S^[s] ((0 : Fin m), b) := by
-              rw [hq']
+  have hRShared : Shared.IsSingleCycleMap R := by
+    simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using hR
+  have hcoverShared :
+      ∀ x : Fin m × beta, ∃ w : beta, ∃ k : Nat,
+        k < m ∧ S^[k] ((0 : Fin m), w) = x := by
+    intro x
+    rcases hcover x with ⟨w, hw⟩
+    exact ⟨w, x.1.val, x.1.isLt, hw⟩
+  have h := Shared.single_cycle_of_periodic_return_cover
+    (S := S) (base := fun w : beta => ((0 : Fin m), w)) (R := R)
+    (period := m) hS hreturn hRShared hcoverShared
+  simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using h
 
 theorem finMAddNat_zero_zero {m : Nat} [NeZero m] :
     finMAddNat (0 : Fin m) 0 = 0 := by

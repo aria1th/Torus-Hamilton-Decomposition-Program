@@ -19,3 +19,6 @@ name = "D5Odd"
 
 [[lean_lib]]
 name = "D7Odd"
+
+[[lean_lib]]
+name = "Shared"
