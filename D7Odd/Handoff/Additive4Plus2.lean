@@ -293,6 +293,71 @@ theorem layerBijective_of_productLayerMaps {m : Nat}
   intro t c
   exact layerMap_bijective_of_productLayerMap_bijective S t c (h t c)
 
+structure ProductRootSchedule (m : Nat) where
+  dir : ZMod m → ProductRoot m → Color → Direction
+
+namespace ProductRootSchedule
+
+def rowLatin {m : Nat} (P : ProductRootSchedule m) : Prop :=
+  ∀ t bf, Function.Bijective fun c : Color => P.dir t bf c
+
+def layerMap {m : Nat} (P : ProductRootSchedule m)
+    (t : ZMod m) (c : Color) : ProductRoot m → ProductRoot m :=
+  fun bf => productStep (P.dir t bf c) bf
+
+def layerBijective {m : Nat} (P : ProductRootSchedule m) : Prop :=
+  ∀ t c, Function.Bijective (P.layerMap t c)
+
+def toRootFlatSchedule {m : Nat} (P : ProductRootSchedule m) :
+    RootFlatSchedule m where
+  dir := fun t w c => P.dir t ((rootEquiv m).symm w) c
+
+theorem toRootFlatSchedule_rowLatin {m : Nat}
+    (P : ProductRootSchedule m) :
+    P.toRootFlatSchedule.rowLatin ↔ P.rowLatin := by
+  constructor
+  · intro h t bf
+    simpa [toRootFlatSchedule] using h t ((rootEquiv m) bf)
+  · intro h t w
+    exact h t ((rootEquiv m).symm w)
+
+theorem toRootFlatSchedule_layerMap_conj {m : Nat}
+    (P : ProductRootSchedule m) (t : ZMod m) (c : Color)
+    (bf : ProductRoot m) :
+    (rootEquiv m).symm
+        (P.toRootFlatSchedule.layerMap t c ((rootEquiv m) bf)) =
+      P.layerMap t c bf := by
+  simp [toRootFlatSchedule, RootFlatSchedule.layerMap, layerMap,
+    rootEquiv_symm_addQRoot_rootEquiv]
+
+theorem toRootFlatSchedule_layerBijective {m : Nat}
+    (P : ProductRootSchedule m) (h : P.layerBijective) :
+    P.toRootFlatSchedule.layerBijective := by
+  intro t c
+  exact Shared.bijective_of_equiv_conj
+    (e := rootEquiv m) (f := P.toRootFlatSchedule.layerMap t c)
+    (g := P.layerMap t c) (h t c)
+    (P.toRootFlatSchedule_layerMap_conj t c)
+
+end ProductRootSchedule
+
+structure ProductRootCertificate (m : Nat) [NeZero m] where
+  schedule : ProductRootSchedule m
+  rowLatin : schedule.rowLatin
+  layerBijective : schedule.layerBijective
+  returnsSingleCycle : schedule.toRootFlatSchedule.returnsSingleCycle
+
+def ProductRootCertificate.toRootFlatCertificate
+    {m : Nat} [NeZero m] (cert : ProductRootCertificate m) :
+    RootFlatCertificate m where
+  schedule := cert.schedule.toRootFlatSchedule
+  rowLatin := (ProductRootSchedule.toRootFlatSchedule_rowLatin cert.schedule).2
+    cert.rowLatin
+  layerBijective :=
+    ProductRootSchedule.toRootFlatSchedule_layerBijective cert.schedule
+      cert.layerBijective
+  returnsSingleCycle := cert.returnsSingleCycle
+
 end Additive4Plus2
 end Handoff
 end D7Odd
