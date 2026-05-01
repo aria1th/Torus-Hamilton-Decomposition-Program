@@ -68,6 +68,16 @@ The bundle supplies one-`Lambda_E` schedules for every even
 The schedule table from the bundle is now embedded in
 `scripts/verify_d5_even_routeE.py` as `SMALL_SEAM_CASES`.
 
+The Lean-facing target for these traces is now:
+
+```text
+D5Odd/EvenRouteE.lean
+```
+
+It defines `RouteECounts` and `RouteESmallSeamCertificate`, then routes any
+completed Route-E certificate through the existing `D5Odd.Even` seam endpoint
+to D5 Hamilton, torus, and Cayley decompositions.
+
 The repo-side verification command used for this absorption was:
 
 ```bash

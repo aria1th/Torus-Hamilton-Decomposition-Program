@@ -452,6 +452,10 @@ covering every even `m >= 6`, prove the induced one-dimensional small-seam
 maps and return-time sums for those families, and package `m = 4` as a finite
 witness theorem.
 
+`D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
+one-`Lambda_E` count/slot data, small-seam first-return traces, return-time
+sum, and the orbit target needed by the existing D5 even seam endpoint.
+
 ## Next Bundle Checklist
 
 When new bundles arrive, compare them against this baseline:

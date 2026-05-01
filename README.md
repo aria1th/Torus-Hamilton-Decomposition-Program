@@ -49,6 +49,9 @@ when `m` is odd and `m >= 3`.
   `RootFlatSchedule` interface, with adapters to the shared layered lift and
   torus/Cayley wrappers.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
+- `D5Odd/EvenRouteE.lean`: Lean-facing Route-E certificate interface for
+  D5 even one-`Lambda_E` count/slot data and small-seam traces, routing a
+  completed Route-E certificate through the existing D5 even seam endpoint.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
@@ -439,6 +442,12 @@ This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
 on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
 same output includes maximal translation blocks for the induced seam map,
 which are the finite traces for the next one-dimensional block-splice proof.
+
+The corresponding Lean target interface builds with:
+
+```bash
+lake build D5Odd.EvenRouteE
+```
 
 ## Citation
 
