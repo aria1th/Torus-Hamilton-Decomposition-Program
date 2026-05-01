@@ -34,6 +34,10 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   equivalence `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and records
   how a standard basis direction lands in one block.  This is the concrete
   graph-isomorphism layer needed before transporting Hamilton factors.
+- It also introduces `CycleCoordinate`, the product-lift data that turns a
+  Hamilton color into an explicit `ZMod n` cycle coordinate.  This isolates the
+  remaining transport problem from the already-formalized single-cycle
+  endpoint.
 - `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
   Cayley endpoints to this shared proposition.  Conditional on the standard
   odd pointwise product expansion, it gives graph-level odd composite endpoints

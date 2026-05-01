@@ -40,7 +40,8 @@ when `m` is odd and `m >= 3`.
   layer bijective, and return single-cycle data.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
-  plus block-coordinate equivalences for composite dimensions.
+  block-coordinate equivalences for composite dimensions, and cycle-coordinate
+  data for product lifts.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
 - `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants and concrete adapters for the shared standard torus/Cayley proposition.

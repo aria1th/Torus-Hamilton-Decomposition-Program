@@ -1,4 +1,4 @@
-import Shared.ReturnLift
+import Shared.RankCycle
 
 namespace Shared
 
@@ -63,6 +63,28 @@ theorem torusVertexBlockEquiv_torusBasis_apply
       intro heq
       exact h <| Prod.ext_iff.1 ((blockIndexEquiv a b).injective heq)
     simp [torusVertexBlockEquiv_apply, torusBasis, h, hne]
+
+structure CycleCoordinate (n : Nat) [NeZero n]
+    {α : Type*} (f : α → α) where
+  equiv : ZMod n ≃ α
+  step : ∀ z : ZMod n, equiv (z + 1) = f (equiv z)
+
+namespace CycleCoordinate
+
+theorem singleCycle {n : Nat} [NeZero n] {α : Type*} {f : α → α}
+    (C : CycleCoordinate n f) :
+    IsSingleCycleMap f := by
+  refine single_cycle_of_zmod_rank f C.equiv.symm C.equiv.symm.bijective ?_
+  intro x
+  let z : ZMod n := C.equiv.symm x
+  have hx : x = C.equiv z := by
+    simp [z]
+  calc
+    C.equiv.symm (f x) = C.equiv.symm (f (C.equiv z)) := by rw [hx]
+    _ = C.equiv.symm (C.equiv (z + 1)) := by rw [C.step z]
+    _ = C.equiv.symm x + 1 := by simp [z]
+
+end CycleCoordinate
 
 def cayleyColorStep {d m : Nat}
     (colorDir : TorusColor d → TorusVertex d m → TorusDirection d)

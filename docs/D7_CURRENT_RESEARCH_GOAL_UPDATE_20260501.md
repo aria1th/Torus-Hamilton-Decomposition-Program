@@ -272,6 +272,9 @@ Implementation progress after this goal update:
   It also contains the block-coordinate equivalence
   `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and the corresponding
   basis-coordinate lemma needed by the graph-product construction.
+  The `CycleCoordinate` structure records the extra coordinate data needed to
+  identify an abstract Hamilton color with the standard `ZMod n` cycle used by
+  the auxiliary dimension-`b` decomposition.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
