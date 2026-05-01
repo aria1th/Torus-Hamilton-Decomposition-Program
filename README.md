@@ -55,7 +55,9 @@ when `m` is odd and `m >= 3`.
   `a |-> rho_s(0,a,0,0,-a)` as `routeEThetaPoint`, and derives the D5 even
   seam orbit target from first-return equations, first-return minimality,
   seam single-cyclicity, and the return-time sum before routing to the
-  torus/Cayley endpoints.
+  torus/Cayley endpoints.  It also defines the underlying `Vec5` seam point
+  `routeEThetaVec` and proves its `rootZ`/`rootOfZ` equivalence with
+  `routeEThetaPoint`, making the bundle coordinate convention explicit.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single

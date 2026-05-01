@@ -170,6 +170,10 @@ E = (2,2,2,4,4,5,8)
 
 are all units modulo `9`, and then replays the full finite bridge verifier.
 This is the current Target-B' regression for zero-set-only scalar certificates.
+When the non-scalar and scalar JSON files are checked together, the non-scalar
+file reports `scalar_ok=False` only because it has no scalar-invariant field;
+both files report `table_ok=True`, `expanded_valid=True`, and `full_ok=True`,
+while the scalar file also reports `scalar_ok=True`.
 
 ### Base Row Side
 

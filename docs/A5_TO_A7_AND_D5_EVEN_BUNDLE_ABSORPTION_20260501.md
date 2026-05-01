@@ -94,6 +94,11 @@ runs the full bridge verifier.  This strengthens the interpretation that the
 fiber problem is a finite mask-design problem once Target A supplies the base
 schedule.
 
+The paired check of the original zero-set table cert and the scalar cert gives
+the expected mixed summary: the original cert has no scalar field, so it
+reports `scalar_ok=False`, but both certs pass table expansion and full bridge
+verification; the scalar cert additionally passes the unit-invariant check.
+
 The current Target-A proof interface is a section-splice theorem on
 
 ```text

@@ -88,6 +88,16 @@ from:
 - a single cycle on the induced seam map;
 - the return-time sum `m^4`.
 
+There is a coordinate convention worth making explicit.  `D5Odd/Even.lean`
+uses `Vec4` as the `rootZ` projection of `Vec5`, i.e. coordinates `1..4`, not
+coordinates `0..3`.  Thus the bundle point `(0,a,0,0,-a)` is represented in
+Lean as `![a,0,0,-a]`.  The file now defines the underlying `Vec5` point
+`routeEThetaVec slot a` and proves:
+
+- `Root5 m (routeEThetaVec slot a)`;
+- `rootZ (routeEThetaVec slot a) = routeEThetaPoint slot a`;
+- `(rootOfZ (routeEThetaPoint slot a)).1 = routeEThetaVec slot a`.
+
 The non-open wrapper `RouteENonopenSmallSeamCertificate` fixes the seam type to
 `RouteENonzeroSeam m` and then routes any completed Route-E certificate through
 the existing `D5Odd.Even` seam endpoint to D5 Hamilton, torus, and Cayley
@@ -127,6 +137,13 @@ all_ok = True
 seam_sizes_ok = True
 return_sums_ok = True
 ```
+
+The v0.4 bundle was also re-read directly: its
+`outputs/d5_even_routeE_small_seam_extended_cases.tsv` table has the same
+`28` rows as the repo's `SMALL_SEAM_CASES`, with matching `(slot, counts)` for
+every even `m = 6,8,...,60`.  The standalone C++ checker compiled from
+`scripts/fast_d5_routeE_small_seam_verify.cpp` reports `ok 1` for all `28`
+embedded cases.
 
 The verifier now also emits proof-facing data for the induced seam map:
 

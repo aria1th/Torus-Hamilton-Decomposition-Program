@@ -47,6 +47,32 @@ def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 3 then ![0, -a, 0, a] else
   ![0, 0, -a, 0]
 
+def routeEThetaVec {m : Nat} (slot : Color) (a : ZMod m) : Vec5 m :=
+  if slot = 0 then ![0, a, 0, 0, -a] else
+  if slot = 1 then ![-a, 0, a, 0, 0] else
+  if slot = 2 then ![0, -a, 0, a, 0] else
+  if slot = 3 then ![0, 0, -a, 0, a] else
+  ![a, 0, 0, -a, 0]
+
+theorem root5_routeEThetaVec {m : Nat} (slot : Color) (a : ZMod m) :
+    Root5 m (routeEThetaVec slot a) := by
+  fin_cases slot <;>
+    simp [routeEThetaVec, Root5, sum5, Fin.sum_univ_five]
+
+theorem rootZ_routeEThetaVec {m : Nat} (slot : Color) (a : ZMod m) :
+    rootZ (routeEThetaVec slot a) = routeEThetaPoint slot a := by
+  fin_cases slot <;>
+    funext i <;>
+    fin_cases i <;>
+    simp [rootZ, routeEThetaVec, routeEThetaPoint, fin4ToFin5]
+
+theorem rootOfZ_routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) :
+    (rootOfZ (routeEThetaPoint slot a)).1 = routeEThetaVec slot a := by
+  fin_cases slot <;>
+    ext i <;>
+    fin_cases i <;>
+    simp [rootOfZ, routeEThetaPoint, routeEThetaVec]
+
 theorem routeEThetaPoint_injective {m : Nat} (slot : Color) :
     Function.Injective (routeEThetaPoint (m := m) slot) := by
   intro a b h
