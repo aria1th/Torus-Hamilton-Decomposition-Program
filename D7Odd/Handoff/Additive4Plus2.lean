@@ -246,6 +246,52 @@ def rootEquiv (m : Nat) :
     simp [baseRoot_targetRoot, fiberRoot_targetRoot]
   right_inv := targetRoot_base_fiber
 
+def root7OfPrefix {m : Nat} (x : Fin 6 → ZMod m) : RootState7 m :=
+  ⟨![x 0, x 1, x 2, x 3, x 4, x 5,
+      -(x 0 + x 1 + x 2 + x 3 + x 4 + x 5)], by
+    unfold Root7
+    simp [sum7_vec]⟩
+
+def prefixOfRoot7 {m : Nat} (w : RootState7 m) : Fin 6 → ZMod m :=
+  fun i => w.1 ⟨i.val, by omega⟩
+
+theorem prefixOfRoot7_root7OfPrefix {m : Nat} (x : Fin 6 → ZMod m) :
+    prefixOfRoot7 (root7OfPrefix x) = x := by
+  funext i
+  fin_cases i <;> simp [prefixOfRoot7, root7OfPrefix]
+
+set_option linter.flexible false in
+theorem root7OfPrefix_prefixOfRoot7 {m : Nat} (w : RootState7 m) :
+    root7OfPrefix (prefixOfRoot7 w) = w := by
+  apply Subtype.ext
+  ext i
+  fin_cases i <;> simp [prefixOfRoot7, root7OfPrefix]
+  · rw [root7_sink_eq]
+    ring
+
+def root7PrefixEquiv (m : Nat) :
+    (Fin 6 → ZMod m) ≃ RootState7 m where
+  toFun := root7OfPrefix
+  invFun := prefixOfRoot7
+  left_inv := prefixOfRoot7_root7OfPrefix
+  right_inv := root7OfPrefix_prefixOfRoot7
+
+noncomputable instance instFintypeRootState7 (m : Nat) [NeZero m] :
+    Fintype (RootState7 m) :=
+  Fintype.ofEquiv (Fin 6 → ZMod m) (root7PrefixEquiv m)
+
+theorem card_RootState7 {m : Nat} [NeZero m] :
+    Fintype.card (RootState7 m) = m ^ 6 := by
+  have hcard :
+      Fintype.card (Fin 6 → ZMod m) = Fintype.card (RootState7 m) :=
+    Fintype.card_congr (root7PrefixEquiv m)
+  calc
+    Fintype.card (RootState7 m) = Fintype.card (Fin 6 → ZMod m) := hcard.symm
+    _ = Fintype.card (ZMod m) ^ 6 := by
+      simp
+    _ = m ^ 6 := by
+      rw [ZMod.card]
+
 set_option linter.flexible false in
 theorem baseRoot_addQRoot {m : Nat}
     (i : Direction) (w : RootState7 m) :
@@ -277,6 +323,20 @@ theorem rootEquiv_symm_addQRoot {m : Nat}
     simp [rootEquiv, baseRoot_addQRoot, fiberRoot_addQRoot]
 
 abbrev ProductRoot (m : Nat) := D5Odd.ARoot5 m × ARoot3 m
+
+noncomputable instance instFintypeProductRoot (m : Nat) [NeZero m] :
+    Fintype (ProductRoot m) :=
+  Fintype.ofEquiv (RootState7 m) (rootEquiv m).symm
+
+theorem card_ProductRoot {m : Nat} [NeZero m] :
+    Fintype.card (ProductRoot m) = m ^ 6 := by
+  have hcard :
+      Fintype.card (D5Odd.ARoot5 m × ARoot3 m) = Fintype.card (RootState7 m) :=
+    Fintype.card_congr (rootEquiv m)
+  calc
+    Fintype.card (ProductRoot m) = Fintype.card (D5Odd.ARoot5 m × ARoot3 m) := rfl
+    _ = Fintype.card (RootState7 m) := hcard
+    _ = m ^ 6 := card_RootState7
 
 def productStep {m : Nat} (i : Direction) : ProductRoot m → ProductRoot m :=
   fun bf =>
