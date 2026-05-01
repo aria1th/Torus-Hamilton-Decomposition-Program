@@ -235,6 +235,11 @@ to `0`.  This is the right comparison layer for residue-family extraction:
 some hits differ only by cyclic slot rotation, while the normalized first hits
 at `m = 6,8,16` remain visibly non-open-port.
 
+The normalized output now also records support/zero positions and whether a
+hit matches the bundled finite schedule's normalized count vector.  This
+separates rotated copies of known witnesses from genuinely different
+count-vector hits, which is the data needed before guessing residue families.
+
 The all-even proof gap is therefore concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;

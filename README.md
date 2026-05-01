@@ -385,6 +385,9 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
 
 The count scan reports both the raw `(slot, counts)` and
 `normalized_counts_slot0`, obtained by cyclically rotating the E-slot to `0`.
+It also reports the normalized support/zero positions and, when a bundled
+finite schedule exists for that modulus, whether a hit matches its normalized
+count vector.
 
 ## Citation
 

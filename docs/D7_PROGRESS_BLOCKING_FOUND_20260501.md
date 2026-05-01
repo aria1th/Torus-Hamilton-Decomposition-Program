@@ -373,6 +373,12 @@ with a concrete Route-E program.
   same `(0,0,1,3,1)` count vector as the bundled `m = 6` witness.  All first
   hits currently seen at `m = 6,8,16` are outside open-port normal form after
   this normalization.
+- The scan also records normalized support/zero positions and whether each hit
+  matches the bundled finite schedule's normalized count vector.  For `m = 6`
+  and `m = 8`, rotated copies of the bundled normalized counts appear among
+  the first ten hits.  For `m = 16`, the first ten slot-0 hits are all
+  different from the bundled normalized count `(1,13,0,1,0)`, so the count
+  space has additional non-open-port witnesses beyond the finite table entry.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove origin-excursion affine chart

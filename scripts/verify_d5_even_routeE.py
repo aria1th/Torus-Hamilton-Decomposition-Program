@@ -196,6 +196,10 @@ def count_hit_summary(slot: int, counts: Tuple[int, int, int, int, int]) -> dict
         "counts": counts,
         "normalized_counts_slot0": normalized,
         "open_port_normal_form": normalized[0] == 0 and normalized[4] == 0,
+        "normalized_support": [i for i, count in enumerate(normalized) if count != 0],
+        "normalized_zero_positions": [
+            i for i, count in enumerate(normalized) if count == 0
+        ],
     }
 
 
@@ -213,12 +217,11 @@ def verify_one_e_schedule(m: int, slot: int, counts: Tuple[int, int, int, int, i
     rows = one_e_rows(m, slot, counts)
     assert len(rows[0]) == m
     lengths = [cycle_lengths(compose_maps(size, maps, row)) for row in rows]
+    count_summary = count_hit_summary(slot, counts)
     return {
         "m": m,
         "type": "one_Lambda_E_layer_plus_constant_offsets",
-        "slot": slot,
-        "counts": counts,
-        "normalized_counts_slot0": normalize_counts_to_slot0(slot, counts),
+        **count_summary,
         "relative_layers": [("C", a, n) for a, n in enumerate(counts) if n] + [("E", slot, 1)],
         "cycle_lengths": lengths,
         "ok": all(length == [size] for length in lengths),
@@ -478,13 +481,22 @@ def scan_one_e_full_count_cases(moduli: Iterable[int], limit: int) -> List[dict]
     results = []
     for m in moduli:
         states, idx = states_idx(m)
+        known = ONE_E_SCHEDULES.get(m)
+        known_normalized = None
+        if known is not None:
+            known_normalized = normalize_counts_to_slot0(known["slot"], known["counts"])
         hits = []
         checked = 0
         for slot in range(5):
             for counts in weak_compositions(m - 1, 5):
                 checked += 1
                 if one_e_single_cycle(m, slot, counts, states, idx):
-                    hits.append(count_hit_summary(slot, counts))
+                    hit = count_hit_summary(slot, counts)
+                    if known_normalized is not None:
+                        hit["matches_known_normalized"] = (
+                            hit["normalized_counts_slot0"] == known_normalized
+                        )
+                    hits.append(hit)
                     if len(hits) >= limit:
                         break
             if len(hits) >= limit:
@@ -492,6 +504,7 @@ def scan_one_e_full_count_cases(moduli: Iterable[int], limit: int) -> List[dict]
         results.append(
             {
                 "m": m,
+                "known_normalized_counts_slot0": known_normalized,
                 "checked": checked,
                 "hit_count": len(hits),
                 "first_hits": hits,
