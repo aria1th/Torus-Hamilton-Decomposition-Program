@@ -70,6 +70,40 @@ theorem zmod_val_eq_neg_one_of_fin_is_last {m : Nat} [NeZero m] {t : Fin m}
     simpa [Nat.cast_add] using hcast
   linear_combination hsum
 
+theorem finMAddNat_zero_val_of_lt {m : Nat} [NeZero m] {k : Nat} (hk : k < m) :
+    (finMAddNat (0 : Fin m) k).val = k := by
+  simp [finMAddNat, Nat.mod_eq_of_lt hk]
+
+theorem even_regular_prefix_fold_range {m : Nat} [NeZero m]
+    (S : D5EvenSeamData m) (c : Color) (n : Nat) (hn : n < m)
+    (w : ARoot5 m) :
+    (List.range n).foldl
+        (fun x k => layerMap (evenSchedule S) (finMAddNat (0 : Fin m) k) c x) w =
+      rootTranslate (n • q5 m c) (root5_nsmul_root n (root5_q5_vec m c)) w := by
+  induction n with
+  | zero =>
+      apply Subtype.ext
+      simp [rootTranslate]
+  | succ n ih =>
+      rw [List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
+      have hn' : n < m := Nat.lt_of_succ_lt hn
+      rw [ih hn']
+      have htlast : (finMAddNat (0 : Fin m) n).val + 1 ≠ m := by
+        rw [finMAddNat_zero_val_of_lt hn']
+        omega
+      have hmap :
+          layerMap (evenSchedule S) (finMAddNat (0 : Fin m) n) c
+              (rootTranslate (n • q5 m c) (root5_nsmul_root n (root5_q5_vec m c)) w) =
+            rootTranslate (q5 m c) (root5_q5_vec m c)
+              (rootTranslate (n • q5 m c) (root5_nsmul_root n (root5_q5_vec m c)) w) := by
+        apply Subtype.ext
+        simp [layerMap, rootTranslate, evenSchedule, evenDir, htlast]
+      rw [hmap]
+      apply Subtype.ext
+      ext i
+      simp [rootTranslate, nsmul_eq_mul, Nat.cast_add]
+      ring
+
 theorem zAtLayer_last_sub_q5_add_b4 {m : Nat} [NeZero m] {t : Fin m}
     (ht : t.val + 1 = m) (y : Vec5 m) (i : Direction) :
     zAtLayer t (y - q5 m i) + b4 m i = rootZ y := by
@@ -77,6 +111,18 @@ theorem zAtLayer_last_sub_q5_add_b4 {m : Nat} [NeZero m] {t : Fin m}
   ext k
   fin_cases i <;> fin_cases k <;>
     simp [zAtLayer, rootZ, fin4ToFin5, b4, q5, e5, htval]
+
+theorem zAtLayer_last_regular_prefix_eq_sub_b4 {m : Nat} [NeZero m] {t : Fin m}
+    (ht : t.val + 1 = m) (c : Color) (z : Vec4 m) :
+    zAtLayer t
+        (rootTranslate (t.val • q5 m c)
+          (root5_nsmul_root t.val (root5_q5_vec m c)) (rootOfZ z)).1 =
+      z - b4 m c := by
+  have htval := zmod_val_eq_neg_one_of_fin_is_last (m := m) (t := t) ht
+  ext k
+  fin_cases c <;> fin_cases k <;>
+    simp [zAtLayer, rootZ, rootTranslate, rootOfZ, fin4ToFin5,
+      b4, q5, e5, nsmul_eq_mul, htval, sub_eq_add_neg]
 
 theorem evenSchedule_latin {m : Nat} (S : D5EvenSeamData m) :
     IsScheduleLatin (evenSchedule S) := by
@@ -138,6 +184,45 @@ def seamRootReturn {m : Nat} (S : D5EvenSeamData m) (c : Color) :
     Vec4 m → Vec4 m :=
   fun z => seamStepMap S c (z - b4 m c)
 
+set_option maxHeartbeats 1000000 in
+-- The final coordinate comparison splits into 125 concrete ZMod goals.
+theorem rootOfZ_seamRootReturn_eq_last_layer {m : Nat} [NeZero m]
+    (S : D5EvenSeamData m) {t : Fin m} (ht : t.val + 1 = m)
+    (c : Color) (z : Vec4 m) :
+    rootOfZ (seamRootReturn S c z) =
+      layerMap (evenSchedule S) t c
+        (rootTranslate (t.val • q5 m c)
+          (root5_nsmul_root t.val (root5_q5_vec m c)) (rootOfZ z)) := by
+  let w : ARoot5 m :=
+    rootTranslate (t.val • q5 m c)
+      (root5_nsmul_root t.val (root5_q5_vec m c)) (rootOfZ z)
+  generalize hd : S.sigma c (z - b4 m c) = d
+  have hzat := zAtLayer_last_regular_prefix_eq_sub_b4
+    (m := m) (t := t) ht c z
+  have hzatw : zAtLayer t w.1 = z - b4 m c := by
+    simpa [w] using hzat
+  have hdir :
+      (evenSchedule S).dir t c w.1 = d := by
+    simp [evenSchedule, evenDir, ht, hzatw, hd]
+  have htval := zmod_val_eq_neg_one_of_fin_is_last (m := m) (t := t) ht
+  have htarget :
+      layerMap (evenSchedule S) t c w =
+        ⟨w.1 + q5 m d, root5_add_q5 w.2 d⟩ := by
+    apply Subtype.ext
+    ext i
+    simp [layerMap, hdir]
+  have hroot :
+      rootOfZ (seamRootReturn S c z) =
+        ⟨w.1 + q5 m d, root5_add_q5 w.2 d⟩ := by
+    dsimp [seamRootReturn, seamStepMap]
+    rw [hd]
+    apply Subtype.ext
+    ext i
+    fin_cases c <;> fin_cases d <;> fin_cases i <;>
+      simp [w, rootTranslate,
+        rootOfZ, b4, q5, e5, nsmul_eq_mul, htval, sub_eq_add_neg] <;> ring
+  exact hroot.trans htarget.symm
+
 theorem vec4_sub_const_bijective {m : Nat} (v : Vec4 m) :
     Function.Bijective fun z : Vec4 m => z - v := by
   constructor
@@ -170,6 +255,27 @@ def D5EvenSeamReturnCompatible (S : D5EvenSeamData m) : Prop :=
     rootOfZ (seamRootReturn S c z) =
       colorReturn (evenSchedule S) c (rootOfZ z)
 
+theorem D5EvenSeamReturnCompatible.of_seam_data {m : Nat} [NeZero m]
+    (S : D5EvenSeamData m) :
+    D5EvenSeamReturnCompatible S := by
+  intro c z
+  rcases Nat.exists_eq_succ_of_ne_zero (NeZero.ne m) with ⟨n, rfl⟩
+  let t : Fin (n + 1) := finMAddNat (0 : Fin (n + 1)) n
+  have htval : t.val = n := by
+    simpa [t] using
+      (finMAddNat_zero_val_of_lt (m := n + 1) (k := n) (Nat.lt_succ_self n))
+  have ht : t.val + 1 = n + 1 := by
+    rw [htval]
+  unfold colorReturn
+  rw [← map_finMAddNat_zero_range (m := n + 1)]
+  rw [List.foldl_map]
+  rw [List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  have hpref := even_regular_prefix_fold_range
+    (m := n + 1) S c n (by omega) (rootOfZ z)
+  rw [hpref]
+  simpa [t, htval] using
+    (rootOfZ_seamRootReturn_eq_last_layer (S := S) (t := t) ht c z)
+
 theorem seamRootReturn_single_cycle_of_orbit_target {m : Nat}
     (S : D5EvenSeamData m) (hOrbit : D5EvenSeamReturnOrbitTarget S)
     (c : Color) :
@@ -197,6 +303,9 @@ def D5EvenSeamReturnCertificateTarget (m : Nat) : Prop :=
   exists S : D5EvenSeamData m,
     D5EvenSeamReturnCompatible S ∧ D5EvenSeamReturnOrbitTarget S
 
+def D5EvenSeamOrbitCertificateTarget (m : Nat) : Prop :=
+  exists S : D5EvenSeamData m, D5EvenSeamReturnOrbitTarget S
+
 theorem D5_even_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
     HamiltonDecompositionD5 m := by
@@ -214,6 +323,14 @@ theorem D5_even_from_return_certificate {m : Nat} [NeZero m]
   exact D5_even_from_seam_data S
     (D5EvenSeamHamiltonian.of_return_orbit S hCompat hOrbit)
 
+theorem D5_even_from_orbit_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamOrbitCertificateTarget m) :
+    HamiltonDecompositionD5 m := by
+  rcases h with ⟨S, hOrbit⟩
+  exact D5_even_from_seam_data S
+    (D5EvenSeamHamiltonian.of_return_orbit S
+      (D5EvenSeamReturnCompatible.of_seam_data S) hOrbit)
+
 theorem D5_even_torus_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
     TorusHamiltonDecompositionD5 m := by
@@ -229,6 +346,11 @@ theorem D5_even_torus_from_return_certificate {m : Nat} [NeZero m]
     (h : D5EvenSeamReturnCertificateTarget m) :
     TorusHamiltonDecompositionD5 m := by
   exact torusHamiltonDecomposition_of_model (D5_even_from_return_certificate h)
+
+theorem D5_even_torus_from_orbit_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamOrbitCertificateTarget m) :
+    TorusHamiltonDecompositionD5 m := by
+  exact torusHamiltonDecomposition_of_model (D5_even_from_orbit_certificate h)
 
 theorem D5_even_cayley_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
     (hHam : D5EvenSeamHamiltonian S) :
@@ -247,5 +369,11 @@ theorem D5_even_cayley_from_return_certificate {m : Nat} [NeZero m]
     CayleyHamiltonDecompositionD5 m := by
   exact cayleyHamiltonDecomposition_of_torus
     (D5_even_torus_from_return_certificate h)
+
+theorem D5_even_cayley_from_orbit_certificate {m : Nat} [NeZero m]
+    (h : D5EvenSeamOrbitCertificateTarget m) :
+    CayleyHamiltonDecompositionD5 m := by
+  exact cayleyHamiltonDecomposition_of_torus
+    (D5_even_torus_from_orbit_certificate h)
 
 end D5Odd
