@@ -66,6 +66,72 @@ def residueShift (h : Nat) : ZMod 5 :=
 def goodPhiClass (h : Nat) : Prop :=
   h % 5 ≠ 3
 
+theorem residueShift_eq_zero_iff (h : Nat) :
+    residueShift h = 0 ↔ h % 5 = 3 := by
+  constructor
+  · intro hzero
+    have hcast : ((h : Nat) : ZMod 5) = (3 : ZMod 5) := by
+      unfold residueShift at hzero
+      linear_combination -hzero
+    have hmodeq : h ≡ 3 [MOD 5] :=
+      (ZMod.natCast_eq_natCast_iff h 3 5).1 hcast
+    have hmodeq' : h % 5 ≡ 3 [MOD 5] :=
+      (Nat.mod_modEq h 5).trans hmodeq
+    exact hmodeq'.eq_of_lt_of_lt (Nat.mod_lt h (by decide)) (by decide)
+  · intro hmod
+    have hmodeq_mod : h % 5 ≡ 3 [MOD 5] := by
+      rw [hmod]
+    have hmodeq : h ≡ 3 [MOD 5] :=
+      (Nat.mod_modEq h 5).symm.trans hmodeq_mod
+    have hcast : ((h : Nat) : ZMod 5) = (3 : ZMod 5) :=
+      (ZMod.natCast_eq_natCast_iff h 3 5).2 hmodeq
+    unfold residueShift
+    rw [hcast]
+    simp
+
+theorem natCast_zmod5_eq_mod (h : Nat) :
+    ((h : Nat) : ZMod 5) = ((h % 5 : Nat) : ZMod 5) := by
+  apply (ZMod.natCast_eq_natCast_iff h (h % 5) 5).2
+  exact (Nat.mod_modEq h 5).symm
+
+theorem residueShift_isUnit_iff_goodPhiClass (h : Nat) :
+    IsUnit (residueShift h) ↔ goodPhiClass h := by
+  haveI : Fact (1 < 5) := ⟨by decide⟩
+  constructor
+  · intro hunit hbad
+    have hshift0 : residueShift h = 0 := (residueShift_eq_zero_iff h).2 hbad
+    rw [hshift0] at hunit
+    exact (not_isUnit_zero (M₀ := ZMod 5)) hunit
+  · intro hgood
+    have hcases :
+        h % 5 = 0 ∨ h % 5 = 1 ∨ h % 5 = 2 ∨
+          h % 5 = 3 ∨ h % 5 = 4 := by
+      have hlt := Nat.mod_lt h (by decide : 0 < 5)
+      omega
+    have hcast := natCast_zmod5_eq_mod h
+    rcases hcases with h0 | h1 | h2 | h3 | h4
+    · unfold residueShift
+      rw [hcast, h0]
+      change IsUnit (3 : ZMod 5)
+      exact (ZMod.unitOfCoprime 3
+        (by decide : Nat.Coprime 3 5)).isUnit
+    · unfold residueShift
+      rw [hcast, h1]
+      change IsUnit (2 : ZMod 5)
+      exact (ZMod.unitOfCoprime 2
+        (by decide : Nat.Coprime 2 5)).isUnit
+    · unfold residueShift
+      rw [hcast, h2]
+      change IsUnit (1 : ZMod 5)
+      exact (ZMod.unitOfCoprime 1
+        (by decide : Nat.Coprime 1 5)).isUnit
+    · exact False.elim (hgood h3)
+    · unfold residueShift
+      rw [hcast, h4]
+      change IsUnit (4 : ZMod 5)
+      exact (ZMod.unitOfCoprime 4
+        (by decide : Nat.Coprime 4 5)).isUnit
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega

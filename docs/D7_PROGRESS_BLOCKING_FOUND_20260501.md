@@ -297,7 +297,10 @@ formula and residue-cycle explanation explicitly.
 interface.  It defines `phi_h`, `phi_h^{-1}`, the good class, and a package
 whose fields are the single-cycle theorem plus Q-hitting, Q-first-return, and
 length-sum obligations for `23` and `32`.  The inverse identities and
-bijectivity of `phi_h` for `h >= 6` are already proved in Lean.
+bijectivity of `phi_h` for `h >= 6` are already proved in Lean.  The residue
+gate `IsUnit (3-h : ZMod 5) ↔ h % 5 != 3` is also now proved, so the remaining
+arithmetic gap is the orbit-stitching theorem from this unit gate to
+`IsSingleCycleMap (phi h)`.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

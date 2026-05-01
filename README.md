@@ -41,7 +41,8 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
   good class `h % 5 != 3`, proving the inverse identities and bijectivity for
-  `h >= 6`, and packaging the remaining cycle/Q-hitting/length-sum obligations.
+  `h >= 6`, proving the residue-shift unit gate in `ZMod 5`, and packaging
+  the remaining cycle/Q-hitting/length-sum obligations.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
