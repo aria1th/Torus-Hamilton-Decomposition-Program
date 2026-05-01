@@ -447,6 +447,9 @@ which are the finite traces for the next one-dimensional block-splice proof.
 The Lean target also includes `RouteENonopenSmallSeamCertificate`, specialized
 to `{a : ZMod m // a != 0}`, and proves that such a certificate gives the
 existing D5 even Hamilton, torus, and Cayley endpoints.
+It also fixes the branch combinatorics: a separate
+`D5EvenRouteEM4FiniteTarget` plus the all-large Route-E certificate target
+implies all even `m >= 4` Hamilton, torus, and Cayley targets.
 
 The finite small-seam table can be scanned for residue-family count formulas:
 

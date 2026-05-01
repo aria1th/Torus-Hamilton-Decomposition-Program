@@ -204,4 +204,86 @@ def D5EvenRouteENonopenAllLargeEvenTarget : Prop :=
 def D5EvenRouteEM4FiniteTarget : Prop :=
   Nonempty (HamiltonDecompositionD5 4)
 
+def D5EvenRouteEAllEvenHamiltonTarget : Prop :=
+  ∀ (m : Nat) [NeZero m], Even m → 4 ≤ m →
+    Nonempty (HamiltonDecompositionD5 m)
+
+def D5EvenRouteEAllEvenTorusTarget : Prop :=
+  ∀ (m : Nat) [NeZero m], Even m → 4 ≤ m →
+    Nonempty (TorusHamiltonDecompositionD5 m)
+
+def D5EvenRouteEAllEvenCayleyTarget : Prop :=
+  ∀ (m : Nat) [NeZero m], Even m → 4 ≤ m →
+    Nonempty (CayleyHamiltonDecompositionD5 m)
+
+theorem D5EvenRouteEAllLargeEvenTarget.of_nonopen
+    (h : D5EvenRouteENonopenAllLargeEvenTarget) :
+    D5EvenRouteEAllLargeEvenTarget := by
+  intro m _hm0 hmEven hm6
+  rcases h m hmEven hm6 with ⟨cert⟩
+  exact ⟨cert.toSmallSeamCertificate⟩
+
+theorem D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenHamiltonTarget := by
+  intro m _hm0 hmEven hm4le
+  by_cases hm6 : 6 ≤ m
+  · rcases hlarge m hmEven hm6 with ⟨cert⟩
+    exact ⟨cert.toHamiltonDecomposition⟩
+  · have hmle5 : m ≤ 5 := by omega
+    interval_cases m
+    · exact hm4
+    · norm_num at hmEven
+
+theorem D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenHamiltonTarget :=
+  D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
+
+theorem D5EvenRouteEAllEvenTorusTarget.of_large_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenTorusTarget := by
+  intro m _hm0 hmEven hm4le
+  by_cases hm6 : 6 ≤ m
+  · rcases hlarge m hmEven hm6 with ⟨cert⟩
+    exact ⟨cert.toTorusHamiltonDecomposition⟩
+  · have hmle5 : m ≤ 5 := by omega
+    interval_cases m
+    · rcases hm4 with ⟨h4⟩
+      exact ⟨torusHamiltonDecomposition_of_model h4⟩
+    · norm_num at hmEven
+
+theorem D5EvenRouteEAllEvenTorusTarget.of_nonopen_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenTorusTarget :=
+  D5EvenRouteEAllEvenTorusTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
+
+theorem D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenCayleyTarget := by
+  intro m _hm0 hmEven hm4le
+  by_cases hm6 : 6 ≤ m
+  · rcases hlarge m hmEven hm6 with ⟨cert⟩
+    exact ⟨cert.toCayleyHamiltonDecomposition⟩
+  · have hmle5 : m ≤ 5 := by omega
+    interval_cases m
+    · rcases hm4 with ⟨h4⟩
+      exact ⟨cayleyHamiltonDecomposition_of_torus
+        (torusHamiltonDecomposition_of_model h4)⟩
+    · norm_num at hmEven
+
+theorem D5EvenRouteEAllEvenCayleyTarget.of_nonopen_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenCayleyTarget :=
+  D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_nonopen hlarge)
+
 end D5Odd

@@ -89,6 +89,18 @@ The non-open wrapper `RouteENonopenSmallSeamCertificate` fixes the seam type to
 the existing `D5Odd.Even` seam endpoint to D5 Hamilton, torus, and Cayley
 decompositions.
 
+It also records the finite-exception packaging shape.  The target
+`D5EvenRouteEM4FiniteTarget` is still a separate `m = 4` Hamilton witness, but
+Lean now proves that:
+
+- `D5EvenRouteEM4FiniteTarget` plus `D5EvenRouteEAllLargeEvenTarget` gives
+  all even `m >= 4` Hamilton, torus, and Cayley targets;
+- the same conclusion follows from the non-open specialized target
+  `D5EvenRouteENonopenAllLargeEvenTarget`.
+
+Thus the remaining `m = 4` obligation is isolated from the all-large Route-E
+small-seam proof.
+
 The repo-side verification command used for this absorption was:
 
 ```bash
@@ -153,7 +165,8 @@ The remaining symbolic propositions are:
 3. prove the return-time sum identity `sum tau = m^4` for each family;
 4. provide the Lean first-return equations/minimality witnesses needed by
    `RouteENonopenSmallSeamCertificate`;
-5. keep `m = 4` as a separate finite witness branch.
+5. prove or import the finite `m = 4` witness required by
+   `D5EvenRouteEM4FiniteTarget`.
 
 This is closer to the final lane-map proof shape in the D3 even Route-E
 argument than to a high-dimensional SAT/chart certificate.
