@@ -392,7 +392,9 @@ Implementation progress after this goal update:
   using base words `23,23,002,0111,3044,14413,43220`.  The optional bundled
   kappa test shows that this alternate base cover does not work with the
   original `m=5` kappa, so the fiber compiler must be constructed for the
-  chosen base row family rather than reused blindly.  A length-three scan over
+  chosen base row family rather than reused blindly.  Passing that same cover
+  to `scripts/search_4plus2_kappa_formulas.py` finds a new full bridge witness
+  in the restricted family, namely `m=5: r=t+|Z|+2`.  A length-three scan over
   `m=5,7,9,11,13,15,17` reproduces the observed exceptional behavior at `m=7`
   and finds no length-three primitive word for `m=17`, matching the current
   need for a longer or congruence-dependent base row family.
@@ -402,7 +404,9 @@ Implementation progress after this goal update:
   known hits `m=5: r=p+2|Z|` and `m=7: r=2|Z|+2`, while `m=9` has no hit in
   this restricted family.  Thus the all-odd fiber compiler needs either a
   richer zero-set table or a section-return construction beyond this affine
-  four-parameter family.
+  four-parameter family.  The same script can consume base-cover JSON from
+  `analyze_4plus2_base_rows.py`; this is how the alternate `m=5` full witness
+  above is checked.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

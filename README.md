@@ -147,6 +147,14 @@ python3 scripts/search_4plus2_kappa_formulas.py --only 5,7,9 \
   --json-out /tmp/d7_4plus2_kappa_formula_search.json
 ```
 
+It can also test row solutions exported by the base analyzer:
+
+```bash
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/d7_4plus2_base_pool_search.json --only 5 \
+  --json-out /tmp/d7_4plus2_base_pool_kappa_formula_search.json
+```
+
 Expected output:
 
 ```text
