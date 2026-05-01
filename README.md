@@ -98,7 +98,8 @@ when `m` is odd and `m >= 3`.
 - `scripts/search_targetA_balanced_covers.py`: balanced Target-A row-family
   search over a primitive-word pool, accepting C++ `HIT ... word=...` output,
   enforcing aggregate slot counts `(m,m,m,m,m)`, then calling the column
-  exact-cover placer.
+  exact-cover placer.  It can also report balanced count-vector combinations
+  separately from column placement.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
@@ -233,6 +234,20 @@ python3 scripts/search_targetA_balanced_covers.py \
   --lengths 5,4,5,4,3,2,2 \
   --json-out /tmp/d7_targetA_balanced_m5_inline.json
 ```
+
+For larger moduli, the count-vector gate can be inspected before running the
+full word-multiset search:
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 --count-vector-limit 3 \
+  --json-out /tmp/targetA_m11_count_vector_gate.json
+```
+
+This separates the necessary aggregate-count question from the harder column
+placement question.
 
 The restricted zero-set kappa formula family can be checked separately:
 

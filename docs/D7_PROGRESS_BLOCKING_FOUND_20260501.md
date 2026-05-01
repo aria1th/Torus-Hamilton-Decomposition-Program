@@ -269,6 +269,35 @@ lines, searches seven-word multisets satisfying the balanced count gate, and
 then calls the column exact-cover placer.  It reproduces the alternate `m = 5`
 cover from the six-word input pool where `23` is allowed to repeat.
 
+The column exact-cover placer has now been rewritten as a fixed-word column
+DP: at each layer it chooses which five of the seven rows consume their next
+base symbol, and requires those five symbols to be a permutation of `0..4`.
+The two remaining rows are then filled by `5` and `6`.  This avoids explicitly
+enumerating base positions and all extra-slot assignments.
+
+For the current temporary `m = 11` primitive pool
+`/tmp/targetA_m11_primitive_words_len11.txt`, the count-vector gate is not
+empty for the natural length pattern
+
+```text
+7,8,8,8,8,8,8.
+```
+
+The command
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 --count-vector-limit 3 \
+  --json-out /tmp/targetA_m11_count_vector_gate.json
+```
+
+reports balanced count-vector combinations immediately.  Thus, for this pool,
+the next `m = 11` obstacle is not merely aggregate slot balance; it is finding
+an actual column placement, or expanding the primitive pool enough that such a
+placement appears.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5

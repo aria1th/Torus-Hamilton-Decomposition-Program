@@ -132,6 +132,99 @@ def suffix_max_counts(
     return suffix
 
 
+def search_count_vector_combos(
+    m: int,
+    words: list[tuple[int, ...]],
+    length_pattern: list[int] | None,
+    limit: int,
+) -> dict | None:
+    if limit <= 0 or length_pattern is None:
+        return None
+
+    target_len = 5 * m
+    target_counts = (m, m, m, m, m)
+    pattern = sorted(length_pattern)
+    if len(pattern) != 7 or sum(pattern) != target_len:
+        return {
+            "enabled": True,
+            "error": "length pattern must have seven entries summing to 5*m",
+            "combos": [],
+        }
+
+    groups: dict[int, dict[tuple[int, int, int, int, int], list[tuple[int, ...]]]] = {}
+    for word in words:
+        groups.setdefault(len(word), {}).setdefault(word_counts(word), []).append(word)
+
+    vectors_by_length = {
+        length: sorted(counts_by_vector)
+        for length, counts_by_vector in groups.items()
+    }
+    combos: list[list[tuple[int, tuple[int, int, int, int, int]]]] = []
+    chosen: list[tuple[int, tuple[int, int, int, int, int]]] = []
+    states_visited = 0
+    truncated = False
+
+    def search(
+        depth: int,
+        total_counts: tuple[int, int, int, int, int],
+        min_index_by_length: dict[int, int],
+    ) -> None:
+        nonlocal states_visited, truncated
+        if len(combos) >= limit:
+            truncated = True
+            return
+        states_visited += 1
+        if any(value > m for value in total_counts):
+            return
+        if depth == 7:
+            if total_counts == target_counts:
+                combos.append(list(chosen))
+            return
+
+        length = pattern[depth]
+        vectors = vectors_by_length.get(length, [])
+        start = min_index_by_length.get(length, 0)
+        for idx in range(start, len(vectors)):
+            vector = vectors[idx]
+            next_counts = add_counts(total_counts, vector)
+            if not leq_counts(next_counts, target_counts):
+                continue
+            next_min_index_by_length = dict(min_index_by_length)
+            next_min_index_by_length[length] = idx
+            chosen.append((length, vector))
+            search(depth + 1, next_counts, next_min_index_by_length)
+            chosen.pop()
+            if len(combos) >= limit:
+                truncated = True
+                return
+
+    search(0, (0, 0, 0, 0, 0), {})
+    return {
+        "enabled": True,
+        "length_pattern": pattern,
+        "states_visited": states_visited,
+        "combo_count_reported": len(combos),
+        "truncated": truncated,
+        "vector_counts_by_length": {
+            str(length): len(vectors) for length, vectors in vectors_by_length.items()
+        },
+        "combos": [
+            [
+                {
+                    "length": length,
+                    "count_vector": list(vector),
+                    "word_count": len(groups[length][vector]),
+                    "representatives": [
+                        word_string(word) for word in groups[length][vector][:5]
+                    ],
+                }
+                for length, vector in combo
+            ]
+            for combo in combos
+        ],
+    }
+
+
 def search_balanced_covers(
     m: int,
     words: list[tuple[int, ...]],
@@ -139,6 +232,7 @@ def search_balanced_covers(
     combo_limit: int,
     solution_limit: int,
     cover_limit: int,
+    count_vector_limit: int = 0,
 ) -> dict:
     target_len = 5 * m
     target_counts = (m, m, m, m, m)
@@ -242,11 +336,15 @@ def search_balanced_covers(
                 return
 
     search(0, 0, 0, (0, 0, 0, 0, 0))
+    count_vector_search = search_count_vector_combos(
+        m, words, length_pattern, count_vector_limit
+    )
     return {
         "m": m,
         "pool_size": len(words),
         "pool_words": [word_string(word) for word in words],
         "length_pattern": pattern,
+        "count_vector_search": count_vector_search,
         "combo_limit": combo_limit,
         "combos_checked": combos_checked,
         "balanced_combos": balanced_combos,
@@ -274,6 +372,12 @@ def main() -> None:
     parser.add_argument("--combo-limit", type=int, default=100000)
     parser.add_argument("--solution-limit", type=int, default=3)
     parser.add_argument("--cover-limit", type=int, default=1)
+    parser.add_argument(
+        "--count-vector-limit",
+        type=int,
+        default=0,
+        help="also report this many balanced count-vector combos for the length pattern",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
@@ -286,6 +390,7 @@ def main() -> None:
         args.combo_limit,
         args.solution_limit,
         args.cover_limit,
+        args.count_vector_limit,
     )
     payload = {"search": result}
 

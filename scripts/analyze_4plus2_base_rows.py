@@ -103,54 +103,74 @@ def search_column_exact_cover(
         raise ValueError("exact-cover search expects exactly seven base words")
     if sum(len(word) for word in words) != 5 * m:
         return []
-
-    candidates_by_word = [row_candidates_for_base_word(word, m) for word in words]
-    if any(not candidates for candidates in candidates_by_word):
+    if any(len(word) > m for word in words):
         return []
 
-    order = sorted(range(7), key=lambda idx: len(candidates_by_word[idx]))
-    used = [set() for _ in range(m)]
-    chosen: dict[int, list[int]] = {}
+    lengths = tuple(len(word) for word in words)
+    target = lengths
+    column_choices = list(itertools.combinations(range(7), 5))
     solutions = []
+    dead_states: set[tuple[int, ...]] = set()
+    path: list[tuple[int, ...]] = []
 
-    def compatible(row: list[int]) -> bool:
-        return all(slot not in used[layer] for layer, slot in enumerate(row))
+    def emit_solution() -> None:
+        progress = [0] * 7
+        rows: list[list[int]] = [[] for _ in range(7)]
+        for chosen_rows in path:
+            extra_rows = [row for row in range(7) if row not in chosen_rows]
+            if len(extra_rows) != 2:
+                raise AssertionError("each exact-cover column has two extra rows")
+            for row in range(7):
+                if row in chosen_rows:
+                    rows[row].append(words[row][progress[row]])
+                    progress[row] += 1
+                else:
+                    rows[row].append(5 if row == extra_rows[0] else 6)
+        if tuple(progress) != target:
+            raise AssertionError("exact-cover path did not consume all base words")
+        solutions.append(
+            {
+                "base_words": [word_string(word) for word in words],
+                "count_summary": base_word_count_summary(m, words),
+                "rows": rows,
+            }
+        )
 
-    def push(row: list[int]) -> None:
-        for layer, slot in enumerate(row):
-            used[layer].add(slot)
-
-    def pop(row: list[int]) -> None:
-        for layer, slot in enumerate(row):
-            used[layer].remove(slot)
-
-    def search(depth: int) -> None:
+    def search(state: tuple[int, ...]) -> bool:
         if len(solutions) >= limit:
-            return
-        if depth == 7:
-            if all(len(column) == 7 for column in used):
-                solutions.append(
-                    {
-                        "base_words": [word_string(word) for word in words],
-                        "count_summary": base_word_count_summary(m, words),
-                        "rows": [chosen[idx] for idx in range(7)],
-                    }
-                )
-            return
+            return True
+        if state == target:
+            emit_solution()
+            return True
+        if state in dead_states:
+            return False
 
-        idx = order[depth]
-        for row in candidates_by_word[idx]:
-            if not compatible(row):
+        found_from_state = False
+        for chosen_rows in column_choices:
+            next_symbols = []
+            for row in chosen_rows:
+                if state[row] >= lengths[row]:
+                    break
+                next_symbols.append(words[row][state[row]])
+            else:
+                if sorted(next_symbols) != [0, 1, 2, 3, 4]:
+                    continue
+                next_state = list(state)
+                for row in chosen_rows:
+                    next_state[row] += 1
+                path.append(chosen_rows)
+                found = search(tuple(next_state))
+                path.pop()
+                found_from_state = found_from_state or found
+                if len(solutions) >= limit:
+                    return True
                 continue
-            chosen[idx] = row
-            push(row)
-            search(depth + 1)
-            pop(row)
-            del chosen[idx]
-            if len(solutions) >= limit:
-                return
 
-    search(0)
+        if not found_from_state:
+            dead_states.add(state)
+        return found_from_state
+
+    search((0, 0, 0, 0, 0, 0, 0))
     return solutions
 
 
