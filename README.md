@@ -38,6 +38,10 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/Additive4Plus2Endpoints.lean`: final torus/Cayley wrappers from direct-chart and bridge-chart `4+2` product-side certificates.
 - `D7Odd/Handoff/Additive4Plus2Goal.lean`: conditional odd D7 goal theorem: the finite `m = 3` branch plus bridge-chart certificates, or the corresponding local/skew-return packages, for all odd `m >= 5` imply the handoff, torus, Cayley, and shared Cayley endpoints.
 - `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`: concrete all-zero-set bridge target: once row permutations, D3 fiber-layer/permutation data, a base-return rank step into `ZMod (m^4)`, and a fiber-monodromy rank step into `ZMod (m^2)` are supplied for the canonical folded return, the local row/layer facts, folded-return bijectivity, product-return equality, base orbit coverage, and monodromy single-cycle are filled in automatically and the odd D7 torus/Cayley endpoints follow.
+- `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
+  the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
+  good class `h % 5 != 3`, and the arithmetic/Q-hitting/length-sum package
+  that remains to be proved.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
@@ -229,6 +233,12 @@ python3 scripts/verify_targetA_23_32_seam_quotient.py \
 The verifier also records the inverse-map explanation for the arithmetic:
 `phi_h^{-1}` walks by `+5` inside residue classes and crosses the top boundary
 with residue shift `3-h mod 5`.
+
+The corresponding Lean proof target is exposed by:
+
+```bash
+lake build D7Odd.Handoff.TargetASeamQuotient
+```
 
 For larger exceptional moduli, compile the faster C++ search helper:
 

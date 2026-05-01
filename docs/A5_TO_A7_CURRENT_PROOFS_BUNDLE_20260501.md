@@ -136,6 +136,18 @@ python3 scripts/verify_targetA_23_32_seam_quotient.py \
 
 It reported `all_ok=True`.
 
+The matching Lean-facing target is now:
+
+```text
+D7Odd/Handoff/TargetASeamQuotient.lean
+```
+
+It defines the quotient map `phi_h`, the inverse map, the good class
+`h % 5 != 3`, and a `TargetASeamQuotientPackage` collecting the still-missing
+formal obligations: arithmetic, Q-hitting, Q-first-return formulas, and the
+two length-sum identities.  This file is a proof interface, not a completed
+Target-A theorem.
+
 ## Updated Target-A Interpretation
 
 Target A now has three layers:

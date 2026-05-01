@@ -293,6 +293,11 @@ transitive exactly when `h != 3 mod 5`; when `h == 3 mod 5`, the five residue
 classes are the five quotient cycles.  The verifier now records this inverse
 formula and residue-cycle explanation explicitly.
 
+`D7Odd/Handoff/TargetASeamQuotient.lean` now exposes this as a Lean proof
+interface.  It defines `phi_h`, `phi_h^{-1}`, the good class, and a package
+whose fields are the arithmetic theorem plus Q-hitting, Q-first-return, and
+length-sum obligations for `23` and `32`.
+
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
 condition is that each base slot `0..4` appears exactly `m` times across the

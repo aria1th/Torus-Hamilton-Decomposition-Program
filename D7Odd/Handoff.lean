@@ -21,3 +21,4 @@ import D7Odd.Handoff.Additive4Plus2BridgeKappa
 import D7Odd.Handoff.Additive4Plus2BridgeChart
 import D7Odd.Handoff.Additive4Plus2Goal
 import D7Odd.Handoff.Additive4Plus2ConcreteGoal
+import D7Odd.Handoff.TargetASeamQuotient
