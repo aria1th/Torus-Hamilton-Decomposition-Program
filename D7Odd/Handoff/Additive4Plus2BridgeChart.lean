@@ -142,6 +142,125 @@ def returnsSingleCycle {m : Nat} [NeZero m]
     (P : BridgeProductRootSchedule m) : Prop :=
   ∀ c : Color, IsSingleCycleMap (P.returnMap c)
 
+theorem rowLatin_of_stateDirectionPermutation {m : Nat}
+    (P : BridgeProductRootSchedule m)
+    (rawDir : ZMod m → ProductRoot m → Color → Direction)
+    (kappa : ZMod m → ProductRoot m → Direction → Direction)
+    (hdir : ∀ t bf, Function.Bijective (rawDir t bf))
+    (hkappa : ∀ t bf, Function.Bijective (kappa t bf))
+    (hP : ∀ t bf c, P.dir t bf c = kappa t bf (rawDir t bf c)) :
+    P.rowLatin := by
+  intro t bf
+  have hcomp :
+      Function.Bijective
+        (fun c : Color => kappa t bf (rawDir t bf c)) :=
+    Shared.composeRowDirection_bijective
+      (rawDir t bf) (kappa t bf) (hdir t bf) (hkappa t bf)
+  convert hcomp using 1
+  funext c
+  exact hP t bf c
+
+theorem layerMap_eq_skewProductMap_of_components {m : Nat}
+    (P : BridgeProductRootSchedule m)
+    (baseStep :
+      ZMod m → Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberStep :
+      ZMod m → Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (hbase : ∀ t c base fiber,
+      baseAddQ (baseDirectionOfSlot (P.dir t (base, fiber) c)) base =
+        baseStep t c base)
+    (hfiber : ∀ t c base fiber,
+      fiberAddQ (bridgeFiberDirectionOfSlot (P.dir t (base, fiber) c))
+          fiber =
+        fiberStep t c base fiber)
+    (t : ZMod m) (c : Color) :
+    P.layerMap t c = Shared.skewProductMap (baseStep t c) (fiberStep t c) := by
+  funext bf
+  rcases bf with ⟨base, fiber⟩
+  exact Prod.ext (hbase t c base fiber) (hfiber t c base fiber)
+
+theorem layerBijective_of_skewProductComponents {m : Nat}
+    (P : BridgeProductRootSchedule m)
+    (baseStep :
+      ZMod m → Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberStep :
+      ZMod m → Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (hbaseEq : ∀ t c base fiber,
+      baseAddQ (baseDirectionOfSlot (P.dir t (base, fiber) c)) base =
+        baseStep t c base)
+    (hfiberEq : ∀ t c base fiber,
+      fiberAddQ (bridgeFiberDirectionOfSlot (P.dir t (base, fiber) c))
+          fiber =
+        fiberStep t c base fiber)
+    (hbaseBij : ∀ t c, Function.Bijective (baseStep t c))
+    (hfiberBij : ∀ t c base, Function.Bijective (fiberStep t c base)) :
+    P.layerBijective := by
+  intro t c
+  rw [P.layerMap_eq_skewProductMap_of_components
+    baseStep fiberStep hbaseEq hfiberEq t c]
+  exact Shared.skewProductMap_bijective
+    (baseStep t c) (fiberStep t c) (hbaseBij t c) (hfiberBij t c)
+
+theorem returnSingleCycle_of_skewReturn {m : Nat} [NeZero m]
+    (P : BridgeProductRootSchedule m) (c : Color)
+    (baseReturn : D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberReturn : D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (base : D5Odd.ARoot5 m) (period : Nat)
+    (hReturn : ∀ bf : ProductRoot m,
+      P.returnMap c bf = Shared.skewProductMap baseReturn fiberReturn bf)
+    (hbase : Function.Bijective baseReturn)
+    (hfiber : ∀ u, Function.Bijective (fiberReturn u))
+    (hreturnBase : (baseReturn^[period]) base = base)
+    (hbaseCover : ∀ b, ∃ k : Nat,
+      k < period ∧ (baseReturn^[k]) base = b)
+    (hmonodromy :
+      IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap baseReturn fiberReturn) base period)) :
+    IsSingleCycleMap (P.returnMap c) := by
+  have hmonoShared :
+      Shared.IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap baseReturn fiberReturn) base period) := by
+    simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using hmonodromy
+  have hcycleShared :
+      Shared.IsSingleCycleMap
+        (Shared.skewProductMap baseReturn fiberReturn) :=
+    Shared.single_cycle_of_skewProduct_base_orbit_monodromy
+      baseReturn fiberReturn base period hbase hfiber hreturnBase hbaseCover
+      hmonoShared
+  have hReturnFun :
+      P.returnMap c = Shared.skewProductMap baseReturn fiberReturn := by
+    funext bf
+    exact hReturn bf
+  rw [hReturnFun]
+  simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using hcycleShared
+
+theorem returnsSingleCycle_of_skewReturns {m : Nat} [NeZero m]
+    (P : BridgeProductRootSchedule m)
+    (baseReturn : Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberReturn : Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (base : Color → D5Odd.ARoot5 m) (period : Color → Nat)
+    (hReturn : ∀ c bf,
+      P.returnMap c bf =
+        Shared.skewProductMap (baseReturn c) (fiberReturn c) bf)
+    (hbase : ∀ c, Function.Bijective (baseReturn c))
+    (hfiber : ∀ c u, Function.Bijective (fiberReturn c u))
+    (hreturnBase : ∀ c, ((baseReturn c)^[period c]) (base c) = base c)
+    (hbaseCover : ∀ c b, ∃ k : Nat,
+      k < period c ∧ ((baseReturn c)^[k]) (base c) = b)
+    (hmonodromy : ∀ c,
+      IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap (baseReturn c) (fiberReturn c))
+          (base c) (period c))) :
+    P.returnsSingleCycle := by
+  intro c
+  exact P.returnSingleCycle_of_skewReturn c
+    (baseReturn c) (fiberReturn c) (base c) (period c)
+    (hReturn c) (hbase c) (hfiber c) (hreturnBase c)
+    (hbaseCover c) (hmonodromy c)
+
 def toRootFlatSchedule {m : Nat} (P : BridgeProductRootSchedule m) :
     RootFlatSchedule m where
   dir := fun t w c => P.dir t ((bridgeRootEquiv m).symm w) c
@@ -229,6 +348,56 @@ structure BridgeProductRootCertificate (m : Nat) [NeZero m] where
   rowLatin : schedule.rowLatin
   layerBijective : schedule.layerBijective
   returnsSingleCycle : schedule.returnsSingleCycle
+
+def BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns
+    {m : Nat} [NeZero m]
+    (P : BridgeProductRootSchedule m)
+    (rawDir : ZMod m → ProductRoot m → Color → Direction)
+    (kappa : ZMod m → ProductRoot m → Direction → Direction)
+    (baseStep :
+      ZMod m → Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberStep :
+      ZMod m → Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (baseReturn : Color → D5Odd.ARoot5 m → D5Odd.ARoot5 m)
+    (fiberReturn : Color → D5Odd.ARoot5 m → ARoot3 m → ARoot3 m)
+    (base : Color → D5Odd.ARoot5 m) (period : Color → Nat)
+    (hdir : ∀ t bf, Function.Bijective (rawDir t bf))
+    (hkappa : ∀ t bf, Function.Bijective (kappa t bf))
+    (hP : ∀ t bf c, P.dir t bf c = kappa t bf (rawDir t bf c))
+    (hbaseLayer : ∀ t c base fiber,
+      baseAddQ (baseDirectionOfSlot (P.dir t (base, fiber) c)) base =
+        baseStep t c base)
+    (hfiberLayer : ∀ t c base fiber,
+      fiberAddQ (bridgeFiberDirectionOfSlot (P.dir t (base, fiber) c))
+          fiber =
+        fiberStep t c base fiber)
+    (hbaseLayerBij : ∀ t c, Function.Bijective (baseStep t c))
+    (hfiberLayerBij : ∀ t c base, Function.Bijective (fiberStep t c base))
+    (hReturn : ∀ c bf,
+      P.returnMap c bf =
+        Shared.skewProductMap (baseReturn c) (fiberReturn c) bf)
+    (hbaseReturnBij : ∀ c, Function.Bijective (baseReturn c))
+    (hfiberReturnBij : ∀ c u, Function.Bijective (fiberReturn c u))
+    (hreturnBase : ∀ c, ((baseReturn c)^[period c]) (base c) = base c)
+    (hbaseCover : ∀ c b, ∃ k : Nat,
+      k < period c ∧ ((baseReturn c)^[k]) (base c) = b)
+    (hmonodromy : ∀ c,
+      IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap (baseReturn c) (fiberReturn c))
+          (base c) (period c))) :
+    BridgeProductRootCertificate m where
+  schedule := P
+  rowLatin :=
+    P.rowLatin_of_stateDirectionPermutation rawDir kappa hdir hkappa hP
+  layerBijective :=
+    P.layerBijective_of_skewProductComponents
+      baseStep fiberStep hbaseLayer hfiberLayer hbaseLayerBij
+      hfiberLayerBij
+  returnsSingleCycle :=
+    P.returnsSingleCycle_of_skewReturns
+      baseReturn fiberReturn base period hReturn hbaseReturnBij
+      hfiberReturnBij hreturnBase hbaseCover hmonodromy
 
 def BridgeProductRootCertificate.toRootFlatCertificate
     {m : Nat} [NeZero m] (cert : BridgeProductRootCertificate m) :

@@ -201,20 +201,21 @@ base-orbit monodromy criterion.  These hooks are bundled by
 used by the bundled all-zero-set bridge certificates, where base non-root
 directions carry the forced D3 `q0` fiber move.  Its
 `BridgeProductRootCertificate` gives the same root-flat handoff endpoint for
-certificates stated in that chart.
+certificates stated in that chart, and
+`BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns` packages the same
+local bridge and monodromy obligations in the bundle-compatible chart.
 `D7Odd/Handoff/Additive4Plus2Endpoints.lean` then carries the same certificate
 through the D7 torus/Cayley wrappers and into the shared Cayley endpoint.
 
-For D=7 even, there is no separate Lean module analogous to `D5Odd/Even.lean`.
-The next theorem should probably be a D7-even certificate target around
+For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 
 - row Latin;
 - layer bijective;
 - return single-cycle.
 
-Once those are available, the existing `D7Odd/Torus.lean` lift should be the
-model for the full torus and Cayley statements.
+Once those are available, the module routes the certificate through the shared
+layered lift and the existing full torus and Cayley wrappers.
 
 ## General odd prime target
 
