@@ -30,6 +30,10 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   now exposes named standard torus/Cayley instantiations of the abstract
   reduction.  The actual graph-product construction proving the pointwise
   expansion remains to be formalized.
+- `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
+  Cayley endpoints to this shared proposition.  Conditional on the standard
+  odd pointwise product expansion, it gives graph-level odd composite endpoints
+  including dimensions `5 * 7` and `7 * 7`.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
   `D5Odd/Main.lean`, `D5Odd/Torus.lean`, and `D5Odd/Cayley.lean`.
 - D=7 odd is Lean-formalized through a root-flat certificate and then lifted to
