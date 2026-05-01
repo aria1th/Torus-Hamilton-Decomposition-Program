@@ -126,6 +126,21 @@ Initial finite audit:
 This reinforces that Target A likely needs a congruence-dependent or
 constructed row family, not one fixed short word.
 
+A primitive-word scan up to length `5` for odd `m = 5,7,...,21` gives a more
+nuanced picture:
+
+- `23` and `32` appear as primitive words for
+  `m = 5,9,11,13,15,19,21`;
+- `m = 7` first needs length `3` words such as `004`, `040`, `400`;
+- `m = 17` first needs length `5` words in the current scan;
+- the `m = 17` length-5 examples are not reusable unchanged at
+  `m = 5,7,9,11,13,15`.
+
+So a plausible Target-A route is not a single base word.  It is either a
+finite congruence family of primitive words, or a constructive/padding theorem
+that produces seven exact-cover rows from a small pool of modulus-dependent
+primitive words.
+
 ## D5 Even Route-E Findings
 
 The Route-E bundle verifies finite schedules for

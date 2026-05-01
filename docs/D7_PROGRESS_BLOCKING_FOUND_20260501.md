@@ -170,6 +170,11 @@ family.
   for `m = 7,11,13,15,17`.  The length-5 `m = 17` examples above all pass the
   `Sigma` section audit at `m = 17`, but do not work unchanged for smaller odd
   moduli.
+- A scan through odd `m = 5,7,...,21` up to word length `5` shows `23` and
+  `32` are primitive for many moduli (`5,9,11,13,15,19,21`), while `m = 7`
+  and `m = 17` need different first-hit patterns in the current scan.  This
+  points toward a congruence-dependent or constructive Target-A row family
+  rather than one fixed short base word.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
