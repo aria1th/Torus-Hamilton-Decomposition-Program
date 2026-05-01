@@ -284,7 +284,8 @@ Implementation progress after this goal update:
   formalized D5 and D7 odd Cayley endpoints: under the single remaining
   graph-level assumption
   `OddPointwiseCompositeExpansion StandardCayleySolved`, it derives shared
-  Cayley composite endpoints such as dimensions `5 * 7` and `7 * 7`.
+  Cayley composite endpoints for any nonempty product of factors each equal to
+  `5` or `7`.
 
 The remaining gap is not the abstract interface. It is the construction of the
 actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the
