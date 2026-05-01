@@ -254,8 +254,9 @@ This separates three mechanisms that should not be conflated:
 
 Implementation progress after this goal update:
 
-- `Shared/RootFlat.lean` now contains the generic schedule/certificate interface
-  for row Latin, layer bijective, and return single-cycle data.
+- `Shared/RootFlat.lean` now contains the generic schedule/certificate
+  interface, including `rootFlatReturnCriterion_of_schedule`, for packaging
+  row Latin, layer bijective, and return single-cycle data.
 - `Shared/RankCycle.lean` now contains a reusable `ZMod` rank criterion for
   finite return-cycle certificates.
 - `Shared/Monodromy.lean` now contains conjugacy transfer for bijective and

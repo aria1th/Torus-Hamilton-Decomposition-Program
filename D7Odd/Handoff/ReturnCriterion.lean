@@ -171,7 +171,12 @@ theorem rootFlatReturnCriterion_of_hamiltonDecompositionD7
     {m : Nat} [NeZero m] (h : HamiltonDecompositionD7 m) :
     Shared.RootFlatReturnCriterion Color Direction (RootState7 m) m := by
   rcases h with ⟨cert⟩
-  exact Shared.rootFlatReturnCriterion_of_certificate cert.toShared
+  exact Shared.rootFlatReturnCriterion_of_schedule
+    ((RootFlatSchedule.toShared_rowLatin cert.schedule).2 cert.rowLatin)
+    ((RootFlatSchedule.toShared_layerBijective cert.schedule).2
+      cert.layerBijective)
+    ((RootFlatSchedule.toShared_returnsSingleCycle cert.schedule).2
+      cert.returnsSingleCycle)
 
 theorem iterate_rank_add_one
     {α : Type*} {N : Nat} [NeZero N] (f : α → α) (rank : α → ZMod N)

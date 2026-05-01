@@ -51,4 +51,17 @@ theorem rootFlatReturnCriterion_of_certificate
     RootFlatReturnCriterion Color Direction RootState m := by
   exact ⟨cert⟩
 
+theorem rootFlatReturnCriterion_of_schedule
+    {Color Direction RootState : Type*} {m : Nat} [NeZero m]
+    {S : RootFlatSchedule Color Direction RootState m}
+    (hRow : S.rowLatin) (hLayer : S.layerBijective)
+    (hReturn : S.returnsSingleCycle) :
+    RootFlatReturnCriterion Color Direction RootState m := by
+  exact ⟨{
+    schedule := S
+    rowLatin := hRow
+    layerBijective := hLayer
+    returnsSingleCycle := hReturn
+  }⟩
+
 end Shared
