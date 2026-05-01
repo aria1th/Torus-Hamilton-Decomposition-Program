@@ -166,21 +166,88 @@ def analyze_bundled_rows(bundle: Path, only: set[int] | None) -> list[dict]:
 def scan_primitive_words(m: int, max_len: int, limit: int) -> list[dict]:
     model = BridgeModel(m)
     found = []
+    for word in primitive_word_tuples(model, max_len, limit):
+        found.append(
+            {
+                "word": word_string(word),
+                "length": len(word),
+                "orbit_prefix": first_orbit_prefix(model, word, min(8, m**4)),
+            }
+        )
+    return found
+
+
+def primitive_word_tuples(
+    model: BridgeModel, max_len: int, limit: int
+) -> list[tuple[int, ...]]:
+    found = []
     for length in range(1, max_len + 1):
         for word in itertools.product(range(5), repeat=length):
             if is_single_cycle(
-                m**4, lambda base, word=word: base_step_for_word(model, word, base)
+                model.m**4,
+                lambda base, word=word: base_step_for_word(model, word, base),
             ):
-                found.append(
-                    {
-                        "word": word_string(word),
-                        "length": length,
-                        "orbit_prefix": first_orbit_prefix(model, word, min(8, m**4)),
-                    }
-                )
+                found.append(word)
                 if len(found) >= limit:
                     return found
     return found
+
+
+def search_cover_from_primitive_pool(
+    m: int,
+    max_len: int,
+    pool_limit: int,
+    combo_limit: int,
+    solution_limit: int,
+) -> dict:
+    model = BridgeModel(m)
+    pool = primitive_word_tuples(model, max_len, pool_limit)
+    target_len = 5 * m
+    solutions = []
+    combos_checked = 0
+
+    def search_words(
+        start: int, depth: int, total_len: int, words: list[tuple[int, ...]]
+    ) -> None:
+        nonlocal combos_checked
+        if len(solutions) >= solution_limit or combos_checked >= combo_limit:
+            return
+        remaining = 7 - depth
+        if remaining == 0:
+            if total_len != target_len:
+                return
+            combos_checked += 1
+            cover_solutions = search_column_exact_cover(m, words, 1)
+            if cover_solutions:
+                solutions.append(cover_solutions[0])
+            return
+        if total_len + remaining > target_len:
+            return
+        if total_len + remaining * max_len < target_len:
+            return
+
+        for idx in range(start, len(pool)):
+            word = pool[idx]
+            next_len = total_len + len(word)
+            if next_len > target_len:
+                continue
+            words.append(word)
+            search_words(idx, depth + 1, next_len, words)
+            words.pop()
+            if len(solutions) >= solution_limit or combos_checked >= combo_limit:
+                return
+
+    search_words(0, 0, 0, [])
+    return {
+        "m": m,
+        "max_len": max_len,
+        "pool_limit": pool_limit,
+        "pool_size": len(pool),
+        "primitive_pool": [word_string(word) for word in pool],
+        "combo_limit": combo_limit,
+        "combos_checked": combos_checked,
+        "solutions": solutions,
+    }
 
 
 def cover_from_bundled(bundle: Path, only: set[int] | None, limit: int) -> list[dict]:
@@ -224,6 +291,14 @@ def main() -> None:
         "--cover-words",
         help="comma-separated seven base words over 0..4 for column exact-cover search",
     )
+    parser.add_argument(
+        "--cover-primitive-m",
+        type=int,
+        help="search exact-covers by choosing seven words from the primitive-word pool",
+    )
+    parser.add_argument("--cover-primitive-max-len", type=int, default=5)
+    parser.add_argument("--cover-pool-limit", type=int, default=60)
+    parser.add_argument("--combo-limit", type=int, default=1000)
     parser.add_argument("--cover-limit", type=int, default=3)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -257,6 +332,16 @@ def main() -> None:
                     args.cover_m, words, args.cover_limit
                 ),
             }
+        )
+    if args.cover_primitive_m is not None:
+        payload["cover_searches"].append(
+            search_cover_from_primitive_pool(
+                args.cover_primitive_m,
+                args.cover_primitive_max_len,
+                args.cover_pool_limit,
+                args.combo_limit,
+                args.cover_limit,
+            )
         )
 
     text = json.dumps(payload, indent=2, sort_keys=True)

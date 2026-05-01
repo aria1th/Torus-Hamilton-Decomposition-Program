@@ -386,10 +386,12 @@ Implementation progress after this goal update:
   subproblem: it confirms that the bundled row projections are base-primitive
   and can reassemble column exact-covers from fixed base words by choosing the
   extra-slot positions.  It also scans short primitive A5 base words for
-  additional odd moduli.  A length-three scan over `m=5,7,9,11,13,15,17`
-  reproduces the observed exceptional behavior at `m=7` and finds no
-  length-three primitive word for `m=17`, matching the current need for a
-  longer or congruence-dependent base row family.
+  additional odd moduli and can run a bounded search that chooses seven words
+  from the primitive-word pool before solving the extra-slot insertion problem.
+  A length-three scan over `m=5,7,9,11,13,15,17` reproduces the observed
+  exceptional behavior at `m=7` and finds no length-three primitive word for
+  `m=17`, matching the current need for a longer or congruence-dependent base
+  row family.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without
