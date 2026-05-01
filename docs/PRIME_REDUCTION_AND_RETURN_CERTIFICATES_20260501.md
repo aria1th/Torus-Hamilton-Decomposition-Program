@@ -230,6 +230,12 @@ bridge-chart certificates for every odd `m >= 5`, implies the D7 handoff,
 torus, Cayley, and shared Cayley endpoints.  Its `BridgeOddLocalSkewTarget`
 records the lower-level alternative: provide the uniform local bridge and
 monodromy packages, then obtain the same odd-D7 endpoint.
+`D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean` now specializes this lower-level
+route to the concrete all-zero-set bridge.  Its `BridgeConcreteSkewPackage`
+keeps the remaining assumptions exactly at the row/fiber-data, product-return,
+base-cover, and fiber-monodromy level; the local row-Latin and layer-bijective
+proofs are supplied automatically from the concrete D5, D3, and bridge-`kappa`
+lemmas.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

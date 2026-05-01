@@ -348,6 +348,13 @@ Implementation progress after this goal update:
   `m >= 5`, implies the D7 handoff, torus, Cayley, and shared Cayley endpoints.
   It also names the lower-level `BridgeOddLocalSkewTarget`, whose data are the
   local bridge and monodromy obligations needed to construct those certificates.
+- `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean` specializes that target to
+  the current all-zero-set bridge architecture.  A
+  `BridgeConcreteSkewPackage` supplies row permutations, the D3
+  fiber-layer/permutation compiler, return equality, base orbit coverage, and
+  fiber monodromy; the file fills in the concrete row-Latin and layer
+  bijectivity obligations from the D5 base, D3 fiber, and bridge-`kappa`
+  lemmas, then routes the package to the same odd-D7 endpoint.
 - `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
   certificate track; its targets now also expose the shared layered full-step
   lift before the existing torus/Cayley wrappers.
@@ -390,8 +397,10 @@ Current status against the revised goal:
   bridge `kappa` is in `D7Odd/Handoff/Additive4Plus2BridgeKappa.lean`; and the
   torus/Cayley wrappers are in `D7Odd/Handoff/Additive4Plus2Endpoints.lean`.
   The conditional odd-D7 target theorem and local/skew package target are in
-  `D7Odd/Handoff/Additive4Plus2Goal.lean`.  The all-odd `m >= 5` product
-  certificate is still open.
+  `D7Odd/Handoff/Additive4Plus2Goal.lean`; the concrete all-zero-set
+  return/monodromy package constructor is in
+  `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`.  The all-odd `m >= 5`
+  product certificate is still open.
 - Local bridge and monodromy lemmas: available abstractly in
   `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`, and exposed at the
   D7 product-schedule level in both `D7Odd/Handoff/Additive4Plus2.lean` and
@@ -417,8 +426,8 @@ are closed and which remain open.
 | Keep D7 odd as regression target | `D7Odd/Torus.lean`, `D7Odd/Cayley.lean`; checked by `lake build D7Odd RoundComposite.ConcreteEndpoints` on 2026-05-01 | Closed regression endpoint |
 | Raise composite theorem to concrete graph theorem | `RoundComposite.lean` has `standard_cayley_pointwise_composite_expansion` and `standard_torus_pointwise_composite_expansion`; `RoundComposite/ConcreteEndpoints.lean` has direct odd `35`, `49`, and 5/7-list Cayley/Torus endpoints | Closed for current shared standard Cayley/Torus target |
 | Extract common root-flat return criterion | `Shared/RootFlat.lean` has `rootFlatLayeredDecomposition_of_schedule` from row Latin, layer bijective, and return single-cycle | Closed at shared layered full-step level |
-| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints | Interface and conditional goal theorem closed; uniform all-odd certificate open |
-| Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` and `BridgeProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` expose it to both D7 product charts; `Additive4Plus2D5Base.lean` proves row Latin and `m >= 5` layer bijectivity for the concrete D5 all-zero-set base packet; `Additive4Plus2D3Fiber.lean` proves row Latin, layer-step bijectivity, and S3-permuted compiler facts for the D3 fiber packet; `Additive4Plus2BridgeKappa.lean` proves bijectivity of the combined state-dependent bridge `kappa`, gives a concrete row-schedule row-Latin adapter, adapts the D3 compiler into the bridge `phi` interface, and proves concrete bridge layer bijectivity for `m >= 5` | Concrete local row/layer assembly closed; uniform return instantiation open |
+| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints; `Additive4Plus2ConcreteGoal.lean` specializes this to the concrete all-zero-set bridge and reduces the remaining construction to row/fiber data plus return/monodromy witnesses | Interface and conditional goal theorem closed; uniform all-odd certificate open |
+| Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` and `BridgeProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` expose it to both D7 product charts; `Additive4Plus2D5Base.lean` proves row Latin and `m >= 5` layer bijectivity for the concrete D5 all-zero-set base packet; `Additive4Plus2D3Fiber.lean` proves row Latin, layer-step bijectivity, and S3-permuted compiler facts for the D3 fiber packet; `Additive4Plus2BridgeKappa.lean` proves bijectivity of the combined state-dependent bridge `kappa`, gives a concrete row-schedule row-Latin adapter, adapts the D3 compiler into the bridge `phi` interface, and proves concrete bridge layer bijectivity for `m >= 5`; `Additive4Plus2ConcreteGoal.lean` consumes these local facts automatically in `BridgeConcreteSkewPackage.toLocalSkewPackage` | Concrete local row/layer assembly closed; uniform return instantiation open |
 | Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy`; `ProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` and `BridgeProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` expose it to product certificates | Abstract and product-schedule criteria closed; product-return instantiation open |
 | Keep D5 even separate | `D5Odd/Even.lean` exposes seam-orbit certificate endpoints; `scripts/d5_even_seam_sat_search.py` is currently a negative/debugging smoke check | Actual orbit certificate open |
 | Keep D7 even separate | `D7Odd/Even.lean` exposes `RootFlatSchedule` certificate endpoints and shared layered adapters | Actual even schedule certificate open |
@@ -438,8 +447,9 @@ the construction of the actual all-zero-set `4+2` product certificate for odd
 
 The next useful Lean/research steps are:
 
-1. Instantiate the additive local bridge with the all-zero-set D5 base rows and
-   the D3 fiber compiler.
+1. Provide a uniform `BridgeConcreteSkewPackage` for every odd `m >= 5`; after
+   the latest interface, this means row permutations, D3 fiber-layer/permutation
+   data, product-return equality, base orbit coverage, and fiber monodromy.
 2. Search for a uniform or finite-congruence description of the all-zero-set
    base rows for odd `m >= 5`.
 3. Search for a zero-set-only or first-return-section formula for the fiber
