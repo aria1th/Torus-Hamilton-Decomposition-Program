@@ -299,34 +299,29 @@ formula and residue-cycle explanation explicitly.
 
 `D7Odd/Handoff/TargetASeamQuotient.lean` now exposes this as a Lean proof
 interface.  It defines `phi_h`, `phi_h^{-1}`, the good class, and a package
-whose fields are the single-cycle theorem plus Q-hitting, Q-first-return, and
-length-sum obligations for `23` and `32`.  The inverse identities and
-bijectivity of `phi_h` for `h >= 6` are already proved in Lean.  The residue
-gate `IsUnit (3-h : ZMod 5) ↔ h % 5 != 3` is also now proved, so the remaining
-arithmetic gap is the orbit-stitching theorem from this unit gate to
-`IsSingleCycleMap (phi h)`.  The Lean file also exposes branch lemmas for
-`phi_h^{-1}`: the internal step is `x -> x+5`, and the top five boundary
+whose remaining fields are Q-hitting, Q-first-return, and length-sum
+obligations for `23` and `32`.  The arithmetic subpackage itself is now
+closed for `h >= 6` by `TargetASeamQuotientArithmetic.ofSixLe`.  The inverse
+identities and bijectivity of `phi_h` for `h >= 6` are already proved in
+Lean.  The residue gate `IsUnit (3-h : ZMod 5) ↔ h % 5 != 3` is also proved.
+The Lean file also exposes branch lemmas for `phi_h^{-1}`: the internal step
+is `x -> x+5`, and the top five boundary
 points map to `3,4,0,1,2`.  The residue transition is now formalized as
 `phiInvNat_mod_five`: internal steps preserve residue modulo `5`, while the
 top-boundary jump adds `3-h`.  Lean also proves
-`phi_single_cycle_iff_phiInv`, reducing the remaining orbit-stitching theorem
-to the inverse-map orbit proof.  The bad-class direction is now proved:
-`goodPhiClass_of_phi_single_cycle` shows that a single-cycle `phi_h` forces
-`h % 5 != 3`.  The good-class residue quotient is also proved:
-`residueShift_add_single_cycle_of_good` shows that `r |-> r + (3-h)` is a
-single cycle on `ZMod 5`.  What remains is the good-class lift from this
-residue cycle and the internal `+5` lanes to full inverse orbit transitivity.
-The internal lane traversal is now formalized by
-`phiInv_iterate_internal_val` and `phiInv_reaches_internal_target`; the
-boundary jump is isolated by `phiInv_reaches_boundary_jump_residue`, which
-moves from a lane top to residue `x + (3-h)`.  The exact low representative
-landing is now formalized by `phiInv_reaches_boundary_jump_low`.  The
-lane-top formula `laneTop` and `phiInv_reaches_next_low` now package one
-complete residue-edge lift from an arbitrary point to the low representative
-of the next lane.  The remaining step is to compose these lifted edges along
-the residue cycle and then use internal lane reachability to hit the final
-target.  A local `Reaches` relation and `Reaches.trans` are now available for
-that final composition.
+`phi_single_cycle_iff_phiInv`, so the inverse-map orbit proof transfers back
+to `phi_h`.  The quotient arithmetic cycle theorem is now closed in Lean as
+`phi_single_cycle_iff_goodPhiClass`: `phi_h` is a single cycle exactly when
+`h % 5 != 3`.  The proof combines the bad-class obstruction
+`goodPhiClass_of_phi_single_cycle`, the good-class residue quotient
+`residueShift_add_single_cycle_of_good`, internal `+5` lane traversal
+(`phiInv_iterate_internal_val`, `phiInv_reaches_internal_target`), exact
+low-representative boundary landing (`phiInv_reaches_boundary_jump_low`),
+one-step residue-edge lifting (`phiInv_reaches_next_low`), and the final
+composition lemmas `phiInv_reaches_low_iter`,
+`phiInv_reaches_low_of_residue_reaches`, and `phiInv_reaches_any_of_good`.
+The weak bad-class five-component package is supplied by the residue-class
+cover `residueComponentCover`.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

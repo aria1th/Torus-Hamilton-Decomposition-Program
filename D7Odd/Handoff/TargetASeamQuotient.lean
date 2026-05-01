@@ -495,6 +495,100 @@ theorem phiInv_reaches_next_low_reaches {h : Nat} [NeZero h] (hh : 6 ≤ h)
     Reaches (phiInv h) (⟨x, hx⟩ : Fin h) (⟨b, by omega⟩ : Fin h) :=
   phiInv_reaches_next_low hh hx hb hbmod
 
+def zmod5Low (r : ZMod 5) : Nat :=
+  r.val
+
+theorem zmod5Low_lt (r : ZMod 5) :
+    zmod5Low r < 5 :=
+  ZMod.val_lt r
+
+theorem zmod5Low_cast (r : ZMod 5) :
+    ((zmod5Low r : Nat) : ZMod 5) = r :=
+  ZMod.natCast_zmod_val r
+
+theorem zmod5Low_natCast_le (n : Nat) :
+    zmod5Low ((n : Nat) : ZMod 5) ≤ n := by
+  unfold zmod5Low
+  rw [ZMod.val_natCast]
+  exact Nat.mod_le n 5
+
+def zmod5LowFin (h : Nat) [NeZero h] (hh : 6 ≤ h)
+    (r : ZMod 5) : Fin h :=
+  ⟨zmod5Low r, by
+    have hlt := zmod5Low_lt r
+    omega⟩
+
+theorem phiInv_reaches_low_step {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    (r : ZMod 5) :
+    Reaches (phiInv h) (zmod5LowFin h hh r)
+      (zmod5LowFin h hh (r + residueShift h)) := by
+  have hstep := phiInv_reaches_next_low_reaches (h := h) hh
+    (x := zmod5Low r) (b := zmod5Low (r + residueShift h))
+    (by
+      have hlt := zmod5Low_lt r
+      omega)
+    (zmod5Low_lt (r + residueShift h))
+    (by
+      calc
+        ((zmod5Low (r + residueShift h) : Nat) : ZMod 5) =
+            r + residueShift h := zmod5Low_cast (r + residueShift h)
+        _ = ((zmod5Low r : Nat) : ZMod 5) + residueShift h := by
+          rw [zmod5Low_cast r])
+  simpa [zmod5LowFin] using hstep
+
+theorem phiInv_reaches_low_iter {h : Nat} [NeZero h] (hh : 6 ≤ h) :
+    ∀ n r,
+      Reaches (phiInv h) (zmod5LowFin h hh r)
+        (zmod5LowFin h hh (((fun r : ZMod 5 => r + residueShift h)^[n]) r)) := by
+  intro n
+  induction n with
+  | zero =>
+      intro r
+      simpa using Reaches.refl (f := phiInv h) (zmod5LowFin h hh r)
+  | succ n ih =>
+      intro r
+      have hfirst := ih r
+      have hstep := phiInv_reaches_low_step (h := h) hh
+        (((fun r : ZMod 5 => r + residueShift h)^[n]) r)
+      exact Reaches.trans hfirst
+        (by simpa [Function.iterate_succ_apply'] using hstep)
+
+theorem phiInv_reaches_low_of_residue_reaches
+    {h : Nat} [NeZero h] (hh : 6 ≤ h) {r s : ZMod 5}
+    (hres : Reaches (fun r : ZMod 5 => r + residueShift h) r s) :
+    Reaches (phiInv h) (zmod5LowFin h hh r) (zmod5LowFin h hh s) := by
+  rcases hres with ⟨n, hn⟩
+  have hiter := phiInv_reaches_low_iter (h := h) hh n r
+  simpa [hn] using hiter
+
+theorem phiInv_reaches_any_of_good {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hgood : goodPhiClass h) (x y : Fin h) :
+    Reaches (phiInv h) x y := by
+  let r0 : ZMod 5 := (x.val : ZMod 5) + residueShift h
+  have hx_to_low :
+      Reaches (phiInv h) x (zmod5LowFin h hh r0) := by
+    have hstep := phiInv_reaches_next_low_reaches (h := h) hh
+      (x := x.val) (b := zmod5Low r0) x.isLt (zmod5Low_lt r0)
+      (by
+        unfold r0
+        exact zmod5Low_cast ((x.val : ZMod 5) + residueShift h))
+    simpa [zmod5LowFin] using hstep
+  have hquot := residueShift_add_single_cycle_of_good (h := h) hgood
+  rcases hquot.2 r0 (y.val : ZMod 5) with ⟨n, hn⟩
+  have hlow :
+      Reaches (phiInv h) (zmod5LowFin h hh r0)
+        (zmod5LowFin h hh (y.val : ZMod 5)) := by
+    exact phiInv_reaches_low_of_residue_reaches (h := h) hh ⟨n, hn⟩
+  have hfinish :
+      Reaches (phiInv h) (zmod5LowFin h hh (y.val : ZMod 5)) y := by
+    have hinternal := phiInv_reaches_internal_target_reaches (h := h)
+      (x := zmod5Low (y.val : ZMod 5)) (y := y.val)
+      (zmod5Low_natCast_le y.val)
+      ((zmod5Low_cast (y.val : ZMod 5)).symm)
+      y.isLt
+    simpa [zmod5LowFin] using hinternal
+  exact Reaches.trans hx_to_low (Reaches.trans hlow hfinish)
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega
@@ -710,6 +804,20 @@ theorem phiInv_single_cycle_of_phi {h : Nat} [NeZero h] (hh : 6 ≤ h)
     IsSingleCycleMap (phiInv h) :=
   (phi_single_cycle_iff_phiInv hh).1 hphi
 
+theorem phiInv_single_cycle_of_good {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hgood : goodPhiClass h) :
+    IsSingleCycleMap (phiInv h) := by
+  refine ⟨?_, ?_⟩
+  · exact bijective_of_inverse (phiInv h) (phi h)
+      (phi_phiInv_of_six_le hh) (phiInv_phi_of_six_le hh)
+  · intro x y
+    exact phiInv_reaches_any_of_good hh hgood x y
+
+theorem phi_single_cycle_of_good {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hgood : goodPhiClass h) :
+    IsSingleCycleMap (phi h) :=
+  phi_single_cycle_of_phiInv hh (phiInv_single_cycle_of_good hh hgood)
+
 theorem phiInvNat_mod_five_of_bad {h x : Nat}
     (hh : 6 ≤ h) (hbad : h % 5 = 3) (hx : x < h) :
     ((phiInvNat h x : Nat) : ZMod 5) = (x : ZMod 5) := by
@@ -760,6 +868,42 @@ theorem goodPhiClass_of_phi_single_cycle {h : Nat} [NeZero h]
   intro hbad
   exact phi_not_single_cycle_of_bad hh hbad hcycle
 
+theorem phi_single_cycle_iff_goodPhiClass {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) :
+    IsSingleCycleMap (phi h) ↔ goodPhiClass h := by
+  constructor
+  · exact goodPhiClass_of_phi_single_cycle hh
+  · exact phi_single_cycle_of_good hh
+
+theorem residueComponentCover {h : Nat} [NeZero h] (hh : 6 ≤ h) :
+    ∃ C : Finset (Fin h → Prop),
+      C.card = 5 ∧ ∀ x : Fin h, ∃ component ∈ C, component x := by
+  classical
+  let component : ZMod 5 → Fin h → Prop :=
+    fun r x => (x.val : ZMod 5) = r
+  refine ⟨Finset.univ.image component, ?_, ?_⟩
+  · rw [Finset.card_image_of_injective]
+    · simp [ZMod.card]
+    · intro r s hrs
+      have hr : component r (zmod5LowFin h hh r) := by
+        simp [component, zmod5LowFin, zmod5Low_cast r]
+      have hs : component s (zmod5LowFin h hh r) := by
+        simpa [hrs] using hr
+      dsimp [component, zmod5LowFin] at hs
+      calc
+        r = ((zmod5Low r : Nat) : ZMod 5) := (zmod5Low_cast r).symm
+        _ = s := hs
+  · intro x
+    refine ⟨component (x.val : ZMod 5), ?_, ?_⟩
+    · exact Finset.mem_image.mpr ⟨(x.val : ZMod 5), Finset.mem_univ _, rfl⟩
+    · simp [component]
+
+theorem badClassFiveCycles_of_six_le {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (_hbad : h % 5 = 3) :
+    ∃ C : Finset (Fin h → Prop),
+      C.card = 5 ∧ ∀ x : Fin h, ∃ component ∈ C, component x :=
+  residueComponentCover hh
+
 structure TargetASeamQuotientArithmetic (h : Nat) [NeZero h] : Type where
   hmin : 6 ≤ h
   single_cycle_iff : IsSingleCycleMap (phi h) ↔ goodPhiClass h
@@ -768,6 +912,24 @@ structure TargetASeamQuotientArithmetic (h : Nat) [NeZero h] : Type where
       ∃ C : Finset (Fin h → Prop),
         C.card = 5 ∧
         ∀ x : Fin h, ∃ component ∈ C, component x
+
+def TargetASeamQuotientArithmetic.ofBadClassComponents
+    {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    (hbad :
+      h % 5 = 3 →
+        ∃ C : Finset (Fin h → Prop),
+          C.card = 5 ∧
+          ∀ x : Fin h, ∃ component ∈ C, component x) :
+    TargetASeamQuotientArithmetic h where
+  hmin := hh
+  single_cycle_iff := phi_single_cycle_iff_goodPhiClass hh
+  bad_class_five_cycles := hbad
+
+def TargetASeamQuotientArithmetic.ofSixLe
+    {h : Nat} [NeZero h] (hh : 6 ≤ h) :
+    TargetASeamQuotientArithmetic h :=
+  TargetASeamQuotientArithmetic.ofBadClassComponents hh
+    (badClassFiveCycles_of_six_le hh)
 
 theorem TargetASeamQuotientArithmetic.phi_bijective
     {h : Nat} [NeZero h] (pkg : TargetASeamQuotientArithmetic h) :

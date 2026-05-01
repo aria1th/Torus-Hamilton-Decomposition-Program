@@ -44,16 +44,15 @@ when `m` is odd and `m >= 3`.
   `h >= 6`, proving the residue-shift unit gate in `ZMod 5`, proving the
   inverse-map residue transition at the top boundary, proving
   `IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h)`, and packaging
-  the remaining cycle/Q-hitting/length-sum obligations.  It also proves the
-  bad-class necessary direction: if `phi h` is a single cycle, then
-  `h % 5 != 3`.  In the good class it proves the quotient residue map
-  `r |-> r + (3-h)` is a single cycle on `ZMod 5`, and it proves the
-  internal lane traversal lemma for repeated `phiInv` steps by `+5`, plus
-  the boundary-jump residue lemma between lanes and an exact low-representative
-  boundary landing lemma.  The lane-top formula `laneTop` and
-  `phiInv_reaches_next_low` lift one residue edge to an actual `phiInv` orbit
-  segment.  A local `Reaches` relation with transitivity is available for the
-  final orbit-stitching composition.
+  the remaining Q-hitting/length-sum obligations.  The seam quotient
+  arithmetic package itself is now closed for `h >= 6` via
+  `TargetASeamQuotientArithmetic.ofSixLe`; in particular,
+  `phi_single_cycle_iff_goodPhiClass` proves
+  `IsSingleCycleMap (phi h) ↔ h % 5 != 3`.  Its proof combines the bad-class
+  obstruction, the good-class residue cycle
+  `r |-> r + (3-h)` on `ZMod 5`, internal `+5` lane traversal for `phiInv`,
+  exact low-representative boundary landings, and a lifted residue-path
+  composition via the local `Reaches` relation.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
@@ -261,8 +260,8 @@ python3 scripts/verify_targetA_23_32_seam_quotient.py \
 
 The verifier also records the inverse-map explanation for the arithmetic:
 `phi_h^{-1}` walks by `+5` inside residue classes and crosses the top boundary
-with residue shift `3-h mod 5`.  The Lean target now proves this residue
-transition as `phiInvNat_mod_five`.
+with residue shift `3-h mod 5`.  The Lean target now proves the full seam
+quotient cycle criterion as `phi_single_cycle_iff_goodPhiClass`.
 
 The corresponding Lean proof target is exposed by:
 
