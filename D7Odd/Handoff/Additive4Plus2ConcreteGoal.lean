@@ -469,6 +469,75 @@ def BridgeConcreteRankPackage.toCertificate
     BridgeProductRootCertificate m :=
   (pkg.toConcreteOrbitPackage).toCertificate hm
 
+structure BridgeConcretePowRankPackage (m : Nat) [NeZero m] where
+  row : Color → ZMod m → Direction
+  fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m
+  perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3
+  basePoint : Color → D5Odd.ARoot5 m
+  rank : Color → D5Odd.ARoot5 m → ZMod (m ^ 4)
+  hrow : ∀ t, Function.Bijective fun c : Color => row c t
+  hperm : ∀ t base, Function.Bijective (perm t base)
+  hrank : ∀ c, Function.Bijective (rank c)
+  hbaseStep : ∀ c base,
+    rank c (bridgeConcreteBaseReturn row c base) = rank c base + 1
+  hmonodromy : ∀ c,
+    IsSingleCycleMap
+      (Shared.sectionReturn
+        (Shared.skewProductMap
+          (bridgeConcreteBaseReturn row c)
+          (bridgeConcreteFiberReturn row fiberLayer perm c))
+        (basePoint c) (m ^ 4))
+
+def BridgeConcretePowRankPackage.toConcreteRankPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeConcreteRankPackage m where
+  row := pkg.row
+  fiberLayer := pkg.fiberLayer
+  perm := pkg.perm
+  basePoint := pkg.basePoint
+  period := fun _ => m ^ 4
+  rank := pkg.rank
+  hrow := pkg.hrow
+  hperm := pkg.hperm
+  hperiod := by
+    intro _c
+    have hmpos : 0 < m := by omega
+    exact pow_pos hmpos 4
+  hrank := pkg.hrank
+  hbaseStep := pkg.hbaseStep
+  hmonodromy := pkg.hmonodromy
+
+def BridgeConcretePowRankPackage.toConcreteOrbitPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeConcreteOrbitPackage m :=
+  (pkg.toConcreteRankPackage hm).toConcreteOrbitPackage
+
+def BridgeConcretePowRankPackage.toConcreteReturnPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeConcreteReturnPackage m :=
+  (pkg.toConcreteRankPackage hm).toConcreteReturnPackage hm
+
+def BridgeConcretePowRankPackage.toConcreteSkewPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeConcreteSkewPackage m :=
+  (pkg.toConcreteRankPackage hm).toConcreteSkewPackage hm
+
+def BridgeConcretePowRankPackage.toLocalSkewPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeLocalSkewPackage m :=
+  (pkg.toConcreteRankPackage hm).toLocalSkewPackage hm
+
+def BridgeConcretePowRankPackage.toCertificate
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcretePowRankPackage m) :
+    BridgeProductRootCertificate m :=
+  (pkg.toConcreteRankPackage hm).toCertificate hm
+
 def BridgeOddConcreteSkewTarget : Type :=
   ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m → BridgeConcreteSkewPackage m
 
@@ -480,6 +549,9 @@ def BridgeOddConcreteOrbitTarget : Type :=
 
 def BridgeOddConcreteRankTarget : Type :=
   ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m → BridgeConcreteRankPackage m
+
+def BridgeOddConcretePowRankTarget : Type :=
+  ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m → BridgeConcretePowRankPackage m
 
 def bridge_odd_local_skew_target_of_concrete_skew_target
     (hConcrete : BridgeOddConcreteSkewTarget) :
@@ -524,6 +596,17 @@ def bridge_odd_certificate_target_of_concrete_rank_target
   bridge_odd_certificate_target_of_concrete_orbit_target
     (bridge_odd_concrete_orbit_target_of_concrete_rank_target hRank)
 
+def bridge_odd_concrete_rank_target_of_concrete_pow_rank_target
+    (hRank : BridgeOddConcretePowRankTarget) :
+    BridgeOddConcreteRankTarget :=
+  fun hm hodd => (hRank hm hodd).toConcreteRankPackage hm
+
+def bridge_odd_certificate_target_of_concrete_pow_rank_target
+    (hRank : BridgeOddConcretePowRankTarget) :
+    BridgeOddCertificateTarget :=
+  bridge_odd_certificate_target_of_concrete_rank_target
+    (bridge_odd_concrete_rank_target_of_concrete_pow_rank_target hRank)
+
 theorem shared_cayley_uniform_from_bridge_odd_concrete_skew_target
     (hConcrete : BridgeOddConcreteSkewTarget) :
     ∀ {m : Nat}, 3 ≤ m → Odd m →
@@ -551,6 +634,13 @@ theorem shared_cayley_uniform_from_bridge_odd_concrete_rank_target
       Shared.CayleyHamiltonDecomposition 7 m :=
   shared_cayley_uniform_from_small3_and_bridge_odd_target
     (bridge_odd_certificate_target_of_concrete_rank_target hRank)
+
+theorem shared_cayley_uniform_from_bridge_odd_concrete_pow_rank_target
+    (hRank : BridgeOddConcretePowRankTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      Shared.CayleyHamiltonDecomposition 7 m :=
+  shared_cayley_uniform_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_pow_rank_target hRank)
 
 end Additive4Plus2
 end Handoff

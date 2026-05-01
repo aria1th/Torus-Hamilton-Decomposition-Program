@@ -243,7 +243,9 @@ remaining concrete bridge assumptions at base orbit coverage and fiber
 monodromy.  Its `BridgeConcreteRankPackage` reduces the base side further:
 a bijective base rank stepped by the folded base return now implies both
 return-to-base and base orbit coverage, so the structural D7 bridge target is
-row/fiber compiler data plus base-rank and fiber-monodromy proofs.
+row/fiber compiler data plus base-rank and fiber-monodromy proofs.  Its
+`BridgeConcretePowRankPackage` fixes that base rank target to `ZMod (m^4)`,
+matching the cardinality of `A5(m)`.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
