@@ -135,6 +135,11 @@ nuanced picture:
 - `m = 17` first needs length `5` words in the current scan;
 - the `m = 17` length-5 examples are not reusable unchanged at
   `m = 5,7,9,11,13,15`.
+- direct testing of the short core `23` through odd `m <= 37` shows failures
+  exactly at `m = 7,17,27,37` in that range, suggesting an
+  `m ≡ 7 mod 10` exceptional family;
+- the currently recorded `m = 7` and `m = 17` exceptional primitive words do
+  not work unchanged at `m = 27` or `m = 37`.
 
 So a plausible Target-A route is not a single base word.  It is either a
 finite congruence family of primitive words, or a constructive/padding theorem

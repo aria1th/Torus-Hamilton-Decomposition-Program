@@ -175,6 +175,10 @@ family.
   and `m = 17` need different first-hit patterns in the current scan.  This
   points toward a congruence-dependent or constructive Target-A row family
   rather than one fixed short base word.
+- Direct testing of `23` through odd `m <= 37` fails exactly at
+  `m = 7,17,27,37` in that range, suggesting an `m ≡ 7 mod 10` exceptional
+  family.  The known `m = 7` and `m = 17` exceptional primitive words do not
+  work unchanged for `m = 27` or `m = 37`.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
