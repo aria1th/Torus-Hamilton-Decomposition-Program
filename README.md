@@ -10,14 +10,14 @@ theorem D5Odd.D5_odd_cayley_unconditional {m : Nat} [NeZero m]
     (hodd : Odd m) (hm3 : 3 <= m) :
     D5Odd.CayleyHamiltonDecompositionD5 m
 
-theorem D7Odd.Handoff.main_odd :
-    D7Odd.Handoff.MainOddTheoremTarget
+theorem D7Odd.D7_odd_cayley_unconditional {m : Nat} [NeZero m]
+    (hodd : Odd m) (hm3 : 3 <= m) :
+    D7Odd.CayleyHamiltonDecompositionD7 m
 ```
 
-The D5 theorem states an explicit Cayley-edge decomposition for
-`Cay((ZMod m)^5, {e_0, e_1, e_2, e_3, e_4})` when `m` is odd and `m >= 3`.
-The D7 endpoint states the corresponding odd-modulus Hamilton decomposition
-target for dimension 7, again for odd `m >= 3`.
+These theorems state explicit Cayley-edge decompositions for
+`Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` in dimensions `d = 5` and `d = 7`
+when `m` is odd and `m >= 3`.
 
 ## Repository Layout
 
@@ -26,7 +26,9 @@ target for dimension 7, again for odd `m >= 3`.
 - `D5Odd/Torus.lean`: layer/root-flat lift from return maps to full torus color cycles.
 - `D5Odd/Main.lean`: model-level odd D5 endpoint.
 - `D7Odd/`: Lean 4 formalization of the odd D7 construction.
-- `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic branch and final D7 endpoint.
+- `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic branch and root-flat D7 endpoint.
+- `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
+- `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.

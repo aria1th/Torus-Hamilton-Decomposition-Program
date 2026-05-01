@@ -3,6 +3,35 @@
 This note records helper theorems that would materially reduce the cost of the
 Lean 4 formalization of the `D_7(m)` odd handoff bundle.
 
+## Current endpoint status
+
+The original handoff endpoint remains:
+
+```lean
+theorem D7Odd.Handoff.main_odd :
+    D7Odd.Handoff.MainOddTheoremTarget
+```
+
+The root-flat certificate is now lifted to the full torus and Cayley statements:
+
+```lean
+theorem D7Odd.rootFlatCertificate_to_hamiltonDecomposition
+    {m : Nat} [NeZero m]
+    (cert : D7Odd.Handoff.RootFlatCertificate m) :
+    D7Odd.HamiltonDecompositionD7 m
+
+theorem D7Odd.D7_odd_torus_unconditional
+    {m : Nat} [NeZero m] (hodd : Odd m) (hm3 : 3 <= m) :
+    D7Odd.TorusHamiltonDecompositionD7 m
+
+theorem D7Odd.D7_odd_cayley_unconditional
+    {m : Nat} [NeZero m] (hodd : Odd m) (hm3 : 3 <= m) :
+    D7Odd.CayleyHamiltonDecompositionD7 m
+```
+
+Thus the remaining theorem requests below are historical/proof-engineering
+notes for the handoff route, not blockers for the current full D7 endpoint.
+
 ## 1. Rank-array finite cycle checker
 
 The small cases `m=3,5` come with rank certificates.  A direct generated

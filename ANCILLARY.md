@@ -14,7 +14,9 @@ It is intentionally a source bundle, not a built Lean workspace.  The generated
 - `D5Odd/ReturnCycle.lean`: return-map proof and the finite `m = 3` rank tables.
 - `D5Odd/Cayley.lean`: top-level Cayley-graph theorem.
 - `D7Odd/*.lean`, `D7Odd.lean`: Lean 4 formalization of the D7 odd case.
-- `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic construction and final D7 theorem.
+- `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic construction and root-flat D7 theorem.
+- `D7Odd/Torus.lean`: bridge from root-flat D7 certificates to the full torus theorem.
+- `D7Odd/Cayley.lean`: top-level D7 Cayley-graph theorem.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff notes and proof-status record.
 - `scripts/d5_odd_paper_verify.py`: independent Python audit script for the finite tables,
   first-return formulas on supplied odd moduli, and the five `m = 3` color returns.
@@ -38,7 +40,7 @@ D5Odd.D5_odd_cayley_unconditional
 The top-level D7 theorem is:
 
 ```lean
-D7Odd.Handoff.main_odd
+D7Odd.D7_odd_cayley_unconditional
 ```
 
 ## Python Audit
