@@ -106,6 +106,9 @@ The useful package is:
 - `D5Odd/ReturnCycle.lean`: rank and semiconjugacy tools such as
   `single_cycle_of_rank`, `single_cycle_of_bijective_semiconj`,
   `single_cycle_of_return_cover`, and `single_cycle_of_first_return_sum`.
+- `Shared/RankCycle.lean`: shared `ZMod` rank criterion
+  `single_cycle_of_zmod_rank`, for finite certificates where a rank map
+  increases by one on each return step.
 - `D5Odd/Torus.lean`: the model-to-torus bridge, especially
   `single_cycle_of_layer_zero_return_cover`, `torusHamiltonDecomposition_of_model`,
   and `D5_odd_torus_unconditional`.

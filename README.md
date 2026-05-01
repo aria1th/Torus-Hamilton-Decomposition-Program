@@ -34,6 +34,7 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the `RootFlatSchedule` interface.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
+- `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and return criterion interface.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.

@@ -256,6 +256,8 @@ Implementation progress after this goal update:
 
 - `Shared/RootFlat.lean` now contains the generic schedule/certificate interface
   for row Latin, layer bijective, and return single-cycle data.
+- `Shared/RankCycle.lean` now contains a reusable `ZMod` rank criterion for
+  finite return-cycle certificates.
 - `Shared/Monodromy.lean` now contains conjugacy transfer for bijective and
   single-cycle maps, plus a skew-product base-orbit monodromy criterion.
 - `Shared/AdditiveBridge.lean` now packages the local bridge obligations:
