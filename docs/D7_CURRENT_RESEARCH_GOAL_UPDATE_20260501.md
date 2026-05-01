@@ -41,8 +41,9 @@ The current committed Lean state contains these relevant pieces.
   certificate is still missing. The small `m=2` SAT smoke test is not a proof
   of the even theorem.
 - A generic composite product theorem exists in `RoundComposite.lean`. It is
-  useful as an abstract reduction, but it is not yet the final concrete
-  graph-level Cayley product expansion theorem.
+  useful as an abstract reduction.  The concrete graph-level Cayley product is
+  now formalized for the left-coordinatized case; the remaining bridge is to
+  supply or derive cycle coordinates for the current base endpoints.
 - A shared return-lift library exists in `Shared/ReturnLift.lean`, covering the
   periodic return lemmas that were previously duplicated in D3/D5/D7 style
   arguments.
@@ -275,6 +276,11 @@ Implementation progress after this goal update:
   The `CycleCoordinate` structure records the extra coordinate data needed to
   identify an abstract Hamilton color with the standard `ZMod n` cycle used by
   the auxiliary dimension-`b` decomposition.
+- `Shared/CayleyProduct.lean` begins the concrete graph-product formalization:
+  it packages coordinate-bearing Cayley decompositions, turns A-color cycle
+  coordinates into block-rank coordinates, defines the product color direction,
+  and proves both its edge-partition condition and its color-wise Hamiltonian
+  conjugacy to the auxiliary B-cycle.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
@@ -306,7 +312,7 @@ The next useful Lean/research steps are:
 3. Search for a zero-set-only or first-return-section formula for the fiber
    compiler `kappa`.
 4. Finish the concrete composite Cayley/torus endpoint from the existing
-   product reduction; the odd-modulus logical reduction is present, but the
-   graph-product construction itself is still not formalized in Lean.
+   product reduction by supplying or deriving the left-factor cycle-coordinate
+   data required by the formalized graph-product construction.
 5. Keep D7 even and D5 even on separate certificate tracks so their open
    obligations do not obscure the D7 odd structural bridge.

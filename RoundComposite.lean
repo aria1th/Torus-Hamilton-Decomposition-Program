@@ -1,5 +1,5 @@
 import Mathlib
-import Shared.TorusCayley
+import Shared.CayleyProduct
 
 namespace RoundComposite
 
@@ -241,6 +241,9 @@ abbrev StandardTorusSolved : Nat → Nat → Prop :=
 abbrev StandardCayleySolved : Nat → Nat → Prop :=
   Shared.CayleyHamiltonDecomposition
 
+abbrev StandardCoordinatizedCayleySolved : Nat → Nat → Prop :=
+  Shared.CoordinatizedCayleyHamiltonDecomposition
+
 variable (TorusSolved CayleySolved : Nat → Nat → Prop)
 
 def TorusToCayley : Prop :=
@@ -294,6 +297,19 @@ theorem standard_torus_to_cayley :
     TorusToCayley StandardTorusSolved StandardCayleySolved := by
   intro _d _m _hm h
   exact h
+
+theorem standard_cayley_of_standard_coordinatized
+    {d m : Nat}
+    (h : StandardCoordinatizedCayleySolved d m) :
+    StandardCayleySolved d m :=
+  Shared.cayleyHamiltonDecomposition_of_coordinatized h
+
+theorem standard_cayley_product_of_left_coordinatized
+    {a b m : Nat} (_ha : 0 < a) (_hb : 0 < b) (_hm : 3 ≤ m)
+    (hA : StandardCoordinatizedCayleySolved a m)
+    (hB : StandardCayleySolved b (m ^ a)) :
+    StandardCayleySolved (a * b) m :=
+  Shared.cayleyHamiltonDecomposition_product_of_left_coordinatized hA hB
 
 theorem standard_cayley_prime_factor_reduction_of_torus_pointwise
     (hExp : PointwiseCompositeExpansion StandardTorusSolved)

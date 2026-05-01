@@ -4,3 +4,4 @@ import Shared.RootFlat
 import Shared.Monodromy
 import Shared.AdditiveBridge
 import Shared.TorusCayley
+import Shared.CayleyProduct

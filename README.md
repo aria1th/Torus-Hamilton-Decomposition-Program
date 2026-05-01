@@ -42,9 +42,12 @@ when `m` is odd and `m >= 3`.
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
   data for product lifts.
+- `Shared/CayleyProduct.lean`: coordinate-bearing Cayley decompositions and the
+  concrete graph-product transport theorem, including product color-direction
+  edge partition and Hamiltonian conjugacy.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants and concrete adapters for the shared standard torus/Cayley proposition.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and the left-coordinatized Cayley product adapter.
 - `RoundComposite/ConcreteEndpoints.lean`: conditional graph-level composite
   endpoints obtained from the formalized D5/D7 odd Cayley theorems once the
   standard pointwise product expansion is supplied.
