@@ -367,6 +367,12 @@ with a concrete Route-E program.
   `(0, (2,0,0,3,2))`, and `m = 16` with `(0, (0,0,8,3,4))`.  These hits give
   a finite-data target for extracting residue-class count/drift families
   beyond the open-port normal form.
+- Count/slot scan hits now also report `normalized_counts_slot0`, obtained by
+  cyclically rotating the E-slot to `0`.  This makes equivalent rotated hits
+  visible: for instance, the `m = 6` hit `(1, (1,0,0,1,3))` normalizes to the
+  same `(0,0,1,3,1)` count vector as the bundled `m = 6` witness.  All first
+  hits currently seen at `m = 6,8,16` are outside open-port normal form after
+  this normalization.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove origin-excursion affine chart

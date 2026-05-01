@@ -183,6 +183,22 @@ def verify_m4_schedule():
     }
 
 
+def normalize_counts_to_slot0(
+    slot: int, counts: Tuple[int, int, int, int, int]
+) -> Tuple[int, int, int, int, int]:
+    return tuple(counts[(i + slot) % 5] for i in range(5))  # type: ignore[return-value]
+
+
+def count_hit_summary(slot: int, counts: Tuple[int, int, int, int, int]) -> dict:
+    normalized = normalize_counts_to_slot0(slot, counts)
+    return {
+        "slot": slot,
+        "counts": counts,
+        "normalized_counts_slot0": normalized,
+        "open_port_normal_form": normalized[0] == 0 and normalized[4] == 0,
+    }
+
+
 def one_e_rows(m: int, slot: int, counts: Tuple[int, int, int, int, int]):
     rel: List[Symbol] = []
     for a, n in enumerate(counts):
@@ -202,6 +218,7 @@ def verify_one_e_schedule(m: int, slot: int, counts: Tuple[int, int, int, int, i
         "type": "one_Lambda_E_layer_plus_constant_offsets",
         "slot": slot,
         "counts": counts,
+        "normalized_counts_slot0": normalize_counts_to_slot0(slot, counts),
         "relative_layers": [("C", a, n) for a, n in enumerate(counts) if n] + [("E", slot, 1)],
         "cycle_lengths": lengths,
         "ok": all(length == [size] for length in lengths),
@@ -467,7 +484,7 @@ def scan_one_e_full_count_cases(moduli: Iterable[int], limit: int) -> List[dict]
             for counts in weak_compositions(m - 1, 5):
                 checked += 1
                 if one_e_single_cycle(m, slot, counts, states, idx):
-                    hits.append({"slot": slot, "counts": counts})
+                    hits.append(count_hit_summary(slot, counts))
                     if len(hits) >= limit:
                         break
             if len(hits) >= limit:
@@ -508,7 +525,7 @@ def scan_open_port_full_cases(moduli: Iterable[int], limit: int) -> List[dict]:
                 counts = (0, a_count, b_count, c_count, 0)
                 if one_e_single_cycle(m, 0, counts, states, idx):
                     hit = dict(section)
-                    hit["counts"] = counts
+                    hit.update(count_hit_summary(0, counts))
                     hit["full_single"] = True
                     hits.append(hit)
                     if len(hits) >= limit:

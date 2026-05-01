@@ -230,6 +230,11 @@ moduli.  This sharpens the remaining task: extract symbolic residue-class
 count/drift families from the larger one-`Lambda_E` hit set, then prove the
 corresponding origin-excursion charts.
 
+The scan also records normalized counts after cyclically rotating the E-slot
+to `0`.  This is the right comparison layer for residue-family extraction:
+some hits differ only by cyclic slot rotation, while the normalized first hits
+at `m = 6,8,16` remain visibly non-open-port.
+
 The all-even proof gap is therefore concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;

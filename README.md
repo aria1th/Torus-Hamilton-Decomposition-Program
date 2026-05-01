@@ -383,6 +383,9 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --json-out /tmp/d5_even_routeE_count_scan.json
 ```
 
+The count scan reports both the raw `(slot, counts)` and
+`normalized_counts_slot0`, obtained by cyclically rotating the E-slot to `0`.
+
 ## Citation
 
 If you use this formalization, cite the repository using `CITATION.cff`.
