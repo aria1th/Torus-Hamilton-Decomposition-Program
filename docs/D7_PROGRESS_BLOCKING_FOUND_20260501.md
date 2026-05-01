@@ -306,7 +306,9 @@ gate `IsUnit (3-h : ZMod 5) ↔ h % 5 != 3` is also now proved, so the remaining
 arithmetic gap is the orbit-stitching theorem from this unit gate to
 `IsSingleCycleMap (phi h)`.  The Lean file also exposes branch lemmas for
 `phi_h^{-1}`: the internal step is `x -> x+5`, and the top five boundary
-points map to `3,4,0,1,2`.
+points map to `3,4,0,1,2`.  The residue transition is now formalized as
+`phiInvNat_mod_five`: internal steps preserve residue modulo `5`, while the
+top-boundary jump adds `3-h`.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

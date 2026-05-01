@@ -156,7 +156,9 @@ IsUnit (3 - h : ZMod 5) iff h % 5 != 3
 are already proved in Lean.  This file is a proof interface, not a completed
 Target-A theorem.  It also exposes branch lemmas for the inverse map: away
 from the top boundary `phi_h^{-1}(x)=x+5`, while the top five points
-`h-5,h-4,h-3,h-2,h-1` map to `3,4,0,1,2`.
+`h-5,h-4,h-3,h-2,h-1` map to `3,4,0,1,2`.  Lean now also proves the
+residue transition lemma `phiInvNat_mod_five`: the inverse map preserves
+`x mod 5` before the top boundary and changes it by `3-h` at the boundary.
 
 ## Updated Target-A Interpretation
 

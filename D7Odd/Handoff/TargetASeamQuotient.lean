@@ -203,6 +203,64 @@ theorem phiInvNat_top_one {h : Nat} (hh : 6 ≤ h) :
   simp [hnot1, hnot2, hnot3, hnot4, hnot5,
     Nat.mod_eq_of_lt (by omega : 2 < h)]
 
+theorem phiInvNat_internal_mod_five {h x : Nat} (hx : x + 5 < h) :
+    ((phiInvNat h x : Nat) : ZMod 5) = (x : ZMod 5) := by
+  rw [phiInvNat_of_add_five_lt hx, Nat.cast_add]
+  change (x : ZMod 5) + (5 : ZMod 5) = (x : ZMod 5)
+  rw [show (5 : ZMod 5) = 0 by exact ZMod.natCast_self 5]
+  simp
+
+theorem phiInvNat_top_mod_five {h x : Nat}
+    (hh : 6 ≤ h) (hx : x < h) (hnot : ¬ x + 5 < h) :
+    ((phiInvNat h x : Nat) : ZMod 5) =
+      (x : ZMod 5) + residueShift h := by
+  by_cases h5 : x + 5 = h
+  · have hxval : x = h - 5 := by omega
+    rw [hxval, phiInvNat_top_five hh]
+    unfold residueShift
+    rw [Nat.cast_sub (by omega : 5 ≤ h)]
+    ring_nf
+    try decide
+  · by_cases h4 : x + 4 = h
+    · have hxval : x = h - 4 := by omega
+      rw [hxval, phiInvNat_top_four hh]
+      unfold residueShift
+      rw [Nat.cast_sub (by omega : 4 ≤ h)]
+      ring_nf
+      try decide
+    · by_cases h3 : x + 3 = h
+      · have hxval : x = h - 3 := by omega
+        rw [hxval, phiInvNat_top_three hh]
+        unfold residueShift
+        rw [Nat.cast_sub (by omega : 3 ≤ h)]
+        ring_nf
+        try decide
+      · by_cases h2 : x + 2 = h
+        · have hxval : x = h - 2 := by omega
+          rw [hxval, phiInvNat_top_two hh]
+          unfold residueShift
+          rw [Nat.cast_sub (by omega : 2 ≤ h)]
+          ring_nf
+          try decide
+        · have hxval : x = h - 1 := by omega
+          rw [hxval, phiInvNat_top_one hh]
+          unfold residueShift
+          rw [Nat.cast_sub (by omega : 1 ≤ h)]
+          ring_nf
+          try decide
+
+theorem phiInvNat_mod_five {h x : Nat} (hh : 6 ≤ h) (hx : x < h) :
+    ((phiInvNat h x : Nat) : ZMod 5) =
+      if x + 5 < h then
+        (x : ZMod 5)
+      else
+        (x : ZMod 5) + residueShift h := by
+  by_cases hlt : x + 5 < h
+  · rw [if_pos hlt]
+    exact phiInvNat_internal_mod_five hlt
+  · rw [if_neg hlt]
+    exact phiInvNat_top_mod_five hh hx hlt
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega
