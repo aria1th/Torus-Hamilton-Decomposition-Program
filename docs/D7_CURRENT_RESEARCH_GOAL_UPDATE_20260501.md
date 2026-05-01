@@ -322,6 +322,8 @@ Implementation progress after this goal update:
   target as a conditional theorem: the finite `m = 3` certificate from
   `SmallBranches.lean`, plus a `BridgeProductRootCertificate` for every odd
   `m >= 5`, implies the D7 handoff, torus, Cayley, and shared Cayley endpoints.
+  It also names the lower-level `BridgeOddLocalSkewTarget`, whose data are the
+  local bridge and monodromy obligations needed to construct those certificates.
 - `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
   certificate track; its targets now also expose the shared layered full-step
   lift before the existing torus/Cayley wrappers.
@@ -360,8 +362,9 @@ Current status against the revised goal:
   certificate constructor is in
   `D7Odd/Handoff/Additive4Plus2BridgeChart.lean`; and the torus/Cayley wrappers
   are in `D7Odd/Handoff/Additive4Plus2Endpoints.lean`.  The conditional
-  odd-D7 target theorem is in `D7Odd/Handoff/Additive4Plus2Goal.lean`.  The
-  all-odd `m >= 5` product certificate is still open.
+  odd-D7 target theorem and local/skew package target are in
+  `D7Odd/Handoff/Additive4Plus2Goal.lean`.  The all-odd `m >= 5` product
+  certificate is still open.
 - Local bridge and monodromy lemmas: available abstractly in
   `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`, and exposed at the
   D7 product-schedule level in both `D7Odd/Handoff/Additive4Plus2.lean` and
@@ -387,7 +390,7 @@ are closed and which remain open.
 | Keep D7 odd as regression target | `D7Odd/Torus.lean`, `D7Odd/Cayley.lean`; checked by `lake build D7Odd RoundComposite.ConcreteEndpoints` on 2026-05-01 | Closed regression endpoint |
 | Raise composite theorem to concrete graph theorem | `RoundComposite.lean` has `standard_cayley_pointwise_composite_expansion` and `standard_torus_pointwise_composite_expansion`; `RoundComposite/ConcreteEndpoints.lean` has direct odd `35`, `49`, and 5/7-list Cayley/Torus endpoints | Closed for current shared standard Cayley/Torus target |
 | Extract common root-flat return criterion | `Shared/RootFlat.lean` has `rootFlatLayeredDecomposition_of_schedule` from row Latin, layer bijective, and return single-cycle | Closed at shared layered full-step level |
-| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates into the full D7 odd endpoints | Interface and conditional goal theorem closed; uniform all-odd certificate open |
+| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints | Interface and conditional goal theorem closed; uniform all-odd certificate open |
 | Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` and `BridgeProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` expose it to both D7 product charts | Abstract and product-schedule criteria closed; D5 all-zero-set/D3 instantiation open |
 | Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy`; `ProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` and `BridgeProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` expose it to product certificates | Abstract and product-schedule criteria closed; product-return instantiation open |
 | Keep D5 even separate | `D5Odd/Even.lean` exposes seam-orbit certificate endpoints; `scripts/d5_even_seam_sat_search.py` is currently a negative/debugging smoke check | Actual orbit certificate open |

@@ -209,7 +209,9 @@ through the D7 torus/Cayley wrappers and into the shared Cayley endpoint.
 `D7Odd/Handoff/Additive4Plus2Goal.lean` packages the intended odd-D7 proof
 route: the finite `m = 3` branch from `SmallBranches.lean`, together with
 bridge-chart certificates for every odd `m >= 5`, implies the D7 handoff,
-torus, Cayley, and shared Cayley endpoints.
+torus, Cayley, and shared Cayley endpoints.  Its `BridgeOddLocalSkewTarget`
+records the lower-level alternative: provide the uniform local bridge and
+monodromy packages, then obtain the same odd-D7 endpoint.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
