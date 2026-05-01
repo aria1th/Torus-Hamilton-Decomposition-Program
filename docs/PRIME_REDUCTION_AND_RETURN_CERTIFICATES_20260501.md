@@ -191,7 +191,11 @@ proves the return map is one cycle.
 For the additive explanation route, `D7Odd/Handoff/Additive4Plus2.lean` now
 also makes the product-side endpoint explicit: a `ProductRootCertificate`
 transports through `A7(m) ~= A5(m) x A3(m)` to the D7 root-flat certificate,
-the D7 handoff Hamilton target, and the shared layered full-step lift.
+the D7 handoff Hamilton target, and the shared layered full-step lift.  The
+same file also exposes the local proof hooks for such a certificate: row Latin
+from a state-dependent direction permutation, layer bijectivity from
+componentwise skew-product branches, and return single-cycle from the shared
+base-orbit monodromy criterion.
 `D7Odd/Handoff/Additive4Plus2Endpoints.lean` then carries the same certificate
 through the D7 torus/Cayley wrappers and into the shared Cayley endpoint.
 

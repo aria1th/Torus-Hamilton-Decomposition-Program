@@ -296,7 +296,11 @@ Implementation progress after this goal update:
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
   certificate to the D7 root-flat, D7 handoff Hamilton, and shared layered-lift
-  targets.
+  targets.  Its `ProductRootSchedule` namespace also has the local bridge
+  entrypoints needed by a future all-zero-set proof: raw direction plus
+  state-dependent `kappa` implies row Latin, componentwise skew-product layers
+  imply layer bijectivity, and color returns identified with skew products can
+  use the shared monodromy criterion.
 - `D7Odd/Handoff/Additive4Plus2Endpoints.lean` carries that product-side
   certificate through the existing D7 torus/Cayley wrappers, including the
   shared Cayley endpoint used by `RoundComposite`.
@@ -338,8 +342,9 @@ Current status against the revised goal:
   `D7Odd/Handoff/Additive4Plus2Endpoints.lean`; the all-odd `m >= 5` product
   certificate is still open.
 - Local bridge and monodromy lemmas: available abstractly in
-  `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`; they still need to
-  be instantiated with the all-zero-set D5 rows and D3 fiber compiler.
+  `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`, and exposed at the
+  D7 product-schedule level in `D7Odd/Handoff/Additive4Plus2.lean`; they still
+  need to be instantiated with the all-zero-set D5 rows and D3 fiber compiler.
 - D5 even: separate seam-orbit track remains open.  `D5Odd/Even.lean` proves
   that a seam orbit certificate implies the model, torus, and Cayley endpoints,
   but the actual orbit certificate is not constructed.
@@ -361,8 +366,8 @@ are closed and which remain open.
 | Raise composite theorem to concrete graph theorem | `RoundComposite.lean` has `standard_cayley_pointwise_composite_expansion` and `standard_torus_pointwise_composite_expansion`; `RoundComposite/ConcreteEndpoints.lean` has direct odd `35`, `49`, and 5/7-list Cayley/Torus endpoints | Closed for current shared standard Cayley/Torus target |
 | Extract common root-flat return criterion | `Shared/RootFlat.lean` has `rootFlatLayeredDecomposition_of_schedule` from row Latin, layer bijective, and return single-cycle | Closed at shared layered full-step level |
 | Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence and product-certificate adapters; `Additive4Plus2Endpoints.lean` lifts product certificates to D7 torus/Cayley/shared Cayley | Interface closed; uniform all-odd certificate open |
-| Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective` and direction reindexing lemmas | Abstract lemma closed; D5 all-zero-set/D3 instantiation open |
-| Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy` | Abstract sufficient criterion closed; product-return instantiation open |
+| Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation` and `layerBijective_of_skewProductComponents` expose it to the D7 product schedule | Abstract and product-schedule criteria closed; D5 all-zero-set/D3 instantiation open |
+| Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy`; `ProductRootSchedule.returnSingleCycle_of_skewReturn` and `returnsSingleCycle_of_skewReturns` expose it to product certificates | Abstract and product-schedule criteria closed; product-return instantiation open |
 | Keep D5 even separate | `D5Odd/Even.lean` exposes seam-orbit certificate endpoints; `scripts/d5_even_seam_sat_search.py` is currently a negative/debugging smoke check | Actual orbit certificate open |
 | Keep D7 even separate | `D7Odd/Even.lean` exposes `RootFlatSchedule` certificate endpoints and shared layered adapters | Actual even schedule certificate open |
 | Defer prime-p abstraction | `D7Odd/Handoff/PrimeRoot*.lean`, `PrimeCanonical*.lean`, and this note keep it as a regression/future interface | Deferred by design |
