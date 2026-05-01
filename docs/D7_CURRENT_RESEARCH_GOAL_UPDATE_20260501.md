@@ -370,7 +370,9 @@ Implementation progress after this goal update:
   cardinality of `A5(m)`, so the remaining base-side statement has the expected
   D5 rank shape.  The `BridgeConcreteFullRankPackage` also replaces the fiber
   monodromy single-cycle witness with a bijective fiber rank into `ZMod (m^2)`
-  stepped by the section return.
+  stepped by the section return.  The concrete full-rank target now also has
+  direct wrappers to the odd-D7 torus and Cayley endpoints, not only to the
+  shared Cayley target.
 - `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
   certificate track; its targets now also expose the shared layered full-step
   lift before the existing torus/Cayley wrappers.

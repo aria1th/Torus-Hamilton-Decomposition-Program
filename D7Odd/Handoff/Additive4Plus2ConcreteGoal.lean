@@ -719,6 +719,36 @@ def bridge_odd_certificate_target_of_concrete_full_rank_target
   bridge_odd_certificate_target_of_concrete_pow_rank_target
     (bridge_odd_concrete_pow_rank_target_of_concrete_full_rank_target hRank)
 
+theorem torus_from_bridge_odd_concrete_full_rank_target
+    (hRank : BridgeOddConcreteFullRankTarget)
+    {m : Nat} [NeZero m] (hm3 : 3 ≤ m) (hodd : Odd m) :
+    D7Odd.TorusHamiltonDecompositionD7 m :=
+  torus_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_full_rank_target hRank) hm3 hodd
+
+theorem cayley_from_bridge_odd_concrete_full_rank_target
+    (hRank : BridgeOddConcreteFullRankTarget)
+    {m : Nat} [NeZero m] (hm3 : 3 ≤ m) (hodd : Odd m) :
+    D7Odd.CayleyHamiltonDecompositionD7 m :=
+  cayley_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_full_rank_target hRank) hm3 hodd
+
+theorem torus_uniform_from_bridge_odd_concrete_full_rank_target
+    (hRank : BridgeOddConcreteFullRankTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.TorusHamiltonDecompositionD7 m := by
+  intro m hm3 hodd
+  haveI : NeZero m := ⟨by omega⟩
+  exact torus_from_bridge_odd_concrete_full_rank_target hRank hm3 hodd
+
+theorem cayley_uniform_from_bridge_odd_concrete_full_rank_target
+    (hRank : BridgeOddConcreteFullRankTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.CayleyHamiltonDecompositionD7 m := by
+  intro m hm3 hodd
+  haveI : NeZero m := ⟨by omega⟩
+  exact cayley_from_bridge_odd_concrete_full_rank_target hRank hm3 hodd
+
 theorem shared_cayley_uniform_from_bridge_odd_concrete_skew_target
     (hConcrete : BridgeOddConcreteSkewTarget) :
     ∀ {m : Nat}, 3 ≤ m → Odd m →
