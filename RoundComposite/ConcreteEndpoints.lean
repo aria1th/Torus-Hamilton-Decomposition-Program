@@ -15,6 +15,14 @@ theorem standard_cayley_odd_uniform_7 :
   intro m hm hodd
   exact D7Odd.D7_odd_shared_cayley_uniform hm hodd
 
+theorem standard_torus_odd_uniform_5 :
+    OddUniformSolved StandardTorusSolved 5 := by
+  exact standard_cayley_odd_uniform_5
+
+theorem standard_torus_odd_uniform_7 :
+    OddUniformSolved StandardTorusSolved 7 := by
+  exact standard_cayley_odd_uniform_7
+
 theorem standard_cayley_odd_uniform_35_of_pointwise
     (hExp : OddPointwiseCompositeExpansion StandardCayleySolved) :
     OddUniformSolved StandardCayleySolved (5 * 7) := by
@@ -44,6 +52,32 @@ theorem standard_cayley_odd_uniform_49_of_product :
     (by decide) (by decide)
     standard_cayley_odd_uniform_7
     standard_cayley_odd_uniform_7
+
+theorem standard_torus_odd_uniform_35_of_pointwise
+    (hExp : OddPointwiseCompositeExpansion StandardTorusSolved) :
+    OddUniformSolved StandardTorusSolved (5 * 7) := by
+  exact odd_uniform_mul_of_pointwise StandardTorusSolved hExp
+    (by decide) (by decide)
+    standard_torus_odd_uniform_5
+    standard_torus_odd_uniform_7
+
+theorem standard_torus_odd_uniform_49_of_pointwise
+    (hExp : OddPointwiseCompositeExpansion StandardTorusSolved) :
+    OddUniformSolved StandardTorusSolved (7 * 7) := by
+  exact odd_uniform_mul_of_pointwise StandardTorusSolved hExp
+    (by decide) (by decide)
+    standard_torus_odd_uniform_7
+    standard_torus_odd_uniform_7
+
+theorem standard_torus_odd_uniform_35_of_product :
+    OddUniformSolved StandardTorusSolved (5 * 7) := by
+  exact standard_torus_odd_uniform_35_of_pointwise
+    standard_torus_odd_pointwise_composite_expansion
+
+theorem standard_torus_odd_uniform_49_of_product :
+    OddUniformSolved StandardTorusSolved (7 * 7) := by
+  exact standard_torus_odd_uniform_49_of_pointwise
+    standard_torus_odd_pointwise_composite_expansion
 
 theorem standard_cayley_odd_uniform_35_of_left_coordinatized_5
     (hCoord5 : OddUniformSolved StandardCoordinatizedCayleySolved 5) :
@@ -93,6 +127,23 @@ theorem standard_cayley_odd_uniform_product_of_5_7_list_of_product
           rcases hmem e he with rfl | rfl
           · exact standard_cayley_odd_uniform_5
           · exact standard_cayley_odd_uniform_7)
+
+theorem standard_torus_odd_uniform_product_of_5_7_list_of_product
+    {ds : List Nat} (hne : ds ≠ [])
+    (hmem : ∀ d, d ∈ ds → d = 5 ∨ d = 7) :
+    OddUniformSolved StandardTorusSolved ds.prod := by
+  cases ds with
+  | nil =>
+      exact (hne rfl).elim
+  | cons d ds =>
+      exact odd_uniform_prod_cons_of_pointwise StandardTorusSolved
+        standard_torus_odd_pointwise_composite_expansion
+        (fun e he => by
+          rcases hmem e he with rfl | rfl <;> decide)
+        (fun e he => by
+          rcases hmem e he with rfl | rfl
+          · exact standard_torus_odd_uniform_5
+          · exact standard_torus_odd_uniform_7)
 
 end Concrete
 end RoundComposite

@@ -228,11 +228,12 @@ cycle structure of the even seam construction.
 
 ### Concrete Composite Expansion
 
-This interface gap is now closed for the standard Cayley target used in this
-repo.  The product construction still factors internally through explicit
+This interface gap is now closed for the standard Cayley/Torus target used in
+this repo.  The product construction still factors internally through explicit
 left-factor cycle coordinates, but those coordinates are now extracted from any
-nontrivial finite single-cycle Cayley endpoint, giving a graph-level
-`StandardCayleySolved` pointwise composite expansion.
+nontrivial finite single-cycle Cayley endpoint, giving graph-level
+`StandardCayleySolved` and `StandardTorusSolved` pointwise composite
+expansions.
 
 ## Integrated Research Narrative
 
@@ -309,12 +310,14 @@ Implementation progress after this goal update:
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without
   pretending that the even branches are solved.  It also proves the concrete
-  `standard_cayley_pointwise_composite_expansion` and its odd-modulus variant.
+  `standard_cayley_pointwise_composite_expansion`,
+  `standard_torus_pointwise_composite_expansion`, and their odd-modulus
+  variants.
 - `RoundComposite/ConcreteEndpoints.lean` now performs that connection for the
-  formalized D5 and D7 odd Cayley endpoints: the older conditional endpoints
+  formalized D5 and D7 odd endpoints: the older conditional endpoints
   under an assumed pointwise expansion remain, but the concrete product theorem
-  now gives direct shared Cayley composite endpoints for `35`, `49`, and any
-  nonempty product of factors each equal to `5` or `7`.
+  now gives direct shared Cayley/Torus composite endpoints for `35`, `49`, and
+  any nonempty product of factors each equal to `5` or `7`.
 
 ## Artifact Checklist
 
@@ -322,10 +325,10 @@ Current status against the revised goal:
 
 - D7 odd regression endpoint: closed in `D7Odd/Torus.lean` and
   `D7Odd/Cayley.lean`; regression build target is `lake build D7Odd`.
-- Concrete composite Cayley theorem: closed for the shared standard Cayley
-  target by `standard_cayley_pointwise_composite_expansion` in
-  `RoundComposite.lean`, with D5/D7 odd concrete endpoints in
-  `RoundComposite/ConcreteEndpoints.lean`.
+- Concrete composite Cayley/Torus theorem: closed for the shared standard
+  targets by `standard_cayley_pointwise_composite_expansion` and
+  `standard_torus_pointwise_composite_expansion` in `RoundComposite.lean`, with
+  D5/D7 odd concrete endpoints in `RoundComposite/ConcreteEndpoints.lean`.
 - Shared root-flat return criterion: closed at the layered full-step level in
   `Shared/RootFlat.lean`; D7-specific adapters are in
   `D7Odd/Handoff/ReturnCriterion.lean` and `D7Odd/Torus.lean`.

@@ -54,10 +54,11 @@ when `m` is odd and `m >= 3`.
   functions or existing single-cycle Cayley decompositions.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and the graph-level standard Cayley product expansion.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and graph-level standard Cayley/Torus product expansions.
 - `RoundComposite/ConcreteEndpoints.lean`: conditional graph-level composite
-  endpoints obtained from the formalized D5/D7 odd Cayley theorems, including
-  direct product endpoints for 35, 49, and nonempty products of 5/7 factors.
+  endpoints obtained from the formalized D5/D7 odd theorems, including direct
+  Cayley/Torus product endpoints for 35, 49, and nonempty products of 5/7
+  factors.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates.

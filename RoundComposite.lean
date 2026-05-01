@@ -342,6 +342,30 @@ theorem standard_cayley_odd_pointwise_composite_expansion :
   exact odd_pointwise_of_pointwise StandardCayleySolved
     standard_cayley_pointwise_composite_expansion
 
+theorem standard_torus_product_of_left_coordinatized
+    {a b m : Nat} (ha : 0 < a) (hb : 0 < b) (hm : 3 ≤ m)
+    (hA : StandardCoordinatizedCayleySolved a m)
+    (hB : StandardTorusSolved b (m ^ a)) :
+    StandardTorusSolved (a * b) m :=
+  standard_cayley_product_of_left_coordinatized ha hb hm hA hB
+
+theorem standard_torus_product_of_standard_torus
+    {a b m : Nat} (ha : 0 < a) (hb : 0 < b) (hm : 3 ≤ m)
+    (hA : StandardTorusSolved a m)
+    (hB : StandardTorusSolved b (m ^ a)) :
+    StandardTorusSolved (a * b) m :=
+  standard_cayley_product_of_standard_cayley ha hb hm hA hB
+
+theorem standard_torus_pointwise_composite_expansion :
+    PointwiseCompositeExpansion StandardTorusSolved := by
+  intro a b m ha hb hm hA hB
+  exact standard_torus_product_of_standard_torus ha hb hm hA hB
+
+theorem standard_torus_odd_pointwise_composite_expansion :
+    OddPointwiseCompositeExpansion StandardTorusSolved := by
+  exact odd_pointwise_of_pointwise StandardTorusSolved
+    standard_torus_pointwise_composite_expansion
+
 theorem odd_uniform_cayley_mul_of_left_coordinatized
     {a b : Nat} (ha : 0 < a) (hb : 0 < b)
     (hA : OddUniformSolved StandardCoordinatizedCayleySolved a)

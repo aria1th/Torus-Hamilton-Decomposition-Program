@@ -28,9 +28,9 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
 - `Shared/TorusCayley.lean` supplies the standard dimension-indexed
   torus/Cayley Hamilton-decomposition proposition, and `RoundComposite.lean`
   now exposes named standard torus/Cayley instantiations of the abstract
-  reduction.  The concrete graph-product construction now yields a standard
-  Cayley pointwise composite expansion, since cycle coordinates can be extracted
-  from any nontrivial finite single-cycle color endpoint.
+  reduction.  The concrete graph-product construction now yields standard
+  Cayley and Torus pointwise composite expansions, since cycle coordinates can
+  be extracted from any nontrivial finite single-cycle color endpoint.
 - The same shared file now identifies composite torus coordinates by the block
   equivalence `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and records
   how a standard basis direction lands in one block.  This is the concrete
@@ -49,9 +49,9 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   coordinatized endpoint, and packages an existing single-cycle Cayley
   decomposition as a coordinatized endpoint.
 - `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
-  Cayley endpoints to this shared proposition.  It still records the older
-  conditional pointwise-expansion endpoints, but the standard Cayley pointwise
-  product expansion is now formalized, so it also gives direct graph-level odd
+  endpoints to this shared proposition.  It still records the older conditional
+  pointwise-expansion endpoints, but the standard Cayley/Torus pointwise product
+  expansions are now formalized, so it also gives direct graph-level odd
   endpoints for `35`, `49`, and every nonempty product of factors each equal to
   `5` or `7`.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
