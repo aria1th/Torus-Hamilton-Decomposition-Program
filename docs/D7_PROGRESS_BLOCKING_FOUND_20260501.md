@@ -453,8 +453,10 @@ maps and return-time sums for those families, and package `m = 4` as a finite
 witness theorem.
 
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
-one-`Lambda_E` count/slot data, small-seam first-return traces, return-time
-sum, and the orbit target needed by the existing D5 even seam endpoint.
+one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam
+first-return traces, first-return minimality, and the return-time sum.  The
+orbit target needed by the existing D5 even seam endpoint is derived in Lean
+from the first-return counting lemma, rather than stored as an assumed field.
 
 ## Next Bundle Checklist
 

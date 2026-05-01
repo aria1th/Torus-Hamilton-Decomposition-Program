@@ -50,8 +50,10 @@ when `m` is odd and `m >= 3`.
   torus/Cayley wrappers.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `D5Odd/EvenRouteE.lean`: Lean-facing Route-E certificate interface for
-  D5 even one-`Lambda_E` count/slot data and small-seam traces, routing a
-  completed Route-E certificate through the existing D5 even seam endpoint.
+  D5 even one-`Lambda_E` count/slot data and small-seam traces.  It records
+  the nonzero seam of size `m-1` and derives the D5 even seam orbit target
+  from first-return equations, first-return minimality, seam single-cyclicity,
+  and the return-time sum before routing to the torus/Cayley endpoints.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
@@ -442,6 +444,9 @@ This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
 on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
 same output includes maximal translation blocks for the induced seam map,
 which are the finite traces for the next one-dimensional block-splice proof.
+The Lean target also includes `RouteENonopenSmallSeamCertificate`, specialized
+to `{a : ZMod m // a != 0}`, and proves that such a certificate gives the
+existing D5 even Hamilton, torus, and Cayley endpoints.
 
 The corresponding Lean target interface builds with:
 

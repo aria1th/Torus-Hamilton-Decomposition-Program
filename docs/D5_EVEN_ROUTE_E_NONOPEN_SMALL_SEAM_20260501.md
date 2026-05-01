@@ -74,9 +74,20 @@ The Lean-facing target for these traces is now:
 D5Odd/EvenRouteE.lean
 ```
 
-It defines `RouteECounts` and `RouteESmallSeamCertificate`, then routes any
-completed Route-E certificate through the existing `D5Odd.Even` seam endpoint
-to D5 Hamilton, torus, and Cayley decompositions.
+It defines `RouteECounts`, the nonzero parameter seam
+`RouteENonzeroSeam m = {a : ZMod m // a != 0}`, and proves that this seam has
+cardinality `m-1`.  The generic `RouteESmallSeamCertificate` now derives the
+needed root-return orbit target from:
+
+- an injective seam parametrization;
+- first-return equations and no-earlier-return witnesses;
+- a single cycle on the induced seam map;
+- the return-time sum `m^4`.
+
+The non-open wrapper `RouteENonopenSmallSeamCertificate` fixes the seam type to
+`RouteENonzeroSeam m` and then routes any completed Route-E certificate through
+the existing `D5Odd.Even` seam endpoint to D5 Hamilton, torus, and Cayley
+decompositions.
 
 The repo-side verification command used for this absorption was:
 
@@ -92,6 +103,8 @@ It reported:
 cases = 28
 range = 6..60
 all_ok = True
+seam_sizes_ok = True
+return_sums_ok = True
 ```
 
 The verifier now also emits proof-facing data for the induced seam map:
@@ -123,7 +136,9 @@ The remaining symbolic propositions are:
 2. for each residue family, prove the induced small-seam map on
    `a = 1,...,m-1` is one cycle;
 3. prove the return-time sum identity `sum tau = m^4` for each family;
-4. keep `m = 4` as a separate finite witness branch.
+4. provide the Lean first-return equations/minimality witnesses needed by
+   `RouteENonopenSmallSeamCertificate`;
+5. keep `m = 4` as a separate finite witness branch.
 
 This is closer to the final lane-map proof shape in the D3 even Route-E
 argument than to a high-dimensional SAT/chart certificate.
