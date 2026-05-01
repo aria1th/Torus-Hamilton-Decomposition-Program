@@ -235,7 +235,9 @@ route to the concrete all-zero-set bridge.  Its `BridgeConcreteSkewPackage`
 keeps the remaining assumptions exactly at the row/fiber-data, product-return,
 base-cover, and fiber-monodromy level; the local row-Latin and layer-bijective
 proofs are supplied automatically from the concrete D5, D3, and bridge-`kappa`
-lemmas.
+lemmas.  Its lower-level `BridgeConcreteReturnPackage` uses canonical folded
+base/fiber returns, so product-return equality is now a theorem rather than a
+separate witness.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

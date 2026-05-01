@@ -83,8 +83,190 @@ def BridgeConcreteSkewPackage.toCertificate
     BridgeProductRootCertificate m :=
   (pkg.toLocalSkewPackage hm).toCertificate
 
+def bridgeConcreteReturnFold {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) : ProductRoot m → ProductRoot m :=
+  fun bf => (List.range m).foldl
+    (fun x (t : Nat) =>
+      Shared.skewProductMap
+        (bridgeConcreteBaseStep row (t : ZMod m) c)
+        (bridgeConcreteFiberStep row fiberLayer perm (t : ZMod m) c) x)
+    bf
+
+def bridgeConcreteBaseReturn {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (c : Color) : D5Odd.ARoot5 m → D5Odd.ARoot5 m :=
+  fun base => (List.range m).foldl
+    (fun x (t : Nat) => bridgeConcreteBaseStep row (t : ZMod m) c x)
+    base
+
+def bridgeConcreteFiberReturn {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) :
+    D5Odd.ARoot5 m → ARoot3 m → ARoot3 m :=
+  fun base fiber =>
+    (bridgeConcreteReturnFold row fiberLayer perm c (base, fiber)).2
+
+theorem bridgeConcreteReturnFold_fst {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) (bf : ProductRoot m) :
+    (bridgeConcreteReturnFold row fiberLayer perm c bf).1 =
+      bridgeConcreteBaseReturn row c bf.1 := by
+  rcases bf with ⟨base, fiber⟩
+  unfold bridgeConcreteReturnFold bridgeConcreteBaseReturn
+  let ts := List.range m
+  change
+    (ts.foldl
+        (fun x (t : Nat) =>
+          Shared.skewProductMap
+            (bridgeConcreteBaseStep row (t : ZMod m) c)
+            (bridgeConcreteFiberStep row fiberLayer perm
+              (t : ZMod m) c) x)
+        (base, fiber)).1 =
+      ts.foldl
+        (fun x (t : Nat) => bridgeConcreteBaseStep row (t : ZMod m) c x)
+        base
+  clear_value ts
+  induction ts generalizing base fiber with
+  | nil =>
+      simp
+  | cons t ts ih =>
+      simpa [Shared.skewProductMap] using
+        ih (bridgeConcreteBaseStep row (t : ZMod m) c base)
+          (bridgeConcreteFiberStep row fiberLayer perm
+            (t : ZMod m) c base fiber)
+
+theorem bridgeConcreteReturnFold_eq_skewProductMap {m : Nat}
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) :
+    bridgeConcreteReturnFold row fiberLayer perm c =
+      Shared.skewProductMap
+        (bridgeConcreteBaseReturn row c)
+        (bridgeConcreteFiberReturn row fiberLayer perm c) := by
+  funext bf
+  exact Prod.ext
+    (bridgeConcreteReturnFold_fst row fiberLayer perm c bf)
+    rfl
+
+theorem bridgeConcreteSchedule_returnMap_eq_returnFold
+    {m : Nat} [NeZero m]
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) (bf : ProductRoot m) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).returnMap c bf =
+      bridgeConcreteReturnFold row fiberLayer perm c bf := by
+  unfold BridgeProductRootSchedule.returnMap bridgeConcreteReturnFold
+  let ts := List.range m
+  change
+    ts.foldl
+        (fun x (t : Nat) =>
+          (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).layerMap
+            (t : ZMod m) c x)
+        bf =
+      ts.foldl
+        (fun x (t : Nat) =>
+          Shared.skewProductMap
+            (bridgeConcreteBaseStep row (t : ZMod m) c)
+            (bridgeConcreteFiberStep row fiberLayer perm
+              (t : ZMod m) c) x)
+        bf
+  clear_value ts
+  induction ts generalizing bf with
+  | nil =>
+      simp
+  | cons t ts ih =>
+      rw [List.foldl_cons, List.foldl_cons]
+      rw [bridgeConcreteSchedule_layerMap_eq_skewProductMap
+        row fiberLayer perm (t : ZMod m) c]
+      exact ih _
+
+theorem bridgeConcreteSchedule_returnMap_eq_skewProductMap
+    {m : Nat} [NeZero m]
+    (row : Color → ZMod m → Direction)
+    (fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m)
+    (perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3)
+    (c : Color) (bf : ProductRoot m) :
+    (bridgeConcreteSchedule row (bridgeD3Phi fiberLayer perm)).returnMap c bf =
+      Shared.skewProductMap
+        (bridgeConcreteBaseReturn row c)
+        (bridgeConcreteFiberReturn row fiberLayer perm c) bf := by
+  rw [bridgeConcreteSchedule_returnMap_eq_returnFold row fiberLayer perm c bf]
+  exact congrFun
+    (bridgeConcreteReturnFold_eq_skewProductMap row fiberLayer perm c) bf
+
+structure BridgeConcreteReturnPackage (m : Nat) [NeZero m] where
+  row : Color → ZMod m → Direction
+  fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m
+  perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3
+  basePoint : Color → D5Odd.ARoot5 m
+  period : Color → Nat
+  hrow : ∀ t, Function.Bijective fun c : Color => row c t
+  hperm : ∀ t base, Function.Bijective (perm t base)
+  hbaseReturnBij : ∀ c,
+    Function.Bijective (bridgeConcreteBaseReturn row c)
+  hfiberReturnBij : ∀ c u,
+    Function.Bijective (bridgeConcreteFiberReturn row fiberLayer perm c u)
+  hreturnBase : ∀ c,
+    ((bridgeConcreteBaseReturn row c)^[period c]) (basePoint c) =
+      basePoint c
+  hbaseCover : ∀ c b, ∃ k : Nat,
+    k < period c ∧
+      ((bridgeConcreteBaseReturn row c)^[k]) (basePoint c) = b
+  hmonodromy : ∀ c,
+    IsSingleCycleMap
+      (Shared.sectionReturn
+        (Shared.skewProductMap
+          (bridgeConcreteBaseReturn row c)
+          (bridgeConcreteFiberReturn row fiberLayer perm c))
+        (basePoint c) (period c))
+
+def BridgeConcreteReturnPackage.toConcreteSkewPackage
+    {m : Nat} [NeZero m] (pkg : BridgeConcreteReturnPackage m) :
+    BridgeConcreteSkewPackage m where
+  row := pkg.row
+  fiberLayer := pkg.fiberLayer
+  perm := pkg.perm
+  baseReturn := bridgeConcreteBaseReturn pkg.row
+  fiberReturn := bridgeConcreteFiberReturn pkg.row pkg.fiberLayer pkg.perm
+  basePoint := pkg.basePoint
+  period := pkg.period
+  hrow := pkg.hrow
+  hperm := pkg.hperm
+  hReturn :=
+    bridgeConcreteSchedule_returnMap_eq_skewProductMap
+      pkg.row pkg.fiberLayer pkg.perm
+  hbaseReturnBij := pkg.hbaseReturnBij
+  hfiberReturnBij := pkg.hfiberReturnBij
+  hreturnBase := pkg.hreturnBase
+  hbaseCover := pkg.hbaseCover
+  hmonodromy := pkg.hmonodromy
+
+def BridgeConcreteReturnPackage.toLocalSkewPackage
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteReturnPackage m) :
+    BridgeLocalSkewPackage m :=
+  pkg.toConcreteSkewPackage.toLocalSkewPackage hm
+
+def BridgeConcreteReturnPackage.toCertificate
+    {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteReturnPackage m) :
+    BridgeProductRootCertificate m :=
+  pkg.toConcreteSkewPackage.toCertificate hm
+
 def BridgeOddConcreteSkewTarget : Type :=
   ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m → BridgeConcreteSkewPackage m
+
+def BridgeOddConcreteReturnTarget : Type :=
+  ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m → BridgeConcreteReturnPackage m
 
 def bridge_odd_local_skew_target_of_concrete_skew_target
     (hConcrete : BridgeOddConcreteSkewTarget) :
@@ -96,12 +278,30 @@ def bridge_odd_certificate_target_of_concrete_skew_target
     BridgeOddCertificateTarget :=
   fun hm hodd => (hConcrete hm hodd).toCertificate hm
 
+def bridge_odd_concrete_skew_target_of_concrete_return_target
+    (hReturn : BridgeOddConcreteReturnTarget) :
+    BridgeOddConcreteSkewTarget :=
+  fun hm hodd => (hReturn hm hodd).toConcreteSkewPackage
+
+def bridge_odd_certificate_target_of_concrete_return_target
+    (hReturn : BridgeOddConcreteReturnTarget) :
+    BridgeOddCertificateTarget :=
+  bridge_odd_certificate_target_of_concrete_skew_target
+    (bridge_odd_concrete_skew_target_of_concrete_return_target hReturn)
+
 theorem shared_cayley_uniform_from_bridge_odd_concrete_skew_target
     (hConcrete : BridgeOddConcreteSkewTarget) :
     ∀ {m : Nat}, 3 ≤ m → Odd m →
       Shared.CayleyHamiltonDecomposition 7 m :=
   shared_cayley_uniform_from_small3_and_bridge_odd_target
     (bridge_odd_certificate_target_of_concrete_skew_target hConcrete)
+
+theorem shared_cayley_uniform_from_bridge_odd_concrete_return_target
+    (hReturn : BridgeOddConcreteReturnTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      Shared.CayleyHamiltonDecomposition 7 m :=
+  shared_cayley_uniform_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_return_target hReturn)
 
 end Additive4Plus2
 end Handoff
