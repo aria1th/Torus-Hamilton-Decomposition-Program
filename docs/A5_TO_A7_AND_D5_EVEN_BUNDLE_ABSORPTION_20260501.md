@@ -223,6 +223,13 @@ Those missing residue classes explain why the Route-E track still needs either
 non-open-port count/slot families or explicit origin-excursion chart
 certificates, not just the `H`-cycle theorem.
 
+A broader one-`Lambda_E` count/slot scan restores positive witnesses in those
+missing cases.  It finds full one-cycle returns for `m = 6,8,16` outside the
+open-port normal form, and also finds additional hits for the already-positive
+moduli.  This sharpens the remaining task: extract symbolic residue-class
+count/drift families from the larger one-`Lambda_E` hit set, then prove the
+corresponding origin-excursion charts.
+
 The all-even proof gap is therefore concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;

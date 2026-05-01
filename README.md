@@ -374,6 +374,15 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --json-out /tmp/d5_even_routeE_open_port_full_scan.json
 ```
 
+To scan the larger one-`Lambda_E` count/slot family directly:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 6,8,10,12,14,16 \
+  --count-scan-limit 5 \
+  --json-out /tmp/d5_even_routeE_count_scan.json
+```
+
 ## Citation
 
 If you use this formalization, cite the repository using `CITATION.cff`.

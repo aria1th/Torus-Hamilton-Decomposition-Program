@@ -360,6 +360,13 @@ with a concrete Route-E program.
   `m = 6,8,16`.  Thus the all-even Route-E family cannot be closed merely by
   the easy open-port section condition; some residue classes need a
   non-open-port count/slot choice or a stronger origin-excursion chart.
+- A larger one-`Lambda_E` count/slot scan now confirms that the missing
+  open-port cases are not failures of the one-`Lambda_E` ansatz itself.  The
+  scan finds full one-cycle hits for `m = 6,8,10,12,14,16,18,20`; for example,
+  `m = 6` starts with `(slot, counts) = (0, (0,0,1,3,1))`, `m = 8` with
+  `(0, (2,0,0,3,2))`, and `m = 16` with `(0, (0,0,8,3,4))`.  These hits give
+  a finite-data target for extracting residue-class count/drift families
+  beyond the open-port normal form.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove origin-excursion affine chart
@@ -419,6 +426,10 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --full-scan-moduli 6,8,10,12,14,16,18,20 \
   --full-scan-limit 5 \
   --json-out /tmp/d5_even_routeE_open_port_full_scan.json
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 6,8,10,12,14,16 \
+  --count-scan-limit 5 \
+  --json-out /tmp/d5_even_routeE_count_scan_6_16.json
 python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \

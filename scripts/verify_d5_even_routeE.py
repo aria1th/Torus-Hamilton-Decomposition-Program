@@ -314,15 +314,21 @@ def verify_core(moduli: Iterable[int]) -> List[dict]:
     return [verify_core_m(m) for m in moduli]
 
 
-def one_e_return_step(
-    m: int, counts: Tuple[int, int, int, int, int], w: State
+def one_e_return_step_with_slot(
+    m: int, slot: int, counts: Tuple[int, int, int, int, int], w: State
 ) -> State:
-    p = lam(PERT, shifted_zero_mask(w), 0)
+    p = lam(PERT, shifted_zero_mask(w), slot)
     y = list(w)
     for i, count in enumerate(counts):
         y[i] = (y[i] + count) % m
     y[p] = (y[p] + 1) % m
     return tuple(y)  # type: ignore[return-value]
+
+
+def one_e_return_step(
+    m: int, counts: Tuple[int, int, int, int, int], w: State
+) -> State:
+    return one_e_return_step_with_slot(m, 0, counts, w)
 
 
 def expected_section_h(m: int, a_count: int, b_count: int, a: int, b: int):
@@ -427,6 +433,7 @@ def scan_open_port_section_cases(moduli: Iterable[int], limit: int) -> List[dict
 
 def one_e_single_cycle(
     m: int,
+    slot: int,
     counts: Tuple[int, int, int, int, int],
     states: List[State],
     idx: Dict[State, int],
@@ -437,8 +444,44 @@ def one_e_single_cycle(
         if seen[state]:
             return False
         seen[state] = 1
-        state = idx[one_e_return_step(m, counts, states[state])]
+        state = idx[one_e_return_step_with_slot(m, slot, counts, states[state])]
     return state == 0
+
+
+def weak_compositions(total: int, parts: int):
+    if parts == 1:
+        yield (total,)
+        return
+    for value in range(total + 1):
+        for tail in weak_compositions(total - value, parts - 1):
+            yield (value,) + tail
+
+
+def scan_one_e_full_count_cases(moduli: Iterable[int], limit: int) -> List[dict]:
+    results = []
+    for m in moduli:
+        states, idx = states_idx(m)
+        hits = []
+        checked = 0
+        for slot in range(5):
+            for counts in weak_compositions(m - 1, 5):
+                checked += 1
+                if one_e_single_cycle(m, slot, counts, states, idx):
+                    hits.append({"slot": slot, "counts": counts})
+                    if len(hits) >= limit:
+                        break
+            if len(hits) >= limit:
+                break
+        results.append(
+            {
+                "m": m,
+                "checked": checked,
+                "hit_count": len(hits),
+                "first_hits": hits,
+                "ok": bool(hits),
+            }
+        )
+    return results
 
 
 def scan_open_port_full_cases(moduli: Iterable[int], limit: int) -> List[dict]:
@@ -463,7 +506,7 @@ def scan_open_port_full_cases(moduli: Iterable[int], limit: int) -> List[dict]:
                 section_hits += 1
                 full_checked += 1
                 counts = (0, a_count, b_count, c_count, 0)
-                if one_e_single_cycle(m, counts, states, idx):
+                if one_e_single_cycle(m, 0, counts, states, idx):
                     hit = dict(section)
                     hit["counts"] = counts
                     hit["full_single"] = True
@@ -503,6 +546,11 @@ def main() -> None:
         help="comma-separated even moduli for open-port section triples that are full cycles",
     )
     parser.add_argument("--full-scan-limit", type=int, default=5)
+    parser.add_argument(
+        "--count-scan-moduli",
+        help="comma-separated even moduli for full one-Lambda_E count/slot scans",
+    )
+    parser.add_argument("--count-scan-limit", type=int, default=10)
     parser.add_argument("--json-out")
     args = parser.parse_args()
 
@@ -520,6 +568,10 @@ def main() -> None:
     if args.full_scan_moduli:
         output["open_port_full_scan"] = scan_open_port_full_cases(
             parse_moduli(args.full_scan_moduli), args.full_scan_limit
+        )
+    if args.count_scan_moduli:
+        output["one_e_full_count_scan"] = scan_one_e_full_count_cases(
+            parse_moduli(args.count_scan_moduli), args.count_scan_limit
         )
 
     text = json.dumps(output, indent=2)
