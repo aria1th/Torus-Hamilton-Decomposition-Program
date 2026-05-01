@@ -354,6 +354,12 @@ with a concrete Route-E program.
   cycle, and the only exception point is `(m-1,2)`.  This does not prove the
   full return is primitive; it isolates the remaining obstruction in the
   origin-excursion/full-return chart.
+- The same verifier now has an open-port full-cycle scan.  Through
+  `m = 6,8,...,20`, the section-passing open-port triples include full
+  one-cycle returns at `m = 10,12,14,18,20`, but no open-port full hit at
+  `m = 6,8,16`.  Thus the all-even Route-E family cannot be closed merely by
+  the easy open-port section condition; some residue classes need a
+  non-open-port count/slot choice or a stronger origin-excursion chart.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove origin-excursion affine chart
@@ -409,6 +415,10 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --section-scan-moduli 6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60 \
   --section-scan-limit 1 \
   --json-out /tmp/d5_even_routeE_section_scan_6_60.json
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --full-scan-moduli 6,8,10,12,14,16,18,20 \
+  --full-scan-limit 5 \
+  --json-out /tmp/d5_even_routeE_open_port_full_scan.json
 python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \

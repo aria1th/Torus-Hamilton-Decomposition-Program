@@ -216,6 +216,13 @@ point `(m-1,2)`.  This supports the current split: the open-port section
 problem is easy, while the all-even proof still needs the origin-excursion
 affine chart that returns through the exceptional point correctly.
 
+A later open-port full-cycle scan separates this further.  Among section
+passing open-port triples, full one-cycle returns are found at
+`m = 10,12,14,18,20`, but no open-port full hit is found at `m = 6,8,16`.
+Those missing residue classes explain why the Route-E track still needs either
+non-open-port count/slot families or explicit origin-excursion chart
+certificates, not just the `H`-cycle theorem.
+
 The all-even proof gap is therefore concrete:
 
 - find residue-class affine count/drift families covering every even `m >= 6`;

@@ -425,6 +425,66 @@ def scan_open_port_section_cases(moduli: Iterable[int], limit: int) -> List[dict
     return results
 
 
+def one_e_single_cycle(
+    m: int,
+    counts: Tuple[int, int, int, int, int],
+    states: List[State],
+    idx: Dict[State, int],
+) -> bool:
+    seen = bytearray(len(states))
+    state = 0
+    for _ in range(len(states)):
+        if seen[state]:
+            return False
+        seen[state] = 1
+        state = idx[one_e_return_step(m, counts, states[state])]
+    return state == 0
+
+
+def scan_open_port_full_cases(moduli: Iterable[int], limit: int) -> List[dict]:
+    results = []
+    for m in moduli:
+        states, idx = states_idx(m)
+        hits = []
+        section_hits = 0
+        full_checked = 0
+        for c_count in range(1, m):
+            if gcd(c_count, m) != 1:
+                continue
+            for a_count in range(m - c_count):
+                b_count = m - 1 - a_count - c_count
+                section = check_section_case(m, a_count, b_count, c_count)
+                if not (
+                    section["C_unit"]
+                    and section["section_formula_ok"]
+                    and section["H_single"]
+                ):
+                    continue
+                section_hits += 1
+                full_checked += 1
+                counts = (0, a_count, b_count, c_count, 0)
+                if one_e_single_cycle(m, counts, states, idx):
+                    hit = dict(section)
+                    hit["counts"] = counts
+                    hit["full_single"] = True
+                    hits.append(hit)
+                    if len(hits) >= limit:
+                        break
+            if len(hits) >= limit:
+                break
+        results.append(
+            {
+                "m": m,
+                "section_hits": section_hits,
+                "full_checked": full_checked,
+                "full_hit_count": len(hits),
+                "first_full_hits": hits,
+                "ok": bool(hits),
+            }
+        )
+    return results
+
+
 def parse_moduli(text: str) -> List[int]:
     return [int(part) for part in text.split(",") if part.strip()]
 
@@ -438,6 +498,11 @@ def main() -> None:
         help="comma-separated even moduli for open-port section triple search",
     )
     parser.add_argument("--section-scan-limit", type=int, default=3)
+    parser.add_argument(
+        "--full-scan-moduli",
+        help="comma-separated even moduli for open-port section triples that are full cycles",
+    )
+    parser.add_argument("--full-scan-limit", type=int, default=5)
     parser.add_argument("--json-out")
     args = parser.parse_args()
 
@@ -451,6 +516,10 @@ def main() -> None:
     if args.section_scan_moduli:
         output["section_scan"] = scan_open_port_section_cases(
             parse_moduli(args.section_scan_moduli), args.section_scan_limit
+        )
+    if args.full_scan_moduli:
+        output["open_port_full_scan"] = scan_open_port_full_cases(
+            parse_moduli(args.full_scan_moduli), args.full_scan_limit
         )
 
     text = json.dumps(output, indent=2)

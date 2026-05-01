@@ -364,6 +364,16 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --json-out /tmp/d5_even_routeE_section_scan.json
 ```
 
+To distinguish section-only hits from full one-`Lambda_E` cycles in the
+open-port subfamily, add the full scan:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --full-scan-moduli 6,8,10,12,14,16,18,20 \
+  --full-scan-limit 5 \
+  --json-out /tmp/d5_even_routeE_open_port_full_scan.json
+```
+
 ## Citation
 
 If you use this formalization, cite the repository using `CITATION.cff`.
