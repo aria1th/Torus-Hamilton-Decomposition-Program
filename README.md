@@ -102,6 +102,18 @@ Optional `4+2` additive bridge audit script, using
 python3 scripts/verify_4plus2_allN_bridge_cert.py
 ```
 
+Expected output:
+
+```text
+verified m=5 product_states=15625 rows=7 return_cycles=single
+verified m=7 product_states=117649 rows=7 return_cycles=single
+verified m=9 product_states=531441 rows=7 return_cycles=single
+```
+
+The D5 even SAT search requires `python-sat`; it is a witness/debugging tool
+for the seam target, not a Lean proof artifact.  The current seam encoding
+returns `unsat` for the small `m=2` smoke check.
+
 ## Citation
 
 If you use this formalization, cite the repository using `CITATION.cff`.
