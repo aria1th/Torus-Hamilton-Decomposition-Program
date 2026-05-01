@@ -14,6 +14,23 @@ missing arithmetic proof is packaged as `TargetASeamQuotientArithmetic`.
 
 namespace TargetA
 
+def Reaches {α : Type*} (f : α → α) (x y : α) : Prop :=
+  ∃ n, f^[n] x = y
+
+theorem Reaches.refl {α : Type*} {f : α → α} (x : α) :
+    Reaches f x x :=
+  ⟨0, by simp⟩
+
+theorem Reaches.trans {α : Type*} {f : α → α} {x y z : α}
+    (hxy : Reaches f x y) (hyz : Reaches f y z) :
+    Reaches f x z := by
+  rcases hxy with ⟨m, hm⟩
+  rcases hyz with ⟨n, hn⟩
+  refine ⟨n + m, ?_⟩
+  rw [Function.iterate_add_apply]
+  rw [hm]
+  exact hn
+
 def phiNat (h x : Nat) : Nat :=
   if x < 3 then
     (x + h - 3) % h
@@ -234,6 +251,11 @@ theorem phiInv_reaches_internal_target {h : Nat} [NeZero h] {x y : Nat}
   have hy_eq : y = x + 5 * n := by omega
   subst y
   exact phiInv_iterate_internal_val (h := h) (x := x) (n := n) hy
+
+theorem phiInv_reaches_internal_target_reaches {h : Nat} [NeZero h] {x y : Nat}
+    (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5)) (hy : y < h) :
+    Reaches (phiInv h) (⟨x, by omega⟩ : Fin h) (⟨y, hy⟩ : Fin h) :=
+  phiInv_reaches_internal_target hxy hmod hy
 
 theorem phiInv_reaches_boundary_jump_val {h : Nat} [NeZero h] {x y : Nat}
     (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5))
@@ -466,6 +488,12 @@ theorem phiInv_reaches_next_low {h : Nat} [NeZero h] (hh : 6 ≤ h)
       hb hbmod with ⟨n, hn⟩
   refine ⟨n, ?_⟩
   simpa using hn
+
+theorem phiInv_reaches_next_low_reaches {h : Nat} [NeZero h] (hh : 6 ≤ h)
+    {x b : Nat} (hx : x < h) (hb : b < 5)
+    (hbmod : (b : ZMod 5) = (x : ZMod 5) + residueShift h) :
+    Reaches (phiInv h) (⟨x, hx⟩ : Fin h) (⟨b, by omega⟩ : Fin h) :=
+  phiInv_reaches_next_low hh hx hb hbmod
 
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by

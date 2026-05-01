@@ -52,7 +52,8 @@ when `m` is odd and `m >= 3`.
   the boundary-jump residue lemma between lanes and an exact low-representative
   boundary landing lemma.  The lane-top formula `laneTop` and
   `phiInv_reaches_next_low` lift one residue edge to an actual `phiInv` orbit
-  segment.
+  segment.  A local `Reaches` relation with transitivity is available for the
+  final orbit-stitching composition.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

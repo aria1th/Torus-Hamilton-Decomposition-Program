@@ -179,7 +179,9 @@ representative of that next lane, using injectivity of `Nat -> ZMod 5` on
 `0..4`.  The lane-top formula is now explicit as `laneTop`, and
 `phiInv_reaches_next_low` packages one full residue-edge lift: from any point,
 move to the top of its lane and land at the low representative of the next
-residue.  The remaining stitching is an induction over the residue-cycle path.
+residue.  The file now also has a local `Reaches` relation and transitivity
+lemma, so the remaining stitching is an induction over the residue-cycle path
+using `Reaches.trans`.
 
 ## Updated Target-A Interpretation
 
