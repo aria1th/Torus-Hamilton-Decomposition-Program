@@ -235,6 +235,18 @@ theorem phiInv_reaches_internal_target {h : Nat} [NeZero h] {x y : Nat}
   subst y
   exact phiInv_iterate_internal_val (h := h) (x := x) (n := n) hy
 
+theorem phiInv_reaches_boundary_jump_val {h : Nat} [NeZero h] {x y : Nat}
+    (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5))
+    (hy : y < h) :
+    ∃ n, (((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h)).val =
+      phiInvNat h y := by
+  rcases phiInv_reaches_internal_target (h := h) (x := x) (y := y)
+      hxy hmod hy with ⟨n, hn⟩
+  refine ⟨n + 1, ?_⟩
+  rw [Function.iterate_succ_apply']
+  rw [hn]
+  rfl
+
 theorem phiInvNat_top_five {h : Nat} (hh : 6 ≤ h) :
     phiInvNat h (h - 5) = 3 := by
   unfold phiInvNat
@@ -340,6 +352,46 @@ theorem phiInvNat_mod_five {h x : Nat} (hh : 6 ≤ h) (hx : x < h) :
     exact phiInvNat_internal_mod_five hlt
   · rw [if_neg hlt]
     exact phiInvNat_top_mod_five hh hx hlt
+
+theorem phiInvNat_boundary_lt_five {h x : Nat}
+    (hh : 6 ≤ h) (hx : x < h) (hnot : ¬ x + 5 < h) :
+    phiInvNat h x < 5 := by
+  by_cases h5 : x + 5 = h
+  · have hxval : x = h - 5 := by omega
+    rw [hxval, phiInvNat_top_five hh]
+    omega
+  · by_cases h4 : x + 4 = h
+    · have hxval : x = h - 4 := by omega
+      rw [hxval, phiInvNat_top_four hh]
+      omega
+    · by_cases h3 : x + 3 = h
+      · have hxval : x = h - 3 := by omega
+        rw [hxval, phiInvNat_top_three hh]
+        omega
+      · by_cases h2 : x + 2 = h
+        · have hxval : x = h - 2 := by omega
+          rw [hxval, phiInvNat_top_two hh]
+          omega
+        · have hxval : x = h - 1 := by omega
+          rw [hxval, phiInvNat_top_one hh]
+          omega
+
+theorem phiInvNat_boundary_residue {h x : Nat}
+    (hh : 6 ≤ h) (hx : x < h) (hboundary : ¬ x + 5 < h) :
+    ((phiInvNat h x : Nat) : ZMod 5) = (x : ZMod 5) + residueShift h :=
+  phiInvNat_top_mod_five hh hx hboundary
+
+theorem phiInv_reaches_boundary_jump_residue {h : Nat} [NeZero h] {x y : Nat}
+    (hh : 6 ≤ h) (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5))
+    (hy : y < h) (hboundary : ¬ y + 5 < h) :
+    ∃ n, (((((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h)).val : Nat) : ZMod 5) =
+      (x : ZMod 5) + residueShift h := by
+  rcases phiInv_reaches_boundary_jump_val (h := h) (x := x) (y := y)
+      hxy hmod hy with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  rw [hn]
+  rw [phiInvNat_boundary_residue hh hy hboundary]
+  rw [hmod]
 
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by

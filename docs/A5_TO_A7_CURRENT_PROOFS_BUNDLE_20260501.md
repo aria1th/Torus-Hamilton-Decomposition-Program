@@ -171,7 +171,9 @@ gap is therefore the good-class lift from this residue cycle and the internal
 partly closed: `phiInv_iterate_internal_val` proves that before the top
 boundary, `n` inverse steps send `x` to `x+5n`, and
 `phiInv_reaches_internal_target` packages reachability inside one residue
-lane.
+lane.  The boundary jump is also isolated:
+`phiInv_reaches_boundary_jump_residue` proves that after reaching a lane's
+top boundary, the next inverse step lands in residue `x + (3-h)`.
 
 ## Updated Target-A Interpretation
 

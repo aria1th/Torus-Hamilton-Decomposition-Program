@@ -318,7 +318,10 @@ single cycle on `ZMod 5`.  What remains is the good-class lift from this
 residue cycle and the internal `+5` lanes to full inverse orbit transitivity.
 The internal lane traversal is now formalized by
 `phiInv_iterate_internal_val` and `phiInv_reaches_internal_target`; the
-remaining step is the boundary-jump stitching between lanes.
+boundary jump is isolated by `phiInv_reaches_boundary_jump_residue`, which
+moves from a lane top to residue `x + (3-h)`.  The remaining step is to
+compose these lane pieces along the residue cycle into full orbit
+transitivity.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
