@@ -138,6 +138,34 @@ def cover_json_cases(
     return cases
 
 
+def hit_cert_filename(source: dict, hit_index: int) -> str:
+    kind = source.get("kind", "case")
+    m = source.get("m", "unknown")
+    solution_index = source.get("solution_index")
+    suffix = f"_solution{solution_index}" if solution_index is not None else ""
+    return f"bridge_4plus2_m{m}_{kind}{suffix}_formula_hit{hit_index}.json"
+
+
+def write_hit_certificates(
+    output_dir: Path, source: dict, cert: dict, hits: list[dict]
+) -> list[str]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    for hit_index, hit in enumerate(hits):
+        formula = hit["formula"]
+        out_cert = copy.deepcopy(cert)
+        out_cert["kappa_perm_indices"] = build_formula_kappa(cert["m"], **formula)
+        out_cert["formula_kappa"] = {
+            "source": source,
+            "formula": formula,
+            "label": hit["label"],
+        }
+        path = output_dir / hit_cert_filename(source, hit_index)
+        path.write_text(json.dumps(out_cert, indent=2, sort_keys=True) + "\n")
+        paths.append(str(path))
+    return paths
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--bundle", type=Path, default=default_bundle_path())
@@ -151,6 +179,11 @@ def main() -> None:
         "--max-cover-solutions",
         type=int,
         help="maximum number of cover-json solutions to test per modulus",
+    )
+    parser.add_argument(
+        "--emit-hit-cert-dir",
+        type=Path,
+        help="write verifier-ready certificate JSON files for formula hits",
     )
     parser.add_argument(
         "--all-hits", action="store_true", help="do not stop after first hit"
@@ -179,6 +212,10 @@ def main() -> None:
             include_failures=args.include_failures,
         )
         result["source"] = source
+        if args.emit_hit_cert_dir is not None and result["hits"]:
+            result["emitted_cert_json"] = write_hit_certificates(
+                args.emit_hit_cert_dir, source, cert, result["hits"]
+            )
         payload["searches"].append(result)
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.json_out is None:

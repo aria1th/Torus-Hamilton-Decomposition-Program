@@ -406,7 +406,9 @@ Implementation progress after this goal update:
   richer zero-set table or a section-return construction beyond this affine
   four-parameter family.  The same script can consume base-cover JSON from
   `analyze_4plus2_base_rows.py`; this is how the alternate `m=5` full witness
-  above is checked.
+  above is checked.  With `--emit-hit-cert-dir`, formula hits are materialized
+  as verifier-ready JSON certificates, and the alternate `m=5` emitted
+  certificate passes `scripts/verify_4plus2_allN_bridge_cert.py --cert-json`.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

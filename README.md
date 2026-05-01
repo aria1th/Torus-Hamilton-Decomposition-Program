@@ -152,6 +152,7 @@ It can also test row solutions exported by the base analyzer:
 ```bash
 python3 scripts/search_4plus2_kappa_formulas.py \
   --cover-json /tmp/d7_4plus2_base_pool_search.json --only 5 \
+  --emit-hit-cert-dir /tmp/d7_4plus2_formula_certs \
   --json-out /tmp/d7_4plus2_base_pool_kappa_formula_search.json
 ```
 
