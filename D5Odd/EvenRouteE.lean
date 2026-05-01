@@ -40,6 +40,38 @@ theorem card_routeENonzeroSeam (m : Nat) [NeZero m] :
   rw [hfilter, Finset.card_erase_of_mem (Finset.mem_univ _),
     Finset.card_univ, ZMod.card]
 
+def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
+  if slot = 0 then ![a, 0, 0, -a] else
+  if slot = 1 then ![0, a, 0, 0] else
+  if slot = 2 then ![-a, 0, a, 0] else
+  if slot = 3 then ![0, -a, 0, a] else
+  ![0, 0, -a, 0]
+
+theorem routeEThetaPoint_injective {m : Nat} (slot : Color) :
+    Function.Injective (routeEThetaPoint (m := m) slot) := by
+  intro a b h
+  fin_cases slot
+  · have h0 := congrArg (fun z : Vec4 m => z 0) h
+    simpa [routeEThetaPoint] using h0
+  · have h1 := congrArg (fun z : Vec4 m => z 1) h
+    simpa [routeEThetaPoint] using h1
+  · have h2 := congrArg (fun z : Vec4 m => z 2) h
+    simpa [routeEThetaPoint] using h2
+  · have h3 := congrArg (fun z : Vec4 m => z 3) h
+    simpa [routeEThetaPoint] using h3
+  · have h2 := congrArg (fun z : Vec4 m => z 2) h
+    exact neg_injective (by simpa [routeEThetaPoint] using h2)
+
+def routeEThetaSeamPoint {m : Nat} (slot : Color) :
+    RouteENonzeroSeam m → Vec4 m :=
+  fun a => routeEThetaPoint (m := m) slot a.1
+
+theorem routeEThetaSeamPoint_injective {m : Nat} (slot : Color) :
+    Function.Injective (routeEThetaSeamPoint (m := m) slot) := by
+  intro a b h
+  apply Subtype.ext
+  exact routeEThetaPoint_injective slot h
+
 structure RouteESmallSeamCertificate (m : Nat) [NeZero m] where
   data : D5EvenSeamData m
   routeCounts : RouteECounts m

@@ -76,8 +76,12 @@ D5Odd/EvenRouteE.lean
 
 It defines `RouteECounts`, the nonzero parameter seam
 `RouteENonzeroSeam m = {a : ZMod m // a != 0}`, and proves that this seam has
-cardinality `m-1`.  The generic `RouteESmallSeamCertificate` now derives the
-needed root-return orbit target from:
+cardinality `m-1`.  It also records the explicit shifted seam point
+`routeEThetaPoint slot a`, matching the bundle's
+`rho_s(0,a,0,0,-a)`, and proves that both the raw `ZMod m` parametrization and
+the subtype `RouteENonzeroSeam m` parametrization are injective.  The generic
+`RouteESmallSeamCertificate` now derives the needed root-return orbit target
+from:
 
 - an injective seam parametrization;
 - first-return equations and no-earlier-return witnesses;
@@ -134,6 +138,11 @@ translation blocks:
 [1,20]  -> delta 23
 [21,43] -> delta 24
 ```
+
+The C++ checker from the bundle is also retained as
+`scripts/fast_d5_routeE_small_seam_verify.cpp`.  It verifies one recorded
+`(m, slot, counts)` case at a time and gives an implementation-independent
+cross-check of the same `start_ok`, one-cycle, and return-time-sum criterion.
 
 The follow-up family scanner:
 

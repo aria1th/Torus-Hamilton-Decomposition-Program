@@ -51,9 +51,11 @@ when `m` is odd and `m >= 3`.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `D5Odd/EvenRouteE.lean`: Lean-facing Route-E certificate interface for
   D5 even one-`Lambda_E` count/slot data and small-seam traces.  It records
-  the nonzero seam of size `m-1` and derives the D5 even seam orbit target
-  from first-return equations, first-return minimality, seam single-cyclicity,
-  and the return-time sum before routing to the torus/Cayley endpoints.
+  the nonzero seam of size `m-1`, the explicit shifted seam parametrization
+  `a |-> rho_s(0,a,0,0,-a)` as `routeEThetaPoint`, and derives the D5 even
+  seam orbit target from first-return equations, first-return minimality,
+  seam single-cyclicity, and the return-time sum before routing to the
+  torus/Cayley endpoints.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
@@ -131,6 +133,9 @@ when `m` is odd and `m >= 3`.
   Route-E bundle, checking the finite schedule table, normalized core
   first-return formula, open-port section formula/cycle examples, and the
   non-open small-seam criterion from the later small-seam bundle.
+- `scripts/fast_d5_routeE_small_seam_verify.cpp`: standalone C++ verifier for
+  one recorded D5 Route-E small-seam case, kept as an independent check of the
+  `m-1` seam criterion.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
@@ -445,11 +450,28 @@ on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
 same output includes maximal translation blocks for the induced seam map,
 which are the finite traces for the next one-dimensional block-splice proof.
 The Lean target also includes `RouteENonopenSmallSeamCertificate`, specialized
-to `{a : ZMod m // a != 0}`, and proves that such a certificate gives the
-existing D5 even Hamilton, torus, and Cayley endpoints.
+to `{a : ZMod m // a != 0}`, with the explicit helper
+`routeEThetaSeamPoint`; it proves that such a certificate gives the existing
+D5 even Hamilton, torus, and Cayley endpoints.
 It also fixes the branch combinatorics: a separate
 `D5EvenRouteEM4FiniteTarget` plus the all-large Route-E certificate target
 implies all even `m >= 4` Hamilton, torus, and Cayley targets.
+
+The same table can be spot-checked through the standalone C++ verifier:
+
+```bash
+python3 - <<'PY' >/tmp/d5_even_routeE_small_seam_cases.tsv
+from scripts.verify_d5_even_routeE import SMALL_SEAM_CASES
+for m, data in sorted(SMALL_SEAM_CASES.items()):
+    print(m, data["slot"], *data["counts"])
+PY
+g++ -std=c++17 -O2 scripts/fast_d5_routeE_small_seam_verify.cpp \
+  -o /tmp/fast_d5_routeE_small_seam_verify
+while read -r m slot n0 n1 n2 n3 n4; do
+  /tmp/fast_d5_routeE_small_seam_verify "$m" "$slot" "$n0" "$n1" "$n2" "$n3" "$n4" |
+    head -1
+done < /tmp/d5_even_routeE_small_seam_cases.tsv
+```
 
 The finite small-seam table can be scanned for residue-family count formulas:
 
