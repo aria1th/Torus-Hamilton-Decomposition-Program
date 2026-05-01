@@ -52,7 +52,9 @@ when `m` is odd and `m >= 3`.
   obstruction, the good-class residue cycle
   `r |-> r + (3-h)` on `ZMod 5`, internal `+5` lane traversal for `phiInv`,
   exact low-representative boundary landings, and a lifted residue-path
-  composition via the local `Reaches` relation.
+  composition via the local `Reaches` relation.  The wrapper
+  `TargetASeamQuotientRemaining.toPackage` now fills the arithmetic field of
+  the older package automatically from `m = 2h+1` and `m >= 13`.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

@@ -953,6 +953,49 @@ structure TargetASeamQuotientPackage (m h : Nat) [NeZero m] [NeZero h] : Type wh
   length_sum_32 : Prop
   length_sum_32_proof : length_sum_32
 
+theorem targetA_hmin_of_m_eq {m h : Nat}
+    (hm : m = 2 * h + 1) (hodd_range : 13 ≤ m) :
+    6 ≤ h := by
+  omega
+
+structure TargetASeamQuotientRemaining (m h : Nat) [NeZero m] [NeZero h] :
+    Type where
+  hm : m = 2 * h + 1
+  hodd_range : 13 ≤ m
+  q_hitting_23 : Prop
+  q_hitting_23_proof : q_hitting_23
+  q_hitting_32 : Prop
+  q_hitting_32_proof : q_hitting_32
+  q_first_return_23 : Prop
+  q_first_return_23_proof : q_first_return_23
+  q_first_return_32 : Prop
+  q_first_return_32_proof : q_first_return_32
+  length_sum_23 : Prop
+  length_sum_23_proof : length_sum_23
+  length_sum_32 : Prop
+  length_sum_32_proof : length_sum_32
+
+def TargetASeamQuotientRemaining.toPackage
+    {m h : Nat} [NeZero m] [NeZero h]
+    (rem : TargetASeamQuotientRemaining m h) :
+    TargetASeamQuotientPackage m h where
+  hm := rem.hm
+  hodd_range := rem.hodd_range
+  arithmetic := TargetASeamQuotientArithmetic.ofSixLe
+    (targetA_hmin_of_m_eq rem.hm rem.hodd_range)
+  q_hitting_23 := rem.q_hitting_23
+  q_hitting_23_proof := rem.q_hitting_23_proof
+  q_hitting_32 := rem.q_hitting_32
+  q_hitting_32_proof := rem.q_hitting_32_proof
+  q_first_return_23 := rem.q_first_return_23
+  q_first_return_23_proof := rem.q_first_return_23_proof
+  q_first_return_32 := rem.q_first_return_32
+  q_first_return_32_proof := rem.q_first_return_32_proof
+  length_sum_23 := rem.length_sum_23
+  length_sum_23_proof := rem.length_sum_23_proof
+  length_sum_32 := rem.length_sum_32
+  length_sum_32_proof := rem.length_sum_32_proof
+
 end TargetA
 end Handoff
 end D7Odd

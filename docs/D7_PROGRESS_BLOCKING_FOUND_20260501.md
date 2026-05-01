@@ -321,7 +321,10 @@ one-step residue-edge lifting (`phiInv_reaches_next_low`), and the final
 composition lemmas `phiInv_reaches_low_iter`,
 `phiInv_reaches_low_of_residue_reaches`, and `phiInv_reaches_any_of_good`.
 The weak bad-class five-component package is supplied by the residue-class
-cover `residueComponentCover`.
+cover `residueComponentCover`.  The new
+`TargetASeamQuotientRemaining.toPackage` adapter fills the old arithmetic
+field automatically from `m = 2h+1` and `m >= 13`, so upstream Target-A work
+only needs to supply Q-hitting, Q-first-return, and length-sum proofs.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

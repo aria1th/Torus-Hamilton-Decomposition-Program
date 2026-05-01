@@ -171,7 +171,10 @@ direction `goodPhiClass_of_phi_single_cycle`, the good-class residue cycle
 `phiInv_reaches_next_low`, and the final residue-path composition
 `phiInv_reaches_low_iter`, `phiInv_reaches_low_of_residue_reaches`, and
 `phiInv_reaches_any_of_good`.  The weak bad-class five-component field is
-filled by the residue-class cover `residueComponentCover`.
+filled by the residue-class cover `residueComponentCover`.  The adapter
+`TargetASeamQuotientRemaining.toPackage` now fills the arithmetic field of
+the older package automatically, leaving only the Q-hitting, Q-first-return,
+and length-sum fields for the `23/32` branch.
 
 ## Updated Target-A Interpretation
 
