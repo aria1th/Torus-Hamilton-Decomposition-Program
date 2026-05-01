@@ -1,0 +1,142 @@
+# D7 Progress, Blocking, and Found Facts
+
+Status baseline before the next D7 research bundles.
+
+Date: 2026-05-01.
+
+## Current Progress
+
+- D7 odd remains the regression endpoint.  The torus and Cayley endpoints are
+  closed in Lean, and the working regression build is
+  `lake build D7Odd RoundComposite.ConcreteEndpoints`.
+- The composite-dimension theorem has been raised to concrete graph-level
+  Cayley/Torus endpoints through `RoundComposite.lean` and
+  `RoundComposite/ConcreteEndpoints.lean`.
+- The shared root-flat return criterion is available in `Shared/RootFlat.lean`:
+  row Latin, layer bijective, and return single-cycle imply the layered
+  Hamilton decomposition.
+- The D7 structural explanation is now centered on the additive `4+2` bridge
+  `A7(m) ~= A5(m) x A3(m)`.
+- The concrete Lean reduction target is
+  `BridgeConcreteFullRankPackage` in
+  `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`.  Supplying this package for
+  all odd `m >= 5` now routes directly to the odd D7 torus and Cayley
+  endpoints.
+- The finite `m = 3` branch is kept separate through the small-certificate
+  route; the bridge target is for odd `m >= 5`.
+- D5 even and D7 even remain separate certificate tracks.
+
+## Current Blocking Point
+
+The remaining D7 odd structural gap is the uniform construction of
+`BridgeConcreteFullRankPackage` for every odd `m >= 5`.
+
+Concretely, this splits into two rank-step theorems:
+
+- Base side: construct a uniform all-zero-set row family and
+  `baseRank : Color -> D5Odd.ARoot5 m -> ZMod (m ^ 4)` such that the canonical
+  folded base return steps `baseRank` by `+1`.
+- Fiber side: construct a D3 fiber compiler and
+  `fiberRank : Color -> ARoot3 m -> ZMod (m ^ 2)` such that the section return
+  over the `m^4` base period steps `fiberRank` by `+1`.
+
+The main live obstruction is the fiber compiler at bundled `m = 9`, especially
+color `0`.
+
+## Found Facts
+
+### Finite Bridge Certificates
+
+`scripts/verify_4plus2_allN_bridge_cert.py` verifies the bundled `m = 5, 7, 9`
+bridge certificates:
+
+- base returns have canonical `m^4` rank-step cycles;
+- fiber section returns have canonical `m^2` rank-step cycles;
+- product returns are single `m^6` cycles.
+
+### Simple Fiber Formulas
+
+`scripts/search_4plus2_kappa_formulas.py` finds simple bundled formulas for
+`m = 5` and `m = 7`:
+
+- `m = 5`: `r = p + 2|Z| mod 3`;
+- `m = 7`: `r = 2|Z| + 2 mod 3`.
+
+The alternate `m = 5` base cover found by the base-row analyzer also admits a
+simple formula: `r = t + |Z| + 2 mod 3`.
+
+### Bundled m = 9 Fiber Obstruction
+
+For bundled `m = 9`, the restricted cyclic/reflected affine family has no hit.
+The larger dihedral family also has no hit:
+
+- formula family: affine rotation modulo `3` plus affine reflection bit modulo
+  `2`;
+- candidates checked: `1296`;
+- section-return hits: `0`.
+
+The dihedral failure summary is concentrated at color `0`:
+
+- cycle length `27`: `664` candidates;
+- cycle length `9`: `516` candidates;
+- cycle length `3`: `79` candidates;
+- cycle length `1`: `37` candidates.
+
+Thus the first fiber obstruction is not a late-color compatibility issue; every
+dihedral candidate already fails on the color-0 section return.
+
+The bundled `m = 9` witness itself is also not explained by the coarse features
+currently tested.  Along the color-0 section trace:
+
+- `slot_by_layer_p_z_component`: `5/55` pure classes;
+- `slot_by_layer_p_z_component_full_mod3`: `11/1235` pure classes.
+
+This says that even after adding full coordinate residues modulo `3`, the
+observed finite witness still depends on finer base-state information.
+
+### Base Row Side
+
+The base side is also not explained by a very short uniform primitive word
+family.
+
+- The bundled row projections for `m = 5, 7, 9` are base primitive.
+- Bundled base words can be reassembled as column exact covers for
+  `m = 5, 7, 9`.
+- For `m = 17`, no primitive base word appears up to length `4`.
+- For `m = 17`, length `5` gives first examples, including
+  `01121`, `01214`, `10112`, `11210`, and `12101`.
+
+## Next Bundle Checklist
+
+When new bundles arrive, compare them against this baseline:
+
+- Do they include a finer description of the bundled `m = 9` kappa table?
+- Do they explain color `0` section monodromy for `m = 9`?
+- Do they provide a candidate invariant finer than `(layer, p, |Z|, component)`
+  and full residues modulo `3`?
+- Do they include a uniform or congruence-dependent base-row family that covers
+  the `m = 17` length-5 onset?
+- Do they expose explicit `baseRank` or `fiberRank` formulas compatible with
+  `BridgeConcreteFullRankPackage`?
+- Do they separate D5 even and D7 even certificate tracks from the D7 odd
+  additive bridge?
+
+## Verification Commands
+
+Recent checks used for this baseline:
+
+```bash
+lake build D7Odd RoundComposite.ConcreteEndpoints
+lake build D7Odd.Handoff.Additive4Plus2ConcreteGoal
+python3 -m py_compile scripts/search_4plus2_kappa_formulas.py
+python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
+  --formula-family dihedral --section-only --summarize-failures \
+  --json-out /tmp/d7_dihedral_m9_failure_summary_check.json
+python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
+  --diagnostics-only --section-trace-diagnostics \
+  --json-out /tmp/d7_m9_section_trace_diag_check.json
+git diff --check
+```
+
+This document is not a completion certificate for the full research goal.  It
+records the current open frontier before the next bundle comparison.

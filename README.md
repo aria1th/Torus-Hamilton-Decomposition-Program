@@ -65,6 +65,9 @@ when `m` is odd and `m >= 3`.
   endpoints obtained from the formalized D5/D7 odd theorems, including direct
   Cayley/Torus product endpoints for 35, 49, and nonempty products of 5/7
   factors.
+- `docs/D7_PROGRESS_BLOCKING_FOUND_20260501.md`: current progress, blockers,
+  and found facts for the D7 additive `4+2` bridge before the next research
+  bundle comparison.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
