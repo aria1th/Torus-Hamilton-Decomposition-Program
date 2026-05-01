@@ -150,8 +150,9 @@ nuanced picture:
 - after adding orbit-only and explicit-word modes to the C++ helper, the
   symmetry closure of the known `m=7,17,27` words still gives no `m = 37`
   primitive word, and an exhaustive length-5 chunk scan for `m = 37` found no
-  hit.  Thus the first `m = 37` primitive word appears to have length at least
-  `6`.
+  hit.  A length-6 chunk search then found `m = 37` primitive words
+  `404432`, `044324`, `324044`, `432404`, and `443240`; all five pass the
+  `Sigma` section audit at `m = 37`.
 
 So a plausible Target-A route is not a single base word.  It is either a
 finite congruence family of primitive words, or a constructive/padding theorem

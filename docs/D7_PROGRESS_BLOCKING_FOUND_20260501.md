@@ -186,8 +186,10 @@ family.
   `m = 7,17,37`, and naive `m = 37` random search is already heavy.
 - With orbit-only and explicit-word modes, the same helper verifies that the
   symmetry closure of the known `m = 7,17,27` words has no `m = 37` hit, and a
-  length-5 exhaustive chunk scan for `m = 37` also finds no hit.  The current
-  lower bound for the first `m = 37` primitive word is therefore length `6`.
+  length-5 exhaustive chunk scan for `m = 37` also finds no hit.  A length-6
+  chunk search then finds primitive words `404432`, `044324`, `324044`,
+  `432404`, and `443240`; all five pass the `Sigma` section audit at
+  `m = 37`.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -291,6 +293,10 @@ python3 scripts/analyze_targetA_section.py \
 g++ -O3 -std=c++17 scripts/search_targetA_primitive_words.cpp \
   -o /tmp/search_targetA_primitive_words
 /tmp/search_targetA_primitive_words 27 6 10 5 2000 27
+python3 scripts/analyze_targetA_section.py \
+  --moduli 37 \
+  --words 404432,044324,324044,432404,443240 \
+  --json-out /tmp/d7_targetA_section_m37_len6_hits.json
 git diff --check
 ```
 
