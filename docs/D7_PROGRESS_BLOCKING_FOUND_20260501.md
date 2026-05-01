@@ -333,7 +333,35 @@ formula directly in Lean.  The validity lemmas `targetAQExpected23_valid` and
 valid labels under `m = 2h+1`, `h >= 6`.  The subtype `QLabel m` and
 endomap predicates `targetAQFirstReturn23EndomapFormula`/
 `targetAQFirstReturn32EndomapFormula` now state the same formula directly on
-valid Q labels.
+valid Q labels.  The expected maps are further split into named B-chain and
+A-label transition lemmas such as `targetAQExpected23_A_even_step`,
+`targetAQExpected23_A_odd_step`, `targetAQExpected32_A_odd_step`, and
+`targetAQExpected32_A_even_step`; these isolate the arithmetic rewrite layer
+needed before proving the expected Q endomaps have the verifier's cycle
+structure.  The double-step lemmas `targetAQExpected23_A_odd_two_step` and
+`targetAQExpected32_A_odd_two_step` make the corresponding tau/phi lane
+transitions explicit.  The B-chain iteration lemmas
+`targetAQExpected23_B_iter`/`targetAQExpected32_B_iter` and
+`targetAQExpected23_A_five_excursion`/
+`targetAQExpected32_A_six_excursion` also isolate the long exceptional bridge
+from `A 11` through the B-chain back to `A 1`.  The direct section-return
+theorems `targetAQExpected23_oddA_return` and
+`targetAQExpected32_oddA_return` now identify the odd-A return maps of the
+expected Q-maps with `phi h`; `targetAQOddA_valid` prepares this section for
+the valid-label subtype.  The subtype return theorems
+`QLabel.expected23_oddA_return`/`QLabel.expected32_oddA_return` and the raw
+cover packages `targetAQExpected23_oddA_cover`/
+`targetAQExpected32_oddA_cover` are now the expected-map cycle scaffold.  The
+single-cycle wrappers are closed for both expected maps by
+`QLabel.expected23_single_cycle_of_good` and
+`QLabel.expected32_single_cycle_of_good`, and the corresponding
+`targetAQFirstReturn23EndomapFormula.single_cycle_of_good`/
+`targetAQFirstReturn32EndomapFormula.single_cycle_of_good` theorems transfer
+those cycle results to any actual first-return endomap satisfying the formula.
+Raw valid-label first-return tables can now be used directly through
+`targetAQLift23`/`targetAQLift32` and the
+`targetAQFirstReturn23Formula.lift_single_cycle_of_good`/
+`targetAQFirstReturn32Formula.lift_single_cycle_of_good` adapters.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

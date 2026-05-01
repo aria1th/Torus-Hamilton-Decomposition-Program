@@ -789,6 +789,88 @@ theorem single_cycle_iff_of_inverse {α : Type*} {f g : α → α}
   · exact single_cycle_of_inverse hright hleft
   · exact single_cycle_of_inverse hleft hright
 
+theorem bijective_of_reaches_all {α : Type*} [Finite α]
+    (f : α → α) (hreach : ∀ x y : α, ∃ n : Nat, f^[n] x = y) :
+    Function.Bijective f := by
+  have hsurj : Function.Surjective f := by
+    intro y
+    rcases hreach (f y) y with ⟨n, hn⟩
+    cases n with
+    | zero =>
+        exact ⟨y, hn⟩
+    | succ n =>
+        refine ⟨f^[n] (f y), ?_⟩
+        simpa [Function.iterate_succ_apply'] using hn
+  exact ⟨(Finite.injective_iff_surjective).2 hsurj, hsurj⟩
+
+theorem single_cycle_of_reaches_all {α : Type*} [Finite α]
+    (f : α → α) (hreach : ∀ x y : α, ∃ n : Nat, f^[n] x = y) :
+    IsSingleCycleMap f :=
+  ⟨bijective_of_reaches_all f hreach, hreach⟩
+
+theorem reaches_all_of_return_cover
+    {α σ : Type*} (f : α → α) (base : σ → α)
+    (next : σ → σ) (time : σ → Nat)
+    (hreturn : ∀ s : σ, f^[time s] (base s) = base (next s))
+    (hcover : ∀ x : α, ∃ s : σ, ∃ k : Nat,
+      k < time s ∧ f^[k] (base s) = x)
+    (hnext : IsSingleCycleMap next) :
+    ∀ x y : α, ∃ n : Nat, f^[n] x = y := by
+  have hbase : ∀ (s : σ) (n : Nat),
+      ∃ N : Nat, f^[N] (base s) = base (next^[n] s) := by
+    intro s n
+    induction n with
+    | zero =>
+        exact ⟨0, rfl⟩
+    | succ n ih =>
+        rcases ih with ⟨N, hN⟩
+        let u : σ := next^[n] s
+        refine ⟨time u + N, ?_⟩
+        calc
+          f^[time u + N] (base s) = f^[time u] (f^[N] (base s)) := by
+            rw [Function.iterate_add_apply]
+          _ = f^[time u] (base u) := by rw [hN]
+          _ = base (next u) := hreturn u
+          _ = base (next^[n.succ] s) := by
+            rw [Function.iterate_succ_apply']
+  intro x y
+  rcases hcover x with ⟨sx, kx, hkx, hx⟩
+  rcases hcover y with ⟨sy, ky, _hky, hy⟩
+  let A := time sx - kx
+  have hfromx : f^[A] x = base (next sx) := by
+    rw [← hx]
+    change f^[time sx - kx] (f^[kx] (base sx)) = base (next sx)
+    rw [← Function.iterate_add_apply]
+    rw [Nat.sub_add_cancel (Nat.le_of_lt hkx)]
+    exact hreturn sx
+  rcases hnext.2 (next sx) sy with ⟨r, hr⟩
+  rcases hbase (next sx) r with ⟨N, hN⟩
+  have htoSy : f^[N] (base (next sx)) = base sy := by
+    rw [hN, hr]
+  refine ⟨ky + (N + A), ?_⟩
+  calc
+    f^[ky + (N + A)] x = f^[ky] (f^[N + A] x) := by
+      rw [Function.iterate_add_apply]
+    _ = f^[ky] (base sy) := by
+      congr
+      calc
+        f^[N + A] x = f^[N] (f^[A] x) := by
+          rw [Function.iterate_add_apply]
+        _ = f^[N] (base (next sx)) := by rw [hfromx]
+        _ = base sy := htoSy
+    _ = y := hy
+
+theorem single_cycle_of_return_cover_finite
+    {α σ : Type*} [Finite α] (f : α → α) (base : σ → α)
+    (next : σ → σ) (time : σ → Nat)
+    (hreturn : ∀ s : σ, f^[time s] (base s) = base (next s))
+    (hcover : ∀ x : α, ∃ s : σ, ∃ k : Nat,
+      k < time s ∧ f^[k] (base s) = x)
+    (hnext : IsSingleCycleMap next) :
+    IsSingleCycleMap f :=
+  single_cycle_of_reaches_all f
+    (reaches_all_of_return_cover f base next time hreturn hcover hnext)
+
 theorem phi_single_cycle_iff_phiInv {h : Nat} [NeZero h] (hh : 6 ≤ h) :
     IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h) :=
   single_cycle_iff_of_inverse
@@ -939,7 +1021,7 @@ theorem TargetASeamQuotientArithmetic.phi_bijective
 inductive QKind where
   | B
   | A
-deriving DecidableEq, Repr
+deriving DecidableEq, Repr, Fintype
 
 structure QRawLabel where
   kind : QKind
@@ -1020,6 +1102,596 @@ def targetAQFirstReturn23Formula
 def targetAQFirstReturn32Formula
     (m h : Nat) (actual : QRawLabel → QRawLabel) : Prop :=
   targetAQFirstReturnFormula m (targetAQExpected32 m h) actual
+
+theorem targetAQExpectedB_step {m value : Nat}
+    (hstep : value + 1 < m) :
+    targetAQExpectedB m value = QRawLabel.B (value + 1) := by
+  simp [targetAQExpectedB, hstep]
+
+theorem targetAQExpectedB_wrap {m value : Nat}
+    (hwrap : ¬ value + 1 < m) :
+    targetAQExpectedB m value = QRawLabel.A 1 := by
+  simp [targetAQExpectedB, hwrap]
+
+theorem targetAQExpected23_B_step {m h value : Nat}
+    (hstep : value + 1 < m) :
+    targetAQExpected23 m h (QRawLabel.B value) =
+      QRawLabel.B (value + 1) := by
+  simp [targetAQExpected23, targetAQExpectedB_step hstep, QRawLabel.B]
+
+theorem targetAQExpected23_B_wrap {m h value : Nat}
+    (hwrap : ¬ value + 1 < m) :
+    targetAQExpected23 m h (QRawLabel.B value) = QRawLabel.A 1 := by
+  simp [targetAQExpected23, targetAQExpectedB_wrap hwrap, QRawLabel.B]
+
+theorem targetAQExpected32_B_step {m h value : Nat}
+    (hstep : value + 1 < m) :
+    targetAQExpected32 m h (QRawLabel.B value) =
+      QRawLabel.B (value + 1) := by
+  simp [targetAQExpected32, targetAQExpectedB_step hstep, QRawLabel.B]
+
+theorem targetAQExpected32_B_wrap {m h value : Nat}
+    (hwrap : ¬ value + 1 < m) :
+    targetAQExpected32 m h (QRawLabel.B value) = QRawLabel.A 1 := by
+  simp [targetAQExpected32, targetAQExpectedB_wrap hwrap, QRawLabel.B]
+
+theorem targetAQExpected23_A_even_step {m h x : Nat}
+    (hx : x ≤ h - 1) :
+    targetAQExpected23 m h (QRawLabel.A (2 * x)) =
+      QRawLabel.A (2 * x + 1) := by
+  simp [targetAQExpected23, QRawLabel.A, hx]
+
+theorem targetAQExpected23_A_even_wrap {m h x : Nat}
+    (hx : ¬ x ≤ h - 1) :
+    targetAQExpected23 m h (QRawLabel.A (2 * x)) = QRawLabel.B 1 := by
+  simp [targetAQExpected23, QRawLabel.A, hx]
+
+theorem targetAQExpected23_A_odd_step {m h x : Nat} :
+    targetAQExpected23 m h (QRawLabel.A (2 * x + 1)) =
+      QRawLabel.A (2 * targetATau23One h (x + 1)) := by
+  have hdiv : (2 * x + 1 + 1) / 2 = x + 1 := by
+    rw [show 2 * x + 1 + 1 = 2 * (x + 1) by omega]
+    exact Nat.mul_div_right (x + 1) (by decide : 0 < 2)
+  simp [targetAQExpected23, QRawLabel.A, hdiv]
+
+theorem targetAQExpected32_A_odd_step {m h x : Nat} :
+    targetAQExpected32 m h (QRawLabel.A (2 * x + 1)) =
+      QRawLabel.A (2 * (x + 1)) := by
+  have hdiv : (2 * x + 1 + 1) / 2 = x + 1 := by
+    rw [show 2 * x + 1 + 1 = 2 * (x + 1) by omega]
+    exact Nat.mul_div_right (x + 1) (by decide : 0 < 2)
+  simp [targetAQExpected32, QRawLabel.A, hdiv]
+
+theorem targetAQExpected32_A_even_wrap {m h : Nat} :
+    targetAQExpected32 m h (QRawLabel.A 12) = QRawLabel.B 1 := by
+  simp [targetAQExpected32, QRawLabel.A]
+
+theorem targetAQExpected32_A_even_step {m h x : Nat}
+    (hx : x ≠ 6) :
+    targetAQExpected32 m h (QRawLabel.A (2 * x)) =
+      QRawLabel.A (2 * targetAPhiOne h x - 1) := by
+  simp [targetAQExpected32, QRawLabel.A, hx]
+
+theorem targetAQExpected23_A_odd_two_step {m h x : Nat}
+    (htau : targetATau23One h (x + 1) ≤ h - 1) :
+    (targetAQExpected23 m h)^[2] (QRawLabel.A (2 * x + 1)) =
+      QRawLabel.A (2 * targetATau23One h (x + 1) + 1) := by
+  rw [show 2 = 1 + 1 by rfl]
+  rw [Function.iterate_add_apply]
+  simp [targetAQExpected23_A_odd_step,
+    targetAQExpected23_A_even_step (m := m) (h := h) htau]
+
+theorem targetAQExpected23_A_odd_two_step_wrap {m h x : Nat}
+    (htau : ¬ targetATau23One h (x + 1) ≤ h - 1) :
+    (targetAQExpected23 m h)^[2] (QRawLabel.A (2 * x + 1)) =
+      QRawLabel.B 1 := by
+  rw [show 2 = 1 + 1 by rfl]
+  rw [Function.iterate_add_apply]
+  simp [targetAQExpected23_A_odd_step,
+    targetAQExpected23_A_even_wrap (m := m) (h := h) htau]
+
+theorem targetAQExpected32_A_odd_two_step {m h x : Nat}
+    (hx : x + 1 ≠ 6) :
+    (targetAQExpected32 m h)^[2] (QRawLabel.A (2 * x + 1)) =
+      QRawLabel.A (2 * targetAPhiOne h (x + 1) - 1) := by
+  rw [show 2 = 1 + 1 by rfl]
+  rw [Function.iterate_add_apply]
+  simp [targetAQExpected32_A_odd_step,
+    targetAQExpected32_A_even_step (m := m) (h := h) hx]
+
+theorem targetAQExpected32_A_odd_two_step_wrap {m h : Nat} :
+    (targetAQExpected32 m h)^[2] (QRawLabel.A 11) = QRawLabel.B 1 := by
+  rw [show 2 = 1 + 1 by rfl]
+  rw [Function.iterate_add_apply]
+  change targetAQExpected32 m h
+      (targetAQExpected32 m h (QRawLabel.A (2 * 5 + 1))) = QRawLabel.B 1
+  rw [targetAQExpected32_A_odd_step (m := m) (h := h) (x := 5)]
+  exact targetAQExpected32_A_even_wrap (m := m) (h := h)
+
+theorem targetAQExpected23_B_iter {m h value n : Nat}
+    (hbound : value + n < m) :
+    (targetAQExpected23 m h)^[n] (QRawLabel.B value) =
+      QRawLabel.B (value + n) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      have hprev : value + n < m := by omega
+      rw [ih hprev]
+      have hstep : value + n + 1 < m := by omega
+      simpa [Nat.add_assoc] using
+        targetAQExpected23_B_step (m := m) (h := h)
+          (value := value + n) hstep
+
+theorem targetAQExpected32_B_iter {m h value n : Nat}
+    (hbound : value + n < m) :
+    (targetAQExpected32 m h)^[n] (QRawLabel.B value) =
+      QRawLabel.B (value + n) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      have hprev : value + n < m := by omega
+      rw [ih hprev]
+      have hstep : value + n + 1 < m := by omega
+      simpa [Nat.add_assoc] using
+        targetAQExpected32_B_step (m := m) (h := h)
+          (value := value + n) hstep
+
+theorem targetAQExpected23_B_one_to_A_one {m h : Nat}
+    (hm : 1 < m) :
+    (targetAQExpected23 m h)^[m - 1] (QRawLabel.B 1) = QRawLabel.A 1 := by
+  rw [show m - 1 = 1 + (m - 2) by omega]
+  rw [Function.iterate_add_apply]
+  rw [targetAQExpected23_B_iter (m := m) (h := h) (value := 1)
+    (n := m - 2) (by omega)]
+  rw [show 1 + (m - 2) = m - 1 by omega]
+  have hwrap : ¬ m - 1 + 1 < m := by omega
+  simpa using targetAQExpected23_B_wrap (m := m) (h := h)
+    (value := m - 1) hwrap
+
+theorem targetAQExpected32_B_one_to_A_one {m h : Nat}
+    (hm : 1 < m) :
+    (targetAQExpected32 m h)^[m - 1] (QRawLabel.B 1) = QRawLabel.A 1 := by
+  rw [show m - 1 = 1 + (m - 2) by omega]
+  rw [Function.iterate_add_apply]
+  rw [targetAQExpected32_B_iter (m := m) (h := h) (value := 1)
+    (n := m - 2) (by omega)]
+  rw [show 1 + (m - 2) = m - 1 by omega]
+  have hwrap : ¬ m - 1 + 1 < m := by omega
+  simpa using targetAQExpected32_B_wrap (m := m) (h := h)
+    (value := m - 1) hwrap
+
+theorem targetAQExpected32_A_six_excursion {m h : Nat}
+    (hm : m = 2 * h + 1) (hh : 0 < h) :
+    (targetAQExpected32 m h)^[2 * h + 2] (QRawLabel.A 11) =
+      QRawLabel.A 1 := by
+  have hmgt : 1 < m := by omega
+  rw [show 2 * h + 2 = (m - 1) + 2 by omega]
+  rw [Function.iterate_add_apply]
+  rw [targetAQExpected32_A_odd_two_step_wrap]
+  exact targetAQExpected32_B_one_to_A_one (m := m) (h := h) hmgt
+
+theorem targetAQExpected32_A_six_to_B_iter {m h n : Nat}
+    (hn : 1 + n < m) :
+    (targetAQExpected32 m h)^[2 + n] (QRawLabel.A 11) =
+      QRawLabel.B (1 + n) := by
+  rw [show 2 + n = n + 2 by omega]
+  rw [Function.iterate_add_apply]
+  rw [targetAQExpected32_A_odd_two_step_wrap]
+  exact targetAQExpected32_B_iter (m := m) (h := h) (value := 1)
+    (n := n) hn
+
+def targetAQOddA {h : Nat} (x : Fin h) : QRawLabel :=
+  QRawLabel.A (2 * x.val + 1)
+
+theorem targetAQOddA_valid {m h : Nat}
+    (hm : m = 2 * h + 1) (x : Fin h) :
+    (targetAQOddA x).valid m := by
+  subst m
+  have hxlt : x.val < h := x.isLt
+  change 1 ≤ 2 * x.val + 1 ∧ 2 * x.val + 1 < 2 * h + 1
+  omega
+
+theorem targetAQExpected32_oddA_to_even {m h : Nat} (x : Fin h) :
+    targetAQExpected32 m h (targetAQOddA x) =
+      QRawLabel.A (2 * (x.val + 1)) := by
+  unfold targetAQOddA
+  exact targetAQExpected32_A_odd_step (m := m) (h := h) (x := x.val)
+
+def targetAQExpected32OddATime (h : Nat) (x : Fin h) : Nat :=
+  if x.val = 5 then 2 * h + 2 else 2
+
+theorem targetAQExpected32OddATime_pos {h : Nat} (x : Fin h) :
+    0 < targetAQExpected32OddATime h x := by
+  unfold targetAQExpected32OddATime
+  split <;> omega
+
+theorem one_lt_targetAQExpected32OddATime {h : Nat} (x : Fin h) :
+    1 < targetAQExpected32OddATime h x := by
+  unfold targetAQExpected32OddATime
+  split
+  · have hxlt : x.val < h := x.isLt
+    omega
+  · omega
+
+theorem targetAQExpected32_oddA_zero_step {m h : Nat} (x : Fin h) :
+    (targetAQExpected32 m h)^[0] (targetAQOddA x) = targetAQOddA x := by
+  rfl
+
+theorem targetAQExpected32_oddA_one_step {m h : Nat} (x : Fin h) :
+    (targetAQExpected32 m h)^[1] (targetAQOddA x) =
+      QRawLabel.A (2 * (x.val + 1)) := by
+  simp [targetAQExpected32_oddA_to_even]
+
+theorem targetAQExpected32_oddA_five_to_B_iter
+    {m h n : Nat} (hh : 6 ≤ h) (hn : 1 + n < m) :
+    (targetAQExpected32 m h)^[2 + n]
+        (targetAQOddA (⟨5, by omega⟩ : Fin h)) =
+      QRawLabel.B (1 + n) := by
+  unfold targetAQOddA
+  change (targetAQExpected32 m h)^[2 + n] (QRawLabel.A 11) =
+    QRawLabel.B (1 + n)
+  exact targetAQExpected32_A_six_to_B_iter (m := m) (h := h) hn
+
+theorem targetAQExpected32_oddA_covers_oddA {m h : Nat} (x : Fin h) :
+    ∃ k : Nat,
+      k < targetAQExpected32OddATime h x ∧
+        (targetAQExpected32 m h)^[k] (targetAQOddA x) =
+          targetAQOddA x := by
+  exact ⟨0, targetAQExpected32OddATime_pos x, rfl⟩
+
+theorem targetAQExpected32_oddA_covers_evenA {m h : Nat} (x : Fin h) :
+    ∃ k : Nat,
+      k < targetAQExpected32OddATime h x ∧
+        (targetAQExpected32 m h)^[k] (targetAQOddA x) =
+          QRawLabel.A (2 * (x.val + 1)) := by
+  exact ⟨1, one_lt_targetAQExpected32OddATime x,
+    targetAQExpected32_oddA_one_step x⟩
+
+theorem targetAQExpected32_oddA_five_covers_B
+    {m h value : Nat} (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (hv1 : 1 ≤ value) (hvm : value < m) :
+    ∃ k : Nat,
+      k < targetAQExpected32OddATime h (⟨5, by omega⟩ : Fin h) ∧
+        (targetAQExpected32 m h)^[k]
+          (targetAQOddA (⟨5, by omega⟩ : Fin h)) =
+          QRawLabel.B value := by
+  refine ⟨2 + (value - 1), ?_, ?_⟩
+  · subst m
+    simp [targetAQExpected32OddATime]
+    omega
+  · have hn : 1 + (value - 1) < m := by omega
+    have hcover := targetAQExpected32_oddA_five_to_B_iter
+      (m := m) (h := h) (n := value - 1) hh hn
+    rw [show 1 + (value - 1) = value by omega] at hcover
+    exact hcover
+
+theorem targetAQExpected32_oddA_cover
+    {m h : Nat} (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (label : QRawLabel) (hv : label.valid m) :
+    ∃ x : Fin h, ∃ k : Nat,
+      k < targetAQExpected32OddATime h x ∧
+        (targetAQExpected32 m h)^[k] (targetAQOddA x) = label := by
+  subst m
+  rcases label with ⟨kind, value⟩
+  cases kind
+  · rcases hv with ⟨hv1, hvm⟩
+    refine ⟨⟨5, by omega⟩, ?_⟩
+    exact targetAQExpected32_oddA_five_covers_B
+      (m := 2 * h + 1) (h := h) rfl hh hv1 hvm
+  · rcases hv with ⟨hv1, hvm⟩
+    change 1 ≤ value at hv1
+    change value < 2 * h + 1 at hvm
+    by_cases hodd : value % 2 = 1
+    · have hdecomp : value = 2 * (value / 2) + 1 := by
+        have hmoddiv := Nat.mod_add_div value 2
+        omega
+      let x : Fin h := ⟨value / 2, by omega⟩
+      refine ⟨x, ?_⟩
+      rcases targetAQExpected32_oddA_covers_oddA (m := 2 * h + 1)
+          (h := h) x with ⟨k, hk, heq⟩
+      refine ⟨k, hk, ?_⟩
+      rw [heq]
+      unfold targetAQOddA
+      change QRawLabel.A (2 * (value / 2) + 1) = QRawLabel.A value
+      exact congrArg QRawLabel.A hdecomp.symm
+    · have heven : value % 2 = 0 := by
+        have hlt := Nat.mod_lt value (by decide : 0 < 2)
+        omega
+      have hdecomp : value = 2 * (value / 2) := by
+        have hmoddiv := Nat.mod_add_div value 2
+        omega
+      have hhalf_pos : 1 ≤ value / 2 := by omega
+      let x : Fin h := ⟨value / 2 - 1, by omega⟩
+      refine ⟨x, ?_⟩
+      rcases targetAQExpected32_oddA_covers_evenA (m := 2 * h + 1)
+          (h := h) x with ⟨k, hk, heq⟩
+      refine ⟨k, hk, ?_⟩
+      rw [heq]
+      unfold x
+      change QRawLabel.A (2 * (value / 2 - 1 + 1)) = QRawLabel.A value
+      congr
+      omega
+
+theorem targetATau23One_succ_eq_phi_val_of_ne_five
+    {h : Nat} [NeZero h] (hh : 6 ≤ h) (x : Fin h)
+    (hx : x.val ≠ 5) :
+    targetATau23One h (x.val + 1) = (phi h x).val := by
+  unfold targetATau23One targetARep1ToH phi phiNat
+  by_cases hx2 : x.val ≤ 2
+  · have hy3 : x.val + 1 ≤ 3 := by omega
+    have hxlt3 : x.val < 3 := by omega
+    have hrepr :
+        ((x.val + 1 + h - 4 - 1) % h) + 1 = x.val + h - 3 := by
+      have hval : x.val + 1 + h - 4 - 1 = x.val + h - 4 := by omega
+      rw [hval]
+      have hlt : x.val + h - 4 < h := by omega
+      have hpos : 1 ≤ x.val + h - 3 := by omega
+      rw [Nat.mod_eq_of_lt hlt]
+      omega
+    have hphi : (x.val + h - 3) % h = x.val + h - 3 := by
+      apply Nat.mod_eq_of_lt
+      omega
+    simp [hy3, hxlt3, hrepr, hphi]
+  · by_cases hx4 : x.val ≤ 4
+    · have hnot3 : ¬ x.val + 1 ≤ 3 := by omega
+      have hy5 : x.val + 1 ≤ 5 := by omega
+      have hxlt3 : ¬ x.val < 3 := by omega
+      have hxlt5 : x.val < 5 := by omega
+      have hrepr :
+          ((x.val + 1 + h - 9 - 1) % h) + 1 = x.val + h - 8 := by
+        have hval : x.val + 1 + h - 9 - 1 = x.val + h - 9 := by omega
+        rw [hval]
+        have hlt : x.val + h - 9 < h := by omega
+        rw [Nat.mod_eq_of_lt hlt]
+        omega
+      have hphi : (x.val + h - 8) % h = x.val + h - 8 := by
+        apply Nat.mod_eq_of_lt
+        omega
+      simp [hnot3, hy5, hxlt3, hxlt5, hrepr, hphi]
+    · have hnot3 : ¬ x.val + 1 ≤ 3 := by omega
+      have hnot5 : ¬ x.val + 1 ≤ 5 := by omega
+      have hnot6 : x.val + 1 ≠ 6 := by omega
+      have hxlt3 : ¬ x.val < 3 := by omega
+      have hxlt5 : ¬ x.val < 5 := by omega
+      have hphi : (x.val + h - 5) % h = x.val - 5 := by
+        rw [show x.val + h - 5 = h + (x.val - 5) by omega]
+        rw [Nat.add_mod_left]
+        apply Nat.mod_eq_of_lt
+        omega
+      simp [hnot3, hnot5, hnot6, hxlt3, hxlt5, hphi]
+
+theorem targetATau23One_succ_eq_h_of_five
+    {h : Nat} [NeZero h] (hh : 6 ≤ h) (x : Fin h)
+    (hx : x.val = 5) :
+    targetATau23One h (x.val + 1) = h := by
+  unfold targetATau23One targetARep1ToH
+  have hy3 : ¬ x.val + 1 ≤ 3 := by omega
+  have hy5 : ¬ x.val + 1 ≤ 5 := by omega
+  have hy6 : x.val + 1 = 6 := by omega
+  simp [hx]
+  omega
+
+def targetAQExpected23OddATime (h : Nat) (x : Fin h) : Nat :=
+  if x.val = 5 then 2 * h + 2 else 2
+
+theorem targetAQExpected23OddATime_pos {h : Nat} (x : Fin h) :
+    0 < targetAQExpected23OddATime h x := by
+  unfold targetAQExpected23OddATime
+  split <;> omega
+
+theorem one_lt_targetAQExpected23OddATime {h : Nat} (x : Fin h) :
+    1 < targetAQExpected23OddATime h x := by
+  unfold targetAQExpected23OddATime
+  split
+  · have hxlt : x.val < h := x.isLt
+    omega
+  · omega
+
+theorem phi_val_five {h : Nat} [NeZero h]
+    (x : Fin h) (hx : x.val = 5) :
+    (phi h x).val = 0 := by
+  simp [phi, phiNat, hx, Nat.mod_self]
+
+theorem targetAQExpected23_A_five_excursion {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) :
+    (targetAQExpected23 m h)^[2 * h + 2] (QRawLabel.A 11) =
+      QRawLabel.A 1 := by
+  have hmgt : 1 < m := by omega
+  rw [show 2 * h + 2 = (m - 1) + 2 by omega]
+  rw [Function.iterate_add_apply]
+  have htau : ¬ targetATau23One h (5 + 1) ≤ h - 1 := by
+    have ht := targetATau23One_succ_eq_h_of_five hh
+      (⟨5, by omega⟩ : Fin h) rfl
+    intro hle
+    rw [ht] at hle
+    omega
+  rw [targetAQExpected23_A_odd_two_step_wrap (m := m) (h := h)
+    (x := 5) htau]
+  exact targetAQExpected23_B_one_to_A_one (m := m) (h := h) hmgt
+
+theorem targetAQExpected23_oddA_return
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (x : Fin h) :
+    (targetAQExpected23 m h)^[targetAQExpected23OddATime h x]
+        (targetAQOddA x) =
+      targetAQOddA (phi h x) := by
+  unfold targetAQExpected23OddATime targetAQOddA
+  by_cases hx : x.val = 5
+  · rw [if_pos hx]
+    rw [show 2 * x.val + 1 = 11 by omega]
+    rw [targetAQExpected23_A_five_excursion (m := m) (h := h) hm hh]
+    have hphi := phi_val_five x hx
+    simp [hphi]
+  · rw [if_neg hx]
+    have htau := targetATau23One_succ_eq_phi_val_of_ne_five hh x hx
+    have htau_le : targetATau23One h (x.val + 1) ≤ h - 1 := by
+      rw [htau]
+      exact Nat.le_pred_of_lt (phi h x).isLt
+    rw [targetAQExpected23_A_odd_two_step (m := m) (h := h)
+      (x := x.val) htau_le]
+    rw [htau]
+
+theorem targetAQExpected23_oddA_to_even {m h : Nat} (x : Fin h) :
+    targetAQExpected23 m h (targetAQOddA x) =
+      QRawLabel.A (2 * targetATau23One h (x.val + 1)) := by
+  unfold targetAQOddA
+  exact targetAQExpected23_A_odd_step (m := m) (h := h) (x := x.val)
+
+theorem targetAQExpected23_oddA_one_step {m h : Nat} (x : Fin h) :
+    (targetAQExpected23 m h)^[1] (targetAQOddA x) =
+      QRawLabel.A (2 * targetATau23One h (x.val + 1)) := by
+  simp [targetAQExpected23_oddA_to_even]
+
+theorem targetATau23One_succ_surjective
+    {h y : Nat} [NeZero h] (hh : 6 ≤ h)
+    (hy1 : 1 ≤ y) (hyh : y ≤ h) :
+    ∃ x : Fin h, targetATau23One h (x.val + 1) = y := by
+  by_cases htop : y = h
+  · subst y
+    refine ⟨⟨5, by omega⟩, ?_⟩
+    exact targetATau23One_succ_eq_h_of_five hh
+      (⟨5, by omega⟩ : Fin h) rfl
+  · have hylt : y < h := by omega
+    rcases (phi_bijective_of_six_le hh).2 (⟨y, hylt⟩ : Fin h) with
+      ⟨x, hx⟩
+    refine ⟨x, ?_⟩
+    have hval : (phi h x).val = y := by
+      exact congrArg Fin.val hx
+    have hxne : x.val ≠ 5 := by
+      intro hx5
+      have hphi := phi_val_five x hx5
+      omega
+    rw [targetATau23One_succ_eq_phi_val_of_ne_five hh x hxne]
+    exact hval
+
+theorem targetAQExpected23_oddA_covers_oddA {m h : Nat} (x : Fin h) :
+    ∃ k : Nat,
+      k < targetAQExpected23OddATime h x ∧
+        (targetAQExpected23 m h)^[k] (targetAQOddA x) =
+          targetAQOddA x := by
+  exact ⟨0, targetAQExpected23OddATime_pos x, rfl⟩
+
+theorem targetAQExpected23_oddA_covers_evenA
+    {m h y : Nat} [NeZero h] (hh : 6 ≤ h)
+    (hy1 : 1 ≤ y) (hyh : y ≤ h) :
+    ∃ x : Fin h, ∃ k : Nat,
+      k < targetAQExpected23OddATime h x ∧
+        (targetAQExpected23 m h)^[k] (targetAQOddA x) =
+          QRawLabel.A (2 * y) := by
+  rcases targetATau23One_succ_surjective hh hy1 hyh with ⟨x, hx⟩
+  refine ⟨x, 1, one_lt_targetAQExpected23OddATime x, ?_⟩
+  rw [targetAQExpected23_oddA_one_step (m := m) (h := h) x]
+  rw [hx]
+
+theorem targetAQExpected23_oddA_five_to_B_iter
+    {m h n : Nat} [NeZero h] (hh : 6 ≤ h) (hn : 1 + n < m) :
+    (targetAQExpected23 m h)^[2 + n]
+        (targetAQOddA (⟨5, by omega⟩ : Fin h)) =
+      QRawLabel.B (1 + n) := by
+  unfold targetAQOddA
+  change (targetAQExpected23 m h)^[2 + n] (QRawLabel.A 11) =
+    QRawLabel.B (1 + n)
+  rw [show 2 + n = n + 2 by omega]
+  rw [Function.iterate_add_apply]
+  have htau : ¬ targetATau23One h (5 + 1) ≤ h - 1 := by
+    have ht := targetATau23One_succ_eq_h_of_five hh
+      (⟨5, by omega⟩ : Fin h) rfl
+    intro hle
+    rw [ht] at hle
+    omega
+  rw [targetAQExpected23_A_odd_two_step_wrap (m := m) (h := h)
+    (x := 5) htau]
+  exact targetAQExpected23_B_iter (m := m) (h := h) (value := 1)
+    (n := n) hn
+
+theorem targetAQExpected23_oddA_five_covers_B
+    {m h value : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (hv1 : 1 ≤ value) (hvm : value < m) :
+    ∃ k : Nat,
+      k < targetAQExpected23OddATime h (⟨5, by omega⟩ : Fin h) ∧
+        (targetAQExpected23 m h)^[k]
+          (targetAQOddA (⟨5, by omega⟩ : Fin h)) =
+          QRawLabel.B value := by
+  refine ⟨2 + (value - 1), ?_, ?_⟩
+  · subst m
+    simp [targetAQExpected23OddATime]
+    omega
+  · have hn : 1 + (value - 1) < m := by omega
+    have hcover := targetAQExpected23_oddA_five_to_B_iter
+      (m := m) (h := h) (n := value - 1) hh hn
+    rw [show 1 + (value - 1) = value by omega] at hcover
+    exact hcover
+
+theorem targetAQExpected23_oddA_cover
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (label : QRawLabel) (hv : label.valid m) :
+    ∃ x : Fin h, ∃ k : Nat,
+      k < targetAQExpected23OddATime h x ∧
+        (targetAQExpected23 m h)^[k] (targetAQOddA x) = label := by
+  subst m
+  rcases label with ⟨kind, value⟩
+  cases kind
+  · rcases hv with ⟨hv1, hvm⟩
+    refine ⟨⟨5, by omega⟩, ?_⟩
+    exact targetAQExpected23_oddA_five_covers_B
+      (m := 2 * h + 1) (h := h) rfl hh hv1 hvm
+  · rcases hv with ⟨hv1, hvm⟩
+    change 1 ≤ value at hv1
+    change value < 2 * h + 1 at hvm
+    by_cases hodd : value % 2 = 1
+    · have hdecomp : value = 2 * (value / 2) + 1 := by
+        have hmoddiv := Nat.mod_add_div value 2
+        omega
+      let x : Fin h := ⟨value / 2, by omega⟩
+      refine ⟨x, ?_⟩
+      rcases targetAQExpected23_oddA_covers_oddA (m := 2 * h + 1)
+          (h := h) x with ⟨k, hk, heq⟩
+      refine ⟨k, hk, ?_⟩
+      rw [heq]
+      unfold targetAQOddA
+      change QRawLabel.A (2 * (value / 2) + 1) = QRawLabel.A value
+      exact congrArg QRawLabel.A hdecomp.symm
+    · have heven : value % 2 = 0 := by
+        have hlt := Nat.mod_lt value (by decide : 0 < 2)
+        omega
+      have hdecomp : value = 2 * (value / 2) := by
+        have hmoddiv := Nat.mod_add_div value 2
+        omega
+      have hhalf_pos : 1 ≤ value / 2 := by omega
+      have hhalf_le : value / 2 ≤ h := by omega
+      rcases targetAQExpected23_oddA_covers_evenA (m := 2 * h + 1)
+          (h := h) hh hhalf_pos hhalf_le with ⟨x, k, hk, heq⟩
+      refine ⟨x, k, hk, ?_⟩
+      rw [heq]
+      change QRawLabel.A (2 * (value / 2)) = QRawLabel.A value
+      exact congrArg QRawLabel.A hdecomp.symm
+
+theorem targetAPhiOne_succ_eq_phi_val_succ {h : Nat} [NeZero h]
+    (x : Fin h) :
+    targetAPhiOne h (x.val + 1) = (phi h x).val + 1 := by
+  simp [targetAPhiOne, phi]
+
+theorem targetAQExpected32_oddA_return
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (x : Fin h) :
+    (targetAQExpected32 m h)^[targetAQExpected32OddATime h x]
+        (targetAQOddA x) =
+      targetAQOddA (phi h x) := by
+  unfold targetAQExpected32OddATime targetAQOddA
+  by_cases hx : x.val = 5
+  · rw [if_pos hx]
+    rw [show 2 * x.val + 1 = 11 by omega]
+    rw [targetAQExpected32_A_six_excursion (m := m) (h := h) hm (by omega)]
+    have hphi := phi_val_five x hx
+    simp [hphi]
+  · rw [if_neg hx]
+    rw [targetAQExpected32_A_odd_two_step (m := m) (h := h)
+      (x := x.val) (by omega)]
+    have hphiOne := targetAPhiOne_succ_eq_phi_val_succ (h := h) x
+    rw [hphiOne]
+    congr
 
 theorem targetARep1ToH_pos (h value : Nat) :
     1 ≤ targetARep1ToH h value := by
@@ -1138,6 +1810,32 @@ abbrev QLabel (m : Nat) :=
 
 namespace QLabel
 
+def equivKindFin (m : Nat) : QLabel m ≃ QKind × Fin (m - 1) where
+  toFun label :=
+    (label.1.kind, ⟨label.1.value - 1, by
+      rcases label.2 with ⟨hpos, hlt⟩
+      omega⟩)
+  invFun data :=
+    ⟨⟨data.1, data.2.val + 1⟩, by
+      constructor
+      · change 1 ≤ data.2.val + 1
+        omega
+      · have hlt := data.2.isLt
+        change data.2.val + 1 < m
+        omega⟩
+  left_inv label := by
+    rcases label with ⟨⟨kind, value⟩, hv⟩
+    rcases hv with ⟨hpos, hlt⟩
+    apply Subtype.ext
+    have hval : value - 1 + 1 = value := Nat.sub_add_cancel hpos
+    cases kind <;> simp [hval]
+  right_inv data := by
+    rcases data with ⟨kind, value⟩
+    simp
+
+noncomputable instance (m : Nat) : Fintype (QLabel m) :=
+  Fintype.ofEquiv (QKind × Fin (m - 1)) (equivKindFin m).symm
+
 def expected23 {m h : Nat} [NeZero h]
     (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
     QLabel m :=
@@ -1160,6 +1858,100 @@ def expected32 {m h : Nat} [NeZero h]
     (expected32 hm hh label).1 = targetAQExpected32 m h label.1 :=
   rfl
 
+theorem expected32_iter_val {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (n : Nat) (label : QLabel m) :
+    (((expected32 hm hh)^[n]) label).1 =
+      (targetAQExpected32 m h)^[n] label.1 := by
+  induction n generalizing label with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply']
+      rw [expected32_val]
+      rw [ih label]
+
+theorem expected23_iter_val {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (n : Nat) (label : QLabel m) :
+    (((expected23 hm hh)^[n]) label).1 =
+      (targetAQExpected23 m h)^[n] label.1 := by
+  induction n generalizing label with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply']
+      rw [expected23_val]
+      rw [ih label]
+
+def oddA {m h : Nat} (hm : m = 2 * h + 1) (x : Fin h) : QLabel m :=
+  ⟨targetAQOddA x, targetAQOddA_valid hm x⟩
+
+@[simp] theorem oddA_val {m h : Nat}
+    (hm : m = 2 * h + 1) (x : Fin h) :
+    (oddA hm x).1 = targetAQOddA x :=
+  rfl
+
+theorem expected32_oddA_return {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (x : Fin h) :
+    ((expected32 hm hh)^[targetAQExpected32OddATime h x]) (oddA hm x) =
+      oddA hm (phi h x) := by
+  apply Subtype.ext
+  rw [expected32_iter_val]
+  exact targetAQExpected32_oddA_return hm hh x
+
+theorem expected23_oddA_return {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (x : Fin h) :
+    ((expected23 hm hh)^[targetAQExpected23OddATime h x]) (oddA hm x) =
+      oddA hm (phi h x) := by
+  apply Subtype.ext
+  rw [expected23_iter_val]
+  exact targetAQExpected23_oddA_return hm hh x
+
+theorem expected32_oddA_cover {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    ∃ x : Fin h, ∃ k : Nat,
+      k < targetAQExpected32OddATime h x ∧
+        ((expected32 hm hh)^[k]) (oddA hm x) = label := by
+  rcases targetAQExpected32_oddA_cover hm hh label.1 label.2 with
+    ⟨x, k, hk, heq⟩
+  refine ⟨x, k, hk, ?_⟩
+  apply Subtype.ext
+  rw [expected32_iter_val]
+  exact heq
+
+theorem expected23_oddA_cover {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    ∃ x : Fin h, ∃ k : Nat,
+      k < targetAQExpected23OddATime h x ∧
+        ((expected23 hm hh)^[k]) (oddA hm x) = label := by
+  rcases targetAQExpected23_oddA_cover hm hh label.1 label.2 with
+    ⟨x, k, hk, heq⟩
+  refine ⟨x, k, hk, ?_⟩
+  apply Subtype.ext
+  rw [expected23_iter_val]
+  exact heq
+
+theorem expected23_single_cycle_of_good {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (hgood : goodPhiClass h) :
+    IsSingleCycleMap (expected23 hm hh) := by
+  exact single_cycle_of_return_cover_finite
+    (f := expected23 hm hh)
+    (base := oddA hm)
+    (next := phi h)
+    (time := targetAQExpected23OddATime h)
+    (hreturn := expected23_oddA_return hm hh)
+    (hcover := expected23_oddA_cover hm hh)
+    (hnext := phi_single_cycle_of_good hh hgood)
+
+theorem expected32_single_cycle_of_good {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (hgood : goodPhiClass h) :
+    IsSingleCycleMap (expected32 hm hh) := by
+  exact single_cycle_of_return_cover_finite
+    (f := expected32 hm hh)
+    (base := oddA hm)
+    (next := phi h)
+    (time := targetAQExpected32OddATime h)
+    (hreturn := expected32_oddA_return hm hh)
+    (hcover := expected32_oddA_cover hm hh)
+    (hnext := phi_single_cycle_of_good hh hgood)
+
 end QLabel
 
 def targetAQFirstReturn23EndomapFormula
@@ -1171,6 +1963,88 @@ def targetAQFirstReturn32EndomapFormula
     {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
     (actual : QLabel m → QLabel m) : Prop :=
   ∀ label, actual label = QLabel.expected32 hm hh label
+
+def targetAQLift23
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (actual : QRawLabel → QRawLabel)
+    (hformula : targetAQFirstReturn23Formula m h actual) :
+    QLabel m → QLabel m :=
+  fun label =>
+    ⟨actual label.1, by
+      rw [hformula label.1 label.2]
+      exact targetAQExpected23_valid hm hh label.1 label.2⟩
+
+def targetAQLift32
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (actual : QRawLabel → QRawLabel)
+    (hformula : targetAQFirstReturn32Formula m h actual) :
+    QLabel m → QLabel m :=
+  fun label =>
+    ⟨actual label.1, by
+      rw [hformula label.1 label.2]
+      exact targetAQExpected32_valid hm hh label.1 label.2⟩
+
+theorem targetAQLift23_endomapFormula
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QRawLabel → QRawLabel}
+    (hformula : targetAQFirstReturn23Formula m h actual) :
+    targetAQFirstReturn23EndomapFormula hm hh
+      (targetAQLift23 hm hh actual hformula) := by
+  intro label
+  apply Subtype.ext
+  exact hformula label.1 label.2
+
+theorem targetAQLift32_endomapFormula
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QRawLabel → QRawLabel}
+    (hformula : targetAQFirstReturn32Formula m h actual) :
+    targetAQFirstReturn32EndomapFormula hm hh
+      (targetAQLift32 hm hh actual hformula) := by
+  intro label
+  apply Subtype.ext
+  exact hformula label.1 label.2
+
+theorem targetAQFirstReturn23EndomapFormula.single_cycle_of_good
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QLabel m → QLabel m}
+    (hformula : targetAQFirstReturn23EndomapFormula hm hh actual)
+    (hgood : goodPhiClass h) :
+    IsSingleCycleMap actual := by
+  have hactual : actual = QLabel.expected23 hm hh := by
+    funext label
+    exact hformula label
+  rw [hactual]
+  exact QLabel.expected23_single_cycle_of_good hm hh hgood
+
+theorem targetAQFirstReturn32EndomapFormula.single_cycle_of_good
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QLabel m → QLabel m}
+    (hformula : targetAQFirstReturn32EndomapFormula hm hh actual)
+    (hgood : goodPhiClass h) :
+    IsSingleCycleMap actual := by
+  have hactual : actual = QLabel.expected32 hm hh := by
+    funext label
+    exact hformula label
+  rw [hactual]
+  exact QLabel.expected32_single_cycle_of_good hm hh hgood
+
+theorem targetAQFirstReturn23Formula.lift_single_cycle_of_good
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QRawLabel → QRawLabel}
+    (hformula : targetAQFirstReturn23Formula m h actual)
+    (hgood : goodPhiClass h) :
+    IsSingleCycleMap (targetAQLift23 hm hh actual hformula) :=
+  targetAQFirstReturn23EndomapFormula.single_cycle_of_good hm hh
+    (targetAQLift23_endomapFormula hm hh hformula) hgood
+
+theorem targetAQFirstReturn32Formula.lift_single_cycle_of_good
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    {actual : QRawLabel → QRawLabel}
+    (hformula : targetAQFirstReturn32Formula m h actual)
+    (hgood : goodPhiClass h) :
+    IsSingleCycleMap (targetAQLift32 hm hh actual hformula) :=
+  targetAQFirstReturn32EndomapFormula.single_cycle_of_good hm hh
+    (targetAQLift32_endomapFormula hm hh hformula) hgood
 
 example : targetAQExpected23 13 6 (QRawLabel.B 1) = QRawLabel.B 2 := rfl
 

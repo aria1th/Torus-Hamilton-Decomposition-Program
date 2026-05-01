@@ -181,7 +181,38 @@ itself is now named in Lean using one-based raw labels:
 maps are now proved well-formed by `targetAQExpected23_valid` and
 `targetAQExpected32_valid`.  The subtype `QLabel m` and endomap predicates
 `targetAQFirstReturn23EndomapFormula`/`targetAQFirstReturn32EndomapFormula`
-package the same target without exposing invalid raw labels.
+package the same target without exposing invalid raw labels.  The expected
+Q-map is also decomposed into named B-chain and A-label transitions, including
+`targetAQExpected23_B_step`, `targetAQExpected23_A_even_step`,
+`targetAQExpected23_A_odd_step`, `targetAQExpected32_B_step`,
+`targetAQExpected32_A_odd_step`, and `targetAQExpected32_A_even_step`.
+The double-step lemmas `targetAQExpected23_A_odd_two_step` and
+`targetAQExpected32_A_odd_two_step` expose the tau/phi lane transitions
+directly.  The B-chain iteration lemmas `targetAQExpected23_B_iter` and
+`targetAQExpected32_B_iter`, together with
+`targetAQExpected23_A_five_excursion` and
+`targetAQExpected32_A_six_excursion`, isolate the long exceptional bridge
+from `A 11` through the B-chain back to `A 1`.  The theorems
+`targetAQExpected23_oddA_return` and `targetAQExpected32_oddA_return` package
+these pieces into the direct statement that the expected Q-maps return from
+the odd-A section by `phi h`, while `targetAQOddA_valid` prepares that section
+for the `QLabel m` subtype.  The lifted theorem
+`QLabel.expected23_oddA_return` and `QLabel.expected32_oddA_return`, plus the
+raw cover theorems `targetAQExpected23_oddA_cover` and
+`targetAQExpected32_oddA_cover`, prepare the expected-map cover scaffold.
+Thus the return-cover inputs for both expected Q-maps are closed.  The
+theorems `QLabel.expected23_single_cycle_of_good` and
+`QLabel.expected32_single_cycle_of_good` now prove the `23` and `32` expected
+Q endomaps are single cycles under the good-class condition `h % 5 != 3`, and
+the corresponding `targetAQFirstReturn23EndomapFormula.single_cycle_of_good`
+and `targetAQFirstReturn32EndomapFormula.single_cycle_of_good` transfer that
+conclusion to any actual first-return endomap satisfying the named formula.
+The raw verifier-style predicates `targetAQFirstReturn23Formula` and
+`targetAQFirstReturn32Formula` now also have direct lift adapters:
+`targetAQLift23`/`targetAQLift32` build valid-label subtype endomaps, and
+`targetAQFirstReturn23Formula.lift_single_cycle_of_good`/
+`targetAQFirstReturn32Formula.lift_single_cycle_of_good` route raw formula
+proofs to the same single-cycle conclusion.
 
 ## Updated Target-A Interpretation
 

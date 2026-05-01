@@ -61,7 +61,39 @@ when `m` is odd and `m >= 3`.
   validity lemmas showing that the expected formulas preserve valid Q labels.
   The subtype `QLabel m` and endomap predicates
   `targetAQFirstReturn23EndomapFormula`/`targetAQFirstReturn32EndomapFormula`
-  package the same target directly on valid Q labels.
+  package the same target directly on valid Q labels.  The B-chain and
+  A-even/A-odd transition lemmas
+  `targetAQExpected23_B_step`, `targetAQExpected23_A_even_step`,
+  `targetAQExpected23_A_odd_step`, `targetAQExpected32_B_step`,
+  `targetAQExpected32_A_odd_step`, and `targetAQExpected32_A_even_step`
+  provide the rewrite layer needed for the eventual expected-Q-map cycle
+  proof.  The double-step lemmas
+  `targetAQExpected23_A_odd_two_step` and
+  `targetAQExpected32_A_odd_two_step` expose the tau/phi lane transitions
+  directly.  The B-chain iteration lemmas
+  `targetAQExpected23_B_iter`/`targetAQExpected32_B_iter` and the
+  `targetAQExpected23_A_five_excursion`/
+  `targetAQExpected32_A_six_excursion` theorems isolate the long bridges from
+  the exceptional `A 11` state back to `A 1`.  The section-return theorems
+  `targetAQExpected23_oddA_return` and `targetAQExpected32_oddA_return` now
+  state directly that the expected maps return from odd-A labels by the
+  quotient map `phi h`, and `targetAQOddA_valid` prepares the same section for
+  the `QLabel m` subtype.
+  The subtype theorems `QLabel.expected23_oddA_return` and
+  `QLabel.expected32_oddA_return`, together with the raw cover lemmas
+  `targetAQExpected23_oddA_cover` and `targetAQExpected32_oddA_cover`,
+  provide the return-cover inputs for both expected Q maps.  Consequently
+  `QLabel.expected23_single_cycle_of_good` and
+  `QLabel.expected32_single_cycle_of_good` prove the `23` and `32` expected Q
+  endomaps are single cycles whenever `h % 5 != 3`, and the corresponding
+  `targetAQFirstReturn23EndomapFormula.single_cycle_of_good`/
+  `targetAQFirstReturn32EndomapFormula.single_cycle_of_good` theorems transfer
+  this to any actual first-return endomap satisfying the named formula.  The
+  raw verifier-style formulas now also lift automatically through
+  `targetAQLift23`/`targetAQLift32`, with
+  `targetAQFirstReturn23Formula.lift_single_cycle_of_good` and
+  `targetAQFirstReturn32Formula.lift_single_cycle_of_good` as the direct
+  adapters from raw valid-label tables.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
