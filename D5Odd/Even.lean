@@ -1,4 +1,4 @@
-import D5Odd.Main
+import D5Odd.Cayley
 
 namespace D5Odd
 
@@ -114,5 +114,28 @@ theorem D5_even_from_target {m : Nat} [NeZero m] (h : D5EvenCertificateTarget m)
     HamiltonDecompositionD5 m := by
   rcases h with ⟨S, hHam⟩
   exact D5_even_from_seam_data S hHam
+
+theorem D5_even_torus_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
+    (hHam : D5EvenSeamHamiltonian S) :
+    TorusHamiltonDecompositionD5 m := by
+  exact torusHamiltonDecomposition_of_model
+    (D5_even_from_seam_data S hHam)
+
+theorem D5_even_torus_from_target {m : Nat} [NeZero m]
+    (h : D5EvenCertificateTarget m) :
+    TorusHamiltonDecompositionD5 m := by
+  exact torusHamiltonDecomposition_of_model (D5_even_from_target h)
+
+theorem D5_even_cayley_from_seam_data {m : Nat} [NeZero m] (S : D5EvenSeamData m)
+    (hHam : D5EvenSeamHamiltonian S) :
+    CayleyHamiltonDecompositionD5 m := by
+  exact cayleyHamiltonDecomposition_of_torus
+    (D5_even_torus_from_seam_data S hHam)
+
+theorem D5_even_cayley_from_target {m : Nat} [NeZero m]
+    (h : D5EvenCertificateTarget m) :
+    CayleyHamiltonDecompositionD5 m := by
+  exact cayleyHamiltonDecomposition_of_torus
+    (D5_even_torus_from_target h)
 
 end D5Odd
