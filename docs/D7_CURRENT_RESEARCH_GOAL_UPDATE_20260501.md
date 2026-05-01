@@ -258,6 +258,9 @@ Implementation progress after this goal update:
   for row Latin, layer bijective, and return single-cycle data.
 - `Shared/Monodromy.lean` now contains conjugacy transfer for bijective and
   single-cycle maps, plus a skew-product base-orbit monodromy criterion.
+- `Shared/AdditiveBridge.lean` now packages the local bridge obligations:
+  state-dependent direction reindexing preserves row Latin, and skew-product
+  layer maps are bijective when the base and all fiber branches are bijective.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
