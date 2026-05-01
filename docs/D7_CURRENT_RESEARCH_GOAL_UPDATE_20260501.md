@@ -252,16 +252,32 @@ This separates three mechanisms that should not be conflated:
 
 ## Immediate Next Steps
 
+Implementation progress after this goal update:
+
+- `Shared/RootFlat.lean` now contains the generic schedule/certificate interface
+  for row Latin, layer bijective, and return single-cycle data.
+- `Shared/Monodromy.lean` now contains conjugacy transfer for bijective and
+  single-cycle maps, plus a skew-product base-orbit monodromy criterion.
+- `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
+  `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
+  layer wrapper, and transfer from a product-side return single-cycle
+  certificate to a D7 root-flat certificate.
+
+The remaining gap is not the abstract interface. It is the construction of the
+actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the
+base rows and the fiber compiler/monodromy proof.
+
 The next useful Lean/research steps are:
 
-1. Add the shared root-flat return criterion.
-2. State the additive local bridge and monodromy criterion in Lean, even before
-   proving the full all-odd `4+2` lemma.
-3. Convert the `m=5,7,9` `4+2` evidence into a small verified regression
+1. Instantiate the additive local bridge with the all-zero-set D5 base rows and
+   the D3 fiber compiler.
+2. Convert the `m=5,7,9` `4+2` evidence into a small verified regression
    harness outside Lean, preserving the bundle certificates.
-4. Search for a uniform or finite-congruence description of the all-zero-set
+3. Search for a uniform or finite-congruence description of the all-zero-set
    base rows for odd `m >= 5`.
-5. Search for a zero-set-only or first-return-section formula for the fiber
+4. Search for a zero-set-only or first-return-section formula for the fiber
    compiler `kappa`.
+5. Finish the concrete composite Cayley/torus endpoint from the existing
+   product reduction.
 6. Keep D7 even and D5 even on separate certificate tracks so their open
    obligations do not obscure the D7 odd structural bridge.
