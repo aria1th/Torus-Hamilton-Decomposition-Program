@@ -310,7 +310,10 @@ points map to `3,4,0,1,2`.  The residue transition is now formalized as
 `phiInvNat_mod_five`: internal steps preserve residue modulo `5`, while the
 top-boundary jump adds `3-h`.  Lean also proves
 `phi_single_cycle_iff_phiInv`, reducing the remaining orbit-stitching theorem
-to the inverse-map orbit proof.
+to the inverse-map orbit proof.  The bad-class direction is now proved:
+`goodPhiClass_of_phi_single_cycle` shows that a single-cycle `phi_h` forces
+`h % 5 != 3`.  What remains is the good-class inverse orbit transitivity
+proof.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

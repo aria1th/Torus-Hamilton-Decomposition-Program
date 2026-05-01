@@ -476,6 +476,56 @@ theorem phiInv_single_cycle_of_phi {h : Nat} [NeZero h] (hh : 6 ≤ h)
     IsSingleCycleMap (phiInv h) :=
   (phi_single_cycle_iff_phiInv hh).1 hphi
 
+theorem phiInvNat_mod_five_of_bad {h x : Nat}
+    (hh : 6 ≤ h) (hbad : h % 5 = 3) (hx : x < h) :
+    ((phiInvNat h x : Nat) : ZMod 5) = (x : ZMod 5) := by
+  rw [phiInvNat_mod_five hh hx]
+  by_cases hlt : x + 5 < h
+  · simp [hlt]
+  · simp [hlt, residueShift_eq_zero_of_bad hbad]
+
+theorem phiInv_iterate_mod_five_of_bad {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hbad : h % 5 = 3) :
+    ∀ n (x : Fin h),
+      ((((phiInv h)^[n]) x).val : ZMod 5) = (x.val : ZMod 5) := by
+  intro n
+  induction n with
+  | zero => intro x; simp
+  | succ n ih =>
+      intro x
+      rw [Function.iterate_succ_apply']
+      calc
+        ((phiInv h (((phiInv h)^[n]) x)).val : ZMod 5) =
+            ((((phiInv h)^[n]) x).val : ZMod 5) := by
+          exact phiInvNat_mod_five_of_bad hh hbad (((phiInv h)^[n]) x).isLt
+        _ = (x.val : ZMod 5) := ih x
+
+theorem phiInv_not_single_cycle_of_bad {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hbad : h % 5 = 3) :
+    ¬ IsSingleCycleMap (phiInv h) := by
+  intro hcycle
+  let y : Fin h := ⟨1, by omega⟩
+  rcases hcycle.2 (0 : Fin h) y with ⟨n, hn⟩
+  have hres := phiInv_iterate_mod_five_of_bad hh hbad n (0 : Fin h)
+  change ((((phiInv h)^[n]) (0 : Fin h)).val : ZMod 5) =
+    (0 : ZMod 5) at hres
+  rw [hn] at hres
+  change (1 : ZMod 5) = (0 : ZMod 5) at hres
+  exact (by decide : (1 : ZMod 5) ≠ 0) hres
+
+theorem phi_not_single_cycle_of_bad {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hbad : h % 5 = 3) :
+    ¬ IsSingleCycleMap (phi h) := by
+  intro hcycle
+  exact phiInv_not_single_cycle_of_bad hh hbad
+    (phiInv_single_cycle_of_phi hh hcycle)
+
+theorem goodPhiClass_of_phi_single_cycle {h : Nat} [NeZero h]
+    (hh : 6 ≤ h) (hcycle : IsSingleCycleMap (phi h)) :
+    goodPhiClass h := by
+  intro hbad
+  exact phi_not_single_cycle_of_bad hh hbad hcycle
+
 structure TargetASeamQuotientArithmetic (h : Nat) [NeZero h] : Type where
   hmin : 6 ≤ h
   single_cycle_iff : IsSingleCycleMap (phi h) ↔ goodPhiClass h

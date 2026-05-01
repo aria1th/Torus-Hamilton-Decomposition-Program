@@ -44,7 +44,9 @@ when `m` is odd and `m >= 3`.
   `h >= 6`, proving the residue-shift unit gate in `ZMod 5`, proving the
   inverse-map residue transition at the top boundary, proving
   `IsSingleCycleMap (phi h) ↔ IsSingleCycleMap (phiInv h)`, and packaging
-  the remaining cycle/Q-hitting/length-sum obligations.
+  the remaining cycle/Q-hitting/length-sum obligations.  It also proves the
+  bad-class necessary direction: if `phi h` is a single cycle, then
+  `h % 5 != 3`.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

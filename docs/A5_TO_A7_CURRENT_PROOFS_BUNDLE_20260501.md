@@ -161,7 +161,10 @@ residue transition lemma `phiInvNat_mod_five`: the inverse map preserves
 `x mod 5` before the top boundary and changes it by `3-h` at the boundary.
 The file also proves `phi_single_cycle_iff_phiInv`, so the remaining
 arithmetic cycle theorem may be proved on the inverse map and transferred
-back to `phi_h`.
+back to `phi_h`.  The bad-class direction is now closed as
+`goodPhiClass_of_phi_single_cycle`: if `phi_h` is a single cycle, then
+`h % 5 != 3`.  The remaining arithmetic gap is therefore the good-class
+inverse orbit transitivity theorem.
 
 ## Updated Target-A Interpretation
 
