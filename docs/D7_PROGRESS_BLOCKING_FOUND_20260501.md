@@ -250,6 +250,12 @@ count gate.  It confirms the bundled `m = 5,7,9` rows and the alternate
 The primitive-pool exact-cover search now uses this count gate before trying
 column placements; the recorded alternate `m = 5` cover is still found with
 the count-pruned search.
+`scripts/search_targetA_balanced_covers.py` is a focused version for larger
+primitive pools, especially pools exported by
+`scripts/search_targetA_primitive_words.cpp`.  It reads `HIT ... word=...`
+lines, searches seven-word multisets satisfying the balanced count gate, and
+then calls the column exact-cover placer.  It reproduces the alternate `m = 5`
+cover from the six-word input pool where `23` is allowed to repeat.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -378,6 +384,10 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-lengths 5,4,5,4,3,2,2 \
   --cover-pool-limit 200 --combo-limit 300000 --cover-limit 1 \
   --json-out /tmp/targetA_m5_primitive_cover_count_pruned.json
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 5 --words 23,002,0111,3044,14413,43220 \
+  --lengths 5,4,5,4,3,2,2 \
+  --json-out /tmp/targetA_balanced_m5_inline.json
 git diff --check
 ```
 

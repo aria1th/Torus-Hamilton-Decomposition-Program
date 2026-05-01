@@ -95,6 +95,10 @@ when `m` is odd and `m >= 3`.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.
+- `scripts/search_targetA_balanced_covers.py`: balanced Target-A row-family
+  search over a primitive-word pool, accepting C++ `HIT ... word=...` output,
+  enforcing aggregate slot counts `(m,m,m,m,m)`, then calling the column
+  exact-cover placer.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
@@ -215,6 +219,16 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-pool-limit 200 --combo-limit 300000 \
   --test-with-bundled-kappa \
   --json-out /tmp/d7_4plus2_base_pool_search.json
+```
+
+For larger primitive pools exported by the C++ helper, use the balanced-cover
+search:
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 5 --words 23,002,0111,3044,14413,43220 \
+  --lengths 5,4,5,4,3,2,2 \
+  --json-out /tmp/d7_targetA_balanced_m5_inline.json
 ```
 
 The restricted zero-set kappa formula family can be checked separately:
