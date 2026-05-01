@@ -89,6 +89,17 @@ def prefixSevenEquiv (m : Nat) :
     seven.Prefix m ≃ (Fin 6 → ZMod m) :=
   Equiv.refl _
 
+def rhoSevenEquiv :
+    seven.Rho ≃ {r : Fin 7 // 1 ≤ r.val} where
+  toFun r := ⟨r.1, r.2⟩
+  invFun r := ⟨r.1, r.2⟩
+  left_inv := by
+    intro r
+    rfl
+  right_inv := by
+    intro r
+    rfl
+
 end PrimeDimension
 
 end PrimeRoot
