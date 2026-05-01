@@ -268,6 +268,11 @@ exact-cover.  The bundled-kappa check then shows this alternate base cover is
 not automatically a full bridge certificate, separating the base row-family
 problem from the D3 fiber compiler problem.
 
+The companion `scripts/search_4plus2_kappa_formulas.py` isolates the first
+fiber-compiler family.  It verifies the zero-set cyclic formulas for bundled
+`m=5` and `m=7`, and confirms that bundled `m=9` is outside the restricted
+affine family `a*t + b*p(Z) + c*|Z| + d mod 3`.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

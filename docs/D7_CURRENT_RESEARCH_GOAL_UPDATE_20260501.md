@@ -396,6 +396,13 @@ Implementation progress after this goal update:
   `m=5,7,9,11,13,15,17` reproduces the observed exceptional behavior at `m=7`
   and finds no length-three primitive word for `m=17`, matching the current
   need for a longer or congruence-dependent base row family.
+- `scripts/search_4plus2_kappa_formulas.py` separates a first fiber-compiler
+  subproblem.  It searches cyclic/reflected zero-set formulas
+  `r = a*t + b*p(Z) + c*|Z| + d mod 3`; the bundled rows reproduce the
+  known hits `m=5: r=p+2|Z|` and `m=7: r=2|Z|+2`, while `m=9` has no hit in
+  this restricted family.  Thus the all-odd fiber compiler needs either a
+  richer zero-set table or a section-return construction beyond this affine
+  four-parameter family.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

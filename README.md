@@ -69,6 +69,7 @@ when `m` is odd and `m >= 3`.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
 - `scripts/analyze_4plus2_base_rows.py`: base-only search aid for the all-zero-set `4+2` bridge; it summarizes bundled row projections and scans short primitive A5 base words.
+- `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
@@ -137,6 +138,13 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-pool-limit 200 --combo-limit 300000 \
   --test-with-bundled-kappa \
   --json-out /tmp/d7_4plus2_base_pool_search.json
+```
+
+The restricted zero-set kappa formula family can be checked separately:
+
+```bash
+python3 scripts/search_4plus2_kappa_formulas.py --only 5,7,9 \
+  --json-out /tmp/d7_4plus2_kappa_formula_search.json
 ```
 
 Expected output:
