@@ -166,6 +166,9 @@ g++ -O3 -std=c++17 scripts/search_targetA_primitive_words.cpp \
 /tmp/search_targetA_primitive_words 27 6 10 5 2000 27
 ```
 
+The helper also accepts explicit candidate words after the mode argument, which
+is useful for parallel chunk checks or testing symmetry closures.
+
 It can also try bounded exact-cover assembly from the primitive-word pool:
 
 ```bash

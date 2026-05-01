@@ -142,6 +142,19 @@ struct Model {
     }
     return state == 0;
   }
+
+  bool single_cycle_word_orbit(
+      const vector<int> &word, vector<int> &seen, int stamp) const {
+    int state = 0;
+    for (int t = 0; t < n; ++t) {
+      if (seen[state] == stamp) return false;
+      seen[state] = stamp;
+      for (int slot : word) {
+        state = step[slot][state];
+      }
+    }
+    return state == 0;
+  }
 };
 
 string word_string(const vector<int> &word) {
@@ -160,6 +173,18 @@ vector<int> decode_word(uint64_t code, int length) {
   return word;
 }
 
+vector<int> parse_word_text(const string &text) {
+  vector<int> word;
+  word.reserve(text.size());
+  for (char ch : text) {
+    if (ch < '0' || ch > '4') {
+      throw runtime_error("word must use only digits 0..4: " + text);
+    }
+    word.push_back(ch - '0');
+  }
+  return word;
+}
+
 uint64_t pow5(int length) {
   uint64_t out = 1;
   for (int i = 0; i < length; ++i) out *= 5;
@@ -169,7 +194,8 @@ uint64_t pow5(int length) {
 int main(int argc, char **argv) {
   if (argc < 4) {
     cerr << "usage: " << argv[0]
-         << " m max_len limit [min_len=1] [random_samples_per_len=0] [seed=1]\n";
+         << " m max_len limit [min_len=1] [random_samples_per_len=0] [seed=1]"
+         << " [mode=orbit|full] [explicit_word...]\n";
     return 2;
   }
   int m = stoi(argv[1]);
@@ -178,11 +204,38 @@ int main(int argc, char **argv) {
   int min_len = argc > 4 ? stoi(argv[4]) : 1;
   int random_samples = argc > 5 ? stoi(argv[5]) : 0;
   uint64_t seed = argc > 6 ? stoull(argv[6]) : 1;
+  string mode = argc > 7 ? argv[7] : "orbit";
+  if (mode != "orbit" && mode != "full") {
+    throw runtime_error("mode must be orbit or full");
+  }
 
   Model model(m);
   cerr << "built m=" << m << " states=" << model.n << "\n";
   mt19937_64 rng(seed);
   int hits = 0;
+  vector<int> seen(model.n, 0);
+  int stamp = 1;
+
+  auto is_single = [&](const vector<int> &word) {
+    if (mode == "full") return model.single_cycle_word(word);
+    if (stamp == numeric_limits<int>::max()) {
+      fill(seen.begin(), seen.end(), 0);
+      stamp = 1;
+    }
+    return model.single_cycle_word_orbit(word, seen, stamp++);
+  };
+
+  if (argc > 8) {
+    for (int i = 8; i < argc; ++i) {
+      auto word = parse_word_text(argv[i]);
+      if (is_single(word)) {
+        cout << "HIT m=" << m << " length=" << word.size()
+             << " word=" << word_string(word) << "\n";
+        if (++hits >= limit) return 0;
+      }
+    }
+    return 0;
+  }
 
   for (int length = min_len; length <= max_len; ++length) {
     uint64_t total = pow5(length);
@@ -193,7 +246,7 @@ int main(int argc, char **argv) {
       uniform_int_distribution<uint64_t> dist(0, total - 1);
       for (int sample = 0; sample < random_samples; ++sample) {
         auto word = decode_word(dist(rng), length);
-        if (model.single_cycle_word(word)) {
+        if (is_single(word)) {
           cout << "HIT m=" << m << " length=" << length
                << " word=" << word_string(word) << "\n";
           if (++hits >= limit) return 0;
@@ -202,7 +255,7 @@ int main(int argc, char **argv) {
     } else {
       for (uint64_t code = 0; code < total; ++code) {
         auto word = decode_word(code, length);
-        if (model.single_cycle_word(word)) {
+        if (is_single(word)) {
           cout << "HIT m=" << m << " length=" << length
                << " word=" << word_string(word) << "\n";
           if (++hits >= limit) return 0;

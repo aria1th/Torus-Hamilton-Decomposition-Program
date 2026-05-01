@@ -184,6 +184,10 @@ family.
   found primitive words `22414`, `24142`, `441144`, and `332332`; all four
   pass the `Sigma` section audit at `m = 27`.  These do not work unchanged at
   `m = 7,17,37`, and naive `m = 37` random search is already heavy.
+- With orbit-only and explicit-word modes, the same helper verifies that the
+  symmetry closure of the known `m = 7,17,27` words has no `m = 37` hit, and a
+  length-5 exhaustive chunk scan for `m = 37` also finds no hit.  The current
+  lower bound for the first `m = 37` primitive word is therefore length `6`.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
