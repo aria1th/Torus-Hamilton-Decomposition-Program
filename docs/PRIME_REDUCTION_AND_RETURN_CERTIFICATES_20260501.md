@@ -251,6 +251,10 @@ matching the `card_ARoot3 = m^2` theorem for `A3(m)`.  On the product side,
 `card_ProductRoot = card_RootState7 = m^6` records the expected total state
 count for the D7 bridge.
 
+The bundled finite verifier now checks the same decomposition shape for
+`m=5,7,9`: base returns are single `m^4` cycles, fiber section returns are
+single `m^2` cycles, and product returns are single `m^6` cycles.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

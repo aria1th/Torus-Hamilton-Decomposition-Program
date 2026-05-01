@@ -376,7 +376,8 @@ Implementation progress after this goal update:
   lift before the existing torus/Cayley wrappers.
 - `scripts/verify_4plus2_allN_bridge_cert.py` now independently replays the
   bundled `m=5,7,9` all-zero-set `4+2` certificates and checks that all seven
-  product returns are single cycles.
+  base returns are single `m^4` cycles, all seven fiber section returns are
+  single `m^2` cycles, and all seven product returns are single `m^6` cycles.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

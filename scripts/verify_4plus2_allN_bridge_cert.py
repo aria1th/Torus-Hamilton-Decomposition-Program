@@ -154,6 +154,20 @@ def validate_certificate(cert: dict) -> None:
             raise ValueError(f"m={m}: kappa layer {t} contains a non-permutation index")
 
 
+def assert_single_cycle(size: int, start: int, step, label: str) -> None:
+    seen = bytearray(size)
+    state = start
+    for step_count in range(size):
+        if not 0 <= state < size:
+            raise ValueError(f"{label}: state {state} is outside 0..{size - 1}")
+        if seen[state]:
+            raise ValueError(f"{label}: repeated state {state} after {step_count} steps")
+        seen[state] = 1
+        state = step(state)
+    if state != start:
+        raise ValueError(f"{label}: did not return to start {start}; ended at {state}")
+
+
 class BridgeModel:
     def __init__(self, m: int):
         self.m = m
@@ -202,6 +216,30 @@ class BridgeModel:
             state = self.layer_step(state, layer, output_slot, kappa)
         return state
 
+    def base_return_step(self, base: int, row: list[int]) -> int:
+        for output_slot in row:
+            if output_slot < 5:
+                base = self.base_next[output_slot][base]
+        return base
+
+    def section_return_step(
+        self,
+        fiber: int,
+        row: list[int],
+        kappa: list[list[int]],
+        base_point: int,
+        base_period: int,
+    ) -> int:
+        state = base_point * self.fiber_size + fiber
+        for _ in range(base_period):
+            state = self.return_step(state, row, kappa)
+        base = state // self.fiber_size
+        if base != base_point:
+            raise ValueError(
+                f"section return left base point {base_point}; ended at base {base}"
+            )
+        return state % self.fiber_size
+
 
 def verify_certificate(cert: dict) -> str:
     validate_certificate(cert)
@@ -209,20 +247,33 @@ def verify_certificate(cert: dict) -> str:
     rows = cert["rows"]
     kappa = cert["kappa_perm_indices"]
     total_states = m**6
+    base_period = m**4
     model = BridgeModel(m)
     for color, row in enumerate(rows):
-        seen = bytearray(total_states)
-        state = 0
-        for step_count in range(total_states):
-            if seen[state]:
-                raise ValueError(
-                    f"m={m}: color {color} repeated state {state} after {step_count} returns"
-                )
-            seen[state] = 1
-            state = model.return_step(state, row, kappa)
-        if state != 0:
-            raise ValueError(f"m={m}: color {color} did not return to the initial state")
-    return f"verified m={m} product_states={total_states} rows=7 return_cycles=single"
+        assert_single_cycle(
+            base_period,
+            0,
+            lambda base, row=row: model.base_return_step(base, row),
+            f"m={m}: color {color} base return",
+        )
+        assert_single_cycle(
+            model.fiber_size,
+            0,
+            lambda fiber, row=row: model.section_return_step(
+                fiber, row, kappa, 0, base_period
+            ),
+            f"m={m}: color {color} fiber section return",
+        )
+        assert_single_cycle(
+            total_states,
+            0,
+            lambda state, row=row: model.return_step(state, row, kappa),
+            f"m={m}: color {color} product return",
+        )
+    return (
+        f"verified m={m} product_states={total_states} rows=7 "
+        "base_cycles=single section_cycles=single return_cycles=single"
+    )
 
 
 def load_bundle(path: Path, only: set[int] | None) -> list[dict]:
