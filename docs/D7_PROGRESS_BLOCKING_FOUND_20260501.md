@@ -324,7 +324,11 @@ The weak bad-class five-component package is supplied by the residue-class
 cover `residueComponentCover`.  The new
 `TargetASeamQuotientRemaining.toPackage` adapter fills the old arithmetic
 field automatically from `m = 2h+1` and `m >= 13`, so upstream Target-A work
-only needs to supply Q-hitting, Q-first-return, and length-sum proofs.
+only needs to supply Q-hitting, Q-first-return, and length-sum proofs.  The
+Q-first-return target is now less opaque: `QRawLabel`, `targetAQExpected23`,
+`targetAQExpected32`, and `targetAQFirstReturn23Formula`/
+`targetAQFirstReturn32Formula` record the verifier's one-based Q-label
+formula directly in Lean.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

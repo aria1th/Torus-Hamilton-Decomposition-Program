@@ -936,6 +936,103 @@ theorem TargetASeamQuotientArithmetic.phi_bijective
     Function.Bijective (phi h) :=
   phi_bijective_of_six_le pkg.hmin
 
+inductive QKind where
+  | B
+  | A
+deriving DecidableEq, Repr
+
+structure QRawLabel where
+  kind : QKind
+  value : Nat
+deriving DecidableEq, Repr
+
+namespace QRawLabel
+
+def valid (m : Nat) (label : QRawLabel) : Prop :=
+  1 ≤ label.value ∧ label.value < m
+
+def B (value : Nat) : QRawLabel :=
+  ⟨QKind.B, value⟩
+
+def A (value : Nat) : QRawLabel :=
+  ⟨QKind.A, value⟩
+
+end QRawLabel
+
+def targetARep1ToH (h value : Nat) : Nat :=
+  ((value - 1) % h) + 1
+
+def targetAPhiOne (h x : Nat) : Nat :=
+  phiNat h (x - 1) + 1
+
+def targetATau23One (h x : Nat) : Nat :=
+  if x ≤ 3 then
+    targetARep1ToH h (x + h - 4)
+  else if x ≤ 5 then
+    targetARep1ToH h (x + h - 9)
+  else if x = 6 then
+    targetARep1ToH h (x + h - 6)
+  else
+    x - 6
+
+def targetAQExpectedB (m : Nat) (value : Nat) : QRawLabel :=
+  if value + 1 < m then
+    QRawLabel.B (value + 1)
+  else
+    QRawLabel.A 1
+
+def targetAQExpected23 (m h : Nat) (label : QRawLabel) : QRawLabel :=
+  match label.kind with
+  | QKind.B => targetAQExpectedB m label.value
+  | QKind.A =>
+      if label.value % 2 = 0 then
+        let x := label.value / 2
+        if x ≤ h - 1 then
+          QRawLabel.A (2 * x + 1)
+        else
+          QRawLabel.B 1
+      else
+        let x := (label.value + 1) / 2
+        QRawLabel.A (2 * targetATau23One h x)
+
+def targetAQExpected32 (m h : Nat) (label : QRawLabel) : QRawLabel :=
+  match label.kind with
+  | QKind.B => targetAQExpectedB m label.value
+  | QKind.A =>
+      if label.value % 2 = 1 then
+        let x := (label.value + 1) / 2
+        QRawLabel.A (2 * x)
+      else
+        let x := label.value / 2
+        if x = 6 then
+          QRawLabel.B 1
+        else
+          QRawLabel.A (2 * targetAPhiOne h x - 1)
+
+def targetAQFirstReturnFormula
+    (m : Nat) (expected actual : QRawLabel → QRawLabel) : Prop :=
+  ∀ label, label.valid m → actual label = expected label
+
+def targetAQFirstReturn23Formula
+    (m h : Nat) (actual : QRawLabel → QRawLabel) : Prop :=
+  targetAQFirstReturnFormula m (targetAQExpected23 m h) actual
+
+def targetAQFirstReturn32Formula
+    (m h : Nat) (actual : QRawLabel → QRawLabel) : Prop :=
+  targetAQFirstReturnFormula m (targetAQExpected32 m h) actual
+
+example : targetAQExpected23 13 6 (QRawLabel.B 1) = QRawLabel.B 2 := rfl
+
+example : targetAQExpected23 13 6 (QRawLabel.B 12) = QRawLabel.A 1 := rfl
+
+example : targetAQExpected23 13 6 (QRawLabel.A 2) = QRawLabel.A 3 := rfl
+
+example : targetAQExpected23 13 6 (QRawLabel.A 1) = QRawLabel.A 6 := rfl
+
+example : targetAQExpected32 13 6 (QRawLabel.A 1) = QRawLabel.A 2 := rfl
+
+example : targetAQExpected32 13 6 (QRawLabel.A 12) = QRawLabel.B 1 := rfl
+
 structure TargetASeamQuotientPackage (m h : Nat) [NeZero m] [NeZero h] : Type where
   hm : m = 2 * h + 1
   hodd_range : 13 ≤ m

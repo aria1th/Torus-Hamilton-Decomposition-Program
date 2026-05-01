@@ -54,7 +54,10 @@ when `m` is odd and `m >= 3`.
   exact low-representative boundary landings, and a lifted residue-path
   composition via the local `Reaches` relation.  The wrapper
   `TargetASeamQuotientRemaining.toPackage` now fills the arithmetic field of
-  the older package automatically from `m = 2h+1` and `m >= 13`.
+  the older package automatically from `m = 2h+1` and `m >= 13`.  The
+  verifier's one-based Q-label return formulas are also named in Lean as
+  `targetAQExpected23`, `targetAQExpected32`, and
+  `targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
