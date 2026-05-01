@@ -67,7 +67,7 @@ when `m` is odd and `m >= 3`.
   factors.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
-- `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including base `m^4`, fiber-section `m^2`, and product `m^6` cycle checks.
+- `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
@@ -113,9 +113,9 @@ python3 scripts/verify_4plus2_allN_bridge_cert.py
 Expected output:
 
 ```text
-verified m=5 product_states=15625 rows=7 base_cycles=single section_cycles=single return_cycles=single
-verified m=7 product_states=117649 rows=7 base_cycles=single section_cycles=single return_cycles=single
-verified m=9 product_states=531441 rows=7 base_cycles=single section_cycles=single return_cycles=single
+verified m=5 product_states=15625 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
+verified m=7 product_states=117649 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
+verified m=9 product_states=531441 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
 ```
 
 The D5 even SAT search requires `python-sat`; it is a witness/debugging tool

@@ -154,18 +154,37 @@ def validate_certificate(cert: dict) -> None:
             raise ValueError(f"m={m}: kappa layer {t} contains a non-permutation index")
 
 
-def assert_single_cycle(size: int, start: int, step, label: str) -> None:
-    seen = bytearray(size)
+def cycle_rank(size: int, start: int, step, label: str) -> list[int]:
+    rank = [-1] * size
     state = start
     for step_count in range(size):
         if not 0 <= state < size:
             raise ValueError(f"{label}: state {state} is outside 0..{size - 1}")
-        if seen[state]:
+        if rank[state] != -1:
             raise ValueError(f"{label}: repeated state {state} after {step_count} steps")
-        seen[state] = 1
+        rank[state] = step_count
         state = step(state)
     if state != start:
         raise ValueError(f"{label}: did not return to start {start}; ended at {state}")
+    return rank
+
+
+def assert_rank_step(rank: list[int], step, label: str) -> None:
+    size = len(rank)
+    for state, state_rank in enumerate(rank):
+        next_state = step(state)
+        if not 0 <= next_state < size:
+            raise ValueError(f"{label}: next state {next_state} is outside 0..{size - 1}")
+        expected = (state_rank + 1) % size
+        actual = rank[next_state]
+        if actual != expected:
+            raise ValueError(
+                f"{label}: rank step failed at state {state}; expected {expected}, got {actual}"
+            )
+
+
+def assert_single_cycle(size: int, start: int, step, label: str) -> None:
+    cycle_rank(size, start, step, label)
 
 
 class BridgeModel:
@@ -250,20 +269,24 @@ def verify_certificate(cert: dict) -> str:
     base_period = m**4
     model = BridgeModel(m)
     for color, row in enumerate(rows):
-        assert_single_cycle(
+        base_step = lambda base, row=row: model.base_return_step(base, row)
+        base_rank = cycle_rank(
             base_period,
             0,
-            lambda base, row=row: model.base_return_step(base, row),
+            base_step,
             f"m={m}: color {color} base return",
         )
-        assert_single_cycle(
+        assert_rank_step(base_rank, base_step, f"m={m}: color {color} base rank")
+        section_step = lambda fiber, row=row: model.section_return_step(
+            fiber, row, kappa, 0, base_period
+        )
+        fiber_rank = cycle_rank(
             model.fiber_size,
             0,
-            lambda fiber, row=row: model.section_return_step(
-                fiber, row, kappa, 0, base_period
-            ),
+            section_step,
             f"m={m}: color {color} fiber section return",
         )
+        assert_rank_step(fiber_rank, section_step, f"m={m}: color {color} fiber rank")
         assert_single_cycle(
             total_states,
             0,
@@ -272,7 +295,7 @@ def verify_certificate(cert: dict) -> str:
         )
     return (
         f"verified m={m} product_states={total_states} rows=7 "
-        "base_cycles=single section_cycles=single return_cycles=single"
+        "base_rank_steps=ok section_rank_steps=ok return_cycles=single"
     )
 
 

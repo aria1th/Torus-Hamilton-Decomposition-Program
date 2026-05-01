@@ -252,8 +252,9 @@ matching the `card_ARoot3 = m^2` theorem for `A3(m)`.  On the product side,
 count for the D7 bridge.
 
 The bundled finite verifier now checks the same decomposition shape for
-`m=5,7,9`: base returns are single `m^4` cycles, fiber section returns are
-single `m^2` cycles, and product returns are single `m^6` cycles.
+`m=5,7,9`: base returns have canonical `m^4` orbit ranks stepped by `+1`,
+fiber section returns have canonical `m^2` orbit ranks stepped by `+1`, and
+product returns are single `m^6` cycles.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
