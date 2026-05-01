@@ -84,6 +84,31 @@ def summarize_feature_dependency(
     }
 
 
+def summarize_counter_groups(feature_name: str, groups: dict) -> dict:
+    majority = sum(max(counts.values()) for counts in groups.values())
+    total = sum(sum(counts.values()) for counts in groups.values())
+    impure_examples = []
+    for key, counts in groups.items():
+        if len(counts) > 1:
+            impure_examples.append(
+                {
+                    "key": repr(key),
+                    "counts": {
+                        str(value): count for value, count in sorted(counts.items())
+                    },
+                }
+            )
+        if len(impure_examples) >= 5:
+            break
+    return {
+        "feature": feature_name,
+        "classes": len(groups),
+        "pure_classes": sum(1 for counts in groups.values() if len(counts) == 1),
+        "majority_fraction": majority / total if total else 1.0,
+        "impure_examples": impure_examples,
+    }
+
+
 def kappa_diagnostic_features(m: int, profile: str) -> list[tuple[str, object]]:
     basic_features = [
         ("zero_mask", lambda _t, xs: zero_mask(xs, m)),
@@ -144,6 +169,85 @@ def kappa_dependency_diagnostics(
             summarize_feature_dependency(m, kappa, feature_name, key_fn)
             for feature_name, key_fn in kappa_diagnostic_features(m, profile)
         ],
+    }
+
+
+def section_trace_diagnostics(cert: dict) -> dict:
+    validate_certificate(cert)
+    m = cert["m"]
+    model = BridgeModel(m)
+    kappa = cert["kappa_perm_indices"]
+    base_period = m**4
+    colors = []
+    for color, row in enumerate(cert["rows"]):
+        base = 0
+        forced_events = 0
+        kappa_events = 0
+        perm_by_layer_p_z = defaultdict(Counter)
+        slot_by_layer_p_z_component = defaultdict(Counter)
+        slot_by_layer_p_z_component_full_mod3 = defaultdict(Counter)
+        for _ in range(base_period):
+            for layer, output_slot in enumerate(row):
+                event_base = base
+                if output_slot < 5:
+                    direction = model.base_direction[output_slot][event_base]
+                    next_base = model.base_next[output_slot][event_base]
+                    if direction == 4:
+                        component = 0
+                    else:
+                        forced_events += 1
+                        base = next_base
+                        continue
+                    base = next_base
+                else:
+                    component = output_slot - 4
+
+                xs = base_tuple(event_base, m)
+                p_value = lambda1_direction(xs, 0, m)
+                z_size = zero_count(xs, m)
+                residues = full_residues_mod3(xs, m)
+                perm_index = kappa[layer][event_base]
+                selected_slot = PERMS3[perm_index][component]
+                kappa_events += 1
+                perm_by_layer_p_z[(layer, p_value, z_size)][perm_index] += 1
+                slot_by_layer_p_z_component[
+                    (layer, p_value, z_size, component)
+                ][selected_slot] += 1
+                slot_by_layer_p_z_component_full_mod3[
+                    (layer, p_value, z_size, component, residues)
+                ][selected_slot] += 1
+        if base != 0:
+            raise ValueError(f"m={m}: color {color} section trace ended at base {base}")
+        total_events = forced_events + kappa_events
+        colors.append(
+            {
+                "color": color,
+                "total_events": total_events,
+                "forced_events": forced_events,
+                "kappa_events": kappa_events,
+                "kappa_event_fraction": (
+                    kappa_events / total_events if total_events else 0.0
+                ),
+                "groups": [
+                    summarize_counter_groups(
+                        "perm_by_layer_p_z", perm_by_layer_p_z
+                    ),
+                    summarize_counter_groups(
+                        "slot_by_layer_p_z_component",
+                        slot_by_layer_p_z_component,
+                    ),
+                    summarize_counter_groups(
+                        "slot_by_layer_p_z_component_full_mod3",
+                        slot_by_layer_p_z_component_full_mod3,
+                    ),
+                ],
+            }
+        )
+    return {
+        "m": m,
+        "base_period": base_period,
+        "fiber_period": model.fiber_size,
+        "colors": colors,
     }
 
 
@@ -845,6 +949,11 @@ def main() -> None:
         default="basic",
         help="feature set for --diagnose-kappa or --diagnostics-only",
     )
+    parser.add_argument(
+        "--section-trace-diagnostics",
+        action="store_true",
+        help="summarize bundled/generated kappa behavior along each section-return trace",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
     only = parse_only(args.only)
@@ -893,6 +1002,8 @@ def main() -> None:
                 cert["kappa_perm_indices"],
                 profile=args.diagnostic_profile,
             )
+        if args.section_trace_diagnostics:
+            result["section_trace_diagnostics"] = section_trace_diagnostics(cert)
         if args.emit_hit_cert_dir is not None and result["hits"]:
             result["emitted_cert_json"] = write_hit_certificates(
                 args.emit_hit_cert_dir, source, cert, result["hits"]

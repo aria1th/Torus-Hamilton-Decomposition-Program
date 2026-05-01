@@ -161,6 +161,10 @@ the same command with `--only 9` checks all `1296` dihedral candidates and finds
 no section-return hit.  With `--summarize-failures`, all bundled `m=9`
 dihedral candidates fail already at color `0`; the first section-cycle lengths
 are `27` for `664` candidates, `9` for `516`, `3` for `79`, and `1` for `37`.
+With `--section-trace-diagnostics`, the bundled `m=9` witness itself is also
+seen to require finer state dependence along the color-0 trace:
+`slot_by_layer_p_z_component` has only `5/55` pure classes, and adding full
+coordinate residues modulo `3` gives only `11/1235` pure classes.
 
 To inspect an existing kappa table without running the formula search:
 

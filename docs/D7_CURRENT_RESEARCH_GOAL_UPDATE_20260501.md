@@ -426,6 +426,12 @@ Implementation progress after this goal update:
   concentrated: every bundled `m=9` dihedral candidate fails at color `0`, with
   first section-cycle lengths `27` for `664` candidates, `9` for `516`, `3`
   for `79`, and `1` for `37`.
+  The `--section-trace-diagnostics` output then checks the bundled witness
+  itself along the section-return traces: for bundled `m=9`, color `0` has only
+  `5/55` pure classes for `slot_by_layer_p_z_component`, and adding full
+  coordinate residues modulo `3` gives only `11/1235` pure classes.  So the
+  finite witness is not merely using a different affine dihedral formula; along
+  the first trace it already depends on finer base-state information.
   With `--diagnostics-only`, the same script now skips formula verification and
   measures whether an existing kappa table is a function of coarse features.
   For bundled `m=9`, the feature partitions `zero_mask`, `zero_count`, `p`,

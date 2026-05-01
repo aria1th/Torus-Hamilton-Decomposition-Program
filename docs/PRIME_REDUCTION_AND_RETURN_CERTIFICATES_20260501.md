@@ -293,7 +293,10 @@ reproduces the bundled `m=5` and `m=7` formulas with constant reflection bit;
 the full `m=9` dihedral sweep checks all `1296` candidates and finds no
 section-return hit.  The failure summary is already concentrated at color `0`:
 the first section-cycle lengths are `27` for `664` candidates, `9` for `516`,
-`3` for `79`, and `1` for `37`.
+`3` for `79`, and `1` for `37`.  Section-trace diagnostics for the bundled
+`m=9` witness show the same obstruction from the other direction: along color
+`0`, `slot_by_layer_p_z_component` has only `5/55` pure classes, and adding
+full coordinate residues modulo `3` gives only `11/1235` pure classes.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
