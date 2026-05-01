@@ -115,6 +115,38 @@ noncomputable def ofRank {n : Nat} [NeZero n] {α : Type*} {f : α → α}
     CycleCoordinate n f :=
   ofRankEquiv (Equiv.ofBijective rank hrank) hstep
 
+noncomputable def ofFinRank {n : Nat} [NeZero n] {α : Type*} {f : α → α}
+    (rank : α → Fin n)
+    (hrank : Function.Bijective rank)
+    (hstep : ∀ x : α,
+      (ZMod.finEquiv n) (rank (f x)) = (ZMod.finEquiv n) (rank x) + 1) :
+    CycleCoordinate n f :=
+  ofRank (fun x => (ZMod.finEquiv n) (rank x))
+    ((ZMod.finEquiv n).bijective.comp hrank)
+    hstep
+
+noncomputable def conj {n : Nat} [NeZero n]
+    {α β : Type*} {f : α → α} {g : β → β}
+    (C : CycleCoordinate n f) (e : α ≃ β)
+    (hcomm : ∀ x : α, e (f x) = g (e x)) :
+    CycleCoordinate n g where
+  equiv := C.equiv.trans e
+  step := by
+    intro z
+    calc
+      (C.equiv.trans e) (z + 1) = e (C.equiv (z + 1)) := rfl
+      _ = e (f (C.equiv z)) := by rw [C.step z]
+      _ = g (e (C.equiv z)) := hcomm (C.equiv z)
+      _ = g ((C.equiv.trans e) z) := rfl
+
+noncomputable def conjOfBijective {n : Nat} [NeZero n]
+    {α β : Type*} {f : α → α} {g : β → β}
+    (C : CycleCoordinate n f) (phi : α → β)
+    (hphi : Function.Bijective phi)
+    (hcomm : ∀ x : α, phi (f x) = g (phi x)) :
+    CycleCoordinate n g :=
+  C.conj (Equiv.ofBijective phi hphi) hcomm
+
 theorem rank_step {n : Nat} [NeZero n] {α : Type*} {f : α → α}
     (C : CycleCoordinate n f) (x : α) :
     C.equiv.symm (f x) = C.equiv.symm x + 1 := by

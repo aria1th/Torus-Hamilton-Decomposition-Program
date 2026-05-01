@@ -120,9 +120,9 @@ factor 7 once the other prime factors are solved.
 The product theorem is no longer only a theorem-level manuscript artifact:
 Lean now has the graph-product interface and Hamilton-decomposition transport
 for a left factor with explicit cycle coordinates.  The remaining interface
-work is to connect existing base decompositions to that coordinate-bearing
-form, or prove a coordinate-extraction theorem from the current single-cycle
-endpoint.
+work is to lift the current coordinate anchor beyond the D5 `m = 3`
+root-return certificate to the full D5/D7 Cayley endpoints, or prove a
+coordinate-extraction theorem from the current single-cycle endpoint.
 
 ## What D=5 odd contributes
 
@@ -135,6 +135,8 @@ The useful package is:
 - `D5Odd/ReturnCycle.lean`: rank and semiconjugacy tools such as
   `single_cycle_of_rank`, `single_cycle_of_bijective_semiconj`,
   `single_cycle_of_return_cover`, and `single_cycle_of_first_return_sum`.
+  It also exports the D5 `m = 3` root-return coordinate witnesses
+  `m3ReturnQuad_cycleCoordinate` and `colorReturn_m3_cycleCoordinate`.
 - `Shared/RankCycle.lean`: shared `ZMod` rank criterion
   `single_cycle_of_zmod_rank`, for finite certificates where a rank map
   increases by one on each return step.
@@ -207,10 +209,10 @@ that statement first, before trying to formalize full torus-level behavior.
 
 ## Concrete next formalization tasks
 
-1. Connect existing D5/D7 Cayley endpoints to the coordinate-bearing product
-   theorem, either by carrying explicit `CycleCoordinate` data in the endpoint
-   or by proving color-wise rank functions and using the shared rank-to-cycle
-   adapter.
+1. Extend the current D5 `m = 3` root-return `CycleCoordinate` anchor to the
+   existing D5/D7 Cayley endpoints, either by carrying explicit coordinate data
+   through the endpoint or by proving a general coordinate-extraction theorem
+   from the current single-cycle proofs.
 2. Extract a shared return-lift library from the D3, D5, and D7 lift arguments.
 3. Turn `D5Odd/Even.lean` into an actual D=5 even seam certificate proof.
 4. Add a D7-even certificate target using the D7 `RootFlatSchedule` interface.

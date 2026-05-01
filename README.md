@@ -25,6 +25,8 @@ when `m` is odd and `m >= 3`.
 - `D5Odd/Cayley.lean`: final Cayley-edge wrapper and theorem.
 - `D5Odd/Torus.lean`: layer/root-flat lift from return maps to full torus color cycles.
 - `D5Odd/Main.lean`: model-level odd D5 endpoint.
+- `D5Odd/ReturnCycle.lean`: D5 return-cycle certificates, including the
+  `m = 3` root-return `CycleCoordinate` exported from the rank certificate.
 - `D7Odd/`: Lean 4 formalization of the odd D7 construction.
 - `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic branch and root-flat D7 endpoint.
 - `D7Odd/Handoff/PrimeCanonicalBridge.lean`: bridge from the prime-parametric interface back to the fixed `d = 7` canonical regression.

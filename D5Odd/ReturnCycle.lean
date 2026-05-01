@@ -1,4 +1,5 @@
 import D5Odd.Matching
+import Shared.TorusCayley
 
 namespace D5Odd
 
@@ -33,6 +34,13 @@ theorem fin81AddNat_add (i : Fin 81) (a b : Nat) :
   ext
   simp [fin81AddNat]
   omega
+
+theorem fin81AddNat_one_zmod (i : Fin 81) :
+    (ZMod.finEquiv 81) (fin81AddNat i 1) =
+      (ZMod.finEquiv 81) i + 1 := by
+  apply ZMod.val_injective 81
+  change (fin81AddNat i 1).val = (i + 1 : Fin 81).val
+  simp [fin81AddNat, Fin.val_add]
 
 set_option linter.style.nativeDecide false in
 theorem fin81AddNat_one_bijective :
@@ -7994,6 +8002,26 @@ theorem colorReturn_m3_single_cycle (c : Color) :
     (Equiv.bijective (rootQuadEquiv 3))
     (by intro x; unfold m3ReturnQuad; rw [rootOfQuad_quadOfRoot])
     (m3ReturnQuad_single_cycle c)
+
+theorem m3Rank_step_zmod (c : Color) (x : Fin 4 -> ZMod 3) :
+    (ZMod.finEquiv 81) (m3Rank c (m3ReturnQuad c x)) =
+      (ZMod.finEquiv 81) (m3Rank c x) + 1 := by
+  rw [m3Rank_step c x]
+  exact fin81AddNat_one_zmod (m3Rank c x)
+
+noncomputable def m3ReturnQuad_cycleCoordinate (c : Color) :
+    Shared.CycleCoordinate 81 (m3ReturnQuad c) :=
+  Shared.CycleCoordinate.ofFinRank
+    (m3Rank c)
+    (m3Rank_bijective c)
+    (m3Rank_step_zmod c)
+
+noncomputable def colorReturn_m3_cycleCoordinate (c : Color) :
+    Shared.CycleCoordinate 81 (colorReturn m3Schedule c) :=
+  (m3ReturnQuad_cycleCoordinate c).conjOfBijective
+    rootOfQuad
+    (Equiv.bijective (rootQuadEquiv 3))
+    (by intro x; unfold m3ReturnQuad; rw [rootOfQuad_quadOfRoot])
 
 theorem m3Schedule_allColorHamiltonian : AllColorHamiltonian m3Schedule := by
   intro c
