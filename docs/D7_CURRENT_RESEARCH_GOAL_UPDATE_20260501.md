@@ -265,6 +265,9 @@ Implementation progress after this goal update:
 - `scripts/verify_4plus2_allN_bridge_cert.py` now independently replays the
   bundled `m=5,7,9` all-zero-set `4+2` certificates and checks that all seven
   product returns are single cycles.
+- `RoundComposite.lean` now has an odd-modulus version of the product reduction
+  interface, so odd-only prime endpoints such as the current D5/D7 theorems can
+  be connected without pretending that the even branches are solved.
 
 The remaining gap is not the abstract interface. It is the construction of the
 actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the
@@ -279,6 +282,7 @@ The next useful Lean/research steps are:
 3. Search for a zero-set-only or first-return-section formula for the fiber
    compiler `kappa`.
 4. Finish the concrete composite Cayley/torus endpoint from the existing
-   product reduction.
+   product reduction; the odd-modulus logical reduction is present, but the
+   graph-product construction itself is still not formalized in Lean.
 5. Keep D7 even and D5 even on separate certificate tracks so their open
    obligations do not obscure the D7 odd structural bridge.

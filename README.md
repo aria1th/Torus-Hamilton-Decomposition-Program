@@ -37,7 +37,7 @@ when `m` is odd and `m >= 3`.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and return criterion interface.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: state-dependent direction reindexing lemmas for local additive bridge row/source Latin conditions.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, plus a concrete torus-to-Cayley adapter.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants and concrete torus-to-Cayley adapters.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates.

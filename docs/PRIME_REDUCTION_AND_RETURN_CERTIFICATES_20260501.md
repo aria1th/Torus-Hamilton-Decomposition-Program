@@ -20,6 +20,11 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
   In particular, pointwise composite expansion has the shape:
   D_a(m) plus D_b(m^a) implies D_ab(m).  Uniformly, once all prime dimensions
   are solved for every modulus, all dimensions follow.
+- The Lean `RoundComposite.lean` file now also separates the odd-modulus version
+  of this reduction.  This is the right interface for currently odd-only prime
+  endpoints such as D=5 and D=7: if the pointwise expansion and prime bases are
+  known for odd moduli, then the prime-factor reduction is also available over
+  odd moduli.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
   `D5Odd/Main.lean`, `D5Odd/Torus.lean`, and `D5Odd/Cayley.lean`.
 - D=7 odd is Lean-formalized through a root-flat certificate and then lifted to
@@ -170,7 +175,9 @@ that statement first, before trying to formalize full torus-level behavior.
 
 ## Concrete next formalization tasks
 
-1. Lean-formalize the composite product theorem.
+1. Lean-formalize the graph-product construction underlying the composite
+   product theorem.  The current Lean file has the logical pointwise and
+   odd-pointwise reduction interfaces, but not the arc-level product proof.
 2. Extract a shared return-lift library from the D3, D5, and D7 lift arguments.
 3. Turn `D5Odd/Even.lean` into an actual D=5 even seam certificate proof.
 4. Add a D7-even certificate target using the D7 `RootFlatSchedule` interface.
