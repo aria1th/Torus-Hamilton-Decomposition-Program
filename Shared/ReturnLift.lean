@@ -5,6 +5,47 @@ namespace Shared
 def IsSingleCycleMap {α : Type*} (f : α → α) : Prop :=
   Function.Bijective f ∧ ∀ x y : α, ∃ n : Nat, f^[n] x = y
 
+theorem iterate_mul_base_of_periodic_return
+    {α β : Type*} (S : α → α) (base : β → α) (R : β → β)
+    (period : Nat)
+    (hreturn : ∀ w : β, S^[period] (base w) = base (R w)) :
+    ∀ n : Nat, ∀ w : β,
+      S^[n * period] (base w) = base (R^[n] w) := by
+  intro n
+  induction n with
+  | zero =>
+      intro w
+      simp
+  | succ n ih =>
+      intro w
+      calc
+        S^[(n + 1) * period] (base w)
+            = S^[n * period + period] (base w) := by
+                congr 1
+                ring
+        _ = S^[n * period] (S^[period] (base w)) := by
+                rw [Function.iterate_add_apply]
+        _ = S^[n * period] (base (R w)) := by
+                rw [hreturn]
+        _ = base (R^[n] (R w)) := ih (R w)
+        _ = base (R^[n + 1] w) := by
+                rw [Function.iterate_succ_apply]
+
+theorem iterate_add_mul_base_of_periodic_return
+    {α β : Type*} (S : α → α) (base : β → α) (R : β → β)
+    (period : Nat)
+    (hreturn : ∀ w : β, S^[period] (base w) = base (R w))
+    (n r : Nat) (w : β) :
+    S^[n * period + r] (base w) =
+      S^[r] (base (R^[n] w)) := by
+  calc
+    S^[n * period + r] (base w)
+        = S^[r] (S^[n * period] (base w)) := by
+            simpa [Nat.add_comm] using
+              Function.iterate_add_apply S r (n * period) (base w)
+    _ = S^[r] (base (R^[n] w)) := by
+            rw [iterate_mul_base_of_periodic_return S base R period hreturn n w]
+
 theorem single_cycle_of_periodic_return_cover
     {α β : Type*} (S : α → α) (base : β → α) (R : β → β)
     (period : Nat)
@@ -16,26 +57,8 @@ theorem single_cycle_of_periodic_return_cover
     IsSingleCycleMap S := by
   have hreturn_iter :
       ∀ n : Nat, ∀ w : β,
-        S^[n * period] (base w) = base (R^[n] w) := by
-    intro n
-    induction n with
-    | zero =>
-        intro w
-        simp
-    | succ n ih =>
-        intro w
-        calc
-          S^[(n + 1) * period] (base w)
-              = S^[n * period + period] (base w) := by
-                  congr 1
-                  ring
-          _ = S^[n * period] (S^[period] (base w)) := by
-                  rw [Function.iterate_add_apply]
-          _ = S^[n * period] (base (R w)) := by
-                  rw [hreturn]
-          _ = base (R^[n] (R w)) := ih (R w)
-          _ = base (R^[n + 1] w) := by
-                  rw [Function.iterate_succ_apply]
+        S^[n * period] (base w) = base (R^[n] w) :=
+    iterate_mul_base_of_periodic_return S base R period hreturn
   refine ⟨hS, ?_⟩
   intro x y
   rcases hcover x with ⟨a, r, hrlt, hx⟩
