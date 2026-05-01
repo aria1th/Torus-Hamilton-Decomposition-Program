@@ -129,6 +129,14 @@ def canonicalSchedule7_prime_certified :
     seven.CountMatrixSchedule 7 :=
   countMatrixScheduleSevenOfFixed Handoff.canonicalSchedule7_certified
 
+theorem canonicalSchedule7_prime_handoff :
+    Handoff.HamiltonDecompositionD7 7 := by
+  let P : Handoff.CountMatrixSchedule 7 :=
+    countMatrixScheduleFixedOfSeven canonicalSchedule7_prime_certified
+  rcases Handoff.canonical_realization_theorem P with ⟨R⟩
+  exact Handoff.hamilton_of_canonical_realization R
+    (fun c => Handoff.countMatrixSchedule_word_certified P c)
+
 theorem addQ_seven_eq_fixed (m : Nat) (i : Fin 7) (w : Vec7 m) :
     seven.addQ m i w = Handoff.addQ m i w := by
   rfl
@@ -203,6 +211,10 @@ theorem hamilton_seven_of_fixed {m : Nat} [NeZero m]
     seven.HamiltonDecomposition m := by
   rcases h with ⟨C⟩
   exact ⟨rootFlatCertificateSevenOfFixed C⟩
+
+theorem canonicalSchedule7_prime_hamilton :
+    seven.HamiltonDecomposition 7 :=
+  hamilton_seven_of_fixed canonicalSchedule7_prime_handoff
 
 theorem hamilton_fixed_of_seven {m : Nat} [NeZero m]
     (h : seven.HamiltonDecomposition m) :
