@@ -247,7 +247,7 @@ row/fiber compiler data plus base-rank and fiber-monodromy proofs.  Its
 `BridgeConcretePowRankPackage` fixes that base rank target to `ZMod (m^4)`,
 matching the cardinality of `A5(m)`.  Its `BridgeConcreteFullRankPackage`
 also reduces the fiber monodromy to a rank-step witness into `ZMod (m^2)`,
-matching the cardinality of `A3(m)`.
+matching the `card_ARoot3 = m^2` theorem for `A3(m)`.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

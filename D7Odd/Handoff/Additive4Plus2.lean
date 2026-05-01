@@ -156,6 +156,43 @@ theorem root3_sink_eq {m : Nat} (w : ARoot3 m) :
     _ = -(w.1 0 + w.1 1) := by
       ring
 
+def pairOfRoot3 {m : Nat} (w : ARoot3 m) : Fin 2 → ZMod m :=
+  fun i => if i = 0 then w.1 0 else w.1 1
+
+set_option linter.flexible false in
+theorem vec3OfPrefix_pairOfRoot3 {m : Nat} (w : ARoot3 m) :
+    vec3OfPrefix (pairOfRoot3 w 0) (pairOfRoot3 w 1) = w := by
+  apply Subtype.ext
+  ext i
+  fin_cases i <;> simp [pairOfRoot3, vec3OfPrefix]
+  rw [root3_sink_eq]
+  ring
+
+def root3PairEquiv (m : Nat) :
+    (Fin 2 → ZMod m) ≃ ARoot3 m where
+  toFun p := vec3OfPrefix (p 0) (p 1)
+  invFun := pairOfRoot3
+  left_inv := by
+    intro p
+    ext i
+    fin_cases i <;> simp [pairOfRoot3, vec3OfPrefix]
+  right_inv := vec3OfPrefix_pairOfRoot3
+
+noncomputable instance instFintypeARoot3 (m : Nat) [NeZero m] : Fintype (ARoot3 m) :=
+  Fintype.ofEquiv (Fin 2 → ZMod m) (root3PairEquiv m)
+
+theorem card_ARoot3 {m : Nat} [NeZero m] :
+    Fintype.card (ARoot3 m) = m ^ 2 := by
+  have hcard :
+      Fintype.card (Fin 2 → ZMod m) = Fintype.card (ARoot3 m) :=
+    Fintype.card_congr (root3PairEquiv m)
+  calc
+    Fintype.card (ARoot3 m) = Fintype.card (Fin 2 → ZMod m) := hcard.symm
+    _ = Fintype.card (ZMod m) ^ 2 := by
+      simp
+    _ = m ^ 2 := by
+      rw [ZMod.card]
+
 theorem root7_sink_eq {m : Nat} (w : RootState7 m) :
     w.1 6 = -(w.1 0 + w.1 1 + w.1 2 + w.1 3 + w.1 4 + w.1 5) := by
   have hsum :
