@@ -295,8 +295,9 @@ formula and residue-cycle explanation explicitly.
 
 `D7Odd/Handoff/TargetASeamQuotient.lean` now exposes this as a Lean proof
 interface.  It defines `phi_h`, `phi_h^{-1}`, the good class, and a package
-whose fields are the arithmetic theorem plus Q-hitting, Q-first-return, and
-length-sum obligations for `23` and `32`.
+whose fields are the single-cycle theorem plus Q-hitting, Q-first-return, and
+length-sum obligations for `23` and `32`.  The inverse identities and
+bijectivity of `phi_h` for `h >= 6` are already proved in Lean.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count

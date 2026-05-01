@@ -40,8 +40,8 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`: concrete all-zero-set bridge target: once row permutations, D3 fiber-layer/permutation data, a base-return rank step into `ZMod (m^4)`, and a fiber-monodromy rank step into `ZMod (m^2)` are supplied for the canonical folded return, the local row/layer facts, folded-return bijectivity, product-return equality, base orbit coverage, and monodromy single-cycle are filled in automatically and the odd D7 torus/Cayley endpoints follow.
 - `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
-  good class `h % 5 != 3`, and the arithmetic/Q-hitting/length-sum package
-  that remains to be proved.
+  good class `h % 5 != 3`, proving the inverse identities and bijectivity for
+  `h >= 6`, and packaging the remaining cycle/Q-hitting/length-sum obligations.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

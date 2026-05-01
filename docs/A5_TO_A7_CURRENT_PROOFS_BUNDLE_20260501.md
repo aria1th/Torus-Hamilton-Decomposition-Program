@@ -144,9 +144,10 @@ D7Odd/Handoff/TargetASeamQuotient.lean
 
 It defines the quotient map `phi_h`, the inverse map, the good class
 `h % 5 != 3`, and a `TargetASeamQuotientPackage` collecting the still-missing
-formal obligations: arithmetic, Q-hitting, Q-first-return formulas, and the
-two length-sum identities.  This file is a proof interface, not a completed
-Target-A theorem.
+formal obligations: the single-cycle arithmetic theorem, Q-hitting,
+Q-first-return formulas, and the two length-sum identities.  The inverse-map
+identities and bijectivity of `phi_h` for `h >= 6` are already proved in Lean.
+This file is a proof interface, not a completed Target-A theorem.
 
 ## Updated Target-A Interpretation
 
