@@ -274,8 +274,12 @@ The companion `scripts/search_4plus2_kappa_formulas.py` isolates the first
 fiber-compiler family.  It verifies the zero-set cyclic formulas for bundled
 `m=5` and `m=7`, and confirms that bundled `m=9` is outside the restricted
 affine family `a*t + b*p(Z) + c*|Z| + d mod 3`.  It can also consume
-base-cover JSON emitted by `scripts/analyze_4plus2_base_rows.py`, and can emit
-verifier-ready certificate JSON files for formula hits.
+base-cover JSON emitted by `scripts/analyze_4plus2_base_rows.py`, can emit
+verifier-ready certificate JSON files for formula hits, and can run
+`--diagnostics-only` to inspect existing kappa tables without replaying the
+formula search.  The bundled `m=9` table is not pure on the current coarse
+feature partitions; for example, `layer_zero_mask` has only `9/243` pure
+classes and majority fraction `0.188843`.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

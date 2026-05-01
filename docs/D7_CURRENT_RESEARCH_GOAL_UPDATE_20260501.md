@@ -409,6 +409,14 @@ Implementation progress after this goal update:
   above is checked.  With `--emit-hit-cert-dir`, formula hits are materialized
   as verifier-ready JSON certificates, and the alternate `m=5` emitted
   certificate passes `scripts/verify_4plus2_allN_bridge_cert.py --cert-json`.
+  With `--diagnostics-only`, the same script now skips formula verification and
+  measures whether an existing kappa table is a function of coarse features.
+  For bundled `m=9`, the feature partitions `zero_mask`, `zero_count`, `p`,
+  `p_zero_count`, `layer_mod3_pmod3_zmod3`, and `layer_mod3_zero_mask` have no
+  pure classes, while `layer_zero_mask` has only `9/243` pure classes and
+  majority fraction `0.188843`.  This supports treating `m=9` as the first
+  genuinely opaque fiber-compiler obstruction, rather than merely a missed
+  four-parameter affine formula.
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without

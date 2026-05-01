@@ -7,6 +7,7 @@ import argparse
 import copy
 import itertools
 import json
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from verify_4plus2_allN_bridge_cert import (
@@ -28,12 +29,74 @@ def zero_count(xs: tuple[int, int, int, int], m: int) -> int:
     return sum(1 for value in full if value == 0)
 
 
+def zero_mask(xs: tuple[int, int, int, int], m: int) -> tuple[bool, bool, bool, bool, bool]:
+    full = (xs[0], xs[1], xs[2], xs[3], (-sum(xs)) % m)
+    return tuple(value == 0 for value in full)
+
+
 def rotation_perm_index(r: int, reflected: bool) -> int:
     if reflected:
         perm = tuple((r - j) % 3 for j in range(3))
     else:
         perm = tuple((r + j) % 3 for j in range(3))
     return PERM_INDEX[perm]
+
+
+def summarize_feature_dependency(
+    m: int, kappa: list[list[int]], feature_name: str, key_fn
+) -> dict:
+    groups = defaultdict(Counter)
+    for t, layer in enumerate(kappa):
+        for base, value in enumerate(layer):
+            xs = base_tuple(base, m)
+            groups[key_fn(t, xs)][value] += 1
+    majority = sum(max(counts.values()) for counts in groups.values())
+    total = sum(sum(counts.values()) for counts in groups.values())
+    impure_examples = []
+    for key, counts in groups.items():
+        if len(counts) > 1:
+            impure_examples.append(
+                {
+                    "key": repr(key),
+                    "counts": dict(sorted(counts.items())),
+                }
+            )
+        if len(impure_examples) >= 5:
+            break
+    return {
+        "feature": feature_name,
+        "classes": len(groups),
+        "pure_classes": sum(1 for counts in groups.values() if len(counts) == 1),
+        "majority_fraction": majority / total if total else 1.0,
+        "impure_examples": impure_examples,
+    }
+
+
+def kappa_dependency_diagnostics(m: int, kappa: list[list[int]]) -> dict:
+    features = [
+        ("zero_mask", lambda _t, xs: zero_mask(xs, m)),
+        ("zero_count", lambda _t, xs: zero_count(xs, m)),
+        ("p", lambda _t, xs: lambda1_direction(xs, 0, m)),
+        ("p_zero_count", lambda _t, xs: (lambda1_direction(xs, 0, m), zero_count(xs, m))),
+        ("layer_zero_mask", lambda t, xs: (t, zero_mask(xs, m))),
+        (
+            "layer_p_zero_count",
+            lambda t, xs: (t, lambda1_direction(xs, 0, m), zero_count(xs, m)),
+        ),
+        (
+            "layer_mod3_pmod3_zmod3",
+            lambda t, xs: (t % 3, lambda1_direction(xs, 0, m) % 3, zero_count(xs, m) % 3),
+        ),
+        ("layer_mod3_zero_mask", lambda t, xs: (t % 3, zero_mask(xs, m))),
+    ]
+    flat_values = [value for layer in kappa for value in layer]
+    return {
+        "perm_counts": dict(sorted(Counter(flat_values).items())),
+        "features": [
+            summarize_feature_dependency(m, kappa, feature_name, key_fn)
+            for feature_name, key_fn in features
+        ],
+    }
 
 
 def build_formula_kappa(
@@ -74,7 +137,7 @@ def test_formula(cert: dict, formula: dict) -> dict:
 
 
 def search_formulas(
-    cert: dict, *, stop_after_first: bool, include_failures: bool
+    cert: dict, *, stop_after_first: bool, include_failures: bool, diagnose_hits: bool
 ) -> dict:
     hits = []
     failures = []
@@ -88,6 +151,10 @@ def search_formulas(
                 "result": result,
             }
             if result["ok"]:
+                if diagnose_hits:
+                    record["formula_kappa_diagnostics"] = kappa_dependency_diagnostics(
+                        cert["m"], build_formula_kappa(cert["m"], **formula)
+                    )
                 hits.append(record)
                 if stop_after_first:
                     return {"m": cert["m"], "hits": hits, "failures": failures}
@@ -189,6 +256,16 @@ def main() -> None:
         "--all-hits", action="store_true", help="do not stop after first hit"
     )
     parser.add_argument("--include-failures", action="store_true")
+    parser.add_argument(
+        "--diagnose-kappa",
+        action="store_true",
+        help="add dependency diagnostics for input kappa tables and formula hits",
+    )
+    parser.add_argument(
+        "--diagnostics-only",
+        action="store_true",
+        help="only emit input kappa diagnostics; skip formula verification",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
     only = parse_only(args.only)
@@ -206,12 +283,20 @@ def main() -> None:
         "searches": [],
     }
     for source, cert in cases:
-        result = search_formulas(
-            cert,
-            stop_after_first=not args.all_hits,
-            include_failures=args.include_failures,
-        )
+        if args.diagnostics_only:
+            result = {"m": cert["m"], "hits": [], "failures": []}
+        else:
+            result = search_formulas(
+                cert,
+                stop_after_first=not args.all_hits,
+                include_failures=args.include_failures,
+                diagnose_hits=args.diagnose_kappa,
+            )
         result["source"] = source
+        if args.diagnose_kappa or args.diagnostics_only:
+            result["input_kappa_diagnostics"] = kappa_dependency_diagnostics(
+                cert["m"], cert["kappa_perm_indices"]
+            )
         if args.emit_hit_cert_dir is not None and result["hits"]:
             result["emitted_cert_json"] = write_hit_certificates(
                 args.emit_hit_cert_dir, source, cert, result["hits"]
