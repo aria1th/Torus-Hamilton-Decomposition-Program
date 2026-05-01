@@ -286,6 +286,13 @@ returns, the Q-first-return formulas, and `sum ell = m^4`.  The remaining
 proof-facing lemmas are Q-hitting and length-sum, plus the small moduli
 `m = 5,7,9,11`.
 
+The arithmetic proof of `phi_h` should use the inverse map.  It is `x -> x+5`
+away from the top five-point boundary, and at the boundary it changes the
+residue class modulo `5` by `3-h`.  Therefore the residue quotient is
+transitive exactly when `h != 3 mod 5`; when `h == 3 mod 5`, the five residue
+classes are the five quotient cycles.  The verifier now records this inverse
+formula and residue-cycle explanation explicitly.
+
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
 condition is that each base slot `0..4` appears exactly `m` times across the

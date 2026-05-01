@@ -68,6 +68,30 @@ phi_h is one cycle  iff  h != 3 mod 5
 When `h == 3 mod 5`, the quotient has five cycles.  This explains the bad
 class for `23/32` structurally.
 
+A Lean-friendly proof route is to use the inverse map.  In 1-based
+coordinates, `phi_h^{-1}` is:
+
+```text
+x -> x + 5     for 1 <= x <= h-5,
+h-4 -> 4,
+h-3 -> 5,
+h-2 -> 1,
+h-1 -> 2,
+h   -> 3.
+```
+
+Thus the inverse walks upward by `5` inside each residue class modulo `5`.
+When it crosses the top five-point boundary, the residue class changes by
+
+```text
+3 - h mod 5.
+```
+
+Since `5` is prime, this boundary shift is transitive on the five residue
+classes exactly when `h != 3 mod 5`.  If `h == 3 mod 5`, the shift is zero and
+the five cycles are just the five residue classes, with lengths
+`ceil(h/5),ceil(h/5),ceil(h/5),floor(h/5),floor(h/5)`.
+
 ## Remaining 23/32 Proof Obligations
 
 The seam quotient removes the need to guess the `m == 2 mod 5` obstruction.
@@ -96,6 +120,7 @@ scripts/verify_targetA_23_32_seam_quotient.py
 checks the quotient as a finite regression:
 
 - the arithmetic cycle theorem for `phi_h`;
+- the inverse formula and the residue-boundary shift explanation;
 - finite Q-hitting for the computed `Sigma` first-return table;
 - the stated Q-first-return formulas for `23` and `32`;
 - the length-sum identity in the same runs.

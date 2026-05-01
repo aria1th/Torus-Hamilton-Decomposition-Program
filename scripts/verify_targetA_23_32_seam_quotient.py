@@ -64,6 +64,58 @@ def phi_cycle_lengths(h: int) -> list[int]:
     return sorted(lengths)
 
 
+def phi_inverse_h(h: int, x: int) -> int:
+    if not 1 <= x <= h:
+        raise ValueError((h, x))
+    if x <= h - 5:
+        return x + 5
+    boundary = {
+        h - 4: 4,
+        h - 3: 5,
+        h - 2: 1,
+        h - 1: 2,
+        h: 3,
+    }
+    return boundary[x]
+
+
+def inverse_formula_ok(h: int) -> bool:
+    return all(
+        phi_h(h, phi_inverse_h(h, x)) == x
+        and phi_inverse_h(h, phi_h(h, x)) == x
+        for x in range(1, h + 1)
+    )
+
+
+def residue_class_sizes(h: int) -> list[int]:
+    sizes = [0] * 5
+    for y in range(h):
+        sizes[y % 5] += 1
+    return sizes
+
+
+def inverse_boundary_shift_mod5(h: int) -> int:
+    return (3 - h) % 5
+
+
+def inverse_residue_cycle_lengths(h: int) -> list[int]:
+    sizes = residue_class_sizes(h)
+    shift = inverse_boundary_shift_mod5(h)
+    seen = [False] * 5
+    lengths = []
+    for start in range(5):
+        if seen[start]:
+            continue
+        residue = start
+        total = 0
+        while not seen[residue]:
+            seen[residue] = True
+            total += sizes[residue]
+            residue = (residue + shift) % 5
+        lengths.append(total)
+    return sorted(lengths)
+
+
 def expected_phi_cycle_lengths(h: int) -> list[int]:
     if h % 5 != 3:
         return [h]
@@ -82,9 +134,16 @@ def analyze_phi(max_h: int) -> dict:
                 "h": h,
                 "h_mod_5": h % 5,
                 "m": 2 * h + 1,
+                "inverse_formula_ok": inverse_formula_ok(h),
+                "inverse_boundary_shift_mod5": inverse_boundary_shift_mod5(h),
+                "inverse_residue_cycle_lengths": inverse_residue_cycle_lengths(h),
                 "cycles": cycles,
                 "expected_cycles": expected,
-                "ok": cycles == expected,
+                "ok": (
+                    cycles == expected
+                    and inverse_formula_ok(h)
+                    and inverse_residue_cycle_lengths(h) == expected
+                ),
             }
         )
     return {

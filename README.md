@@ -226,6 +226,10 @@ python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --json-out /tmp/d7_targetA_23_32_seam_quotient.json
 ```
 
+The verifier also records the inverse-map explanation for the arithmetic:
+`phi_h^{-1}` walks by `+5` inside residue classes and crosses the top boundary
+with residue shift `3-h mod 5`.
+
 For larger exceptional moduli, compile the faster C++ search helper:
 
 ```bash
