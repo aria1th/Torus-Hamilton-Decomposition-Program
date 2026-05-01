@@ -296,6 +296,9 @@ Implementation progress after this goal update:
   layer wrapper, and transfer from a product-side return single-cycle
   certificate to the D7 root-flat, D7 handoff Hamilton, and shared layered-lift
   targets.
+- `D7Odd/Handoff/Additive4Plus2Endpoints.lean` carries that product-side
+  certificate through the existing D7 torus/Cayley wrappers, including the
+  shared Cayley endpoint used by `RoundComposite`.
 - `D7Odd/Even.lean` keeps the even case on a separate `RootFlatSchedule`
   certificate track; its targets now also expose the shared layered full-step
   lift before the existing torus/Cayley wrappers.
@@ -328,7 +331,8 @@ Current status against the revised goal:
   `D7Odd/Handoff/ReturnCriterion.lean` and `D7Odd/Torus.lean`.
 - Additive bridge interface: partially closed.  The `A7(m) ~= A5(m) x A3(m)`
   root equivalence and product-certificate adapters are in
-  `D7Odd/Handoff/Additive4Plus2.lean`, while the all-odd `m >= 5` product
+  `D7Odd/Handoff/Additive4Plus2.lean`, and the torus/Cayley wrappers are in
+  `D7Odd/Handoff/Additive4Plus2Endpoints.lean`; the all-odd `m >= 5` product
   certificate is still open.
 - Local bridge and monodromy lemmas: available abstractly in
   `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`; they still need to
