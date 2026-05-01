@@ -418,10 +418,11 @@ Implementation progress after this goal update:
   affine modulo 2 while the rotation remains affine modulo 3; using
   `--section-only`, this family is checked against the monodromy
   section-return criterion instead of the full product-cycle audit.  It
-  reproduces the bundled `m=5` and `m=7` hits with constant reflection bit.
-  The complete bundled `m=9` dihedral sweep remains heavy in pure Python, so
-  bounded probes should use `--max-candidates` until this path is moved to a
-  compiled/vectorized backend.
+  reproduces the bundled `m=5` and `m=7` hits with constant reflection bit,
+  while the full bundled `m=9` sweep checks all `1296` candidates and finds no
+  section-return hit.  Thus the first fiber obstruction is now outside the
+  affine dihedral zero-set family, not merely outside a fixed-orientation
+  cyclic/reflected subfamily.
   With `--diagnostics-only`, the same script now skips formula verification and
   measures whether an existing kappa table is a function of coarse features.
   For bundled `m=9`, the feature partitions `zero_mask`, `zero_count`, `p`,

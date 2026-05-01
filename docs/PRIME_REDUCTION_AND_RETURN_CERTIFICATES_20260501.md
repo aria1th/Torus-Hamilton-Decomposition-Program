@@ -290,8 +290,8 @@ permutation is encoded by an affine rotation modulo 3 and an affine reflection
 bit modulo 2.  With `--section-only`, the search tests the exact monodromy
 section-return criterion without replaying the product-cycle audit.  This
 reproduces the bundled `m=5` and `m=7` formulas with constant reflection bit;
-the full `m=9` dihedral sweep is still too slow in pure Python and should be
-treated as a candidate for a compiled/vectorized backend.
+the full `m=9` dihedral sweep checks all `1296` candidates and finds no
+section-return hit.
 
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Search simple zero-set cyclic kappa formulas for 4+2 bridge certificates."""
+"""Search simple zero-set kappa formulas for 4+2 bridge certificates."""
 
 from __future__ import annotations
 
@@ -266,6 +266,157 @@ def compose_section_perm(
     return section_perm
 
 
+def section_event_plan(
+    model: BridgeModel,
+    row: list[int],
+    base_point: int,
+    base_period: int,
+) -> tuple[list[int], dict[int, tuple[int, int, int, int]]]:
+    base = base_point
+    event_keys = []
+    key_data = {}
+    for _ in range(base_period):
+        for layer, output_slot in enumerate(row):
+            if output_slot < 5:
+                direction = model.base_direction[output_slot][base]
+                next_base = model.base_next[output_slot][base]
+                if direction == 4:
+                    xs = base_tuple(base, model.m)
+                    p_value = lambda1_direction(xs, 0, model.m)
+                    z_size = zero_count(xs, model.m)
+                    key = ((layer * 6 + p_value) * 6 + z_size) * 3
+                    event_keys.append(key)
+                    key_data[key] = (layer, p_value, z_size, 0)
+                else:
+                    event_keys.append(-1)
+                base = next_base
+            else:
+                xs = base_tuple(base, model.m)
+                component = output_slot - 4
+                p_value = lambda1_direction(xs, 0, model.m)
+                z_size = zero_count(xs, model.m)
+                key = ((layer * 6 + p_value) * 6 + z_size) * 3 + component
+                event_keys.append(key)
+                key_data[key] = (layer, p_value, z_size, component)
+    if base != base_point:
+        raise ValueError(f"section return left base point {base_point}; ended at base {base}")
+    return event_keys, key_data
+
+
+def selected_perm_index(formula: dict, layer: int, p_value: int, z_size: int) -> int:
+    if formula.get("family") == "dihedral":
+        features = (layer, p_value, z_size, 1)
+        r = affine_value(features, tuple(formula["rotation"]), 3)
+        reflected = affine_value(features, tuple(formula["reflection"]), 2) == 1
+        return rotation_perm_index(r, reflected)
+    r = (
+        formula["a"] * (layer % 3)
+        + formula["b"] * (p_value % 3)
+        + formula["c"] * (z_size % 3)
+        + formula["d"]
+    ) % 3
+    return rotation_perm_index(r, formula["reflected"])
+
+
+def fiber_maps_for_formula(
+    model: BridgeModel,
+    key_data: dict[int, tuple[int, int, int, int]],
+    formula: dict,
+) -> dict[int, list[int]]:
+    maps = {}
+    for key, (layer, p_value, z_size, component) in key_data.items():
+        perm_index = selected_perm_index(formula, layer, p_value, z_size)
+        slot = PERMS3[perm_index][component]
+        maps[key] = model.fiber_next[layer][slot]
+    return maps
+
+
+def section_step_from_events(
+    model: BridgeModel,
+    event_keys: list[int],
+    maps: dict[int, list[int]],
+    fiber: int,
+) -> int:
+    for key in event_keys:
+        if key < 0:
+            fiber = model.fiber_forced_q0[fiber]
+        else:
+            fiber = maps[key][fiber]
+    return fiber
+
+
+def assert_single_cycle_from_events(
+    model: BridgeModel,
+    event_keys: list[int],
+    maps: dict[int, list[int]],
+    label: str,
+) -> None:
+    seen = bytearray(model.fiber_size)
+    state = 0
+    for step_count in range(model.fiber_size):
+        if seen[state]:
+            raise ValueError(f"{label}: repeated state {state} after {step_count} steps")
+        seen[state] = 1
+        state = section_step_from_events(model, event_keys, maps, state)
+    if state != 0:
+        raise ValueError(f"{label}: did not return to start 0; ended at {state}")
+
+
+def section_contexts_for_cert(cert: dict) -> dict:
+    validate_certificate(cert)
+    m = cert["m"]
+    model = BridgeModel(m)
+    base_period = m**4
+    contexts = []
+    for color, row in enumerate(cert["rows"]):
+        base_step = lambda base, row=row: model.base_return_step(base, row)
+        cycle_rank(
+            base_period,
+            0,
+            base_step,
+            f"m={m}: color {color} base return",
+        )
+        event_keys, key_data = section_event_plan(model, row, 0, base_period)
+        contexts.append(
+            {
+                "color": color,
+                "event_keys": event_keys,
+                "key_data": key_data,
+            }
+        )
+    return {"m": m, "model": model, "contexts": contexts}
+
+
+def test_formula_with_section_contexts(section_contexts: dict, formula: dict) -> dict:
+    try:
+        model = section_contexts["model"]
+        for context in section_contexts["contexts"]:
+            maps = fiber_maps_for_formula(model, context["key_data"], formula)
+            assert_single_cycle_from_events(
+                model,
+                context["event_keys"],
+                maps,
+                f"m={section_contexts['m']}: color {context['color']} fiber section return",
+            )
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+    return {
+        "ok": True,
+        "message": (
+            f"section-verified m={section_contexts['m']} rows=7 "
+            "base_cycles=single section_cycles=single"
+        ),
+    }
+
+
+def test_formula_section_only(cert: dict, formula: dict) -> dict:
+    try:
+        section_contexts = section_contexts_for_cert(cert)
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+    return test_formula_with_section_contexts(section_contexts, formula)
+
+
 def test_kappa(cert: dict, kappa: list[list[int]], *, section_only: bool) -> dict:
     candidate = copy.deepcopy(cert)
     candidate["kappa_perm_indices"] = kappa
@@ -302,6 +453,8 @@ def test_kappa(cert: dict, kappa: list[list[int]], *, section_only: bool) -> dic
 
 
 def test_formula(cert: dict, formula: dict, *, section_only: bool) -> dict:
+    if section_only:
+        return test_formula_section_only(cert, formula)
     return test_kappa(
         cert,
         build_kappa_from_formula(cert["m"], formula),
@@ -322,6 +475,7 @@ def search_formulas(
     hits = []
     failures = []
     candidates_checked = 0
+    section_contexts = section_contexts_for_cert(cert) if section_only else None
     for reflected in (False, True):
         for a, b, c, d in itertools.product(range(3), repeat=4):
             if max_candidates is not None and candidates_checked >= max_candidates:
@@ -342,7 +496,10 @@ def search_formulas(
                 "reflected": reflected,
             }
             candidates_checked += 1
-            result = test_formula(cert, formula, section_only=section_only)
+            if section_contexts is None:
+                result = test_formula(cert, formula, section_only=False)
+            else:
+                result = test_formula_with_section_contexts(section_contexts, formula)
             record = {
                 "formula": formula,
                 "label": formula_label(a, b, c, d, reflected),
@@ -388,6 +545,7 @@ def search_dihedral_formulas(
     hits = []
     failures = []
     candidates_checked = 0
+    section_contexts = section_contexts_for_cert(cert) if section_only else None
     for reflection in itertools.product(range(2), repeat=4):
         for rotation in itertools.product(range(3), repeat=4):
             if max_candidates is not None and candidates_checked >= max_candidates:
@@ -405,7 +563,10 @@ def search_dihedral_formulas(
                 "reflection": list(reflection),
             }
             candidates_checked += 1
-            result = test_formula(cert, formula, section_only=section_only)
+            if section_contexts is None:
+                result = test_formula(cert, formula, section_only=False)
+            else:
+                result = test_formula_with_section_contexts(section_contexts, formula)
             record = {
                 "formula": formula,
                 "label": dihedral_formula_label(rotation, reflection),

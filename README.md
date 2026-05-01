@@ -156,9 +156,9 @@ python3 scripts/search_4plus2_kappa_formulas.py --only 5,7 \
   --json-out /tmp/d7_4plus2_dihedral_section_search.json
 ```
 
-This reproduces the `m=5` and `m=7` hits with constant reflection bit.  The
-full `m=9` dihedral sweep is still too heavy for the current pure-Python path;
-use `--max-candidates` for bounded probes.
+This reproduces the `m=5` and `m=7` hits with constant reflection bit.  Running
+the same command with `--only 9` checks all `1296` dihedral candidates and finds
+no section-return hit.
 
 To inspect an existing kappa table without running the formula search:
 
