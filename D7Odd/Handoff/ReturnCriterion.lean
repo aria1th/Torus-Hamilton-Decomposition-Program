@@ -157,6 +157,12 @@ def toShared {m : Nat} [NeZero m] (cert : RootFlatCertificate m) :
     (RootFlatSchedule.toShared_returnsSingleCycle cert.schedule).2
       cert.returnsSingleCycle
 
+theorem toSharedLayeredHamilton {m : Nat} [NeZero m]
+    (cert : RootFlatCertificate m) :
+    Shared.RootFlatLayeredHamiltonDecomposition
+      Color Direction (RootState7 m) m :=
+  Shared.rootFlatLayeredDecomposition_of_certificate cert.toShared
+
 end RootFlatCertificate
 
 def HamiltonDecompositionD7 (m : Nat) [NeZero m] : Prop :=
@@ -177,6 +183,13 @@ theorem rootFlatReturnCriterion_of_hamiltonDecompositionD7
       cert.layerBijective)
     ((RootFlatSchedule.toShared_returnsSingleCycle cert.schedule).2
       cert.returnsSingleCycle)
+
+theorem rootFlatLayeredHamilton_of_hamiltonDecompositionD7
+    {m : Nat} [NeZero m] (h : HamiltonDecompositionD7 m) :
+    Shared.RootFlatLayeredHamiltonDecomposition
+      Color Direction (RootState7 m) m := by
+  rcases h with ⟨cert⟩
+  exact cert.toSharedLayeredHamilton
 
 theorem iterate_rank_add_one
     {α : Type*} {N : Nat} [NeZero N] (f : α → α) (rank : α → ZMod N)
