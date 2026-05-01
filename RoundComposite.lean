@@ -304,12 +304,43 @@ theorem standard_cayley_of_standard_coordinatized
     StandardCayleySolved d m :=
   Shared.cayleyHamiltonDecomposition_of_coordinatized h
 
+theorem standard_coordinatized_of_standard_cayley
+    {d m : Nat} (hd : 0 < d) (hm : 3 ≤ m)
+    (h : StandardCayleySolved d m) :
+    StandardCoordinatizedCayleySolved d m := by
+  have hmpos : 0 < m := lt_of_lt_of_le (by decide : 0 < 3) hm
+  have hpow3 : 3 ≤ m ^ d := three_le_pow_of_three_le hm hd
+  have hpow1 : 1 < m ^ d := lt_of_lt_of_le (by decide : 1 < 3) hpow3
+  letI : NeZero m := ⟨ne_of_gt hmpos⟩
+  letI : NeZero (m ^ d) := ⟨ne_of_gt (lt_trans (by decide : 0 < 1) hpow1)⟩
+  exact Shared.coordinatizedCayleyHamiltonDecomposition_of_single_cycle
+    hpow1 h
+
 theorem standard_cayley_product_of_left_coordinatized
     {a b m : Nat} (_ha : 0 < a) (_hb : 0 < b) (_hm : 3 ≤ m)
     (hA : StandardCoordinatizedCayleySolved a m)
     (hB : StandardCayleySolved b (m ^ a)) :
     StandardCayleySolved (a * b) m :=
   Shared.cayleyHamiltonDecomposition_product_of_left_coordinatized hA hB
+
+theorem standard_cayley_product_of_standard_cayley
+    {a b m : Nat} (ha : 0 < a) (hb : 0 < b) (hm : 3 ≤ m)
+    (hA : StandardCayleySolved a m)
+    (hB : StandardCayleySolved b (m ^ a)) :
+    StandardCayleySolved (a * b) m :=
+  standard_cayley_product_of_left_coordinatized ha hb hm
+    (standard_coordinatized_of_standard_cayley ha hm hA)
+    hB
+
+theorem standard_cayley_pointwise_composite_expansion :
+    PointwiseCompositeExpansion StandardCayleySolved := by
+  intro a b m ha hb hm hA hB
+  exact standard_cayley_product_of_standard_cayley ha hb hm hA hB
+
+theorem standard_cayley_odd_pointwise_composite_expansion :
+    OddPointwiseCompositeExpansion StandardCayleySolved := by
+  exact odd_pointwise_of_pointwise StandardCayleySolved
+    standard_cayley_pointwise_composite_expansion
 
 theorem odd_uniform_cayley_mul_of_left_coordinatized
     {a b : Nat} (ha : 0 < a) (hb : 0 < b)
@@ -320,6 +351,42 @@ theorem odd_uniform_cayley_mul_of_left_coordinatized
   exact standard_cayley_product_of_left_coordinatized ha hb hm
     (hA hm hodd)
     (hB (three_le_pow_of_three_le hm ha) hodd.pow)
+
+theorem odd_uniform_cayley_mul_of_standard
+    {a b : Nat} (ha : 0 < a) (hb : 0 < b)
+    (hA : OddUniformSolved StandardCayleySolved a)
+    (hB : OddUniformSolved StandardCayleySolved b) :
+    OddUniformSolved StandardCayleySolved (a * b) := by
+  intro m hm hodd
+  exact standard_cayley_product_of_standard_cayley ha hb hm
+    (hA hm hodd)
+    (hB (three_le_pow_of_three_le hm ha) hodd.pow)
+
+theorem odd_uniform_standard_cayley_prod_cons_of_product :
+    ∀ {d : Nat} {ds : List Nat},
+      (∀ e, e ∈ d :: ds → 0 < e) →
+      (∀ e, e ∈ d :: ds → OddUniformSolved StandardCayleySolved e) →
+      OddUniformSolved StandardCayleySolved (d :: ds).prod
+  | d, [], _hpos, hsol => by
+      simpa using hsol d (by simp)
+  | d, e :: es, hpos, hsol => by
+      have hdpos : 0 < d := hpos d (by simp)
+      have htailPos : ∀ x, x ∈ e :: es → 0 < x := by
+        intro x hx
+        exact hpos x (by simp [hx])
+      have htailSol :
+          ∀ x, x ∈ e :: es → OddUniformSolved StandardCayleySolved x := by
+        intro x hx
+        exact hsol x (by simp [hx])
+      have htail :
+          OddUniformSolved StandardCayleySolved (e :: es).prod :=
+        odd_uniform_standard_cayley_prod_cons_of_product
+          htailPos htailSol
+      have htailProdPos : 0 < (e :: es).prod :=
+        list_prod_pos_of_all_pos htailPos
+      simpa using
+        odd_uniform_cayley_mul_of_standard hdpos htailProdPos
+          (hsol d (by simp)) htail
 
 theorem standard_cayley_prime_factor_reduction_of_torus_pointwise
     (hExp : PointwiseCompositeExpansion StandardTorusSolved)

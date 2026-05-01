@@ -42,8 +42,9 @@ The current committed Lean state contains these relevant pieces.
   of the even theorem.
 - A generic composite product theorem exists in `RoundComposite.lean`. It is
   useful as an abstract reduction.  The concrete graph-level Cayley product is
-  now formalized for the left-coordinatized case; the remaining bridge is to
-  supply or derive cycle coordinates for the current base endpoints.
+  now formalized for the standard Cayley target: the left-coordinatized product
+  theorem is combined with finite single-cycle coordinate extraction to derive
+  the standard Cayley pointwise composite expansion.
 - A shared return-lift library exists in `Shared/ReturnLift.lean`, covering the
   periodic return lemmas that were previously duplicated in D3/D5/D7 style
   arguments.
@@ -226,9 +227,11 @@ cycle structure of the even seam construction.
 
 ### Concrete Composite Expansion
 
-The current composite theorem is abstract. The paper-level theorem still needs
-the connection from the product construction to the concrete Cayley graph
-Hamilton decomposition for composite dimensions.
+This interface gap is now closed for the standard Cayley target used in this
+repo.  The product construction still factors internally through explicit
+left-factor cycle coordinates, but those coordinates are now extracted from any
+nontrivial finite single-cycle Cayley endpoint, giving a graph-level
+`StandardCayleySolved` pointwise composite expansion.
 
 ## Integrated Research Narrative
 
@@ -277,14 +280,15 @@ Implementation progress after this goal update:
   identify an abstract Hamilton color with the standard `ZMod n` cycle used by
   the auxiliary dimension-`b` decomposition.  It now has constructors from
   rank-equivalence/rank-bijection data, matching the style of the existing
-  generated rank certificates.
+  generated rank certificates, and a finite single-cycle constructor that
+  extracts coordinates from the ordinary Cayley Hamiltonian endpoint.
 - `Shared/CayleyProduct.lean` begins the concrete graph-product formalization:
   it packages coordinate-bearing Cayley decompositions, turns A-color cycle
   coordinates into block-rank coordinates, defines the product color direction,
   and proves both its edge-partition condition and its color-wise Hamiltonian
   conjugacy to the auxiliary B-cycle.  It also has an adapter from a Cayley
   decomposition plus color-wise rank-step data to a coordinatized Cayley
-  endpoint.
+  endpoint, and an adapter from an existing single-cycle Cayley decomposition.
 - `D7Odd/Handoff/Additive4Plus2.lean` now contains the concrete
   `A7(m) ~= A5(m) x A3(m)` root equivalence, slot-step conjugacy, product
   layer wrapper, and transfer from a product-side return single-cycle
@@ -295,20 +299,17 @@ Implementation progress after this goal update:
 - `RoundComposite.lean` now has an odd-modulus version of the product reduction
   interface, plus named standard torus/Cayley instantiations, so odd-only prime
   endpoints such as the current D5/D7 theorems can be connected without
-  pretending that the even branches are solved.
+  pretending that the even branches are solved.  It also proves the concrete
+  `standard_cayley_pointwise_composite_expansion` and its odd-modulus variant.
 - `RoundComposite/ConcreteEndpoints.lean` now performs that connection for the
-  formalized D5 and D7 odd Cayley endpoints: under the single remaining
-  graph-level assumption
-  `OddPointwiseCompositeExpansion StandardCayleySolved`, it derives shared
-  Cayley composite endpoints for any nonempty product of factors each equal to
-  `5` or `7`.
-  It also records the sharper 35/49 route obtained from the formalized
-  left-coordinatized product theorem, reducing that route's remaining
-  obligation to coordinatized D5/D7 odd base endpoints.
+  formalized D5 and D7 odd Cayley endpoints: the older conditional endpoints
+  under an assumed pointwise expansion remain, but the concrete product theorem
+  now gives direct shared Cayley composite endpoints for `35`, `49`, and any
+  nonempty product of factors each equal to `5` or `7`.
 
-The remaining gap is not the abstract interface. It is the construction of the
-actual all-zero-set `4+2` product certificate for odd `m >= 5`, including the
-base rows and the fiber compiler/monodromy proof.
+The remaining D7-structure gap is not the abstract composite interface. It is
+the construction of the actual all-zero-set `4+2` product certificate for odd
+`m >= 5`, including the base rows and the fiber compiler/monodromy proof.
 
 The next useful Lean/research steps are:
 
@@ -318,10 +319,8 @@ The next useful Lean/research steps are:
    base rows for odd `m >= 5`.
 3. Search for a zero-set-only or first-return-section formula for the fiber
    compiler `kappa`.
-4. Finish the concrete composite Cayley/torus endpoint from the existing
-   product reduction by supplying or deriving the left-factor cycle-coordinate
-   data required by the formalized graph-product construction.  The nearest
-   Lean shape is now a color-wise rank function whose successor identity is
-   `rank (step x) = rank x + 1`.
+4. Use the concrete composite Cayley/torus endpoint as the baseline for future
+   prime endpoints, instead of treating composite dimensions as fresh search
+   problems.
 5. Keep D7 even and D5 even on separate certificate tracks so their open
    obligations do not obscure the D7 odd structural bridge.

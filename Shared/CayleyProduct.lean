@@ -41,6 +41,28 @@ theorem coordinatizedCayleyHamiltonDecomposition_of_rank
   exact ⟨inferInstance,
     ⟨coordinatizedCayleyDecomposition_of_rank D rank hrank hstep⟩⟩
 
+noncomputable def coordinatizedCayleyDecomposition_of_single_cycle
+    {d m : Nat} [NeZero m] [NeZero (m ^ d)]
+    (hm : 1 < m ^ d)
+    (D : CayleyDecomposition d m) :
+    CoordinatizedCayleyDecomposition d m where
+  toCayleyDecomposition := D
+  cycleCoordinate := fun c =>
+    CycleCoordinate.ofFiniteSingleCycle
+      (f := cayleyColorStep D.colorDir c)
+      (by simp [TorusVertex])
+      hm
+      (D.colorHamiltonian c)
+
+theorem coordinatizedCayleyHamiltonDecomposition_of_single_cycle
+    {d m : Nat} [NeZero m] [NeZero (m ^ d)]
+    (hm : 1 < m ^ d)
+    (h : CayleyHamiltonDecomposition d m) :
+    CoordinatizedCayleyHamiltonDecomposition d m := by
+  rcases h with ⟨D⟩
+  exact ⟨inferInstance,
+    ⟨coordinatizedCayleyDecomposition_of_single_cycle hm D⟩⟩
+
 def torusVertexBlockRankEquiv
     {a b m n : Nat} [NeZero n]
     {f : TorusVertex a m → TorusVertex a m}

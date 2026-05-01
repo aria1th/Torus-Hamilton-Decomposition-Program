@@ -28,30 +28,32 @@ Program repo's D=5 odd and D=7 odd Lean formalizations.
 - `Shared/TorusCayley.lean` supplies the standard dimension-indexed
   torus/Cayley Hamilton-decomposition proposition, and `RoundComposite.lean`
   now exposes named standard torus/Cayley instantiations of the abstract
-  reduction.  The concrete graph-product construction is now formalized for a
-  left factor equipped with explicit cycle coordinates.
+  reduction.  The concrete graph-product construction now yields a standard
+  Cayley pointwise composite expansion, since cycle coordinates can be extracted
+  from any nontrivial finite single-cycle color endpoint.
 - The same shared file now identifies composite torus coordinates by the block
   equivalence `TorusVertex (a * b) m ~= (Fin b -> TorusVertex a m)` and records
   how a standard basis direction lands in one block.  This is the concrete
   graph-isomorphism layer needed before transporting Hamilton factors.
 - It also introduces `CycleCoordinate`, the product-lift data that turns a
-  Hamilton color into an explicit `ZMod n` cycle coordinate.  This isolates the
-  remaining transport problem from the already-formalized single-cycle
-  endpoint.  Rank-equivalence/rank-bijection constructors now make this
-  compatible with existing rank-certificate proofs.
+  Hamilton color into an explicit `ZMod n` cycle coordinate.
+  Rank-equivalence/rank-bijection constructors make this compatible with
+  existing rank-certificate proofs, and the finite single-cycle constructor now
+  supplies coordinates directly from the usual `IsSingleCycleMap` endpoint when
+  the vertex set has size greater than one.
 - `Shared/CayleyProduct.lean` now formalizes the first concrete graph-product
   layer: coordinate-bearing Cayley decompositions, block-rank coordinates, the
   product color-direction map, its edge-partition proof, and the color-wise
   Hamiltonian conjugacy from the product step to the auxiliary B-cycle.  It
   also packages a Cayley decomposition with color-wise rank-step data as a
-  coordinatized endpoint.
+  coordinatized endpoint, and packages an existing single-cycle Cayley
+  decomposition as a coordinatized endpoint.
 - `RoundComposite/ConcreteEndpoints.lean` connects the current D5 and D7 odd
-  Cayley endpoints to this shared proposition.  Conditional on the standard
-  odd pointwise product expansion, it gives graph-level odd composite endpoints
-  for any nonempty product of factors each equal to `5` or `7`.
-  The file also has direct 35/49 endpoints from the left-coordinatized product
-  theorem; these no longer assume the full pointwise expansion, but they do
-  require coordinatized D5/D7 base data.
+  Cayley endpoints to this shared proposition.  It still records the older
+  conditional pointwise-expansion endpoints, but the standard Cayley pointwise
+  product expansion is now formalized, so it also gives direct graph-level odd
+  endpoints for `35`, `49`, and every nonempty product of factors each equal to
+  `5` or `7`.
 - D=5 odd is Lean-formalized through the model, torus, and Cayley levels:
   `D5Odd/Main.lean`, `D5Odd/Torus.lean`, and `D5Odd/Cayley.lean`.
 - D=7 odd is Lean-formalized through a root-flat certificate and then lifted to
@@ -119,10 +121,10 @@ factor 7 once the other prime factors are solved.
 
 The product theorem is no longer only a theorem-level manuscript artifact:
 Lean now has the graph-product interface and Hamilton-decomposition transport
-for a left factor with explicit cycle coordinates.  The remaining interface
-work is to lift the current coordinate anchor beyond the D5 `m = 3`
-root-return certificate to the full D5/D7 Cayley endpoints, or prove a
-coordinate-extraction theorem from the current single-cycle endpoint.
+for a left factor with explicit cycle coordinates.  The coordinate-extraction
+step is now also formalized for finite nontrivial single-cycle Cayley endpoints,
+so the standard Cayley product expansion is available directly at the shared
+graph level.
 
 ## What D=5 odd contributes
 
@@ -209,10 +211,9 @@ that statement first, before trying to formalize full torus-level behavior.
 
 ## Concrete next formalization tasks
 
-1. Extend the current D5 `m = 3` root-return `CycleCoordinate` anchor to the
-   existing D5/D7 Cayley endpoints, either by carrying explicit coordinate data
-   through the endpoint or by proving a general coordinate-extraction theorem
-   from the current single-cycle proofs.
+1. Use the new standard Cayley product expansion as the composite baseline;
+   as more prime endpoints are proved, instantiate the same graph-level product
+   theorem rather than adding new composite-dimension searches.
 2. Extract a shared return-lift library from the D3, D5, and D7 lift arguments.
 3. Turn `D5Odd/Even.lean` into an actual D=5 even seam certificate proof.
 4. Add a D7-even certificate target using the D7 `RootFlatSchedule` interface.
