@@ -33,7 +33,10 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the `RootFlatSchedule` interface.
 - `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
 - `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases.
+- `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and return criterion interface.
+- `Shared/Monodromy.lean`: skew-product and monodromy lemmas for additive bridge proofs.
+- `Shared/AdditiveBridge.lean`: state-dependent direction reindexing lemmas for local additive bridge row/source Latin conditions.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, plus a concrete torus-to-Cayley adapter.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
