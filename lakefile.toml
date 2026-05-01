@@ -22,3 +22,6 @@ name = "D7Odd"
 
 [[lean_lib]]
 name = "Shared"
+
+[[lean_lib]]
+name = "RoundComposite"

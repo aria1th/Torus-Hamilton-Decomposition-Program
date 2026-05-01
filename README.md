@@ -29,8 +29,13 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/CanonicalFamily.lean`: canonical generic branch and root-flat D7 endpoint.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
+- `D7Odd/Even.lean`: even-modulus D7 certificate targets via the `RootFlatSchedule` interface.
+- `D5Odd/Even.lean`: even-modulus D5 seam certificate target and torus/Cayley wrappers.
+- `Shared/ReturnLift.lean`: shared return-map lift lemma used by the D5 and D7 torus lifts.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
+- `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
@@ -39,6 +44,7 @@ Install Lean with `elan`, then run:
 
 ```bash
 lake build D5Odd D7Odd
+lake build RoundComposite Shared
 ```
 
 The project currently uses:
