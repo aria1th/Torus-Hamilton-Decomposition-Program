@@ -123,6 +123,21 @@ translation blocks:
 [21,43] -> delta 24
 ```
 
+The follow-up family scanner:
+
+```bash
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --json-out /tmp/d5_routeE_small_seam_family_scan.json
+```
+
+tests whether the finite `m = 6,8,...,60` table is already compatible with
+simple affine normalized count vectors on residue classes.  It reports that
+periods `4,6,...,26` all fail exact affine fits on at least one residue class,
+while periods `28` and `30` have no robust affine class because each class has
+at most two samples.  Thus the current table is strong evidence for the
+small-seam criterion, but it should not be treated as an extracted all-even
+count formula.
+
 ## Revised D5 Even Route-E Gap
 
 The non-open branch should no longer be described as an unresolved

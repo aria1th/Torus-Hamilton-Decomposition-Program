@@ -452,6 +452,14 @@ covering every even `m >= 6`, prove the induced one-dimensional small-seam
 maps and return-time sums for those families, and package `m = 4` as a finite
 witness theorem.
 
+The first residue-family scan is intentionally negative.  The script
+`scripts/analyze_d5_routeE_small_seam_families.py` checks whether the recorded
+small-seam table already supports simple affine normalized count vectors on
+residue classes.  On the current `m = 6,8,...,60` data, tested periods
+`4,6,...,26` fail exact affine fits, while periods `28` and `30` have only
+one or two samples per class.  This means the table is a seam-criterion
+certificate source, not yet an all-even formula source.
+
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
 one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam
 first-return traces, first-return minimality, and the return-time sum.  The

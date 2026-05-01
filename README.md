@@ -448,6 +448,17 @@ The Lean target also includes `RouteENonopenSmallSeamCertificate`, specialized
 to `{a : ZMod m // a != 0}`, and proves that such a certificate gives the
 existing D5 even Hamilton, torus, and Cayley endpoints.
 
+The finite small-seam table can be scanned for residue-family count formulas:
+
+```bash
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --json-out /tmp/d5_routeE_small_seam_family_scan.json
+```
+
+This is a research aid.  On the current table, simple affine normalized count
+vectors fail for tested periods up to `26`; periods `28` and above are too
+sparse to give robust family evidence.
+
 The corresponding Lean target interface builds with:
 
 ```bash
