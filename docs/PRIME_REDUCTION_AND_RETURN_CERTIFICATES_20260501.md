@@ -268,7 +268,9 @@ exact-cover.  The bundled-kappa check then shows this alternate base cover is
 not automatically a full bridge certificate, separating the base row-family
 problem from the D3 fiber compiler problem.  A separate zero-set kappa search
 does find a new full `m=5` bridge formula for this alternate cover:
-`r=t+|Z|+2`.
+`r=t+|Z|+2`.  On the next unresolved modulus in the short-word scan, `m=17`,
+there are no primitive base words of length at most four, while length five
+already gives examples such as `01121`, `01214`, and `10112`.
 
 The companion `scripts/search_4plus2_kappa_formulas.py` isolates the first
 fiber-compiler family.  It verifies the zero-set cyclic formulas for bundled

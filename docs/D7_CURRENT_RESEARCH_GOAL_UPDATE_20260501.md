@@ -396,8 +396,11 @@ Implementation progress after this goal update:
   to `scripts/search_4plus2_kappa_formulas.py` finds a new full bridge witness
   in the restricted family, namely `m=5: r=t+|Z|+2`.  A length-three scan over
   `m=5,7,9,11,13,15,17` reproduces the observed exceptional behavior at `m=7`
-  and finds no length-three primitive word for `m=17`, matching the current
-  need for a longer or congruence-dependent base row family.
+  and finds no length-three primitive word for `m=17`.  A follow-up scan shows
+  no length-four primitive word for `m=17`, while length five gives the first
+  examples, including `01121`, `01214`, `10112`, `11210`, and `12101`.  This
+  sharpens the current need for a longer or congruence-dependent base row
+  family.
 - `scripts/search_4plus2_kappa_formulas.py` separates a first fiber-compiler
   subproblem.  It searches cyclic/reflected zero-set formulas
   `r = a*t + b*p(Z) + c*|Z| + d mod 3`; the bundled rows reproduce the
