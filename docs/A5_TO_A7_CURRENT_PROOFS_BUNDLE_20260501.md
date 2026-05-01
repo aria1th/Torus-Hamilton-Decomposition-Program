@@ -179,7 +179,9 @@ itself is now named in Lean using one-based raw labels:
 `targetAQExpected23`, `targetAQExpected32`, and the formula predicates
 `targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`.  The expected
 maps are now proved well-formed by `targetAQExpected23_valid` and
-`targetAQExpected32_valid`.
+`targetAQExpected32_valid`.  The subtype `QLabel m` and endomap predicates
+`targetAQFirstReturn23EndomapFormula`/`targetAQFirstReturn32EndomapFormula`
+package the same target without exposing invalid raw labels.
 
 ## Updated Target-A Interpretation
 

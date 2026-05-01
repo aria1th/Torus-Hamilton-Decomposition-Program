@@ -1133,6 +1133,45 @@ theorem targetAQExpected32_valid {m h : Nat} [NeZero h]
         have hl := targetAPhiOne_le (h := h) (x := value / 2)
         omega
 
+abbrev QLabel (m : Nat) :=
+  {label : QRawLabel // label.valid m}
+
+namespace QLabel
+
+def expected23 {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    QLabel m :=
+  ⟨targetAQExpected23 m h label.1,
+    targetAQExpected23_valid hm hh label.1 label.2⟩
+
+def expected32 {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    QLabel m :=
+  ⟨targetAQExpected32 m h label.1,
+    targetAQExpected32_valid hm hh label.1 label.2⟩
+
+@[simp] theorem expected23_val {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    (expected23 hm hh label).1 = targetAQExpected23 m h label.1 :=
+  rfl
+
+@[simp] theorem expected32_val {m h : Nat} [NeZero h]
+    (hm : m = 2 * h + 1) (hh : 6 ≤ h) (label : QLabel m) :
+    (expected32 hm hh label).1 = targetAQExpected32 m h label.1 :=
+  rfl
+
+end QLabel
+
+def targetAQFirstReturn23EndomapFormula
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (actual : QLabel m → QLabel m) : Prop :=
+  ∀ label, actual label = QLabel.expected23 hm hh label
+
+def targetAQFirstReturn32EndomapFormula
+    {m h : Nat} [NeZero h] (hm : m = 2 * h + 1) (hh : 6 ≤ h)
+    (actual : QLabel m → QLabel m) : Prop :=
+  ∀ label, actual label = QLabel.expected32 hm hh label
+
 example : targetAQExpected23 13 6 (QRawLabel.B 1) = QRawLabel.B 2 := rfl
 
 example : targetAQExpected23 13 6 (QRawLabel.B 12) = QRawLabel.A 1 := rfl

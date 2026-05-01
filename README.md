@@ -59,6 +59,9 @@ when `m` is odd and `m >= 3`.
   `targetAQExpected23`, `targetAQExpected32`, and
   `targetAQFirstReturn23Formula`/`targetAQFirstReturn32Formula`, with
   validity lemmas showing that the expected formulas preserve valid Q labels.
+  The subtype `QLabel m` and endomap predicates
+  `targetAQFirstReturn23EndomapFormula`/`targetAQFirstReturn32EndomapFormula`
+  package the same target directly on valid Q labels.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the

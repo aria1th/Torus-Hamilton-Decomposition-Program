@@ -330,7 +330,10 @@ Q-first-return target is now less opaque: `QRawLabel`, `targetAQExpected23`,
 `targetAQFirstReturn32Formula` record the verifier's one-based Q-label
 formula directly in Lean.  The validity lemmas `targetAQExpected23_valid` and
 `targetAQExpected32_valid` show these expected maps send valid labels back to
-valid labels under `m = 2h+1`, `h >= 6`.
+valid labels under `m = 2h+1`, `h >= 6`.  The subtype `QLabel m` and
+endomap predicates `targetAQFirstReturn23EndomapFormula`/
+`targetAQFirstReturn32EndomapFormula` now state the same formula directly on
+valid Q labels.
 
 The next Target-A gap is independent of this section theorem: seven primitive
 row words must also satisfy column exact cover.  The necessary aggregate count
