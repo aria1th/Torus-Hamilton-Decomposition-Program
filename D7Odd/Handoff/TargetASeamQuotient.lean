@@ -393,6 +393,34 @@ theorem phiInv_reaches_boundary_jump_residue {h : Nat} [NeZero h] {x y : Nat}
   rw [phiInvNat_boundary_residue hh hy hboundary]
   rw [hmod]
 
+theorem nat_eq_of_zmod5_eq_of_lt {a b : Nat}
+    (ha : a < 5) (hb : b < 5) (h : (a : ZMod 5) = (b : ZMod 5)) :
+    a = b := by
+  have hm : a ≡ b [MOD 5] := (ZMod.natCast_eq_natCast_iff a b 5).1 h
+  exact hm.eq_of_lt_of_lt ha hb
+
+theorem phiInv_reaches_boundary_jump_low {h : Nat} [NeZero h] {x y b : Nat}
+    (hh : 6 ≤ h) (hxy : x ≤ y) (hmod : (y : ZMod 5) = (x : ZMod 5))
+    (hy : y < h) (hboundary : ¬ y + 5 < h) (hb : b < 5)
+    (hbmod : (b : ZMod 5) = (x : ZMod 5) + residueShift h) :
+    ∃ n, ((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h) =
+      (⟨b, by omega⟩ : Fin h) := by
+  rcases phiInv_reaches_boundary_jump_val (h := h) (x := x) (y := y)
+      hxy hmod hy with ⟨n, hn⟩
+  refine ⟨n, ?_⟩
+  apply Fin.ext
+  have hvalmod : ((phiInvNat h y : Nat) : ZMod 5) =
+      (x : ZMod 5) + residueShift h := by
+    rw [phiInvNat_boundary_residue hh hy hboundary]
+    rw [hmod]
+  have heq : phiInvNat h y = b :=
+    nat_eq_of_zmod5_eq_of_lt
+      (phiInvNat_boundary_lt_five hh hy hboundary) hb
+      (by rw [hvalmod, hbmod])
+  calc
+    (((phiInv h)^[n]) (⟨x, by omega⟩ : Fin h)).val = phiInvNat h y := hn
+    _ = b := heq
+
 private theorem add_sub_mod_eq_sub {h x c : Nat} (hc : c ≤ x) (hx : x < h) :
     (x + h - c) % h = x - c := by
   have hrewrite : x + h - c = h + (x - c) := by omega

@@ -49,7 +49,8 @@ when `m` is odd and `m >= 3`.
   `h % 5 != 3`.  In the good class it proves the quotient residue map
   `r |-> r + (3-h)` is a single cycle on `ZMod 5`, and it proves the
   internal lane traversal lemma for repeated `phiInv` steps by `+5`, plus
-  the boundary-jump residue lemma between lanes.
+  the boundary-jump residue lemma between lanes and an exact low-representative
+  boundary landing lemma.
 - `D7Odd/Torus.lean`: lift from root-flat D7 certificates to full torus color cycles.
 - `D7Odd/Cayley.lean`: final D7 Cayley-edge wrapper and theorem.
 - `D7Odd/Even.lean`: even-modulus D7 certificate targets via the
