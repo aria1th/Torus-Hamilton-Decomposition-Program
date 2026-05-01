@@ -80,7 +80,7 @@ when `m` is odd and `m >= 3`.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
-- `scripts/analyze_4plus2_base_rows.py`: base-only search aid for the all-zero-set `4+2` bridge; it summarizes bundled row projections and scans short primitive A5 base words.
+- `scripts/analyze_4plus2_base_rows.py`: base-only search aid for the all-zero-set `4+2` bridge; it summarizes bundled row projections, reports aggregate base-slot count feasibility for exact cover, and scans short primitive A5 base words.
 - `scripts/analyze_targetA_section.py`: Target-A section-return analyzer for
   candidate all-zero-set A5 base words, reporting primitiveity, first return
   to `Sigma = {(0,a,b,0,-a-b) : a+b != 0}`, excursion coverage, and coarse

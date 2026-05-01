@@ -62,6 +62,23 @@ def parse_word(value: str) -> tuple[int, ...]:
     return tuple(int(ch) for ch in value)
 
 
+def base_word_count_summary(m: int, words: list[tuple[int, ...]]) -> dict:
+    slot_counts = {
+        str(slot): sum(1 for word in words for value in word if value == slot)
+        for slot in range(5)
+    }
+    total_base_slots = sum(slot_counts.values())
+    return {
+        "word_lengths": [len(word) for word in words],
+        "total_base_slots": total_base_slots,
+        "target_total_base_slots": 5 * m,
+        "total_length_ok": total_base_slots == 5 * m,
+        "slot_counts": slot_counts,
+        "target_count_per_base_slot": m,
+        "slot_counts_ok": all(count == m for count in slot_counts.values()),
+    }
+
+
 def row_candidates_for_base_word(word: tuple[int, ...], m: int) -> list[list[int]]:
     if len(word) > m:
         return []
@@ -115,6 +132,7 @@ def search_column_exact_cover(
                 solutions.append(
                     {
                         "base_words": [word_string(word) for word in words],
+                        "count_summary": base_word_count_summary(m, words),
                         "rows": [chosen[idx] for idx in range(7)],
                     }
                 )
@@ -278,6 +296,7 @@ def cover_from_bundled(bundle: Path, only: set[int] | None, limit: int) -> list[
             {
                 "m": m,
                 "base_words": [word_string(word) for word in words],
+                "count_summary": base_word_count_summary(m, words),
                 "solutions": search_column_exact_cover(m, words, limit),
             }
         )
@@ -384,6 +403,7 @@ def main() -> None:
             {
                 "m": args.cover_m,
                 "base_words": [word_string(word) for word in words],
+                "count_summary": base_word_count_summary(args.cover_m, words),
                 "solutions": search_column_exact_cover(
                     args.cover_m, words, args.cover_limit
                 ),

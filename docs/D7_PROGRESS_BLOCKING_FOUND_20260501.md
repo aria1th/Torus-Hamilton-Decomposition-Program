@@ -239,6 +239,15 @@ confirms:
 - if `m == 2 mod 5`, there is exactly one `Sigma0` component and four
   off-`Sigma0` cycles with the predicted lengths.
 
+The next Target-A gap is independent of this section theorem: seven primitive
+row words must also satisfy column exact cover.  The necessary aggregate count
+condition is that each base slot `0..4` appears exactly `m` times across the
+seven base words.  `scripts/analyze_4plus2_base_rows.py` now reports this
+count gate.  It confirms the bundled `m = 5,7,9` rows and the alternate
+`m = 5` cover `23,23,002,0111,3044,14413,43220` are balanced, while a toy
+`m = 11` construction using mostly powers of `23` has the correct total length
+`55` but fails the slot-count gate with counts `4,0,26,25,0`.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -354,6 +363,13 @@ python3 scripts/verify_targetA_23_32.py \
 python3 scripts/analyze_targetA_23_32_seams.py \
   --moduli 5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51 \
   --json-out /tmp/targetA_23_32_seams_5_to_51.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-from-bundled --only 5,7,9 --cover-limit 1 \
+  --json-out /tmp/targetA_bundled_cover_counts.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-m 11 \
+  --cover-words 23232323,23232323,23232323,23232323,23232323,2323232323,00002 \
+  --cover-limit 1 --json-out /tmp/targetA_m11_power_bad_counts.json
 git diff --check
 ```
 

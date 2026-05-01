@@ -208,3 +208,43 @@ cycle verifier:
 For example, at `m = 17`, `W = 23` has `Sigma0` component length `88` and
 off-`Sigma0` lengths `37,38,54,55`; `W = 32` has `Sigma0` component length
 `86` and off-`Sigma0` lengths `38,38,54,56`.
+
+## Exact-Cover Count Gate
+
+The `23/32` theorem candidate does not by itself solve Target A.  A full
+seven-row schedule must also have column exact cover.  Before solving the
+column-placement problem, the aggregate base-word counts must satisfy:
+
+```text
+count(slot 0) = count(slot 1) = count(slot 2) = count(slot 3) = count(slot 4) = m.
+```
+
+`scripts/analyze_4plus2_base_rows.py` now reports this count summary for fixed
+base-word multisets and exact-cover solutions.
+
+The bundled finite rows satisfy this gate for `m = 5,7,9`:
+
+```bash
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-from-bundled --only 5,7,9 --cover-limit 1 \
+  --json-out /tmp/targetA_bundled_cover_counts.json
+```
+
+The previously recorded alternate `m = 5` primitive cover also satisfies the
+gate:
+
+```text
+23,23,002,0111,3044,14413,43220
+```
+
+with slot counts `5,5,5,5,5`.  By contrast, a toy `m = 11` multiset built
+mostly from powers of `23`,
+
+```text
+23232323,23232323,23232323,23232323,23232323,2323232323,00002
+```
+
+has total length `55 = 5m` but slot counts `4,0,26,25,0`, so it fails before
+the column exact-cover search.  This exposes a separate Target-A obligation:
+besides proving primitive row words, we need a balanced primitive-word library
+whose aggregate counts are exactly `(m,m,m,m,m)`.
