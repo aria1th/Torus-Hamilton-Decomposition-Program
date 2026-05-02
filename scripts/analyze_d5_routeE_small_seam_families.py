@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from fractions import Fraction
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
@@ -61,6 +61,111 @@ def case_rows(normalized: bool) -> List[dict]:
             }
         )
     return rows
+
+
+def as_count_vec(value: Sequence[int]) -> CountVec:
+    vec = tuple(int(item) for item in value)
+    if len(vec) != 5:
+        raise ValueError(f"expected a 5-count vector, got {value!r}")
+    return vec  # type: ignore[return-value]
+
+
+def ordered_unique(values: Iterable[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
+    seen = set()
+    result = []
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            result.append(value)
+    return result
+
+
+def counter_items(counter: Counter[Tuple[int, ...]], key_name: str) -> List[dict]:
+    return [
+        {key_name: list(key), "count": count}
+        for key, count in sorted(counter.items(), key=lambda item: (item[0], item[1]))
+    ]
+
+
+def summarize_count_scan_case(item: dict) -> dict:
+    hits = item.get("first_hits", [])
+    normalized_vectors = [
+        as_count_vec(hit["normalized_counts_slot0"]) for hit in hits
+    ]
+    distinct_vectors = ordered_unique(normalized_vectors)
+    open_vectors = ordered_unique(
+        vec
+        for vec, hit in zip(normalized_vectors, hits)
+        if hit.get("open_port_normal_form", False)
+    )
+    known_value = item.get("known_normalized_counts_slot0")
+    known_vec = as_count_vec(known_value) if known_value is not None else None
+    known_present = (
+        known_vec in distinct_vectors
+        if known_vec is not None
+        else any(hit.get("matches_known_normalized", False) for hit in hits)
+    )
+    alternative_vectors = [
+        vec for vec in distinct_vectors if known_vec is None or vec != known_vec
+    ]
+    zero_counter: Counter[Tuple[int, ...]] = Counter(
+        tuple(hit.get("normalized_zero_positions", [])) for hit in hits
+    )
+    support_counter: Counter[Tuple[int, ...]] = Counter(
+        tuple(hit.get("normalized_support", [])) for hit in hits
+    )
+    return {
+        "m": item["m"],
+        "checked": item.get("checked"),
+        "first_hit_count": len(hits),
+        "reported_hit_count": item.get("hit_count"),
+        "ok": item.get("ok", bool(hits)),
+        "known_normalized_counts_slot0": known_vec,
+        "known_present": known_present,
+        "known_hit_count": sum(
+            1
+            for vec, hit in zip(normalized_vectors, hits)
+            if (known_vec is not None and vec == known_vec)
+            or hit.get("matches_known_normalized", False)
+        ),
+        "distinct_normalized_count": len(distinct_vectors),
+        "distinct_normalized_hits": distinct_vectors,
+        "alternative_distinct_count": len(alternative_vectors),
+        "alternative_normalized_hits": alternative_vectors,
+        "open_port_hit_count": sum(
+            1 for hit in hits if hit.get("open_port_normal_form", False)
+        ),
+        "open_port_distinct_count": len(open_vectors),
+        "open_port_normalized_hits": open_vectors,
+        "zero_position_classes": counter_items(zero_counter, "zero_positions"),
+        "support_classes": counter_items(support_counter, "support"),
+    }
+
+
+def summarize_count_scan_json(path: Path) -> dict:
+    payload = json.loads(path.read_text())
+    scan = payload.get("one_e_full_count_scan")
+    if not isinstance(scan, list):
+        raise ValueError("expected verifier JSON with one_e_full_count_scan")
+    cases = [summarize_count_scan_case(item) for item in scan]
+    return {
+        "source": str(path),
+        "schema": "d5_routeE_one_e_full_count_scan_summary_v1",
+        "case_count": len(cases),
+        "moduli": [case["m"] for case in cases],
+        "known_present_moduli": [
+            case["m"] for case in cases if case["known_present"]
+        ],
+        "alternative_present_moduli": [
+            case["m"]
+            for case in cases
+            if case["alternative_distinct_count"] > 0
+        ],
+        "open_port_present_moduli": [
+            case["m"] for case in cases if case["open_port_hit_count"] > 0
+        ],
+        "cases": cases,
+    }
 
 
 def fit_affine_coordinate(points: Sequence[Tuple[int, int]]):
@@ -170,6 +275,21 @@ def print_summary(results: Sequence[dict]) -> None:
         )
 
 
+def print_count_scan_summary(summary: dict) -> None:
+    print("count_scan m first_hits distinct open_hits open_distinct known_present alternatives zero_classes")
+    for case in summary["cases"]:
+        print(
+            case["m"],
+            case["first_hit_count"],
+            case["distinct_normalized_count"],
+            case["open_port_hit_count"],
+            case["open_port_distinct_count"],
+            case["known_present"],
+            case["alternative_distinct_count"],
+            len(case["zero_position_classes"]),
+        )
+
+
 def compact_manifest(output: dict) -> dict:
     period_summaries = []
     for result in output["results"]:
@@ -234,6 +354,11 @@ def main() -> None:
     parser.add_argument("--json-out")
     parser.add_argument("--write-manifest", type=Path)
     parser.add_argument("--manifest", type=Path)
+    parser.add_argument(
+        "--count-scan-json",
+        type=Path,
+        help="summarize verifier JSON from verify_d5_even_routeE.py --count-scan-moduli",
+    )
     args = parser.parse_args()
 
     rows = case_rows(normalized=not args.raw_counts)
@@ -246,6 +371,9 @@ def main() -> None:
         "results": [analyze_period(period, rows) for period in periods],
     }
     print_summary(output["results"])
+    if args.count_scan_json is not None:
+        output["count_scan_summary"] = summarize_count_scan_json(args.count_scan_json)
+        print_count_scan_summary(output["count_scan_summary"])
     manifest_check = None
     if args.write_manifest is not None:
         manifest = compact_manifest(output)

@@ -756,6 +756,26 @@ vectors fail for tested periods up to `26`; periods `28` and `30` are too
 sparse to give robust family evidence.  The manifest check should print
 `manifest_ok True mismatches []`.
 
+The same analyzer can also summarize prefix hits from a full one-`Lambda_E`
+count/slot scan:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 6,8,10,12 \
+  --count-scan-limit 20 \
+  --json-out /tmp/d5_count_scan_6_12_limit20.json
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
+  --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
+```
+
+For `m = 6,8,10,12`, the recorded witness appears in the prefix hits, but so
+do alternative normalized count vectors.  The `m = 10,12` prefixes even
+include open-port normal forms.  This means the finite table should be treated
+as a validated small-seam evidence set, not as a canonical residue-family
+formula to extrapolate.
+
 The same small-seam verifier output can be compressed into one-dimensional
 translation-block diagnostics:
 

@@ -81,6 +81,20 @@ python3 scripts/analyze_d5_routeE_small_seam_families.py \
   --json-out /tmp/d5_routeE_small_seam_family_scan_current.json
 => manifest_ok True mismatches []
 
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 6,8,10,12 \
+  --count-scan-limit 20 \
+  --json-out /tmp/d5_count_scan_6_12_limit20.json
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
+  --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
+=> count_scan summaries:
+=> m=6: first_hits=10 distinct=2 open_hits=0 known_present=True alternatives=1
+=> m=8: first_hits=10 distinct=2 open_hits=0 known_present=True alternatives=1
+=> m=10: first_hits=20 distinct=9 open_hits=6 known_present=True alternatives=8
+=> m=12: first_hits=20 distinct=12 open_hits=2 known_present=True alternatives=11
+
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
   --json-out /tmp/d5_routeE_nonopen_bundle_check.json

@@ -222,6 +222,41 @@ count formula.  The compact manifest
 `certs/d5_routeE_small_seam_family_scan_manifest.json` pins this negative scan
 as a regression artifact.
 
+On 2026-05-02 the analyzer was extended to read prefix hits from the full
+one-`Lambda_E` count/slot scan:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 6,8,10,12 \
+  --count-scan-limit 20 \
+  --json-out /tmp/d5_count_scan_6_12_limit20.json
+
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
+  --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
+```
+
+The prefix-hit summary is:
+
+```text
+count_scan m first_hits distinct open_hits open_distinct known_present alternatives zero_classes
+6 10 2 0 0 True 1 2
+8 10 2 0 0 True 1 2
+10 20 9 6 2 True 8 6
+12 20 12 2 1 True 11 7
+```
+
+Thus the recorded `SMALL_SEAM_CASES` are not unique even at small moduli.  The
+known witness is present in these scan prefixes, but alternative normalized
+count vectors are also present, and `m = 10,12` already show open-port normal
+forms.  This sharpens the interpretation of the negative family scan: fitting
+the recorded table may fail because the table is one validated witness choice,
+not because Route-E lacks a simpler all-even count family.  The next search
+should choose a canonical objective, such as low support, open-port form,
+small block count, or long translation blocks, before attempting a uniform
+residue theorem.
+
 The block-splice trace can now be summarized directly with:
 
 ```bash
