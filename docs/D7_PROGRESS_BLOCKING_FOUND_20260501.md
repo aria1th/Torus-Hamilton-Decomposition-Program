@@ -645,7 +645,11 @@ scalar criterion behind Target B'.  It defines the clock/carry equivalence
 cycle once the clock scalar `A`, the full-round carry scalar `E`, and the
 round-return equation are supplied with both scalars units.  This does not
 construct `K_m(Z)`; it removes the downstream A3 primitiveity proof once a
-row schedule and zero-set/congruence table have produced those scalars.
+row schedule and zero-set/congruence table have produced those scalars.  The
+same file packages this as `BridgeConcreteScalarMonodromyPackage`: base
+`m^4` rank-step data plus per-color triangular scalar certificates lower to
+`BridgeConcretePowRankPackage` and then to the existing odd D7 torus/Cayley
+endpoint adapters.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 

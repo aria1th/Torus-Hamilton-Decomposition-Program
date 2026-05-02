@@ -1,4 +1,4 @@
-import D7Odd.Handoff.Additive4Plus2
+import D7Odd.Handoff.Additive4Plus2ConcreteGoal
 
 namespace D7Odd
 namespace Handoff
@@ -148,6 +148,115 @@ theorem a3_single_cycle {m : Nat} [NeZero m]
   simpa [Shared.IsSingleCycleMap, IsSingleCycleMap] using haroot_shared
 
 end A3TriangularScalarCertificate
+
+structure BridgeConcreteScalarMonodromyPackage (m : Nat) [NeZero m] where
+  row : Color → ZMod m → Direction
+  fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m
+  perm : ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3
+  basePoint : Color → D5Odd.ARoot5 m
+  baseRank : Color → D5Odd.ARoot5 m → ZMod (m ^ 4)
+  fiberCert : Color → A3TriangularScalarCertificate m
+  hrow : ∀ t, Function.Bijective fun c : Color => row c t
+  hperm : ∀ t base, Function.Bijective (perm t base)
+  hbaseRank : ∀ c, Function.Bijective (baseRank c)
+  hbaseStep : ∀ c base,
+    baseRank c (bridgeConcreteBaseReturn row c base) =
+      baseRank c base + 1
+  hsection :
+    ∀ c,
+      bridgeConcreteSectionReturn row fiberLayer perm c (basePoint c) (m ^ 4) =
+        a3TriangularMap (fiberCert c).A (fiberCert c).phi
+
+namespace BridgeConcreteScalarMonodromyPackage
+
+def toConcretePowRankPackage {m : Nat} [NeZero m] (_hm : 5 ≤ m)
+    (pkg : BridgeConcreteScalarMonodromyPackage m) :
+    BridgeConcretePowRankPackage m where
+  row := pkg.row
+  fiberLayer := pkg.fiberLayer
+  perm := pkg.perm
+  basePoint := pkg.basePoint
+  rank := pkg.baseRank
+  hrow := pkg.hrow
+  hperm := pkg.hperm
+  hrank := pkg.hbaseRank
+  hbaseStep := pkg.hbaseStep
+  hmonodromy := by
+    intro c
+    change IsSingleCycleMap
+      (bridgeConcreteSectionReturn pkg.row pkg.fiberLayer pkg.perm c
+        (pkg.basePoint c) (m ^ 4))
+    rw [pkg.hsection c]
+    exact (pkg.fiberCert c).a3_single_cycle
+
+def toConcreteRankPackage {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteScalarMonodromyPackage m) :
+    BridgeConcreteRankPackage m :=
+  (pkg.toConcretePowRankPackage hm).toConcreteRankPackage hm
+
+def toConcreteOrbitPackage {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteScalarMonodromyPackage m) :
+    BridgeConcreteOrbitPackage m :=
+  (pkg.toConcretePowRankPackage hm).toConcreteOrbitPackage hm
+
+def toCertificate {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteScalarMonodromyPackage m) :
+    BridgeProductRootCertificate m :=
+  (pkg.toConcretePowRankPackage hm).toCertificate hm
+
+end BridgeConcreteScalarMonodromyPackage
+
+def BridgeOddConcreteScalarTarget : Type :=
+  ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m →
+    BridgeConcreteScalarMonodromyPackage m
+
+def bridge_odd_concrete_pow_rank_target_of_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget) :
+    BridgeOddConcretePowRankTarget :=
+  fun hm hodd => (hScalar hm hodd).toConcretePowRankPackage hm
+
+def bridge_odd_certificate_target_of_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget) :
+    BridgeOddCertificateTarget :=
+  bridge_odd_certificate_target_of_concrete_pow_rank_target
+    (bridge_odd_concrete_pow_rank_target_of_concrete_scalar_target hScalar)
+
+theorem torus_from_bridge_odd_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget)
+    {m : Nat} [NeZero m] (hm3 : 3 ≤ m) (hodd : Odd m) :
+    D7Odd.TorusHamiltonDecompositionD7 m :=
+  torus_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_scalar_target hScalar) hm3 hodd
+
+theorem cayley_from_bridge_odd_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget)
+    {m : Nat} [NeZero m] (hm3 : 3 ≤ m) (hodd : Odd m) :
+    D7Odd.CayleyHamiltonDecompositionD7 m :=
+  cayley_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_scalar_target hScalar) hm3 hodd
+
+theorem torus_uniform_from_bridge_odd_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.TorusHamiltonDecompositionD7 m := by
+  intro m hm3 hodd
+  haveI : NeZero m := ⟨by omega⟩
+  exact torus_from_bridge_odd_concrete_scalar_target hScalar hm3 hodd
+
+theorem cayley_uniform_from_bridge_odd_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.CayleyHamiltonDecompositionD7 m := by
+  intro m hm3 hodd
+  haveI : NeZero m := ⟨by omega⟩
+  exact cayley_from_bridge_odd_concrete_scalar_target hScalar hm3 hodd
+
+theorem shared_cayley_uniform_from_bridge_odd_concrete_scalar_target
+    (hScalar : BridgeOddConcreteScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      Shared.CayleyHamiltonDecomposition 7 m :=
+  shared_cayley_uniform_from_small3_and_bridge_odd_target
+    (bridge_odd_certificate_target_of_concrete_scalar_target hScalar)
 
 end Additive4Plus2
 end Handoff

@@ -43,7 +43,9 @@ when `m` is odd and `m >= 3`.
   equivalence `A3(m) ~= (ZMod m)^2` and proves that a triangular map
   `(s,x) |-> (s+A, x+phi(s))` is a single `m^2` cycle once the clock scalar
   `A`, the full-round carry scalar `E`, and the recorded round return are
-  supplied with `A` and `E` units.
+  supplied with `A` and `E` units.  It also packages this with the base
+  `m^4` rank-step into `BridgeConcreteScalarMonodromyPackage`, lowering the
+  scalar Target-B' data to the existing bridge torus/Cayley endpoint adapters.
 - `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
   good class `h % 5 != 3`, proving the inverse identities and bijectivity for
