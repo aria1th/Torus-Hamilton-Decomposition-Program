@@ -352,18 +352,83 @@ def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
     return summary
 
 
+def compact_triangular_manifest(result: dict) -> dict:
+    triangular = result["triangular_obligations"]
+    return {
+        "schema": "d7_targetB_triangular_obligations_v1",
+        "m": result["m"],
+        "base_period": triangular["base_period"],
+        "lean_certificate": triangular["lean_certificate"],
+        "clock_pair": triangular["clock_pair"],
+        "colors": [
+            {
+                "color": color["color"],
+                "A": color["A"],
+                "E": color["E"],
+                "A_unit": color["A_unit"],
+                "E_unit": color["E_unit"],
+                "phi": color["phi"],
+                "section_matches_triangular": color["section_matches_triangular"],
+                "round_at_zero_ok": color["round_at_zero_ok"],
+            }
+            for color in triangular["colors"]
+        ],
+    }
+
+
+def compare_triangular_manifest(expected: dict, actual: dict) -> dict:
+    keys = ("schema", "m", "base_period", "lean_certificate", "clock_pair", "colors")
+    mismatches = [key for key in keys if expected.get(key) != actual.get(key)]
+    return {
+        "ok": not mismatches,
+        "mismatches": mismatches,
+        "expected_color_count": len(expected.get("colors", [])),
+        "actual_color_count": len(actual.get("colors", [])),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("cert_json", type=Path, nargs="+")
     parser.add_argument("--skip-full-verify", action="store_true")
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument(
+        "--write-triangular-manifest",
+        type=Path,
+        help="write compact A/E/phi/roundAtZero manifest for one certificate",
+    )
+    parser.add_argument(
+        "--triangular-manifest",
+        type=Path,
+        help="compare one certificate against a committed triangular manifest",
+    )
     args = parser.parse_args()
 
     results = [
         verify_zero_set_cert(path, full_verify=not args.skip_full_verify)
         for path in args.cert_json
     ]
-    payload = {"all_ok": all(result["ok"] for result in results), "results": results}
+    payload = {"results": results}
+    triangular_manifest_check = None
+    if args.write_triangular_manifest is not None:
+        if len(results) != 1:
+            raise SystemExit("--write-triangular-manifest requires exactly one certificate")
+        manifest = compact_triangular_manifest(results[0])
+        args.write_triangular_manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.write_triangular_manifest.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+        )
+        print(f"wrote {args.write_triangular_manifest}")
+    if args.triangular_manifest is not None:
+        if len(results) != 1:
+            raise SystemExit("--triangular-manifest requires exactly one certificate")
+        expected = json.loads(args.triangular_manifest.read_text())
+        actual = compact_triangular_manifest(results[0])
+        triangular_manifest_check = compare_triangular_manifest(expected, actual)
+        payload["triangular_manifest_check"] = triangular_manifest_check
+    payload["all_ok"] = all(result["ok"] for result in results) and (
+        triangular_manifest_check is None or triangular_manifest_check["ok"]
+    )
     for result in results:
         full = result.get("full_verify", {})
         print(
@@ -377,11 +442,20 @@ def main() -> None:
                 **result,
             )
         )
+    if triangular_manifest_check is not None:
+        print(
+            "triangular_manifest_ok",
+            triangular_manifest_check["ok"],
+            "mismatches",
+            triangular_manifest_check["mismatches"],
+        )
     print(f"all_ok={payload['all_ok']}")
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
         print(f"wrote {args.json_out}")
+    if not payload["all_ok"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

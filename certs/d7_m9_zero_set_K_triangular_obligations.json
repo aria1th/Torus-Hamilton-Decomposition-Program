@@ -1,0 +1,149 @@
+{
+  "base_period": 6561,
+  "clock_pair": "(s, x) = (y0 + y1, y0)",
+  "colors": [
+    {
+      "A": 5,
+      "A_unit": true,
+      "E": 2,
+      "E_unit": true,
+      "color": 0,
+      "phi": [
+        1,
+        1,
+        6,
+        3,
+        0,
+        3,
+        5,
+        4,
+        6
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 7,
+      "A_unit": true,
+      "E": 2,
+      "E_unit": true,
+      "color": 1,
+      "phi": [
+        7,
+        1,
+        7,
+        7,
+        7,
+        7,
+        3,
+        4,
+        4
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 2,
+      "A_unit": true,
+      "E": 2,
+      "E_unit": true,
+      "color": 2,
+      "phi": [
+        4,
+        4,
+        8,
+        4,
+        2,
+        8,
+        1,
+        3,
+        4
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 1,
+      "A_unit": true,
+      "E": 4,
+      "E_unit": true,
+      "color": 3,
+      "phi": [
+        8,
+        7,
+        6,
+        7,
+        3,
+        0,
+        4,
+        4,
+        1
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 1,
+      "A_unit": true,
+      "E": 4,
+      "E_unit": true,
+      "color": 4,
+      "phi": [
+        1,
+        3,
+        4,
+        6,
+        7,
+        8,
+        5,
+        1,
+        5
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 1,
+      "A_unit": true,
+      "E": 5,
+      "E_unit": true,
+      "color": 5,
+      "phi": [
+        2,
+        1,
+        4,
+        7,
+        0,
+        0,
+        8,
+        6,
+        4
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    },
+    {
+      "A": 1,
+      "A_unit": true,
+      "E": 8,
+      "E_unit": true,
+      "color": 6,
+      "phi": [
+        8,
+        8,
+        8,
+        4,
+        5,
+        5,
+        0,
+        7,
+        8
+      ],
+      "round_at_zero_ok": true,
+      "section_matches_triangular": true
+    }
+  ],
+  "lean_certificate": "A3TriangularScalarCertificate",
+  "m": 9,
+  "schema": "d7_targetB_triangular_obligations_v1"
+}

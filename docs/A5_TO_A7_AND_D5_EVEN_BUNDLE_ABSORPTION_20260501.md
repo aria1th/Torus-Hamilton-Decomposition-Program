@@ -112,6 +112,10 @@ c5: [2,1,4,7,0,0,8,6,4]
 c6: [8,8,8,4,5,5,0,7,8]
 ```
 
+The same data is committed as
+`certs/d7_m9_zero_set_K_triangular_obligations.json`; the verifier can compare
+against it with `--triangular-manifest`.
+
 The paired check of the original zero-set table cert and the scalar cert gives
 the expected mixed summary: the original cert has no scalar field, so it
 reports `scalar_ok=False`, but both certs pass table expansion and full bridge

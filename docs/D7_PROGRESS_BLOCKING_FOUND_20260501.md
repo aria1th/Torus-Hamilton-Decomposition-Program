@@ -859,8 +859,10 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
+  --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 # => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
+# => triangular_manifest_ok True mismatches []
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json
 python3 scripts/verify_d5_even_routeE.py --mode section \

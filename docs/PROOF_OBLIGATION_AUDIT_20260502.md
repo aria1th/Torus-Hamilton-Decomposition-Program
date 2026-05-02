@@ -46,8 +46,10 @@ python3 scripts/verify_d7_4plus2_rank_fingerprints.py \
 
 python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
+  --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_triangular_full.json
 => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
+=> triangular_manifest_ok True mismatches []
 
 python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \

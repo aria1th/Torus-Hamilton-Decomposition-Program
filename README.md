@@ -210,6 +210,9 @@ when `m` is odd and `m >= 3`.
 - `certs/d7_m9_zero_set_K_scalar_cert.json`: compact `m = 9` Target-B'
   zero-set-only `K(Z)` scalar certificate, storing the mask table, row
   schedule, and scalar invariants used by `verify_zero_set_k_cert.py`.
+- `certs/d7_m9_zero_set_K_triangular_obligations.json`: compact Target-B'
+  manifest of the `A`, `E`, and `phi(s)` triangular data extracted from the
+  `m = 9` scalar certificate.
 - `scripts/verify_d7_4plus2_rank_fingerprints.py`: regression verifier for
   `certs/d7_4plus2_rank_fingerprints.json`; it recomputes compact D7 odd
   base/fiber rank-step fingerprints and compares them to the committed
@@ -554,13 +557,15 @@ unit invariants plus the triangular Lean obligations directly:
 ```bash
 python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
+  --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 ```
 
 For the current `m = 9` scalar certificate this reports
 `scalar_ok=True`, `triangular_ok=True`, `table_ok=True`,
-`expanded_valid=True`, and `full_ok=True`; the JSON includes the per-color
-`A`, `E`, and `phi(s)` data matching `A3TriangularScalarCertificate`.
+`triangular_manifest_ok=True`, `expanded_valid=True`, and `full_ok=True`; the
+JSON includes the per-color `A`, `E`, and `phi(s)` data matching
+`A3TriangularScalarCertificate`.
 
 It can also test row solutions exported by the base analyzer:
 
