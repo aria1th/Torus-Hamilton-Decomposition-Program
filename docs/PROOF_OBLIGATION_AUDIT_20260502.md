@@ -146,35 +146,45 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --mode support \
   --max-support 3 \
   --support-pattern 0,1,3 \
-  --moduli 14,16,18,20,22,24 \
-  --hit-limit 3 \
-  --json-out /tmp/d5_support013_small_seam_search_14_24_repeat.json
+  --moduli 14,16,18,20 \
+  --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_14_20.json
 python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --mode support \
   --max-support 3 \
   --support-pattern 0,1,3 \
-  --moduli 26 \
-  --hit-limit 3 \
-  --candidate-limit 1000 \
-  --json-out /tmp/d5_support013_small_seam_search_26_repeat.json
+  --moduli 22 \
+  --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_22.json
 python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --mode support \
   --max-support 3 \
   --support-pattern 0,1,3 \
-  --moduli 28,30 \
-  --hit-limit 3 \
-  --candidate-limit 1200 \
-  --json-out /tmp/d5_support013_small_seam_search_28_30_repeat.json
-=> support-pattern (a,b,0,c,0) min-block examples:
+  --moduli 24 \
+  --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_24.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support --max-support 3 --support-pattern 0,1,3 \
+  --moduli 26 --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_26.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support --max-support 3 --support-pattern 0,1,3 \
+  --moduli 28 --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_28.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support --max-support 3 --support-pattern 0,1,3 \
+  --moduli 30 --hit-limit 0 \
+  --json-out /tmp/d5_support013_small_seam_fullhits_30.json
+=> full support-pattern (a,b,0,c,0) min-block examples:
 => m=14: (1,3,0,9,0), blocks=8
 => m=16: (1,13,0,1,0), blocks=11
 => m=18: (5,7,0,5,0), blocks=9
 => m=20: (3,13,0,3,0), blocks=7
-=> m=22: (3,1,0,17,0), blocks=10
+=> m=22: (11,3,0,7,0), blocks=7
 => m=24: (5,13,0,5,0), blocks=11
-=> m=26: (3,19,0,3,0), blocks=11
+=> m=26: (13,5,0,7,0), blocks=8
 => m=28: (3,5,0,19,0), blocks=8
-=> m=30: (5,7,0,17,0), blocks=14
+=> m=30: (11,7,0,11,0), blocks=8
 => The same pattern at m=32,34 was stopped after about two minutes without
 => a JSON result, so the current exact support-pattern evidence is m=14..30.
 

@@ -170,6 +170,9 @@ when `m` is odd and `m >= 3`.
 - `docs/PROOF_OBLIGATION_AUDIT_20260502.md`: current goal-to-artifact audit,
   recording which Lean/program artifacts prove which parts of the D7/D5-even
   research goal and which named propositions remain open.
+- `docs/CURRENT_FLOW_AND_NEXT_BUNDLE_PLAN_20260502.md`: current-flow note for
+  the D7 odd bridge, D5 even Route-E, D7 even root-flat track, proposed goal
+  revision, and the concrete shape expected from the next bundle.
 - `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`: absorption note
   for `A5_to_A7_induction_hypothesis_bundle_v0_1.zip` and
   `d5_even_routeE_bundle_v0_1.zip`, sharpening the D7 odd bridge into
@@ -830,7 +833,7 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --max-support 3 \
   --support-pattern 0,1,3 \
   --moduli 14,16,18,20,22,24 \
-  --hit-limit 3 \
+  --hit-limit 0 \
   --json-out /tmp/d5_support013_small_seam_search_14_24.json
 ```
 
@@ -838,7 +841,7 @@ The open-port search first checks the `m^2` section formula/cycle and then
 checks the `Theta` small seam.  It confirms open-port small-seam hits at
 `m = 10,12,14,18,20` and no hit in that search at `m = 6,8,16`.  The
 support-limited search finds low-support alternatives, including the
-support-3 min-block candidates `(1,3,0,9,0)` at `m = 14`,
+early support-3 candidates `(1,3,0,9,0)` at `m = 14`,
 `(5,7,0,5,0)` at `m = 18`, and `(3,1,0,17,0)` at `m = 22`.  Wide ranges
 should be run with care because failed candidates can still require long
 first-return searches.  For exploratory scans, `--max-return-steps` or
@@ -847,10 +850,10 @@ results are heuristic and should be rechecked without the cap before being
 used as proof evidence.
 The `--support-pattern 0,1,3` search targets vectors of the form
 `(a,b,0,c,0)`.  It now gives a concrete low-support route through
-`m = 14,16,...,30`, with min-block examples
+`m = 14,16,...,30`, with full-shape min-block examples
 `(1,3,0,9,0)`, `(1,13,0,1,0)`, `(5,7,0,5,0)`,
-`(3,13,0,3,0)`, `(3,1,0,17,0)`, `(5,13,0,5,0)`,
-`(3,19,0,3,0)`, `(3,5,0,19,0)`, and `(5,7,0,17,0)`.
+`(3,13,0,3,0)`, `(11,3,0,7,0)`, `(5,13,0,5,0)`,
+`(13,5,0,7,0)`, `(3,5,0,19,0)`, and `(11,7,0,11,0)`.
 This is still finite evidence, but it is a much sharper candidate family than
 the arbitrary recorded small-seam table.
 

@@ -319,23 +319,24 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --max-support 3 \
   --support-pattern 0,1,3 \
   --moduli 14,16,18,20,22,24 \
-  --hit-limit 3 \
+  --hit-limit 0 \
   --json-out /tmp/d5_support013_small_seam_search_14_24.json
 ```
 
-This exact, uncapped search gives the following min-block candidates:
+This exact, uncapped full-shape search gives the following min-block
+candidates:
 
 ```text
-m  counts          blocks max_block checked
-14 (1,3,0,9,0)    8      4         63
-16 (1,13,0,1,0)   11     3         30
-18 (5,7,0,5,0)    9      2         106
-20 (3,13,0,3,0)   7      4         46
-22 (3,1,0,17,0)   10     4         48
-24 (5,13,0,5,0)   11     3         217
-26 (3,19,0,3,0)   11     4         138
-28 (3,5,0,19,0)   8      10        54
-30 (5,7,0,17,0)   14     4         109
+m  counts           blocks max_block checked hits
+14 (1,3,0,9,0)     8      4         66      3
+16 (1,13,0,1,0)    11     3         91      4
+18 (5,7,0,5,0)     9      2         120     3
+20 (3,13,0,3,0)    7      4         153     5
+22 (11,3,0,7,0)    7      5         190     10
+24 (5,13,0,5,0)    11     3         231     4
+26 (13,5,0,7,0)    8      8         276     13
+28 (3,5,0,19,0)    8      10        325     13
+30 (11,7,0,11,0)   8      6         378     9
 ```
 
 The `m = 32,34` extension was started with the same pattern but stopped after
