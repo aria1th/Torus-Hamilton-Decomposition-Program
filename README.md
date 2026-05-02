@@ -223,6 +223,10 @@ when `m` is odd and `m >= 3`.
 - `docs/TWO_GOAL_RESET_20260502.md`: current two-goal reset, separating the
   D7 odd structural `4+2` proof program from the D5 even Route-E branch-menu
   proof program and listing the blocking propositions for each.
+- `docs/D11_AND_A5_A7_LEAN_HANDOFF_PLAN_20260502.md`: side-track Lean plan
+  after reading `D11_odd_canonical_schedule_certificate.md` and
+  `A5_to_A7_Lean_handoff_bundle_v1_0.zip`, separating the D11 odd canonical
+  schedule formalization from the A5-to-A7 structural D7 handoff tasks.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
