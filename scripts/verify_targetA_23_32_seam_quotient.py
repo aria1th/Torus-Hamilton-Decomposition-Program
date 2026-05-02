@@ -21,6 +21,7 @@ the eventual Lean theorem.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -304,12 +305,63 @@ def analyze_q_table(word: Word, m: int) -> dict:
     }
 
 
+def stable_digest(value) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(payload).hexdigest()
+
+
+def compact_manifest(payload: dict) -> dict:
+    return {
+        "schema": "d7_targetA_23_32_seam_quotient_manifest_v1",
+        "moduli": payload["moduli"],
+        "words": payload["words"],
+        "phi": {
+            "h_range": payload["phi"]["h_range"],
+            "all_ok": payload["phi"]["all_ok"],
+            "rows_sha256": stable_digest(payload["phi"]["rows"]),
+        },
+        "q_results": [
+            {
+                "m": result["m"],
+                "h": result["h"],
+                "word": result["word"],
+                "q_hitting_ok": result["q_hitting"]["ok"],
+                "q_hitting_max_steps": result["q_hitting"]["max_steps"],
+                "q_hitting_zero_step_hits": result["q_hitting"]["zero_step_hits"],
+                "q_formula_ok": result["q_formula_ok"],
+                "return_time_sum": result["return_time_sum"],
+                "return_time_sum_ok": result["return_time_sum_ok"],
+                "phi_cycles": result["phi_cycles"],
+                "phi_expected_cycles": result["phi_expected_cycles"],
+                "phi_cycle_ok": result["phi_cycle_ok"],
+                "primitive_quotient_expected": result["primitive_quotient_expected"],
+                "m_mod_5": result["m_mod_5"],
+            }
+            for result in payload["q_results"]
+        ],
+        "all_ok": payload["all_ok"],
+    }
+
+
+def compare_manifest(expected: dict, actual: dict) -> dict:
+    keys = ("schema", "moduli", "words", "phi", "q_results", "all_ok")
+    mismatches = [key for key in keys if expected.get(key) != actual.get(key)]
+    return {
+        "ok": not mismatches,
+        "mismatches": mismatches,
+        "expected_q_result_count": len(expected.get("q_results", [])),
+        "actual_q_result_count": len(actual.get("q_results", [])),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--moduli", default="13,17,19,27,37")
     parser.add_argument("--words", default="23,32")
     parser.add_argument("--phi-max", type=int, default=80)
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument("--write-manifest", type=Path)
+    parser.add_argument("--manifest", type=Path)
     args = parser.parse_args()
 
     moduli = parse_moduli(args.moduli)
@@ -342,10 +394,30 @@ def main() -> None:
         )
     print(f"all_ok={payload['all_ok']}")
 
+    manifest_check = None
+    if args.write_manifest is not None:
+        manifest = compact_manifest(payload)
+        args.write_manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.write_manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+        print(f"wrote {args.write_manifest}")
+    if args.manifest is not None:
+        expected = json.loads(args.manifest.read_text())
+        actual = compact_manifest(payload)
+        manifest_check = compare_manifest(expected, actual)
+        payload["manifest_check"] = manifest_check
+        print(
+            "manifest_ok",
+            manifest_check["ok"],
+            "mismatches",
+            manifest_check["mismatches"],
+        )
+
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
         print(f"wrote {args.json_out}")
+    if not payload["all_ok"] or (manifest_check is not None and not manifest_check["ok"]):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

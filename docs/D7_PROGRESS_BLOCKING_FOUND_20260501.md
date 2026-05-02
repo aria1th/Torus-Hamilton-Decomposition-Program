@@ -292,6 +292,9 @@ finite regression version: `phi_h` arithmetic, Q-hitting for computed first
 returns, the Q-first-return formulas, and `sum ell = m^4`.  The remaining
 proof-facing lemmas are Q-hitting and length-sum, plus the small moduli
 `m = 5,7,9,11`.
+The standard finite regression range is now pinned by
+`certs/d7_targetA_23_32_seam_quotient_manifest.json`, which stores compact
+Q-result summaries and a hash of the `phi_h` table through `h = 200`.
 
 The arithmetic proof of `phi_h` should use the inverse map.  It is `x -> x+5`
 away from the top five-point boundary, and at the boundary it changes the

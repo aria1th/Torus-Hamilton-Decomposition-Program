@@ -1,0 +1,683 @@
+{
+  "all_ok": true,
+  "moduli": [
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41
+  ],
+  "phi": {
+    "all_ok": true,
+    "h_range": [
+      6,
+      200
+    ],
+    "rows_sha256": "b317f66e699629cbe424819635473ca1b79f9fba8555a6b96086cd768fd8b849"
+  },
+  "q_results": [
+    {
+      "h": 6,
+      "m": 13,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        6
+      ],
+      "phi_expected_cycles": [
+        6
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 25,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 24,
+      "return_time_sum": 28561,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 6,
+      "m": 13,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        6
+      ],
+      "phi_expected_cycles": [
+        6
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 25,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 24,
+      "return_time_sum": 28561,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 7,
+      "m": 15,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        7
+      ],
+      "phi_expected_cycles": [
+        7
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 32,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 28,
+      "return_time_sum": 50625,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 7,
+      "m": 15,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        7
+      ],
+      "phi_expected_cycles": [
+        7
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 31,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 28,
+      "return_time_sum": 50625,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 8,
+      "m": 17,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        1,
+        1,
+        2,
+        2,
+        2
+      ],
+      "phi_expected_cycles": [
+        1,
+        1,
+        2,
+        2,
+        2
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 38,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 32,
+      "return_time_sum": 83521,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 8,
+      "m": 17,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        1,
+        1,
+        2,
+        2,
+        2
+      ],
+      "phi_expected_cycles": [
+        1,
+        1,
+        2,
+        2,
+        2
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 37,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 32,
+      "return_time_sum": 83521,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 9,
+      "m": 19,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        9
+      ],
+      "phi_expected_cycles": [
+        9
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 44,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 36,
+      "return_time_sum": 130321,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 9,
+      "m": 19,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        9
+      ],
+      "phi_expected_cycles": [
+        9
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 43,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 36,
+      "return_time_sum": 130321,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 10,
+      "m": 21,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        10
+      ],
+      "phi_expected_cycles": [
+        10
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 50,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 40,
+      "return_time_sum": 194481,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 10,
+      "m": 21,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        10
+      ],
+      "phi_expected_cycles": [
+        10
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 49,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 40,
+      "return_time_sum": 194481,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 11,
+      "m": 23,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        11
+      ],
+      "phi_expected_cycles": [
+        11
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 56,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 44,
+      "return_time_sum": 279841,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 11,
+      "m": 23,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        11
+      ],
+      "phi_expected_cycles": [
+        11
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 55,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 44,
+      "return_time_sum": 279841,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 12,
+      "m": 25,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        12
+      ],
+      "phi_expected_cycles": [
+        12
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 62,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 48,
+      "return_time_sum": 390625,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 12,
+      "m": 25,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        12
+      ],
+      "phi_expected_cycles": [
+        12
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 61,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 48,
+      "return_time_sum": 390625,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 13,
+      "m": 27,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "phi_expected_cycles": [
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 68,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 52,
+      "return_time_sum": 531441,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 13,
+      "m": 27,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "phi_expected_cycles": [
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 67,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 52,
+      "return_time_sum": 531441,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 14,
+      "m": 29,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        14
+      ],
+      "phi_expected_cycles": [
+        14
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 74,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 56,
+      "return_time_sum": 707281,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 14,
+      "m": 29,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        14
+      ],
+      "phi_expected_cycles": [
+        14
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 73,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 56,
+      "return_time_sum": 707281,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 15,
+      "m": 31,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        15
+      ],
+      "phi_expected_cycles": [
+        15
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 80,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 60,
+      "return_time_sum": 923521,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 15,
+      "m": 31,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        15
+      ],
+      "phi_expected_cycles": [
+        15
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 79,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 60,
+      "return_time_sum": 923521,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 16,
+      "m": 33,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        16
+      ],
+      "phi_expected_cycles": [
+        16
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 86,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 64,
+      "return_time_sum": 1185921,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 16,
+      "m": 33,
+      "m_mod_5": 3,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        16
+      ],
+      "phi_expected_cycles": [
+        16
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 85,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 64,
+      "return_time_sum": 1185921,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 17,
+      "m": 35,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        17
+      ],
+      "phi_expected_cycles": [
+        17
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 92,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 68,
+      "return_time_sum": 1500625,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 17,
+      "m": 35,
+      "m_mod_5": 0,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        17
+      ],
+      "phi_expected_cycles": [
+        17
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 91,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 68,
+      "return_time_sum": 1500625,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 18,
+      "m": 37,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        3,
+        3,
+        4,
+        4,
+        4
+      ],
+      "phi_expected_cycles": [
+        3,
+        3,
+        4,
+        4,
+        4
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 98,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 72,
+      "return_time_sum": 1874161,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 18,
+      "m": 37,
+      "m_mod_5": 2,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        3,
+        3,
+        4,
+        4,
+        4
+      ],
+      "phi_expected_cycles": [
+        3,
+        3,
+        4,
+        4,
+        4
+      ],
+      "primitive_quotient_expected": false,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 97,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 72,
+      "return_time_sum": 1874161,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 19,
+      "m": 39,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        19
+      ],
+      "phi_expected_cycles": [
+        19
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 104,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 76,
+      "return_time_sum": 2313441,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 19,
+      "m": 39,
+      "m_mod_5": 4,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        19
+      ],
+      "phi_expected_cycles": [
+        19
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 103,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 76,
+      "return_time_sum": 2313441,
+      "return_time_sum_ok": true,
+      "word": "32"
+    },
+    {
+      "h": 20,
+      "m": 41,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        20
+      ],
+      "phi_expected_cycles": [
+        20
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 110,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 80,
+      "return_time_sum": 2825761,
+      "return_time_sum_ok": true,
+      "word": "23"
+    },
+    {
+      "h": 20,
+      "m": 41,
+      "m_mod_5": 1,
+      "phi_cycle_ok": true,
+      "phi_cycles": [
+        20
+      ],
+      "phi_expected_cycles": [
+        20
+      ],
+      "primitive_quotient_expected": true,
+      "q_formula_ok": true,
+      "q_hitting_max_steps": 109,
+      "q_hitting_ok": true,
+      "q_hitting_zero_step_hits": 80,
+      "return_time_sum": 2825761,
+      "return_time_sum_ok": true,
+      "word": "32"
+    }
+  ],
+  "schema": "d7_targetA_23_32_seam_quotient_manifest_v1",
+  "words": [
+    "23",
+    "32"
+  ]
+}

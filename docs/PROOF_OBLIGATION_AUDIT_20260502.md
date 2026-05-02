@@ -54,8 +54,10 @@ python3 scripts/verify_zero_set_k_cert.py \
 python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \
   --phi-max 200 \
+  --manifest certs/d7_targetA_23_32_seam_quotient_manifest.json \
   --json-out /tmp/d7_targetA_23_32_seam_quotient_current.json
 => phi_all_ok=True, all_ok=True
+=> manifest_ok True mismatches []
 
 python3 scripts/summarize_d5_routeE_small_seam_blocks.py \
   --json-out /tmp/d5_routeE_small_seam_block_summary_current.json

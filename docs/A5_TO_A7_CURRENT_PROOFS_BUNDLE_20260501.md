@@ -131,10 +131,11 @@ The broader local check used for this absorption was:
 python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \
   --phi-max 200 \
+  --manifest certs/d7_targetA_23_32_seam_quotient_manifest.json \
   --json-out /tmp/targetA_23_32_seam_quotient_13_41.json
 ```
 
-It reported `all_ok=True`.
+It reported `all_ok=True` and `manifest_ok=True`.
 
 The matching Lean-facing target is now:
 

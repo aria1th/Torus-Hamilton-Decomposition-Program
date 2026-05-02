@@ -187,7 +187,9 @@ when `m` is odd and `m >= 3`.
   decomposition gates.
 - `scripts/verify_targetA_23_32_seam_quotient.py`: verifier for the current
   `23/32` seam quotient proof target, checking the arithmetic `phi_h` cycle
-  theorem, finite Q-hitting, Q-first-return formulas, and length sums.
+  theorem, finite Q-hitting, Q-first-return formulas, and length sums.  Its
+  standard regression is pinned by
+  `certs/d7_targetA_23_32_seam_quotient_manifest.json`.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.
@@ -341,6 +343,7 @@ that quotient with:
 python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \
   --phi-max 200 \
+  --manifest certs/d7_targetA_23_32_seam_quotient_manifest.json \
   --json-out /tmp/d7_targetA_23_32_seam_quotient.json
 ```
 
