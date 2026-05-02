@@ -127,7 +127,9 @@ when `m` is odd and `m >= 3`.
   section normal form is also named as `routeEOpenPortSectionPairMap`; the
   chart `routeEOpenPortChart` conjugates it to `routeEOpenPortHMap`, and
   `RouteEOpenPortAffineChartCertificate` lowers a rank-step proof for that
-  chart map to a single-cycle section result.
+  chart map to a single-cycle section result.  The finite odometer spine
+  `routeEOpenPortFinSquareSucc_single_cycle` is available for explicit
+  `m^2` chart-rank constructions.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -793,6 +795,9 @@ For the separate open-port branch, `RouteEOpenPortAffineChartCertificate`
 packages the smaller `m^2` section map.  This is useful as a checked
 intermediate normal form, but it does not replace the still-needed full
 one-`Lambda_E` return proof on the D5 even state space.
+The supporting finite odometer lemma `routeEOpenPortFinSquareSucc_single_cycle`
+closes the base-`m` successor on `Fin m x Fin m`, which is the intended target
+for an explicit open-port chart rank.
 
 The corresponding Lean target interface builds with:
 

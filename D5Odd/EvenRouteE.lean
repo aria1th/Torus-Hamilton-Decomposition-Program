@@ -108,6 +108,26 @@ def translationFormula {m : Nat} (block : RouteESeamTranslationBlock m)
 
 end RouteESeamTranslationBlock
 
+def routeEOpenPortFinSquareSucc {m : Nat} (I : Fin m × Fin m) : Fin m × Fin m :=
+  (finProdFinEquiv.symm ((finRotate (m * m)) (finProdFinEquiv I)) :
+    Fin m × Fin m)
+
+theorem routeEOpenPortFinSquareSucc_single_cycle (m : Nat) :
+    IsSingleCycleMap (routeEOpenPortFinSquareSucc (m := m)) := by
+  exact single_cycle_of_bijective_semiconj
+    (f := finRotate (m * m))
+    (g := routeEOpenPortFinSquareSucc (m := m))
+    (phi := (finProdFinEquiv.symm : Fin (m * m) → Fin m × Fin m))
+    (Equiv.bijective finProdFinEquiv.symm)
+    (by
+      intro x
+      change finProdFinEquiv.symm ((finRotate (m * m)) x) =
+        finProdFinEquiv.symm
+          ((finRotate (m * m))
+            (finProdFinEquiv (finProdFinEquiv.symm x)))
+      rw [Equiv.apply_symm_apply])
+    (finRotate_single_cycle (m * m))
+
 def routeEOpenPortSectionPairMap {m : Nat}
     (A B : ZMod m) : ZMod m × ZMod m → ZMod m × ZMod m :=
   fun p =>
