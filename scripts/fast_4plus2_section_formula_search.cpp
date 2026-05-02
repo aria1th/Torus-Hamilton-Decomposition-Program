@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -249,6 +250,50 @@ void apply_map_ptr(std::vector<int> &perm, const int *map) {
   }
 }
 
+int base_return_step(const Model &model, int base, const std::vector<int> &row) {
+  for (int output_slot : row) {
+    if (output_slot < 5) {
+      base = model.base_next[output_slot][base];
+    }
+  }
+  return base;
+}
+
+std::vector<int> cycle_rank(int size, int start, const std::vector<int> &perm,
+                            const std::string &label) {
+  std::vector<int> rank(size, -1);
+  int state = start;
+  for (int step = 0; step < size; ++step) {
+    if (state < 0 || state >= size) {
+      throw std::runtime_error(label + ": state escaped range");
+    }
+    if (rank[state] != -1) {
+      throw std::runtime_error(label + ": repeated state before full period");
+    }
+    rank[state] = step;
+    state = perm[state];
+  }
+  if (state != start) {
+    throw std::runtime_error(label + ": did not close at full period");
+  }
+  return rank;
+}
+
+void assert_rank_step(const std::vector<int> &rank, const std::vector<int> &perm,
+                      const std::string &label) {
+  int size = static_cast<int>(rank.size());
+  for (int state = 0; state < size; ++state) {
+    int next = perm[state];
+    if (next < 0 || next >= size) {
+      throw std::runtime_error(label + ": next state escaped range");
+    }
+    int expected = (rank[state] + 1) % size;
+    if (rank[next] != expected) {
+      throw std::runtime_error(label + ": rank step failed");
+    }
+  }
+}
+
 bool is_single_cycle(const std::vector<int> &perm) {
   std::vector<char> seen(perm.size(), 0);
   int state = 0;
@@ -273,48 +318,92 @@ int selected_slot(const Formula &formula, int layer, int p_value, int zero_count
   return (r + component) % 3;
 }
 
+std::vector<int> compose_section_perm(const Model &model,
+                                      const std::vector<int> &row,
+                                      const Formula &formula) {
+  std::vector<int> perm(model.fiber_size, 0);
+  for (int i = 0; i < model.fiber_size; ++i) {
+    perm[i] = i;
+  }
+  int base = 0;
+  for (int step = 0; step < model.base_size; ++step) {
+    for (int layer = 0; layer < model.m; ++layer) {
+      int output_slot = row[layer];
+      if (output_slot < 5) {
+        int direction = model.base_direction[output_slot][base];
+        int next_base = model.base_next[output_slot][base];
+        if (direction == 4) {
+          int slot = selected_slot(formula, layer, model.p_value[base],
+                                   model.zero_count[base], 0);
+          apply_map_ptr(
+              perm,
+              &model.fiber_next[(layer * 3 + slot) * model.fiber_size]);
+        } else {
+          apply_map(perm, model.fiber_forced_q0);
+        }
+        base = next_base;
+      } else {
+        int component = output_slot - 4;
+        int slot = selected_slot(formula, layer, model.p_value[base],
+                                 model.zero_count[base], component);
+        apply_map_ptr(perm,
+                      &model.fiber_next[(layer * 3 + slot) * model.fiber_size]);
+      }
+    }
+  }
+  if (base != 0) {
+    throw std::runtime_error("base section did not return to 0");
+  }
+  return perm;
+}
+
 std::tuple<bool, int, std::string> test_formula(
     const Model &model, const std::vector<std::vector<int>> &rows,
     const Formula &formula) {
-  std::vector<int> perm(model.fiber_size, 0);
   for (int color = 0; color < 7; ++color) {
-    for (int i = 0; i < model.fiber_size; ++i) {
-      perm[i] = i;
-    }
-    int base = 0;
-    for (int step = 0; step < model.base_size; ++step) {
-      for (int layer = 0; layer < model.m; ++layer) {
-        int output_slot = rows[color][layer];
-        if (output_slot < 5) {
-          int direction = model.base_direction[output_slot][base];
-          int next_base = model.base_next[output_slot][base];
-          if (direction == 4) {
-            int slot = selected_slot(formula, layer, model.p_value[base],
-                                     model.zero_count[base], 0);
-            apply_map_ptr(
-                perm,
-                &model.fiber_next[(layer * 3 + slot) * model.fiber_size]);
-          } else {
-            apply_map(perm, model.fiber_forced_q0);
-          }
-          base = next_base;
-        } else {
-          int component = output_slot - 4;
-          int slot = selected_slot(formula, layer, model.p_value[base],
-                                   model.zero_count[base], component);
-          apply_map_ptr(perm,
-                        &model.fiber_next[(layer * 3 + slot) * model.fiber_size]);
-        }
-      }
-    }
-    if (base != 0) {
-      return {false, color, "base section did not return to 0"};
+    std::vector<int> perm;
+    try {
+      perm = compose_section_perm(model, rows[color], formula);
+    } catch (const std::exception &ex) {
+      return {false, color, ex.what()};
     }
     if (!is_single_cycle(perm)) {
       return {false, color, "fiber section is not a single cycle"};
     }
   }
   return {true, -1, ""};
+}
+
+std::uint64_t fnv1a_rank_hash(const std::vector<int> &rank) {
+  std::uint64_t hash = 1469598103934665603ULL;
+  for (int value : rank) {
+    std::uint64_t x = static_cast<std::uint64_t>(value);
+    for (int byte = 0; byte < 8; ++byte) {
+      hash ^= (x >> (8 * byte)) & 0xffU;
+      hash *= 1099511628211ULL;
+    }
+  }
+  return hash;
+}
+
+std::string hex64(std::uint64_t value) {
+  const char *digits = "0123456789abcdef";
+  std::string out(16, '0');
+  for (int i = 15; i >= 0; --i) {
+    out[i] = digits[value & 0xfU];
+    value >>= 4;
+  }
+  return out;
+}
+
+std::vector<int> orbit_prefix(int start, const std::vector<int> &perm, int limit) {
+  std::vector<int> out;
+  int state = start;
+  for (int i = 0; i < limit; ++i) {
+    out.push_back(state);
+    state = perm[state];
+  }
+  return out;
 }
 
 int layer_step(const Model &model, int state, int layer, int output_slot,
@@ -374,6 +463,75 @@ std::tuple<bool, int, std::string> verify_product_cycles(
   return {true, -1, ""};
 }
 
+void write_int_array(std::ostream &out, const std::vector<int> &values) {
+  out << "[";
+  for (std::size_t i = 0; i < values.size(); ++i) {
+    if (i != 0) {
+      out << ",";
+    }
+    out << values[i];
+  }
+  out << "]";
+}
+
+void write_rank_summary(const std::string &path, const Model &model,
+                        const std::vector<std::vector<int>> &rows,
+                        const Formula &formula) {
+  std::ofstream out(path);
+  if (!out) {
+    throw std::runtime_error("could not open rank summary path");
+  }
+  out << "{\n";
+  out << "  \"description\": \"Formula-defined compact rank fingerprints for "
+         "generated all-zero-set 4+2 bridge witnesses.\",\n";
+  out << "  \"m\": " << model.m << ",\n";
+  out << "  \"base_period\": " << model.base_size << ",\n";
+  out << "  \"fiber_period\": " << model.fiber_size << ",\n";
+  out << "  \"product_states\": " << model.base_size * model.fiber_size << ",\n";
+  out << "  \"colors\": [\n";
+  for (int color = 0; color < 7; ++color) {
+    std::vector<int> base_perm(model.base_size, 0);
+    for (int base = 0; base < model.base_size; ++base) {
+      base_perm[base] = base_return_step(model, base, rows[color]);
+    }
+    auto base_rank = cycle_rank(
+        model.base_size, 0, base_perm,
+        "m=" + std::to_string(model.m) + ": color " + std::to_string(color) +
+            " base return");
+    assert_rank_step(base_rank, base_perm,
+                     "m=" + std::to_string(model.m) + ": color " +
+                         std::to_string(color) + " base rank");
+
+    auto section_perm = compose_section_perm(model, rows[color], formula);
+    auto fiber_rank = cycle_rank(
+        model.fiber_size, 0, section_perm,
+        "m=" + std::to_string(model.m) + ": color " + std::to_string(color) +
+            " fiber section return");
+    assert_rank_step(fiber_rank, section_perm,
+                     "m=" + std::to_string(model.m) + ": color " +
+                         std::to_string(color) + " fiber rank");
+
+    if (color != 0) {
+      out << ",\n";
+    }
+    out << "    {\n";
+    out << "      \"color\": " << color << ",\n";
+    out << "      \"base_rank_fnv1a64\": \""
+        << hex64(fnv1a_rank_hash(base_rank)) << "\",\n";
+    out << "      \"fiber_rank_fnv1a64\": \""
+        << hex64(fnv1a_rank_hash(fiber_rank)) << "\",\n";
+    out << "      \"base_orbit_prefix\": ";
+    write_int_array(out, orbit_prefix(0, base_perm, std::min(16, model.base_size)));
+    out << ",\n";
+    out << "      \"fiber_section_orbit_prefix\": ";
+    write_int_array(out, orbit_prefix(0, section_perm, std::min(16, model.fiber_size)));
+    out << "\n";
+    out << "    }";
+  }
+  out << "\n  ]\n";
+  out << "}\n";
+}
+
 std::string label(const Formula &formula) {
   std::string out = formula.reflected ? "reflected: r = " : "cyclic: r = ";
   out += std::to_string(formula.a) + "*t + " + std::to_string(formula.b) +
@@ -419,7 +577,8 @@ void usage(const char *argv0) {
   std::cerr
       << "usage: " << argv0
       << " --m M --rows ROW0,...,ROW6 [--formula a,b,c,d,reflected]"
-      << " [--max-candidates N] [--all-hits] [--verify-product]\n";
+      << " [--max-candidates N] [--all-hits] [--verify-product]"
+      << " [--rank-summary-json PATH]\n";
 }
 
 } // namespace
@@ -433,6 +592,7 @@ int main(int argc, char **argv) {
     int max_candidates = -1;
     bool all_hits = false;
     bool verify_product = false;
+    std::string rank_summary_json;
 
     for (int i = 1; i < argc; ++i) {
       std::string arg = argv[i];
@@ -449,6 +609,8 @@ int main(int argc, char **argv) {
         all_hits = true;
       } else if (arg == "--verify-product") {
         verify_product = true;
+      } else if (arg == "--rank-summary-json" && i + 1 < argc) {
+        rank_summary_json = argv[++i];
       } else if (arg == "--help") {
         usage(argv[0]);
         return 0;
@@ -499,6 +661,10 @@ int main(int argc, char **argv) {
 
     if (has_formula) {
       run_formula(only_formula);
+      if (!rank_summary_json.empty()) {
+        write_rank_summary(rank_summary_json, model, rows, only_formula);
+        std::cout << "wrote " << rank_summary_json << "\n";
+      }
     } else {
       for (int reflected_int = 0; reflected_int < 2; ++reflected_int) {
         for (int a = 0; a < 3; ++a) {

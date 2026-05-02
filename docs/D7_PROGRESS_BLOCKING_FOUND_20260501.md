@@ -602,12 +602,23 @@ wrapper `scripts/verify_compact_4plus2_formula_certs.py` validates that each
 full row projects to its recorded base word, each column is a permutation of
 `0..6`, base-word counts are balanced, Target-A section/column diagnostics
 pass, and the C++ formula checker verifies the section and direct product
-cycles.  A full replay reports:
+cycles.  With `--rank-summary-dir`, the C++ checker also records base and
+fiber section rank fingerprints after checking that those ranks step by `+1`.
+A full replay reports:
 
 ```text
 m=11: Target-A single/single/sum=14641, column depth 11, product_states=1771561
 m=13: Target-A single/single/sum=28561, column depth 13, product_states=4826809
 m=17: Target-A single/single/sum=83521, column depth 17, product_states=24137569
+```
+
+For the first color in each generated witness, the current FNV-1a rank
+fingerprints are:
+
+```text
+m=11: base=48ab096ae45686b0 fiber=64056811e313fd5b
+m=13: base=1729960657986ab2 fiber=a5d710c16e78968b
+m=17: base=4b5c9cc72a8705cc fiber=951e7c9f9efbba84
 ```
 
 ### A5-to-A7 Target-A/Target-B Refinement
@@ -912,6 +923,7 @@ g++ -std=c++17 -O3 scripts/fast_4plus2_section_formula_search.cpp \
   --rows 10435141403555553,32244253552624642,51506515121101121,43623066064362300,25350400235040065,04162622316236234,66011334640413416 \
   --formula 0,0,2,1,0 --verify-product
 python3 scripts/verify_compact_4plus2_formula_certs.py --target-a --product \
+  --rank-summary-dir /tmp/d7_compact_rank_summaries_full \
   --json-out /tmp/d7_compact_formula_full_verify.json
 git diff --check
 ```

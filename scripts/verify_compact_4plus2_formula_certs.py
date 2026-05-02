@@ -102,6 +102,7 @@ def run_cpp_checker(
     formula: str,
     *,
     product: bool,
+    rank_summary_json: Path | None = None,
 ) -> str:
     cmd = [
         str(checker),
@@ -114,6 +115,8 @@ def run_cpp_checker(
     ]
     if product:
         cmd.append("--verify-product")
+    if rank_summary_json is not None:
+        cmd.extend(["--rank-summary-json", str(rank_summary_json)])
     result = subprocess.run(cmd, check=True, text=True, capture_output=True)
     return result.stdout.strip()
 
@@ -177,6 +180,11 @@ def main() -> None:
         action="store_true",
         help="also run direct product-return single-cycle checks",
     )
+    parser.add_argument(
+        "--rank-summary-dir",
+        type=Path,
+        help="write per-witness base/fiber rank-step fingerprints from the C++ checker",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
@@ -192,12 +200,19 @@ def main() -> None:
         results = []
         for witness in selected:
             shape = validate_witness_shape(witness)
+            rank_summary_json = None
+            if args.rank_summary_dir is not None:
+                args.rank_summary_dir.mkdir(parents=True, exist_ok=True)
+                rank_summary_json = args.rank_summary_dir / (
+                    f"{shape['name']}_rank_summary.json"
+                )
             cpp_output = run_cpp_checker(
                 checker,
                 shape["m"],
                 shape["rows_arg"],
                 shape["formula_arg"],
                 product=args.product,
+                rank_summary_json=rank_summary_json,
             )
             result = {
                 "name": shape["name"],
@@ -206,6 +221,8 @@ def main() -> None:
                 "formula": witness["formula"],
                 "cpp_checker_output": cpp_output.splitlines(),
             }
+            if rank_summary_json is not None:
+                result["rank_summary_json"] = str(rank_summary_json)
             if args.target_a:
                 result["target_a"] = target_a_summary(witness)
             results.append(result)
@@ -215,6 +232,7 @@ def main() -> None:
         "cert_json": str(args.cert_json),
         "target_a_checked": args.target_a,
         "product_checked": args.product,
+        "rank_summary_checked": args.rank_summary_dir is not None,
         "results": results,
     }
     text = json.dumps(out, indent=2, sort_keys=True)

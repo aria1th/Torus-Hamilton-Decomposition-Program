@@ -195,7 +195,7 @@ when `m` is odd and `m >= 3`.
   compact generated `m = 11,13,17` formula certificates in
   `certs/d7_4plus2_compact_formula_witnesses.json`.  It validates row/base
   shape, can rerun the Target-A section and column audits, and delegates
-  formula/product checks to the C++ checker.
+  formula/product/rank-step fingerprint checks to the C++ checker.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
   tables, checks scalar unit invariants, and can run the full bridge verifier.
@@ -440,6 +440,7 @@ can be replayed with:
 
 ```bash
 python3 scripts/verify_compact_4plus2_formula_certs.py --target-a --product \
+  --rank-summary-dir /tmp/d7_compact_rank_summaries \
   --json-out /tmp/d7_compact_formula_full_verify.json
 ```
 
