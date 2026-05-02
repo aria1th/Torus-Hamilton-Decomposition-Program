@@ -742,6 +742,13 @@ directly.  The summary also emits piecewise-translation propositions; for
 example, the `m = 44` trace is exactly `V(a)=a+23` on `[1,20]` and
 `V(a)=a+24` on `[21,43]`, modulo `44`.
 
+The same finite evidence is now packaged as
+`certs/d5_routeE_small_seam_rank_certs.json` and checked by
+`scripts/verify_d5_routeE_small_seam_rank_certs.py`.  The cert stores the seam
+rank and inverse rank tables, maximal translation blocks, and return-time sum
+for all `28` cases; the verifier recomputes the small-seam first return and
+checks rank step, block maximality, and `sum tau = m^4`.
+
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
 one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam
 first-return traces, first-return minimality, and the return-time sum.  The

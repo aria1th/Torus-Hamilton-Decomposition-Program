@@ -663,6 +663,17 @@ finite trace targets for the next block-splice proof, not an all-even formula.
 Clustering the same data by normalized zero/support positions finds no robust
 sample-count-at-least-three affine count family.
 
+The finite ranked block certs can be regenerated and checked with:
+
+```bash
+python3 scripts/verify_d5_routeE_small_seam_rank_certs.py \
+  --cert certs/d5_routeE_small_seam_rank_certs.json \
+  --json-out /tmp/d5_routeE_small_seam_rank_cert_verify.json
+```
+
+This verifies the recorded rank arrays, inverse rank arrays, maximal
+translation blocks, and return-time sums for all `28` small-seam cases.
+
 `D5Odd/EvenRouteE.lean` also exposes these trace summaries as a Lean-facing
 piecewise translation interface: `RouteESeamTranslationBlock`,
 `RouteEThetaPiecewiseTranslationCertificate`, and the all-large target

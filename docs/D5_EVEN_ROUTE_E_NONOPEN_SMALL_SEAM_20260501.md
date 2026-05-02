@@ -271,6 +271,25 @@ cluster; only two-sample affine fits appear.  Thus the current finite table
 still points more strongly to a block-splice theorem than to direct affine
 interpolation of count vectors.
 
+The finite rank/block certificate is stored as:
+
+```text
+certs/d5_routeE_small_seam_rank_certs.json
+```
+
+and verified by:
+
+```bash
+python3 scripts/verify_d5_routeE_small_seam_rank_certs.py \
+  --cert certs/d5_routeE_small_seam_rank_certs.json \
+  --json-out /tmp/d5_routeE_small_seam_rank_cert_verify.json
+```
+
+It records, for every bundled `m = 6,8,...,60` case, the orbit rank on the
+small seam, its inverse rank table, the maximal translation blocks, and the
+return-time sum.  The verification checks `rank(V(a)) = rank(a)+1 mod (m-1)`,
+block cover/disjointness/maximality, and `sum tau = m^4`.
+
 ## Revised D5 Even Route-E Gap
 
 The non-open branch should no longer be described as an unresolved
