@@ -842,6 +842,7 @@ def cover_json_cases(
     bundle: Path,
     only: set[int] | None,
     max_solutions: int | None,
+    allow_dummy_kappa: bool,
 ) -> list[tuple[dict, dict]]:
     payload = json.loads(path.read_text())
     cert_by_m = {cert["m"]: cert for cert in load_bundle(bundle, None)}
@@ -850,12 +851,26 @@ def cover_json_cases(
         m = cover_search.get("m")
         if only is not None and m not in only:
             continue
-        if m not in cert_by_m:
-            continue
         for solution_index, solution in enumerate(cover_search.get("solutions", [])):
             if max_solutions is not None and solution_index >= max_solutions:
                 break
-            cert = copy.deepcopy(cert_by_m[m])
+            if m in cert_by_m:
+                cert = copy.deepcopy(cert_by_m[m])
+            elif allow_dummy_kappa:
+                rows = solution.get("rows")
+                if not isinstance(m, int) or not isinstance(rows, list):
+                    continue
+                cert = {
+                    "m": m,
+                    "rows": rows,
+                    "kappa_perm_indices": [[0 for _ in range(m**4)] for _ in range(m)],
+                    "note": (
+                        "dummy kappa generated from cover-json rows; formula "
+                        "search overwrites kappa_perm_indices"
+                    ),
+                }
+            else:
+                continue
             cert["rows"] = solution["rows"]
             cases.append(
                 (
@@ -922,6 +937,15 @@ def main() -> None:
         help="maximum number of cover-json solutions to test per modulus",
     )
     parser.add_argument(
+        "--allow-cover-dummy-kappa",
+        action="store_true",
+        help=(
+            "when --cover-json contains a modulus absent from the bundle, build "
+            "a verifier-shaped dummy-kappa cert from the row solution so formula "
+            "search can overwrite the kappa table"
+        ),
+    )
+    parser.add_argument(
         "--emit-hit-cert-dir",
         type=Path,
         help="write verifier-ready certificate JSON files for formula hits",
@@ -981,7 +1005,11 @@ def main() -> None:
         cases = bundled_cases(args.bundle, only)
     else:
         cases = cover_json_cases(
-            args.cover_json, args.bundle, only, args.max_cover_solutions
+            args.cover_json,
+            args.bundle,
+            only,
+            args.max_cover_solutions,
+            args.allow_cover_dummy_kappa,
         )
 
     payload = {

@@ -480,6 +480,42 @@ diagnostic reaches target depth `11` with `234` reachable states and no
 truncation.  This is a finite `m = 11` Target-A row-cover witness and a useful
 trace source, not yet a congruence-family proof.
 
+The same rows also give a finite Target-B' witness.  `scripts/search_4plus2_kappa_formulas.py`
+now accepts `--cover-json ... --allow-cover-dummy-kappa`, so new row covers for
+moduli not present in the original bundle can be tested by formula search
+without hand-building a dummy certificate.  On the first `m = 11` cover above,
+
+```bash
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m11_rot_symbol1_solution0_cover_diag_recheck.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 1 \
+  --formula-family rotation --section-only \
+  --json-out /tmp/targetA_m11_cover_json_rotation_section_formula_search.json
+```
+
+checks `14` rotation-family candidates and finds
+
+```text
+cyclic: r = 0*t + 1*p + 1*z + 1 mod 3.
+```
+
+The same first hit appears for all three diagnostic exact-cover placements
+emitted from this count-vector combo.  Here `p = p(Z)` is the D5 zero-set table
+direction and `z = |Z|`, so this is still a zero-set-derived,
+layer-independent fiber compiler.  Emitting that hit and running the full
+product verifier gives:
+
+```text
+verified m=11 product_states=1771561 rows=7 base_rank_steps=ok
+section_rank_steps=ok return_cycles=single
+```
+
+Thus `m = 11` now has a finite all-zero-set `4+2` bridge certificate, including
+both Target-A base primitiveity/cover evidence and Target-B' fiber evidence.
+The open problem remains extracting a uniform all-odd family and Lean-facing
+rank-step formulas.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -708,6 +744,22 @@ python3 scripts/analyze_4plus2_base_rows.py \
   --cover-words 2434343,43033334,33342440,01241242,01110212,10212011,42020010 \
   --cover-limit 3 --diagnose-cover \
   --json-out /tmp/targetA_m11_rot_symbol1_solution0_cover_diag.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m11_rot_symbol1_solution0_cover_diag.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 1 \
+  --formula-family rotation --section-only \
+  --json-out /tmp/targetA_m11_cover_json_rotation_section_formula_search.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m11_rot_symbol1_solution0_cover_diag.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 1 \
+  --formula-family rotation --section-only \
+  --emit-hit-cert-dir /tmp/targetA_m11_formula_hits \
+  --json-out /tmp/targetA_m11_solution0_rotation_section_formula_emit.json
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --cert-json /tmp/targetA_m11_formula_hits/bridge_4plus2_m11_cover_json_solution0_formula_hit0.json \
+  --rank-summary-json /tmp/targetA_m11_solution0_formula_hit0_rank_summary.json
 git diff --check
 ```
 

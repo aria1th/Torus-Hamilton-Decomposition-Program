@@ -399,6 +399,22 @@ one resulting base-word set is
 passes the Target-A section audit at `m = 11`, and the seven words have a
 column exact cover.  This is finite evidence for the Target-A row-family
 search, not an all-odd symbolic family.
+The resulting cover JSON can be fed directly into the kappa formula search,
+even though `m = 11` is not part of the original bundle:
+
+```bash
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m11_rot_symbol1_solution0_cover_diag.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 1 \
+  --formula-family rotation --section-only \
+  --json-out /tmp/targetA_m11_cover_json_rotation_section_formula_search.json
+```
+
+For the cover above, this finds the zero-set-derived rotation formula
+`r = p(Z) + |Z| + 1 mod 3`.  Emitting that hit as a full certificate and
+checking it with `scripts/verify_4plus2_allN_bridge_cert.py` verifies
+`11^6 = 1771561` product states with single color-return cycles.
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
 now reports exact-cover DP depth, reachable/dead states, and dead-frontier
 examples.
