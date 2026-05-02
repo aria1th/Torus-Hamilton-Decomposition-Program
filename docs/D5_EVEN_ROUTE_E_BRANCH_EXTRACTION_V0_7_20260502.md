@@ -131,8 +131,21 @@ E(q)       occurs 1 time
 F(q)       occurs 1 time
 ```
 
-This gives a sharper proof target for `sum tau = m^4`: prove the pointwise
-return-time partition, then prove the weighted sum identity.
+The pointwise partition verified by the B20 script is:
+
+```text
+tau(a) = D(q)  for 1 <= a <= h-2 except a = r, 2*r
+tau(a) = C(q)  for a = r, 2*r, h
+tau(a) = F(q)  for a = h-1
+tau(a) = B(q)  for h+1 <= a <= m-2 except a = h+r, h+2*r
+tau(a) = A(q)  for a = h+r, h+2*r
+tau(a) = E(q)  for a = m-1
+```
+
+The stronger pointwise formula was checked on the default `m = 20,44` run and
+again at `m = 68`.  This gives a sharper proof target for `sum tau = m^4`:
+prove the pointwise return-time partition, then prove the weighted sum
+identity.
 
 ## Proof Obligations Exposed by B20
 
