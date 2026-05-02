@@ -87,7 +87,8 @@ Current state:
   formula as `RouteEB20.returnTimeFormula`.  The sharper target
   `RouteEB20.ThetaPointwiseTraceTarget` uses that formula directly and lowers
   to `RouteEB20.ThetaTraceTarget`, with the final `m^4` sum discharged by
-  `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
+  `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.  The
+  `RouteEB20.returnTimeFormula_*` lemmas name the pointwise partition cases.
 
 Reset target:
 

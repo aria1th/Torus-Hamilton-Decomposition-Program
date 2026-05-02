@@ -254,6 +254,92 @@ theorem returnTimeFormula_pos (q : Nat)
   unfold returnTimeFormula
   split_ifs <;> simp [timeA, timeC, timeE, timeF, modulus]
 
+theorem returnTimeFormula_lower_exception (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val ≤ half q - 2)
+    (hex : a.1.val = third q ∨ a.1.val = 2 * third q) :
+    returnTimeFormula q a = timeC q := by
+  simp [returnTimeFormula, ha, hex]
+
+theorem returnTimeFormula_lower_generic (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val ≤ half q - 2)
+    (hne₁ : a.1.val ≠ third q)
+    (hne₂ : a.1.val ≠ 2 * third q) :
+    returnTimeFormula q a = timeC q + modulus q := by
+  simp [returnTimeFormula, ha, hne₁, hne₂]
+
+theorem returnTimeFormula_leftBoundary (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val = half q - 1) :
+    returnTimeFormula q a = timeF q := by
+  unfold returnTimeFormula
+  rw [ha]
+  have hnotLower : ¬ half q - 1 ≤ half q - 2 := by
+    simp [half]
+  rw [if_neg hnotLower]
+  rw [if_pos rfl]
+
+theorem returnTimeFormula_midpoint (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val = half q) :
+    returnTimeFormula q a = timeC q := by
+  unfold returnTimeFormula
+  rw [ha]
+  have hnotLower : ¬ half q ≤ half q - 2 := by
+    simp [half]
+  have hnotLeft : half q ≠ half q - 1 := by
+    simp [half]
+  rw [if_neg hnotLower]
+  rw [if_neg hnotLeft]
+  rw [if_pos rfl]
+
+theorem returnTimeFormula_upper_exception (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hlo : half q + 1 ≤ a.1.val)
+    (hhi : a.1.val ≤ modulus q - 2)
+    (hex : a.1.val = half q + third q ∨
+      a.1.val = half q + 2 * third q) :
+    returnTimeFormula q a = timeA q := by
+  have hnotLower : ¬ a.1.val ≤ half q - 2 := by omega
+  have hnotLeft : a.1.val ≠ half q - 1 := by omega
+  have hnotMid : a.1.val ≠ half q := by omega
+  simp [returnTimeFormula, hnotLower, hnotLeft, hnotMid, hhi, hex]
+
+theorem returnTimeFormula_upper_generic (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hlo : half q + 1 ≤ a.1.val)
+    (hhi : a.1.val ≤ modulus q - 2)
+    (hne₁ : a.1.val ≠ half q + third q)
+    (hne₂ : a.1.val ≠ half q + 2 * third q) :
+    returnTimeFormula q a = timeA q + modulus q := by
+  have hnotLower : ¬ a.1.val ≤ half q - 2 := by omega
+  have hnotLeft : a.1.val ≠ half q - 1 := by omega
+  have hnotMid : a.1.val ≠ half q := by omega
+  simp [returnTimeFormula, hnotLower, hnotLeft, hnotMid, hhi, hne₁,
+    hne₂]
+
+theorem returnTimeFormula_last (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val = modulus q - 1) :
+    returnTimeFormula q a = timeE q := by
+  have hnotLower : ¬ a.1.val ≤ half q - 2 := by
+    rw [ha]
+    simp [half, modulus]
+    omega
+  have hnotLeft : a.1.val ≠ half q - 1 := by
+    rw [ha]
+    simp [half, modulus]
+    omega
+  have hnotMid : a.1.val ≠ half q := by
+    rw [ha]
+    simp [half, modulus]
+    omega
+  have hnotUpper : ¬ a.1.val ≤ modulus q - 2 := by
+    rw [ha]
+    simp [modulus]
+  simp [returnTimeFormula, hnotLower, hnotLeft, hnotMid, hnotUpper]
+
 def seamStep (q : Nat) : Nat := half q + 1
 
 theorem seamStep_lt_modulus_pred (q : Nat) :

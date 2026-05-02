@@ -162,7 +162,8 @@ pointwise return-time formula is now named `RouteEB20.returnTimeFormula`, and
 `RouteEB20.ThetaPointwiseTraceTarget` is the sharper version of the B20 trace
 target using that formula directly; it only needs the formula sum to match
 `RouteEB20.returnTimeWeightedSum`, after which the closed weighted-sum theorem
-gives `m^4`.
+gives `m^4`.  The formula's verifier-facing cases are exposed as
+`RouteEB20.returnTimeFormula_*` rewrite lemmas.
 
 ## Proof Obligations Exposed by B20
 
