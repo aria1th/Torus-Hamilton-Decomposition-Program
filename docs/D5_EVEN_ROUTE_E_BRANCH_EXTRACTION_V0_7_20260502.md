@@ -97,6 +97,19 @@ m = 20: [1,8]  -> delta 11, [9,19]  -> delta 12
 m = 44: [1,20] -> delta 23, [21,43] -> delta 24
 ```
 
+The repo now has a B20-specific Python regression:
+
+```bash
+python3 scripts/verify_d5_routeE_b20_branch.py \
+  --moduli 20,44 \
+  --json-out /tmp/d5_routeE_b20_branch_20_44.json
+```
+
+It checks the B20 count formula, the `Theta_0` small-seam criterion, the
+two-block translation table, and the return-time sum.  The default `20,44`
+run reports `all_ok=True`; larger bundle instances such as `68,92` can be
+requested explicitly but are slower in Python.
+
 ## Proof Obligations Exposed by B20
 
 For the B20 branch, the all-even proof target is now concrete:

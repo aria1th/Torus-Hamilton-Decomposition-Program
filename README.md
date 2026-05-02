@@ -290,6 +290,9 @@ when `m` is odd and `m >= 3`.
   the D5 Route-E small-seam first-return maps, compressing the verifier's
   translation blocks into block-count, long-block, piecewise-translation, and
   fingerprint diagnostics.
+- `scripts/verify_d5_routeE_b20_branch.py`: verifier for the extracted D5
+  Route-E B20 branch `m == 20 mod 24`, checking the count formula, two-block
+  `Theta_0` seam map, and return-time sum for selected moduli.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
