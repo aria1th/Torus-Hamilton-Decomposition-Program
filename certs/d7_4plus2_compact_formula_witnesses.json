@@ -1,0 +1,98 @@
+{
+  "description": "Compact finite all-zero-set 4+2 bridge witnesses with formula-defined Target-B' kappa tables. Rows are full length-m schedules over slots 0..6; base_words are the row projections to slots 0..4.",
+  "witnesses": [
+    {
+      "name": "m11_targetA_solution0_rotation_formula",
+      "m": 11,
+      "base_words": [
+        "2434343",
+        "43033334",
+        "33342440",
+        "01241242",
+        "01110212",
+        "10212011",
+        "42020010"
+      ],
+      "rows": [
+        "24553434553",
+        "55430353334",
+        "33342545405",
+        "01264166242",
+        "60111021626",
+        "16025612011",
+        "42606200160"
+      ],
+      "formula": {
+        "family": "rotation",
+        "a": 0,
+        "b": 1,
+        "c": 1,
+        "d": 1,
+        "reflected": false,
+        "label": "cyclic: r = 0*t + 1*p + 1*z + 1 mod 3"
+      }
+    },
+    {
+      "name": "m13_targetA_solution0_rotation_formula",
+      "m": 13,
+      "base_words": [
+        "14244442",
+        "312324442",
+        "312231334",
+        "423021000",
+        "2041033232",
+        "0041011111",
+        "4230300013"
+      ],
+      "rows": [
+        "1555455244442",
+        "3123244455255",
+        "5316522313534",
+        "6462360521000",
+        "2604103632326",
+        "0041011166161",
+        "4230636000613"
+      ],
+      "formula": {
+        "family": "rotation",
+        "a": 0,
+        "b": 0,
+        "c": 1,
+        "d": 0,
+        "reflected": false,
+        "label": "cyclic: r = 0*t + 0*p + 1*z + 0 mod 3"
+      }
+    },
+    {
+      "name": "m17_targetA_solution0_rotation_formula",
+      "m": 17,
+      "base_words": [
+        "10431414033",
+        "322442322442",
+        "101121101121",
+        "432300432300",
+        "230400230400",
+        "0412223123234",
+        "0113344041341"
+      ],
+      "rows": [
+        "10435141403555553",
+        "32244253552624642",
+        "51506515121101121",
+        "43623066064362300",
+        "25350400235040065",
+        "04162622316236234",
+        "66011334640413416"
+      ],
+      "formula": {
+        "family": "rotation",
+        "a": 0,
+        "b": 0,
+        "c": 2,
+        "d": 1,
+        "reflected": false,
+        "label": "cyclic: r = 0*t + 0*p + 2*z + 1 mod 3"
+      }
+    }
+  ]
+}

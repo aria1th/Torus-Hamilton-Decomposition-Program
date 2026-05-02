@@ -191,6 +191,11 @@ when `m` is odd and `m >= 3`.
   verifies the base/section criterion quickly and can also replay the direct
   product-return single-cycle check for larger finite witnesses such as
   `m = 17`.
+- `scripts/verify_compact_4plus2_formula_certs.py`: verifier wrapper for the
+  compact generated `m = 11,13,17` formula certificates in
+  `certs/d7_4plus2_compact_formula_witnesses.json`.  It validates row/base
+  shape, can rerun the Target-A section and column audits, and delegates
+  formula/product checks to the C++ checker.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
   tables, checks scalar unit invariants, and can run the full bridge verifier.
@@ -430,6 +435,14 @@ Target-A base-word set is
 the C++ section checker finds the first rotation-family hit
 `r = 2|Z| + 1 mod 3` and verifies `17^6 = 24137569` product states.  This is
 finite evidence for the bridge pipeline, not yet a symbolic all-odd row family.
+The generated `m = 11,13,17` witnesses are also committed in compact form and
+can be replayed with:
+
+```bash
+python3 scripts/verify_compact_4plus2_formula_certs.py --target-a --product \
+  --json-out /tmp/d7_compact_formula_full_verify.json
+```
+
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
 now reports exact-cover DP depth, reachable/dead states, and dead-frontier
 examples.

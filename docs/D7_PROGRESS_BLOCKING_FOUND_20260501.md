@@ -596,6 +596,20 @@ turns the `m = 17` obstruction into a concrete trace source for the
 `m == 2 mod 5` correction/splicing family and for Lean-facing base/fiber rank
 formulas.
 
+The generated `m = 11,13,17` rows and formulas are now committed in compact
+form at `certs/d7_4plus2_compact_formula_witnesses.json`.  The verifier
+wrapper `scripts/verify_compact_4plus2_formula_certs.py` validates that each
+full row projects to its recorded base word, each column is a permutation of
+`0..6`, base-word counts are balanced, Target-A section/column diagnostics
+pass, and the C++ formula checker verifies the section and direct product
+cycles.  A full replay reports:
+
+```text
+m=11: Target-A single/single/sum=14641, column depth 11, product_states=1771561
+m=13: Target-A single/single/sum=28561, column depth 13, product_states=4826809
+m=17: Target-A single/single/sum=83521, column depth 17, product_states=24137569
+```
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -897,6 +911,8 @@ g++ -std=c++17 -O3 scripts/fast_4plus2_section_formula_search.cpp \
   --m 17 \
   --rows 10435141403555553,32244253552624642,51506515121101121,43623066064362300,25350400235040065,04162622316236234,66011334640413416 \
   --formula 0,0,2,1,0 --verify-product
+python3 scripts/verify_compact_4plus2_formula_certs.py --target-a --product \
+  --json-out /tmp/d7_compact_formula_full_verify.json
 git diff --check
 ```
 

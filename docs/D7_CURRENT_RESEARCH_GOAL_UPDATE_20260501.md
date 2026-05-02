@@ -577,6 +577,9 @@ Verification signals used in this audit:
 - `scripts/fast_4plus2_section_formula_search.cpp` compiles with `g++ -O3`,
   reproduces the `m=11` and `m=13` generated full product checks, and verifies
   the `m=17` formula witness over `24137569` product states.
+- `scripts/verify_compact_4plus2_formula_certs.py --target-a --product`
+  replays the committed compact generated witnesses in
+  `certs/d7_4plus2_compact_formula_witnesses.json` for `m=11,13,17`.
 - `git diff --check` succeeds for the current tracked edits.
 
 The remaining D7-structure gap is not the abstract composite interface. It is
