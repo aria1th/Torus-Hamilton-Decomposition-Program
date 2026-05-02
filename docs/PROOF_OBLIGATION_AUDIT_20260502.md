@@ -45,7 +45,7 @@ python3 scripts/verify_d7_4plus2_rank_fingerprints.py \
 => witnesses 3 all_ok True missing [] extra []
 
 python3 scripts/verify_zero_set_k_cert.py \
-  /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_triangular_full.json
 => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
 

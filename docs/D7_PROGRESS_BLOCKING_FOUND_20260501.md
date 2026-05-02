@@ -858,7 +858,7 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/verify_zero_set_k_cert.py \
-  /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 # => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
 python3 scripts/verify_d5_even_routeE.py --mode all \

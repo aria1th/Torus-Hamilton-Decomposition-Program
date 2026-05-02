@@ -82,8 +82,9 @@ For a fixed row schedule and zero-set-only `K_m(Z)`, the two A3 monodromy
 scalars are therefore finite mask sums.  Target B' is exactly the condition
 that those scalar pairs are units modulo `m` for every color.
 
-The `m = 9` scalar certificate records the same zero-set-only `K(Z)` table
-already checked in the current baseline, with scalar invariants:
+The committed `m = 9` scalar certificate
+`certs/d7_m9_zero_set_K_scalar_cert.json` records the same zero-set-only
+`K(Z)` table already checked in the current baseline, with scalar invariants:
 
 ```text
 A = (5,7,2,1,1,1,1)

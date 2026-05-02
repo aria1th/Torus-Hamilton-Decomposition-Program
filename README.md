@@ -207,6 +207,9 @@ when `m` is odd and `m >= 3`.
   `certs/d7_4plus2_compact_formula_witnesses.json`.  It validates row/base
   shape, can rerun the Target-A section and column audits, and delegates
   formula/product/rank-step fingerprint checks to the C++ checker.
+- `certs/d7_m9_zero_set_K_scalar_cert.json`: compact `m = 9` Target-B'
+  zero-set-only `K(Z)` scalar certificate, storing the mask table, row
+  schedule, and scalar invariants used by `verify_zero_set_k_cert.py`.
 - `scripts/verify_d7_4plus2_rank_fingerprints.py`: regression verifier for
   `certs/d7_4plus2_rank_fingerprints.json`; it recomputes compact D7 odd
   base/fiber rank-step fingerprints and compares them to the committed
@@ -550,7 +553,7 @@ unit invariants plus the triangular Lean obligations directly:
 
 ```bash
 python3 scripts/verify_zero_set_k_cert.py \
-  /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 ```
 
