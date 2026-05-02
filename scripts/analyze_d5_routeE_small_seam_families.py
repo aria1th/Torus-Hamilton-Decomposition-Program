@@ -170,6 +170,55 @@ def print_summary(results: Sequence[dict]) -> None:
         )
 
 
+def compact_manifest(output: dict) -> dict:
+    period_summaries = []
+    for result in output["results"]:
+        period_summaries.append(
+            {
+                "period": result["period"],
+                "class_count": result["class_count"],
+                "min_sample_count": result["min_sample_count"],
+                "max_sample_count": result["max_sample_count"],
+                "bad_residue_count": len(result["bad_residues"]),
+                "bad_residues": result["bad_residues"],
+                "all_non_singleton_affine": result["all_non_singleton_affine"],
+                "robust_affine_residues": result["robust_affine_residues"],
+                "singleton_residues": result["singleton_residues"],
+            }
+        )
+    return {
+        "schema": "d5_routeE_small_seam_family_scan_manifest_v1",
+        "source": output["source"],
+        "normalized_slot_zero": output["normalized_slot_zero"],
+        "case_count": output["case_count"],
+        "moduli": output["moduli"],
+        "periods": [item["period"] for item in period_summaries],
+        "bad_periods": [
+            item["period"]
+            for item in period_summaries
+            if item["bad_residue_count"] != 0
+        ],
+        "nonrobust_affine_periods": [
+            item["period"]
+            for item in period_summaries
+            if item["bad_residue_count"] == 0
+            and not item["robust_affine_residues"]
+        ],
+        "robust_affine_periods": [
+            item["period"]
+            for item in period_summaries
+            if item["robust_affine_residues"]
+        ],
+        "period_summaries": period_summaries,
+    }
+
+
+def compare_manifest(expected: dict, actual: dict) -> dict:
+    keys = sorted(set(expected) | set(actual))
+    mismatches = [key for key in keys if expected.get(key) != actual.get(key)]
+    return {"ok": not mismatches, "mismatches": mismatches}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -183,6 +232,8 @@ def main() -> None:
         help="fit raw slot/count vectors instead of normalized slot-zero vectors",
     )
     parser.add_argument("--json-out")
+    parser.add_argument("--write-manifest", type=Path)
+    parser.add_argument("--manifest", type=Path)
     args = parser.parse_args()
 
     rows = case_rows(normalized=not args.raw_counts)
@@ -195,8 +246,24 @@ def main() -> None:
         "results": [analyze_period(period, rows) for period in periods],
     }
     print_summary(output["results"])
+    manifest_check = None
+    if args.write_manifest is not None:
+        manifest = compact_manifest(output)
+        args.write_manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.write_manifest.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+        )
+        print(f"wrote {args.write_manifest}")
+    if args.manifest is not None:
+        expected = json.loads(args.manifest.read_text())
+        actual = compact_manifest(output)
+        manifest_check = compare_manifest(expected, actual)
+        output["manifest_check"] = manifest_check
+        print("manifest_ok", manifest_check["ok"], "mismatches", manifest_check["mismatches"])
     if args.json_out:
         Path(args.json_out).write_text(json.dumps(output, indent=2) + "\n")
+    if manifest_check is not None and not manifest_check["ok"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

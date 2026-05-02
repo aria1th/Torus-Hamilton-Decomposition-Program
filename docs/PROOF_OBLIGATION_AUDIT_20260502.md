@@ -63,6 +63,11 @@ python3 scripts/summarize_d5_routeE_small_seam_blocks.py \
   --json-out /tmp/d5_routeE_small_seam_block_summary_current.json
 => cases 28 all_ok True return_sums_ok True
 
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
+  --json-out /tmp/d5_routeE_small_seam_family_scan_current.json
+=> manifest_ok True mismatches []
+
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
   --json-out /tmp/d5_routeE_nonopen_bundle_check.json

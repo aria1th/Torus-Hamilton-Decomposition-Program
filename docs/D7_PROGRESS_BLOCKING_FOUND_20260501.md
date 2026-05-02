@@ -769,7 +769,9 @@ small-seam table already supports simple affine normalized count vectors on
 residue classes.  On the current `m = 6,8,...,60` data, tested periods
 `4,6,...,26` fail exact affine fits, while periods `28` and `30` have only
 one or two samples per class.  This means the table is a seam-criterion
-certificate source, not yet an all-even formula source.
+certificate source, not yet an all-even formula source.  The compact manifest
+`certs/d5_routeE_small_seam_family_scan_manifest.json` now pins this negative
+scan.
 
 The finite seam maps now also have a compact block-splice summary via
 `scripts/summarize_d5_routeE_small_seam_blocks.py`.  On the same `28` recorded

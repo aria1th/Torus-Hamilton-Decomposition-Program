@@ -208,6 +208,7 @@ The follow-up family scanner:
 
 ```bash
 python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
   --json-out /tmp/d5_routeE_small_seam_family_scan.json
 ```
 
@@ -217,7 +218,9 @@ periods `4,6,...,26` all fail exact affine fits on at least one residue class,
 while periods `28` and `30` have no robust affine class because each class has
 at most two samples.  Thus the current table is strong evidence for the
 small-seam criterion, but it should not be treated as an extracted all-even
-count formula.
+count formula.  The compact manifest
+`certs/d5_routeE_small_seam_family_scan_manifest.json` pins this negative scan
+as a regression artifact.
 
 The block-splice trace can now be summarized directly with:
 

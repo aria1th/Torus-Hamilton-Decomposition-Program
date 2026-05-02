@@ -234,6 +234,10 @@ when `m` is odd and `m >= 3`.
   regression manifest.  It records the uniform section affine chart through
   `m = 60` and the full-return scan through `m = 20`, including the expected
   open-port full failures at `m = 6,8,16`.
+- `certs/d5_routeE_small_seam_family_scan_manifest.json`: compact D5 Route-E
+  small-seam residue-family scan manifest.  It records that the current
+  `m = 6,8,...,60` table does not yet support a robust simple affine
+  normalized count family for the tested periods.
 - `scripts/verify_d5_routeE_nonopen_bundle.py`: bundle-consistency checker for
   `d5_even_routeE_nonopen_small_seam_v0_4.zip`.  It compares the source TSV
   to the repo's `SMALL_SEAM_CASES`, parses the bundle verifier transcript,
@@ -710,12 +714,14 @@ The finite small-seam table can be scanned for residue-family count formulas:
 
 ```bash
 python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
   --json-out /tmp/d5_routeE_small_seam_family_scan.json
 ```
 
 This is a research aid.  On the current table, simple affine normalized count
-vectors fail for tested periods up to `26`; periods `28` and above are too
-sparse to give robust family evidence.
+vectors fail for tested periods up to `26`; periods `28` and `30` are too
+sparse to give robust family evidence.  The manifest check should print
+`manifest_ok True mismatches []`.
 
 The same small-seam verifier output can be compressed into one-dimensional
 translation-block diagnostics:
