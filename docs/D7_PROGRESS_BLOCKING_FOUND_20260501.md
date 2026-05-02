@@ -718,6 +718,10 @@ with a concrete Route-E program.
 - In the open-port family `s=0`, `nu=(0,A,B,C,0)`, the completed section map is
   `H_{A,C}(sigma,a) = (sigma-C, a+A+1-1_{sigma=0})`, which is a single
   `m^2` cycle when `gcd(C,m)=1`.
+  Lean now records the section-pair map, the chart `(a,b) |-> (a+b,a)`, and
+  the conjugacy to this `H` map as `routeEOpenPortChart_sectionPairMap`.
+  The certificate shape `RouteEOpenPortAffineChartCertificate` states the
+  remaining small affine/rank obligation for this section normal form.
 - `scripts/verify_d5_even_routeE.py` now has a section-scan mode.  Through
   even `m = 6,8,...,60`, it finds the uniform open-port section triple
   `(A,B,C) = (0,m-2,1)`: the section formula holds, `H` is a single `m^2`
@@ -825,6 +829,9 @@ with the interval translation blocks.  Thus the D5 even symbolic gap is no
 longer “prove `IsSingleCycleMap` directly”; it is to supply a uniform seam
 rank formula, block translations, and the return-time sum for the count/slot
 families.
+Separately, the open-port section branch now has a Lean-facing affine chart
+target over `ZMod m x ZMod m`; this is a useful intermediate check, not a
+substitute for the full one-`Lambda_E` return proof.
 It also records the branch-combination theorem: a separate `m = 4` Hamilton
 witness plus either the generic all-large Route-E target or the specialized
 non-open small-seam target implies all even `m >= 4` Hamilton, torus, and

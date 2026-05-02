@@ -1,4 +1,5 @@
 import D5Odd.Even
+import Shared.Monodromy
 import Shared.RankCycle
 
 namespace D5Odd
@@ -106,6 +107,118 @@ def translationFormula {m : Nat} (block : RouteESeamTranslationBlock m)
   ∀ a, block.contains a → (f a).1 = a.1 + block.delta
 
 end RouteESeamTranslationBlock
+
+def routeEOpenPortSectionPairMap {m : Nat}
+    (A B : ZMod m) : ZMod m × ZMod m → ZMod m × ZMod m :=
+  fun p =>
+    if p.1 + p.2 = 0 then
+      (p.1 + A, p.2 + B + 1)
+    else
+      (p.1 + A + 1, p.2 + B)
+
+def routeEOpenPortChart {m : Nat} :
+    ZMod m × ZMod m → ZMod m × ZMod m :=
+  fun p => (p.1 + p.2, p.1)
+
+def routeEOpenPortChartEquiv {m : Nat} :
+    ZMod m × ZMod m ≃ ZMod m × ZMod m where
+  toFun := routeEOpenPortChart
+  invFun := fun p => (p.2, p.1 - p.2)
+  left_inv := by
+    intro p
+    rcases p with ⟨a, b⟩
+    simp [routeEOpenPortChart]
+  right_inv := by
+    intro p
+    rcases p with ⟨sigma, a⟩
+    simp [routeEOpenPortChart]
+
+def routeEOpenPortHMap {m : Nat}
+    (A C : ZMod m) : ZMod m × ZMod m → ZMod m × ZMod m :=
+  fun p => (p.1 - C, p.2 + A + 1 - if p.1 = 0 then 1 else 0)
+
+set_option linter.flexible false in
+theorem routeEOpenPortChart_sectionPairMap
+    {m : Nat} (A B C : ZMod m)
+    (hABC : A + B + C + 1 = 0) (p : ZMod m × ZMod m) :
+    routeEOpenPortChart (routeEOpenPortSectionPairMap A B p) =
+      routeEOpenPortHMap A C (routeEOpenPortChart p) := by
+  rcases p with ⟨a, b⟩
+  have hABC' : A + B + 1 = -C := by
+    calc
+      A + B + 1 = A + B + C + 1 - C := by ring
+      _ = 0 - C := by rw [hABC]
+      _ = -C := by ring
+  by_cases h : a + b = 0
+  · apply Prod.ext
+    · simp [routeEOpenPortSectionPairMap, routeEOpenPortChart,
+        routeEOpenPortHMap, h]
+      calc
+        a + A + (b + B + 1) = (a + b) + (A + B + 1) := by ring
+        _ = 0 + (A + B + 1) := by rw [h]
+        _ = -C := by rw [hABC']; ring
+    · simp [routeEOpenPortSectionPairMap, routeEOpenPortChart,
+        routeEOpenPortHMap, h]
+  · apply Prod.ext
+    · simp [routeEOpenPortSectionPairMap, routeEOpenPortChart,
+        routeEOpenPortHMap, h]
+      calc
+        a + A + 1 + (b + B) = (a + b) + (A + B + 1) := by ring
+        _ = (a + b) - C := by rw [hABC']; ring
+    · simp [routeEOpenPortSectionPairMap, routeEOpenPortChart,
+        routeEOpenPortHMap, h]
+
+structure RouteEOpenPortAffineChartCertificate (m : Nat) [NeZero m] where
+  A : ZMod m
+  B : ZMod m
+  C : ZMod m
+  count_sum : A + B + C + 1 = 0
+  C_unit : IsUnit C
+  chartRank : ZMod m × ZMod m → ZMod (m ^ 2)
+  chartRank_bijective : Function.Bijective chartRank
+  chartRank_step :
+    ∀ p, chartRank (routeEOpenPortHMap A C p) = chartRank p + 1
+
+namespace RouteEOpenPortAffineChartCertificate
+
+theorem H_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortAffineChartCertificate m) :
+    IsSingleCycleMap (routeEOpenPortHMap cert.A cert.C) := by
+  have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+  haveI : NeZero (m ^ 2) := ⟨ne_of_gt (pow_pos hmpos 2)⟩
+  exact Shared.single_cycle_of_zmod_rank
+    (routeEOpenPortHMap cert.A cert.C)
+    cert.chartRank cert.chartRank_bijective cert.chartRank_step
+
+theorem sectionPairMap_conjugates_to_H {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortAffineChartCertificate m)
+    (p : ZMod m × ZMod m) :
+    routeEOpenPortChart (routeEOpenPortSectionPairMap cert.A cert.B p) =
+      routeEOpenPortHMap cert.A cert.C (routeEOpenPortChart p) :=
+  routeEOpenPortChart_sectionPairMap cert.A cert.B cert.C cert.count_sum p
+
+theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortAffineChartCertificate m) :
+    IsSingleCycleMap (routeEOpenPortSectionPairMap cert.A cert.B) := by
+  refine Shared.single_cycle_of_equiv_conj
+    (e := (routeEOpenPortChartEquiv (m := m)).symm)
+    (f := routeEOpenPortSectionPairMap cert.A cert.B)
+    (g := routeEOpenPortHMap cert.A cert.C)
+    (H_single_cycle cert) ?_
+  intro p
+  calc
+    routeEOpenPortChart
+        (routeEOpenPortSectionPairMap cert.A cert.B
+          ((routeEOpenPortChartEquiv (m := m)).symm p)) =
+        routeEOpenPortHMap cert.A cert.C
+          (routeEOpenPortChart ((routeEOpenPortChartEquiv (m := m)).symm p)) :=
+      sectionPairMap_conjugates_to_H cert ((routeEOpenPortChartEquiv (m := m)).symm p)
+    _ = routeEOpenPortHMap cert.A cert.C p := by
+      simpa [routeEOpenPortChartEquiv] using
+        congrArg (routeEOpenPortHMap cert.A cert.C)
+          ((routeEOpenPortChartEquiv (m := m)).right_inv p)
+
+end RouteEOpenPortAffineChartCertificate
 
 def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 0 then ![a, 0, 0, -a] else

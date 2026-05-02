@@ -123,7 +123,11 @@ when `m` is odd and `m >= 3`.
   Route-E table `LambdaE` now lives here, with
   `LambdaE_latin` and `LambdaE_cyclic` recording its table invariants, and
   `LambdaE_routeEThetaVec`/`LambdaE_routeEThetaSeam` proving the bundle's
-  `start_ok` port statement `p_s(Theta_s(a)) = s+2 mod 5`.
+  `start_ok` port statement `p_s(Theta_s(a)) = s+2 mod 5`.  The open-port
+  section normal form is also named as `routeEOpenPortSectionPairMap`; the
+  chart `routeEOpenPortChart` conjugates it to `routeEOpenPortHMap`, and
+  `RouteEOpenPortAffineChartCertificate` lowers a rank-step proof for that
+  chart map to a single-cycle section result.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -624,6 +628,11 @@ It checks the recorded finite schedules for `m = 4,6,...,20`, the normalized
 Route-E core first-return table through `m = 20`, and the open-port section
 formula/cycle examples.  It is an audit artifact for the current Route-E
 program, not an all-even symbolic theorem.
+The corresponding Lean interface records the section formula as
+`routeEOpenPortChart_sectionPairMap`: under `A+B+C+1=0`, the open-port
+section-pair map is conjugate by `(a,b) |-> (a+b,a)` to
+`H(sigma,a)=(sigma-C, a+A+1-1_{sigma=0})`.  A future affine/rank formula for
+this chart map can be supplied through `RouteEOpenPortAffineChartCertificate`.
 
 The open-port section search can also be scanned separately:
 
@@ -780,6 +789,10 @@ one-cycle proof by a bijective rank
 for a symbolic block-splice proof: prove block translations, a seam rank
 formula, and the return-time sum, then Lean derives the seam cycle and lowers
 to the same endpoints.
+For the separate open-port branch, `RouteEOpenPortAffineChartCertificate`
+packages the smaller `m^2` section map.  This is useful as a checked
+intermediate normal form, but it does not replace the still-needed full
+one-`Lambda_E` return proof on the D5 even state space.
 
 The corresponding Lean target interface builds with:
 
