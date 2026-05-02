@@ -46,6 +46,9 @@ when `m` is odd and `m >= 3`.
   supplied with `A` and `E` units.  It also packages this with the base
   `m^4` rank-step into `BridgeConcreteScalarMonodromyPackage`, lowering the
   scalar Target-B' data to the existing bridge torus/Cayley endpoint adapters.
+  The `ZeroSetKappaFamily` and
+  `BridgeConcreteZeroSetScalarMonodromyPackage` wrappers specialize this target
+  to zero-set-only `K(Z)` tables.
 - `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
   good class `h % 5 != 3`, proving the inverse identities and bijectivity for

@@ -206,9 +206,82 @@ def toCertificate {m : Nat} [NeZero m] (hm : 5 ≤ m)
 
 end BridgeConcreteScalarMonodromyPackage
 
+structure ZeroSetKappaFamily (m : Nat) where
+  fiberLayer : ZMod m → D5Odd.ARoot5 m → ZMod m
+  permOfMask : D5Odd.Mask5 → Direction3 → Direction3
+  permOfMask_bijective : ∀ S, Function.Bijective (permOfMask S)
+
+namespace ZeroSetKappaFamily
+
+def perm {m : Nat} (K : ZeroSetKappaFamily m) :
+    ZMod m → D5Odd.ARoot5 m → Direction3 → Direction3 :=
+  fun _t base => K.permOfMask (D5Odd.zeroMaskMinusOne base.1)
+
+theorem perm_bijective {m : Nat} (K : ZeroSetKappaFamily m) :
+    ∀ t base, Function.Bijective (K.perm t base) := by
+  intro t base
+  exact K.permOfMask_bijective (D5Odd.zeroMaskMinusOne base.1)
+
+end ZeroSetKappaFamily
+
+structure BridgeConcreteZeroSetScalarMonodromyPackage (m : Nat) [NeZero m] where
+  row : Color → ZMod m → Direction
+  zeroSetKappa : ZeroSetKappaFamily m
+  basePoint : Color → D5Odd.ARoot5 m
+  baseRank : Color → D5Odd.ARoot5 m → ZMod (m ^ 4)
+  fiberCert : Color → A3TriangularScalarCertificate m
+  hrow : ∀ t, Function.Bijective fun c : Color => row c t
+  hbaseRank : ∀ c, Function.Bijective (baseRank c)
+  hbaseStep : ∀ c base,
+    baseRank c (bridgeConcreteBaseReturn row c base) =
+      baseRank c base + 1
+  hsection :
+    ∀ c,
+      bridgeConcreteSectionReturn row zeroSetKappa.fiberLayer
+        zeroSetKappa.perm c (basePoint c) (m ^ 4) =
+        a3TriangularMap (fiberCert c).A (fiberCert c).phi
+
+namespace BridgeConcreteZeroSetScalarMonodromyPackage
+
+def toScalarMonodromyPackage {m : Nat} [NeZero m]
+    (pkg : BridgeConcreteZeroSetScalarMonodromyPackage m) :
+    BridgeConcreteScalarMonodromyPackage m where
+  row := pkg.row
+  fiberLayer := pkg.zeroSetKappa.fiberLayer
+  perm := pkg.zeroSetKappa.perm
+  basePoint := pkg.basePoint
+  baseRank := pkg.baseRank
+  fiberCert := pkg.fiberCert
+  hrow := pkg.hrow
+  hperm := pkg.zeroSetKappa.perm_bijective
+  hbaseRank := pkg.hbaseRank
+  hbaseStep := pkg.hbaseStep
+  hsection := pkg.hsection
+
+def toConcretePowRankPackage {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteZeroSetScalarMonodromyPackage m) :
+    BridgeConcretePowRankPackage m :=
+  pkg.toScalarMonodromyPackage.toConcretePowRankPackage hm
+
+def toCertificate {m : Nat} [NeZero m] (hm : 5 ≤ m)
+    (pkg : BridgeConcreteZeroSetScalarMonodromyPackage m) :
+    BridgeProductRootCertificate m :=
+  pkg.toScalarMonodromyPackage.toCertificate hm
+
+end BridgeConcreteZeroSetScalarMonodromyPackage
+
 def BridgeOddConcreteScalarTarget : Type :=
   ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m →
     BridgeConcreteScalarMonodromyPackage m
+
+def BridgeOddConcreteZeroSetScalarTarget : Type :=
+  ∀ {m : Nat} [NeZero m], 5 ≤ m → Odd m →
+    BridgeConcreteZeroSetScalarMonodromyPackage m
+
+def bridge_odd_concrete_scalar_target_of_zero_set_scalar_target
+    (hZeroSet : BridgeOddConcreteZeroSetScalarTarget) :
+    BridgeOddConcreteScalarTarget :=
+  fun hm hodd => (hZeroSet hm hodd).toScalarMonodromyPackage
 
 def bridge_odd_concrete_pow_rank_target_of_concrete_scalar_target
     (hScalar : BridgeOddConcreteScalarTarget) :
@@ -257,6 +330,27 @@ theorem shared_cayley_uniform_from_bridge_odd_concrete_scalar_target
       Shared.CayleyHamiltonDecomposition 7 m :=
   shared_cayley_uniform_from_small3_and_bridge_odd_target
     (bridge_odd_certificate_target_of_concrete_scalar_target hScalar)
+
+theorem torus_uniform_from_bridge_odd_concrete_zero_set_scalar_target
+    (hZeroSet : BridgeOddConcreteZeroSetScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.TorusHamiltonDecompositionD7 m :=
+  torus_uniform_from_bridge_odd_concrete_scalar_target
+    (bridge_odd_concrete_scalar_target_of_zero_set_scalar_target hZeroSet)
+
+theorem cayley_uniform_from_bridge_odd_concrete_zero_set_scalar_target
+    (hZeroSet : BridgeOddConcreteZeroSetScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      D7Odd.CayleyHamiltonDecompositionD7 m :=
+  cayley_uniform_from_bridge_odd_concrete_scalar_target
+    (bridge_odd_concrete_scalar_target_of_zero_set_scalar_target hZeroSet)
+
+theorem shared_cayley_uniform_from_bridge_odd_concrete_zero_set_scalar_target
+    (hZeroSet : BridgeOddConcreteZeroSetScalarTarget) :
+    ∀ {m : Nat}, 3 ≤ m → Odd m →
+      Shared.CayleyHamiltonDecomposition 7 m :=
+  shared_cayley_uniform_from_bridge_odd_concrete_scalar_target
+    (bridge_odd_concrete_scalar_target_of_zero_set_scalar_target hZeroSet)
 
 end Additive4Plus2
 end Handoff

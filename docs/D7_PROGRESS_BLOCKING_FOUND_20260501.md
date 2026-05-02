@@ -662,7 +662,11 @@ row schedule and zero-set/congruence table have produced those scalars.  The
 same file packages this as `BridgeConcreteScalarMonodromyPackage`: base
 `m^4` rank-step data plus per-color triangular scalar certificates lower to
 `BridgeConcretePowRankPackage` and then to the existing odd D7 torus/Cayley
-endpoint adapters.
+endpoint adapters.  It now also names the zero-set-only specialization
+`ZeroSetKappaFamily` and `BridgeConcreteZeroSetScalarMonodromyPackage`, so the
+remaining Target-B' proof obligation is exactly to construct such a `K(Z)`
+family and prove the triangular section equation/unit scalars for the selected
+row schedule.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
