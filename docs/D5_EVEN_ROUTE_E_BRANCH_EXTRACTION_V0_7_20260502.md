@@ -145,7 +145,8 @@ tau(a) = E(q)  for a = m-1
 The stronger pointwise formula was checked on the default `m = 20,44` run and
 again at `m = 68`.  This gives a sharper proof target for `sum tau = m^4`:
 prove the pointwise return-time partition, then prove the weighted sum
-identity.
+identity.  The latter arithmetic target is now recorded in Lean as
+`RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
 
 ## Proof Obligations Exposed by B20
 
@@ -160,9 +161,10 @@ For the B20 branch, the all-even proof target is now concrete:
 6. package these equations into `RouteEThetaRankedPiecewiseTranslationCertificate`
    or directly into `RouteEThetaSmallSeamCertificate`.
 
-The strongest missing item is the symbolic port-time proof behind item 3 and
-the return-time sum identity in item 5.  The seam one-cycle proof itself looks
-small once `T_h` is available.
+The strongest missing item is the symbolic port-time proof behind item 3,
+plus the pointwise return-time partition needed by item 5.  The arithmetic
+weighted-sum identity for the extracted distribution is already a Lean target.
+The seam one-cycle proof itself looks small once `T_h` is available.
 
 ## Goal Impact
 
@@ -228,9 +230,10 @@ after that is mostly packaging.
 The hard part is not the seam one-cycle.  The hard part is the symbolic
 port-time proof: starting from `Theta_0(a)`, prove the excursion first returns
 to `Theta_0` at the claimed target, with no earlier return, and prove the
-return-time sum `sum tau = m^4`.  The verified return-time distributions for
-B20 have only a few values, which is encouraging, but no closed formula has
-yet been extracted in the repo.
+pointwise return-time partition.  The verified return-time distributions for
+B20 have only a few values, and the resulting weighted-sum identity has now
+been extracted into Lean, but the trace theorem producing those values is
+still open.
 
 The full all-even D5 Route-E theorem is less immediate.  It becomes plausible
 if the remaining even residue classes admit a small finite menu of branches

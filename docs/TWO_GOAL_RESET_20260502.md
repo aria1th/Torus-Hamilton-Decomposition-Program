@@ -1,0 +1,122 @@
+# Two-Goal Reset
+
+Date: 2026-05-02.
+
+This note resets the active research goal after absorbing the latest D7
+exceptional phase-splice and D5 Route-E branch-extraction bundles. It is a
+planning target, not a completion claim.
+
+The endpoint theorems stay as regressions. The new work is to turn the
+candidate mechanisms into proof-grade Lean/program certificates.
+
+## Goal 1: D7 Odd Structural Proof
+
+Prove the closed D7 odd torus/Cayley endpoint through the additive
+`A7 ~= A5 x A3` decomposition.
+
+The target is no longer just another finite D7 witness. The target is a
+uniform bridge certificate with:
+
+- an A5 base return of rank `m^4`;
+- an A3 fiber return of rank `m^2`;
+- compatibility data lowering through the existing `4+2` bridge interfaces.
+
+Current state:
+
+- The D7 odd torus/Cayley endpoint remains closed and should stay green.
+- The `4+2` bridge plumbing is Lean-facing endpoint infrastructure, not the
+  mathematical blocker.
+- The good-class `23/32` A5 quotient arithmetic is closed in Lean for the
+  expected congruence class, while Q-hitting, Q-first-return, length-sum, and
+  small-modulus packaging remain to be formalized.
+- The exceptional class `m = 10*t+7` is now separated into a five-lane
+  phase-splice problem. The `00` correction block phase table has program
+  verification, but not a Lean proof or a chosen uniform correction schedule.
+- Target B' has the triangular A3 scalar interface and finite `m=9` evidence,
+  but no uniform zero-set-only or congruence-family `K_m(Z)` theorem.
+
+Reset target:
+
+1. Prove the good-class A5 base package.
+2. Prove the exceptional A5 five-lane splice package.
+3. Assemble good and exceptional branches into seven all-zero-set A5 rows with
+   exact column cover and folded rank step `m^4`.
+4. Choose and prove the compatible A3 fiber family `K_m(Z)`, including scalar
+   unit/carry and rank step `m^2`.
+5. Lower the completed package through the existing D7 odd bridge to the
+   torus/Cayley endpoint.
+
+Blocking propositions:
+
+- Lean Q-hitting and length-sum theorem for the good-class `23/32` branch.
+- Lean `00` phase table and one-cycle correction schedule for
+  `m = 10*t+7`.
+- Seven-row all-zero-set exact-cover theorem.
+- Uniform Target-B' `K_m(Z)` or congruence-family scalar theorem.
+
+## Goal 2: D5 Even Route-E Branch Menu
+
+Prove the D5 even Route-E endpoint by a finite residue branch menu, beginning
+with the extracted B20 branch.
+
+This replaces the earlier single global count/drift target. The finite
+small-seam table is evidence, not itself a uniform theorem.
+
+Current state:
+
+- The finite `m = 4` branch is closed in Lean.
+- The non-open small-seam bundle gives validated finite witnesses for
+  `m = 6,8,...,60`.
+- The `Theta_s = {rho_s(0,a,0,0,-a) : a != 0}` seam is the proof-facing
+  section for the all-large branch.
+- The B20 branch, `m = 24*q+20`, has verifier support for the count vector,
+  two-block seam map, pointwise return-time partition, and return-time sum.
+- Lean now records the B20 arithmetic target in `RouteEB20`: the count sum and
+  weighted return-time polynomial identity are closed, conditional on the
+  extracted pointwise return-time distribution.
+
+Reset target:
+
+1. Finish B20 as the first symbolic branch theorem.
+2. Extract enough additional residue branches to cover every even `m >= 6`.
+3. For each branch prove count/slot formula, `Theta` first-return equation,
+   no-earlier-return minimality, seam rank or single-cycle theorem, and
+   return-time sum `m^4`.
+4. Lower the branch menu through the existing all-large Route-E adapters to
+   the D5 Hamilton/Torus/Cayley endpoints.
+
+B20 first formal target:
+
+```text
+m = 24*q + 20
+h = 12*q + 10
+r = 4*q + 3
+nu = (r,0,0,h+r,r)
+```
+
+Expected seam map:
+
+```text
+1 <= a <= h-2:      V(a) = a + h + 1 mod m
+h-1 <= a <= m-1:    V(a) = a + h + 2 mod m
+```
+
+The Lean arithmetic target is no longer the blocker for B20. The remaining
+B20 blocker is to prove symbolically that the Route-E trace has exactly this
+first-return map, no earlier return, the extracted pointwise return-time
+partition, and the seam rank/single-cycle property.
+
+Blocking propositions:
+
+- B20 symbolic first-return and minimality proof.
+- B20 pointwise return-time partition proof, feeding the existing Lean
+  weighted-sum identity.
+- B20 seam rank or one-cycle proof for the two-block map.
+- A finite residue branch menu covering all even `m >= 6`.
+
+## Operating Rule For New Bundles
+
+Future bundles should be judged by whether they close one of the propositions
+above. Additional finite witnesses are useful only when they identify a
+uniform branch formula, a rank function, or a proof-ready recurrence that can
+be moved into Lean.

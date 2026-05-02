@@ -9,6 +9,10 @@ This note records the revised research goal after absorbing:
 
 It is a planning target, not a completion claim.
 
+The sharper current reset is recorded in `docs/TWO_GOAL_RESET_20260502.md`.
+The effective active goal is now two proof programs: D7 odd structural
+`4+2`, and D5 even Route-E finite branch menu.
+
 ## Regression Targets
 
 Keep the already closed endpoints as regression targets:

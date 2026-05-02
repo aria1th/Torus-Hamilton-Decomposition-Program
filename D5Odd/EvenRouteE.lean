@@ -19,6 +19,77 @@ structure RouteECounts (m : Nat) where
   counts : Fin 5 → Nat
   count_sum : (Finset.univ.sum counts) = m - 1
 
+namespace RouteEB20
+
+/-!
+Arithmetic data for the first extracted D5 even Route-E branch.
+
+The branch is `m = 24*q + 20`, slot zero, with count vector
+`(r,0,0,h+r,r)` where `h = m/2 = 12*q+10` and `r = (h-1)/3 = 4*q+3`.
+The program verifier `scripts/verify_d5_routeE_b20_branch.py` checks the
+corresponding first-return and pointwise return-time formulas.  The lemmas
+below record the count-sum and return-time weighted-sum arithmetic needed by
+the eventual symbolic certificate.
+-/
+
+def modulus (q : Nat) : Nat := 24 * q + 20
+
+def half (q : Nat) : Nat := 12 * q + 10
+
+def third (q : Nat) : Nat := 4 * q + 3
+
+def repeatedTimeCount (q : Nat) : Nat := 12 * q + 6
+
+def counts (q : Nat) : Fin 5 → Nat :=
+  ![third q, 0, 0, half q + third q, third q]
+
+theorem counts_sum (q : Nat) :
+    Finset.univ.sum (counts q) = modulus q - 1 := by
+  simp [counts, Fin.sum_univ_five, third, half, modulus]
+  omega
+
+def routeCounts (q : Nat) : RouteECounts (modulus q) where
+  slot := 0
+  counts := counts q
+  count_sum := counts_sum q
+
+def timeA (q : Nat) : Nat :=
+  13824 * q ^ 3 + 34272 * q ^ 2 + 28320 * q + 7806
+
+def timeC (q : Nat) : Nat :=
+  timeA q + modulus q * (modulus q + 1)
+
+def timeE (q : Nat) : Nat :=
+  20736 * q ^ 3 + 50976 * q ^ 2 + 41772 * q + 11416
+
+def timeF (q : Nat) : Nat :=
+  20736 * q ^ 3 + 51552 * q ^ 2 + 42780 * q + 11862
+
+def returnTimeWeightedSum (q : Nat) : Nat :=
+  2 * timeA q +
+  repeatedTimeCount q * (timeA q + modulus q) +
+  3 * timeC q +
+  repeatedTimeCount q * (timeC q + modulus q) +
+  timeE q +
+  timeF q
+
+theorem repeatedTimeCount_eq_half_sub_four (q : Nat) :
+    repeatedTimeCount q = half q - 4 := by
+  simp [repeatedTimeCount, half]
+
+theorem three_third_eq_half_sub_one (q : Nat) :
+    3 * third q = half q - 1 := by
+  simp [third, half]
+  ring
+
+theorem returnTimeWeightedSum_eq_modulus_pow_four (q : Nat) :
+    returnTimeWeightedSum q = modulus q ^ 4 := by
+  simp [returnTimeWeightedSum, timeA, timeC, timeE, timeF,
+    repeatedTimeCount, modulus]
+  ring
+
+end RouteEB20
+
 def LambdaE (S : Mask5) : Color → Direction :=
   if S = mask5 false false false false false then row5 0 1 2 3 4
   else if S = mask5 true false false false false then row5 0 1 3 2 4

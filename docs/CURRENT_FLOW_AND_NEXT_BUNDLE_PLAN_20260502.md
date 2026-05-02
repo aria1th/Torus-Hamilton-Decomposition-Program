@@ -8,6 +8,8 @@ even Route-E bundles, and the later D5 small-seam/branch searches.  It is not
 a completion claim.  The purpose is to make the next goal revision and next
 bundle shape explicit.
 
+The sharper two-goal reset is recorded in `docs/TWO_GOAL_RESET_20260502.md`.
+
 ## Current Flow
 
 The stable regression target is unchanged:
@@ -116,7 +118,9 @@ T_h(a) = a+h+1 on 1 <= a <= h-2,
 ```
 
 The remaining task for this branch is a symbolic port-time/first-return proof
-and the return-time sum `sum tau = m^4`.
+and the pointwise return-time partition feeding `sum tau = m^4`.  The
+weighted-sum arithmetic for the extracted B20 distribution is now recorded in
+Lean as `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
 
 ## D7 Even Track
 
