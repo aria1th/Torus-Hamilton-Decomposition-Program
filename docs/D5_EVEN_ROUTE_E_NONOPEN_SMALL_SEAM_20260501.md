@@ -242,11 +242,24 @@ Lean now has a named interface for this trace shape:
   all-large even target, with lowering lemmas to the existing D5 even
   Hamilton, torus, and Cayley endpoints.
 
+The next proof-facing layer is now also named.  `RouteEThetaRankedSmallSeamCertificate`
+replaces the direct `seamReturn_single` hypothesis by a bijective seam rank
+
+```text
+RouteENonzeroSeam m -> ZMod (m-1)
+```
+
+whose step under the seam return is `+1`; Lean then derives the one-cycle
+property using `Shared.single_cycle_of_zmod_rank`.  The combined
+`RouteEThetaRankedPiecewiseTranslationCertificate` records both the interval
+translation blocks and the rank-step data.
+
 This interface is deliberately conservative: it records the block-splice data
-as proof-facing evidence, but it still inherits the one-cycle and return-time
-sum hypotheses from `RouteEThetaSmallSeamCertificate`.  The missing theorem is
-the symbolic argument deriving those hypotheses from a uniform block
-decomposition.
+as proof-facing evidence, and it can derive the seam one-cycle from a rank
+formula, but it still requires the return-time sum identity.  The missing
+symbolic theorem is therefore sharper: produce uniform count/slot families,
+prove the block translations and ranked seam cycle for each family, and prove
+the return-time sum.
 
 This does not supply a residue-class formula for all even `m`, but it gives a
 small proof-facing target for the next lane/block-splice argument: explain

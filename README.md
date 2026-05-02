@@ -672,6 +672,14 @@ block cover/disjointness and interval translation formulas on top of
 return-time sum hypotheses from the block decomposition alone.  The named
 target is still useful because a future block-splice proof can lower
 immediately to the existing D5 even Hamilton, torus, and Cayley endpoints.
+There is now also a ranked variant,
+`RouteEThetaRankedSmallSeamCertificate`, which replaces the assumed seam
+one-cycle proof by a bijective rank
+`RouteENonzeroSeam m -> ZMod (m-1)` with rank step `+1`.  The combined
+`RouteEThetaRankedPiecewiseTranslationCertificate` is the preferred endpoint
+for a symbolic block-splice proof: prove block translations, a seam rank
+formula, and the return-time sum, then Lean derives the seam cycle and lowers
+to the same endpoints.
 
 The corresponding Lean target interface builds with:
 

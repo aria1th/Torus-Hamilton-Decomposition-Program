@@ -755,6 +755,14 @@ can be treated as named Lean obligations.  This layer currently extends the
 canonical theta small-seam certificate; the still-open theorem is to derive
 the one-cycle and return-time-sum hypotheses from uniform block decompositions
 rather than assume them.
+The interface now also has a ranked variant:
+`RouteEThetaRankedSmallSeamCertificate` derives the seam one-cycle from a
+bijective rank into `ZMod (m-1)` with rank step `+1`, and
+`RouteEThetaRankedPiecewiseTranslationCertificate` combines that rank target
+with the interval translation blocks.  Thus the D5 even symbolic gap is no
+longer “prove `IsSingleCycleMap` directly”; it is to supply a uniform seam
+rank formula, block translations, and the return-time sum for the count/slot
+families.
 It also records the branch-combination theorem: a separate `m = 4` Hamilton
 witness plus either the generic all-large Route-E target or the specialized
 non-open small-seam target implies all even `m >= 4` Hamilton, torus, and
