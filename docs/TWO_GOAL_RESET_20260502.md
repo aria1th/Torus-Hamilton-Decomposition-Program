@@ -78,6 +78,11 @@ Current state:
   `Fin (m-1)`, proves the two translation-block formulas, and proves this
   expected seam map is a single cycle.  The corresponding two-block
   cover/disjoint/translation obligations are packaged as `RouteEB20.seamBlocks`.
+- Lean now names the remaining B20 trace proposition as
+  `RouteEB20.ThetaTraceTarget`: concrete first-return equations, no-earlier
+  returns, positive return times, and the branch return-time sum.  The
+  adapter `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` lowers this
+  target to the existing `RouteEThetaPiecewiseTranslationCertificate`.
 
 Reset target:
 
@@ -108,14 +113,17 @@ h-1 <= a <= m-1:    V(a) = a + h + 2 mod m
 The Lean arithmetic and expected-map single-cycle targets are no longer the
 blockers for B20. The remaining B20 blocker is to prove symbolically that the
 Route-E trace has exactly this first-return map, no earlier return, and the
-extracted pointwise return-time partition.
+extracted pointwise return-time partition, i.e. to construct
+`RouteEB20.ThetaTraceTarget q`.
 
 Blocking propositions:
 
 - B20 symbolic first-return and minimality proof.
 - B20 pointwise return-time partition proof, feeding the existing Lean
   weighted-sum identity.
-- Packaging the symbolic trace proof against the closed expected seam map.
+- Construction of `RouteEB20.ThetaTraceTarget q`; its packaging against the
+  closed expected seam map is now handled by
+  `RouteEB20.thetaPiecewiseCertificateOfTraceTarget`.
 - A finite residue branch menu covering all even `m >= 6`.
 
 ## Operating Rule For New Bundles

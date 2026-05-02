@@ -1433,6 +1433,72 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m] [NeZero (m - 1)]
 
 end RouteEThetaRankedPiecewiseTranslationCertificate
 
+namespace RouteEB20
+
+/-!
+Trace-facing B20 target.
+
+The expected B20 seam map, block cover, and cycle proof are already closed
+above.  The remaining branch-specific work is to prove that the concrete
+Route-E trace first-returns to this map with the claimed positive return
+times and no earlier seam hits.  Once those trace facts and the return-time
+sum are supplied, the theorem below packages them as the existing
+piecewise-translation certificate.
+-/
+
+structure ThetaTraceTarget (q : Nat) where
+  data : D5EvenSeamData (modulus q)
+  returnTime : Color → RouteENonzeroSeam (modulus q) → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] (routeEThetaSeamPoint 0 a) =
+        routeEThetaSeamPoint 0 (seamMap q a)
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b, (seamRootReturn data c)^[k] (routeEThetaSeamPoint 0 a) =
+        routeEThetaSeamPoint 0 b
+  returnTime_sum :
+    ∀ c,
+      Finset.univ.sum (fun a : RouteENonzeroSeam (modulus q) =>
+        returnTime c a) = modulus q ^ 4
+
+noncomputable def thetaPiecewiseCertificateOfTraceTarget (q : Nat)
+    (target : ThetaTraceTarget q) :
+    RouteEThetaPiecewiseTranslationCertificate (modulus q) where
+  data := target.data
+  routeCounts := routeCounts q
+  slot := 0
+  routeCounts_slot := rfl
+  seamReturn := fun _ => seamMap q
+  returnTime := target.returnTime
+  returnTime_pos := target.returnTime_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  seamReturn_single := by
+    intro _c
+    exact seamMap_single_cycle q
+  returnTime_sum := target.returnTime_sum
+  blocks := fun _ => seamBlocks q
+  block_cover := by
+    intro _c a
+    exact seamBlocks_cover q a
+  block_disjoint := by
+    intro _c a block₁ block₂ hmem₁ hmem₂ hcontains₁ hcontains₂
+    exact seamBlocks_disjoint q a block₁ block₂ hmem₁ hmem₂ hcontains₁
+      hcontains₂
+  block_translation := by
+    intro _c block hmem
+    exact seamBlocks_translation q block hmem
+
+theorem thetaPiecewiseTarget_of_traceTarget (q : Nat)
+    (h : Nonempty (ThetaTraceTarget q)) :
+    Nonempty (RouteEThetaPiecewiseTranslationCertificate (modulus q)) := by
+  rcases h with ⟨target⟩
+  exact ⟨thetaPiecewiseCertificateOfTraceTarget q target⟩
+
+end RouteEB20
+
 def D5EvenRouteEAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteESmallSeamCertificate m)

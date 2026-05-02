@@ -248,8 +248,12 @@ The sharpest remaining propositions are:
    target is B20, `m == 20 mod 24`, with
    `nu=(r,0,0,h+r,r)` and a two-block seam map.  Its count-sum, weighted
    return-time arithmetic, expected seam-map translations, and expected
-   seam-map single-cycle theorem are now recorded in Lean, so the remaining
-   B20 work is the symbolic trace theorem: first-return equations,
+   seam-map single-cycle theorem are now recorded in Lean, and
+   `RouteEB20.ThetaTraceTarget` names the exact trace certificate still to be
+   constructed.  Its adapter
+   `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` already packages such a
+   trace certificate as a `RouteEThetaPiecewiseTranslationCertificate`, so the
+   remaining B20 work is the symbolic trace theorem: first-return equations,
    no-earlier-return, and pointwise return-time partition.  The canonical
    open-port carry law is a checked section-level lemma, not the final
    all-even return theorem; the remaining work is the full Route-E symbolic

@@ -123,7 +123,9 @@ weighted-sum arithmetic for the extracted B20 distribution is now recorded in
 Lean as `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`, and the
 expected two-block seam map is now recorded as `RouteEB20.seamMap` with a
 single-cycle theorem and `RouteEB20.seamBlocks_*` piecewise-translation
-packaging.
+packaging.  The exact Lean-facing endpoint for the remaining trace proof is
+now `RouteEB20.ThetaTraceTarget`; once constructed, it is lowered by
+`RouteEB20.thetaPiecewiseCertificateOfTraceTarget`.
 
 ## D7 Even Track
 
@@ -216,7 +218,9 @@ For D7 even:
 4. D7 Target B' uniform `K_m(Z)`/congruence family and triangular A3 scalar
    proof.
 5. D5 even finite residue-branch menu for all even `m >= 6`, beginning with
-   the B20 symbolic first-return/return-time proof, plus seam rank and
-   return-time-sum proofs for the remaining branches.  For B20 itself, the
-   expected seam-map one-cycle proof is already closed in Lean.
+   the B20 symbolic first-return/return-time proof packaged as
+   `RouteEB20.ThetaTraceTarget`, plus seam rank and return-time-sum proofs for
+   the remaining branches.  For B20 itself, the expected seam-map one-cycle
+   proof and the adapter to `RouteEThetaPiecewiseTranslationCertificate` are
+   already closed in Lean.
 6. D7 even root-flat schedule certificate family.

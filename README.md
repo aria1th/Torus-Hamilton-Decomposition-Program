@@ -125,7 +125,11 @@ when `m` is odd and `m >= 3`.
   return-time polynomial identity.  It also records the expected B20 seam map
   as index addition on the nonzero seam, proves the two translation-block
   formulas, packages the corresponding block cover/disjoint/translation
-  obligations, and proves that this expected seam map is a single cycle.  The
+  obligations, and proves that this expected seam map is a single cycle.
+  `RouteEB20.ThetaTraceTarget` is the remaining trace-facing B20 proposition:
+  once the concrete first-return equations, minimality, and return-time sum
+  are supplied, `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` packages
+  them as a `RouteEThetaPiecewiseTranslationCertificate`.  The
   Route-E table `LambdaE` now lives here, with
   `LambdaE_latin` and `LambdaE_cyclic` recording its table invariants, and
   `LambdaE_routeEThetaVec`/`LambdaE_routeEThetaSeam` proving the bundle's

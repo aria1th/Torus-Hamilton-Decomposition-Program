@@ -153,7 +153,11 @@ The expected two-block seam map is also recorded in Lean as `RouteEB20.seamMap`;
 `RouteEB20.seamMap_single_cycle` close the abstract map/one-cycle side;
 `RouteEB20.seamBlocks_cover`, `RouteEB20.seamBlocks_disjoint`, and
 `RouteEB20.seamBlocks_translation` package it for the piecewise-translation
-interface.
+interface.  Lean now names the remaining trace-facing proposition as
+`RouteEB20.ThetaTraceTarget`; after the concrete first-return/minimality and
+return-time facts are supplied,
+`RouteEB20.thetaPiecewiseCertificateOfTraceTarget` turns it into a
+`RouteEThetaPiecewiseTranslationCertificate`.
 
 ## Proof Obligations Exposed by B20
 
@@ -165,13 +169,15 @@ For the B20 branch, the all-even proof target is now concrete:
 3. prove the first-return equation is the two-block map `T_h`;
 4. prove the two-block map is a single cycle on `{1,...,m-1}`;
 5. prove the return-time sum identity `sum tau = m^4`;
-6. package these equations into `RouteEThetaRankedPiecewiseTranslationCertificate`
-   or directly into `RouteEThetaSmallSeamCertificate`.
+6. construct `RouteEB20.ThetaTraceTarget q`, which is already packaged by
+   `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` as a
+   `RouteEThetaPiecewiseTranslationCertificate`.
 
 The strongest missing item is the symbolic port-time proof behind item 3,
 plus the pointwise return-time partition needed by item 5.  The arithmetic
 weighted-sum identity for the extracted distribution and the expected
-two-block seam-map one-cycle proof are already Lean targets.
+two-block seam-map one-cycle proof are already Lean targets, and the final
+B20 adapter proposition is now named explicitly.
 
 ## Goal Impact
 
