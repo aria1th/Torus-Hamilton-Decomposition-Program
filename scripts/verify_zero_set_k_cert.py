@@ -20,7 +20,10 @@ import math
 from pathlib import Path
 
 from verify_4plus2_allN_bridge_cert import (
+    BridgeModel,
     base_tuple,
+    fiber_index,
+    fiber_tuple,
     validate_certificate,
     verify_certificate,
 )
@@ -137,6 +140,178 @@ def scalar_unit_summary(cert: dict) -> dict:
     }
 
 
+def clock_pair_from_fiber(fiber: int, m: int) -> tuple[int, int]:
+    y0, y1 = fiber_tuple(fiber, m)
+    return ((y0 + y1) % m, y0)
+
+
+def fiber_from_clock_pair(pair: tuple[int, int], m: int) -> int:
+    s, x = pair
+    return fiber_index((x % m, (s - x) % m), m)
+
+
+def triangular_pair_step(
+    pair: tuple[int, int], A: int, phi: list[int], m: int
+) -> tuple[int, int]:
+    s, x = pair
+    return ((s + A) % m, (x + phi[s]) % m)
+
+
+def triangular_obligation_summary(cert: dict, expanded_kappa: list[list[int]]) -> dict:
+    field, invariants = scalar_invariant_field(cert)
+    if invariants is None:
+        return {
+            "present": False,
+            "ok": False,
+            "field": None,
+            "reason": "no verified_scalar_invariants_mod_* field",
+        }
+    m = cert["m"]
+    A_values = invariants.get("A")
+    E_values = invariants.get("E")
+    rows = cert.get("rows")
+    if (
+        not isinstance(A_values, list)
+        or not isinstance(E_values, list)
+        or not isinstance(rows, list)
+        or len(A_values) != len(rows)
+        or len(E_values) != len(rows)
+    ):
+        return {
+            "present": True,
+            "ok": False,
+            "field": field,
+            "reason": "scalar invariant field must contain A/E lists matching rows",
+        }
+
+    model = BridgeModel(m)
+    base_period = m**4
+    colors = []
+    all_errors: list[dict] = []
+    for color, row in enumerate(rows):
+        A = int(A_values[color]) % m
+        E = int(E_values[color]) % m
+        phi: list[int | None] = [None] * m
+        errors: list[dict] = []
+        for s in range(m):
+            for x in range(m):
+                start_fiber = fiber_from_clock_pair((s, x), m)
+                actual_fiber = model.section_return_step(
+                    start_fiber, row, expanded_kappa, 0, base_period
+                )
+                actual_pair = clock_pair_from_fiber(actual_fiber, m)
+                expected_clock = (s + A) % m
+                if actual_pair[0] != expected_clock:
+                    errors.append(
+                        {
+                            "kind": "clock_step",
+                            "s": s,
+                            "x": x,
+                            "actual": list(actual_pair),
+                            "expected_clock": expected_clock,
+                        }
+                    )
+                    break
+                delta = (actual_pair[1] - x) % m
+                if phi[s] is None:
+                    phi[s] = delta
+                elif phi[s] != delta:
+                    errors.append(
+                        {
+                            "kind": "phi_depends_on_x",
+                            "s": s,
+                            "x": x,
+                            "actual_delta": delta,
+                            "expected_delta": phi[s],
+                            "actual": list(actual_pair),
+                        }
+                    )
+                    break
+            if errors:
+                break
+
+        phi_values = [int(value) if value is not None else None for value in phi]
+        if not errors and all(value is not None for value in phi_values):
+            phi_int = [int(value) for value in phi_values]
+            for s in range(m):
+                for x in range(m):
+                    start_fiber = fiber_from_clock_pair((s, x), m)
+                    actual_pair = clock_pair_from_fiber(
+                        model.section_return_step(
+                            start_fiber, row, expanded_kappa, 0, base_period
+                        ),
+                        m,
+                    )
+                    expected_pair = triangular_pair_step((s, x), A, phi_int, m)
+                    if actual_pair != expected_pair:
+                        errors.append(
+                            {
+                                "kind": "section_triangular_mismatch",
+                                "s": s,
+                                "x": x,
+                                "actual": list(actual_pair),
+                                "expected": list(expected_pair),
+                            }
+                        )
+                        break
+                if errors:
+                    break
+            for x in range(m):
+                pair = (0, x)
+                for _step in range(m):
+                    pair = triangular_pair_step(pair, A, phi_int, m)
+                expected_pair = (0, (x + E) % m)
+                if pair != expected_pair:
+                    errors.append(
+                        {
+                            "kind": "round_at_zero",
+                            "x": x,
+                            "actual": list(pair),
+                            "expected": list(expected_pair),
+                        }
+                    )
+                    break
+
+        A_unit = math.gcd(A, m) == 1
+        E_unit = math.gcd(E, m) == 1
+        if not A_unit:
+            errors.append({"kind": "A_not_unit", "A": A})
+        if not E_unit:
+            errors.append({"kind": "E_not_unit", "E": E})
+        color_summary = {
+            "color": color,
+            "A": A,
+            "E": E,
+            "A_unit": A_unit,
+            "E_unit": E_unit,
+            "phi": phi_values,
+            "section_matches_triangular": not any(
+                error["kind"]
+                in {"clock_step", "phi_depends_on_x", "section_triangular_mismatch"}
+                for error in errors
+            ),
+            "round_at_zero_ok": not any(
+                error["kind"] == "round_at_zero" for error in errors
+            ),
+            "ok": not errors,
+            "errors": errors[:10],
+        }
+        colors.append(color_summary)
+        all_errors.extend({"color": color, **error} for error in errors)
+
+    return {
+        "present": True,
+        "ok": not all_errors,
+        "field": field,
+        "modulus": m,
+        "base_period": base_period,
+        "lean_certificate": "A3TriangularScalarCertificate",
+        "clock_pair": "(s, x) = (y0 + y1, y0)",
+        "colors": colors,
+        "failures": all_errors[:20],
+    }
+
+
 def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
     cert = json.loads(path.read_text())
     expanded = copy.deepcopy(cert)
@@ -148,6 +323,9 @@ def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
         "note": cert.get("note"),
         "zero_set_table": table_match_summary(cert, expanded["kappa_perm_indices"]),
         "scalar_units": scalar_unit_summary(cert),
+        "triangular_obligations": triangular_obligation_summary(
+            cert, expanded["kappa_perm_indices"]
+        ),
     }
     try:
         validate_certificate(expanded)
@@ -167,6 +345,7 @@ def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
     summary["ok"] = (
         summary["zero_set_table"]["matches_shifted_zero_mask"]
         and summary["scalar_units"]["ok"]
+        and summary["triangular_obligations"]["ok"]
         and summary["expanded_certificate_valid"]
         and (not full_verify or summary.get("full_verify", {}).get("ok") is True)
     )
@@ -188,9 +367,11 @@ def main() -> None:
     for result in results:
         full = result.get("full_verify", {})
         print(
-            "m={m} scalar_ok={scalar_ok} table_ok={table_ok} "
-            "expanded_valid={expanded_certificate_valid} full_ok={full_ok}".format(
+            "m={m} scalar_ok={scalar_ok} triangular_ok={triangular_ok} "
+            "table_ok={table_ok} expanded_valid={expanded_certificate_valid} "
+            "full_ok={full_ok}".format(
                 scalar_ok=result["scalar_units"]["ok"],
+                triangular_ok=result["triangular_obligations"]["ok"],
                 table_ok=result["zero_set_table"]["matches_shifted_zero_mask"],
                 full_ok=full.get("ok", "skipped"),
                 **result,

@@ -168,12 +168,15 @@ A = (5,7,2,1,1,1,1)
 E = (2,2,2,4,4,5,8)
 ```
 
-are all units modulo `9`, and then replays the full finite bridge verifier.
+are all units modulo `9`, extracts the per-color triangular `phi(s)` tables,
+checks the finite `roundAtZero` equations required by
+`A3TriangularScalarCertificate`, and then replays the full finite bridge
+verifier.
 This is the current Target-B' regression for zero-set-only scalar certificates.
 When the non-scalar and scalar JSON files are checked together, the non-scalar
 file reports `scalar_ok=False` only because it has no scalar-invariant field;
 both files report `table_ok=True`, `expanded_valid=True`, and `full_ok=True`,
-while the scalar file also reports `scalar_ok=True`.
+while the scalar file also reports `scalar_ok=True` and `triangular_ok=True`.
 
 ### Base Row Side
 
@@ -857,6 +860,7 @@ python3 scripts/search_4plus2_kappa_formulas.py \
 python3 scripts/verify_zero_set_k_cert.py \
   /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
+# => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json
 python3 scripts/verify_d5_even_routeE.py --mode section \

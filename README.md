@@ -213,7 +213,9 @@ when `m` is odd and `m >= 3`.
   manifest, with optional Target-A and direct product checks.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
-  tables, checks scalar unit invariants, and can run the full bridge verifier.
+  tables, checks scalar unit invariants, extracts the triangular A3
+  `phi(s)` tables, verifies the Lean-facing `roundAtZero` equations, and can
+  run the full bridge verifier.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `scripts/verify_d5_even_routeE.py`: audit verifier for the absorbed D5 even
@@ -544,13 +546,18 @@ The snapshot records whether a certificate-provided `K(Z)` table matches the
 shifted zero-set mask encoding used by the finite kappa table.
 
 For scalar-only `K(Z)` certificates, expand the mask table and check the A3
-unit invariants directly:
+unit invariants plus the triangular Lean obligations directly:
 
 ```bash
 python3 scripts/verify_zero_set_k_cert.py \
   /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_scalar_cert.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
 ```
+
+For the current `m = 9` scalar certificate this reports
+`scalar_ok=True`, `triangular_ok=True`, `table_ok=True`,
+`expanded_valid=True`, and `full_ok=True`; the JSON includes the per-color
+`A`, `E`, and `phi(s)` data matching `A3TriangularScalarCertificate`.
 
 It can also test row solutions exported by the base analyzer:
 
