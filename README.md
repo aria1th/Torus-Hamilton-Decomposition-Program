@@ -222,6 +222,10 @@ when `m` is odd and `m >= 3`.
   theorem, finite Q-hitting, Q-first-return formulas, and length sums.  Its
   standard regression is pinned by
   `certs/d7_targetA_23_32_seam_quotient_manifest.json`.
+- `scripts/verify_targetA_exceptional_phase_splice.py`: verifier for the D7
+  Target-A exceptional `m = 10*t+7` phase-splice target, recomputing the
+  `00` correction-block action from A5 state dynamics and checking it against
+  the five-lane symbolic table for `H = 23` and `H = 32`.
 - `scripts/search_targetA_primitive_words.cpp`: faster C++ primitive-word
   search for Target-A exceptional moduli where the Python exhaustive scan is
   too slow.

@@ -29,6 +29,18 @@ The reproduction script assumes the helper
 that helper was copied from the bundle and the phase-table script was rerun
 for `m = 17,27,37`, matching the stated lane behavior.
 
+The repo now has a path-stable verifier for the same phase table:
+
+```bash
+python3 scripts/verify_targetA_exceptional_phase_splice.py \
+  --moduli 17,27,37 \
+  --json-out /tmp/d7_targetA_exceptional_phase_splice_17_37.json
+```
+
+It recomputes the actual `00` correction action from the A5 state dynamics and
+checks it against the symbolic five-lane table for both `H = 23` and `H = 32`.
+On the displayed moduli it reports `all_ok=True`.
+
 ## Main Finding
 
 The `23/32` Target-A seam quotient already explains the good class:
@@ -113,7 +125,9 @@ The repo is ahead on the formal arithmetic infrastructure for the good class:
   into the D7 bridge, torus, and Cayley endpoints.
 
 The missing layer is the symbolic exceptional splice theorem.  The v0.4 bundle
-now provides the right reduced object for that theorem.
+now provides the right reduced object for that theorem, and
+`scripts/verify_targetA_exceptional_phase_splice.py` pins the finite phase
+table as a regression artifact.
 
 ## Goal Impact
 
