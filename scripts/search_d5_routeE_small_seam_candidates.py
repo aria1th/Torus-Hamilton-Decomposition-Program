@@ -23,6 +23,15 @@ def parse_moduli(text: str) -> List[int]:
     return [int(part) for part in text.split(",") if part.strip()]
 
 
+def parse_support_pattern(text: str | None) -> Tuple[int, ...] | None:
+    if text is None or text.strip() == "":
+        return None
+    pattern = tuple(int(part) for part in text.split(",") if part.strip())
+    if len(set(pattern)) != len(pattern) or any(index < 0 or index >= 5 for index in pattern):
+        raise ValueError("support pattern must be distinct indices in 0..4")
+    return pattern
+
+
 def normalized_summary(counts: CountVec) -> dict:
     return {
         "counts": counts,
@@ -69,10 +78,27 @@ def weak_compositions_positive(total: int, parts: int):
             yield (value,) + tail
 
 
-def support_at_most_candidates(m: int, max_support: int) -> Iterable[dict]:
+def support_at_most_candidates(
+    m: int, max_support: int, support_pattern: Tuple[int, ...] | None
+) -> Iterable[dict]:
     """Yield slot-zero count vectors with support size at most max_support."""
     indices = range(5)
     total = m - 1
+    if support_pattern is not None:
+        support_size = len(support_pattern)
+        if support_size > max_support:
+            return
+        for values in weak_compositions_positive(total, support_size):
+            counts = [0, 0, 0, 0, 0]
+            for index, value in zip(support_pattern, values):
+                counts[index] = value
+            vec = tuple(counts)  # type: ignore[assignment]
+            yield {
+                "m": m,
+                "slot": 0,
+                **normalized_summary(vec),
+            }
+        return
     for support_size in range(1, max_support + 1):
         for support in combinations(indices, support_size):
             for values in weak_compositions_positive(total, support_size):
@@ -101,30 +127,34 @@ def verify_small_seam_case_with_cap(
     counts: CountVec,
     max_steps: int | None,
 ) -> dict:
-    if max_steps is None:
-        result = route_e.verify_small_seam_case(m, slot, counts)
-        result["cap_exhausted"] = False
-        result["max_return_steps"] = None
-        return result
-
     seam_port = (slot + 2) % 5
     first_return = {}
     return_times = {}
     start_ok = True
     no_return = []
+    repeat_exhausted = []
+    limit = max_steps if max_steps is not None else m**4 + 5
     for a in range(1, m):
         w = route_e.theta_state(m, slot, a)
         if route_e.lam(route_e.PERT, route_e.shifted_zero_mask(w), slot) != seam_port:
             start_ok = False
-        for time in range(1, max_steps + 1):
+        seen = {w}
+        for time in range(1, limit + 1):
             w = route_e.one_e_return_step_with_slot(m, slot, counts, w)
             b = route_e.theta_param(m, slot, w)
             if b is not None:
                 first_return[a] = b
                 return_times[a] = time
                 break
+            if w in seen:
+                no_return.append(a)
+                repeat_exhausted.append(a)
+                break
+            seen.add(w)
         else:
             no_return.append(a)
+            break
+        if no_return:
             break
 
     cycle_lengths = (
@@ -153,7 +183,8 @@ def verify_small_seam_case_with_cap(
         "translation_block_count": len(blocks),
         "translation_blocks": blocks,
         "no_return_examples": no_return,
-        "cap_exhausted": bool(no_return),
+        "cap_exhausted": bool(no_return) and not repeat_exhausted,
+        "repeat_exhausted": bool(repeat_exhausted),
         "max_return_steps": max_steps,
         "ok": ok,
     }
@@ -178,17 +209,20 @@ def score_candidate(
         "max_block_length": max((block["length"] for block in blocks), default=0),
         "translation_blocks_prefix": blocks[:8],
         "cap_exhausted": result["cap_exhausted"],
+        "repeat_exhausted": result["repeat_exhausted"],
         "max_return_steps": result["max_return_steps"],
         "section_ok": candidate.get("section", {}).get("section_formula_ok"),
         "section_H_single": candidate.get("section", {}).get("H_single"),
     }
 
 
-def candidate_stream(m: int, mode: str, max_support: int) -> Iterable[dict]:
+def candidate_stream(
+    m: int, mode: str, max_support: int, support_pattern: Tuple[int, ...] | None
+) -> Iterable[dict]:
     if mode == "open-port":
         return open_port_section_candidates(m)
     if mode == "support":
-        return support_at_most_candidates(m, max_support)
+        return support_at_most_candidates(m, max_support, support_pattern)
     raise ValueError(f"unknown mode {mode!r}")
 
 
@@ -220,6 +254,7 @@ def search_modulus(
     m: int,
     mode: str,
     max_support: int,
+    support_pattern: Tuple[int, ...] | None,
     hit_limit: int,
     candidate_limit: int | None,
     max_return_steps: int | None,
@@ -229,11 +264,14 @@ def search_modulus(
     hits = []
     checked = 0
     capped = 0
-    for candidate in candidate_stream(m, mode, max_support):
+    repeated = 0
+    for candidate in candidate_stream(m, mode, max_support, support_pattern):
         checked += 1
         scored = score_candidate(candidate, max_return_steps, m3_factor)
         if scored["cap_exhausted"]:
             capped += 1
+        if scored["repeat_exhausted"]:
+            repeated += 1
         if scored["small_seam_ok"]:
             hits.append(scored)
             if hit_limit and len(hits) >= hit_limit:
@@ -243,8 +281,10 @@ def search_modulus(
     return {
         "m": m,
         "mode": mode,
+        "support_pattern": support_pattern,
         "checked": checked,
         "cap_exhausted_count": capped,
+        "repeat_exhausted_count": repeated,
         "hit_count": len(hits),
         "ok": bool(hits),
         "hits": hits,
@@ -253,7 +293,7 @@ def search_modulus(
 
 
 def print_summary(results: List[dict]) -> None:
-    print("m mode checked capped hits best_min_block best_low_support")
+    print("m mode checked capped repeated hits best_min_block best_low_support")
     for result in results:
         min_block = result["best"]["min_block"]
         low_support = result["best"]["low_support"]
@@ -262,6 +302,7 @@ def print_summary(results: List[dict]) -> None:
             result["mode"],
             result["checked"],
             result["cap_exhausted_count"],
+            result["repeat_exhausted_count"],
             result["hit_count"],
             compact_best(min_block[0]) if min_block else None,
             compact_best(low_support[0]) if low_support else None,
@@ -293,6 +334,10 @@ def main() -> None:
         help="maximum support size for --mode support",
     )
     parser.add_argument(
+        "--support-pattern",
+        help="comma-separated support indices to scan exactly, e.g. 0,1,3",
+    )
+    parser.add_argument(
         "--hit-limit",
         type=int,
         default=5,
@@ -316,12 +361,14 @@ def main() -> None:
     parser.add_argument("--top", type=int, default=5)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
+    support_pattern = parse_support_pattern(args.support_pattern)
 
     results = [
         search_modulus(
             m,
             args.mode,
             args.max_support,
+            support_pattern,
             args.hit_limit,
             args.candidate_limit,
             args.max_return_steps,
@@ -334,6 +381,7 @@ def main() -> None:
         "schema": "d5_routeE_small_seam_candidate_search_v1",
         "mode": args.mode,
         "moduli": parse_moduli(args.moduli),
+        "support_pattern": support_pattern,
         "max_return_steps": args.max_return_steps,
         "max_return_m3_factor": args.max_return_m3_factor,
         "results": results,

@@ -824,6 +824,14 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
   --moduli 6,8,10,12,14,16 \
   --hit-limit 3 \
   --json-out /tmp/d5_support3_small_seam_search_6_16.json
+
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --support-pattern 0,1,3 \
+  --moduli 14,16,18,20,22,24 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support013_small_seam_search_14_24.json
 ```
 
 The open-port search first checks the `m^2` section formula/cycle and then
@@ -837,6 +845,14 @@ first-return searches.  For exploratory scans, `--max-return-steps` or
 `--max-return-m3-factor` can cap each seam point's first-return search; capped
 results are heuristic and should be rechecked without the cap before being
 used as proof evidence.
+The `--support-pattern 0,1,3` search targets vectors of the form
+`(a,b,0,c,0)`.  It now gives a concrete low-support route through
+`m = 14,16,...,30`, with min-block examples
+`(1,3,0,9,0)`, `(1,13,0,1,0)`, `(5,7,0,5,0)`,
+`(3,13,0,3,0)`, `(3,1,0,17,0)`, `(5,13,0,5,0)`,
+`(3,19,0,3,0)`, `(3,5,0,19,0)`, and `(5,7,0,17,0)`.
+This is still finite evidence, but it is a much sharper candidate family than
+the arbitrary recorded small-seam table.
 
 `D5Odd/EvenRouteE.lean` also exposes these trace summaries as a Lean-facing
 piecewise translation interface: `RouteESeamTranslationBlock`,

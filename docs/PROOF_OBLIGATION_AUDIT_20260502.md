@@ -142,6 +142,42 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
 => The searcher also supports exploratory return caps, but capped misses are
 => not proof evidence; candidates used downstream must be rerun without caps.
 
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --support-pattern 0,1,3 \
+  --moduli 14,16,18,20,22,24 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support013_small_seam_search_14_24_repeat.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --support-pattern 0,1,3 \
+  --moduli 26 \
+  --hit-limit 3 \
+  --candidate-limit 1000 \
+  --json-out /tmp/d5_support013_small_seam_search_26_repeat.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --support-pattern 0,1,3 \
+  --moduli 28,30 \
+  --hit-limit 3 \
+  --candidate-limit 1200 \
+  --json-out /tmp/d5_support013_small_seam_search_28_30_repeat.json
+=> support-pattern (a,b,0,c,0) min-block examples:
+=> m=14: (1,3,0,9,0), blocks=8
+=> m=16: (1,13,0,1,0), blocks=11
+=> m=18: (5,7,0,5,0), blocks=9
+=> m=20: (3,13,0,3,0), blocks=7
+=> m=22: (3,1,0,17,0), blocks=10
+=> m=24: (5,13,0,5,0), blocks=11
+=> m=26: (3,19,0,3,0), blocks=11
+=> m=28: (3,5,0,19,0), blocks=8
+=> m=30: (5,7,0,17,0), blocks=14
+=> The same pattern at m=32,34 was stopped after about two minutes without
+=> a JSON result, so the current exact support-pattern evidence is m=14..30.
+
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
   --json-out /tmp/d5_routeE_nonopen_bundle_check.json

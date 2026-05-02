@@ -310,6 +310,39 @@ scans bounded, but a capped search can miss a late-returning valid candidate.
 Any candidate promoted to a proof-facing table should therefore be rerun
 without a cap.
 
+A more useful ordering is to target the observed support pattern
+`[0,1,3]`, i.e. vectors `(a,b,0,c,0)`:
+
+```bash
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --support-pattern 0,1,3 \
+  --moduli 14,16,18,20,22,24 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support013_small_seam_search_14_24.json
+```
+
+This exact, uncapped search gives the following min-block candidates:
+
+```text
+m  counts          blocks max_block checked
+14 (1,3,0,9,0)    8      4         63
+16 (1,13,0,1,0)   11     3         30
+18 (5,7,0,5,0)    9      2         106
+20 (3,13,0,3,0)   7      4         46
+22 (3,1,0,17,0)   10     4         48
+24 (5,13,0,5,0)   11     3         217
+26 (3,19,0,3,0)   11     4         138
+28 (3,5,0,19,0)   8      10        54
+30 (5,7,0,17,0)   14     4         109
+```
+
+The `m = 32,34` extension was started with the same pattern but stopped after
+about two minutes without a JSON result, so the current reliable support-
+pattern evidence is `m = 14..30`.  This is not yet an all-even theorem, but it
+is a concrete candidate family/shape for the next residue-formula search.
+
 The block-splice trace can now be summarized directly with:
 
 ```bash
