@@ -220,6 +220,10 @@ when `m` is odd and `m >= 3`.
   Route-E bundle, checking the finite schedule table, normalized core
   first-return formula, open-port section formula/cycle examples, and the
   non-open small-seam criterion from the later small-seam bundle.
+- `scripts/verify_d5_routeE_nonopen_bundle.py`: bundle-consistency checker for
+  `d5_even_routeE_nonopen_small_seam_v0_4.zip`.  It compares the source TSV
+  to the repo's `SMALL_SEAM_CASES`, parses the bundle verifier transcript,
+  and recomputes the small-seam criterion with the repo Python verifier.
 - `scripts/fast_d5_routeE_small_seam_verify.cpp`: standalone C++ verifier for
   one recorded D5 Route-E small-seam case, kept as an independent check of the
   `m-1` seam criterion.
@@ -618,15 +622,22 @@ count vector.
 The later non-open small-seam bundle can be checked with:
 
 ```bash
+python3 scripts/verify_d5_routeE_nonopen_bundle.py \
+  /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
+  --json-out /tmp/d5_routeE_nonopen_bundle_check.json
+
 python3 scripts/verify_d5_even_routeE.py --mode section \
   --small-seam-moduli all \
   --json-out /tmp/d5_even_routeE_small_seam_all.json
 ```
 
-This verifies the recorded even cases `m = 6,8,...,60`: each first-return map
-on the size `m-1` seam is a single cycle and has return-time sum `m^4`.  The
-same output includes maximal translation blocks for the induced seam map,
-which are the finite traces for the next one-dimensional block-splice proof.
+The first command verifies that the source bundle's TSV, its verifier
+transcript, and the repo's embedded `SMALL_SEAM_CASES` all describe the same
+`28` cases.  The second recomputes the recorded even cases `m = 6,8,...,60`:
+each first-return map on the size `m-1` seam is a single cycle and has
+return-time sum `m^4`.  The same output includes maximal translation blocks
+for the induced seam map, which are the finite traces for the next
+one-dimensional block-splice proof.
 The Lean target also includes `RouteEThetaSmallSeamCertificate`, specialized
 to the canonical bundle seam
 `Theta_s = {rho_s(0,a,0,0,-a) : a != 0}` via

@@ -169,6 +169,20 @@ update:
   reports `all_ok=True`, `seam_sizes_ok=True`, and `return_sums_ok=True`;
 - the standalone C++ checker reports `bad 0` over the same `28` rows.
 
+The exact bundle-to-repo consistency check is now automated by:
+
+```bash
+python3 scripts/verify_d5_routeE_nonopen_bundle.py \
+  /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
+  --json-out /tmp/d5_routeE_nonopen_bundle_check.json
+```
+
+On the source zip this reports:
+
+```text
+cases 28 tsv_matches_repo True report_matches_tsv True python_recompute_all_ok True all_ok True
+```
+
 The verifier now also emits proof-facing data for the induced seam map:
 
 - `translation_blocks`: maximal intervals in `a = 1,...,m-1` on which

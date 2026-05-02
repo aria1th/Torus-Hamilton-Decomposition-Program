@@ -745,6 +745,10 @@ absorption run reported `28` cases and `all_ok=True`.  It now also emits the
 maximal translation blocks of the induced seam map, i.e. intervals on which
 `V(a)-a mod m` is constant.  These blocks are the finite trace data for the
 next one-dimensional block-splice proof.
+The source bundle itself is now checked by
+`scripts/verify_d5_routeE_nonopen_bundle.py`, which confirms that the bundle
+TSV, bundle verifier transcript, repo `SMALL_SEAM_CASES`, and Python
+recomputation all agree on the same `28` cases.
 
 The D5 even open tasks are now: find residue-class count/drift families
 covering every even `m >= 6`, prove the induced one-dimensional small-seam
