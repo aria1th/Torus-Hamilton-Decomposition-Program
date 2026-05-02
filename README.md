@@ -359,6 +359,27 @@ python3 scripts/search_targetA_balanced_covers.py \
 
 This separates the necessary aggregate-count question from the harder column
 placement question.
+The same script can now test column placements for a bounded number of
+balanced count-vector combinations without running the full multiset search:
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 --count-vector-limit 3 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 50 --count-vector-product-limit 5000 \
+  --json-out /tmp/targetA_m11_count_vector_placement_diag.json
+```
+
+The `--count-vector-placement-start` option lets the same check run in
+windows.  On the current temporary pool, the windows `0..50`, `50..100`,
+`100..150`, and `150..200` reject all first 200 balanced vector combos at the
+first-symbol mask gate, before any concrete word product or deeper DP is
+entered.
+For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
+now reports exact-cover DP depth, reachable/dead states, and dead-frontier
+examples.
 
 The restricted zero-set kappa formula family can be checked separately:
 

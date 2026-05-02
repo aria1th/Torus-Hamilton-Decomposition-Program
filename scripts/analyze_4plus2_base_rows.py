@@ -174,6 +174,117 @@ def search_column_exact_cover(
     return solutions
 
 
+def diagnose_column_exact_cover(
+    m: int,
+    words: list[tuple[int, ...]],
+    state_limit: int = 200000,
+    dead_example_limit: int = 5,
+) -> dict:
+    if len(words) != 7:
+        return {"valid_input": False, "reason": "expected exactly seven base words"}
+    if sum(len(word) for word in words) != 5 * m:
+        return {
+            "valid_input": False,
+            "reason": "base-word lengths must sum to 5*m",
+            "total_base_slots": sum(len(word) for word in words),
+            "target_total_base_slots": 5 * m,
+        }
+    if any(len(word) > m for word in words):
+        return {"valid_input": False, "reason": "a base word is longer than m"}
+
+    lengths = tuple(len(word) for word in words)
+    target = lengths
+    column_choices = list(itertools.combinations(range(7), 5))
+    seen: set[tuple[int, ...]] = set()
+    dead_states: set[tuple[int, ...]] = set()
+    states_by_depth: dict[int, int] = {}
+    transitions_by_depth: dict[int, int] = {}
+    choice_hist_by_depth: dict[int, dict[int, int]] = {}
+    dead_examples = []
+    max_depth = 0
+    target_reached = False
+    truncated = False
+
+    def depth_of(state: tuple[int, ...]) -> int:
+        return sum(state) // 5
+
+    def next_frontier(state: tuple[int, ...]) -> list[int | None]:
+        return [
+            words[row][state[row]] if state[row] < lengths[row] else None
+            for row in range(7)
+        ]
+
+    def search(state: tuple[int, ...]) -> None:
+        nonlocal max_depth, target_reached, truncated
+        if truncated or state in seen:
+            return
+        if len(seen) >= state_limit:
+            truncated = True
+            return
+        seen.add(state)
+        depth = depth_of(state)
+        max_depth = max(max_depth, depth)
+        states_by_depth[depth] = states_by_depth.get(depth, 0) + 1
+        if state == target:
+            target_reached = True
+            return
+
+        valid_choices = 0
+        for chosen_rows in column_choices:
+            next_symbols = []
+            for row in chosen_rows:
+                if state[row] >= lengths[row]:
+                    break
+                next_symbols.append(words[row][state[row]])
+            else:
+                if sorted(next_symbols) != [0, 1, 2, 3, 4]:
+                    continue
+                valid_choices += 1
+                next_state = list(state)
+                for row in chosen_rows:
+                    next_state[row] += 1
+                transitions_by_depth[depth] = transitions_by_depth.get(depth, 0) + 1
+                search(tuple(next_state))
+                if truncated:
+                    return
+
+        hist = choice_hist_by_depth.setdefault(depth, {})
+        hist[valid_choices] = hist.get(valid_choices, 0) + 1
+        if valid_choices == 0:
+            dead_states.add(state)
+            if len(dead_examples) < dead_example_limit:
+                dead_examples.append(
+                    {
+                        "state": list(state),
+                        "depth": depth,
+                        "frontier": next_frontier(state),
+                    }
+                )
+
+    search((0, 0, 0, 0, 0, 0, 0))
+    return {
+        "valid_input": True,
+        "base_words": [word_string(word) for word in words],
+        "word_lengths": list(lengths),
+        "target_reached": target_reached,
+        "state_limit": state_limit,
+        "truncated": truncated,
+        "reachable_states": len(seen),
+        "dead_states": len(dead_states),
+        "max_depth": max_depth,
+        "target_depth": m,
+        "states_by_depth": {str(k): states_by_depth[k] for k in sorted(states_by_depth)},
+        "transitions_by_depth": {
+            str(k): transitions_by_depth[k] for k in sorted(transitions_by_depth)
+        },
+        "choice_hist_by_depth": {
+            str(depth): {str(k): hist[k] for k in sorted(hist)}
+            for depth, hist in sorted(choice_hist_by_depth.items())
+        },
+        "dead_examples": dead_examples,
+    }
+
+
 def analyze_bundled_rows(bundle: Path, only: set[int] | None) -> list[dict]:
     out = []
     for cert in load_bundle(bundle, only):
@@ -351,6 +462,16 @@ def cover_from_bundled(bundle: Path, only: set[int] | None, limit: int) -> list[
     return out
 
 
+def add_cover_diagnostics(cover_searches: list[dict], state_limit: int) -> None:
+    for search in cover_searches:
+        words = [parse_word(word) for word in search.get("base_words", [])]
+        if not words:
+            continue
+        search["column_diagnostic"] = diagnose_column_exact_cover(
+            search["m"], words, state_limit
+        )
+
+
 def test_rows_with_bundled_kappa(cert: dict, rows: list[list[int]]) -> dict:
     candidate = copy.deepcopy(cert)
     candidate["rows"] = rows
@@ -419,6 +540,12 @@ def main() -> None:
     parser.add_argument("--combo-limit", type=int, default=1000)
     parser.add_argument("--cover-limit", type=int, default=3)
     parser.add_argument(
+        "--diagnose-cover",
+        action="store_true",
+        help="attach exact-cover DP diagnostics for explicit or bundled cover words",
+    )
+    parser.add_argument("--diagnose-state-limit", type=int, default=200000)
+    parser.add_argument(
         "--test-with-bundled-kappa",
         action="store_true",
         help="test cover solutions against the bundled kappa table for the same modulus",
@@ -470,6 +597,8 @@ def main() -> None:
         )
     if args.test_with_bundled_kappa:
         annotate_with_bundled_kappa_tests(payload["cover_searches"], args.bundle)
+    if args.diagnose_cover:
+        add_cover_diagnostics(payload["cover_searches"], args.diagnose_state_limit)
 
     text = json.dumps(payload, indent=2, sort_keys=True)
     if args.json_out is None:

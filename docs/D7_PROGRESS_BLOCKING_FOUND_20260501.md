@@ -409,6 +409,38 @@ reports balanced count-vector combinations immediately.  Thus, for this pool,
 the next `m = 11` obstacle is not merely aggregate slot balance; it is finding
 an actual column placement, or expanding the primitive pool enough that such a
 placement appears.
+The balanced-cover script now has a bounded count-vector placement diagnostic:
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 --count-vector-limit 3 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 50 --count-vector-product-limit 5000 \
+  --json-out /tmp/targetA_m11_count_vector_placement_diag.json
+```
+
+The `--count-vector-placement-start` option supports windowed scans.  On the
+current temporary pool, the windows `0..50`, `50..100`, `100..150`, and
+`150..200` report:
+
+```text
+balanced vector combos inspected = 200
+combo-level first-symbol impossible = 200
+word products checked = 0
+first-frontier failures = 0
+DP products checked = 0
+skipped by product limit = 0
+diag solutions = 0
+```
+
+So the first 200 balanced count-vector combos have no placement because their
+word groups cannot even choose first symbols covering `0,1,2,3,4` across five
+rows.  The companion `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
+mode now records fixed word-set DP depth, reachable/dead state counts, and
+dead-frontier examples; for the first representative `m = 11` combo it stops
+at depth `0` with frontier `[2,0,0,0,0,0,0]`.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 

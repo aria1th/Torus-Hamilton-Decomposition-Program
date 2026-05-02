@@ -21,6 +21,7 @@ word search helper.
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import re
 from pathlib import Path
@@ -39,6 +40,12 @@ WORD_RE = re.compile(r"(?:word=)?([0-4]+)")
 
 def word_counts(word: tuple[int, ...]) -> tuple[int, int, int, int, int]:
     return tuple(sum(1 for value in word if value == slot) for slot in range(5))
+
+
+def first_symbol(word: tuple[int, ...]) -> int:
+    if not word:
+        raise ValueError("empty base words are not supported")
+    return word[0]
 
 
 def add_counts(
@@ -225,6 +232,205 @@ def search_count_vector_combos(
     }
 
 
+def first_frontier_has_exact_cover(words: tuple[tuple[int, ...], ...]) -> bool:
+    frontier = [word[0] for word in words]
+    return all(slot in frontier for slot in range(5))
+
+
+def combo_first_frontier_possible(
+    combo: list[tuple[int, tuple[int, int, int, int, int]]],
+    groups: dict[int, dict[tuple[int, int, int, int, int], list[tuple[int, ...]]]],
+) -> bool:
+    masks = {0}
+    for length, vector in combo:
+        first_symbols = {first_symbol(word) for word in groups[length][vector]}
+        next_masks = set()
+        for mask in masks:
+            for symbol in first_symbols:
+                next_masks.add(mask | (1 << symbol))
+        masks = next_masks
+    return (0b11111 in masks)
+
+
+def search_count_vector_placements(
+    m: int,
+    words: list[tuple[int, ...]],
+    length_pattern: list[int] | None,
+    vector_combo_start: int,
+    vector_combo_limit: int,
+    product_limit: int,
+    representatives_per_vector: int,
+    solution_limit: int,
+    cover_limit: int,
+) -> dict | None:
+    if vector_combo_limit <= 0 or length_pattern is None:
+        return None
+
+    target_len = 5 * m
+    target_counts = (m, m, m, m, m)
+    pattern = sorted(length_pattern)
+    if len(pattern) != 7 or sum(pattern) != target_len:
+        return {
+            "enabled": True,
+            "error": "length pattern must have seven entries summing to 5*m",
+            "solutions": [],
+        }
+
+    groups: dict[int, dict[tuple[int, int, int, int, int], list[tuple[int, ...]]]] = {}
+    for word in words:
+        groups.setdefault(len(word), {}).setdefault(word_counts(word), []).append(word)
+    for counts_by_vector in groups.values():
+        for vector, group_words in counts_by_vector.items():
+            counts_by_vector[vector] = sorted(
+                group_words, key=lambda item: word_string(item)
+            )
+
+    vectors_by_length = {
+        length: sorted(counts_by_vector)
+        for length, counts_by_vector in groups.items()
+    }
+    vector_combos_seen = 0
+    vector_combos_tested = 0
+    vector_combos_frontier_impossible = 0
+    word_products_checked = 0
+    frontier_failures = 0
+    dp_products_checked = 0
+    skipped_product_limit = 0
+    states_visited = 0
+    truncated = False
+    solutions = []
+    attempts = []
+    chosen: list[tuple[int, tuple[int, int, int, int, int]]] = []
+
+    def emit_vector_combo(
+        combo: list[tuple[int, tuple[int, int, int, int, int]]]
+    ) -> None:
+        nonlocal vector_combos_seen, vector_combos_tested
+        nonlocal vector_combos_frontier_impossible, word_products_checked
+        nonlocal frontier_failures, dp_products_checked
+        nonlocal skipped_product_limit, truncated
+        if len(solutions) >= solution_limit:
+            return
+        vector_combos_seen += 1
+        if vector_combos_seen <= vector_combo_start:
+            return
+        if vector_combos_seen > vector_combo_start + vector_combo_limit:
+            truncated = True
+            return
+        combo_frontier_possible = combo_first_frontier_possible(combo, groups)
+
+        word_groups = []
+        combo_summary = []
+        product_size = 1
+        for length, vector in combo:
+            group_words = groups[length][vector]
+            if representatives_per_vector > 0:
+                group_words = group_words[:representatives_per_vector]
+            word_groups.append(group_words)
+            product_size *= len(group_words)
+            combo_summary.append(
+                {
+                    "length": length,
+                    "count_vector": list(vector),
+                    "word_count": len(groups[length][vector]),
+                    "tested_word_count": len(group_words),
+                    "representatives": [
+                        word_string(word) for word in group_words[:5]
+                    ],
+                }
+            )
+        attempt = {
+            "vector_combo_index": vector_combos_seen - 1,
+            "product_size": product_size,
+            "tested": False,
+            "combo_frontier_possible": combo_frontier_possible,
+            "solution_count": 0,
+            "frontier_failures": 0,
+            "dp_products_checked": 0,
+            "combo": combo_summary,
+        }
+        attempts.append(attempt)
+        if not combo_frontier_possible:
+            vector_combos_frontier_impossible += 1
+            attempt["skipped"] = "frontier_impossible"
+            return
+        if product_size > product_limit:
+            skipped_product_limit += 1
+            attempt["skipped"] = "product_limit"
+            return
+
+        vector_combos_tested += 1
+        attempt["tested"] = True
+        for word_choice in itertools.product(*word_groups):
+            word_products_checked += 1
+            if not first_frontier_has_exact_cover(word_choice):
+                frontier_failures += 1
+                attempt["frontier_failures"] += 1
+                continue
+            dp_products_checked += 1
+            attempt["dp_products_checked"] += 1
+            cover_solutions = search_column_exact_cover(m, list(word_choice), cover_limit)
+            if cover_solutions:
+                attempt["solution_count"] += len(cover_solutions)
+                for solution in cover_solutions:
+                    solutions.append(solution)
+                    if len(solutions) >= solution_limit:
+                        return
+
+    def search(
+        depth: int,
+        total_counts: tuple[int, int, int, int, int],
+        min_index_by_length: dict[int, int],
+    ) -> None:
+        nonlocal states_visited, truncated
+        if len(solutions) >= solution_limit or truncated:
+            return
+        states_visited += 1
+        if any(value > m for value in total_counts):
+            return
+        if depth == 7:
+            if total_counts == target_counts:
+                emit_vector_combo(list(chosen))
+            return
+
+        length = pattern[depth]
+        vectors = vectors_by_length.get(length, [])
+        start = min_index_by_length.get(length, 0)
+        for idx in range(start, len(vectors)):
+            vector = vectors[idx]
+            next_counts = add_counts(total_counts, vector)
+            if not leq_counts(next_counts, target_counts):
+                continue
+            next_min_index_by_length = dict(min_index_by_length)
+            next_min_index_by_length[length] = idx
+            chosen.append((length, vector))
+            search(depth + 1, next_counts, next_min_index_by_length)
+            chosen.pop()
+            if len(solutions) >= solution_limit or truncated:
+                return
+
+    search(0, (0, 0, 0, 0, 0), {})
+    return {
+        "enabled": True,
+        "length_pattern": pattern,
+        "states_visited": states_visited,
+        "vector_combo_start": vector_combo_start,
+        "vector_combo_limit": vector_combo_limit,
+        "product_limit": product_limit,
+        "representatives_per_vector": representatives_per_vector,
+        "vector_combos_seen": vector_combos_seen,
+        "vector_combos_tested": vector_combos_tested,
+        "vector_combos_frontier_impossible": vector_combos_frontier_impossible,
+        "word_products_checked": word_products_checked,
+        "frontier_failures": frontier_failures,
+        "dp_products_checked": dp_products_checked,
+        "skipped_product_limit": skipped_product_limit,
+        "truncated": truncated,
+        "attempts": attempts,
+        "solutions": solutions,
+    }
+
+
 def search_balanced_covers(
     m: int,
     words: list[tuple[int, ...]],
@@ -233,6 +439,10 @@ def search_balanced_covers(
     solution_limit: int,
     cover_limit: int,
     count_vector_limit: int = 0,
+    count_vector_placement_start: int = 0,
+    count_vector_placement_limit: int = 0,
+    count_vector_product_limit: int = 10000,
+    count_vector_representatives_per_vector: int = 0,
 ) -> dict:
     target_len = 5 * m
     target_counts = (m, m, m, m, m)
@@ -339,6 +549,17 @@ def search_balanced_covers(
     count_vector_search = search_count_vector_combos(
         m, words, length_pattern, count_vector_limit
     )
+    count_vector_placement_search = search_count_vector_placements(
+        m,
+        words,
+        length_pattern,
+        count_vector_placement_start,
+        count_vector_placement_limit,
+        count_vector_product_limit,
+        count_vector_representatives_per_vector,
+        solution_limit,
+        cover_limit,
+    )
     return {
         "m": m,
         "pool_size": len(words),
@@ -350,6 +571,7 @@ def search_balanced_covers(
         "balanced_combos": balanced_combos,
         "placement_failures": placement_failures,
         "solutions": solutions,
+        "count_vector_placement_search": count_vector_placement_search,
         "solution_count_summaries": [
             base_word_count_summary(
                 m, [parse_word(word) for word in solution["base_words"]]
@@ -378,6 +600,30 @@ def main() -> None:
         default=0,
         help="also report this many balanced count-vector combos for the length pattern",
     )
+    parser.add_argument(
+        "--count-vector-placement-start",
+        type=int,
+        default=0,
+        help="skip this many balanced count-vector combos before placement tests",
+    )
+    parser.add_argument(
+        "--count-vector-placement-limit",
+        type=int,
+        default=0,
+        help="try column placements for this many balanced count-vector combos",
+    )
+    parser.add_argument(
+        "--count-vector-product-limit",
+        type=int,
+        default=10000,
+        help="skip a count-vector placement combo if its word product is larger",
+    )
+    parser.add_argument(
+        "--count-vector-representatives-per-vector",
+        type=int,
+        default=0,
+        help="limit tested words per count vector; 0 means all words in the pool",
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
@@ -391,6 +637,10 @@ def main() -> None:
         args.solution_limit,
         args.cover_limit,
         args.count_vector_limit,
+        args.count_vector_placement_start,
+        args.count_vector_placement_limit,
+        args.count_vector_product_limit,
+        args.count_vector_representatives_per_vector,
     )
     payload = {"search": result}
 
@@ -402,6 +652,21 @@ def main() -> None:
     )
     for idx, solution in enumerate(result["solutions"][: args.solution_limit]):
         print(f"solution[{idx}] words={solution['base_words']}")
+    placement_diag = result.get("count_vector_placement_search")
+    if placement_diag is not None:
+        print(
+            "count_vector_placement "
+            "start={vector_combo_start} seen={vector_combos_seen} "
+            "tested={vector_combos_tested} "
+            "frontier_impossible={vector_combos_frontier_impossible} "
+            "word_products={word_products_checked} "
+            "frontier_failures={frontier_failures} "
+            "dp_products={dp_products_checked} skipped={skipped_product_limit} "
+            "diag_solutions={solution_count} truncated={truncated}".format(
+                solution_count=len(placement_diag["solutions"]),
+                **placement_diag,
+            )
+        )
 
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
