@@ -114,6 +114,32 @@ python3 scripts/analyze_d5_routeE_small_seam_families.py \
 => m=14: (2,2,6,3,0), blocks=7, open=False
 => m=16: (1,13,0,1,0), blocks=11, open=False, known=True
 
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode open-port \
+  --moduli 6,8,10,12,14,16,18,20 \
+  --hit-limit 2 \
+  --json-out /tmp/d5_open_port_small_seam_search_6_20.json
+=> open-port small-seam hits at m=10,12,14,18,20
+=> no open-port hit in this search at m=6,8,16
+
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --moduli 6,8,10,12,14,16 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support3_small_seam_search_6_16.json
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --moduli 18,20,22 \
+  --hit-limit 3 \
+  --candidate-limit 1200 \
+  --json-out /tmp/d5_support3_small_seam_search_18_22.json
+=> support<=3 min-block examples:
+=> m=14: (1,3,0,9,0), blocks=8
+=> m=18: (5,7,0,5,0), blocks=9
+=> m=22: (3,1,0,17,0), blocks=10
+
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
   --json-out /tmp/d5_routeE_nonopen_bundle_check.json

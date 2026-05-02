@@ -278,6 +278,32 @@ best minimum-block prefix hit in this scan, with `11` blocks.  This reinforces
 that "open-port" and "proof-simple block trace" are related but not identical
 search objectives.
 
+The next search aid is:
+
+```bash
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode open-port \
+  --moduli 6,8,10,12,14,16,18,20 \
+  --hit-limit 2 \
+  --json-out /tmp/d5_open_port_small_seam_search_6_20.json
+
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --moduli 6,8,10,12,14,16 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support3_small_seam_search_6_16.json
+```
+
+Unlike the full count scan, this checks constrained candidates directly
+against the proof-facing `Theta` small-seam criterion.  In open-port mode it
+first filters through the section chart formula and `H` single-cycle test,
+then checks the small seam.  The `m = 6..20` open-port run found hits at
+`m = 10,12,14,18,20` and no hit at `m = 6,8,16`.  The support-limited run
+shows why the search should not be purely open-port: support-3 candidates give
+better block traces at some moduli, for example `(1,3,0,9,0)` at `m = 14`,
+`(5,7,0,5,0)` at `m = 18`, and `(3,1,0,17,0)` at `m = 22`.
+
 The block-splice trace can now be summarized directly with:
 
 ```bash

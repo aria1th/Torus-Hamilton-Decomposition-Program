@@ -808,6 +808,33 @@ python3 scripts/verify_d5_routeE_small_seam_rank_certs.py \
 This verifies the recorded rank arrays, inverse rank arrays, maximal
 translation blocks, and return-time sums for all `28` small-seam cases.
 
+Candidate families can now be searched directly against the small-seam
+criterion, without replaying a full `m^4` state-cycle scan:
+
+```bash
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode open-port \
+  --moduli 6,8,10,12,14,16,18,20 \
+  --hit-limit 2 \
+  --json-out /tmp/d5_open_port_small_seam_search_6_20.json
+
+python3 scripts/search_d5_routeE_small_seam_candidates.py \
+  --mode support \
+  --max-support 3 \
+  --moduli 6,8,10,12,14,16 \
+  --hit-limit 3 \
+  --json-out /tmp/d5_support3_small_seam_search_6_16.json
+```
+
+The open-port search first checks the `m^2` section formula/cycle and then
+checks the `Theta` small seam.  It confirms open-port small-seam hits at
+`m = 10,12,14,18,20` and no hit in that search at `m = 6,8,16`.  The
+support-limited search finds low-support alternatives, including the
+support-3 min-block candidates `(1,3,0,9,0)` at `m = 14`,
+`(5,7,0,5,0)` at `m = 18`, and `(3,1,0,17,0)` at `m = 22`.  Wide ranges
+should be run with care because failed candidates can still require long
+first-return searches.
+
 `D5Odd/EvenRouteE.lean` also exposes these trace summaries as a Lean-facing
 piecewise translation interface: `RouteESeamTranslationBlock`,
 `RouteEThetaPiecewiseTranslationCertificate`, and the all-large target
