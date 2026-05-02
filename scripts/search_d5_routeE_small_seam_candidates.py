@@ -87,9 +87,84 @@ def support_at_most_candidates(m: int, max_support: int) -> Iterable[dict]:
                 }
 
 
-def score_candidate(candidate: dict) -> dict:
-    result = route_e.verify_small_seam_case(
-        candidate["m"], candidate["slot"], candidate["counts"]
+def effective_max_steps(m: int, max_return_steps: int | None, m3_factor: float | None):
+    if max_return_steps is not None:
+        return max_return_steps
+    if m3_factor is not None:
+        return max(1, int(m3_factor * (m**3)))
+    return None
+
+
+def verify_small_seam_case_with_cap(
+    m: int,
+    slot: int,
+    counts: CountVec,
+    max_steps: int | None,
+) -> dict:
+    if max_steps is None:
+        result = route_e.verify_small_seam_case(m, slot, counts)
+        result["cap_exhausted"] = False
+        result["max_return_steps"] = None
+        return result
+
+    seam_port = (slot + 2) % 5
+    first_return = {}
+    return_times = {}
+    start_ok = True
+    no_return = []
+    for a in range(1, m):
+        w = route_e.theta_state(m, slot, a)
+        if route_e.lam(route_e.PERT, route_e.shifted_zero_mask(w), slot) != seam_port:
+            start_ok = False
+        for time in range(1, max_steps + 1):
+            w = route_e.one_e_return_step_with_slot(m, slot, counts, w)
+            b = route_e.theta_param(m, slot, w)
+            if b is not None:
+                first_return[a] = b
+                return_times[a] = time
+                break
+        else:
+            no_return.append(a)
+            break
+
+    cycle_lengths = (
+        route_e.cycle_lengths_from_param_map(first_return, range(1, m))
+        if not no_return
+        else []
+    )
+    blocks = route_e.translation_blocks(m, first_return) if not no_return else []
+    return_time_sum = sum(return_times.values())
+    ok = (
+        start_ok
+        and not no_return
+        and cycle_lengths == [m - 1]
+        and return_time_sum == m**4
+    )
+    return {
+        "m": m,
+        "slot": slot,
+        "counts": counts,
+        "seam_port": seam_port,
+        "seam_size": m - 1,
+        "start_ok": start_ok,
+        "cycle_lengths": cycle_lengths,
+        "return_time_sum": return_time_sum,
+        "expected_return_time_sum": m**4,
+        "translation_block_count": len(blocks),
+        "translation_blocks": blocks,
+        "no_return_examples": no_return,
+        "cap_exhausted": bool(no_return),
+        "max_return_steps": max_steps,
+        "ok": ok,
+    }
+
+
+def score_candidate(
+    candidate: dict, max_return_steps: int | None, m3_factor: float | None
+) -> dict:
+    max_steps = effective_max_steps(candidate["m"], max_return_steps, m3_factor)
+    result = verify_small_seam_case_with_cap(
+        candidate["m"], candidate["slot"], candidate["counts"], max_steps
     )
     blocks = result.get("translation_blocks", [])
     return {
@@ -102,6 +177,8 @@ def score_candidate(candidate: dict) -> dict:
         "block_count": result["translation_block_count"],
         "max_block_length": max((block["length"] for block in blocks), default=0),
         "translation_blocks_prefix": blocks[:8],
+        "cap_exhausted": result["cap_exhausted"],
+        "max_return_steps": result["max_return_steps"],
         "section_ok": candidate.get("section", {}).get("section_formula_ok"),
         "section_H_single": candidate.get("section", {}).get("H_single"),
     }
@@ -145,13 +222,18 @@ def search_modulus(
     max_support: int,
     hit_limit: int,
     candidate_limit: int | None,
+    max_return_steps: int | None,
+    m3_factor: float | None,
     top: int,
 ) -> dict:
     hits = []
     checked = 0
+    capped = 0
     for candidate in candidate_stream(m, mode, max_support):
         checked += 1
-        scored = score_candidate(candidate)
+        scored = score_candidate(candidate, max_return_steps, m3_factor)
+        if scored["cap_exhausted"]:
+            capped += 1
         if scored["small_seam_ok"]:
             hits.append(scored)
             if hit_limit and len(hits) >= hit_limit:
@@ -162,6 +244,7 @@ def search_modulus(
         "m": m,
         "mode": mode,
         "checked": checked,
+        "cap_exhausted_count": capped,
         "hit_count": len(hits),
         "ok": bool(hits),
         "hits": hits,
@@ -170,7 +253,7 @@ def search_modulus(
 
 
 def print_summary(results: List[dict]) -> None:
-    print("m mode checked hits best_min_block best_low_support")
+    print("m mode checked capped hits best_min_block best_low_support")
     for result in results:
         min_block = result["best"]["min_block"]
         low_support = result["best"]["low_support"]
@@ -178,6 +261,7 @@ def print_summary(results: List[dict]) -> None:
             result["m"],
             result["mode"],
             result["checked"],
+            result["cap_exhausted_count"],
             result["hit_count"],
             compact_best(min_block[0]) if min_block else None,
             compact_best(low_support[0]) if low_support else None,
@@ -219,6 +303,16 @@ def main() -> None:
         type=int,
         help="stop each modulus after checking this many candidates",
     )
+    parser.add_argument(
+        "--max-return-steps",
+        type=int,
+        help="exploratory cap for each seam point's first-return search",
+    )
+    parser.add_argument(
+        "--max-return-m3-factor",
+        type=float,
+        help="exploratory cap set to factor*m^3 steps for each seam point",
+    )
     parser.add_argument("--top", type=int, default=5)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -230,6 +324,8 @@ def main() -> None:
             args.max_support,
             args.hit_limit,
             args.candidate_limit,
+            args.max_return_steps,
+            args.max_return_m3_factor,
             args.top,
         )
         for m in parse_moduli(args.moduli)
@@ -238,6 +334,8 @@ def main() -> None:
         "schema": "d5_routeE_small_seam_candidate_search_v1",
         "mode": args.mode,
         "moduli": parse_moduli(args.moduli),
+        "max_return_steps": args.max_return_steps,
+        "max_return_m3_factor": args.max_return_m3_factor,
         "results": results,
     }
     print_summary(results)

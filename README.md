@@ -833,7 +833,10 @@ support-limited search finds low-support alternatives, including the
 support-3 min-block candidates `(1,3,0,9,0)` at `m = 14`,
 `(5,7,0,5,0)` at `m = 18`, and `(3,1,0,17,0)` at `m = 22`.  Wide ranges
 should be run with care because failed candidates can still require long
-first-return searches.
+first-return searches.  For exploratory scans, `--max-return-steps` or
+`--max-return-m3-factor` can cap each seam point's first-return search; capped
+results are heuristic and should be rechecked without the cap before being
+used as proof evidence.
 
 `D5Odd/EvenRouteE.lean` also exposes these trace summaries as a Lean-facing
 piecewise translation interface: `RouteESeamTranslationBlock`,

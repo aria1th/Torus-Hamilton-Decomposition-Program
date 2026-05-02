@@ -304,6 +304,12 @@ shows why the search should not be purely open-port: support-3 candidates give
 better block traces at some moduli, for example `(1,3,0,9,0)` at `m = 14`,
 `(5,7,0,5,0)` at `m = 18`, and `(3,1,0,17,0)` at `m = 22`.
 
+The script also has exploratory caps `--max-return-steps` and
+`--max-return-m3-factor`.  These are useful to keep wide failed-candidate
+scans bounded, but a capped search can miss a late-returning valid candidate.
+Any candidate promoted to a proof-facing table should therefore be rerun
+without a cap.
+
 The block-splice trace can now be summarized directly with:
 
 ```bash

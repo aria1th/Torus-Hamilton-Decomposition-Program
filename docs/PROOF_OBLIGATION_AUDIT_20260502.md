@@ -139,6 +139,8 @@ python3 scripts/search_d5_routeE_small_seam_candidates.py \
 => m=14: (1,3,0,9,0), blocks=8
 => m=18: (5,7,0,5,0), blocks=9
 => m=22: (3,1,0,17,0), blocks=10
+=> The searcher also supports exploratory return caps, but capped misses are
+=> not proof evidence; candidates used downstream must be rerun without caps.
 
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \
