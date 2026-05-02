@@ -196,6 +196,10 @@ when `m` is odd and `m >= 3`.
   `certs/d7_4plus2_compact_formula_witnesses.json`.  It validates row/base
   shape, can rerun the Target-A section and column audits, and delegates
   formula/product/rank-step fingerprint checks to the C++ checker.
+- `scripts/verify_d7_4plus2_rank_fingerprints.py`: regression verifier for
+  `certs/d7_4plus2_rank_fingerprints.json`; it recomputes compact D7 odd
+  base/fiber rank-step fingerprints and compares them to the committed
+  manifest, with optional Target-A and direct product checks.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
   tables, checks scalar unit invariants, and can run the full bridge verifier.
@@ -446,6 +450,14 @@ can be replayed with:
 python3 scripts/verify_compact_4plus2_formula_certs.py --target-a --product \
   --rank-summary-dir /tmp/d7_compact_rank_summaries \
   --json-out /tmp/d7_compact_formula_full_verify.json
+```
+
+The committed rank-fingerprint manifest can be replayed directly:
+
+```bash
+python3 scripts/verify_d7_4plus2_rank_fingerprints.py \
+  --target-a --product \
+  --json-out /tmp/d7_4plus2_rank_fingerprint_full_verify.json
 ```
 
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`

@@ -621,6 +621,23 @@ m=13: base=1729960657986ab2 fiber=a5d710c16e78968b
 m=17: base=4b5c9cc72a8705cc fiber=951e7c9f9efbba84
 ```
 
+The full per-color fingerprint manifest is now committed as
+`certs/d7_4plus2_rank_fingerprints.json`.  It is checked by
+`scripts/verify_d7_4plus2_rank_fingerprints.py`, which reruns the compact
+formula verifier, regenerates the base/fiber rank-step fingerprints, and
+compares them to the manifest.  The stronger regression command
+
+```bash
+python3 scripts/verify_d7_4plus2_rank_fingerprints.py \
+  --target-a --product \
+  --json-out /tmp/d7_4plus2_rank_fingerprint_full_verify.json
+```
+
+reported `witnesses 3 all_ok True missing [] extra []`.  This does not close
+the symbolic all-odd formula problem, but it makes the finite `m=11,13,17`
+Target-A/Target-B' rank evidence reproducible against the Lean-facing
+`BridgeConcreteFullRankPackage` shape.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
