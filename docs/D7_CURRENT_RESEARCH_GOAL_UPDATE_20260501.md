@@ -434,6 +434,15 @@ Implementation progress after this goal update:
   examples, including `01121`, `01214`, `10112`, `11210`, and `12101`.  This
   sharpens the current need for a longer or congruence-dependent base row
   family.
+- The later balanced-cover pipeline now supplies finite all-zero-set bridge
+  witnesses beyond the original bundled `m=5,7,9` cases.  It finds Target-A
+  exact-cover row sets for `m=11`, `m=13`, and `m=17`; the corresponding
+  Target-B' formulas are `r=p(Z)+|Z|+1`, `r=|Z|`, and `r=2|Z|+1`
+  respectively.  A new C++ checker reproduces the full product-return
+  single-cycle checks for these generated rows, including `17^6 = 24137569`
+  states for the `m=17` witness.  These traces are finite evidence and
+  regression data; the symbolic all-odd row family and rank-step formulas are
+  still open.
 - `scripts/search_4plus2_kappa_formulas.py` separates a first fiber-compiler
   subproblem.  It searches cyclic/reflected zero-set formulas
   `r = a*t + b*p(Z) + c*|Z| + d mod 3`; the bundled rows reproduce the
@@ -522,7 +531,8 @@ Current status against the revised goal:
   `D7Odd/Handoff/Additive4Plus2Goal.lean`; the concrete all-zero-set
   return/monodromy package constructor is in
   `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`.  The all-odd `m >= 5`
-  product certificate is still open.
+  product certificate is still open, with finite generated witnesses now
+  available through `m = 17`.
 - Local bridge and monodromy lemmas: available abstractly in
   `Shared/AdditiveBridge.lean` and `Shared/Monodromy.lean`, and exposed at the
   D7 product-schedule level in both `D7Odd/Handoff/Additive4Plus2.lean` and
@@ -551,7 +561,7 @@ are closed and which remain open.
 | Keep D7 odd as regression target | `D7Odd/Torus.lean`, `D7Odd/Cayley.lean`; checked by `lake build D7Odd RoundComposite.ConcreteEndpoints` on 2026-05-01 | Closed regression endpoint |
 | Raise composite theorem to concrete graph theorem | `RoundComposite.lean` has `standard_cayley_pointwise_composite_expansion` and `standard_torus_pointwise_composite_expansion`; `RoundComposite/ConcreteEndpoints.lean` has direct odd `35`, `49`, and 5/7-list Cayley/Torus endpoints | Closed for current shared standard Cayley/Torus target |
 | Extract common root-flat return criterion | `Shared/RootFlat.lean` has `rootFlatLayeredDecomposition_of_schedule` from row Latin, layer bijective, and return single-cycle | Closed at shared layered full-step level |
-| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `card_ARoot3 = m^2`, `card_ProductRoot = card_RootState7 = m^6`, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints; `Additive4Plus2ConcreteGoal.lean` specializes this to the concrete all-zero-set bridge and reduces the remaining construction to row/fiber data plus canonical folded base/fiber rank steps into `ZMod (m^4)` and `ZMod (m^2)` | Interface and conditional goal theorem closed; uniform all-odd certificate open |
+| Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `card_ARoot3 = m^2`, `card_ProductRoot = card_RootState7 = m^6`, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints; `Additive4Plus2ConcreteGoal.lean` specializes this to the concrete all-zero-set bridge and reduces the remaining construction to row/fiber data plus canonical folded base/fiber rank steps into `ZMod (m^4)` and `ZMod (m^2)`; finite generated witnesses are recorded through `m = 17` | Interface and conditional goal theorem closed; uniform all-odd certificate open |
 | Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` and `BridgeProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` expose it to both D7 product charts; `Additive4Plus2D5Base.lean` proves row Latin and `m >= 5` layer bijectivity for the concrete D5 all-zero-set base packet; `Additive4Plus2D3Fiber.lean` proves row Latin, layer-step bijectivity, and S3-permuted compiler facts for the D3 fiber packet; `Additive4Plus2BridgeKappa.lean` proves bijectivity of the combined state-dependent bridge `kappa`, gives a concrete row-schedule row-Latin adapter, adapts the D3 compiler into the bridge `phi` interface, and proves concrete bridge layer bijectivity for `m >= 5`; `Additive4Plus2ConcreteGoal.lean` consumes these local facts automatically in `BridgeConcreteSkewPackage.toLocalSkewPackage` | Concrete local row/layer assembly closed; uniform return instantiation open |
 | Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy`; `ProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` and `BridgeProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` expose it to product certificates | Abstract and product-schedule criteria closed; product-return instantiation open |
 | Keep D5 even separate | `D5Odd/Even.lean` exposes the older seam-orbit certificate endpoints; `D5Odd/EvenRouteE.lean` exposes `RouteEThetaSmallSeamCertificate`; `scripts/d5_even_seam_sat_search.py` remains a negative/debugging smoke check; `scripts/verify_d5_even_routeE.py` absorbs the positive Route-E finite schedule/core/section checks from `d5_even_routeE_bundle_v0_1.zip` and the small-seam checks from `d5_even_routeE_nonopen_small_seam_v0_4.zip` | Route-E all-even count/slot families plus symbolic small-seam cycle and return-time-sum proofs open |
@@ -564,6 +574,9 @@ Verification signals used in this audit:
   pre-existing `D5Odd/ReturnCycle.lean` linter warnings replayed.
 - `grep -R "sorry" -n -- *.lean Shared D5Odd D7Odd RoundComposite` finds no
   Lean `sorry` in the active formalization files.
+- `scripts/fast_4plus2_section_formula_search.cpp` compiles with `g++ -O3`,
+  reproduces the `m=11` and `m=13` generated full product checks, and verifies
+  the `m=17` formula witness over `24137569` product states.
 - `git diff --check` succeeds for the current tracked edits.
 
 The remaining D7-structure gap is not the abstract composite interface. It is
@@ -595,7 +608,9 @@ rank-step theorem for a uniform all-zero-set compiler.  The current finite
 evidence shows the intended ranks for `m=5,7,9`, while the new kappa
 diagnostics show that the bundled `m=9` fiber table is opaque to the simplest
 zero-set feature partitions and remains opaque after adding full root
-coordinate residues modulo 3.
+coordinate residues modulo 3.  Generated finite witnesses now extend this
+evidence through `m=17`; their role is trace evidence for the uniform
+base/fiber rank-step theorem, not a replacement for it.
 
 The next useful Lean/research steps are:
 

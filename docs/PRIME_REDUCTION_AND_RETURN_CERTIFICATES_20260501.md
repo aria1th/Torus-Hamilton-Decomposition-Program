@@ -305,6 +305,15 @@ for `zero_mask`, `243/243` for `layer_zero_mask`, and `3033/3033` for
 `layer_zero_mask_full_mod3`.  This shifts the fiber question from opaque
 state-dependence to explaining a finite zero-set table `K(Z)`.
 
+After the m=11 and m=13 row-cover witnesses, the same finite pipeline now also
+has an m=17 witness.  The Target-A base words
+`10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341`
+pass the section audit and column exact-cover diagnostic.  The fast C++ checker
+then finds a Target-B' rotation formula `r = 2|Z| + 1 mod 3` and directly
+verifies `17^6 = 24137569` product states.  This is evidence for the finite
+bridge decomposition through `m=17`, while the symbolic all-odd family and
+Lean-facing rank formulas remain open.
+
 For D=7 even, `D7Odd/Even.lean` now keeps a separate certificate target around
 `RootFlatSchedule`, with the same three obligations:
 

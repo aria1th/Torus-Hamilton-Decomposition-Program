@@ -122,8 +122,9 @@ Candidate short patterns mentioned by the bundle include:
 4204204
 ```
 
-The existing `m=5,7,9` finite rows should be used as trace data, not as a
-substitute for this symbolic Target-A proof.
+The existing `m=5,7,9` finite rows, and the later generated finite witnesses
+through `m=17`, should be used as trace data, not as a substitute for this
+symbolic Target-A proof.
 
 The repo now has `scripts/analyze_targetA_section.py` for this interface.  It
 checks a candidate base word for primitiveity, first return to `Sigma`,
@@ -143,6 +144,14 @@ Initial finite audit:
 
 This reinforces that Target A likely needs a congruence-dependent or
 constructed row family, not one fixed short word.
+
+The later balanced-cover pipeline turns the `m = 17` onset into a full finite
+bridge witness.  The base words
+`10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341`
+pass the Target-A section audit and column exact-cover diagnostic, and the
+fiber formula `r = 2|Z|+1 mod 3` passes the full product-return check in the
+C++ direct verifier.  This strengthens the finite trace data for the bad
+class, but the symbolic correction/splicing proof remains the target.
 
 A primitive-word scan up to length `5` for odd `m = 5,7,...,21` gives a more
 nuanced picture:

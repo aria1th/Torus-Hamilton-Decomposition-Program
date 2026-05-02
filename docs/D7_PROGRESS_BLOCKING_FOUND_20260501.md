@@ -556,6 +556,46 @@ So the finite all-zero-set `4+2` bridge evidence now extends through
 `m = 5,7,9,11,13`, with `m = 11` and `m = 13` produced by the current
 row-cover/search pipeline rather than by the original bundle.
 
+The same search shape now reaches the next exceptional modulus `m = 17`.
+The first useful pool combined powers of the length-5 primitive words with a
+small random primitive pool at lengths `11,12,13`.  Among the open length
+patterns, `11,12,12,12,12,13,13` produced a column exact-cover placement.  One
+Target-A base-word set is
+
+```text
+10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341
+```
+
+`scripts/analyze_targetA_section.py --moduli 17` confirms that all seven words
+are single `17^4 = 83521` base cycles, have single `Sigma` first-return
+cycles, have return-time sum `83521`, and cover all base states by the section
+excursions.  The column diagnostic reaches target depth `17` with `194`
+reachable states and no truncation.
+
+The original Python rotation-family section search is too slow at this scale,
+so `scripts/fast_4plus2_section_formula_search.cpp` was added as a direct C++
+checker for full row covers and formula-defined kappa tables.  It first
+reproduces the known `m = 11` and `m = 13` full product checks.  On the `m =
+17` rows above, the first rotation-family hit is
+
+```text
+cyclic: r = 0*t + 0*p + 2*z + 1 mod 3.
+```
+
+The full rotation-family sweep finds `21` hits among `162` candidates; for
+example the previous `m = 11` formula `r = p(Z)+|Z|+1` is also a hit on these
+rows.  The direct C++ product replay for the first hit gives:
+
+```text
+product-verified m=17 product_states=24137569 rows=7 return_cycles=single
+```
+
+Thus the finite all-zero-set `4+2` bridge evidence now extends through
+`m = 5,7,9,11,13,17`.  This still does not close Target A symbolically: it
+turns the `m = 17` obstruction into a concrete trace source for the
+`m == 2 mod 5` correction/splicing family and for Lean-facing base/fiber rank
+formulas.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -683,8 +723,8 @@ When new bundles arrive, compare them against this baseline:
   section monodromy for `m = 9`?
 - Do they provide a candidate invariant finer than `(layer, p, |Z|, component)`
   and full residues modulo `3`?
-- Do they include a uniform or congruence-dependent base-row family that covers
-  the `m = 17` length-5 onset?
+- Do they include a uniform or congruence-dependent base-row family explaining
+  the finite `m = 17` cover and the broader `m == 2 mod 5` correction class?
 - Do they prove or further compress the `23/32` first-return table, especially
   the `Sigma0` law and the `m == 2 mod 5` five-cycle decomposition?
 - Do they provide a correction family for the `m == 2 mod 5` seam components?
@@ -839,6 +879,24 @@ python3 scripts/search_4plus2_kappa_formulas.py \
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
   --cert-json /tmp/targetA_m13_formula_hits/bridge_4plus2_m13_cover_json_solution0_formula_hit0.json \
   --rank-summary-json /tmp/targetA_m13_solution0_formula_hit0_rank_summary.json
+python3 scripts/analyze_targetA_section.py \
+  --moduli 17 \
+  --words 10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341 \
+  --json-out /tmp/targetA_m17_solution0_section.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-m 17 \
+  --cover-words 10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341 \
+  --cover-limit 3 --diagnose-cover \
+  --json-out /tmp/targetA_m17_solution0_cover_diag.json
+g++ -std=c++17 -O3 scripts/fast_4plus2_section_formula_search.cpp \
+  -o /tmp/fast_4plus2_section_formula_search
+/tmp/fast_4plus2_section_formula_search \
+  --m 17 \
+  --rows 10435141403555553,32244253552624642,51506515121101121,43623066064362300,25350400235040065,04162622316236234,66011334640413416
+/tmp/fast_4plus2_section_formula_search \
+  --m 17 \
+  --rows 10435141403555553,32244253552624642,51506515121101121,43623066064362300,25350400235040065,04162622316236234,66011334640413416 \
+  --formula 0,0,2,1,0 --verify-product
 git diff --check
 ```
 

@@ -186,6 +186,11 @@ when `m` is odd and `m >= 3`.
   exact-cover placer.  It can also report balanced count-vector combinations
   separately from column placement.
 - `scripts/search_4plus2_kappa_formulas.py`: fiber-compiler search aid for zero-set cyclic/reflected kappa formulas of the form `a*t + b*p(Z) + c*|Z| + d mod 3`, a larger dihedral `rotation mod 3 + reflection mod 2` family, and dependency diagnostics for bundled or generated kappa tables.
+- `scripts/fast_4plus2_section_formula_search.cpp`: standalone C++ checker for
+  generated full row covers and rotation-family Target-B' formulas.  It
+  verifies the base/section criterion quickly and can also replay the direct
+  product-return single-cycle check for larger finite witnesses such as
+  `m = 17`.
 - `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
   zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
   tables, checks scalar unit invariants, and can run the full bridge verifier.
@@ -419,6 +424,12 @@ The same pipeline now also has a finite `m = 13` witness.  One base-word set is
 `14244442,312324442,312231334,423021000,2041033232,0041011111,4230300013`;
 the fiber formula is the simpler `r = |Z| mod 3`, and the full verifier checks
 `13^6 = 4826809` product states.
+The next exceptional modulus also now has a finite witness.  For `m = 17`, one
+Target-A base-word set is
+`10431414033,322442322442,101121101121,432300432300,230400230400,0412223123234,0113344041341`;
+the C++ section checker finds the first rotation-family hit
+`r = 2|Z| + 1 mod 3` and verifies `17^6 = 24137569` product states.  This is
+finite evidence for the bridge pipeline, not yet a symbolic all-odd row family.
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
 now reports exact-cover DP depth, reachable/dead states, and dead-frontier
 examples.
