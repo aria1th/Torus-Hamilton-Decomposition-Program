@@ -163,7 +163,11 @@ pointwise return-time formula is now named `RouteEB20.returnTimeFormula`, and
 target using that formula directly; it only needs the formula sum to match
 `RouteEB20.returnTimeWeightedSum`, after which the closed weighted-sum theorem
 gives `m^4`.  The formula's verifier-facing cases are exposed as
-`RouteEB20.returnTimeFormula_*` rewrite lemmas.
+`RouteEB20.returnTimeFormula_*` rewrite lemmas.  The same distribution is now
+also organized as `RouteEB20.returnTimeBlocks`; the theorem
+`RouteEB20.returnTimeBlocks_cover` proves that the extracted interval blocks
+cover the whole nonzero seam, giving the eventual symbolic trace proof a
+stable case split.
 
 ## Proof Obligations Exposed by B20
 
@@ -181,7 +185,9 @@ For the B20 branch, the all-even proof target is now concrete:
    `RouteEThetaPiecewiseTranslationCertificate`.
 
 The strongest missing item is the symbolic port-time proof behind item 3,
-plus the pointwise return-time partition needed by item 5.  The arithmetic
+plus the pointwise return-time partition needed by item 5.  The named
+`returnTimeBlocks` interval cover should be used as the partition skeleton,
+but it does not by itself prove any Route-E trace equation.  The arithmetic
 weighted-sum identity for the extracted distribution and the expected
 two-block seam-map one-cycle proof are already Lean targets, and the final
 B20 adapter proposition is now named explicitly.

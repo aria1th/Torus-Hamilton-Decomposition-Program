@@ -214,6 +214,23 @@ noncomputable def indexEquiv {m : Nat} [NeZero m] :
 
 end RouteENonzeroSeam
 
+structure RouteEReturnTimeBlock where
+  start : Nat
+  stop : Nat
+  time : Nat
+
+namespace RouteEReturnTimeBlock
+
+def contains {m : Nat} (block : RouteEReturnTimeBlock)
+    (a : RouteENonzeroSeam m) : Prop :=
+  block.start ≤ a.1.val ∧ a.1.val ≤ block.stop
+
+def timeFormula {m : Nat} (block : RouteEReturnTimeBlock)
+    (f : RouteENonzeroSeam m → Nat) : Prop :=
+  ∀ a, block.contains a → f a = block.time
+
+end RouteEReturnTimeBlock
+
 namespace RouteEB20
 
 instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
@@ -339,6 +356,175 @@ theorem returnTimeFormula_last (q : Nat)
     rw [ha]
     simp [modulus]
   simp [returnTimeFormula, hnotLower, hnotLeft, hnotMid, hnotUpper]
+
+def returnTimeLowerLeftBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := 1
+  stop := third q - 1
+  time := timeC q + modulus q
+
+def returnTimeLowerFirstExceptionBlock (q : Nat) :
+    RouteEReturnTimeBlock where
+  start := third q
+  stop := third q
+  time := timeC q
+
+def returnTimeLowerMiddleBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := third q + 1
+  stop := 2 * third q - 1
+  time := timeC q + modulus q
+
+def returnTimeLowerSecondExceptionBlock (q : Nat) :
+    RouteEReturnTimeBlock where
+  start := 2 * third q
+  stop := 2 * third q
+  time := timeC q
+
+def returnTimeLowerRightBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := 2 * third q + 1
+  stop := half q - 2
+  time := timeC q + modulus q
+
+def returnTimeLeftBoundaryBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := half q - 1
+  stop := half q - 1
+  time := timeF q
+
+def returnTimeMidpointBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := half q
+  stop := half q
+  time := timeC q
+
+def returnTimeUpperLeftBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := half q + 1
+  stop := half q + third q - 1
+  time := timeA q + modulus q
+
+def returnTimeUpperFirstExceptionBlock (q : Nat) :
+    RouteEReturnTimeBlock where
+  start := half q + third q
+  stop := half q + third q
+  time := timeA q
+
+def returnTimeUpperMiddleBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := half q + third q + 1
+  stop := half q + 2 * third q - 1
+  time := timeA q + modulus q
+
+def returnTimeUpperSecondExceptionBlock (q : Nat) :
+    RouteEReturnTimeBlock where
+  start := half q + 2 * third q
+  stop := half q + 2 * third q
+  time := timeA q
+
+def returnTimeUpperRightBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := half q + 2 * third q + 1
+  stop := modulus q - 2
+  time := timeA q + modulus q
+
+def returnTimeLastBlock (q : Nat) : RouteEReturnTimeBlock where
+  start := modulus q - 1
+  stop := modulus q - 1
+  time := timeE q
+
+def returnTimeBlocks (q : Nat) : List RouteEReturnTimeBlock :=
+  [ returnTimeLowerLeftBlock q
+  , returnTimeLowerFirstExceptionBlock q
+  , returnTimeLowerMiddleBlock q
+  , returnTimeLowerSecondExceptionBlock q
+  , returnTimeLowerRightBlock q
+  , returnTimeLeftBoundaryBlock q
+  , returnTimeMidpointBlock q
+  , returnTimeUpperLeftBlock q
+  , returnTimeUpperFirstExceptionBlock q
+  , returnTimeUpperMiddleBlock q
+  , returnTimeUpperSecondExceptionBlock q
+  , returnTimeUpperRightBlock q
+  , returnTimeLastBlock q
+  ]
+
+theorem returnTimeBlocks_cover (q : Nat)
+    (a : RouteENonzeroSeam (modulus q)) :
+    ∃ block, block ∈ returnTimeBlocks q ∧ block.contains a := by
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+  have hle_last : a.1.val ≤ modulus q - 1 := by
+    have hlt := ZMod.val_lt a.1
+    omega
+  by_cases h₁ : a.1.val ≤ third q - 1
+  · refine ⟨returnTimeLowerLeftBlock q, ?_, ?_⟩
+    · simp [returnTimeBlocks]
+    · change 1 ≤ a.1.val ∧ a.1.val ≤ third q - 1
+      exact ⟨Nat.succ_le_of_lt hpos, h₁⟩
+  · by_cases h₂ : a.1.val = third q
+    · refine ⟨returnTimeLowerFirstExceptionBlock q, ?_, ?_⟩
+      · simp [returnTimeBlocks]
+      · simp [RouteEReturnTimeBlock.contains,
+          returnTimeLowerFirstExceptionBlock, h₂]
+    · by_cases h₃ : a.1.val ≤ 2 * third q - 1
+      · refine ⟨returnTimeLowerMiddleBlock q, ?_, ?_⟩
+        · simp [returnTimeBlocks]
+        · simp [RouteEReturnTimeBlock.contains, returnTimeLowerMiddleBlock,
+            third] at *
+          omega
+      · by_cases h₄ : a.1.val = 2 * third q
+        · refine ⟨returnTimeLowerSecondExceptionBlock q, ?_, ?_⟩
+          · simp [returnTimeBlocks]
+          · simp [RouteEReturnTimeBlock.contains,
+              returnTimeLowerSecondExceptionBlock, h₄]
+        · by_cases h₅ : a.1.val ≤ half q - 2
+          · refine ⟨returnTimeLowerRightBlock q, ?_, ?_⟩
+            · simp [returnTimeBlocks]
+            · simp [RouteEReturnTimeBlock.contains,
+                returnTimeLowerRightBlock, third, half] at *
+              omega
+          · by_cases h₆ : a.1.val = half q - 1
+            · refine ⟨returnTimeLeftBoundaryBlock q, ?_, ?_⟩
+              · simp [returnTimeBlocks]
+              · simp [RouteEReturnTimeBlock.contains,
+                  returnTimeLeftBoundaryBlock, h₆]
+            · by_cases h₇ : a.1.val = half q
+              · refine ⟨returnTimeMidpointBlock q, ?_, ?_⟩
+                · simp [returnTimeBlocks]
+                · simp [RouteEReturnTimeBlock.contains,
+                    returnTimeMidpointBlock, h₇]
+              · by_cases h₈ : a.1.val ≤ half q + third q - 1
+                · refine ⟨returnTimeUpperLeftBlock q, ?_, ?_⟩
+                  · simp [returnTimeBlocks]
+                  · simp [RouteEReturnTimeBlock.contains,
+                      returnTimeUpperLeftBlock, third, half] at *
+                    omega
+                · by_cases h₉ : a.1.val = half q + third q
+                  · refine ⟨returnTimeUpperFirstExceptionBlock q, ?_, ?_⟩
+                    · simp [returnTimeBlocks]
+                    · simp [RouteEReturnTimeBlock.contains,
+                        returnTimeUpperFirstExceptionBlock, h₉]
+                  · by_cases h₁₀ :
+                        a.1.val ≤ half q + 2 * third q - 1
+                    · refine ⟨returnTimeUpperMiddleBlock q, ?_, ?_⟩
+                      · simp [returnTimeBlocks]
+                      · simp [RouteEReturnTimeBlock.contains,
+                          returnTimeUpperMiddleBlock, third, half] at *
+                        omega
+                    · by_cases h₁₁ :
+                          a.1.val = half q + 2 * third q
+                      · refine ⟨returnTimeUpperSecondExceptionBlock q, ?_, ?_⟩
+                        · simp [returnTimeBlocks]
+                        · simp [RouteEReturnTimeBlock.contains,
+                            returnTimeUpperSecondExceptionBlock, h₁₁]
+                      · by_cases h₁₂ : a.1.val ≤ modulus q - 2
+                        · refine ⟨returnTimeUpperRightBlock q, ?_, ?_⟩
+                          · simp [returnTimeBlocks]
+                          · simp [RouteEReturnTimeBlock.contains,
+                              returnTimeUpperRightBlock, third, half,
+                              modulus] at *
+                            omega
+                        · refine ⟨returnTimeLastBlock q, ?_, ?_⟩
+                          · simp [returnTimeBlocks]
+                          · simp [RouteEReturnTimeBlock.contains,
+                              returnTimeLastBlock, modulus] at *
+                            omega
 
 def seamStep (q : Nat) : Nat := half q + 1
 

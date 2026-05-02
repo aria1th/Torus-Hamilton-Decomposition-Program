@@ -6,8 +6,16 @@ This note resets the active research goal after absorbing the latest D7
 exceptional phase-splice and D5 Route-E branch-extraction bundles. It is a
 planning target, not a completion claim.
 
-The endpoint theorems stay as regressions. The new work is to turn the
-candidate mechanisms into proof-grade Lean/program certificates.
+The endpoint theorems stay as regressions. The live work has two proof
+programs:
+
+1. D7 odd: replace the already-closed direct endpoint by a structural
+   `A7 ~= A5 x A3` explanation.
+2. D5 even: replace the older global Route-E formula search by a finite
+   residue-branch menu, with B20 as the first symbolic branch.
+
+D7 even remains a separate RootFlatSchedule track and is not part of this
+two-goal reset.
 
 ## Goal 1: D7 Odd Structural Proof
 
@@ -46,6 +54,17 @@ Reset target:
 5. Lower the completed package through the existing D7 odd bridge to the
    torus/Cayley endpoint.
 
+Definition of done:
+
+- The good-class and exceptional A5 base branches together produce a uniform
+  all-odd A5 rank step of size `m^4` in the concrete all-zero-set bridge
+  interface.
+- The A3 Target-B' family is compatible with that base branch and produces a
+  scalar monodromy rank step of size `m^2`.
+- The combined package fills `BridgeConcreteFullRankPackage` (or its current
+  successor interface) for every odd `m >= 5`, leaving only the already-closed
+  finite `m = 3` regression branch.
+
 Blocking propositions:
 
 - Lean Q-hitting and length-sum theorem for the good-class `23/32` branch.
@@ -53,6 +72,15 @@ Blocking propositions:
   `m = 10*t+7`.
 - Seven-row all-zero-set exact-cover theorem.
 - Uniform Target-B' `K_m(Z)` or congruence-family scalar theorem.
+
+Near-term Lean/program work:
+
+- Keep `TargetASeamQuotient` green while turning the Q-return formulas into
+  the Q-hitting/length-sum package.
+- Convert the exceptional `m = 10*t+7` phase-splice table into named Lean
+  targets before attempting a monolithic proof.
+- Use finite verifiers only to extract stable row schedules, zero-set cover
+  identities, and scalar/carry formulas that can become Lean propositions.
 
 ## Goal 2: D5 Even Route-E Branch Menu
 
@@ -89,6 +117,10 @@ Current state:
   to `RouteEB20.ThetaTraceTarget`, with the final `m^4` sum discharged by
   `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.  The
   `RouteEB20.returnTimeFormula_*` lemmas name the pointwise partition cases.
+- Lean now also names the B20 return-time interval package as
+  `RouteEB20.returnTimeBlocks`, with `RouteEB20.returnTimeBlocks_cover`
+  covering the nonzero seam by the extracted intervals.  This is a
+  proof-facing organization of the same pointwise formula, not a trace proof.
 
 Reset target:
 
@@ -99,6 +131,14 @@ Reset target:
    return-time sum `m^4`.
 4. Lower the branch menu through the existing all-large Route-E adapters to
    the D5 Hamilton/Torus/Cayley endpoints.
+
+Definition of done:
+
+- The finite menu covers all even `m >= 6` by explicit residue predicates.
+- Each menu item constructs the appropriate Route-E certificate target, not
+  just a verifier witness.
+- The `m = 4` finite branch plus the menu lower to the existing D5 even
+  Hamilton, torus, and Cayley endpoints.
 
 B20 first formal target:
 
@@ -120,7 +160,8 @@ The Lean arithmetic and expected-map single-cycle targets are no longer the
 blockers for B20. The remaining B20 blocker is to prove symbolically that the
 Route-E trace has exactly this first-return map, no earlier return, and the
 extracted pointwise return-time partition, preferably by constructing
-`RouteEB20.ThetaPointwiseTraceTarget q`.
+`RouteEB20.ThetaPointwiseTraceTarget q`.  The named return-time blocks should
+be used as the local case split for the pointwise partition proof.
 
 Blocking propositions:
 
@@ -132,6 +173,15 @@ Blocking propositions:
   is now handled by
   `RouteEB20.thetaPiecewiseCertificateOfTraceTarget`.
 - A finite residue branch menu covering all even `m >= 6`.
+
+Near-term Lean/program work:
+
+- Finish the B20 symbolic trace proof before broadening the branch menu too
+  aggressively.
+- Use the `returnTimeBlocks` intervals as the proof skeleton for the B20
+  pointwise return-time partition.
+- Extract the next branch only when it has a stable count vector, seam map,
+  return-time partition, and verifier coverage on several moduli.
 
 ## Operating Rule For New Bundles
 
