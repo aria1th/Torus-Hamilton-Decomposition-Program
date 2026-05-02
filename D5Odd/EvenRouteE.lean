@@ -222,6 +222,38 @@ instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
 instance modulus_pred_neZero (q : Nat) : NeZero (modulus q - 1) :=
   ⟨by simp [modulus]⟩
 
+/-!
+The verifier's B20 return-time formula, written pointwise on the nonzero
+Theta seam.  The labels match the bundle note: `B = A + m` and
+`D = C + m`.
+-/
+
+def returnTimeFormula (q : Nat)
+    (a : RouteENonzeroSeam (modulus q)) : Nat :=
+  if a.1.val ≤ half q - 2 then
+    if a.1.val = third q ∨ a.1.val = 2 * third q then
+      timeC q
+    else
+      timeC q + modulus q
+  else if a.1.val = half q - 1 then
+    timeF q
+  else if a.1.val = half q then
+    timeC q
+  else if a.1.val ≤ modulus q - 2 then
+    if a.1.val = half q + third q ∨
+        a.1.val = half q + 2 * third q then
+      timeA q
+    else
+      timeA q + modulus q
+  else
+    timeE q
+
+theorem returnTimeFormula_pos (q : Nat)
+    (a : RouteENonzeroSeam (modulus q)) :
+    0 < returnTimeFormula q a := by
+  unfold returnTimeFormula
+  split_ifs <;> simp [timeA, timeC, timeE, timeF, modulus]
+
 def seamStep (q : Nat) : Nat := half q + 1
 
 theorem seamStep_lt_modulus_pred (q : Nat) :
@@ -1463,6 +1495,39 @@ structure ThetaTraceTarget (q : Nat) where
       Finset.univ.sum (fun a : RouteENonzeroSeam (modulus q) =>
         returnTime c a) = modulus q ^ 4
 
+structure ThetaPointwiseTraceTarget (q : Nat) where
+  data : D5EvenSeamData (modulus q)
+  returnTimeFormula_weightedSum :
+    Finset.univ.sum (fun a : RouteENonzeroSeam (modulus q) =>
+      returnTimeFormula q a) = returnTimeWeightedSum q
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTimeFormula q a]
+          (routeEThetaSeamPoint 0 a) =
+        routeEThetaSeamPoint 0 (seamMap q a)
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTimeFormula q a →
+      ¬ ∃ b, (seamRootReturn data c)^[k] (routeEThetaSeamPoint 0 a) =
+        routeEThetaSeamPoint 0 b
+
+noncomputable def thetaTraceTargetOfPointwise (q : Nat)
+    (target : ThetaPointwiseTraceTarget q) :
+    ThetaTraceTarget q where
+  data := target.data
+  returnTime := fun _ => returnTimeFormula q
+  returnTime_pos := by
+    intro _c a
+    exact returnTimeFormula_pos q a
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  returnTime_sum := by
+    intro _c
+    calc
+      Finset.univ.sum (fun a : RouteENonzeroSeam (modulus q) =>
+          returnTimeFormula q a) = returnTimeWeightedSum q :=
+        target.returnTimeFormula_weightedSum
+      _ = modulus q ^ 4 := returnTimeWeightedSum_eq_modulus_pow_four q
+
 noncomputable def thetaPiecewiseCertificateOfTraceTarget (q : Nat)
     (target : ThetaTraceTarget q) :
     RouteEThetaPiecewiseTranslationCertificate (modulus q) where
@@ -1496,6 +1561,13 @@ theorem thetaPiecewiseTarget_of_traceTarget (q : Nat)
     Nonempty (RouteEThetaPiecewiseTranslationCertificate (modulus q)) := by
   rcases h with ⟨target⟩
   exact ⟨thetaPiecewiseCertificateOfTraceTarget q target⟩
+
+theorem thetaPiecewiseTarget_of_pointwiseTraceTarget (q : Nat)
+    (h : Nonempty (ThetaPointwiseTraceTarget q)) :
+    Nonempty (RouteEThetaPiecewiseTranslationCertificate (modulus q)) := by
+  rcases h with ⟨target⟩
+  exact ⟨thetaPiecewiseCertificateOfTraceTarget q
+    (thetaTraceTargetOfPointwise q target)⟩
 
 end RouteEB20
 

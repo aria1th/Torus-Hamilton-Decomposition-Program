@@ -83,6 +83,11 @@ Current state:
   returns, positive return times, and the branch return-time sum.  The
   adapter `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` lowers this
   target to the existing `RouteEThetaPiecewiseTranslationCertificate`.
+- Lean also records the verifier's six-value B20 pointwise return-time
+  formula as `RouteEB20.returnTimeFormula`.  The sharper target
+  `RouteEB20.ThetaPointwiseTraceTarget` uses that formula directly and lowers
+  to `RouteEB20.ThetaTraceTarget`, with the final `m^4` sum discharged by
+  `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
 
 Reset target:
 
@@ -113,16 +118,17 @@ h-1 <= a <= m-1:    V(a) = a + h + 2 mod m
 The Lean arithmetic and expected-map single-cycle targets are no longer the
 blockers for B20. The remaining B20 blocker is to prove symbolically that the
 Route-E trace has exactly this first-return map, no earlier return, and the
-extracted pointwise return-time partition, i.e. to construct
-`RouteEB20.ThetaTraceTarget q`.
+extracted pointwise return-time partition, preferably by constructing
+`RouteEB20.ThetaPointwiseTraceTarget q`.
 
 Blocking propositions:
 
 - B20 symbolic first-return and minimality proof.
 - B20 pointwise return-time partition proof, feeding the existing Lean
   weighted-sum identity.
-- Construction of `RouteEB20.ThetaTraceTarget q`; its packaging against the
-  closed expected seam map is now handled by
+- Construction of `RouteEB20.ThetaPointwiseTraceTarget q`; its packaging
+  through `RouteEB20.ThetaTraceTarget q` against the closed expected seam map
+  is now handled by
   `RouteEB20.thetaPiecewiseCertificateOfTraceTarget`.
 - A finite residue branch menu covering all even `m >= 6`.
 

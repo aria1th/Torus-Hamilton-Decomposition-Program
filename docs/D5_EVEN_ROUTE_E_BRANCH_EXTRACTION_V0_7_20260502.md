@@ -157,7 +157,12 @@ interface.  Lean now names the remaining trace-facing proposition as
 `RouteEB20.ThetaTraceTarget`; after the concrete first-return/minimality and
 return-time facts are supplied,
 `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` turns it into a
-`RouteEThetaPiecewiseTranslationCertificate`.
+`RouteEThetaPiecewiseTranslationCertificate`.  The verifier's six-value
+pointwise return-time formula is now named `RouteEB20.returnTimeFormula`, and
+`RouteEB20.ThetaPointwiseTraceTarget` is the sharper version of the B20 trace
+target using that formula directly; it only needs the formula sum to match
+`RouteEB20.returnTimeWeightedSum`, after which the closed weighted-sum theorem
+gives `m^4`.
 
 ## Proof Obligations Exposed by B20
 
@@ -169,8 +174,9 @@ For the B20 branch, the all-even proof target is now concrete:
 3. prove the first-return equation is the two-block map `T_h`;
 4. prove the two-block map is a single cycle on `{1,...,m-1}`;
 5. prove the return-time sum identity `sum tau = m^4`;
-6. construct `RouteEB20.ThetaTraceTarget q`, which is already packaged by
-   `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` as a
+6. construct `RouteEB20.ThetaPointwiseTraceTarget q`, which fixes the
+   return-time side to `RouteEB20.returnTimeFormula` and is already packaged
+   through `RouteEB20.ThetaTraceTarget` as a
    `RouteEThetaPiecewiseTranslationCertificate`.
 
 The strongest missing item is the symbolic port-time proof behind item 3,

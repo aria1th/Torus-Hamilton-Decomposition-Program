@@ -129,7 +129,11 @@ when `m` is odd and `m >= 3`.
   `RouteEB20.ThetaTraceTarget` is the remaining trace-facing B20 proposition:
   once the concrete first-return equations, minimality, and return-time sum
   are supplied, `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` packages
-  them as a `RouteEThetaPiecewiseTranslationCertificate`.  The
+  them as a `RouteEThetaPiecewiseTranslationCertificate`.
+  `RouteEB20.returnTimeFormula` and `RouteEB20.ThetaPointwiseTraceTarget`
+  specialize that obligation to the six-value pointwise return-time formula
+  checked by the B20 verifier, feeding the already-closed weighted-sum
+  arithmetic theorem.  The
   Route-E table `LambdaE` now lives here, with
   `LambdaE_latin` and `LambdaE_cyclic` recording its table invariants, and
   `LambdaE_routeEThetaVec`/`LambdaE_routeEThetaSeam` proving the bundle's

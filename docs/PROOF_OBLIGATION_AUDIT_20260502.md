@@ -254,7 +254,10 @@ The sharpest remaining propositions are:
    `RouteEB20.thetaPiecewiseCertificateOfTraceTarget` already packages such a
    trace certificate as a `RouteEThetaPiecewiseTranslationCertificate`, so the
    remaining B20 work is the symbolic trace theorem: first-return equations,
-   no-earlier-return, and pointwise return-time partition.  The canonical
+   no-earlier-return, and pointwise return-time partition.  The pointwise
+   form is now named as `RouteEB20.returnTimeFormula` and
+   `RouteEB20.ThetaPointwiseTraceTarget`, with the final arithmetic routed
+   through `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.  The canonical
    open-port carry law is a checked section-level lemma, not the final
    all-even return theorem; the remaining work is the full Route-E symbolic
    small-seam certificate.
