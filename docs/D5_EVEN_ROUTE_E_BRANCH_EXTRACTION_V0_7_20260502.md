@@ -106,9 +106,33 @@ python3 scripts/verify_d5_routeE_b20_branch.py \
 ```
 
 It checks the B20 count formula, the `Theta_0` small-seam criterion, the
-two-block translation table, and the return-time sum.  The default `20,44`
-run reports `all_ok=True`; larger bundle instances such as `68,92` can be
-requested explicitly but are slower in Python.
+two-block translation table, a fitted six-value return-time distribution, and
+the return-time sum.  The default `20,44` run reports `all_ok=True`; the
+slower `m = 68` run was also checked locally and reports `times_ok=True`.
+
+The fitted return-time distribution is written in terms of `m = 24*q+20` and
+`h = m/2`.  Define
+
+```text
+A(q) = 13824*q^3 + 34272*q^2 + 28320*q + 7806
+C(q) = A(q) + m*(m+1)
+E(q) = 20736*q^3 + 50976*q^2 + 41772*q + 11416
+F(q) = 20736*q^3 + 51552*q^2 + 42780*q + 11862
+```
+
+Then the observed distribution is:
+
+```text
+A(q)       occurs 2 times
+A(q)+m     occurs h-4 times
+C(q)       occurs 3 times
+C(q)+m     occurs h-4 times
+E(q)       occurs 1 time
+F(q)       occurs 1 time
+```
+
+This gives a sharper proof target for `sum tau = m^4`: prove the pointwise
+return-time partition, then prove the weighted sum identity.
 
 ## Proof Obligations Exposed by B20
 

@@ -11,7 +11,8 @@ The expected first return on the Theta seam is the two-block map
     h-1 <= a <= m-1: a |-> a + h + 2
 
 modulo ``m``.  This script checks that finite claim using the repo Route-E
-small-seam verifier.  It is a regression artifact, not the symbolic proof.
+small-seam verifier.  It also checks the fitted six-value return-time
+distribution.  It is a regression artifact, not the symbolic proof.
 """
 
 from __future__ import annotations
@@ -41,13 +42,47 @@ def expected_blocks(m: int) -> list[dict]:
     ]
 
 
+def b20_q(m: int) -> int:
+    if (m - 20) % 24 != 0:
+        raise ValueError(f"B20 expects m = 24*q+20, got {m}")
+    return (m - 20) // 24
+
+
+def expected_time_distribution(m: int) -> dict[int, int]:
+    """Return the fitted B20 return-time distribution.
+
+    The six time values are written as polynomials in q where m = 24*q + 20.
+    This is proof-target data extracted from the verified B20 instances.
+    """
+    q = b20_q(m)
+    h = m // 2
+    a = 13824 * q**3 + 34272 * q**2 + 28320 * q + 7806
+    c = a + m * (m + 1)
+    e = 20736 * q**3 + 50976 * q**2 + 41772 * q + 11416
+    f = 20736 * q**3 + 51552 * q**2 + 42780 * q + 11862
+    return {
+        a: 2,
+        a + m: h - 4,
+        c: 3,
+        c + m: h - 4,
+        e: 1,
+        f: 1,
+    }
+
+
+def weighted_time_sum(distribution: dict[int, int]) -> int:
+    return sum(time * count for time, count in distribution.items())
+
+
 def analyze_modulus(m: int) -> dict:
     counts = b20_counts(m)
     result = route_e.verify_small_seam_case(m, 0, counts)
     expected = expected_blocks(m)
+    expected_distribution = expected_time_distribution(m)
     return {
         "m": m,
         "h": m // 2,
+        "q": b20_q(m),
         "r": counts[0],
         "slot": 0,
         "counts": counts,
@@ -61,7 +96,16 @@ def analyze_modulus(m: int) -> dict:
         "translation_blocks_ok": result["translation_blocks"] == expected,
         "orbit_prefix_from_1": result["orbit_prefix_from_1"],
         "time_distribution": result["time_distribution"],
-        "ok": result["ok"] and result["translation_blocks"] == expected,
+        "expected_time_distribution": expected_distribution,
+        "time_distribution_ok": result["time_distribution"] == expected_distribution,
+        "expected_distribution_sum": weighted_time_sum(expected_distribution),
+        "expected_distribution_sum_ok": weighted_time_sum(expected_distribution) == m**4,
+        "ok": (
+            result["ok"]
+            and result["translation_blocks"] == expected
+            and result["time_distribution"] == expected_distribution
+            and weighted_time_sum(expected_distribution) == m**4
+        ),
     }
 
 
@@ -87,7 +131,8 @@ def main() -> None:
     for result in results:
         print(
             "m={m} counts={counts} small_ok={small_seam_ok} "
-            "blocks_ok={translation_blocks_ok} sum_ok={return_time_sum_ok} "
+            "blocks_ok={translation_blocks_ok} times_ok={time_distribution_ok} "
+            "sum_ok={return_time_sum_ok} "
             "blocks={translation_blocks}".format(**result)
         )
     print(f"all_ok={payload['all_ok']}")
