@@ -638,6 +638,15 @@ the symbolic all-odd formula problem, but it makes the finite `m=11,13,17`
 Target-A/Target-B' rank evidence reproducible against the Lean-facing
 `BridgeConcreteFullRankPackage` shape.
 
+`D7Odd/Handoff/Additive4Plus2TargetB.lean` now records the proof-facing A3
+scalar criterion behind Target B'.  It defines the clock/carry equivalence
+`A3(m) ~= (ZMod m)^2`, packages triangular maps
+`(s,x) |-> (s+A, x+phi(s))`, and proves that such a map is a single `m^2`
+cycle once the clock scalar `A`, the full-round carry scalar `E`, and the
+round-return equation are supplied with both scalars units.  This does not
+construct `K_m(Z)`; it removes the downstream A3 primitiveity proof once a
+row schedule and zero-set/congruence table have produced those scalars.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -808,6 +817,9 @@ When new bundles arrive, compare them against this baseline:
 - Do they provide a correction family for the `m == 2 mod 5` seam components?
 - Do they expose explicit `baseRank` or `fiberRank` formulas compatible with
   `BridgeConcreteFullRankPackage`?
+- Do they produce Target-B' triangular data: a row-schedule-specific
+  `K_m(Z)`, scalar units `A,E`, and the full-round A3 carry-return equation
+  needed by `A3TriangularScalarCertificate`?
 - Do they separate D5 even and D7 even certificate tracks from the D7 odd
   additive bridge?
 - For D5 even, do they provide count/slot residue families and symbolic
@@ -820,6 +832,7 @@ Recent checks used for this baseline:
 ```bash
 lake build D7Odd RoundComposite.ConcreteEndpoints
 lake build D7Odd.Handoff.Additive4Plus2ConcreteGoal
+lake build D7Odd.Handoff.Additive4Plus2TargetB D7Odd.Handoff
 python3 -m py_compile scripts/search_4plus2_kappa_formulas.py
 python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
   --formula-family dihedral --section-only --summarize-failures \

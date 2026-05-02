@@ -38,6 +38,12 @@ when `m` is odd and `m >= 3`.
 - `D7Odd/Handoff/Additive4Plus2Endpoints.lean`: final torus/Cayley wrappers from direct-chart and bridge-chart `4+2` product-side certificates.
 - `D7Odd/Handoff/Additive4Plus2Goal.lean`: conditional odd D7 goal theorem: the finite `m = 3` branch plus bridge-chart certificates, or the corresponding local/skew-return packages, for all odd `m >= 5` imply the handoff, torus, Cayley, and shared Cayley endpoints.
 - `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`: concrete all-zero-set bridge target: once row permutations, D3 fiber-layer/permutation data, a base-return rank step into `ZMod (m^4)`, and a fiber-monodromy rank step into `ZMod (m^2)` are supplied for the canonical folded return, the local row/layer facts, folded-return bijectivity, product-return equality, base orbit coverage, and monodromy single-cycle are filled in automatically and the odd D7 torus/Cayley endpoints follow.
+- `D7Odd/Handoff/Additive4Plus2TargetB.lean`: Lean-facing Target-B'
+  scalar interface for the A3 fiber engine.  It defines the clock/carry
+  equivalence `A3(m) ~= (ZMod m)^2` and proves that a triangular map
+  `(s,x) |-> (s+A, x+phi(s))` is a single `m^2` cycle once the clock scalar
+  `A`, the full-round carry scalar `E`, and the recorded round return are
+  supplied with `A` and `E` units.
 - `D7Odd/Handoff/TargetASeamQuotient.lean`: Lean-facing proof target for
   the `23/32` Target-A seam quotient, defining `phi_h`, its inverse, the
   good class `h % 5 != 3`, proving the inverse identities and bijectivity for

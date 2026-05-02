@@ -14,7 +14,7 @@ interfaces, not substitutes for the remaining uniform theorems.
 | Keep closed D7 odd torus/Cayley endpoint as regression target | `D7Odd/Cayley.lean`, `D7Odd/Torus.lean`, `D7Odd/Handoff/Additive4Plus2Goal.lean` | The existing odd D7 endpoint remains closed in Lean.  The additive bridge can lower to the same torus/Cayley endpoint once the bridge certificate target is supplied. | This does not by itself prove the new structural `4+2` explanation uniformly for all odd `m`. |
 | D7 odd additive `A7 ~= A5 x A3` bridge | `D7Odd/Handoff/Additive4Plus2*.lean` | Root-state product chart, local bridge schedule, row/layer local facts, and endpoint adapters are formalized. | Uniform construction of the all-odd bridge data remains open. |
 | D7 Target A base rank-step | `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`, `D7Odd/Handoff/TargetASeamQuotient.lean`, `scripts/verify_targetA_23_32_seam_quotient.py` | `BridgeConcreteFullRankPackage` names the Lean-facing base rank `A5 -> ZMod (m^4)` and derives base orbit coverage from rank step.  The `23/32` seam quotient arithmetic is closed in Lean for `h >= 6`; the verifier checks Q-hitting, Q-first-return formulas, and length sums over the tested range. | Lean still needs actual Q-hitting and length-sum proofs, small-modulus packaging, and a seven-row column exact-cover family.  The current `23/32` branch covers the good class structurally, not the full Target-A row-family problem. |
-| D7 Target B' fiber rank-step | `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`, `scripts/verify_zero_set_k_cert.py`, `scripts/verify_d7_4plus2_rank_fingerprints.py` | `BridgeConcreteFullRankPackage` names the fiber rank `A3 -> ZMod (m^2)` and derives monodromy single-cycle from rank step.  The `m=9` scalar zero-set-only `K(Z)` certificate checks scalar units and full finite replay.  Compact `m=11,13,17` witnesses have committed base/fiber rank fingerprints. | No uniform zero-set-only or congruence-family `K_m(Z)` theorem is proved.  Finite scalar/unit checks are regressions for the desired theorem shape. |
+| D7 Target B' fiber rank-step | `D7Odd/Handoff/Additive4Plus2ConcreteGoal.lean`, `D7Odd/Handoff/Additive4Plus2TargetB.lean`, `scripts/verify_zero_set_k_cert.py`, `scripts/verify_d7_4plus2_rank_fingerprints.py` | `BridgeConcreteFullRankPackage` names the fiber rank `A3 -> ZMod (m^2)` and derives monodromy single-cycle from rank step.  `Additive4Plus2TargetB.lean` proves the triangular A3 scalar criterion: a clock/carry map `(s,x) |-> (s+A, x+phi(s))` is one `m^2` cycle when the clock scalar `A`, full-round carry scalar `E`, and round-return equation are supplied with `A,E` units.  The `m=9` scalar zero-set-only `K(Z)` certificate checks scalar units and full finite replay.  Compact `m=11,13,17` witnesses have committed base/fiber rank fingerprints. | No uniform zero-set-only or congruence-family `K_m(Z)` theorem is proved.  The remaining Lean gap is to derive the triangular round-return equation and scalar units from the selected row schedule and `K_m(Z)`. |
 | D5 even Route-E periodic-excursion track | `D5Odd/EvenRouteE.lean`, `D5Odd/EvenRouteEM4.lean`, `scripts/verify_d5_even_routeE.py`, `scripts/verify_d5_routeE_small_seam_rank_certs.py` | The finite `m=4` branch is closed.  The canonical `Theta_s` small-seam certificate lowers to D5 Hamilton/Torus/Cayley endpoints.  The ranked piecewise certificate derives the seam one-cycle from a rank into `ZMod (m-1)`.  The finite `m=6,8,...,60` rank/block certs verify rank step, maximal translation blocks, and return-time sum. | The all-even symbolic proof is still open: count/slot residue families, first-return equations/minimality, uniform seam rank formulas, and return-time sums must be proved. |
 | D7 even separate track | `D7Odd/Even.lean` | The even D7 target remains isolated behind the `RootFlatSchedule` certificate interface and endpoint adapters. | A new uniform D7-even certificate family is not supplied here. |
 | Composite/root-flat/local bridge/monodromy infrastructure | `Shared/*.lean`, `RoundComposite.lean`, `RoundComposite/ConcreteEndpoints.lean` | The shared root-flat lift, monodromy/rank-cycle lemmas, and graph-level composite endpoints build.  New D7/D5 propositions are intended to plug into these interfaces. | No new prime-odd or even certificate is created by the composite infrastructure alone. |
@@ -26,6 +26,9 @@ Lean builds rerun on 2026-05-02:
 ```text
 lake build D7Odd.Handoff.TargetASeamQuotient D7Odd.Handoff.Additive4Plus2ConcreteGoal
 => Build completed successfully (8378 jobs).
+
+lake build D7Odd.Handoff.Additive4Plus2TargetB D7Odd.Handoff
+=> Build completed successfully (8384 jobs).
 
 lake build D5Odd.EvenRouteE D5Odd.EvenRouteEM4 D7Odd.Even
 => Build completed successfully (8379 jobs).
@@ -72,8 +75,10 @@ The sharpest remaining propositions are:
    Q-first-return, and length-sum obligations currently verified by
    `verify_targetA_23_32_seam_quotient.py`, and package the small moduli.
 3. **D7 Target B'.**  Generalize the finite `m=9` zero-set-only scalar
-   certificate, or replace it by a congruence-family `K_m(Z)`, and prove the
-   A3 scalar/rank-step unit theorem for the selected row schedule.
+   certificate, or replace it by a congruence-family `K_m(Z)`, then prove that
+   the selected row schedule and `K_m(Z)` produce the triangular A3
+   round-return equation and unit scalars needed by
+   `A3TriangularScalarCertificate`.
 4. **D5 even Route-E.**  Find count/slot families covering every even
    `m >= 6`; prove the induced `Theta_s` first-return equations and
    minimality; prove a uniform seam rank formula into `ZMod (m-1)`; and prove
