@@ -663,6 +663,16 @@ finite trace targets for the next block-splice proof, not an all-even formula.
 Clustering the same data by normalized zero/support positions finds no robust
 sample-count-at-least-three affine count family.
 
+`D5Odd/EvenRouteE.lean` also exposes these trace summaries as a Lean-facing
+piecewise translation interface: `RouteESeamTranslationBlock`,
+`RouteEThetaPiecewiseTranslationCertificate`, and the all-large target
+`D5EvenRouteEThetaPiecewiseAllLargeEvenTarget`.  This currently packages
+block cover/disjointness and interval translation formulas on top of
+`RouteEThetaSmallSeamCertificate`; it does not yet derive the one-cycle or
+return-time sum hypotheses from the block decomposition alone.  The named
+target is still useful because a future block-splice proof can lower
+immediately to the existing D5 even Hamilton, torus, and Cayley endpoints.
+
 The corresponding Lean target interface builds with:
 
 ```bash

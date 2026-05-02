@@ -86,6 +86,26 @@ theorem card_routeENonzeroSeam (m : Nat) [NeZero m] :
   rw [hfilter, Finset.card_erase_of_mem (Finset.mem_univ _),
     Finset.card_univ, ZMod.card]
 
+structure RouteESeamTranslationBlock (m : Nat) where
+  start : Nat
+  stop : Nat
+  delta : ZMod m
+  start_pos : 0 < start
+  stop_lt : stop < m
+  start_le_stop : start ≤ stop
+
+namespace RouteESeamTranslationBlock
+
+def contains {m : Nat} (block : RouteESeamTranslationBlock m)
+    (a : RouteENonzeroSeam m) : Prop :=
+  block.start ≤ a.1.val ∧ a.1.val ≤ block.stop
+
+def translationFormula {m : Nat} (block : RouteESeamTranslationBlock m)
+    (f : RouteENonzeroSeam m → RouteENonzeroSeam m) : Prop :=
+  ∀ a, block.contains a → (f a).1 = a.1 + block.delta
+
+end RouteESeamTranslationBlock
+
 def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 0 then ![a, 0, 0, -a] else
   if slot = 1 then ![0, a, 0, 0] else
@@ -404,6 +424,49 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
 
 end RouteEThetaSmallSeamCertificate
 
+structure RouteEThetaPiecewiseTranslationCertificate (m : Nat) [NeZero m] extends
+    RouteEThetaSmallSeamCertificate m where
+  blocks : Color → List (RouteESeamTranslationBlock m)
+  block_cover :
+    ∀ c a, ∃ block, block ∈ blocks c ∧ block.contains a
+  block_disjoint :
+    ∀ c a block₁ block₂,
+      block₁ ∈ blocks c → block₂ ∈ blocks c →
+      block₁.contains a → block₂.contains a → block₁ = block₂
+  block_translation :
+    ∀ c block,
+      block ∈ blocks c →
+        block.translationFormula (seamReturn c)
+
+namespace RouteEThetaPiecewiseTranslationCertificate
+
+theorem seamRootReturn_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEThetaPiecewiseTranslationCertificate m) (c : Color) :
+    IsSingleCycleMap (seamRootReturn cert.data c) :=
+  cert.toRouteEThetaSmallSeamCertificate.seamRootReturn_single_cycle c
+
+theorem orbitTarget {m : Nat} [NeZero m]
+    (cert : RouteEThetaPiecewiseTranslationCertificate m) :
+    D5EvenSeamReturnOrbitTarget cert.data :=
+  cert.toRouteEThetaSmallSeamCertificate.orbitTarget
+
+theorem toHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaPiecewiseTranslationCertificate m) :
+    HamiltonDecompositionD5 m :=
+  cert.toRouteEThetaSmallSeamCertificate.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaPiecewiseTranslationCertificate m) :
+    TorusHamiltonDecompositionD5 m :=
+  cert.toRouteEThetaSmallSeamCertificate.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEThetaPiecewiseTranslationCertificate m) :
+    CayleyHamiltonDecompositionD5 m :=
+  cert.toRouteEThetaSmallSeamCertificate.toCayleyHamiltonDecomposition
+
+end RouteEThetaPiecewiseTranslationCertificate
+
 def D5EvenRouteEAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteESmallSeamCertificate m)
@@ -415,6 +478,10 @@ def D5EvenRouteENonopenAllLargeEvenTarget : Prop :=
 def D5EvenRouteEThetaAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteEThetaSmallSeamCertificate m)
+
+def D5EvenRouteEThetaPiecewiseAllLargeEvenTarget : Prop :=
+  ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
+    Nonempty (RouteEThetaPiecewiseTranslationCertificate m)
 
 def D5EvenRouteEM4FiniteTarget : Prop :=
   Nonempty (HamiltonDecompositionD5 4)
@@ -451,6 +518,25 @@ theorem D5EvenRouteEAllLargeEvenTarget.of_theta
   D5EvenRouteEAllLargeEvenTarget.of_nonopen
     (D5EvenRouteENonopenAllLargeEvenTarget.of_theta h)
 
+theorem D5EvenRouteEThetaAllLargeEvenTarget.of_piecewise
+    (h : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteEThetaAllLargeEvenTarget := by
+  intro m _hm0 hmEven hm6
+  rcases h m hmEven hm6 with ⟨cert⟩
+  exact ⟨cert.toRouteEThetaSmallSeamCertificate⟩
+
+theorem D5EvenRouteENonopenAllLargeEvenTarget.of_piecewise
+    (h : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteENonopenAllLargeEvenTarget :=
+  D5EvenRouteENonopenAllLargeEvenTarget.of_theta
+    (D5EvenRouteEThetaAllLargeEvenTarget.of_piecewise h)
+
+theorem D5EvenRouteEAllLargeEvenTarget.of_piecewise
+    (h : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteEAllLargeEvenTarget :=
+  D5EvenRouteEAllLargeEvenTarget.of_theta
+    (D5EvenRouteEThetaAllLargeEvenTarget.of_piecewise h)
+
 theorem D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
@@ -477,6 +563,13 @@ theorem D5EvenRouteEAllEvenHamiltonTarget.of_theta_and_m4
     D5EvenRouteEAllEvenHamiltonTarget :=
   D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
+
+theorem D5EvenRouteEAllEvenHamiltonTarget.of_piecewise_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenHamiltonTarget :=
+  D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_piecewise hlarge)
 
 theorem D5EvenRouteEAllEvenTorusTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
@@ -506,6 +599,13 @@ theorem D5EvenRouteEAllEvenTorusTarget.of_theta_and_m4
   D5EvenRouteEAllEvenTorusTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
 
+theorem D5EvenRouteEAllEvenTorusTarget.of_piecewise_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenTorusTarget :=
+  D5EvenRouteEAllEvenTorusTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_piecewise hlarge)
+
 theorem D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4
     (hm4 : D5EvenRouteEM4FiniteTarget)
     (hlarge : D5EvenRouteEAllLargeEvenTarget) :
@@ -534,5 +634,12 @@ theorem D5EvenRouteEAllEvenCayleyTarget.of_theta_and_m4
     D5EvenRouteEAllEvenCayleyTarget :=
   D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4 hm4
     (D5EvenRouteEAllLargeEvenTarget.of_theta hlarge)
+
+theorem D5EvenRouteEAllEvenCayleyTarget.of_piecewise_and_m4
+    (hm4 : D5EvenRouteEM4FiniteTarget)
+    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
+    D5EvenRouteEAllEvenCayleyTarget :=
+  D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4 hm4
+    (D5EvenRouteEAllLargeEvenTarget.of_piecewise hlarge)
 
 end D5Odd

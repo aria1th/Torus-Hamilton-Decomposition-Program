@@ -747,6 +747,14 @@ one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam
 first-return traces, first-return minimality, and the return-time sum.  The
 orbit target needed by the existing D5 even seam endpoint is derived in Lean
 from the first-return counting lemma, rather than stored as an assumed field.
+It also records a proof-facing piecewise translation layer
+(`RouteESeamTranslationBlock`,
+`RouteEThetaPiecewiseTranslationCertificate`, and
+`D5EvenRouteEThetaPiecewiseAllLargeEvenTarget`) so the finite block traces
+can be treated as named Lean obligations.  This layer currently extends the
+canonical theta small-seam certificate; the still-open theorem is to derive
+the one-cycle and return-time-sum hypotheses from uniform block decompositions
+rather than assume them.
 It also records the branch-combination theorem: a separate `m = 4` Hamilton
 witness plus either the generic all-large Route-E target or the specialized
 non-open small-seam target implies all even `m >= 4` Hamilton, torus, and

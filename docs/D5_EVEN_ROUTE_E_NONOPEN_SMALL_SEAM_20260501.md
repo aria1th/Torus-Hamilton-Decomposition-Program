@@ -231,6 +231,23 @@ finite trace is:
 21 <= a <= 43: V(a) = a + 24 mod 44
 ```
 
+Lean now has a named interface for this trace shape:
+
+- `RouteESeamTranslationBlock m` records one interval
+  `start <= a <= stop` and a constant translation `delta`;
+- `RouteEThetaPiecewiseTranslationCertificate m` adds block cover,
+  disjointness, and translation formulas to the canonical
+  `RouteEThetaSmallSeamCertificate`;
+- `D5EvenRouteEThetaPiecewiseAllLargeEvenTarget` is the corresponding
+  all-large even target, with lowering lemmas to the existing D5 even
+  Hamilton, torus, and Cayley endpoints.
+
+This interface is deliberately conservative: it records the block-splice data
+as proof-facing evidence, but it still inherits the one-cycle and return-time
+sum hypotheses from `RouteEThetaSmallSeamCertificate`.  The missing theorem is
+the symbolic argument deriving those hypotheses from a uniform block
+decomposition.
+
 This does not supply a residue-class formula for all even `m`, but it gives a
 small proof-facing target for the next lane/block-splice argument: explain
 which normalized count families produce few-block or long-block seam maps, and
