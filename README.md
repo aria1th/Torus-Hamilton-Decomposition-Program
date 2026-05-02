@@ -223,11 +223,12 @@ when `m` is odd and `m >= 3`.
   `certs/d7_4plus2_rank_fingerprints.json`; it recomputes compact D7 odd
   base/fiber rank-step fingerprints and compares them to the committed
   manifest, with optional Target-A and direct product checks.
-- `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for scalar
-  zero-set-only `K(Z)` certificates; it expands mask tables into full kappa
-  tables, checks scalar unit invariants, extracts the triangular A3
-  `phi(s)` tables, verifies the Lean-facing `roundAtZero` equations, and can
-  run the full bridge verifier.
+- `scripts/verify_zero_set_k_cert.py`: Target-B' verifier for zero-set-only
+  `K(Z)` certificates; it expands mask tables into full kappa tables, checks
+  any provided full `kappa_perm_indices` table against that expansion, checks
+  scalar unit invariants when present, extracts the triangular A3 `phi(s)`
+  tables, verifies the Lean-facing `roundAtZero` equations, and can run the
+  full bridge verifier.
 - `scripts/d7_bridge_snapshot.py`: compact JSON snapshot tool for bridge bundles or extracted certificate JSON files, used to compare new research bundles against the current baseline.
 - `scripts/d5_even_seam_sat_search.py`: SAT witness search for the D5 even seam certificate target.
 - `scripts/verify_d5_even_routeE.py`: audit verifier for the absorbed D5 even
@@ -566,10 +567,15 @@ python3 scripts/d7_bridge_snapshot.py \
 The snapshot records whether a certificate-provided `K(Z)` table matches the
 shifted zero-set mask encoding used by the finite kappa table.
 
-For scalar-only `K(Z)` certificates, expand the mask table and check the A3
-unit invariants plus the triangular Lean obligations directly:
+For zero-set `K(Z)` certificates, check the full-table expansion and the A3
+unit invariants plus triangular Lean obligations directly:
 
 ```bash
+python3 scripts/verify_zero_set_k_cert.py \
+  certs/d7_m9_zero_set_K_full_bridge_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
+  --allow-missing-scalar \
+  --json-out /tmp/d7_m9_zero_set_K_full_and_scalar_verify.json
 python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
   --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
@@ -578,8 +584,9 @@ python3 scripts/verify_zero_set_k_cert.py \
 
 For the current `m = 9` scalar certificate this reports
 `scalar_ok=True`, `triangular_ok=True`, `table_ok=True`,
-`triangular_manifest_ok=True`, `expanded_valid=True`, and `full_ok=True`; the
-JSON includes the per-color `A`, `E`, and `phi(s)` data matching
+`provided_kappa=absent`, `triangular_manifest_ok=True`,
+`expanded_valid=True`, and `full_ok=True`; the JSON includes the per-color
+`A`, `E`, and `phi(s)` data matching
 `A3TriangularScalarCertificate`.
 
 It can also test row solutions exported by the base analyzer:

@@ -48,8 +48,17 @@ python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
   --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_triangular_full.json
-=> m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
+=> m=9 scalar_ok=True triangular_ok=True table_ok=True provided_kappa=absent expanded_valid=True full_ok=True
 => triangular_manifest_ok True mismatches []
+
+python3 scripts/verify_zero_set_k_cert.py \
+  certs/d7_m9_zero_set_K_full_bridge_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
+  --allow-missing-scalar \
+  --json-out /tmp/d7_m9_zero_set_K_full_and_scalar_verify.json
+=> m=9 scalar_ok=False triangular_ok=False table_ok=True provided_kappa=True expanded_valid=True full_ok=True
+=> m=9 scalar_ok=True triangular_ok=True table_ok=True provided_kappa=absent expanded_valid=True full_ok=True
+=> all_ok=True
 
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
   --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json

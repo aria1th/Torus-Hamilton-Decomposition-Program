@@ -6,9 +6,10 @@ a finite congruence family, and whose A3 scalar monodromy invariants are units.
 
 The post-bundle m=9 scalar certificate records a shifted zero-set mask table
 ``K(Z)`` plus scalar invariants, but it does not need to store the full
-``kappa_perm_indices`` table.  This script expands such a mask table to the
-full verifier format, checks the scalar unit condition, and optionally runs the
-full finite bridge verifier.
+``kappa_perm_indices`` table.  Full certificates may also include the expanded
+``kappa_perm_indices`` table.  This script expands the mask table to the full
+verifier format, checks any provided full table against that expansion, checks
+the scalar unit condition, and optionally runs the full finite bridge verifier.
 """
 
 from __future__ import annotations
@@ -97,6 +98,48 @@ def table_match_summary(cert: dict, expanded_kappa: list[list[int]]) -> dict:
         "mask_count": len(table),
         "table": [[mask, table[mask]] for mask in sorted(table)],
         "matches_shifted_zero_mask": not mismatches,
+        "mismatch_examples": mismatches,
+    }
+
+
+def provided_kappa_summary(cert: dict, expanded_kappa: list[list[int]]) -> dict:
+    provided = cert.get("kappa_perm_indices")
+    if provided is None:
+        return {"present": False, "ok": True, "matches_expanded": None}
+    mismatches = []
+    if not isinstance(provided, list) or len(provided) != len(expanded_kappa):
+        return {
+            "present": True,
+            "ok": False,
+            "matches_expanded": False,
+            "reason": "kappa_perm_indices has the wrong layer count",
+        }
+    for layer, (provided_layer, expanded_layer) in enumerate(zip(provided, expanded_kappa)):
+        if not isinstance(provided_layer, list) or len(provided_layer) != len(expanded_layer):
+            return {
+                "present": True,
+                "ok": False,
+                "matches_expanded": False,
+                "reason": f"kappa layer {layer} has the wrong length",
+            }
+        for base, (actual, expected) in enumerate(zip(provided_layer, expanded_layer)):
+            if actual != expected:
+                mismatches.append(
+                    {
+                        "layer": layer,
+                        "base": base,
+                        "actual": actual,
+                        "expected": expected,
+                    }
+                )
+                if len(mismatches) >= 10:
+                    break
+        if len(mismatches) >= 10:
+            break
+    return {
+        "present": True,
+        "ok": not mismatches,
+        "matches_expanded": not mismatches,
         "mismatch_examples": mismatches,
     }
 
@@ -312,20 +355,31 @@ def triangular_obligation_summary(cert: dict, expanded_kappa: list[list[int]]) -
     }
 
 
-def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
+def allowed_missing(summary: dict, allow_missing_scalar: bool) -> bool:
+    return allow_missing_scalar and not summary["present"]
+
+
+def verify_zero_set_cert(
+    path: Path, *, full_verify: bool, allow_missing_scalar: bool
+) -> dict:
     cert = json.loads(path.read_text())
     expanded = copy.deepcopy(cert)
     expanded["kappa_perm_indices"] = expand_kappa_from_masks(cert)
+    scalar_units = scalar_unit_summary(cert)
+    triangular_obligations = triangular_obligation_summary(
+        cert, expanded["kappa_perm_indices"]
+    )
     summary = {
         "path": str(path),
         "m": cert.get("m"),
         "rows": cert.get("rows"),
         "note": cert.get("note"),
         "zero_set_table": table_match_summary(cert, expanded["kappa_perm_indices"]),
-        "scalar_units": scalar_unit_summary(cert),
-        "triangular_obligations": triangular_obligation_summary(
+        "provided_kappa": provided_kappa_summary(
             cert, expanded["kappa_perm_indices"]
         ),
+        "scalar_units": scalar_units,
+        "triangular_obligations": triangular_obligations,
     }
     try:
         validate_certificate(expanded)
@@ -344,8 +398,15 @@ def verify_zero_set_cert(path: Path, *, full_verify: bool) -> dict:
             }
     summary["ok"] = (
         summary["zero_set_table"]["matches_shifted_zero_mask"]
-        and summary["scalar_units"]["ok"]
-        and summary["triangular_obligations"]["ok"]
+        and summary["provided_kappa"]["ok"]
+        and (
+            summary["scalar_units"]["ok"]
+            or allowed_missing(summary["scalar_units"], allow_missing_scalar)
+        )
+        and (
+            summary["triangular_obligations"]["ok"]
+            or allowed_missing(summary["triangular_obligations"], allow_missing_scalar)
+        )
         and summary["expanded_certificate_valid"]
         and (not full_verify or summary.get("full_verify", {}).get("ok") is True)
     )
@@ -391,6 +452,14 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("cert_json", type=Path, nargs="+")
     parser.add_argument("--skip-full-verify", action="store_true")
+    parser.add_argument(
+        "--allow-missing-scalar",
+        action="store_true",
+        help=(
+            "allow full zero-set bridge certificates without scalar invariant "
+            "fields to pass the table/full-verify regression"
+        ),
+    )
     parser.add_argument("--json-out", type=Path)
     parser.add_argument(
         "--write-triangular-manifest",
@@ -405,7 +474,11 @@ def main() -> None:
     args = parser.parse_args()
 
     results = [
-        verify_zero_set_cert(path, full_verify=not args.skip_full_verify)
+        verify_zero_set_cert(
+            path,
+            full_verify=not args.skip_full_verify,
+            allow_missing_scalar=args.allow_missing_scalar,
+        )
         for path in args.cert_json
     ]
     payload = {"results": results}
@@ -431,13 +504,20 @@ def main() -> None:
     )
     for result in results:
         full = result.get("full_verify", {})
+        provided_kappa_status = (
+            result["provided_kappa"]["ok"]
+            if result["provided_kappa"]["present"]
+            else "absent"
+        )
         print(
             "m={m} scalar_ok={scalar_ok} triangular_ok={triangular_ok} "
-            "table_ok={table_ok} expanded_valid={expanded_certificate_valid} "
+            "table_ok={table_ok} provided_kappa={provided_kappa_status} "
+            "expanded_valid={expanded_certificate_valid} "
             "full_ok={full_ok}".format(
                 scalar_ok=result["scalar_units"]["ok"],
                 triangular_ok=result["triangular_obligations"]["ok"],
                 table_ok=result["zero_set_table"]["matches_shifted_zero_mask"],
+                provided_kappa_status=provided_kappa_status,
                 full_ok=full.get("ok", "skipped"),
                 **result,
             )

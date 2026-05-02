@@ -160,8 +160,10 @@ at color `4` for `m = 7`.  So the current evidence does not yet give one
 global K-table for all moduli and all existing row choices; it gives a concrete
 zero-set-table target to explain and generalize.
 
-`scripts/verify_zero_set_k_cert.py` now verifies the scalar-only version of
-this certificate.  It expands the shifted zero-set mask table into the full
+`scripts/verify_zero_set_k_cert.py` now verifies both the full and scalar-only
+versions of this certificate.  For the full version, it compares the provided
+`kappa_perm_indices` table against the shifted zero-set mask expansion.  For
+the scalar-only version, it expands the same mask table into the full
 `kappa_perm_indices` table, checks the recorded scalar invariants
 
 ```text
@@ -178,9 +180,10 @@ The full handoff certificate is now committed as
 `certs/d7_m9_zero_set_K_full_bridge_cert.json` and verifies directly with
 `scripts/verify_4plus2_allN_bridge_cert.py`.  When the full and scalar JSON
 files are checked together, the full file reports `scalar_ok=False` only
-because it has no scalar-invariant field; both files report `table_ok=True`,
-`expanded_valid=True`, and `full_ok=True`, while the scalar file also reports
-`scalar_ok=True` and `triangular_ok=True`.
+because it has no scalar-invariant field and reports `provided_kappa=True`;
+both files report `table_ok=True`, `expanded_valid=True`, and `full_ok=True`,
+while the scalar file also reports `scalar_ok=True`, `triangular_ok=True`, and
+`provided_kappa=absent`.
 
 ### Base Row Side
 
@@ -869,10 +872,15 @@ python3 scripts/search_4plus2_kappa_formulas.py \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/verify_zero_set_k_cert.py \
+  certs/d7_m9_zero_set_K_full_bridge_cert.json \
+  certs/d7_m9_zero_set_K_scalar_cert.json \
+  --allow-missing-scalar \
+  --json-out /tmp/d7_m9_zero_set_K_full_and_scalar_verify.json
+python3 scripts/verify_zero_set_k_cert.py \
   certs/d7_m9_zero_set_K_scalar_cert.json \
   --triangular-manifest certs/d7_m9_zero_set_K_triangular_obligations.json \
   --json-out /tmp/d7_m9_zero_set_K_scalar_verify.json
-# => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
+# => m=9 scalar_ok=True triangular_ok=True table_ok=True provided_kappa=absent expanded_valid=True full_ok=True
 # => triangular_manifest_ok True mismatches []
 python3 scripts/verify_d5_even_routeE.py --mode all \
   --json-out /tmp/d5_even_routeE_verify.json

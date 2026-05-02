@@ -97,13 +97,14 @@ E = (2,2,2,4,4,5,8)
 ```
 
 All entries are units modulo `9`.  `scripts/verify_zero_set_k_cert.py` now
-checks this scalar-only certificate directly: it expands the shifted-mask
-`K(Z)` table into a full kappa table, verifies these unit invariants, extracts
-the per-color triangular carry tables `phi(s)`, verifies the finite
-`roundAtZero` equations used by `A3TriangularScalarCertificate`, and then runs
-the full bridge verifier.  This strengthens the interpretation that the fiber
-problem is a finite mask-design problem once Target A supplies the base
-schedule.
+checks both certificate forms: for the full certificate, it compares the
+provided `kappa_perm_indices` table against the shifted-mask `K(Z)` expansion;
+for the scalar-only certificate, it expands that same mask table, verifies
+these unit invariants, extracts the per-color triangular carry tables `phi(s)`,
+verifies the finite `roundAtZero` equations used by
+`A3TriangularScalarCertificate`, and then runs the full bridge verifier.  This
+strengthens the interpretation that the fiber problem is a finite mask-design
+problem once Target A supplies the base schedule.
 
 For the current `m = 9` scalar certificate the extracted `phi` tables are:
 
@@ -123,9 +124,9 @@ against it with `--triangular-manifest`.
 
 The paired check of the full zero-set table cert and the scalar cert gives the
 expected mixed summary: the full cert has no scalar field, so it reports
-`scalar_ok=False`, but both certs pass table expansion and full bridge
-verification; the scalar cert additionally passes the unit-invariant and
-triangular-obligation checks.
+`scalar_ok=False`, but it now also reports `provided_kappa=True`; both certs
+pass table expansion and full bridge verification; the scalar cert additionally
+passes the unit-invariant and triangular-obligation checks.
 
 The current Target-A proof interface is a section-splice theorem on
 
