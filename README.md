@@ -132,7 +132,10 @@ when `m` is odd and `m >= 3`.
   `m^2` chart-rank constructions, and
   `RouteEOpenPortFiniteOdometerCertificate` lets such a finite chart
   equivalence close the section map without first packaging a `ZMod (m^2)`
-  rank.
+  rank.  For the uniform verifier triple `(A,B,C)=(0,m-2,1)`, the canonical
+  chart is named as `routeEOpenPortCanonicalChartIdx`, with coordinates
+  `(i,j)=(-a-s,-1-s)` on the `H(s,a)` chart; the remaining step-law obligation
+  is isolated as `RouteEOpenPortCanonicalChartStepTarget`.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -804,6 +807,11 @@ for an explicit open-port chart rank.
 The alternate certificate shape `RouteEOpenPortFiniteOdometerCertificate`
 therefore accepts a chart equivalence to this finite odometer plus a step law,
 then derives both the `H`-map cycle and the original section-pair cycle.
+For the uniform open-port triple `(A,B,C)=(0,m-2,1)`, Lean now fixes the
+candidate odometer chart
+`routeEOpenPortCanonicalChartIdx(s,a)=(-a-s,-1-s)`.  Supplying
+`RouteEOpenPortCanonicalChartStepTarget` proves the `H` cycle and the
+corresponding section-pair cycle for `B=-2`, i.e. `m-2` in `ZMod m`.
 
 The corresponding Lean target interface builds with:
 

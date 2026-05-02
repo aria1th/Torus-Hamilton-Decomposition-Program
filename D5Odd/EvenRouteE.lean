@@ -298,6 +298,59 @@ theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
 
 end RouteEOpenPortFiniteOdometerCertificate
 
+noncomputable def routeEOpenPortCanonicalChartIdx {m : Nat} [NeZero m] :
+    ZMod m × ZMod m ≃ Fin m × Fin m where
+  toFun p :=
+    ((finZModEquiv m).symm (-p.2 - p.1),
+      (finZModEquiv m).symm (-1 - p.1))
+  invFun I :=
+    let sigma : ZMod m := -1 - (finZModEquiv m I.2)
+    (sigma, -(finZModEquiv m I.1) - sigma)
+  left_inv := by
+    intro p
+    rcases p with ⟨sigma, a⟩
+    simp [finZModEquiv]
+  right_inv := by
+    intro I
+    rcases I with ⟨i, j⟩
+    apply Prod.ext
+    · apply Fin.ext
+      simp only [neg_sub, sub_neg_eq_add, add_sub_cancel_left, Equiv.symm_apply_apply]
+    · apply Fin.ext
+      simp only [sub_sub_cancel, Equiv.symm_apply_apply]
+
+structure RouteEOpenPortCanonicalChartStepTarget (m : Nat) [NeZero m] : Prop where
+  chartIdx_step :
+    ∀ p, routeEOpenPortCanonicalChartIdx
+        (routeEOpenPortHMap (0 : ZMod m) (1 : ZMod m) p) =
+      routeEOpenPortFinSquareSucc (routeEOpenPortCanonicalChartIdx p)
+
+namespace RouteEOpenPortCanonicalChartStepTarget
+
+noncomputable def finiteOdometerCertificate {m : Nat} [NeZero m]
+    (target : RouteEOpenPortCanonicalChartStepTarget m) :
+    RouteEOpenPortFiniteOdometerCertificate m where
+  A := 0
+  B := -2
+  C := 1
+  count_sum := by ring
+  chartIdx := routeEOpenPortCanonicalChartIdx
+  chartIdx_step := target.chartIdx_step
+
+theorem H_single_cycle {m : Nat} [NeZero m]
+    (target : RouteEOpenPortCanonicalChartStepTarget m) :
+    IsSingleCycleMap (routeEOpenPortHMap (0 : ZMod m) (1 : ZMod m)) :=
+  RouteEOpenPortFiniteOdometerCertificate.H_single_cycle
+    (finiteOdometerCertificate target)
+
+theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
+    (target : RouteEOpenPortCanonicalChartStepTarget m) :
+    IsSingleCycleMap (routeEOpenPortSectionPairMap (0 : ZMod m) (-2 : ZMod m)) :=
+  RouteEOpenPortFiniteOdometerCertificate.sectionPairMap_single_cycle
+    (finiteOdometerCertificate target)
+
+end RouteEOpenPortCanonicalChartStepTarget
+
 def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 0 then ![a, 0, 0, -a] else
   if slot = 1 then ![0, a, 0, 0] else
