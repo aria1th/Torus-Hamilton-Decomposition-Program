@@ -128,6 +128,125 @@ theorem routeEOpenPortFinSquareSucc_single_cycle (m : Nat) :
       rw [Equiv.apply_symm_apply])
     (finRotate_single_cycle (m * m))
 
+theorem routeEOpenPortFinSquareSucc_of_col_lt {m : Nat} [NeZero m]
+    (I : Fin m × Fin m) (hcol : I.2.val + 1 < m) :
+    routeEOpenPortFinSquareSucc I = (I.1, ⟨I.2.val + 1, hcol⟩) := by
+  apply (Equiv.injective finProdFinEquiv)
+  change finProdFinEquiv
+      (finProdFinEquiv.symm ((finRotate (m * m)) (finProdFinEquiv I))) =
+    finProdFinEquiv (I.1, ⟨I.2.val + 1, hcol⟩)
+  rw [Equiv.apply_symm_apply]
+  rw [finRotate_apply]
+  apply Fin.ext
+  rw [Fin.val_add]
+  have hNpos : 0 < m * m := by
+    have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+    exact Nat.mul_pos hmpos hmpos
+  haveI : NeZero (m * m) := ⟨Nat.ne_of_gt hNpos⟩
+  have hNgt1 : 1 < m * m := by
+    by_cases hm1 : m = 1
+    · subst m
+      have hbad : I.2.val + 1 < 1 := hcol
+      omega
+    · have hmge2 : 2 ≤ m := by omega
+      nlinarith
+  have hone : ((1 : Fin (m * m)).val) = 1 := by
+    rw [Fin.coe_ofNat_eq_mod]
+    exact Nat.mod_eq_of_lt hNgt1
+  rw [hone]
+  have hlt : (finProdFinEquiv I).val + 1 < m * m := by
+    calc
+      (finProdFinEquiv I).val + 1 = I.2.val + m * I.1.val + 1 := by
+        simp [finProdFinEquiv]
+      _ = (I.2.val + 1) + m * I.1.val := by omega
+      _ < m + m * I.1.val := Nat.add_lt_add_right hcol _
+      _ = m * (I.1.val + 1) := by rw [Nat.mul_succ, add_comm]
+      _ ≤ m * m := Nat.mul_le_mul_left m (Nat.succ_le_of_lt I.1.isLt)
+  rw [Nat.mod_eq_of_lt hlt]
+  simp [finProdFinEquiv]
+  omega
+
+set_option linter.flexible false in
+theorem routeEOpenPortFinSquareSucc_of_last_col {m : Nat} [NeZero m]
+    (I : Fin m × Fin m) (hcol : I.2.val + 1 = m) :
+    routeEOpenPortFinSquareSucc I =
+      ((finRotate m) I.1, (⟨0, Nat.pos_of_ne_zero (NeZero.ne m)⟩ : Fin m)) := by
+  by_cases hm1 : m = 1
+  · subst m
+    rcases I with ⟨i, j⟩
+    fin_cases i
+    fin_cases j
+    rfl
+  apply (Equiv.injective finProdFinEquiv)
+  change finProdFinEquiv
+      (finProdFinEquiv.symm ((finRotate (m * m)) (finProdFinEquiv I))) =
+    finProdFinEquiv
+      ((finRotate m) I.1, (⟨0, Nat.pos_of_ne_zero (NeZero.ne m)⟩ : Fin m))
+  rw [Equiv.apply_symm_apply]
+  by_cases hrow : I.1.val + 1 < m
+  · rw [finRotate_of_lt I.1 hrow]
+    rw [finRotate_apply]
+    apply Fin.ext
+    rw [Fin.val_add]
+    have hNpos : 0 < m * m := by
+      have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+      exact Nat.mul_pos hmpos hmpos
+    haveI : NeZero (m * m) := ⟨Nat.ne_of_gt hNpos⟩
+    have hNgt1 : 1 < m * m := by
+      have hmge2 : 2 ≤ m := by omega
+      nlinarith
+    have hone : ((1 : Fin (m * m)).val) = 1 := by
+      rw [Fin.coe_ofNat_eq_mod]
+      exact Nat.mod_eq_of_lt hNgt1
+    rw [hone]
+    have hlt : (finProdFinEquiv I).val + 1 < m * m := by
+      calc
+        (finProdFinEquiv I).val + 1 = I.2.val + m * I.1.val + 1 := by
+          simp [finProdFinEquiv]
+        _ = m * (I.1.val + 1) := by
+          rw [Nat.mul_succ]
+          omega
+        _ < m * m :=
+          Nat.mul_lt_mul_of_pos_left hrow (Nat.pos_of_ne_zero (NeZero.ne m))
+    rw [Nat.mod_eq_of_lt hlt]
+    simp [finProdFinEquiv]
+    rw [Nat.mul_succ]
+    omega
+  · have hroweq : I.1.val + 1 = m := by
+      have hle : I.1.val + 1 ≤ m := Nat.succ_le_of_lt I.1.isLt
+      omega
+    rw [finRotate_of_last I.1 hroweq]
+    rw [finRotate_apply]
+    apply Fin.ext
+    rw [Fin.val_add]
+    have hNpos : 0 < m * m := by
+      have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+      exact Nat.mul_pos hmpos hmpos
+    haveI : NeZero (m * m) := ⟨Nat.ne_of_gt hNpos⟩
+    have hNgt1 : 1 < m * m := by
+      have hmge2 : 2 ≤ m := by omega
+      nlinarith
+    have hone : ((1 : Fin (m * m)).val) = 1 := by
+      rw [Fin.coe_ofNat_eq_mod]
+      exact Nat.mod_eq_of_lt hNgt1
+    rw [hone]
+    have heqN : (finProdFinEquiv I).val + 1 = m * m := by
+      calc
+        (finProdFinEquiv I).val + 1 = I.2.val + m * I.1.val + 1 := by
+          simp [finProdFinEquiv]
+        _ = m * (I.1.val + 1) := by
+          rw [Nat.mul_succ]
+          omega
+        _ = m * m := by rw [hroweq]
+    rw [heqN]
+    simp [Nat.mod_self, finProdFinEquiv]
+
+theorem finZModEquiv_symm_add_one {m : Nat} [NeZero m] (x : ZMod m) :
+    (finZModEquiv m).symm (x + 1) =
+      (finRotate m) ((finZModEquiv m).symm x) := by
+  apply (Equiv.injective (finZModEquiv m))
+  simp [finZModEquiv, finRotate_apply, Fin.val_add]
+
 def routeEOpenPortSectionPairMap {m : Nat}
     (A B : ZMod m) : ZMod m × ZMod m → ZMod m × ZMod m :=
   fun p =>
@@ -319,6 +438,56 @@ noncomputable def routeEOpenPortCanonicalChartIdx {m : Nat} [NeZero m] :
     · apply Fin.ext
       simp only [sub_sub_cancel, Equiv.symm_apply_apply]
 
+theorem routeEOpenPortCanonicalColumn_last {m : Nat} [NeZero m] :
+    ((finZModEquiv m).symm (-1 : ZMod m)).val + 1 = m := by
+  have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+  have hcast :
+      ((((finZModEquiv m).symm (-1 : ZMod m)).val : Nat) : ZMod m) = -1 := by
+    simp [finZModEquiv]
+  have htarget : (((m - 1 : Nat) : ZMod m)) = -1 := by
+    have hsum : (((m - 1) + 1 : Nat) : ZMod m) = (0 : ZMod m) := by
+      rw [show (m - 1) + 1 = m by omega]
+      simp
+    rw [Nat.cast_add, Nat.cast_one] at hsum
+    rw [add_comm] at hsum
+    exact eq_neg_of_add_eq_zero_right hsum
+  have hv : ((finZModEquiv m).symm (-1 : ZMod m)).val = m - 1 := by
+    apply zmod_nat_eq_of_lt (m := m)
+    · exact ((finZModEquiv m).symm (-1 : ZMod m)).isLt
+    · exact Nat.sub_lt hmpos Nat.one_pos
+    · simpa [htarget] using hcast
+  omega
+
+theorem routeEOpenPortCanonicalColumn_lt_of_ne_zero {m : Nat} [NeZero m]
+    {sigma : ZMod m} (hsigma : sigma ≠ 0) :
+    ((finZModEquiv m).symm (-1 - sigma)).val + 1 < m := by
+  have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+  by_contra hlt
+  have hjle : ((finZModEquiv m).symm (-1 - sigma)).val + 1 ≤ m :=
+    Nat.succ_le_of_lt ((finZModEquiv m).symm (-1 - sigma)).isLt
+  have hj : ((finZModEquiv m).symm (-1 - sigma)).val + 1 = m := by omega
+  have hcast :
+      ((((finZModEquiv m).symm (-1 - sigma)).val : Nat) : ZMod m) =
+        -1 - sigma := by
+    simp [finZModEquiv]
+  have htarget :
+      ((((finZModEquiv m).symm (-1 - sigma)).val : Nat) : ZMod m) = -1 := by
+    have hv : ((finZModEquiv m).symm (-1 - sigma)).val = m - 1 := by omega
+    rw [hv]
+    have hsum : (((m - 1) + 1 : Nat) : ZMod m) = (0 : ZMod m) := by
+      rw [show (m - 1) + 1 = m by omega]
+      simp
+    rw [Nat.cast_add, Nat.cast_one] at hsum
+    rw [add_comm] at hsum
+    exact eq_neg_of_add_eq_zero_right hsum
+  have hsigma0 : sigma = 0 := by
+    have h : (-1 : ZMod m) = -1 - sigma := htarget.symm.trans hcast
+    have h2 := congrArg (fun x : ZMod m => x + 1) h
+    have hneg : -sigma = 0 := by
+      simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using h2.symm
+    exact neg_eq_zero.mp hneg
+  exact hsigma hsigma0
+
 structure RouteEOpenPortCanonicalChartStepTarget (m : Nat) [NeZero m] : Prop where
   chartIdx_step :
     ∀ p, routeEOpenPortCanonicalChartIdx
@@ -326,6 +495,39 @@ structure RouteEOpenPortCanonicalChartStepTarget (m : Nat) [NeZero m] : Prop whe
       routeEOpenPortFinSquareSucc (routeEOpenPortCanonicalChartIdx p)
 
 namespace RouteEOpenPortCanonicalChartStepTarget
+
+set_option linter.flexible false in
+theorem unconditional {m : Nat} [NeZero m] :
+    RouteEOpenPortCanonicalChartStepTarget m := by
+  refine ⟨?_⟩
+  intro p
+  rcases p with ⟨sigma, a⟩
+  by_cases hsigma : sigma = 0
+  · subst sigma
+    have hcol :
+        (routeEOpenPortCanonicalChartIdx ((0 : ZMod m), a)).2.val + 1 = m := by
+      simpa [routeEOpenPortCanonicalChartIdx] using
+        routeEOpenPortCanonicalColumn_last (m := m)
+    rw [routeEOpenPortFinSquareSucc_of_last_col _ hcol]
+    apply Prod.ext
+    · simp [routeEOpenPortCanonicalChartIdx, routeEOpenPortHMap]
+      simpa [finRotate_apply] using finZModEquiv_symm_add_one (-a)
+    · simp [routeEOpenPortCanonicalChartIdx, routeEOpenPortHMap, finZModEquiv]
+  · have hcol :
+        (routeEOpenPortCanonicalChartIdx (sigma, a)).2.val + 1 < m := by
+      simpa [routeEOpenPortCanonicalChartIdx] using
+        routeEOpenPortCanonicalColumn_lt_of_ne_zero (m := m) hsigma
+    rw [routeEOpenPortFinSquareSucc_of_col_lt _ hcol]
+    apply Prod.ext
+    · apply (Equiv.injective (finZModEquiv m))
+      simp [routeEOpenPortCanonicalChartIdx, routeEOpenPortHMap, hsigma, finZModEquiv]
+      ring
+    · simp [routeEOpenPortCanonicalChartIdx, routeEOpenPortHMap, hsigma]
+      rw [← finRotate_of_lt ((finZModEquiv m).symm (-1 - sigma)) hcol]
+      rw [← finZModEquiv_symm_add_one (-1 - sigma)]
+      apply (Equiv.injective (finZModEquiv m))
+      simp [finZModEquiv]
+      ring
 
 noncomputable def finiteOdometerCertificate {m : Nat} [NeZero m]
     (target : RouteEOpenPortCanonicalChartStepTarget m) :
@@ -350,6 +552,16 @@ theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
     (finiteOdometerCertificate target)
 
 end RouteEOpenPortCanonicalChartStepTarget
+
+theorem routeEOpenPortCanonicalH_single_cycle {m : Nat} [NeZero m] :
+    IsSingleCycleMap (routeEOpenPortHMap (0 : ZMod m) (1 : ZMod m)) :=
+  RouteEOpenPortCanonicalChartStepTarget.H_single_cycle
+    RouteEOpenPortCanonicalChartStepTarget.unconditional
+
+theorem routeEOpenPortCanonicalSectionPairMap_single_cycle {m : Nat} [NeZero m] :
+    IsSingleCycleMap (routeEOpenPortSectionPairMap (0 : ZMod m) (-2 : ZMod m)) :=
+  RouteEOpenPortCanonicalChartStepTarget.sectionPairMap_single_cycle
+    RouteEOpenPortCanonicalChartStepTarget.unconditional
 
 def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 0 then ![a, 0, 0, -a] else

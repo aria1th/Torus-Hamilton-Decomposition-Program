@@ -134,8 +134,10 @@ when `m` is odd and `m >= 3`.
   equivalence close the section map without first packaging a `ZMod (m^2)`
   rank.  For the uniform verifier triple `(A,B,C)=(0,m-2,1)`, the canonical
   chart is named as `routeEOpenPortCanonicalChartIdx`, with coordinates
-  `(i,j)=(-a-s,-1-s)` on the `H(s,a)` chart; the remaining step-law obligation
-  is isolated as `RouteEOpenPortCanonicalChartStepTarget`.
+  `(i,j)=(-a-s,-1-s)` on the `H(s,a)` chart.  Lean proves the finite carry
+  law as `RouteEOpenPortCanonicalChartStepTarget.unconditional` and derives
+  `routeEOpenPortCanonicalH_single_cycle` and
+  `routeEOpenPortCanonicalSectionPairMap_single_cycle`.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -812,9 +814,11 @@ therefore accepts a chart equivalence to this finite odometer plus a step law,
 then derives both the `H`-map cycle and the original section-pair cycle.
 For the uniform open-port triple `(A,B,C)=(0,m-2,1)`, Lean now fixes the
 candidate odometer chart
-`routeEOpenPortCanonicalChartIdx(s,a)=(-a-s,-1-s)`.  Supplying
-`RouteEOpenPortCanonicalChartStepTarget` proves the `H` cycle and the
-corresponding section-pair cycle for `B=-2`, i.e. `m-2` in `ZMod m`.
+`routeEOpenPortCanonicalChartIdx(s,a)=(-a-s,-1-s)`.  The carry law is closed as
+`RouteEOpenPortCanonicalChartStepTarget.unconditional`, giving the theorem
+`routeEOpenPortCanonicalH_single_cycle` and the corresponding section-pair
+cycle `routeEOpenPortCanonicalSectionPairMap_single_cycle` for `B=-2`, i.e.
+`m-2` in `ZMod m`.
 
 The corresponding Lean target interface builds with:
 
