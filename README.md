@@ -142,6 +142,9 @@ when `m` is odd and `m >= 3`.
 - `docs/D7_PROGRESS_BLOCKING_FOUND_20260501.md`: current progress, blockers,
   and found facts for the D7 additive `4+2` bridge before the next research
   bundle comparison.
+- `docs/PROOF_OBLIGATION_AUDIT_20260502.md`: current goal-to-artifact audit,
+  recording which Lean/program artifacts prove which parts of the D7/D5-even
+  research goal and which named propositions remain open.
 - `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`: absorption note
   for `A5_to_A7_induction_hypothesis_bundle_v0_1.zip` and
   `d5_even_routeE_bundle_v0_1.zip`, sharpening the D7 odd bridge into
