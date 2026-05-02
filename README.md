@@ -415,6 +415,10 @@ For the cover above, this finds the zero-set-derived rotation formula
 `r = p(Z) + |Z| + 1 mod 3`.  Emitting that hit as a full certificate and
 checking it with `scripts/verify_4plus2_allN_bridge_cert.py` verifies
 `11^6 = 1771561` product states with single color-return cycles.
+The same pipeline now also has a finite `m = 13` witness.  One base-word set is
+`14244442,312324442,312231334,423021000,2041033232,0041011111,4230300013`;
+the fiber formula is the simpler `r = |Z| mod 3`, and the full verifier checks
+`13^6 = 4826809` product states.
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
 now reports exact-cover DP depth, reachable/dead states, and dead-frontier
 examples.

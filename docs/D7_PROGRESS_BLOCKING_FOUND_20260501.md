@@ -516,6 +516,46 @@ both Target-A base primitiveity/cover evidence and Target-B' fiber evidence.
 The open problem remains extracting a uniform all-odd family and Lean-facing
 rank-step formulas.
 
+The same pipeline also reaches `m = 13` with a small deterministic random pool.
+Using C++ orbit search with seed `20260502` for length `9` and seed `20260503`
+for length `10`, together with the earlier length-8 hits, the length pattern
+
+```text
+8,9,9,9,10,10,10
+```
+
+gives three diagnostic exact-cover placements after checking `35582` sampled
+word products and `7592` exact-cover DP products.  One Target-A base-word set
+is
+
+```text
+14244442,312324442,312231334,423021000,2041033232,0041011111,4230300013
+```
+
+`scripts/analyze_targetA_section.py --moduli 13` confirms that all seven words
+are single `13^4 = 28561` base cycles, have single `Sigma` first-return cycles,
+and cover all base states by the section excursions.  The column diagnostic
+reaches target depth `13` with `193` reachable states and no truncation.
+
+For the first three `m = 13` cover placements, the rotation-family formula
+search finds the same first hit:
+
+```text
+cyclic: r = 0*t + 0*p + 1*z + 0 mod 3.
+```
+
+Thus the fiber compiler is simply `r = |Z| mod 3` for these rows.  Emitting the
+first hit and running the full product verifier gives:
+
+```text
+verified m=13 product_states=4826809 rows=7 base_rank_steps=ok
+section_rank_steps=ok return_cycles=single
+```
+
+So the finite all-zero-set `4+2` bridge evidence now extends through
+`m = 5,7,9,11,13`, with `m = 11` and `m = 13` produced by the current
+row-cover/search pipeline rather than by the original bundle.
+
 ### A5-to-A7 Target-A/Target-B Refinement
 
 The absorbed A5-to-A7 induction bundle records that the direct mixed D5
@@ -760,6 +800,45 @@ python3 scripts/search_4plus2_kappa_formulas.py \
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
   --cert-json /tmp/targetA_m11_formula_hits/bridge_4plus2_m11_cover_json_solution0_formula_hit0.json \
   --rank-summary-json /tmp/targetA_m11_solution0_formula_hit0_rank_summary.json
+printf '%s\n' \
+  14244442 312324442 312231334 423021000 \
+  2041033232 0041011111 4230300013 \
+  > /tmp/targetA_m13_solution0_words.txt
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 13 --word-file /tmp/targetA_m13_solution0_words.txt \
+  --cyclic-rotations \
+  --lengths 8,9,9,9,10,10,10 \
+  --combo-limit 0 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 20 \
+  --count-vector-product-limit 1000000 \
+  --count-vector-representatives-per-symbol 1 \
+  --json-out /tmp/targetA_m13_solution0_words_cvplacement.json
+python3 scripts/analyze_targetA_section.py \
+  --moduli 13 \
+  --words 14244442,312324442,312231334,423021000,2041033232,0041011111,4230300013 \
+  --json-out /tmp/targetA_m13_solution0_section.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-m 13 \
+  --cover-words 14244442,312324442,312231334,423021000,2041033232,0041011111,4230300013 \
+  --cover-limit 3 --diagnose-cover \
+  --json-out /tmp/targetA_m13_solution0_cover_diag.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m13_solution0_cover_diag.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 3 \
+  --formula-family rotation --section-only \
+  --json-out /tmp/targetA_m13_cover_json_rotation_section_formula_search_3sol.json
+python3 scripts/search_4plus2_kappa_formulas.py \
+  --cover-json /tmp/targetA_m13_solution0_cover_diag.json \
+  --allow-cover-dummy-kappa \
+  --max-cover-solutions 1 \
+  --formula-family rotation --section-only \
+  --emit-hit-cert-dir /tmp/targetA_m13_formula_hits \
+  --json-out /tmp/targetA_m13_rotation_section_formula_emit.json
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --cert-json /tmp/targetA_m13_formula_hits/bridge_4plus2_m13_cover_json_solution0_formula_hit0.json \
+  --rank-summary-json /tmp/targetA_m13_solution0_formula_hit0_rank_summary.json
 git diff --check
 ```
 
