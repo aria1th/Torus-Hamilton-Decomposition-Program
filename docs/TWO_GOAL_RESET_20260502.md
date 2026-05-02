@@ -76,7 +76,8 @@ Current state:
   extracted pointwise return-time distribution.
 - Lean also records the expected B20 seam map as addition by `h+1` on
   `Fin (m-1)`, proves the two translation-block formulas, and proves this
-  expected seam map is a single cycle.
+  expected seam map is a single cycle.  The corresponding two-block
+  cover/disjoint/translation obligations are packaged as `RouteEB20.seamBlocks`.
 
 Reset target:
 

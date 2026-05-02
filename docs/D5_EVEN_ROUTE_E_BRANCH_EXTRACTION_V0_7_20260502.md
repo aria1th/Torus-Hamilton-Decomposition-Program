@@ -150,7 +150,10 @@ identity.  The latter arithmetic target is now recorded in Lean as
 The expected two-block seam map is also recorded in Lean as `RouteEB20.seamMap`;
 `RouteEB20.seamMap_lower_translation`,
 `RouteEB20.seamMap_upper_translation`, and
-`RouteEB20.seamMap_single_cycle` close the abstract map/one-cycle side.
+`RouteEB20.seamMap_single_cycle` close the abstract map/one-cycle side;
+`RouteEB20.seamBlocks_cover`, `RouteEB20.seamBlocks_disjoint`, and
+`RouteEB20.seamBlocks_translation` package it for the piecewise-translation
+interface.
 
 ## Proof Obligations Exposed by B20
 

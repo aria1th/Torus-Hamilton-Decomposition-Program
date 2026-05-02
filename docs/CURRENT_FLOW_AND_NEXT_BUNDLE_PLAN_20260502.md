@@ -122,7 +122,8 @@ and the pointwise return-time partition feeding `sum tau = m^4`.  The
 weighted-sum arithmetic for the extracted B20 distribution is now recorded in
 Lean as `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`, and the
 expected two-block seam map is now recorded as `RouteEB20.seamMap` with a
-single-cycle theorem.
+single-cycle theorem and `RouteEB20.seamBlocks_*` piecewise-translation
+packaging.
 
 ## D7 Even Track
 

@@ -397,6 +397,96 @@ def translationFormula {m : Nat} (block : RouteESeamTranslationBlock m)
 
 end RouteESeamTranslationBlock
 
+namespace RouteEB20
+
+def lowerBlock (q : Nat) : RouteESeamTranslationBlock (modulus q) where
+  start := 1
+  stop := half q - 2
+  delta := (seamStep q : ZMod (modulus q))
+  start_pos := by omega
+  stop_lt := by
+    simp [half, modulus]
+    omega
+  start_le_stop := by
+    simp [half]
+
+def upperBlock (q : Nat) : RouteESeamTranslationBlock (modulus q) where
+  start := half q - 1
+  stop := modulus q - 1
+  delta := ((seamStep q + 1 : Nat) : ZMod (modulus q))
+  start_pos := by
+    simp [half]
+  stop_lt := by
+    simp [modulus]
+  start_le_stop := by
+    simp [half, modulus]
+    omega
+
+def seamBlocks (q : Nat) : List (RouteESeamTranslationBlock (modulus q)) :=
+  [lowerBlock q, upperBlock q]
+
+theorem seamBlocks_cover (q : Nat)
+    (a : RouteENonzeroSeam (modulus q)) :
+    ∃ block, block ∈ seamBlocks q ∧ block.contains a := by
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+  have hle_last : a.1.val ≤ modulus q - 1 := by
+    have hlt := ZMod.val_lt a.1
+    omega
+  by_cases ha : a.1.val ≤ half q - 2
+  · refine ⟨lowerBlock q, ?_, ?_⟩
+    · simp [seamBlocks]
+    · exact ⟨by simpa [lowerBlock] using Nat.succ_le_of_lt hpos, ha⟩
+  · have hupper : half q - 1 ≤ a.1.val := by
+      simp [half] at ha ⊢
+      omega
+    refine ⟨upperBlock q, ?_, ?_⟩
+    · simp [seamBlocks]
+    · exact ⟨hupper, hle_last⟩
+
+set_option linter.flexible false in
+theorem seamBlocks_disjoint (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (block₁ block₂ : RouteESeamTranslationBlock (modulus q)) :
+    block₁ ∈ seamBlocks q → block₂ ∈ seamBlocks q →
+    block₁.contains a → block₂.contains a → block₁ = block₂ := by
+  intro hmem₁ hmem₂ hcontains₁ hcontains₂
+  simp [seamBlocks] at hmem₁ hmem₂
+  rcases hmem₁ with h₁ | h₁ <;> rcases hmem₂ with h₂ | h₂
+  · rw [h₁, h₂]
+  · subst block₁
+    subst block₂
+    exfalso
+    simp [RouteESeamTranslationBlock.contains, lowerBlock] at hcontains₁
+    simp [RouteESeamTranslationBlock.contains, upperBlock] at hcontains₂
+    omega
+  · subst block₁
+    subst block₂
+    exfalso
+    simp [RouteESeamTranslationBlock.contains, upperBlock] at hcontains₁
+    simp [RouteESeamTranslationBlock.contains, lowerBlock] at hcontains₂
+    omega
+  · rw [h₁, h₂]
+
+set_option linter.flexible false in
+theorem seamBlocks_translation (q : Nat)
+    (block : RouteESeamTranslationBlock (modulus q)) :
+    block ∈ seamBlocks q →
+      block.translationFormula (seamMap q) := by
+  intro hmem
+  simp [seamBlocks] at hmem
+  rcases hmem with hmem | hmem
+  · subst block
+    intro a hcontains
+    exact seamMap_lower_translation q a hcontains.2
+  · subst block
+    intro a hcontains
+    exact seamMap_upper_translation q a hcontains.1
+
+end RouteEB20
+
 def routeEOpenPortFinSquareSucc {m : Nat} (I : Fin m × Fin m) : Fin m × Fin m :=
   (finProdFinEquiv.symm ((finRotate (m * m)) (finProdFinEquiv I)) :
     Fin m × Fin m)
