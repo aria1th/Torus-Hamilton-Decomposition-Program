@@ -734,7 +734,11 @@ The finite seam maps now also have a compact block-splice summary via
 cases it reports `all_ok=True` and `return_sums_ok=True`; low block-count cases
 are `m = 6,8,10,44,48,50`, and long-block cases are
 `m = 6,8,36,44,48,50`.  These cases are the most useful next finite traces for
-guessing a symbolic one-dimensional block proof.
+guessing a symbolic one-dimensional block proof.  The same summary clusters by
+normalized zero/support positions and finds no robust affine count fit with at
+least three samples in any cluster, reinforcing that the current route should
+explain block-splice dynamics rather than interpolate the finite count table
+directly.
 
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
 one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam

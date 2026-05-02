@@ -659,6 +659,8 @@ On the recorded `m = 6,8,...,60` cases, this reports `all_ok=True` and
 `return_sums_ok=True`.  Low block-count cases are
 `m = 6,8,10,44,48,50`; long-block cases are `m = 6,8,36,44,48,50`.  These are
 finite trace targets for the next block-splice proof, not an all-even formula.
+Clustering the same data by normalized zero/support positions finds no robust
+sample-count-at-least-three affine count family.
 
 The corresponding Lean target interface builds with:
 

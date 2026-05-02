@@ -227,6 +227,11 @@ This does not supply a residue-class formula for all even `m`, but it gives a
 small proof-facing target for the next lane/block-splice argument: explain
 which normalized count families produce few-block or long-block seam maps, and
 then prove the one-cycle and return-time-sum identities symbolically.
+The same summary clusters by normalized zero/support positions.  On this table
+there is no robust affine count fit with at least three samples in any such
+cluster; only two-sample affine fits appear.  Thus the current finite table
+still points more strongly to a block-splice theorem than to direct affine
+interpolation of count vectors.
 
 ## Revised D5 Even Route-E Gap
 

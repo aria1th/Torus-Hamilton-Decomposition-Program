@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
+from fractions import Fraction
 from pathlib import Path
 
 import verify_d5_even_routeE as route_e
@@ -38,14 +39,15 @@ def case_summary(case: dict) -> dict:
     long_blocks = [
         block for block in blocks if block["length"] >= max(2, (m - 1 + 3) // 4)
     ]
+    normalized = route_e.normalize_counts_to_slot0(case["slot"], tuple(case["counts"]))
     return {
         "m": m,
         "ok": case.get("ok", False),
         "slot": case.get("slot"),
         "counts": case.get("counts"),
-        "normalized_counts_slot0": route_e.normalize_counts_to_slot0(
-            case["slot"], tuple(case["counts"])
-        ),
+        "normalized_counts_slot0": normalized,
+        "zero_positions": [i for i, count in enumerate(normalized) if count == 0],
+        "support": [i for i, count in enumerate(normalized) if count != 0],
         "seam_size": case.get("seam_size"),
         "return_time_sum": case.get("return_time_sum"),
         "expected_return_time_sum": case.get("expected_return_time_sum"),
@@ -63,6 +65,110 @@ def case_summary(case: dict) -> dict:
     }
 
 
+def frac_json(q: Fraction) -> dict:
+    return {"num": q.numerator, "den": q.denominator}
+
+
+def frac_text(q: Fraction) -> str:
+    if q.denominator == 1:
+        return str(q.numerator)
+    return f"{q.numerator}/{q.denominator}"
+
+
+def affine_text(a: Fraction, b: Fraction) -> str:
+    if a == 0:
+        return frac_text(b)
+    slope = "m" if a == 1 else f"{frac_text(a)}*m"
+    if b == 0:
+        return slope
+    sign = "+" if b > 0 else "-"
+    return f"{slope} {sign} {frac_text(abs(b))}"
+
+
+def fit_affine_coordinate(points: list[tuple[int, int]]) -> dict:
+    if len(points) == 1:
+        value = points[0][1]
+        return {
+            "status": "singleton",
+            "formula": str(value),
+            "slope": frac_json(Fraction(0)),
+            "intercept": frac_json(Fraction(value)),
+        }
+    x0, y0 = points[0]
+    x1, y1 = points[-1]
+    if x0 == x1:
+        return {"status": "bad", "reason": "duplicate modulus"}
+    slope = Fraction(y1 - y0, x1 - x0)
+    intercept = Fraction(y0) - slope * x0
+    for x, y in points:
+        if slope * x + intercept != y:
+            return {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": frac_json(slope),
+                "intercept": frac_json(intercept),
+                "first_bad": {
+                    "m": x,
+                    "expected": frac_text(slope * x + intercept),
+                    "got": y,
+                },
+            }
+    return {
+        "status": "ok",
+        "formula": affine_text(slope, intercept),
+        "slope": frac_json(slope),
+        "intercept": frac_json(intercept),
+    }
+
+
+def fit_affine_counts(items: list[dict]) -> dict:
+    ordered = sorted(items, key=lambda item: item["m"])
+    fits = []
+    ok = True
+    for i in range(5):
+      points = [
+          (item["m"], item["normalized_counts_slot0"][i]) for item in ordered
+      ]
+      fit = fit_affine_coordinate(points)
+      fits.append(fit)
+      ok = ok and fit["status"] in {"ok", "singleton"}
+    return {
+        "status": "singleton" if len(ordered) == 1 else ("ok" if ok else "bad"),
+        "formulas": [fit.get("formula") for fit in fits],
+        "coordinate_fits": fits,
+    }
+
+
+def cluster_by_key(items: list[dict], key_name: str) -> list[dict]:
+    groups: dict[tuple[int, ...], list[dict]] = {}
+    for item in items:
+        key = tuple(item[key_name])
+        groups.setdefault(key, []).append(item)
+    clusters = []
+    for key, group in sorted(groups.items(), key=lambda pair: (pair[0], pair[1][0]["m"])):
+        low = [item["m"] for item in group if item["block_count"] <= 10]
+        long = [
+            item["m"]
+            for item in group
+            if item["max_block_length"] >= item["m"] // 4
+        ]
+        affine_fit = fit_affine_counts(group)
+        clusters.append(
+            {
+                key_name: list(key),
+                "sample_count": len(group),
+                "moduli": [item["m"] for item in group],
+                "block_counts": [item["block_count"] for item in group],
+                "max_block_lengths": [item["max_block_length"] for item in group],
+                "low_block_moduli": low,
+                "long_block_moduli": long,
+                "robust_affine": len(group) >= 3 and affine_fit["status"] == "ok",
+                "affine_fit": affine_fit,
+            }
+        )
+    return clusters
+
+
 def summarize(cases: list[dict]) -> dict:
     summaries = [case_summary(case) for case in sorted(cases, key=lambda c: c["m"])]
     low_block_cases = [
@@ -76,6 +182,8 @@ def summarize(cases: list[dict]) -> dict:
         for item in summaries
         if item["ok"] and item["singleton_blocks"] * 2 >= item["block_count"]
     ]
+    zero_clusters = cluster_by_key(summaries, "zero_positions")
+    support_clusters = cluster_by_key(summaries, "support")
     return {
         "source": "verify_d5_even_routeE.SMALL_SEAM_CASES",
         "case_count": len(summaries),
@@ -108,6 +216,14 @@ def summarize(cases: list[dict]) -> dict:
             for item in long_block_cases
         ],
         "mostly_singleton_moduli": [item["m"] for item in mostly_singleton_cases],
+        "zero_position_clusters": zero_clusters,
+        "support_clusters": support_clusters,
+        "robust_affine_zero_position_clusters": [
+            cluster for cluster in zero_clusters if cluster["robust_affine"]
+        ],
+        "robust_affine_support_clusters": [
+            cluster for cluster in support_clusters if cluster["robust_affine"]
+        ],
         "cases": summaries,
     }
 
@@ -132,6 +248,26 @@ def print_text(summary: dict) -> None:
         )
     print("low_block_moduli", [item["m"] for item in summary["low_block_cases"]])
     print("long_block_moduli", [item["m"] for item in summary["long_block_cases"]])
+    print(
+        "robust_affine_zero_position_clusters",
+        [
+            cluster["zero_positions"]
+            for cluster in summary["robust_affine_zero_position_clusters"]
+        ],
+    )
+    print(
+        "robust_affine_support_clusters",
+        [cluster["support"] for cluster in summary["robust_affine_support_clusters"]],
+    )
+    print("zero_position_clusters")
+    for cluster in summary["zero_position_clusters"]:
+        print(
+            cluster["zero_positions"],
+            "moduli",
+            cluster["moduli"],
+            "fit",
+            cluster["affine_fit"]["status"],
+        )
 
 
 def main() -> None:
