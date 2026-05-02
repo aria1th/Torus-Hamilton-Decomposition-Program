@@ -796,7 +796,10 @@ one-cycle proof by a bijective rank
 `RouteEThetaRankedPiecewiseTranslationCertificate` is the preferred endpoint
 for a symbolic block-splice proof: prove block translations, a seam rank
 formula, and the return-time sum, then Lean derives the seam cycle and lowers
-to the same endpoints.
+to the same endpoints.  Since the finite `m=4` Route-E branch is closed,
+`D5Odd/EvenRouteEM4.lean` also provides unconditional adapters from the
+ranked, piecewise, and ranked-piecewise all-large targets to the all-even
+Hamilton, torus, and Cayley targets.
 For the separate open-port branch, `RouteEOpenPortAffineChartCertificate`
 packages the smaller `m^2` section map.  This is useful as a checked
 intermediate normal form, but it does not replace the still-needed full
