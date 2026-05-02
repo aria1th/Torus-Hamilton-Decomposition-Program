@@ -14,6 +14,7 @@ small-seam criterion for non-open one-Lambda_E schedules.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 from math import gcd
@@ -747,6 +748,97 @@ def parse_small_seam_moduli(text: str) -> List[int]:
     return parse_moduli(text)
 
 
+def stable_digest(value) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(payload).hexdigest()
+
+
+def compact_section_case(case: dict) -> dict:
+    return {
+        "m": case["m"],
+        "A": case["A"],
+        "B": case["B"],
+        "C": case["C"],
+        "C_unit": case["C_unit"],
+        "section_formula_ok": case["section_formula_ok"],
+        "exception_count": case["exception_count"],
+        "exception_points": [list(point) for point in case["exception_points"]],
+        "H_cycle_lengths": case["H_cycle_lengths"],
+        "H_single": case["H_single"],
+    }
+
+
+def compact_manifest(output: dict) -> dict:
+    manifest = {
+        "schema": "d5_routeE_open_port_regression_manifest_v1",
+        "keys": sorted(output),
+    }
+    if "section" in output:
+        manifest["section"] = [compact_section_case(case) for case in output["section"]]
+    if "section_scan" in output:
+        manifest["section_scan"] = [
+            {
+                "m": item["m"],
+                "checked": item["checked"],
+                "hit_count": item["hit_count"],
+                "ok": item["ok"],
+                "first_hits": [
+                    compact_section_case(hit) for hit in item.get("first_hits", [])
+                ],
+            }
+            for item in output["section_scan"]
+        ]
+    if "open_port_full_scan" in output:
+        manifest["open_port_full_scan"] = [
+            {
+                "m": item["m"],
+                "section_hits": item["section_hits"],
+                "full_checked": item["full_checked"],
+                "full_hit_count": item["full_hit_count"],
+                "ok": item["ok"],
+                "first_full_hits": [
+                    {
+                        **compact_section_case(hit),
+                        "slot": hit["slot"],
+                        "counts": list(hit["counts"]),
+                        "normalized_counts_slot0": list(hit["normalized_counts_slot0"]),
+                        "open_port_normal_form": hit["open_port_normal_form"],
+                        "full_single": hit["full_single"],
+                    }
+                    for hit in item.get("first_full_hits", [])
+                ],
+            }
+            for item in output["open_port_full_scan"]
+        ]
+    if "one_e_full_count_scan" in output:
+        manifest["one_e_full_count_scan_sha256"] = stable_digest(
+            output["one_e_full_count_scan"]
+        )
+    if "small_seam" in output:
+        manifest["small_seam"] = [
+            {
+                "m": item["m"],
+                "slot": item.get("slot"),
+                "counts": item.get("counts"),
+                "seam_size": item.get("seam_size"),
+                "start_ok": item.get("start_ok"),
+                "cycle_lengths": item.get("cycle_lengths"),
+                "return_time_sum": item.get("return_time_sum"),
+                "expected_return_time_sum": item.get("expected_return_time_sum"),
+                "translation_block_count": item.get("translation_block_count"),
+                "ok": item.get("ok"),
+            }
+            for item in output["small_seam"]
+        ]
+    return manifest
+
+
+def compare_manifest(expected: dict, actual: dict) -> dict:
+    keys = sorted(set(expected) | set(actual))
+    mismatches = [key for key in keys if expected.get(key) != actual.get(key)]
+    return {"ok": not mismatches, "mismatches": mismatches}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["all", "schedule", "core", "section"], default="all")
@@ -774,6 +866,8 @@ def main() -> None:
         ),
     )
     parser.add_argument("--json-out")
+    parser.add_argument("--write-manifest", type=Path)
+    parser.add_argument("--manifest", type=Path)
     args = parser.parse_args()
 
     output = {}
@@ -800,10 +894,25 @@ def main() -> None:
             parse_small_seam_moduli(args.small_seam_moduli)
         )
 
+    manifest_check = None
+    if args.write_manifest is not None:
+        manifest = compact_manifest(output)
+        args.write_manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.write_manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+        print(f"wrote {args.write_manifest}")
+    if args.manifest is not None:
+        expected = json.loads(args.manifest.read_text())
+        actual = compact_manifest(output)
+        manifest_check = compare_manifest(expected, actual)
+        output["manifest_check"] = manifest_check
+        print("manifest_ok", manifest_check["ok"], "mismatches", manifest_check["mismatches"])
+
     text = json.dumps(output, indent=2)
     if args.json_out:
         Path(args.json_out).write_text(text + "\n")
     print(text)
+    if manifest_check is not None and not manifest_check["ok"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

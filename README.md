@@ -230,6 +230,10 @@ when `m` is odd and `m >= 3`.
   Route-E bundle, checking the finite schedule table, normalized core
   first-return formula, open-port section formula/cycle examples, and the
   non-open small-seam criterion from the later small-seam bundle.
+- `certs/d5_routeE_open_port_manifest.json`: compact D5 Route-E open-port
+  regression manifest.  It records the uniform section affine chart through
+  `m = 60` and the full-return scan through `m = 20`, including the expected
+  open-port full failures at `m = 6,8,16`.
 - `scripts/verify_d5_routeE_nonopen_bundle.py`: bundle-consistency checker for
   `d5_even_routeE_nonopen_small_seam_v0_4.zip`.  It compares the source TSV
   to the repo's `SMALL_SEAM_CASES`, parses the bundle verifier transcript,
@@ -620,6 +624,19 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --full-scan-moduli 6,8,10,12,14,16,18,20 \
   --full-scan-limit 5 \
   --json-out /tmp/d5_even_routeE_open_port_full_scan.json
+```
+
+The pinned open-port regression combines the section scan through `m = 60`
+with the full-return scan through `m = 20`:
+
+```bash
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --section-scan-moduli 6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60 \
+  --section-scan-limit 1 \
+  --full-scan-moduli 6,8,10,12,14,16,18,20 \
+  --full-scan-limit 1 \
+  --manifest certs/d5_routeE_open_port_manifest.json \
+  --json-out /tmp/d5_routeE_open_port_manifest_verify.json
 ```
 
 To scan the larger one-`Lambda_E` count/slot family directly:

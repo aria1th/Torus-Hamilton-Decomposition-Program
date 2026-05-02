@@ -68,6 +68,15 @@ python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   --json-out /tmp/d5_routeE_nonopen_bundle_check.json
 => cases 28 tsv_matches_repo True report_matches_tsv True python_recompute_all_ok True all_ok True
 
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --section-scan-moduli 6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60 \
+  --section-scan-limit 1 \
+  --full-scan-moduli 6,8,10,12,14,16,18,20 \
+  --full-scan-limit 1 \
+  --manifest certs/d5_routeE_open_port_manifest.json \
+  --json-out /tmp/d5_routeE_open_port_manifest_verify.json
+=> manifest_ok True mismatches []
+
 python3 scripts/verify_d5_routeE_small_seam_rank_certs.py \
   --cert certs/d5_routeE_small_seam_rank_certs.json \
   --json-out /tmp/d5_routeE_small_seam_rank_cert_current.json

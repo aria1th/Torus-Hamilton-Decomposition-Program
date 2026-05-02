@@ -712,6 +712,8 @@ with a concrete Route-E program.
   `(A,B,C) = (0,m-2,1)`: the section formula holds, `H` is a single `m^2`
   cycle, and the only exception point is `(m-1,2)`.  This does not prove the
   full return is primitive; it only isolates the open-port section dynamics.
+- The compact manifest `certs/d5_routeE_open_port_manifest.json` pins this
+  section scan and the open-port full-return scan through `m = 20`.
 - The same verifier now has an open-port full-cycle scan.  Through
   `m = 6,8,...,20`, the section-passing open-port triples include full
   one-cycle returns at `m = 10,12,14,18,20`, but no open-port full hit at

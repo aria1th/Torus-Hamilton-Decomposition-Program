@@ -254,6 +254,8 @@ The verifier now also has a section-scan mode.  In the tested even range
 passes the section formula and gives a single `H` cycle, with one exception
 point `(m-1,2)`.  This explains why the open-port section theorem is useful but
 not by itself a full all-even proof.
+The compact manifest `certs/d5_routeE_open_port_manifest.json` records this
+section scan together with the open-port full-return scan through `m = 20`.
 
 A later open-port full-cycle scan separates this further.  Among section
 passing open-port triples, full one-cycle returns are found at
