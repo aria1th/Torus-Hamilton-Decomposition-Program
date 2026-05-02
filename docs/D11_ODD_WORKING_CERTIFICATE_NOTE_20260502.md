@@ -10,6 +10,7 @@ Source:
 
 - `/data/angel/repos/etc/D11_odd_canonical_schedule_certificate.md`
 - `docs/D_AGNOSTIC_BASE_TAIL_CERTIFICATE_PROGRAM_20260502.md`
+- `docs/D11_LEAN_HELPER_LEMMA_REQUESTS_20260502.md`
 
 ## Status Summary
 
@@ -346,3 +347,22 @@ D11 Lean theorem:
 
 This is now a well-scoped project: one formal large-branch translation plus
 four finite search certificates.
+
+## Lean Helper Lemma Requests
+
+The requested Lean support lemmas are listed separately in
+`docs/D11_LEAN_HELPER_LEMMA_REQUESTS_20260502.md`.  The list is organized as:
+
+```text
+generic finite dynamics
+D11 coordinate lemmas
+canonical layer rule
+count matrix and branch arithmetic
+triangular return lemmas
+large-branch endpoint packaging
+small-case base-tail certificate checker
+```
+
+The most important correction carried into that list is that the return map is
+not claimed to be count-vector determined.  The theorem to formalize is that
+the map is triangular and each total skew carry is count-vector determined.

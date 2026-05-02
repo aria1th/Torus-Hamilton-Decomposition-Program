@@ -239,6 +239,10 @@ when `m` is odd and `m >= 3`.
   note: treats odd `m >= 11` as a closed non-Lean certificate, isolates
   `m = 3,5,7,9` as finite base-tail search certificate tasks, and records the
   Lean formalization order.
+- `docs/D11_LEAN_HELPER_LEMMA_REQUESTS_20260502.md`: requested Lean helper
+  lemma list for D11, covering generic skew-cycle facts, D11 coordinates,
+  canonical layer/count arithmetic, triangular return, endpoint packaging, and
+  small-case base-tail certificate soundness.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
