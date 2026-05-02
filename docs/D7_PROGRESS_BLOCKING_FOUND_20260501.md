@@ -729,6 +729,13 @@ residue classes.  On the current `m = 6,8,...,60` data, tested periods
 one or two samples per class.  This means the table is a seam-criterion
 certificate source, not yet an all-even formula source.
 
+The finite seam maps now also have a compact block-splice summary via
+`scripts/summarize_d5_routeE_small_seam_blocks.py`.  On the same `28` recorded
+cases it reports `all_ok=True` and `return_sums_ok=True`; low block-count cases
+are `m = 6,8,10,44,48,50`, and long-block cases are
+`m = 6,8,36,44,48,50`.  These cases are the most useful next finite traces for
+guessing a symbolic one-dimensional block proof.
+
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
 one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam
 first-return traces, first-return minimality, and the return-time sum.  The
@@ -797,6 +804,8 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
   --count-scan-moduli 6,8,10,12,14,16 \
   --count-scan-limit 5 \
   --json-out /tmp/d5_even_routeE_count_scan_6_16.json
+python3 scripts/summarize_d5_routeE_small_seam_blocks.py \
+  --json-out /tmp/d5_routeE_small_seam_block_summary.json
 python3 scripts/analyze_targetA_section.py \
   --moduli 5,7,9,11,13,15,17 \
   --words 332,01302,4204204 \

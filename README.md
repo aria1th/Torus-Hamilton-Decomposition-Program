@@ -208,6 +208,9 @@ when `m` is odd and `m >= 3`.
 - `scripts/fast_d5_routeE_small_seam_verify.cpp`: standalone C++ verifier for
   one recorded D5 Route-E small-seam case, kept as an independent check of the
   `m-1` seam criterion.
+- `scripts/summarize_d5_routeE_small_seam_blocks.py`: proof-facing summary of
+  the D5 Route-E small-seam first-return maps, compressing the verifier's
+  translation blocks into block-count, long-block, and fingerprint diagnostics.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build
@@ -643,6 +646,19 @@ python3 scripts/analyze_d5_routeE_small_seam_families.py \
 This is a research aid.  On the current table, simple affine normalized count
 vectors fail for tested periods up to `26`; periods `28` and above are too
 sparse to give robust family evidence.
+
+The same small-seam verifier output can be compressed into one-dimensional
+translation-block diagnostics:
+
+```bash
+python3 scripts/summarize_d5_routeE_small_seam_blocks.py \
+  --json-out /tmp/d5_routeE_small_seam_block_summary.json
+```
+
+On the recorded `m = 6,8,...,60` cases, this reports `all_ok=True` and
+`return_sums_ok=True`.  Low block-count cases are
+`m = 6,8,10,44,48,50`; long-block cases are `m = 6,8,36,44,48,50`.  These are
+finite trace targets for the next block-splice proof, not an all-even formula.
 
 The corresponding Lean target interface builds with:
 

@@ -205,6 +205,29 @@ at most two samples.  Thus the current table is strong evidence for the
 small-seam criterion, but it should not be treated as an extracted all-even
 count formula.
 
+The block-splice trace can now be summarized directly with:
+
+```bash
+python3 scripts/summarize_d5_routeE_small_seam_blocks.py \
+  --json-out /tmp/d5_routeE_small_seam_block_summary.json
+```
+
+On the current `m = 6,8,...,60` table this reports `28` cases,
+`all_ok=True`, and `return_sums_ok=True`.  The low block-count cases are
+`m = 6,8,10,44,48,50`, while the cases with a block of length at least
+`m/4` are `m = 6,8,36,44,48,50`.  In particular, the known `m = 44` witness
+has exactly two blocks:
+
+```text
+[1,20]  -> delta 23
+[21,43] -> delta 24
+```
+
+This does not supply a residue-class formula for all even `m`, but it gives a
+small proof-facing target for the next lane/block-splice argument: explain
+which normalized count families produce few-block or long-block seam maps, and
+then prove the one-cycle and return-time-sum identities symbolically.
+
 ## Revised D5 Even Route-E Gap
 
 The non-open branch should no longer be described as an unresolved
