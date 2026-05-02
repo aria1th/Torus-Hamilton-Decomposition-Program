@@ -231,6 +231,10 @@ when `m` is odd and `m >= 3`.
   `d3_A2_bridge_rewrite_v0_1.zip`, recording the even D3 Route-E rewrite as
   an `A2`-fiber finite-defect bridge and its implication for a possible
   `D4 -> D5` lane-splice interpretation of D5 even Route-E.
+- `docs/D_AGNOSTIC_BASE_TAIL_CERTIFICATE_PROGRAM_20260502.md`:
+  dimension-agnostic base-tail certificate/verifier design: reduce large
+  `(ZMod m)^(d-1)` cycle checks to small base cycles plus tail carry units,
+  with a D11 Lean status audit.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.

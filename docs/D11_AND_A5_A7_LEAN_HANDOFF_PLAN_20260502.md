@@ -120,6 +120,12 @@ base primitive differences in {1,2,4,5,7,8,10}
    lists explicit base layer decompositions and `Block10` layer permutations.
    Encode those explicit lists and prove their count matrices directly.
 
+   The dimension-agnostic base-tail certificate plan is recorded separately in
+   `docs/D_AGNOSTIC_BASE_TAIL_CERTIFICATE_PROGRAM_20260502.md`.  For D11 it
+   should be used especially for the leftover finite cases `m = 3,5,7,9`,
+   where the external canonical `b = 1` count-matrix certificate does not
+   apply.
+
 4. Define the D11 canonical selector.
 
    Implement the layer `rho(t,z)`, `lambda_rho`, `d(t,z,s)`, and selector
