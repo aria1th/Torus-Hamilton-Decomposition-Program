@@ -180,6 +180,10 @@ Near-term Lean/program work:
   aggressively.
 - Use the `returnTimeBlocks` intervals as the proof skeleton for the B20
   pointwise return-time partition.
+- In parallel with B20, test the `d3_A2_bridge_rewrite_v0_1` lesson: try to
+  rewrite D5 Route-E as a `D4 -> D5`, `A5 ~= A4 x A2` finite-defect
+  lane-splice module, so future branches are searched by hidden `A2` lane maps
+  rather than raw residue tables alone.
 - Extract the next branch only when it has a stable count vector, seam map,
   return-time partition, and verifier coverage on several moduli.
 
