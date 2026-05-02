@@ -129,7 +129,10 @@ when `m` is odd and `m >= 3`.
   `RouteEOpenPortAffineChartCertificate` lowers a rank-step proof for that
   chart map to a single-cycle section result.  The finite odometer spine
   `routeEOpenPortFinSquareSucc_single_cycle` is available for explicit
-  `m^2` chart-rank constructions.
+  `m^2` chart-rank constructions, and
+  `RouteEOpenPortFiniteOdometerCertificate` lets such a finite chart
+  equivalence close the section map without first packaging a `ZMod (m^2)`
+  rank.
 - `D5Odd/EvenRouteEM4.lean`: finite `m = 4` Route-E branch.  It packages the
   recorded `C/E/O/O` four-layer schedule, verifies exact cover and Latin
   conditions by finite decision, proves all five color returns are single
@@ -798,6 +801,9 @@ one-`Lambda_E` return proof on the D5 even state space.
 The supporting finite odometer lemma `routeEOpenPortFinSquareSucc_single_cycle`
 closes the base-`m` successor on `Fin m x Fin m`, which is the intended target
 for an explicit open-port chart rank.
+The alternate certificate shape `RouteEOpenPortFiniteOdometerCertificate`
+therefore accepts a chart equivalence to this finite odometer plus a step law,
+then derives both the `H`-map cycle and the original section-pair cycle.
 
 The corresponding Lean target interface builds with:
 

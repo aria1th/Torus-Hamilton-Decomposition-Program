@@ -240,6 +240,64 @@ theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
 
 end RouteEOpenPortAffineChartCertificate
 
+structure RouteEOpenPortFiniteOdometerCertificate (m : Nat) [NeZero m] where
+  A : ZMod m
+  B : ZMod m
+  C : ZMod m
+  count_sum : A + B + C + 1 = 0
+  chartIdx : ZMod m × ZMod m ≃ Fin m × Fin m
+  chartIdx_step :
+    ∀ p, chartIdx (routeEOpenPortHMap A C p) =
+      routeEOpenPortFinSquareSucc (chartIdx p)
+
+namespace RouteEOpenPortFiniteOdometerCertificate
+
+theorem H_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortFiniteOdometerCertificate m) :
+    IsSingleCycleMap (routeEOpenPortHMap cert.A cert.C) := by
+  refine Shared.single_cycle_of_equiv_conj
+    (e := cert.chartIdx.symm)
+    (f := routeEOpenPortHMap cert.A cert.C)
+    (g := routeEOpenPortFinSquareSucc (m := m))
+    (routeEOpenPortFinSquareSucc_single_cycle m) ?_
+  intro I
+  calc
+    cert.chartIdx
+        (routeEOpenPortHMap cert.A cert.C (cert.chartIdx.symm I)) =
+        routeEOpenPortFinSquareSucc (cert.chartIdx (cert.chartIdx.symm I)) :=
+      cert.chartIdx_step (cert.chartIdx.symm I)
+    _ = routeEOpenPortFinSquareSucc I := by simp
+
+theorem sectionPairMap_conjugates_to_H {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortFiniteOdometerCertificate m)
+    (p : ZMod m × ZMod m) :
+    routeEOpenPortChart (routeEOpenPortSectionPairMap cert.A cert.B p) =
+      routeEOpenPortHMap cert.A cert.C (routeEOpenPortChart p) :=
+  routeEOpenPortChart_sectionPairMap cert.A cert.B cert.C cert.count_sum p
+
+theorem sectionPairMap_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEOpenPortFiniteOdometerCertificate m) :
+    IsSingleCycleMap (routeEOpenPortSectionPairMap cert.A cert.B) := by
+  refine Shared.single_cycle_of_equiv_conj
+    (e := (routeEOpenPortChartEquiv (m := m)).symm)
+    (f := routeEOpenPortSectionPairMap cert.A cert.B)
+    (g := routeEOpenPortHMap cert.A cert.C)
+    (H_single_cycle cert) ?_
+  intro p
+  calc
+    routeEOpenPortChart
+        (routeEOpenPortSectionPairMap cert.A cert.B
+          ((routeEOpenPortChartEquiv (m := m)).symm p)) =
+        routeEOpenPortHMap cert.A cert.C
+          (routeEOpenPortChart ((routeEOpenPortChartEquiv (m := m)).symm p)) :=
+      sectionPairMap_conjugates_to_H cert ((routeEOpenPortChartEquiv (m := m)).symm p)
+    _ = routeEOpenPortHMap cert.A cert.C p := by
+      simpa [routeEOpenPortChartEquiv] using
+        congrArg (routeEOpenPortHMap cert.A cert.C)
+          ((routeEOpenPortChartEquiv (m := m)).right_inv p)
+
+end RouteEOpenPortFiniteOdometerCertificate
+
 def routeEThetaPoint {m : Nat} (slot : Color) (a : ZMod m) : Vec4 m :=
   if slot = 0 then ![a, 0, 0, -a] else
   if slot = 1 then ![0, a, 0, 0] else
