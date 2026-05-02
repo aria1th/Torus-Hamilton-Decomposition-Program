@@ -70,7 +70,8 @@ coefficients `4,-3,2,-1,0,1` by zero-set size.
 
 The previous live obstruction was the bundled fiber compiler at `m = 9`,
 especially color `0`.  The extracted certificate
-`bridge_4plus2_allN_m9_zero_set_K_cert.json` now gives a finite zero-set-only
+`bridge_4plus2_allN_m9_zero_set_K_cert.json`, committed repo-locally as
+`certs/d7_m9_zero_set_K_full_bridge_cert.json`, now gives a finite zero-set-only
 replacement for this case.  The remaining blocker is to explain and generalize
 that `K(Z)` table, and to combine it with a uniform base-row family.
 
@@ -125,9 +126,9 @@ currently tested.  Along the color-0 section trace:
 This says that even after adding full coordinate residues modulo `3`, the
 observed finite witness still depends on finer base-state information.
 
-The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json` changes
-the picture.  It keeps the bundled `m = 9` rows, replaces the kappa table, and
-passes the full verifier:
+The repo-local full certificate `certs/d7_m9_zero_set_K_full_bridge_cert.json`
+changes the picture.  It keeps the bundled `m = 9` rows, replaces the kappa
+table, and passes the full verifier:
 
 ```text
 verified m=9 product_states=531441 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
@@ -173,10 +174,13 @@ checks the finite `roundAtZero` equations required by
 `A3TriangularScalarCertificate`, and then replays the full finite bridge
 verifier.
 This is the current Target-B' regression for zero-set-only scalar certificates.
-When the non-scalar and scalar JSON files are checked together, the non-scalar
-file reports `scalar_ok=False` only because it has no scalar-invariant field;
-both files report `table_ok=True`, `expanded_valid=True`, and `full_ok=True`,
-while the scalar file also reports `scalar_ok=True` and `triangular_ok=True`.
+The full handoff certificate is now committed as
+`certs/d7_m9_zero_set_K_full_bridge_cert.json` and verifies directly with
+`scripts/verify_4plus2_allN_bridge_cert.py`.  When the full and scalar JSON
+files are checked together, the full file reports `scalar_ok=False` only
+because it has no scalar-invariant field; both files report `table_ok=True`,
+`expanded_valid=True`, and `full_ok=True`, while the scalar file also reports
+`scalar_ok=True` and `triangular_ok=True`.
 
 ### Base Row Side
 
@@ -859,9 +863,9 @@ python3 scripts/search_4plus2_kappa_formulas.py --only 9 \
   --diagnostics-only --section-trace-diagnostics \
   --json-out /tmp/d7_m9_section_trace_diag_check.json
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
-  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json
 python3 scripts/search_4plus2_kappa_formulas.py \
-  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/verify_zero_set_k_cert.py \

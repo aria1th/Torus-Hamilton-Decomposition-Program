@@ -51,6 +51,10 @@ python3 scripts/verify_zero_set_k_cert.py \
 => m=9 scalar_ok=True triangular_ok=True table_ok=True expanded_valid=True full_ok=True
 => triangular_manifest_ok True mismatches []
 
+python3 scripts/verify_4plus2_allN_bridge_cert.py \
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json
+=> verified m=9 product_states=531441 rows=7 base_rank_steps=ok section_rank_steps=ok return_cycles=single
+
 python3 scripts/verify_targetA_23_32_seam_quotient.py \
   --moduli 13,15,17,19,21,23,25,27,29,31,33,35,37,39,41 \
   --phi-max 200 \

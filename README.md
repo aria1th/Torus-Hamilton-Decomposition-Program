@@ -209,6 +209,10 @@ when `m` is odd and `m >= 3`.
   `certs/d7_4plus2_compact_formula_witnesses.json`.  It validates row/base
   shape, can rerun the Target-A section and column audits, and delegates
   formula/product/rank-step fingerprint checks to the C++ checker.
+- `certs/d7_m9_zero_set_K_full_bridge_cert.json`: full `m = 9` Target-B'
+  zero-set-only bridge certificate with the expanded `kappa_perm_indices`
+  table.  It is the repo-local copy of the handoff `K(Z)` certificate and is
+  verified by `scripts/verify_4plus2_allN_bridge_cert.py`.
 - `certs/d7_m9_zero_set_K_scalar_cert.json`: compact `m = 9` Target-B'
   zero-set-only `K(Z)` scalar certificate, storing the mask table, row
   schedule, and scalar invariants used by `verify_zero_set_k_cert.py`.
@@ -548,13 +552,13 @@ certificate and its kappa table is pure on `zero_mask`:
 
 ```bash
 python3 scripts/verify_4plus2_allN_bridge_cert.py \
-  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json
 python3 scripts/search_4plus2_kappa_formulas.py \
-  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json \
   --diagnostics-only --diagnostic-profile all --section-trace-diagnostics \
   --json-out /tmp/d7_m9_zero_set_K_diag.json
 python3 scripts/d7_bridge_snapshot.py \
-  --cert-json /data/angel/repos/etc/bridge_4plus2_allN_m9_zero_set_K_cert.json \
+  --cert-json certs/d7_m9_zero_set_K_full_bridge_cert.json \
   --include-full-verify --include-section-trace \
   --json-out /tmp/d7_m9_zero_set_K_snapshot.json
 ```

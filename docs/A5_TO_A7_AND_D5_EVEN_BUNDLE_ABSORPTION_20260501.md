@@ -82,6 +82,11 @@ For a fixed row schedule and zero-set-only `K_m(Z)`, the two A3 monodromy
 scalars are therefore finite mask sums.  Target B' is exactly the condition
 that those scalar pairs are units modulo `m` for every color.
 
+The committed full `m = 9` certificate
+`certs/d7_m9_zero_set_K_full_bridge_cert.json` is the repo-local copy of the
+handoff zero-set-only bridge certificate.  It verifies directly with
+`scripts/verify_4plus2_allN_bridge_cert.py`.
+
 The committed `m = 9` scalar certificate
 `certs/d7_m9_zero_set_K_scalar_cert.json` records the same zero-set-only
 `K(Z)` table already checked in the current baseline, with scalar invariants:
@@ -116,9 +121,9 @@ The same data is committed as
 `certs/d7_m9_zero_set_K_triangular_obligations.json`; the verifier can compare
 against it with `--triangular-manifest`.
 
-The paired check of the original zero-set table cert and the scalar cert gives
-the expected mixed summary: the original cert has no scalar field, so it
-reports `scalar_ok=False`, but both certs pass table expansion and full bridge
+The paired check of the full zero-set table cert and the scalar cert gives the
+expected mixed summary: the full cert has no scalar field, so it reports
+`scalar_ok=False`, but both certs pass table expansion and full bridge
 verification; the scalar cert additionally passes the unit-invariant and
 triangular-obligation checks.
 

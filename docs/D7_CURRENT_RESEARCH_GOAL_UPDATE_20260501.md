@@ -484,7 +484,8 @@ Implementation progress after this goal update:
   `layer_zero_mask_full_mod3` has only `44/3033` pure classes, so the bundled
   table is not explained by adding coordinate residues modulo 3 to the coarse
   zero-set features.
-- The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json`
+- The extracted certificate `bridge_4plus2_allN_m9_zero_set_K_cert.json`,
+  committed repo-locally as `certs/d7_m9_zero_set_K_full_bridge_cert.json`,
   resolves this finite `m=9` obstruction with the same rows but a replacement
   kappa table.  It passes the full bridge verifier, and its kappa table is
   layer-independent and zero-set-only: `zero_mask` has `27/27` pure classes,
