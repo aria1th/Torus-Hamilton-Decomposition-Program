@@ -435,12 +435,50 @@ skipped by product limit = 0
 diag solutions = 0
 ```
 
-So the first 200 balanced count-vector combos have no placement because their
-word groups cannot even choose first symbols covering `0,1,2,3,4` across five
-rows.  The companion `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
-mode now records fixed word-set DP depth, reachable/dead state counts, and
-dead-frontier examples; for the first representative `m = 11` combo it stops
-at depth `0` with frontier `[2,0,0,0,0,0,0]`.
+So, without cyclic rotations, the first 200 balanced count-vector combos have
+no placement because their word groups cannot even choose first symbols
+covering `0,1,2,3,4` across five rows.  The companion
+`scripts/analyze_4plus2_base_rows.py --diagnose-cover` mode now records fixed
+word-set DP depth, reachable/dead state counts, and dead-frontier examples; for
+the first lexicographic representative `m = 11` combo it stops at depth `0`
+with frontier `[2,0,0,0,0,0,0]`.
+
+The cyclic-rotation closure changes that diagnosis.  With
+`--cyclic-rotations`, combo-level first-symbol feasibility opens immediately.
+The lexicographically first few representatives can still be bad, so the
+script now has `--count-vector-representatives-per-symbol`, which samples up
+to a fixed number of words for each first symbol within a count-vector group.
+The command
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --cyclic-rotations \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 5 \
+  --count-vector-product-limit 100000 \
+  --count-vector-representatives-per-symbol 1 \
+  --json-out /tmp/targetA_m11_rot_symbol1_0_5.json
+```
+
+finds three diagnostic exact-cover placements in the first balanced
+count-vector combo, after checking `1484` sampled word products and `246`
+exact-cover DP products.  One resulting Target-A base-word set is
+
+```text
+2434343,43033334,33342440,01241242,01110212,10212011,42020010
+```
+
+`scripts/analyze_targetA_section.py --moduli 11` confirms that each of these
+seven words is a single `m^4` base cycle, has a single `Sigma` first-return
+cycle, has return-time sum `14641`, and covers all base states once by the
+section excursions.  `scripts/analyze_4plus2_base_rows.py --cover-m 11
+--diagnose-cover` confirms the seven words have column exact covers; the
+diagnostic reaches target depth `11` with `234` reachable states and no
+truncation.  This is a finite `m = 11` Target-A row-cover witness and a useful
+trace source, not yet a congruence-family proof.
 
 ### A5-to-A7 Target-A/Target-B Refinement
 
@@ -496,14 +534,13 @@ with a concrete Route-E program.
   even `m = 6,8,...,60`, it finds the uniform open-port section triple
   `(A,B,C) = (0,m-2,1)`: the section formula holds, `H` is a single `m^2`
   cycle, and the only exception point is `(m-1,2)`.  This does not prove the
-  full return is primitive; it isolates the remaining obstruction in the
-  origin-excursion/full-return chart.
+  full return is primitive; it only isolates the open-port section dynamics.
 - The same verifier now has an open-port full-cycle scan.  Through
   `m = 6,8,...,20`, the section-passing open-port triples include full
   one-cycle returns at `m = 10,12,14,18,20`, but no open-port full hit at
   `m = 6,8,16`.  Thus the all-even Route-E family cannot be closed merely by
   the easy open-port section condition; some residue classes need a
-  non-open-port count/slot choice or a stronger origin-excursion chart.
+  non-open-port count/slot choice or another return section.
 - A larger one-`Lambda_E` count/slot scan now confirms that the missing
   open-port cases are not failures of the one-`Lambda_E` ansatz itself.  The
   scan finds full one-cycle hits for `m = 6,8,10,12,14,16,18,20`; for example,
@@ -579,8 +616,8 @@ When new bundles arrive, compare them against this baseline:
   `BridgeConcreteFullRankPackage`?
 - Do they separate D5 even and D7 even certificate tracks from the D7 odd
   additive bridge?
-- For D5 even, do they provide count/drift families and origin-excursion
-  charts for the Route-E one-`Lambda_E` program?
+- For D5 even, do they provide count/slot residue families and symbolic
+  small-seam block decompositions for the Route-E one-`Lambda_E` program?
 
 ## Verification Commands
 
@@ -652,6 +689,25 @@ python3 scripts/search_targetA_balanced_covers.py \
   --m 5 --words 23,002,0111,3044,14413,43220 \
   --lengths 5,4,5,4,3,2,2 \
   --json-out /tmp/targetA_balanced_m5_inline.json
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --cyclic-rotations \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 5 \
+  --count-vector-product-limit 100000 \
+  --count-vector-representatives-per-symbol 1 \
+  --json-out /tmp/targetA_m11_rot_symbol1_0_5.json
+python3 scripts/analyze_targetA_section.py \
+  --moduli 11 \
+  --words 2434343,43033334,33342440,01241242,01110212,10212011,42020010 \
+  --json-out /tmp/targetA_m11_rot_symbol1_solution0_section.json
+python3 scripts/analyze_4plus2_base_rows.py \
+  --cover-m 11 \
+  --cover-words 2434343,43033334,33342440,01241242,01110212,10212011,42020010 \
+  --cover-limit 3 --diagnose-cover \
+  --json-out /tmp/targetA_m11_rot_symbol1_solution0_cover_diag.json
 git diff --check
 ```
 

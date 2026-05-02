@@ -354,6 +354,13 @@ theorem seam_card {m : Nat} [NeZero m]
     Fintype.card (RouteENonzeroSeam m) = m - 1 :=
   card_routeENonzeroSeam m
 
+theorem returnTime_sum_card_form {m : Nat} [NeZero m]
+    (cert : RouteEThetaSmallSeamCertificate m) (c : Color) :
+    Finset.univ.sum (fun a : RouteENonzeroSeam m => cert.returnTime c a) =
+      Fintype.card (Vec4 m) := by
+  rw [cert.returnTime_sum c]
+  exact (card_vec4 m).symm
+
 def toNonopenSmallSeamCertificate {m : Nat} [NeZero m]
     (cert : RouteEThetaSmallSeamCertificate m) :
     RouteENonopenSmallSeamCertificate m where

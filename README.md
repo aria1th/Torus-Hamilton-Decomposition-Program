@@ -377,6 +377,28 @@ windows.  On the current temporary pool, the windows `0..50`, `50..100`,
 `100..150`, and `150..200` reject all first 200 balanced vector combos at the
 first-symbol mask gate, before any concrete word product or deeper DP is
 entered.
+For pools that are closed under cyclic rotations, the same diagnostic can
+sample representatives by first symbol:
+
+```bash
+python3 scripts/search_targetA_balanced_covers.py \
+  --m 11 --word-file /tmp/targetA_m11_primitive_words_len11.txt \
+  --cyclic-rotations \
+  --lengths 7,8,8,8,8,8,8 \
+  --combo-limit 0 \
+  --count-vector-placement-start 0 \
+  --count-vector-placement-limit 5 \
+  --count-vector-product-limit 100000 \
+  --count-vector-representatives-per-symbol 1 \
+  --json-out /tmp/targetA_m11_rot_symbol1_0_5.json
+```
+
+This finds column exact-cover diagnostics for the first `m = 11` vector combo;
+one resulting base-word set is
+`2434343,43033334,33342440,01241242,01110212,10212011,42020010`.  Each word
+passes the Target-A section audit at `m = 11`, and the seven words have a
+column exact cover.  This is finite evidence for the Target-A row-family
+search, not an all-odd symbolic family.
 For fixed word sets, `scripts/analyze_4plus2_base_rows.py --diagnose-cover`
 now reports exact-cover DP depth, reachable/dead states, and dead-frontier
 examples.

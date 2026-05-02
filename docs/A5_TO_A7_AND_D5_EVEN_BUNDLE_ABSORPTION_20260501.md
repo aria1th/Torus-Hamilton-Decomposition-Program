@@ -44,14 +44,17 @@ track:
   `m >= 6`, with `m = 4` handled as a separate finite `C/E/O` witness;
 - a symbolic reduction to a one-map return `F_{nu,s}`;
 - an open-port section theorem where `nu = (0,A,B,C,0)` and `gcd(C,m)=1`;
-- the remaining all-even gap as residue-class count/drift families plus
-  origin-excursion affine chart certificates.
+- the initial all-even gap as residue-class count/drift families plus
+  origin-excursion affine chart certificates, later sharpened by
+  `d5_even_routeE_nonopen_small_seam_v0_4.zip` to a one-dimensional
+  small-seam first-return problem.
 
 Thus the D5 even item in the project goal should be revised to:
 
 > D5 even is a separate Route-E periodic-excursion certificate track: prove
-> all-even one-`Lambda_E` count/drift coverage and origin-excursion chart
-> certificates, with `m = 4` packaged as a finite witness.
+> all-even one-`Lambda_E` count/slot coverage and, for each residue family, a
+> small-seam first-return cycle plus return-time sum certificate; package
+> `m = 4` as a finite witness.
 
 ## A5 to A7 Findings
 
@@ -209,8 +212,8 @@ The symbolic core now written down is:
 - for `s = 0` and `nu = (0,A,B,C,0)`, the completed open-port section map is
   `H_{A,C}(sigma,a) = (sigma-C, a+A+1-1_{sigma=0})`;
 - if `gcd(C,m)=1`, this completed section map is a single `m^2` cycle;
-- the remaining primitiveity proof is the origin-excursion lemma outside the
-  section.
+- before the non-open small-seam update, the remaining primitiveity proof for
+  this open-port subfamily was an origin-excursion lemma outside the section.
 
 The verifier now also has a section-scan mode.  In the tested even range
 `m = 6,8,...,60`, the uniform open-port triple
@@ -220,23 +223,24 @@ The verifier now also has a section-scan mode.  In the tested even range
 ```
 
 passes the section formula and gives a single `H` cycle, with one exception
-point `(m-1,2)`.  This supports the current split: the open-port section
-problem is easy, while the all-even proof still needs the origin-excursion
-affine chart that returns through the exceptional point correctly.
+point `(m-1,2)`.  This explains why the open-port section theorem is useful but
+not by itself a full all-even proof.
 
 A later open-port full-cycle scan separates this further.  Among section
 passing open-port triples, full one-cycle returns are found at
 `m = 10,12,14,18,20`, but no open-port full hit is found at `m = 6,8,16`.
-Those missing residue classes explain why the Route-E track still needs either
-non-open-port count/slot families or explicit origin-excursion chart
-certificates, not just the `H`-cycle theorem.
+Those missing residue classes explain why the Route-E track still needs
+non-open-port count/slot families or another return section, not just the
+`H`-cycle theorem.
 
 A broader one-`Lambda_E` count/slot scan restores positive witnesses in those
 missing cases.  It finds full one-cycle returns for `m = 6,8,16` outside the
 open-port normal form, and also finds additional hits for the already-positive
 moduli.  This sharpens the remaining task: extract symbolic residue-class
-count/drift families from the larger one-`Lambda_E` hit set, then prove the
-corresponding origin-excursion charts.
+count/slot families from the larger one-`Lambda_E` hit set.  The later v0.4
+small-seam bundle gives the preferred certificate shape for those families:
+prove the induced map on `Theta_s` is one cycle and that the return-time sum is
+`m^4`.
 
 The scan also records normalized counts after cyclically rotating the E-slot
 to `0`.  This is the right comparison layer for residue-family extraction:

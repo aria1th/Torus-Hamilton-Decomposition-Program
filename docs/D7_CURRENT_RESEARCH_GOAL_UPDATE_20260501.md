@@ -117,9 +117,10 @@ The active goal should be revised as follows.
 6. Treat the `3+3` D4 route as diagnostic or negative unless a new D4 packet is
    found. The current root-fixed extracted D4 packet has an extra-capacity
    obstruction at `m=3`.
-7. Keep D5 even as a separate Route-E periodic-excursion certificate problem:
-   one-`Lambda_E` count/drift coverage for even `m >= 6`, origin-excursion
-   affine chart certificates, and a finite `m = 4` witness branch.
+7. Keep D5 even as a separate Route-E small-seam certificate problem:
+   one-`Lambda_E` count/slot coverage for even `m >= 6`, one-dimensional
+   small-seam first-return cycle and return-time sum proofs, and a finite
+   `m = 4` witness branch.
 8. Keep D7 even as a separate `RootFlatSchedule` certificate construction
    problem.
 9. Postpone the full prime-p canonical-family abstraction until the D7 `4+2`
@@ -245,14 +246,16 @@ bundle records a concrete obstruction for the `3+3` route at `m=3` under
 root-fixed coordinate conjugations. This can be formalized as a negative lemma
 or kept as a search constraint.
 
-### D5 Even Seam Orbit Certificate
+### D5 Even Route-E Small-Seam Certificate
 
 D5 even is still missing the real all-even certificate.  The Lean compatibility
 interface has been simplified, and the older seam search remains useful as a
 debugging track, but the current positive route is the Route-E construction
-absorbed from `d5_even_routeE_bundle_v0_1.zip`: constant layers plus one
-perturbed zero-set layer `Lambda_E`, a symbolic open-port section theorem, and
-a remaining periodic origin-excursion certificate.
+absorbed from `d5_even_routeE_bundle_v0_1.zip` and then sharpened by
+`d5_even_routeE_nonopen_small_seam_v0_4.zip`: constant layers plus one
+perturbed zero-set layer `Lambda_E`, count/slot families for every even
+`m >= 6`, and a one-dimensional small-seam first-return proof on
+`Theta_s = {rho_s(0,a,0,0,-a) : a != 0}`.
 
 ### Concrete Composite Expansion
 
@@ -527,9 +530,10 @@ Current status against the revised goal:
   instantiated with the all-zero-set D5 rows and D3 fiber compiler.
 - D5 even: separate Route-E/even-certificate track remains open.
   `D5Odd/Even.lean` still exposes the existing seam-orbit implication
-  endpoints, while `scripts/verify_d5_even_routeE.py` records the absorbed
-  Route-E finite schedule/core/section checks.  The all-even count/drift and
-  origin-excursion certificates are not yet constructed.
+  endpoints, while `D5Odd/EvenRouteE.lean` records the small-seam certificate
+  interface and `scripts/verify_d5_even_routeE.py` records the finite
+  schedule/core/section/small-seam checks.  The all-even count/slot residue
+  families and symbolic small-seam cycle/sum proofs are not yet constructed.
 - D7 even: separate `RootFlatSchedule` target remains open.
   `D7Odd/Even.lean` routes a future even certificate through the shared
   layered lift and then to torus/Cayley wrappers.
@@ -550,7 +554,7 @@ are closed and which remain open.
 | Move D7 explanation to additive `4+2` bridge | `D7Odd/Handoff/Additive4Plus2.lean` has `A7(m) ~= A5(m) x A3(m)` root equivalence, `card_ARoot3 = m^2`, `card_ProductRoot = card_RootState7 = m^6`, `ProductRootCertificate.ofLocalBridgeAndSkewReturns`, and product-certificate adapters; `Additive4Plus2BridgeChart.lean` has the bundle-compatible forced-`q0` bridge chart, `BridgeProductRootCertificate`, and `BridgeProductRootCertificate.ofLocalBridgeAndSkewReturns`; `Additive4Plus2Endpoints.lean` lifts both product-certificate forms to D7 torus/Cayley/shared Cayley; `Additive4Plus2Goal.lean` packages finite `m = 3` plus odd `m >= 5` bridge certificates, or local/skew packages, into the full D7 odd endpoints; `Additive4Plus2ConcreteGoal.lean` specializes this to the concrete all-zero-set bridge and reduces the remaining construction to row/fiber data plus canonical folded base/fiber rank steps into `ZMod (m^4)` and `ZMod (m^2)` | Interface and conditional goal theorem closed; uniform all-odd certificate open |
 | Formalize local bridge lemma | `Shared/AdditiveBridge.lean` has `localBridge_rowLatin_and_layerBijective`; `ProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` and `BridgeProductRootSchedule.rowLatin_of_stateDirectionPermutation`/`layerBijective_of_skewProductComponents` expose it to both D7 product charts; `Additive4Plus2D5Base.lean` proves row Latin and `m >= 5` layer bijectivity for the concrete D5 all-zero-set base packet; `Additive4Plus2D3Fiber.lean` proves row Latin, layer-step bijectivity, and S3-permuted compiler facts for the D3 fiber packet; `Additive4Plus2BridgeKappa.lean` proves bijectivity of the combined state-dependent bridge `kappa`, gives a concrete row-schedule row-Latin adapter, adapts the D3 compiler into the bridge `phi` interface, and proves concrete bridge layer bijectivity for `m >= 5`; `Additive4Plus2ConcreteGoal.lean` consumes these local facts automatically in `BridgeConcreteSkewPackage.toLocalSkewPackage` | Concrete local row/layer assembly closed; uniform return instantiation open |
 | Formalize monodromy criterion | `Shared/Monodromy.lean` has `single_cycle_of_skewProduct_monodromy` and `single_cycle_of_skewProduct_base_orbit_monodromy`; `ProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` and `BridgeProductRootSchedule.returnSingleCycle_of_skewReturn`/`returnsSingleCycle_of_skewReturns` expose it to product certificates | Abstract and product-schedule criteria closed; product-return instantiation open |
-| Keep D5 even separate | `D5Odd/Even.lean` exposes the older seam-orbit certificate endpoints; `scripts/d5_even_seam_sat_search.py` remains a negative/debugging smoke check; `scripts/verify_d5_even_routeE.py` absorbs the positive Route-E finite schedule/core/section checks from `d5_even_routeE_bundle_v0_1.zip` | Route-E all-even count/drift and origin-excursion certificates open |
+| Keep D5 even separate | `D5Odd/Even.lean` exposes the older seam-orbit certificate endpoints; `D5Odd/EvenRouteE.lean` exposes `RouteEThetaSmallSeamCertificate`; `scripts/d5_even_seam_sat_search.py` remains a negative/debugging smoke check; `scripts/verify_d5_even_routeE.py` absorbs the positive Route-E finite schedule/core/section checks from `d5_even_routeE_bundle_v0_1.zip` and the small-seam checks from `d5_even_routeE_nonopen_small_seam_v0_4.zip` | Route-E all-even count/slot families plus symbolic small-seam cycle and return-time-sum proofs open |
 | Keep D7 even separate | `D7Odd/Even.lean` exposes `RootFlatSchedule` certificate endpoints and shared layered adapters | Actual even schedule certificate open |
 | Defer prime-p abstraction | `D7Odd/Handoff/PrimeRoot*.lean`, `PrimeCanonical*.lean`, and this note keep it as a regression/future interface | Deferred by design |
 

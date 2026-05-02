@@ -48,6 +48,35 @@ def first_symbol(word: tuple[int, ...]) -> int:
     return word[0]
 
 
+def first_symbol_histogram(words: list[tuple[int, ...]]) -> list[int]:
+    out = [0, 0, 0, 0, 0]
+    for word in words:
+        out[first_symbol(word)] += 1
+    return out
+
+
+def select_count_vector_representatives(
+    words: list[tuple[int, ...]],
+    representatives_per_vector: int,
+    representatives_per_symbol: int,
+) -> list[tuple[int, ...]]:
+    if representatives_per_symbol > 0:
+        selected: list[tuple[int, ...]] = []
+        counts = [0, 0, 0, 0, 0]
+        for word in words:
+            symbol = first_symbol(word)
+            if counts[symbol] >= representatives_per_symbol:
+                continue
+            counts[symbol] += 1
+            selected.append(word)
+            if all(count >= representatives_per_symbol for count in counts):
+                break
+        return selected
+    if representatives_per_vector > 0:
+        return words[:representatives_per_vector]
+    return words
+
+
 def add_counts(
     left: tuple[int, int, int, int, int], right: tuple[int, int, int, int, int]
 ) -> tuple[int, int, int, int, int]:
@@ -104,6 +133,22 @@ def load_words(
     if pool_limit is not None:
         return words[:pool_limit]
     return words
+
+
+def cyclic_rotations(word: tuple[int, ...]) -> list[tuple[int, ...]]:
+    return [word[idx:] + word[:idx] for idx in range(len(word))]
+
+
+def close_under_cyclic_rotations(words: list[tuple[int, ...]]) -> list[tuple[int, ...]]:
+    out = []
+    seen: set[tuple[int, ...]] = set()
+    for word in words:
+        for rotated in cyclic_rotations(word):
+            if rotated in seen:
+                continue
+            seen.add(rotated)
+            out.append(rotated)
+    return out
 
 
 def filter_words(
@@ -252,6 +297,20 @@ def combo_first_frontier_possible(
     return (0b11111 in masks)
 
 
+def word_groups_first_frontier_possible(
+    word_groups: list[list[tuple[int, ...]]],
+) -> bool:
+    masks = {0}
+    for group_words in word_groups:
+        first_symbols = {first_symbol(word) for word in group_words}
+        next_masks = set()
+        for mask in masks:
+            for symbol in first_symbols:
+                next_masks.add(mask | (1 << symbol))
+        masks = next_masks
+    return (0b11111 in masks)
+
+
 def search_count_vector_placements(
     m: int,
     words: list[tuple[int, ...]],
@@ -260,6 +319,7 @@ def search_count_vector_placements(
     vector_combo_limit: int,
     product_limit: int,
     representatives_per_vector: int,
+    representatives_per_symbol: int,
     solution_limit: int,
     cover_limit: int,
 ) -> dict | None:
@@ -295,6 +355,7 @@ def search_count_vector_placements(
     word_products_checked = 0
     frontier_failures = 0
     dp_products_checked = 0
+    sampled_frontier_impossible = 0
     skipped_product_limit = 0
     states_visited = 0
     truncated = False
@@ -324,26 +385,34 @@ def search_count_vector_placements(
         product_size = 1
         for length, vector in combo:
             group_words = groups[length][vector]
-            if representatives_per_vector > 0:
-                group_words = group_words[:representatives_per_vector]
+            selected_words = select_count_vector_representatives(
+                group_words, representatives_per_vector, representatives_per_symbol
+            )
             word_groups.append(group_words)
-            product_size *= len(group_words)
+            product_size *= len(selected_words)
             combo_summary.append(
                 {
                     "length": length,
                     "count_vector": list(vector),
                     "word_count": len(groups[length][vector]),
-                    "tested_word_count": len(group_words),
+                    "tested_word_count": len(selected_words),
+                    "first_symbol_histogram": first_symbol_histogram(group_words),
+                    "tested_first_symbol_histogram": first_symbol_histogram(
+                        selected_words
+                    ),
                     "representatives": [
-                        word_string(word) for word in group_words[:5]
+                        word_string(word) for word in selected_words[:10]
                     ],
                 }
             )
+            word_groups[-1] = selected_words
+        sampled_frontier_possible = word_groups_first_frontier_possible(word_groups)
         attempt = {
             "vector_combo_index": vector_combos_seen - 1,
             "product_size": product_size,
             "tested": False,
             "combo_frontier_possible": combo_frontier_possible,
+            "sampled_frontier_possible": sampled_frontier_possible,
             "solution_count": 0,
             "frontier_failures": 0,
             "dp_products_checked": 0,
@@ -353,6 +422,10 @@ def search_count_vector_placements(
         if not combo_frontier_possible:
             vector_combos_frontier_impossible += 1
             attempt["skipped"] = "frontier_impossible"
+            return
+        if not sampled_frontier_possible:
+            sampled_frontier_impossible += 1
+            attempt["skipped"] = "sampled_frontier_impossible"
             return
         if product_size > product_limit:
             skipped_product_limit += 1
@@ -418,12 +491,14 @@ def search_count_vector_placements(
         "vector_combo_limit": vector_combo_limit,
         "product_limit": product_limit,
         "representatives_per_vector": representatives_per_vector,
+        "representatives_per_symbol": representatives_per_symbol,
         "vector_combos_seen": vector_combos_seen,
         "vector_combos_tested": vector_combos_tested,
         "vector_combos_frontier_impossible": vector_combos_frontier_impossible,
         "word_products_checked": word_products_checked,
         "frontier_failures": frontier_failures,
         "dp_products_checked": dp_products_checked,
+        "sampled_frontier_impossible": sampled_frontier_impossible,
         "skipped_product_limit": skipped_product_limit,
         "truncated": truncated,
         "attempts": attempts,
@@ -443,6 +518,7 @@ def search_balanced_covers(
     count_vector_placement_limit: int = 0,
     count_vector_product_limit: int = 10000,
     count_vector_representatives_per_vector: int = 0,
+    count_vector_representatives_per_symbol: int = 0,
 ) -> dict:
     target_len = 5 * m
     target_counts = (m, m, m, m, m)
@@ -557,6 +633,7 @@ def search_balanced_covers(
         count_vector_placement_limit,
         count_vector_product_limit,
         count_vector_representatives_per_vector,
+        count_vector_representatives_per_symbol,
         solution_limit,
         cover_limit,
     )
@@ -591,6 +668,11 @@ def main() -> None:
     parser.add_argument("--max-len", type=int)
     parser.add_argument("--pool-limit", type=int)
     parser.add_argument("--max-per-length", type=int)
+    parser.add_argument(
+        "--cyclic-rotations",
+        action="store_true",
+        help="close the primitive-word pool under cyclic rotations",
+    )
     parser.add_argument("--combo-limit", type=int, default=100000)
     parser.add_argument("--solution-limit", type=int, default=3)
     parser.add_argument("--cover-limit", type=int, default=1)
@@ -624,10 +706,22 @@ def main() -> None:
         default=0,
         help="limit tested words per count vector; 0 means all words in the pool",
     )
+    parser.add_argument(
+        "--count-vector-representatives-per-symbol",
+        type=int,
+        default=0,
+        help=(
+            "limit tested words to this many representatives for each first "
+            "symbol within a count vector; takes precedence over "
+            "--count-vector-representatives-per-vector"
+        ),
+    )
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
     words = load_words(args.word_file, args.words, args.pool_limit)
+    if args.cyclic_rotations:
+        words = close_under_cyclic_rotations(words)
     words = filter_words(words, args.min_len, args.max_len, args.max_per_length)
     result = search_balanced_covers(
         args.m,
@@ -641,6 +735,7 @@ def main() -> None:
         args.count_vector_placement_limit,
         args.count_vector_product_limit,
         args.count_vector_representatives_per_vector,
+        args.count_vector_representatives_per_symbol,
     )
     payload = {"search": result}
 
@@ -661,7 +756,9 @@ def main() -> None:
             "frontier_impossible={vector_combos_frontier_impossible} "
             "word_products={word_products_checked} "
             "frontier_failures={frontier_failures} "
-            "dp_products={dp_products_checked} skipped={skipped_product_limit} "
+            "dp_products={dp_products_checked} "
+            "sampled_frontier_impossible={sampled_frontier_impossible} "
+            "skipped={skipped_product_limit} "
             "diag_solutions={solution_count} truncated={truncated}".format(
                 solution_count=len(placement_diag["solutions"]),
                 **placement_diag,

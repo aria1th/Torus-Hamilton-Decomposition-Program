@@ -161,6 +161,14 @@ every even `m = 6,8,...,60`.  The standalone C++ checker compiled from
 `scripts/fast_d5_routeE_small_seam_verify.cpp` reports `ok 1` for all `28`
 embedded cases.
 
+The bundle was rechecked again on 2026-05-02 after the current proof-status
+update:
+
+- the source TSV and repo `SMALL_SEAM_CASES` agree exactly on all `28` rows;
+- `scripts/verify_d5_even_routeE.py --mode section --small-seam-moduli all`
+  reports `all_ok=True`, `seam_sizes_ok=True`, and `return_sums_ok=True`;
+- the standalone C++ checker reports `bad 0` over the same `28` rows.
+
 The verifier now also emits proof-facing data for the induced seam map:
 
 - `translation_blocks`: maximal intervals in `a = 1,...,m-1` on which
