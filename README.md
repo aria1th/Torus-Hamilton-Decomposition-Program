@@ -173,6 +173,10 @@ when `m` is odd and `m >= 3`.
 - `docs/CURRENT_FLOW_AND_NEXT_BUNDLE_PLAN_20260502.md`: current-flow note for
   the D7 odd bridge, D5 even Route-E, D7 even root-flat track, proposed goal
   revision, and the concrete shape expected from the next bundle.
+- `docs/REVISED_GOAL_20260502.md`: revised proof-program goal after the D7
+  exceptional phase-splice and D5 Route-E branch-extraction bundles, splitting
+  D7 Target A into good-class, exceptional-splice, and assembly targets and
+  D5 even into a finite residue branch-menu program.
 - `docs/A5_TO_A7_AND_D5_EVEN_BUNDLE_ABSORPTION_20260501.md`: absorption note
   for `A5_to_A7_induction_hypothesis_bundle_v0_1.zip` and
   `d5_even_routeE_bundle_v0_1.zip`, sharpening the D7 odd bridge into
@@ -186,10 +190,18 @@ when `m` is odd and `m >= 3`.
   `A5_to_A7_current_proofs_bundle_v0_3.zip` and its note, recording the
   symbolic seam quotient `phi_h` for the `23/32` Target-A branch and the
   reduced Q-hitting/length-sum obligations.
+- `docs/A5_EXCEPTIONAL_PHASE_SPLICE_BUNDLE_V0_4_20260502.md`: absorption note
+  for `A5_exceptional_phase_splice_bundle_v0_4.zip`, recording the
+  exceptional `m = 10*t+7` five-lane splice system and the `00` correction
+  block phase table for D7 Target A.
 - `docs/D5_EVEN_ROUTE_E_NONOPEN_SMALL_SEAM_20260501.md`: absorption note for
   `d5_even_routeE_nonopen_small_seam_v0_4.zip`, recording the size `m-1`
   small-seam criterion for non-open one-`Lambda_E` schedules and the verified
   even range `m = 6,8,...,60`.
+- `docs/D5_EVEN_ROUTE_E_BRANCH_EXTRACTION_V0_7_20260502.md`: absorption note
+  for `d5_even_routeE_branch_extraction_v0_7.zip`, recording the branch/menu
+  interpretation of the D5 even Route-E data and the B20 candidate
+  `m == 20 mod 24` with counts `(r,0,0,h+r,r)`.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.

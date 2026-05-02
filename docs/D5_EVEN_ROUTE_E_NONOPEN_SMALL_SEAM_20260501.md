@@ -429,6 +429,32 @@ small seam, its inverse rank table, the maximal translation blocks, and the
 return-time sum.  The verification checks `rank(V(a)) = rank(a)+1 mod (m-1)`,
 block cover/disjointness/maximality, and `sum tau = m^4`.
 
+The later bundle
+`/data/angel/repos/etc/d5_even_routeE_branch_extraction_v0_7.zip` changes the
+search emphasis.  It groups the same verified `m = 6,8,...,60` cases by branch
+and records that the observed witnesses are heterogeneous rather than one
+stable closed count formula.  Its useful new candidate is branch `B20`:
+
+```text
+m = 24*q + 20, h = m/2, r = (h-1)/3,
+slot = 0,
+nu = (r,0,0,h+r,r).
+```
+
+The claimed first-return map on the `Theta_0` seam is the two-block map
+
+```text
+1 <= a <= h-2:      V(a) = a + h + 1 mod m
+h-1 <= a <= m-1:    V(a) = a + h + 2 mod m
+```
+
+The bundle verifies this branch for `m = 20,44,68,92`.  Locally, the bundled
+C++ verifier was compiled and rerun on those four instances, reporting `ok 1`
+for each.  This branch is not in the earlier `(a,b,0,c,0)` support pattern;
+it has normalized support `(0,3,4)`.  Thus the next D5 even target should be a
+finite residue-branch menu, with B20 as the first symbolic branch, rather than
+a single global support-pattern interpolation.
+
 ## Revised D5 Even Route-E Gap
 
 The non-open branch should no longer be described as an unresolved
@@ -437,8 +463,8 @@ small-seam first-return problem.
 
 The remaining symbolic propositions are:
 
-1. construct residue-class formulas for `(s,nu)` covering every even
-   `m >= 6`;
+1. construct a finite residue-branch menu of formulas for `(s,nu)` covering
+   every even `m >= 6`, beginning with B20;
 2. for each residue family, prove the induced small-seam map on
    `a = 1,...,m-1` is one cycle;
 3. prove the return-time sum identity `sum tau = m^4` for each family;

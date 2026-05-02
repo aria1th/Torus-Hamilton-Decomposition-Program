@@ -270,6 +270,84 @@ def summarize_count_scan_json(path: Path, score_small_seam: bool, top: int) -> d
     return summary
 
 
+def candidate_search_row_key(row: dict, objective: str):
+    counts = row["fit_vector"]
+    if objective == "low_support":
+        return (
+            len(row["support"]),
+            row["block_count"],
+            -row["max_block_length"],
+            counts,
+        )
+    return (
+        row["block_count"],
+        -row["max_block_length"],
+        len(row["support"]),
+        counts,
+    )
+
+
+def candidate_search_rows(paths: Sequence[Path], objective: str) -> List[dict]:
+    by_m: Dict[int, dict] = {}
+    for path in paths:
+        payload = json.loads(path.read_text())
+        for item in payload.get("results", []):
+            hits = item.get("best", {}).get(objective, [])
+            if not hits:
+                continue
+            hit = hits[0]
+            counts = as_count_vec(hit["counts"])
+            row = {
+                "source": str(path),
+                "m": int(item["m"]),
+                "slot": int(hit.get("slot", 0)),
+                "fit_vector": counts,
+                "counts": counts,
+                "zero_positions": [i for i, n in enumerate(counts) if n == 0],
+                "support": [i for i, n in enumerate(counts) if n != 0],
+                "block_count": int(hit.get("block_count", 0)),
+                "max_block_length": int(hit.get("max_block_length", 0)),
+                "hit_count": int(item.get("hit_count", 0)),
+                "checked": int(item.get("checked", 0)),
+            }
+            old = by_m.get(row["m"])
+            if old is None or candidate_search_row_key(
+                row, objective
+            ) < candidate_search_row_key(old, objective):
+                by_m[row["m"]] = row
+    return [by_m[m] for m in sorted(by_m)]
+
+
+def summarize_candidate_search_jsons(
+    paths: Sequence[Path], objective: str, periods: Sequence[int]
+) -> dict:
+    rows = candidate_search_rows(paths, objective)
+    return {
+        "schema": "d5_routeE_candidate_search_affine_summary_v1",
+        "sources": [str(path) for path in paths],
+        "objective": objective,
+        "case_count": len(rows),
+        "moduli": [row["m"] for row in rows],
+        "rows": [
+            {
+                "m": row["m"],
+                "counts": row["fit_vector"],
+                "support": row["support"],
+                "zero_positions": row["zero_positions"],
+                "block_count": row["block_count"],
+                "max_block_length": row["max_block_length"],
+                "hit_count": row["hit_count"],
+                "checked": row["checked"],
+                "source": row["source"],
+            }
+            for row in rows
+        ],
+        "results": [analyze_period(period, rows) for period in periods]
+        if rows
+        else [],
+    }
+
+
 def fit_affine_coordinate(points: Sequence[Tuple[int, int]]):
     if len(points) == 1:
         return {
@@ -407,6 +485,29 @@ def print_count_scan_summary(summary: dict) -> None:
                 print("count_scan_best", case["m"], name, json.dumps(compact))
 
 
+def print_candidate_search_summary(summary: dict) -> None:
+    print(
+        "candidate_search",
+        "objective",
+        summary["objective"],
+        "cases",
+        summary["case_count"],
+        "moduli",
+        summary["moduli"],
+    )
+    print("candidate_search_rows m counts blocks max_block hits checked")
+    for row in summary["rows"]:
+        print(
+            row["m"],
+            row["counts"],
+            row["block_count"],
+            row["max_block_length"],
+            row["hit_count"],
+            row["checked"],
+        )
+    print_summary(summary["results"])
+
+
 def compact_manifest(output: dict) -> dict:
     period_summaries = []
     for result in output["results"]:
@@ -487,6 +588,21 @@ def main() -> None:
         default=5,
         help="number of scored candidates to retain per objective",
     )
+    parser.add_argument(
+        "--candidate-search-json",
+        type=Path,
+        action="append",
+        help=(
+            "summarize search_d5_routeE_small_seam_candidates.py JSON output; "
+            "may be passed multiple times"
+        ),
+    )
+    parser.add_argument(
+        "--candidate-objective",
+        choices=["min_block", "low_support"],
+        default="min_block",
+        help="which best-candidate bucket to fit from candidate-search JSON",
+    )
     args = parser.parse_args()
 
     rows = case_rows(normalized=not args.raw_counts)
@@ -506,6 +622,13 @@ def main() -> None:
             top=args.count_scan_top,
         )
         print_count_scan_summary(output["count_scan_summary"])
+    if args.candidate_search_json is not None:
+        output["candidate_search_summary"] = summarize_candidate_search_jsons(
+            args.candidate_search_json,
+            objective=args.candidate_objective,
+            periods=periods,
+        )
+        print_candidate_search_summary(output["candidate_search_summary"])
     manifest_check = None
     if args.write_manifest is not None:
         manifest = compact_manifest(output)

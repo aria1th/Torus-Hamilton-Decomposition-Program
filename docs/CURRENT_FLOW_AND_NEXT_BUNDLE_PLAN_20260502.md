@@ -3,9 +3,10 @@
 Date: 2026-05-02.
 
 This note records the current research flow after absorbing the D7 odd
-`4+2` bridge bundles, the D5 even Route-E bundles, and the later D5
-small-seam candidate searches.  It is not a completion claim.  The purpose is
-to make the next goal revision and next bundle shape explicit.
+`4+2` bridge bundles, the D7 Target-A exceptional phase-splice bundle, the D5
+even Route-E bundles, and the later D5 small-seam/branch searches.  It is not
+a completion claim.  The purpose is to make the next goal revision and next
+bundle shape explicit.
 
 ## Current Flow
 
@@ -36,7 +37,11 @@ Target A is the A5 base problem:
 The current `23/32` seam quotient work is real progress, but it is not the full
 Target-A row-family theorem.  Lean closes the arithmetic quotient cycle for
 the good class, while the verifier still supplies Q-hitting, Q-first-return,
-length-sum, and small-modulus evidence.
+length-sum, and small-modulus evidence.  The exceptional class should now be
+tracked separately: `A5_exceptional_phase_splice_bundle_v0_4.zip` reduces
+`m = 10*t+7` to a five-lane phase-splice system and identifies `00` as the
+correction block whose phase table should be formalized before choosing the
+exceptional correction schedule.
 
 Target B' is the A3 fiber/scalar problem:
 
@@ -72,12 +77,17 @@ Full count-prefix scans show multiple alternative normalized count vectors at
 small moduli.  Therefore fitting the recorded table directly is the wrong
 objective.
 
-The current candidate-family evidence is more specific:
+The current candidate-family evidence is more specific, but it has also been
+partly superseded by the branch-extraction bundle `v0.7`:
 
 - open-port small-seam hits occur at `m = 10,12,14,18,20`, but not in the
   tested open-port search at `m = 6,8,16`;
 - low-support support-pattern search for vectors `(a,b,0,c,0)` gives exact
   full-shape evidence through `m = 14,16,...,30`;
+- `d5_even_routeE_branch_extraction_v0_7.zip` groups the verified
+  `m = 6,8,...,60` witnesses by residue branch and extracts a cleaner
+  candidate branch `B20` for `m == 20 mod 24` with normalized counts
+  `(r,0,0,h+r,r)` and a two-block seam map;
 - the best full-shape candidates found on that support pattern are:
 
 ```text
@@ -94,9 +104,19 @@ m  counts           blocks max_block hits
 ```
 
 This is finite evidence for a sharper D5 even search objective, not yet an
-all-even theorem.  The next D5 goal should be to turn this shape into residue
-formulas, then prove the induced one-dimensional small-seam map by block/rank
-arguments and prove the return-time sum.
+all-even theorem.  The `v0.7` bundle changes the best objective from "fit this
+one observed support shape" to "extract a finite branch menu".  The first
+proof-facing branch should be `B20`, where
+
+```text
+m = 24*q + 20, h = m/2, r = (h-1)/3,
+nu = (r,0,0,h+r,r),
+T_h(a) = a+h+1 on 1 <= a <= h-2,
+       = a+h+2 on h-1 <= a <= 2*h-1.
+```
+
+The remaining task for this branch is a symbolic port-time/first-return proof
+and the return-time sum `sum tau = m^4`.
 
 ## D7 Even Track
 
@@ -107,8 +127,23 @@ return certificates on that track.
 
 ## Proposed Goal Revision
 
-The active goal should remain proof-driven, but the D5 even clause should be
-sharpened.
+The active goal should remain proof-driven, but both the D7 Target-A and D5
+even clauses should be sharpened.
+
+Suggested replacement for the D7 Target-A item:
+
+```text
+D7 Target A:
+  Target A1 good-class 23/32 branch for odd m with m % 5 != 2:
+    prove Q-hitting, Q-first-return formulas, length sum, and small cases;
+  Target A2 exceptional branch m = 10*t+7:
+    formalize the five-lane system and 00 phase table,
+    choose/prove a correction schedule,
+    and lift it back to Q-hitting, length-sum, and m^4 base rank;
+  Target A3 assembly:
+    combine good + exceptional branches into seven all-zero-set rows,
+    prove column exact-cover, and package the A5 base m^4 rank-step.
+```
 
 Suggested replacement for the D5 even item:
 
@@ -116,15 +151,15 @@ Suggested replacement for the D5 even item:
 D5 even Route-E:
   keep m=4 finite branch closed;
   keep the Theta small-seam target as the large-even endpoint;
-  search for and then formalize a low-support one-Lambda_E family,
-  with current priority on support pattern (a,b,0,c,0);
-  prove its first-return map by piecewise translation/rank data and
-  prove sum tau = m^4.
+  extract and formalize a finite residue-branch menu of one-Lambda_E families;
+  use B20 (m == 20 mod 24) as the first branch-level target;
+  for each branch prove count formulas, piecewise first-return maps,
+  seam rank/single-cycle data, and sum tau = m^4.
 ```
 
-For D7 odd, the current goal is still accurate, but the next bundle should be
-judged by whether it supplies one of the missing uniform Target-A or Target-B'
-objects, not by whether it contains more finite witnesses.
+For D7 Target B', the current goal remains schedule-dependent: once the base
+row schedule is fixed, the next proof must supply a compatible zero-set-only
+or congruence-family `K_m(Z)` and the triangular A3 scalar/rank theorem.
 
 ## Next Bundle Shape
 
@@ -137,6 +172,9 @@ For D7 Target A:
 - base first-return/rank formulas into `ZMod (m^4)`;
 - Q-hitting, Q-first-return, and length-sum proofs or verifier manifests for
   the `23/32` branch;
+- for the exceptional class `m = 10*t+7`, a correction word or insertion
+  schedule in the five-lane `00` phase-splice system, plus proof that the
+  reduced lane map is one cycle and lifts back to Q-hitting/length-sum data;
 - explicit handling of small odd moduli.
 
 For D7 Target B':
@@ -148,8 +186,8 @@ For D7 Target B':
 
 For D5 even:
 
-- residue formulas for one-`Lambda_E` counts, preferably starting with the
-  support pattern `(a,b,0,c,0)`;
+- residue formulas for a finite branch menu of one-`Lambda_E` counts,
+  starting with the B20 branch `(r,0,0,h+r,r)`;
 - generated block/rank certificates for the `Theta` seam;
 - return-time sum identities;
 - exact notes distinguishing exploratory capped searches from proof-grade
@@ -163,10 +201,14 @@ For D7 even:
 ## Current Blocking Propositions
 
 1. D7 Target A row-family exact cover and `m^4` base rank-step.
-2. D7 Target A `23/32` Q-hitting, Q-first-return, length-sum, and small-modulus
-   packaging in Lean.
-3. D7 Target B' uniform `K_m(Z)`/congruence family and triangular A3 scalar
+2. D7 Target A good-class `23/32` Q-hitting, Q-first-return, length-sum, and
+   small-modulus packaging in Lean.
+3. D7 Target A exceptional class `m = 10*t+7`: formalize the `00` phase table,
+   choose/prove a five-lane correction schedule, and lift it back to the
+   base-return/rank package.
+4. D7 Target B' uniform `K_m(Z)`/congruence family and triangular A3 scalar
    proof.
-4. D5 even low-support count family for all even `m >= 6`, plus symbolic
-   small-seam first-return, seam rank, and return-time-sum proof.
-5. D7 even root-flat schedule certificate family.
+5. D5 even finite residue-branch menu for all even `m >= 6`, beginning with
+   the B20 symbolic first-return/return-time proof, plus seam rank and
+   return-time-sum proofs for the remaining branches.
+6. D7 even root-flat schedule certificate family.

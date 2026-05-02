@@ -1,0 +1,193 @@
+# D5 Even Route-E Branch Extraction v0.7
+
+Date: 2026-05-02.
+
+Source bundle:
+
+- `/data/angel/repos/etc/d5_even_routeE_branch_extraction_v0_7.zip`
+
+This note records the mathematical payload of the branch-extraction bundle.
+It is an extraction and target-selection note, not an all-even proof claim.
+
+## Bundle Contents
+
+The bundle contains:
+
+- `notes/branch_extraction_report.md`: grouped report for the currently
+  verified one-`Lambda_E` small-seam schedules;
+- `outputs/source_cases.tsv`: the original verified small-seam cases;
+- `outputs/branch_table.tsv`: normalized branch table with `h=m/2`,
+  `m mod 6`, normalized slot-zero counts, seam orbit, and jump-run count;
+- `outputs/small_seam_branch_maps.txt`: full seam maps and return times
+  produced by `dump_one.cpp`;
+- `notes/candidate_branch_B20.md`: a clean extracted branch candidate for
+  `m == 20 mod 24`;
+- `scripts/fast_small_seam_verify.cpp`, `scripts/dump_one.cpp`, and
+  `scripts/make_branch_table.py`: reproduction tools.
+
+The verified table is still the same finite range `m = 6,8,...,60` as the
+non-open small-seam bundle.  The new information is the branch classification
+and the explicit extraction of a simple residue branch candidate.
+
+## Main Finding
+
+The branch table supports a finite branch/menu proof more strongly than a
+single global count formula.  The witnesses are heterogeneous after slot-zero
+normalization, and the bundle status explicitly records that stable closed
+count formulas for all even `m` have not yet been extracted.
+
+This changes the D5 even search objective:
+
+- do not try to interpolate the recorded `SMALL_SEAM_CASES` as one canonical
+  formula;
+- search for a finite list of residue branches, each with its own count
+  formula and one-dimensional seam map proof;
+- use the recorded table as evidence and regression data, not as the final
+  branch menu.
+
+## Candidate Branch B20
+
+The clean branch in the bundle is `B20`, for
+
+```text
+m = 24*q + 20,
+h = m/2 = 12*q + 10,
+r = 4*q + 3 = (h-1)/3.
+```
+
+Use slot `s = 0` and the one-`Lambda_E` count vector
+
+```text
+nu = (r, 0, 0, h+r, r)
+   = ((m-2)/6, 0, 0, (2*m-1)/3, (m-2)/6).
+```
+
+This is a support pattern `(0,3,4)` in normalized slot-zero coordinates.  It
+is therefore different from the earlier exploratory support pattern
+`(0,1,3)` / `(a,b,0,c,0)`.
+
+The claimed small-seam first-return map is the two-block translation
+
+```text
+T_h(a) =
+  a + h + 1,  1 <= a <= h-2,
+  a + h + 2,  h-1 <= a <= 2*h-1,
+mod 2*h.
+```
+
+For this branch `m == 2 mod 6`, so the two-block map avoids the residue-3
+obstruction class described in the bundle note.
+
+The bundle records verified instances:
+
+```text
+m  q  r   counts              seam cycle  return sum
+20 0  3   (3,0,0,13,3)       19          20^4
+44 1  7   (7,0,0,29,7)       43          44^4
+68 2  11  (11,0,0,45,11)     67          68^4
+92 3  15  (15,0,0,61,15)     91          92^4
+```
+
+Locally, the bundle C++ verifier was compiled and rerun on these four
+instances.  It reported `ok 1` in each case.  The dumped seam maps for
+`m = 20` and `m = 44` have exactly the advertised two translation blocks:
+
+```text
+m = 20: [1,8]  -> delta 11, [9,19]  -> delta 12
+m = 44: [1,20] -> delta 23, [21,43] -> delta 24
+```
+
+## Proof Obligations Exposed by B20
+
+For the B20 branch, the all-even proof target is now concrete:
+
+1. prove that `nu = (r,0,0,h+r,r)` is a valid one-`Lambda_E` schedule for
+   all `m = 24*q + 20`;
+2. prove that every point of `Theta_0` first returns to `Theta_0`;
+3. prove the first-return equation is the two-block map `T_h`;
+4. prove the two-block map is a single cycle on `{1,...,m-1}`;
+5. prove the return-time sum identity `sum tau = m^4`;
+6. package these equations into `RouteEThetaRankedPiecewiseTranslationCertificate`
+   or directly into `RouteEThetaSmallSeamCertificate`.
+
+The strongest missing item is the symbolic port-time proof behind item 3 and
+the return-time sum identity in item 5.  The seam one-cycle proof itself looks
+small once `T_h` is available.
+
+## Goal Impact
+
+The D5 even clause of the active goal should be revised from a single
+low-support family to a finite residue-branch program:
+
+```text
+D5 even Route-E:
+  keep m=4 finite branch closed;
+  keep Theta small-seam as the large-even endpoint;
+  extract a finite menu of residue branches for all even m >= 6;
+  formalize each branch by count formulas, piecewise seam first-return maps,
+  seam rank/single-cycle proofs, and return-time sums;
+  use B20 (m == 20 mod 24) as the first branch-level formalization target.
+```
+
+The previous `(a,b,0,c,0)` support-pattern search remains useful evidence, but
+it should no longer be treated as the primary D5 even route.  B20 shows that a
+different low-support pattern can give a cleaner symbolic map.
+
+## Relative Position
+
+The bundle was ahead of the repo-state search in three ways:
+
+1. it selected a branch/menu interpretation rather than continuing to fit one
+   global support pattern;
+2. it extracted a concrete first branch, B20, with a closed count formula and
+   a two-block candidate seam map;
+3. it supplied classification data for the verified `m = 6,8,...,60` table by
+   `m mod 6`, normalized counts, orbit, and jump-run count.
+
+The repo was ahead of the bundle in the formal endpoint infrastructure:
+
+1. Lean already has the `Theta_s` small-seam certificate, the ranked seam
+   certificate, the piecewise translation certificate, and the combined
+   `RouteEThetaRankedPiecewiseTranslationCertificate`;
+2. the finite `m = 4` Route-E branch is already closed and the all-large
+   Route-E targets already lower to D5 Hamilton, torus, and Cayley endpoints;
+3. the repo-side verifiers already check bundle-to-repo consistency, rank
+   steps on the finite seam, block maximality, and return-time sums;
+4. the earlier count scans had already exposed non-uniqueness of the recorded
+   witnesses, which agrees with the bundle's warning that the verified table is
+   heterogeneous.
+
+Thus v0.7 is ahead on target discovery, while the repo is ahead on proof
+interfaces and endpoint plumbing.  The two pieces are compatible: B20 fits
+the existing ranked-piecewise `Theta` interface almost exactly.
+
+## Reachability Assessment
+
+B20 looks realistically reachable as a first symbolic Route-E branch.  The
+seam map has only two translation blocks:
+
+```text
+1 <= a <= h-2:      delta = h+1
+h-1 <= a <= 2*h-1:  delta = h+2
+```
+
+Once the first-return equation is proved, the single-cycle proof should be a
+small number-theoretic lemma about this two-block map.  The Lean endpoint work
+after that is mostly packaging.
+
+The hard part is not the seam one-cycle.  The hard part is the symbolic
+port-time proof: starting from `Theta_0(a)`, prove the excursion first returns
+to `Theta_0` at the claimed target, with no earlier return, and prove the
+return-time sum `sum tau = m^4`.  The verified return-time distributions for
+B20 have only a few values, which is encouraging, but no closed formula has
+yet been extracted in the repo.
+
+The full all-even D5 Route-E theorem is less immediate.  It becomes plausible
+if the remaining even residue classes admit a small finite menu of branches
+with comparable block structure.  It is not plausible as a direct fit of the
+recorded table or of the earlier `(a,b,0,c,0)` support pattern alone.  The
+next practical target is therefore:
+
+1. close B20 symbolically;
+2. search for sibling branches covering the remaining even residue classes;
+3. only then assemble the all-even Route-E target.
