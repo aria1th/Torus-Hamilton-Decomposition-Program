@@ -767,6 +767,7 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
 python3 scripts/analyze_d5_routeE_small_seam_families.py \
   --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
   --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --score-count-scan-small-seam \
   --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
 ```
 
@@ -774,7 +775,12 @@ For `m = 6,8,10,12`, the recorded witness appears in the prefix hits, but so
 do alternative normalized count vectors.  The `m = 10,12` prefixes even
 include open-port normal forms.  This means the finite table should be treated
 as a validated small-seam evidence set, not as a canonical residue-family
-formula to extrapolate.
+formula to extrapolate.  With `--score-count-scan-small-seam`, the analyzer
+also reruns the small-seam block verifier on each distinct normalized prefix
+hit and reports the best candidates under three objectives: minimum block
+count, open-port first, and low support.  These objectives can diverge, so the
+next uniform-family search should choose one explicitly before trying to fit
+residue formulas.
 
 The same small-seam verifier output can be compressed into one-dimensional
 translation-block diagnostics:

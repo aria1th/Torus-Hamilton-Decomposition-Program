@@ -88,12 +88,31 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
 python3 scripts/analyze_d5_routeE_small_seam_families.py \
   --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
   --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --score-count-scan-small-seam \
   --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
 => count_scan summaries:
 => m=6: first_hits=10 distinct=2 open_hits=0 known_present=True alternatives=1
 => m=8: first_hits=10 distinct=2 open_hits=0 known_present=True alternatives=1
 => m=10: first_hits=20 distinct=9 open_hits=6 known_present=True alternatives=8
 => m=12: first_hits=20 distinct=12 open_hits=2 known_present=True alternatives=11
+=> scored min-block examples:
+=> m=10: (0,0,8,1,0), blocks=7, open=True
+=> m=12: (1,2,1,7,0), blocks=7, open=False
+
+python3 scripts/verify_d5_even_routeE.py --mode section \
+  --count-scan-moduli 14,16 \
+  --count-scan-limit 20 \
+  --json-out /tmp/d5_count_scan_14_16_limit20.json
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
+  --count-scan-json /tmp/d5_count_scan_14_16_limit20.json \
+  --score-count-scan-small-seam \
+  --json-out /tmp/d5_routeE_count_hit_scores_14_16.json
+=> m=14: first_hits=20 distinct=20 open_hits=1 known_present=True alternatives=19
+=> m=16: first_hits=20 distinct=20 open_hits=0 known_present=True alternatives=19
+=> scored min-block examples:
+=> m=14: (2,2,6,3,0), blocks=7, open=False
+=> m=16: (1,13,0,1,0), blocks=11, open=False, known=True
 
 python3 scripts/verify_d5_routeE_nonopen_bundle.py \
   /data/angel/repos/etc/d5_even_routeE_nonopen_small_seam_v0_4.zip \

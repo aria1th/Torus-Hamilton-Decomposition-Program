@@ -234,6 +234,7 @@ python3 scripts/verify_d5_even_routeE.py --mode section \
 python3 scripts/analyze_d5_routeE_small_seam_families.py \
   --manifest certs/d5_routeE_small_seam_family_scan_manifest.json \
   --count-scan-json /tmp/d5_count_scan_6_12_limit20.json \
+  --score-count-scan-small-seam \
   --json-out /tmp/d5_routeE_small_seam_family_scan_with_count_hits.json
 ```
 
@@ -256,6 +257,26 @@ not because Route-E lacks a simpler all-even count family.  The next search
 should choose a canonical objective, such as low support, open-port form,
 small block count, or long translation blocks, before attempting a uniform
 residue theorem.
+
+The `--score-count-scan-small-seam` option deduplicates the prefix hits by
+normalized count vector and reruns the small-seam block verifier on each
+distinct hit.  In the `m = 6,8,10,12` scan, the best minimum-block candidates
+are the recorded witnesses for `m = 6,8`, the open-port vector
+`(0,0,8,1,0)` for `m = 10`, and the non-open vector `(1,2,1,7,0)` for
+`m = 12`.  A follow-up prefix scan for `m = 14,16` gives:
+
+```text
+count_scan m first_hits distinct open_hits open_distinct known_present alternatives zero_classes
+14 20 20 1 1 True 19 9
+16 20 20 0 0 True 19 9
+```
+
+For `m = 14`, the open-port prefix hit `(0,6,2,5,0)` has `13` singleton
+translation blocks, while the best minimum-block prefix hit `(2,2,6,3,0)` has
+`7` blocks.  For `m = 16`, the recorded vector `(1,13,0,1,0)` is still the
+best minimum-block prefix hit in this scan, with `11` blocks.  This reinforces
+that "open-port" and "proof-simple block trace" are related but not identical
+search objectives.
 
 The block-splice trace can now be summarized directly with:
 

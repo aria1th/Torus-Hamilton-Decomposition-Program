@@ -142,13 +142,112 @@ def summarize_count_scan_case(item: dict) -> dict:
     }
 
 
-def summarize_count_scan_json(path: Path) -> dict:
+def count_scan_distinct_hit_rows(item: dict) -> List[dict]:
+    seen = set()
+    rows = []
+    for hit in item.get("first_hits", []):
+        vec = as_count_vec(hit["normalized_counts_slot0"])
+        if vec in seen:
+            continue
+        seen.add(vec)
+        rows.append(
+            {
+                "m": item["m"],
+                "slot": hit["slot"],
+                "counts": as_count_vec(hit["counts"]),
+                "normalized_counts_slot0": vec,
+                "open_port_normal_form": hit.get("open_port_normal_form", False),
+                "support": list(hit.get("normalized_support", [])),
+                "zero_positions": list(hit.get("normalized_zero_positions", [])),
+                "matches_known_normalized": hit.get(
+                    "matches_known_normalized", False
+                ),
+            }
+        )
+    return rows
+
+
+def score_count_scan_hit(row: dict) -> dict:
+    result = route_e.verify_small_seam_case(
+        row["m"], row["slot"], row["counts"]
+    )
+    blocks = result.get("translation_blocks", [])
+    return {
+        "normalized_counts_slot0": row["normalized_counts_slot0"],
+        "slot": row["slot"],
+        "counts": row["counts"],
+        "open_port_normal_form": row["open_port_normal_form"],
+        "support_count": len(row["support"]),
+        "support": row["support"],
+        "zero_positions": row["zero_positions"],
+        "matches_known_normalized": row["matches_known_normalized"],
+        "small_seam_ok": result["ok"],
+        "block_count": result["translation_block_count"],
+        "max_block_length": max((block["length"] for block in blocks), default=0),
+        "translation_blocks_prefix": blocks[:8],
+    }
+
+
+def best_candidates(scored: Sequence[dict], top: int) -> dict:
+    good = [item for item in scored if item["small_seam_ok"]]
+    by_min_block = sorted(
+        good,
+        key=lambda item: (
+            item["block_count"],
+            -item["max_block_length"],
+            item["support_count"],
+            not item["open_port_normal_form"],
+            item["normalized_counts_slot0"],
+        ),
+    )
+    by_open_first = sorted(
+        good,
+        key=lambda item: (
+            not item["open_port_normal_form"],
+            item["block_count"],
+            item["support_count"],
+            item["normalized_counts_slot0"],
+        ),
+    )
+    by_low_support = sorted(
+        good,
+        key=lambda item: (
+            item["support_count"],
+            item["block_count"],
+            not item["open_port_normal_form"],
+            item["normalized_counts_slot0"],
+        ),
+    )
+    return {
+        "min_block": by_min_block[:top],
+        "open_first": by_open_first[:top],
+        "low_support": by_low_support[:top],
+    }
+
+
+def score_count_scan_summary(summary: dict, payload: dict, top: int) -> None:
+    scan_by_m = {
+        item["m"]: item
+        for item in payload.get("one_e_full_count_scan", [])
+        if isinstance(item, dict)
+    }
+    for case in summary["cases"]:
+        item = scan_by_m[case["m"]]
+        scored = [
+            score_count_scan_hit(row)
+            for row in count_scan_distinct_hit_rows(item)
+        ]
+        case["scored_distinct_hits"] = scored
+        case["best_scored_candidates"] = best_candidates(scored, top)
+
+
+def summarize_count_scan_json(path: Path, score_small_seam: bool, top: int) -> dict:
     payload = json.loads(path.read_text())
     scan = payload.get("one_e_full_count_scan")
     if not isinstance(scan, list):
         raise ValueError("expected verifier JSON with one_e_full_count_scan")
     cases = [summarize_count_scan_case(item) for item in scan]
-    return {
+    summary = {
         "source": str(path),
         "schema": "d5_routeE_one_e_full_count_scan_summary_v1",
         "case_count": len(cases),
@@ -166,6 +265,9 @@ def summarize_count_scan_json(path: Path) -> dict:
         ],
         "cases": cases,
     }
+    if score_small_seam:
+        score_count_scan_summary(summary, payload, top)
+    return summary
 
 
 def fit_affine_coordinate(points: Sequence[Tuple[int, int]]):
@@ -288,6 +390,21 @@ def print_count_scan_summary(summary: dict) -> None:
             case["alternative_distinct_count"],
             len(case["zero_position_classes"]),
         )
+        best = case.get("best_scored_candidates")
+        if best is not None:
+            for name in ["min_block", "open_first", "low_support"]:
+                compact = [
+                    {
+                        "counts": item["normalized_counts_slot0"],
+                        "blocks": item["block_count"],
+                        "max": item["max_block_length"],
+                        "support": item["support_count"],
+                        "open": item["open_port_normal_form"],
+                        "known": item["matches_known_normalized"],
+                    }
+                    for item in best[name]
+                ]
+                print("count_scan_best", case["m"], name, json.dumps(compact))
 
 
 def compact_manifest(output: dict) -> dict:
@@ -359,6 +476,17 @@ def main() -> None:
         type=Path,
         help="summarize verifier JSON from verify_d5_even_routeE.py --count-scan-moduli",
     )
+    parser.add_argument(
+        "--score-count-scan-small-seam",
+        action="store_true",
+        help="score distinct count-scan hits by the small-seam block verifier",
+    )
+    parser.add_argument(
+        "--count-scan-top",
+        type=int,
+        default=5,
+        help="number of scored candidates to retain per objective",
+    )
     args = parser.parse_args()
 
     rows = case_rows(normalized=not args.raw_counts)
@@ -372,7 +500,11 @@ def main() -> None:
     }
     print_summary(output["results"])
     if args.count_scan_json is not None:
-        output["count_scan_summary"] = summarize_count_scan_json(args.count_scan_json)
+        output["count_scan_summary"] = summarize_count_scan_json(
+            args.count_scan_json,
+            score_small_seam=args.score_count_scan_small_seam,
+            top=args.count_scan_top,
+        )
         print_count_scan_summary(output["count_scan_summary"])
     manifest_check = None
     if args.write_manifest is not None:
