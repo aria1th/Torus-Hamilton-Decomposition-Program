@@ -159,6 +159,224 @@ theorem card_routeENonzeroSeam (m : Nat) [NeZero m] :
   rw [hfilter, Finset.card_erase_of_mem (Finset.mem_univ _),
     Finset.card_univ, ZMod.card]
 
+namespace RouteENonzeroSeam
+
+def toIndex {m : Nat} [NeZero m] (a : RouteENonzeroSeam m) : Fin (m - 1) :=
+  ⟨a.1.val - 1, by
+    have hpos : 0 < a.1.val := by
+      by_contra hnot
+      have hzero : a.1.val = 0 := by omega
+      exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+    have hlt := ZMod.val_lt a.1
+    omega⟩
+
+def ofIndex {m : Nat} [NeZero m] (i : Fin (m - 1)) : RouteENonzeroSeam m :=
+  ⟨((i.val + 1 : Nat) : ZMod m), by
+    exact zmod_nat_ne_zero (m := m) (k := i.val + 1) (by omega) (by omega)⟩
+
+set_option linter.flexible false in
+theorem ofIndex_toIndex {m : Nat} [NeZero m] (a : RouteENonzeroSeam m) :
+    ofIndex (toIndex a) = a := by
+  apply Subtype.ext
+  simp [ofIndex, toIndex]
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+  have hsub : a.1.val - 1 + 1 = a.1.val :=
+    Nat.sub_add_cancel (Nat.succ_le_of_lt hpos)
+  calc
+    (((a.1.val - 1 : Nat) : ZMod m) + 1) =
+        (((a.1.val - 1 + 1 : Nat) : ZMod m)) := by
+      simp [Nat.cast_add]
+    _ = ((a.1.val : Nat) : ZMod m) := by rw [hsub]
+    _ = a.1 := ZMod.natCast_zmod_val a.1
+
+set_option linter.flexible false in
+theorem toIndex_ofIndex {m : Nat} [NeZero m] (i : Fin (m - 1)) :
+    toIndex (ofIndex i) = i := by
+  apply Fin.ext
+  simp [toIndex, ofIndex]
+  have hcast : (((i.val : Nat) : ZMod m) + 1) =
+      (((i.val + 1 : Nat) : ZMod m)) := by
+    simp [Nat.cast_add]
+  rw [hcast]
+  rw [ZMod.val_natCast_of_lt]
+  · omega
+  · omega
+
+noncomputable def indexEquiv {m : Nat} [NeZero m] :
+    RouteENonzeroSeam m ≃ Fin (m - 1) where
+  toFun := toIndex
+  invFun := ofIndex
+  left_inv := ofIndex_toIndex
+  right_inv := toIndex_ofIndex
+
+end RouteENonzeroSeam
+
+namespace RouteEB20
+
+instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
+  ⟨by simp [modulus]⟩
+
+instance modulus_pred_neZero (q : Nat) : NeZero (modulus q - 1) :=
+  ⟨by simp [modulus]⟩
+
+def seamStep (q : Nat) : Nat := half q + 1
+
+theorem seamStep_lt_modulus_pred (q : Nat) :
+    seamStep q < modulus q - 1 := by
+  simp [seamStep, half, modulus]
+  omega
+
+theorem seamStep_coprime (q : Nat) :
+    Nat.Coprime (seamStep q) (modulus q - 1) := by
+  rw [seamStep, half, modulus]
+  have hN : 24 * q + 20 - 1 = (12 * q + 8) + (12 * q + 11) := by
+    omega
+  rw [hN]
+  rw [Nat.coprime_add_self_right]
+  have hA : 12 * q + 11 = 3 + (12 * q + 8) := by
+    omega
+  rw [hA]
+  rw [Nat.coprime_add_self_left]
+  have hB : 12 * q + 8 = 2 + (4 * q + 2) * 3 := by
+    omega
+  rw [hB]
+  rw [Nat.coprime_add_mul_right_right]
+  norm_num
+
+noncomputable def seamIndexAdd (q : Nat) :
+    Fin (modulus q - 1) → Fin (modulus q - 1) :=
+  fun i => (finZModEquiv (modulus q - 1)).symm
+    ((finZModEquiv (modulus q - 1)) i +
+      (seamStep q : ZMod (modulus q - 1)))
+
+set_option linter.flexible false in
+theorem seamIndexAdd_val (q : Nat) (i : Fin (modulus q - 1)) :
+    (seamIndexAdd q i).val =
+      (i.val + seamStep q) % (modulus q - 1) := by
+  simp [seamIndexAdd, finZModEquiv]
+  rw [ZMod.val_add]
+  rw [ZMod.val_natCast_of_lt (show i.val < modulus q - 1 from i.isLt)]
+  rw [ZMod.val_natCast_of_lt (seamStep_lt_modulus_pred q)]
+
+theorem seamIndexAdd_single_cycle (q : Nat) :
+    IsSingleCycleMap (seamIndexAdd q) := by
+  refine Shared.single_cycle_of_equiv_conj
+    (e := (finZModEquiv (modulus q - 1)).symm)
+    (f := seamIndexAdd q)
+    (g := fun x : ZMod (modulus q - 1) =>
+      x + (seamStep q : ZMod (modulus q - 1)))
+    ?_ ?_
+  · exact Shared.zmod_add_single_cycle_of_coprime (seamStep_coprime q)
+  · intro x
+    simp [seamIndexAdd]
+
+noncomputable def seamMap (q : Nat) :
+    RouteENonzeroSeam (modulus q) → RouteENonzeroSeam (modulus q) :=
+  fun a => RouteENonzeroSeam.ofIndex
+    (seamIndexAdd q (RouteENonzeroSeam.toIndex a))
+
+theorem seamMap_single_cycle (q : Nat) :
+    IsSingleCycleMap (seamMap q) := by
+  refine Shared.single_cycle_of_equiv_conj
+    (e := (RouteENonzeroSeam.indexEquiv (m := modulus q)).symm)
+    (f := seamMap q)
+    (g := seamIndexAdd q)
+    (seamIndexAdd_single_cycle q) ?_
+  intro i
+  change RouteENonzeroSeam.toIndex
+      (seamMap q (RouteENonzeroSeam.ofIndex i)) =
+    seamIndexAdd q i
+  simp [seamMap, RouteENonzeroSeam.toIndex_ofIndex]
+
+set_option linter.flexible false in
+theorem seamMap_lower_translation (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val ≤ half q - 2) :
+    (seamMap q a).1 = a.1 + (seamStep q : ZMod (modulus q)) := by
+  simp [seamMap, RouteENonzeroSeam.ofIndex]
+  rw [seamIndexAdd_val]
+  simp [RouteENonzeroSeam.toIndex]
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+  have hlt : a.1.val - 1 + seamStep q < modulus q - 1 := by
+    simp [seamStep, half, modulus] at ha ⊢
+    omega
+  rw [Nat.mod_eq_of_lt hlt]
+  have hsub : a.1.val - 1 + seamStep q + 1 =
+      a.1.val + seamStep q := by
+    simp [seamStep]
+    omega
+  calc
+    (((a.1.val - 1 + seamStep q : Nat) : ZMod (modulus q)) + 1) =
+        (((a.1.val - 1 + seamStep q + 1 : Nat) :
+          ZMod (modulus q))) := by
+      simp [Nat.cast_add]
+    _ = (((a.1.val + seamStep q : Nat) : ZMod (modulus q))) := by
+      rw [hsub]
+    _ = ((a.1.val : Nat) : ZMod (modulus q)) +
+        (seamStep q : ZMod (modulus q)) := by
+      simp [Nat.cast_add]
+    _ = a.1 + (seamStep q : ZMod (modulus q)) := by
+      rw [ZMod.natCast_zmod_val a.1]
+
+set_option linter.flexible false in
+theorem seamMap_upper_translation (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : half q - 1 ≤ a.1.val) :
+    (seamMap q a).1 =
+      a.1 + ((seamStep q + 1 : Nat) : ZMod (modulus q)) := by
+  simp [seamMap, RouteENonzeroSeam.ofIndex]
+  rw [seamIndexAdd_val]
+  simp [RouteENonzeroSeam.toIndex]
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero)
+  let N := modulus q - 1
+  let s := a.1.val - 1 + seamStep q
+  have hge : N ≤ s := by
+    simp [N, s, seamStep, half, modulus] at ha ⊢
+    omega
+  have hlt : s - N < N := by
+    have aval_lt := ZMod.val_lt a.1
+    simp [N, s, seamStep, half, modulus] at ha aval_lt ⊢
+    omega
+  have hs : s = N + (s - N) := by
+    omega
+  have hmod : (a.1.val - 1 + seamStep q) %
+      (modulus q - 1) = s - N := by
+    change s % N = s - N
+    rw [hs, Nat.add_mod_left, Nat.mod_eq_of_lt hlt]
+    omega
+  rw [hmod]
+  have hsum : s - N + 1 + modulus q =
+      a.1.val + seamStep q + 1 := by
+    dsimp [s, N]
+    omega
+  calc
+    (((s - N : Nat) : ZMod (modulus q)) + 1) =
+        (((s - N + 1 : Nat) : ZMod (modulus q))) := by
+      simp [Nat.cast_add]
+    _ = (((s - N + 1 + modulus q : Nat) : ZMod (modulus q))) := by
+      simp [Nat.cast_add]
+    _ = (((a.1.val + seamStep q + 1 : Nat) :
+        ZMod (modulus q))) := by
+      rw [hsum]
+    _ = ((a.1.val : Nat) : ZMod (modulus q)) +
+        (seamStep q : ZMod (modulus q)) + 1 := by
+      simp [Nat.cast_add]
+    _ = a.1 + (seamStep q : ZMod (modulus q)) + 1 := by
+      rw [ZMod.natCast_zmod_val a.1]
+    _ = a.1 + ((seamStep q : ZMod (modulus q)) + 1) := by
+      ring
+
+end RouteEB20
+
 structure RouteESeamTranslationBlock (m : Nat) where
   start : Nat
   stop : Nat

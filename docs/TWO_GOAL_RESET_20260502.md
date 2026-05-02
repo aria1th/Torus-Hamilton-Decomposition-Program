@@ -74,6 +74,9 @@ Current state:
 - Lean now records the B20 arithmetic target in `RouteEB20`: the count sum and
   weighted return-time polynomial identity are closed, conditional on the
   extracted pointwise return-time distribution.
+- Lean also records the expected B20 seam map as addition by `h+1` on
+  `Fin (m-1)`, proves the two translation-block formulas, and proves this
+  expected seam map is a single cycle.
 
 Reset target:
 
@@ -101,17 +104,17 @@ Expected seam map:
 h-1 <= a <= m-1:    V(a) = a + h + 2 mod m
 ```
 
-The Lean arithmetic target is no longer the blocker for B20. The remaining
-B20 blocker is to prove symbolically that the Route-E trace has exactly this
-first-return map, no earlier return, the extracted pointwise return-time
-partition, and the seam rank/single-cycle property.
+The Lean arithmetic and expected-map single-cycle targets are no longer the
+blockers for B20. The remaining B20 blocker is to prove symbolically that the
+Route-E trace has exactly this first-return map, no earlier return, and the
+extracted pointwise return-time partition.
 
 Blocking propositions:
 
 - B20 symbolic first-return and minimality proof.
 - B20 pointwise return-time partition proof, feeding the existing Lean
   weighted-sum identity.
-- B20 seam rank or one-cycle proof for the two-block map.
+- Packaging the symbolic trace proof against the closed expected seam map.
 - A finite residue branch menu covering all even `m >= 6`.
 
 ## Operating Rule For New Bundles

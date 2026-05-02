@@ -147,6 +147,10 @@ again at `m = 68`.  This gives a sharper proof target for `sum tau = m^4`:
 prove the pointwise return-time partition, then prove the weighted sum
 identity.  The latter arithmetic target is now recorded in Lean as
 `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
+The expected two-block seam map is also recorded in Lean as `RouteEB20.seamMap`;
+`RouteEB20.seamMap_lower_translation`,
+`RouteEB20.seamMap_upper_translation`, and
+`RouteEB20.seamMap_single_cycle` close the abstract map/one-cycle side.
 
 ## Proof Obligations Exposed by B20
 
@@ -163,8 +167,8 @@ For the B20 branch, the all-even proof target is now concrete:
 
 The strongest missing item is the symbolic port-time proof behind item 3,
 plus the pointwise return-time partition needed by item 5.  The arithmetic
-weighted-sum identity for the extracted distribution is already a Lean target.
-The seam one-cycle proof itself looks small once `T_h` is available.
+weighted-sum identity for the extracted distribution and the expected
+two-block seam-map one-cycle proof are already Lean targets.
 
 ## Goal Impact
 
@@ -223,9 +227,9 @@ seam map has only two translation blocks:
 h-1 <= a <= 2*h-1:  delta = h+2
 ```
 
-Once the first-return equation is proved, the single-cycle proof should be a
-small number-theoretic lemma about this two-block map.  The Lean endpoint work
-after that is mostly packaging.
+The single-cycle proof for this expected map is now a Lean lemma:
+`RouteEB20.seamMap_single_cycle`.  Once the first-return equation is proved,
+the remaining Lean endpoint work is mostly packaging.
 
 The hard part is not the seam one-cycle.  The hard part is the symbolic
 port-time proof: starting from `Theta_0(a)`, prove the excursion first returns

@@ -120,7 +120,9 @@ T_h(a) = a+h+1 on 1 <= a <= h-2,
 The remaining task for this branch is a symbolic port-time/first-return proof
 and the pointwise return-time partition feeding `sum tau = m^4`.  The
 weighted-sum arithmetic for the extracted B20 distribution is now recorded in
-Lean as `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`.
+Lean as `RouteEB20.returnTimeWeightedSum_eq_modulus_pow_four`, and the
+expected two-block seam map is now recorded as `RouteEB20.seamMap` with a
+single-cycle theorem.
 
 ## D7 Even Track
 
@@ -214,5 +216,6 @@ For D7 even:
    proof.
 5. D5 even finite residue-branch menu for all even `m >= 6`, beginning with
    the B20 symbolic first-return/return-time proof, plus seam rank and
-   return-time-sum proofs for the remaining branches.
+   return-time-sum proofs for the remaining branches.  For B20 itself, the
+   expected seam-map one-cycle proof is already closed in Lean.
 6. D7 even root-flat schedule certificate family.

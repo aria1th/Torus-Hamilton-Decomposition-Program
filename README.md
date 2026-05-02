@@ -122,7 +122,9 @@ when `m` is odd and `m >= 3`.
   `routeEThetaPoint`, making the bundle coordinate convention explicit.  The
   `RouteEB20` namespace records the first extracted residue branch
   `m = 24*q+20`: its count vector, count-sum theorem, and weighted
-  return-time polynomial identity.  The
+  return-time polynomial identity.  It also records the expected B20 seam map
+  as index addition on the nonzero seam, proves the two translation-block
+  formulas, and proves that this expected seam map is a single cycle.  The
   Route-E table `LambdaE` now lives here, with
   `LambdaE_latin` and `LambdaE_cyclic` recording its table invariants, and
   `LambdaE_routeEThetaVec`/`LambdaE_routeEThetaSeam` proving the bundle's
