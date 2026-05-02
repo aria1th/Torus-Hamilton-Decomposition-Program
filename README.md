@@ -210,7 +210,8 @@ when `m` is odd and `m >= 3`.
   `m-1` seam criterion.
 - `scripts/summarize_d5_routeE_small_seam_blocks.py`: proof-facing summary of
   the D5 Route-E small-seam first-return maps, compressing the verifier's
-  translation blocks into block-count, long-block, and fingerprint diagnostics.
+  translation blocks into block-count, long-block, piecewise-translation, and
+  fingerprint diagnostics.
 - `ANCILLARY.md`: description of the source bundle supplied with the manuscript.
 
 ## Build

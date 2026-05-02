@@ -223,6 +223,14 @@ has exactly two blocks:
 [21,43] -> delta 24
 ```
 
+Equivalently, the proof-facing piecewise translation proposition for this
+finite trace is:
+
+```text
+1 <= a <= 20:  V(a) = a + 23 mod 44
+21 <= a <= 43: V(a) = a + 24 mod 44
+```
+
 This does not supply a residue-class formula for all even `m`, but it gives a
 small proof-facing target for the next lane/block-splice argument: explain
 which normalized count families produce few-block or long-block seam maps, and

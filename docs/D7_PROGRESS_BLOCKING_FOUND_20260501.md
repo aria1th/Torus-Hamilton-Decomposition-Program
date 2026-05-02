@@ -738,7 +738,9 @@ guessing a symbolic one-dimensional block proof.  The same summary clusters by
 normalized zero/support positions and finds no robust affine count fit with at
 least three samples in any cluster, reinforcing that the current route should
 explain block-splice dynamics rather than interpolate the finite count table
-directly.
+directly.  The summary also emits piecewise-translation propositions; for
+example, the `m = 44` trace is exactly `V(a)=a+23` on `[1,20]` and
+`V(a)=a+24` on `[21,43]`, modulo `44`.
 
 `D5Odd/EvenRouteE.lean` now records this as a Lean-facing certificate shape:
 one-`Lambda_E` count/slot data, the nonzero seam of size `m-1`, small-seam

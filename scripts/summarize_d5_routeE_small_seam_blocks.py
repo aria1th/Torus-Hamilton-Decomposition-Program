@@ -60,9 +60,28 @@ def case_summary(case: dict) -> dict:
             {"delta": delta, "count": count}
             for delta, count in delta_hist.most_common(8)
         ],
+        "translation_blocks": blocks,
+        "piecewise_translation": piecewise_translation(m, blocks),
         "long_blocks": long_blocks,
         "orbit_prefix_from_1": case.get("orbit_prefix_from_1", []),
     }
+
+
+def piecewise_translation(m: int, blocks: list[dict]) -> list[dict]:
+    pieces = []
+    for block in blocks:
+        start = block["start"]
+        end = block["end"]
+        delta = block["delta"]
+        pieces.append(
+            {
+                "start": start,
+                "end": end,
+                "delta": delta,
+                "formula": f"{start} <= a <= {end}: V(a) = a + {delta} mod {m}",
+            }
+        )
+    return pieces
 
 
 def frac_json(q: Fraction) -> dict:
@@ -126,12 +145,12 @@ def fit_affine_counts(items: list[dict]) -> dict:
     fits = []
     ok = True
     for i in range(5):
-      points = [
-          (item["m"], item["normalized_counts_slot0"][i]) for item in ordered
-      ]
-      fit = fit_affine_coordinate(points)
-      fits.append(fit)
-      ok = ok and fit["status"] in {"ok", "singleton"}
+        points = [
+            (item["m"], item["normalized_counts_slot0"][i]) for item in ordered
+        ]
+        fit = fit_affine_coordinate(points)
+        fits.append(fit)
+        ok = ok and fit["status"] in {"ok", "singleton"}
     return {
         "status": "singleton" if len(ordered) == 1 else ("ok" if ok else "bad"),
         "formulas": [fit.get("formula") for fit in fits],
@@ -203,6 +222,7 @@ def summarize(cases: list[dict]) -> dict:
                 "max_block_length": item["max_block_length"],
                 "normalized_counts_slot0": item["normalized_counts_slot0"],
                 "long_blocks": item["long_blocks"],
+                "piecewise_translation": item["piecewise_translation"],
             }
             for item in low_block_cases
         ],
@@ -212,6 +232,7 @@ def summarize(cases: list[dict]) -> dict:
                 "block_count": item["block_count"],
                 "max_block_length": item["max_block_length"],
                 "long_blocks": item["long_blocks"],
+                "piecewise_translation": item["piecewise_translation"],
             }
             for item in long_block_cases
         ],
