@@ -143,7 +143,7 @@ The following are already available as Lean-checked support for this goal:
   generic equivalence-to-Cayley lift adapter.
 - Active-Hall symboling foundation:
   `ActiveHall.Incidence`, `ActiveHall.Symboling`, `ActiveHall.CountMatrix`,
-  residue specifications, and symboling row/column count lemmas.
+  residue specifications, Hall cuts, and symboling row/column/cut lemmas.
 
 ## Non-Goals
 

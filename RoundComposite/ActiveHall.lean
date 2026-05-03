@@ -22,6 +22,11 @@ def colorDegree {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C) (c : C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => c ∈ I.active x)).card
 
+def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
+    (U : Finset C) (S : Finset (Fin T)) : Nat :=
+  ∑ x : X, min ((I.active x ∩ U).card) S.card
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/
@@ -51,6 +56,18 @@ def ColCompatible {m T : Nat} {X C : Type*}
 end ResidueSpec
 
 namespace CountMatrix
+
+def cutMass {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (U : Finset C) (S : Finset (Fin T)) : Nat :=
+  ∑ c ∈ U, ∑ σ ∈ S, M.val c σ
+
+def HallCuts {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) : Prop :=
+  ∀ U : Finset C, ∀ S : Finset (Fin T),
+    M.cutMass U S ≤ I.cutCap U S
 
 def HasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -111,6 +128,12 @@ def count {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] {I : Incidence T X C}
     (Φ : Symboling I) (c : C) (σ : Fin T) : Nat :=
   ∑ x : X, if Φ.color x σ = c then 1 else 0
+
+def symbolsIn {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq C] {I : Incidence T X C}
+    (Φ : Symboling I) (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    Finset (Fin T) :=
+  S.filter (fun σ => Φ.color x σ ∈ U)
 
 theorem sum_color_eq_indicator {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
@@ -202,6 +225,84 @@ theorem count_col_sum {T : Nat} {X C : Type*}
     _ = Fintype.card X := by
             simp
 
+theorem local_cut_count_eq_symbolsIn_card {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    (∑ c ∈ U, ∑ σ ∈ S,
+        if Φ.color x σ = c then (1 : Nat) else 0)
+      = (Φ.symbolsIn x U S).card := by
+  classical
+  calc
+    (∑ c ∈ U, ∑ σ ∈ S,
+        if Φ.color x σ = c then (1 : Nat) else 0)
+        = ∑ σ ∈ S, ∑ c ∈ U,
+            if Φ.color x σ = c then (1 : Nat) else 0 := by
+            rw [Finset.sum_comm]
+    _ = ∑ σ ∈ S, if Φ.color x σ ∈ U then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro σ _hσ
+            by_cases hmem : Φ.color x σ ∈ U
+            · rw [Finset.sum_eq_single (Φ.color x σ)]
+              · simp [hmem]
+              · intro c _hc hne
+                have hneq : Φ.color x σ ≠ c := by
+                  intro h
+                  exact hne h.symm
+                simp [hneq]
+              · intro hnot
+                exact False.elim (hnot hmem)
+            · have hneq : ∀ c ∈ U, Φ.color x σ ≠ c := by
+                intro c hc h
+                exact hmem (by rw [h]; exact hc)
+              simp [hmem]
+    _ = (Φ.symbolsIn x U S).card := by
+            rw [symbolsIn]
+            exact (Finset.card_filter (fun σ => Φ.color x σ ∈ U) S).symm
+
+theorem symbolsIn_card_le_S {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    (Φ.symbolsIn x U S).card ≤ S.card :=
+  Finset.card_filter_le S (fun σ => Φ.color x σ ∈ U)
+
+theorem symbolsIn_card_le_active_inter {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    (Φ.symbolsIn x U S).card ≤ (I.active x ∩ U).card := by
+  classical
+  let imageSet : Finset C := (Φ.symbolsIn x U S).image (Φ.color x)
+  have hcardImage :
+      imageSet.card = (Φ.symbolsIn x U S).card := by
+    apply Finset.card_image_of_injOn
+    intro σ hσ τ hτ hcolor
+    have hsub : Φ.equiv x σ = Φ.equiv x τ := by
+      exact Subtype.ext hcolor
+    exact (Φ.equiv x).injective hsub
+  have hsubset : imageSet ⊆ I.active x ∩ U := by
+    intro c hc
+    rcases Finset.mem_image.mp hc with ⟨σ, hσ, rfl⟩
+    have hactive : Φ.color x σ ∈ I.active x := (Φ.equiv x σ).2
+    have hU : Φ.color x σ ∈ U := by
+      exact (Finset.mem_filter.mp hσ).2
+    exact Finset.mem_inter.mpr ⟨hactive, hU⟩
+  calc
+    (Φ.symbolsIn x U S).card = imageSet.card := hcardImage.symm
+    _ ≤ (I.active x ∩ U).card := Finset.card_le_card hsubset
+
+theorem local_cut_count_le_cap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    (∑ c ∈ U, ∑ σ ∈ S,
+        if Φ.color x σ = c then (1 : Nat) else 0)
+      ≤ min ((I.active x ∩ U).card) S.card := by
+  rw [Φ.local_cut_count_eq_symbolsIn_card x U S]
+  exact le_min (Φ.symbolsIn_card_le_active_inter x U S)
+    (Φ.symbolsIn_card_le_S x U S)
+
 def toCountMatrix {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) : CountMatrix I where
@@ -229,6 +330,38 @@ theorem hasResidues_of_realizes {m T : Nat} {X C : Type*}
   intro c σ
   rw [hreal c σ]
   exact hres c σ
+
+theorem toCountMatrix_hallCuts {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    (Φ.toCountMatrix).HallCuts := by
+  classical
+  intro U S
+  calc
+    (Φ.toCountMatrix).cutMass U S
+        = ∑ x : X, ∑ c ∈ U, ∑ σ ∈ S,
+            if Φ.color x σ = c then (1 : Nat) else 0 := by
+            change (∑ c ∈ U, ∑ σ ∈ S, ∑ x : X,
+                if Φ.color x σ = c then (1 : Nat) else 0)
+              = ∑ x : X, ∑ c ∈ U, ∑ σ ∈ S,
+                if Φ.color x σ = c then (1 : Nat) else 0
+            calc
+              (∑ c ∈ U, ∑ σ ∈ S, ∑ x : X,
+                  if Φ.color x σ = c then (1 : Nat) else 0)
+                  = ∑ c ∈ U, ∑ x : X, ∑ σ ∈ S,
+                      if Φ.color x σ = c then (1 : Nat) else 0 := by
+                      apply Finset.sum_congr rfl
+                      intro c _hc
+                      rw [Finset.sum_comm]
+              _ = ∑ x : X, ∑ c ∈ U, ∑ σ ∈ S,
+                    if Φ.color x σ = c then (1 : Nat) else 0 := by
+                    rw [Finset.sum_comm]
+    _ ≤ ∑ x : X, min ((I.active x ∩ U).card) S.card := by
+            apply Finset.sum_le_sum
+            intro x _hx
+            exact Φ.local_cut_count_le_cap x U S
+    _ = I.cutCap U S := by
+            rfl
 
 end Symboling
 
