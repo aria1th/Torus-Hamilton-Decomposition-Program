@@ -208,11 +208,11 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_main_lemmas
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-This is the current precise Lean goal boundary.  The top-level proof
-architecture is now stable; the remaining work is to prove
-`OddCoreHighModulusPrefixCountGoal`, `D11SmallModulusFromD5BaseGoal`, and
-`OddCoreSmallModulusOfBaseGoal`.  The older `hD11` and `hSmall` assumptions
-are derivable from these refined branch interfaces.
+This three-input endpoint is retained as a development adapter.  It is useful
+for local work because it names the D11-small case and the general small case
+separately, but it is no longer the preferred manuscript-facing goal boundary.
+The older `hD11` and `hSmall` assumptions are derivable from these refined
+branch interfaces.
 
 A manuscript-facing compressed endpoint is now available:
 
@@ -235,6 +235,11 @@ Lean-checked `b = 5` Hall-slack adapter.  The general `d >= 13` small branch
 uses the closed `OddCoreSmallBaseSlackWitnessGoal` to provide the chosen
 seed-semigroup base, packet data, and Hall-slack inequality.
 
+Therefore the adjusted goal is now exactly this: prove the final
+all-dimensional odd-modulus theorem from two remaining uniform construction
+theorems, not from a `d < 29` finite boundary table and not from a separate
+D11-small branch theorem.
+
 For the small-modulus branch, it is enough to prove the more Lean-ready packet
 interface:
 
@@ -245,7 +250,10 @@ theorem RoundComposite.Concrete.oddCoreSmallModulusOfBaseGoal_of_unitPackets
 ```
 
 This adapter constructs the unit-packet data from `2*b < d <= 3*b` using the
-closed arithmetic lemmas in `RoundComposite/SeedSemigroup.lean`.
+closed arithmetic lemmas in `RoundComposite/SeedSemigroup.lean`.  It remains
+useful for the older non-slack endpoint.  The current v2 target should instead
+prove the slack version above, because the Hall inequalities are part of the
+actual base-tail theorem.
 
 The small-branch hypothesis can already be reduced one step further.  The
 seed-semigroup arithmetic is closed in `RoundComposite/SeedSemigroup.lean`:
@@ -265,7 +273,8 @@ theorem RoundComposite.Concrete.oddCoreSmallGE13_of_seed_semigroup_base
 ```
 
 Thus the true small-modulus mathematical gap is now the base-tail lift
-interface `OddCoreSmallModulusLiftOfBase`, not the seed-base availability
+interface, in its current Lean-facing form
+`OddCoreSmallModulusSlackPacketLiftGoal`, not the seed-base availability
 arithmetic.
 
 The final no-assumption theorem is obtained by replacing these parameters with
@@ -527,10 +536,12 @@ The first high-modulus prefix-count foundation is also formalized in
 `SignedPrefixCounts` certificate shapes, proves the signed values
 `{-2,-1,1,2}` are primitive modulo every odd `m`, proves the bridge
 `SignedPrefixCounts.toParts_admissible`, and closes the basic quotient/remainder
-facts needed for `m = (d-1)q + r`.
+facts needed for `m = (d-1)q + r`.  The same module now defines
+`QuotientTransport` and proves `QuotientTransport.toSigned_admissible`, so a
+transport construction only has to produce the quotient/remainder fields.
 
-The same file now also records the small-block arithmetic needed by the
-base-tail theorem:
+`RoundComposite/SeedSemigroup.lean` also records the small-block arithmetic
+needed by the base-tail theorem:
 
 ```lean
 def RoundComposite.twoThreeBlockParts (b d : Nat) : List Nat

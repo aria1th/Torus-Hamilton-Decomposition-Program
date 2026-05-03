@@ -199,7 +199,11 @@ when `m` is odd and `m >= 3`.
   definitions.  It introduces `Parts`, `SignedPrefixCounts`, the signed
   difference set `{ -2, -1, 1, 2 }`, proves those signed values are primitive
   modulo any odd `m`, proves `SignedPrefixCounts.toParts_admissible`, and
-  records the quotient/remainder facts used when `m = (d-1)q + r`.
+  records the quotient/remainder facts used when `m = (d-1)q + r`.  It also
+  defines `QuotientTransport` and proves
+  `QuotientTransport.toSigned_admissible`, the algebraic bridge from
+  quotient/remainder transportation data to an admissible prefix-count
+  certificate.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus
