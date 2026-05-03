@@ -402,5 +402,14 @@ theorem symbolingWithResidues_of_feasible_and_realization
   rcases @hRealize T X C _ _ _ _ I M hHall with ⟨Φ, hRealizes⟩
   exact ⟨Φ, Φ.hasResidues_of_realizes hRealizes hResidues⟩
 
+theorem feasibleWithResidues_of_symbolingWithResidues
+    {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hSymboling : SymbolingWithResidues I R) :
+    FeasibleWithResidues I R := by
+  rcases hSymboling with ⟨Φ, hResidues⟩
+  exact ⟨Φ.toCountMatrix, Φ.toCountMatrix_hallCuts, hResidues⟩
+
 end ActiveHall
 end RoundComposite

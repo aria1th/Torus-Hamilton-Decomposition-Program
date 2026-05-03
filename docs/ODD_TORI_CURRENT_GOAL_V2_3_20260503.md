@@ -130,6 +130,7 @@ ActiveHall.FeasibleWithResidues
 ActiveHall.SymbolingWithResidues
 ActiveHall.HallRealizationGoal
 ActiveHall.symbolingWithResidues_of_feasible_and_realization
+ActiveHall.feasibleWithResidues_of_symbolingWithResidues
 ```
 
 This isolates two different tasks:
@@ -162,7 +163,9 @@ Already Lean-checked support includes:
   root-step Cayley lift.
 - Active-Hall symboling foundation: incidence data, symbolings, count
   matrices, residue specifications, row/column count lemmas, Hall cuts, and
-  the feasible-residue to symboling adapter conditional on Hall realization.
+  the feasible-residue to symboling adapter conditional on Hall realization,
+  plus the converse sanity adapter from symbolings back to feasible residue
+  count matrices.
 
 ## Non-Goals
 

@@ -195,7 +195,8 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `ActiveHall.SymbolingWithResidues`, `ActiveHall.HallRealizationGoal`, and
   `ActiveHall.symbolingWithResidues_of_feasible_and_realization`, splitting
   the small packet lift into feasible residue count-matrix construction plus
-  Hall/Hoffman realization.
+  Hall/Hoffman realization.  The converse sanity direction
+  `ActiveHall.feasibleWithResidues_of_symbolingWithResidues` is also closed.
 - Prefix-count foundation module `RoundComposite/PrefixCount.lean`, including
   `Parts`, `SignedPrefixCounts`, `signedVal_coprime_of_odd`,
   `SignedPrefixCounts.toParts_admissible`, `one_le_div_pred_of_le`, and
