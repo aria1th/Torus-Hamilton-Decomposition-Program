@@ -6,6 +6,12 @@ This note records large Lean-formalization subtasks that are worth sending to a
 frontier model before implementation starts.  The local goal is recorded in
 `docs/ODD_TORI_GLOBAL_FORMALIZATION_GOAL_20260503.md`.
 
+Scope correction: these two background requests were submitted before the
+dimension-parity correction.  Their prompts say "odd `d`", but the current
+target is all `d >= 2` with odd `m >= 3`.  The returned plans should therefore
+be read as Lean plans for the same two heavy mechanisms, with the final
+dimension quantifier broadened wherever the manuscript hypotheses allow it.
+
 Model settings requested by the user:
 
 ```text
@@ -25,8 +31,18 @@ The Lean-heavy subtasks are:
 4. Dyadic-triadic interval arithmetic and the `d < 29` boundary witness table.
 5. D2 seed formalization.
 
-Only the first two are large enough to justify GPT-5.5 Pro immediately.  The
-others are better handled locally after the theorem interface is fixed.
+The first two were sent immediately.  After the dimension-parity correction, a
+third request was added for the all-dimensional wrapper over the
+odd-dimensional core theorem.
+
+Saved responses:
+
+- active Hall-slack:
+  `docs/GPT55_PRO_ACTIVE_HALL_SLACK_RESPONSE_20260503.md`
+- signed transportation/count branch:
+  `docs/GPT55_PRO_SIGNED_TRANSPORT_COUNT_BRANCH_RESPONSE_20260503.md`
+- all-dimensional wrapper / odd-core skeleton:
+  `docs/GPT55_PRO_ALL_DIMENSIONAL_WRAPPER_ODD_CORE_RESPONSE_20260503.md`
 
 ## Request 1: Active Hall-Slack Lean Plan
 
@@ -215,6 +231,11 @@ active_hall_slack:
 signed_transport_count_branch:
   response_id = resp_02e89d0269448d6b0069f781f016888190bfe73ff01f394e06
   initial_status = queued
+
+all_dimensional_wrapper_odd_core_skeleton:
+  response_id = resp_0ec0fb435989d83b0069f7886079f48197b2220cf5e1dbd968
+  initial_status = queued
+  final_status = completed
 ```
 
 Retrieve with the Responses API:
@@ -227,4 +248,22 @@ curl -s -H "Authorization: Bearer $OPENAI_API_KEY" \
   https://api.openai.com/v1/responses/resp_01bc2f30d606b77c0069f781eded40819ca33fc85820d0d3c4
 curl -s -H "Authorization: Bearer $OPENAI_API_KEY" \
   https://api.openai.com/v1/responses/resp_02e89d0269448d6b0069f781f016888190bfe73ff01f394e06
+curl -s -H "Authorization: Bearer $OPENAI_API_KEY" \
+  https://api.openai.com/v1/responses/resp_0ec0fb435989d83b0069f7886079f48197b2220cf5e1dbd968
+```
+
+## Request 3: All-Dimensional Wrapper and Odd-Core Skeleton
+
+Purpose:
+
+Produce the Lean architecture for deriving the final `d >= 2`, odd `m`
+theorem from an odd-dimensional core theorem and the formalized D2 seed.  This
+request exists because the count-branch plan still naturally assumes odd `d`,
+so the clean final architecture should likely peel powers of `2` by product
+lifting rather than broadening every construction branch to even dimensions.
+
+Response id:
+
+```text
+resp_0ec0fb435989d83b0069f7886079f48197b2220cf5e1dbd968
 ```

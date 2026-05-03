@@ -15,6 +15,13 @@ an absorption note, not a full proof audit.  Route E for D5 even is essentially
 orthogonal to this bundle; the large changes are in the odd-torus prefix-count,
 base-tail, D11, and eventual-dimension strategy.
 
+Scope correction after the first absorption pass: the target theorem should be
+read as all dimensions `d >= 2` with odd modulus `m >= 3`, not only odd
+dimensions.  Statements below that still mention odd dimensions are preserved
+as descriptions of the initial reading or of the dyadic-triadic odd-dimension
+sub-corollary; the live goal is recorded in
+`docs/ODD_TORI_GLOBAL_FORMALIZATION_GOAL_20260503.md`.
+
 ## Executive Update
 
 The proof program has shifted from D11-specific finite leftovers to two
@@ -182,14 +189,13 @@ The most important conceptual value of the v2 manuscript is not just the
 individual D11 consequence.  The stronger message is:
 
 ```text
-Odd-dimensional directed torus Hamilton decompositions are reduced to
-finite seed dimensions, finite low-modulus boundary checks, and the lifting
-machinery of this paper.
+Odd-modulus directed torus Hamilton decompositions are reduced to finite seed
+dimensions, finite low-modulus boundary checks, and the lifting machinery of
+this paper.
 ```
 
 With uniform seed decompositions in dimensions `2`, `3`, `5`, and `7`, the
-current machinery proves every odd dimension `d >= 3` and every odd modulus
-`m >= 3`:
+current target is every dimension `d >= 2` and every odd modulus `m >= 3`:
 
 ```text
 m >= d:
@@ -425,8 +431,8 @@ Outside Lean, under the manuscript's cited inputs:
 
 ```text
 D5 uniform odd theorem -> D11 all odd m >= 3
-D3 uniform odd theorem + composite lift -> all odd d >= 29, all odd m >= 3
-count branch -> all odd d >= 5, odd m >= d
+D3 uniform odd theorem + composite lift -> eventual-dimension odd-modulus range
+count branch -> high-modulus odd m >= d range
 ```
 
 Inside this repository:

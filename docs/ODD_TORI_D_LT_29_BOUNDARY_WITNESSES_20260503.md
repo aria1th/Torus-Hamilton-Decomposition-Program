@@ -1,16 +1,21 @@
-# Odd Tori `d < 29` Boundary Witness Table
+# Odd-Modulus Tori `d < 29` Boundary Witness Table
 
 Date: 2026-05-03.
 
-This note records the finite boundary audit for the global odd-tori
-formalization goal.  The boundary under discussion is:
+This note records the finite boundary audit for the global odd-modulus torus
+formalization goal.  After the latest goal refinement, this table is an
+audit/regression artifact only: the intended proof spine replaces the
+theorem-level `d < 29` boundary by a uniform small-base lemma for odd
+`d >= 13`.
+
+The audited boundary is:
 
 ```text
-d odd, 3 <= d < 29
+2 <= d < 29
 m odd, 3 <= m < d
 ```
 
-There are exactly `78` such pairs.  With uniform seed dimensions
+There are exactly `169` such pairs.  With uniform seed dimensions
 
 ```text
 2, 3, 5, 7
@@ -28,16 +33,17 @@ dimensions up to `28`:
 16, 18, 20, 21, 24, 25, 27, 28
 ```
 
-Odd solved dimensions below `29` that are used directly:
+Solved seed-semigroup dimensions below `29` that are used directly:
 
 ```text
-3, 5, 7, 9, 15, 21, 25, 27
+2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15,
+16, 18, 20, 21, 24, 25, 27, 28
 ```
 
-The remaining odd dimensions below `29` are:
+The remaining dimensions below `29` are:
 
 ```text
-11, 13, 17, 19, 23
+11, 13, 17, 19, 22, 23, 26
 ```
 
 These are handled by base-tail witnesses.
@@ -56,23 +62,37 @@ All parts are positive units modulo odd `m`.
 
 ## Compressed Exhaustive Table
 
-The table lists every possible odd `m < d` for each odd `d < 29`.
+The table lists every possible odd `m < d` for each `2 <= d < 29`.
 
 | `d` | exact odd `m < d` | witness |
 |---:|---|---|
+| 2 | none | no boundary pair |
 | 3 | none | no boundary pair |
+| 4 | `3` | product seed `D2 * D2` |
 | 5 | `3` | direct seed `D5` |
+| 6 | `3,5` | product seed `D2 * D3` |
 | 7 | `3,5` | direct seed `D7` |
+| 8 | `3,5,7` | product seed `D2^3` |
 | 9 | `3,5,7` | product seed `D3 * D3` |
+| 10 | `3,5,7,9` | product seed `D2 * D5` |
 | 11 | `3,5,7,9` | base-tail with `b=5`, `T=6`, base `D5` |
+| 12 | `3,5,7,9,11` | product seed `D2^2 * D3` |
 | 13 | `3,5,7,9,11` | base-tail with `b=6`, `T=7`, base `D6 = D2 * D3` |
+| 14 | `3,5,7,9,11,13` | product seed `D2 * D7` |
 | 15 | `3,5,7,9,11,13` | product seed `D3 * D5` |
+| 16 | `3,5,7,9,11,13,15` | product seed `D2^4` |
 | 17 | `3,5,7,9,11,13,15` | base-tail with `b=6`, `T=11`, base `D6 = D2 * D3` |
+| 18 | `3,5,7,9,11,13,15,17` | product seed `D2 * D3^2` |
 | 19 | `3,5,7,9,11,13,15,17` | base-tail with `b=7`, `T=12`, base `D7` |
+| 20 | `3,5,7,9,11,13,15,17,19` | product seed `D2^2 * D5` |
 | 21 | `3,5,7,9,11,13,15,17,19` | product seed `D3 * D7` |
+| 22 | `3,5,7,9,11,13,15,17,19,21` | base-tail with `b=10`, `T=12`, base `D10 = D2 * D5` |
 | 23 | `3,5,7,9,11,13,15,17,19,21` | base-tail with `b=8`, `T=15`, base `D8 = D2^3` |
+| 24 | `3,5,7,9,11,13,15,17,19,21,23` | product seed `D2^3 * D3` |
 | 25 | `3,5,7,9,11,13,15,17,19,21,23` | product seed `D5 * D5` |
+| 26 | `3,5,7,9,11,13,15,17,19,21,23,25` | base-tail with `b=10`, `T=16`, base `D10 = D2 * D5` |
 | 27 | `3,5,7,9,11,13,15,17,19,21,23,25` | product seed `D3 * D3 * D3` |
+| 28 | `3,5,7,9,11,13,15,17,19,21,23,25,27` | product seed `D2^2 * D7` |
 
 ## Base-Tail Witness Details
 
@@ -86,7 +106,9 @@ with odd `m >= 3`.
 | 13 | 6 | 7 | `3+2+2+2+2+2` | `3^6 = 729 > 3*13*7 = 273` |
 | 17 | 6 | 11 | `3+3+3+3+3+2` | `3^6 = 729 > 3*17*11 = 561` |
 | 19 | 7 | 12 | `3+3+3+3+3+2+2` | `3^7 = 2187 > 3*19*12 = 684` |
+| 22 | 10 | 12 | `3+3+2+2+2+2+2+2+2+2` | `3^10 = 59049 > 3*22*12 = 792` |
 | 23 | 8 | 15 | `3+3+3+3+3+3+3+2` | `3^8 = 6561 > 3*23*15 = 1035` |
+| 26 | 10 | 16 | `3+3+3+3+3+3+2+2+2+2` | `3^10 = 59049 > 3*26*16 = 1248` |
 
 In each row:
 
@@ -101,47 +123,89 @@ m^b > m d T for every odd m in the listed range
 
 ## Expanded Pair List
 
-This is the exact list of all `78` boundary pairs, grouped by `d`.
+This is the exact list of all `169` boundary pairs, grouped by `d`.
 
 ```text
+d = 2:
+  none
+
 d = 3:
   none
+
+d = 4:
+  (4,3)
 
 d = 5:
   (5,3)
 
+d = 6:
+  (6,3), (6,5)
+
 d = 7:
   (7,3), (7,5)
+
+d = 8:
+  (8,3), (8,5), (8,7)
 
 d = 9:
   (9,3), (9,5), (9,7)
 
+d = 10:
+  (10,3), (10,5), (10,7), (10,9)
+
 d = 11:
   (11,3), (11,5), (11,7), (11,9)
+
+d = 12:
+  (12,3), (12,5), (12,7), (12,9), (12,11)
 
 d = 13:
   (13,3), (13,5), (13,7), (13,9), (13,11)
 
+d = 14:
+  (14,3), (14,5), (14,7), (14,9), (14,11), (14,13)
+
 d = 15:
   (15,3), (15,5), (15,7), (15,9), (15,11), (15,13)
+
+d = 16:
+  (16,3), (16,5), (16,7), (16,9), (16,11), (16,13), (16,15)
 
 d = 17:
   (17,3), (17,5), (17,7), (17,9), (17,11), (17,13), (17,15)
 
+d = 18:
+  (18,3), (18,5), (18,7), (18,9), (18,11), (18,13), (18,15), (18,17)
+
 d = 19:
   (19,3), (19,5), (19,7), (19,9), (19,11), (19,13), (19,15), (19,17)
+
+d = 20:
+  (20,3), (20,5), (20,7), (20,9), (20,11), (20,13), (20,15), (20,17), (20,19)
 
 d = 21:
   (21,3), (21,5), (21,7), (21,9), (21,11), (21,13), (21,15), (21,17), (21,19)
 
+d = 22:
+  (22,3), (22,5), (22,7), (22,9), (22,11), (22,13), (22,15), (22,17), (22,19), (22,21)
+
 d = 23:
   (23,3), (23,5), (23,7), (23,9), (23,11), (23,13), (23,15), (23,17), (23,19), (23,21)
+
+d = 24:
+  (24,3), (24,5), (24,7), (24,9), (24,11), (24,13), (24,15), (24,17), (24,19), (24,21), (24,23)
 
 d = 25:
   (25,3), (25,5), (25,7), (25,9), (25,11), (25,13), (25,15), (25,17), (25,19), (25,21), (25,23)
 
+d = 26:
+  (26,3), (26,5), (26,7), (26,9), (26,11), (26,13), (26,15), (26,17), (26,19), (26,21), (26,23), (26,25)
+
 d = 27:
   (27,3), (27,5), (27,7), (27,9), (27,11), (27,13), (27,15), (27,17), (27,19), (27,21), (27,23), (27,25)
+
+d = 28:
+  (28,3), (28,5), (28,7), (28,9), (28,11), (28,13), (28,15), (28,17), (28,19), (28,21), (28,23), (28,25), (28,27)
 ```
 
 ## Verification Summary
@@ -149,7 +213,7 @@ d = 27:
 A deterministic enumeration checked:
 
 ```text
-boundary pair count: 78
+boundary pair count: 169
 errors: []
 ```
 

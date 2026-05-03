@@ -21,6 +21,12 @@ name = "D5Odd"
 name = "D7Odd"
 
 [[lean_lib]]
+name = "TorusD4"
+
+[[lean_lib]]
+name = "TorusD3Odd"
+
+[[lean_lib]]
 name = "Shared"
 
 [[lean_lib]]

@@ -1,9 +1,21 @@
 import D5Odd.Cayley
 import D7Odd.Cayley
+import Shared.D2Seed
+import Shared.D3Seed
 import RoundComposite
 
 namespace RoundComposite
 namespace Concrete
+
+theorem standard_cayley_odd_uniform_2 :
+    OddUniformSolved StandardCayleySolved 2 := by
+  intro m hm hodd
+  exact Shared.D2.shared_cayley_uniform hm hodd
+
+theorem standard_cayley_odd_uniform_3 :
+    OddUniformSolved StandardCayleySolved 3 := by
+  intro m hm hodd
+  exact Shared.D3.shared_cayley_uniform hm hodd
 
 theorem standard_cayley_odd_uniform_5 :
     OddUniformSolved StandardCayleySolved 5 := by
@@ -19,9 +31,65 @@ theorem standard_torus_odd_uniform_5 :
     OddUniformSolved StandardTorusSolved 5 := by
   exact standard_cayley_odd_uniform_5
 
+theorem standard_torus_odd_uniform_2 :
+    OddUniformSolved StandardTorusSolved 2 := by
+  exact standard_cayley_odd_uniform_2
+
+theorem standard_torus_odd_uniform_3 :
+    OddUniformSolved StandardTorusSolved 3 := by
+  exact standard_cayley_odd_uniform_3
+
 theorem standard_torus_odd_uniform_7 :
     OddUniformSolved StandardTorusSolved 7 := by
   exact standard_cayley_odd_uniform_7
+
+theorem standard_cayley_odd_uniform_all_dimensions_of_odd_core
+    (hOddCore :
+      ∀ {d : Nat}, Odd d → 3 ≤ d →
+        OddUniformSolved StandardCayleySolved d) :
+    ∀ {d : Nat}, 2 ≤ d →
+      OddUniformSolved StandardCayleySolved d := by
+  intro d
+  induction d using Nat.strong_induction_on with
+  | h d ih =>
+      intro hd2
+      by_cases hdodd : Odd d
+      · have hd3 : 3 ≤ d := by
+          rcases hdodd with ⟨k, hk⟩
+          omega
+        exact hOddCore hdodd hd3
+      · have hdeven : Even d := Nat.not_odd_iff_even.mp hdodd
+        rcases even_iff_exists_two_mul.mp hdeven with ⟨k, hk⟩
+        by_cases hk1 : k = 1
+        · subst k
+          simpa [hk] using standard_cayley_odd_uniform_2
+        · have hkpos : 0 < k := by omega
+          have hk2 : 2 ≤ k := by omega
+          have hklt : k < d := by omega
+          rw [hk]
+          exact odd_uniform_cayley_mul_of_standard
+            (by decide) hkpos
+            standard_cayley_odd_uniform_2
+            (ih k hklt hk2)
+
+theorem odd_modulus_tori_all_dimensions_uniform_of_odd_core
+    (hOddCore :
+      ∀ {d : Nat}, 3 ≤ d → Odd d →
+        OddUniformSolved StandardCayleySolved d)
+    {d : Nat} (hd2 : 2 ≤ d) :
+    OddUniformSolved StandardCayleySolved d :=
+  standard_cayley_odd_uniform_all_dimensions_of_odd_core
+    (fun hodd hd3 => hOddCore hd3 hodd) hd2
+
+theorem odd_modulus_tori_all_dimensions_of_odd_core
+    (hOddCore :
+      ∀ {d : Nat}, 3 ≤ d → Odd d →
+        OddUniformSolved StandardCayleySolved d)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_uniform_of_odd_core
+    hOddCore hd2 hm3 hmodd
 
 theorem standard_cayley_odd_uniform_35_of_pointwise
     (hExp : OddPointwiseCompositeExpansion StandardCayleySolved) :

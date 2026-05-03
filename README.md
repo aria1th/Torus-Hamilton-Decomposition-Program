@@ -2,10 +2,15 @@
 
 Lean 4 formalization and audit artifacts for Hamilton decompositions of directed torus/Cayley digraphs.
 
-The current formalized endpoints include the odd-modulus directed 5-torus and
-7-torus constructions.  In particular, the repository proves:
+The current formalized endpoints include the directed 2-torus seed and the
+odd-modulus directed 5-torus and 7-torus constructions.  In particular, the
+repository proves:
 
 ```lean
+theorem Shared.D2.shared_cayley_uniform :
+    ∀ {m : Nat}, 3 <= m -> Odd m ->
+      Shared.CayleyHamiltonDecomposition 2 m
+
 theorem D5Odd.D5_odd_cayley_unconditional {m : Nat} [NeZero m]
     (hodd : Odd m) (hm3 : 3 <= m) :
     D5Odd.CayleyHamiltonDecompositionD5 m
@@ -16,7 +21,7 @@ theorem D7Odd.D7_odd_cayley_unconditional {m : Nat} [NeZero m]
 ```
 
 These theorems state explicit Cayley-edge decompositions for
-`Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` in dimensions `d = 5` and `d = 7`
+`Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` in dimensions `d = 2, 5, 7`
 when `m` is odd and `m >= 3`.
 
 ## Repository Layout
@@ -166,6 +171,36 @@ when `m` is odd and `m >= 3`.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
   layered full-step lift: row Latin gives edge partition, and layer bijective
   plus return single-cycle gives Hamiltonian full color steps.
+- `Shared/D2Seed.lean`: direct D2 phase schedule.  It proves the two color
+  returns are translations by `1` and `m - 1`, transfers the root-flat cycle to
+  the standard Cayley torus, and exposes `Shared.D2.shared_cayley_uniform`.
+- `Shared/D3Seed.lean`: adapter from the D3 odd formalization to the shared
+  Cayley endpoint.  It exposes `Shared.D3.shared_cayley_uniform`, which is
+  re-exported as the standard D3 odd-uniform seed.
+- `RoundComposite/ConcreteEndpoints.lean`: concrete seed endpoints, including
+  the D2/D3 seed endpoints and
+  `standard_cayley_odd_uniform_all_dimensions_of_odd_core`, which reduces all
+  dimensions `d >= 2` to the odd-dimensional core using D2 and product lift.
+  The same reduction is exposed under
+  `odd_modulus_tori_all_dimensions_uniform_of_odd_core` and
+  `odd_modulus_tori_all_dimensions_of_odd_core`.
+- `RoundComposite/SeedSemigroup.lean`: seed-semigroup arithmetic for the
+  global odd-modulus goal.  It defines `SolvedBySeedSemigroup`, proves that
+  every odd `d >= 13` has a seed-semigroup base `b` with
+  `2 * b < d <= 3 * b`, and adapts such bases to odd-uniform standard Cayley
+  solutions using the closed D2/D3 seeds.
+- `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
+  global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
+  plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus
+  prefix-count branch or small-modulus base-tail branch, and includes the
+  adapter from the seed-semigroup base availability lemma to the small branch.
+  The refined endpoint
+  `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
+  high-modulus prefix-count theorem, the D11-from-D5 small lift, and the
+  general base-tail small lift as assumptions.  The companion endpoint
+  `odd_modulus_tori_all_dimensions_of_main_lemmas` exposes those same inputs as
+  the theorem-shaped goals `OddCoreHighModulusPrefixCountGoal`,
+  `D11SmallModulusFromD5BaseGoal`, and `OddCoreSmallModulusOfBaseGoal`.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
@@ -177,11 +212,10 @@ when `m` is odd and `m >= 3`.
   functions or existing single-cycle Cayley decompositions.
 - `Shared/Monodromy.lean`: skew-product, base-orbit, and monodromy lemmas for additive bridge proofs.
 - `Shared/AdditiveBridge.lean`: local additive bridge lemmas for state-dependent direction reindexing, row/source Latin preservation, and skew-product layer bijectivity.
-- `RoundComposite.lean`: composite-dimension product reduction from pointwise expansion and prime bases, including odd-modulus variants, concrete adapters for the shared standard torus/Cayley proposition, and graph-level standard Cayley/Torus product expansions.
-- `RoundComposite/ConcreteEndpoints.lean`: conditional graph-level composite
-  endpoints obtained from the formalized D5/D7 odd theorems, including direct
-  Cayley/Torus product endpoints for 35, 49, and nonempty products of 5/7
-  factors.
+- `RoundComposite.lean`: composite-dimension product reduction from pointwise
+  expansion and prime bases, including odd-modulus variants, concrete adapters
+  for the shared standard torus/Cayley proposition, and graph-level standard
+  Cayley/Torus product expansions.
 - `docs/D7_PROGRESS_BLOCKING_FOUND_20260501.md`: current progress, blockers,
   and found facts for the D7 additive `4+2` bridge before the next research
   bundle comparison.
@@ -252,11 +286,18 @@ when `m` is odd and `m >= 3`.
 - `docs/ODD_TORI_GLOBAL_FORMALIZATION_GOAL_20260503.md`: revised primary goal
   after the v2 absorption and D2 seed audit: defer Route E, use D2/D3/D5/D7
   seeds plus prefix-count and base-tail Hall-slack machinery, and target a Lean
-  proof for every odd dimension `d >= 3` and odd modulus `m >= 3`.
+  proof for every dimension `d >= 2` and odd modulus `m >= 3`, with even
+  dimensions handled by the D2/product wrapper and the main construction
+  concentrated in the odd-dimensional core.
+- `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
+  completion audit for the global odd-modulus theorem, recording which parts
+  are Lean-closed, which are conditional skeletons, and the three remaining
+  proof blocks needed to remove all assumptions.
 - `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`: exhaustive finite
-  boundary witness table for the global odd-tori goal, covering all `78` odd
-  pairs with `3 <= d < 29` and `3 <= m < d` by seed-semigroup dimensions or
-  explicit base-tail witnesses.
+  boundary audit table for the global odd-modulus goal, covering all `169`
+  pairs with `2 <= d < 29`, odd `m`, and `3 <= m < d` by seed-semigroup
+  dimensions or explicit base-tail witnesses.  This table is retained as
+  audit/regression evidence, not as the intended main proof spine.
 - `docs/GPT55_PRO_ODD_TORI_LEAN_REQUESTS_20260503.md`: high-cost GPT-5.5 Pro
   background requests for the two largest Lean-formalization planning blocks:
   active Hall-slack realization and signed transportation/count branch.
