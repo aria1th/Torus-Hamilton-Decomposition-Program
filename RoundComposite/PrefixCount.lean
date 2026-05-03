@@ -981,6 +981,34 @@ theorem step_nonneg {d m q r : Nat}
 
 end Qge2PlanBounds
 
+structure StepNonnegCompatibility {d m q r : Nat}
+    (P : MarginPlan d m q r) (E : SignedMarginMatrix d P.sigma) : Prop where
+  eps_nonneg_of_delta_zero :
+    ∀ i k, (q : Int) - P.tau i = 0 → 0 ≤ E.eps i k
+  eps_ge_neg_one_of_delta_one :
+    ∀ i k, (q : Int) - P.tau i = 1 → (-1 : Int) ≤ E.eps i k
+
+namespace StepNonnegCompatibility
+
+theorem step_nonneg {d m q r : Nat}
+    {P : MarginPlan d m q r} {E : SignedMarginMatrix d P.sigma}
+    (hCompat : StepNonnegCompatibility P E) :
+    ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k := by
+  intro i k
+  have hdelta_nonneg := P.delta_nonneg i
+  by_cases h0 : (q : Int) - P.tau i = 0
+  · have heps := hCompat.eps_nonneg_of_delta_zero i k h0
+    linarith
+  · by_cases h1 : (q : Int) - P.tau i = 1
+    · have heps := hCompat.eps_ge_neg_one_of_delta_one i k h1
+      linarith
+    · have hdelta_ge_two : (2 : Int) ≤ (q : Int) - P.tau i := by
+        omega
+      have heps := E.eps_ge_neg_two i k
+      linarith
+
+end StepNonnegCompatibility
+
 def MarginTransportQge2PlanGoal : Prop :=
   ∀ {d m q r : Nat},
     Odd d → 5 ≤ d → Odd m →
@@ -1007,6 +1035,15 @@ def MarginTransportQeq1Goal : Prop :=
       ∃ E : SignedMarginMatrix d P.sigma,
         ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k
 
+def MarginTransportQeq1CompatibleGoal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → q = 1 →
+    ∃ P : MarginPlan d m q r,
+      ∃ E : SignedMarginMatrix d P.sigma,
+        StepNonnegCompatibility P E
+
 theorem marginTransportQge2Goal_of_plan
     (hPlan : MarginTransportQge2PlanGoal) :
     MarginTransportQge2Goal := by
@@ -1014,6 +1051,14 @@ theorem marginTransportQge2Goal_of_plan
   rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with
     ⟨P, hP, ⟨E⟩⟩
   exact ⟨P, E, hP.step_nonneg⟩
+
+theorem marginTransportQeq1Goal_of_compatible
+    (hCompatGoal : MarginTransportQeq1CompatibleGoal) :
+    MarginTransportQeq1Goal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hCompatGoal hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hCompat⟩
+  exact ⟨P, E, hCompat.step_nonneg⟩
 
 theorem transportQge2Goal_of_margin
     (hMargin : MarginTransportQge2Goal) :

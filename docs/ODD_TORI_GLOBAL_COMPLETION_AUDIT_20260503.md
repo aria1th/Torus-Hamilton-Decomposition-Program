@@ -52,6 +52,7 @@ boundary table as an input theorem or Lean dependency.
 | Dense matrix layer realization | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.balancedMatrixLayerRealization_zero`; `PrefixCount.matrixBalanced_exists_positive_perm`; `PrefixCount.peelLayer_balanced`; `PrefixCount.balancedMatrixLayerRealizationGoal`; `PrefixCount.matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Closed |
 | Margin-facing transport split | `PrefixCount.MarginTransportQge2Goal`; `PrefixCount.MarginTransportQeq1Goal`; `PrefixCount.transportQge2Goal_of_margin`; `PrefixCount.transportQeq1Goal_of_margin`; `PrefixCount.admissiblePartsCountBranchGoal_of_margin`; `oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry`; `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q>=2 transport nonnegativity split | `PrefixCount.signedVal_ge_neg_two`; `PrefixCount.SignedMarginMatrix.eps_ge_neg_two`; `PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero`; `PrefixCount.MarginPlan.sigma_sum_eq`; `PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum`; `PrefixCount.Qge2PlanBounds`; `PrefixCount.Qge2PlanBounds.step_nonneg`; `PrefixCount.MarginTransportQge2PlanGoal`; `PrefixCount.marginTransportQge2Goal_of_plan`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
+| Q=1 transport compatibility split | `PrefixCount.StepNonnegCompatibility`; `PrefixCount.StepNonnegCompatibility.step_nonneg`; `PrefixCount.MarginTransportQeq1CompatibleGoal`; `PrefixCount.marginTransportQeq1Goal_of_compatible`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Compat_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -270,6 +271,18 @@ PrefixCountGeometricCriterionGoal
 
 and the global endpoint in that shape is
 `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift`.
+
+For the `q = 1` branch, `StepNonnegCompatibility.step_nonneg` now isolates the
+exact row-local restrictions needed for nonnegativity:
+
+```text
+q - tau = 0  -> eps >= 0
+q - tau = 1  -> eps >= -1
+q - tau >= 2 -> automatic from eps >= -2
+```
+
+The corresponding global endpoint is
+`odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift`.
 
 ## Verdict
 

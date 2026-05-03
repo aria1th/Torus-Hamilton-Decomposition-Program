@@ -6,8 +6,9 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
-Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_1_20260503.md`.
-That note is the preferred short reference after the `d < 29` boundary review.
+Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_2_20260503.md`.
+That note is the preferred short reference after the `d < 29` boundary review
+and the q=1 transport-compatibility split.
 
 Correction after the first reset: the manuscript-facing small branch must
 explicitly expose the Hall-slack hypotheses `d - b > b` and
@@ -78,8 +79,11 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_an
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-So the active goal is now two remaining theorem families.  The small-base
-Hall-slack arithmetic witness is already Lean-closed.
+So the public active goal is now two remaining theorem families.  At the
+current Lean endpoint, the high branch has been split further, leaving four
+explicit assumptions: q>=2 margin plans, q=1 compatible margins, the geometric
+prefix-count criterion, and the small-modulus Hall-slack packet lift.  The
+small-base Hall-slack arithmetic witness is already Lean-closed.
 
 ## Remaining Theorem 1: High Modulus
 
@@ -260,6 +264,13 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.marginTransportQge2Goal_of_plan`.  The corresponding global
   endpoint is
   `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift`.
+- Q=1 compatibility split:
+  `PrefixCount.StepNonnegCompatibility`,
+  `PrefixCount.StepNonnegCompatibility.step_nonneg`,
+  `PrefixCount.MarginTransportQeq1CompatibleGoal`, and
+  `PrefixCount.marginTransportQeq1Goal_of_compatible`.  The corresponding
+  global endpoint is
+  `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift`.
 
 ## Revised Goal in One Sentence
 

@@ -1,0 +1,133 @@
+# Odd-Modulus Tori Current Goal v2.2
+
+Date: 2026-05-03.
+
+This note is the current working goal after the `d < 29` boundary review, the
+D2/product-wrapper review, and the latest prefix-count transport split.
+
+## Final Target
+
+Prove the all-dimensional odd-modulus theorem:
+
+```lean
+theorem odd_modulus_tori_all_dimensions
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+Equivalently, every standard directed torus
+`Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` has a directed Hamilton decomposition
+when `2 <= d`, `Odd m`, and `3 <= m`.
+
+## Main Strategic Reset
+
+The `d < 29` finite boundary table is not a theorem-level input in the current
+proof spine.  It remains useful as audit/regression evidence, but the final
+Lean theorem should not import it.
+
+The revised proof spine is:
+
+```text
+D2 seed and product wrapper
++ odd-dimensional core seeds D3, D5, D7
++ D9 as D3 * D3
++ D11 by the same high/small branch split
++ high-modulus prefix-count theorem for odd d >= 5, m >= d
++ small-modulus Hall-slack packet lift for odd d >= 11, m < d
+```
+
+Thus `(d,m) = (13,3)` is not a distinguished leftover pair in the new spine.
+It is covered by the uniform small-modulus packet-lift theorem once that
+theorem is proved.  The same applies to the rest of the former `d < 29`
+boundary list.
+
+## Current Lean Endpoint
+
+At the public level, the all-dimensional theorem is reduced to two theorem
+families:
+
+```lean
+OddCoreHighModulusPrefixCountGoal
+OddCoreSmallModulusSlackPacketLiftGoal
+```
+
+The current lowest-level endpoint is sharper.  It proves the final theorem
+from the following four remaining blocks:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+So the active Lean goal is to remove exactly these four assumptions.
+
+## Remaining Blocks
+
+1. `PrefixCount.MarginTransportQge2PlanGoal`
+
+   The high-modulus quotient branch with `q >= 2`.  The nonnegativity part is
+   already factored out: once the margin plan proves `2 <= q - tau i` rowwise,
+   `Qge2PlanBounds.step_nonneg` supplies per-cell nonnegativity from the
+   universal lower bound `eps >= -2`.
+
+2. `PrefixCount.MarginTransportQeq1CompatibleGoal`
+
+   The high-modulus boundary branch with `q = 1`.  The remaining content is to
+   construct row margins and signed corrections satisfying
+   `StepNonnegCompatibility`: rows with `q - tau = 0` admit only nonnegative
+   correction entries, rows with `q - tau = 1` avoid `-2`, and rows with
+   `q - tau >= 2` are automatic.
+
+3. `PrefixCountGeometricCriterionGoal`
+
+   The geometric prefix-count Hamilton criterion.  This should package the
+   root-flat coordinates, the canonical layer rule, the Latin property, the
+   triangular return/skew-cycle argument, the primitive row criterion, and the
+   lift from first return cycles to Hamilton cycles on the full torus.
+
+4. `OddCoreSmallModulusSlackPacketLiftGoal`
+
+   The uniform base-tail theorem for `m < d`.  The required seed-semigroup base
+   and Hall-slack arithmetic witnesses are already Lean-closed; the remaining
+   work is the actual packet/base-tail lift construction.
+
+## Closed Support
+
+The following are already available as Lean-checked support for this goal:
+
+- D2 seed and even-dimensional product wrapper.
+- D3 seed, D5 seed, D7 seed, and D9 as `D3 * D3`.
+- Seed-semigroup base availability for odd `d >= 13`.
+- Unit packet construction and Hall-slack arithmetic witnesses.
+- D11-specific `b = 5` Hall-slack arithmetic adapter.
+- Prefix-count foundational algebra and quotient/remainder interfaces.
+- Dense matrix layer realization, closed by Hall extraction and induction.
+- Margin-facing transport adapters.
+- Q>=2 nonnegativity adapter.
+- Q=1 compatibility-to-nonnegativity adapter.
+
+## Non-Goals
+
+- Do not prove the final theorem by importing the `d < 29` finite boundary
+  table.
+- Do not treat `(13,3)` as a special certificate target unless the uniform
+  small-modulus packet-lift theorem unexpectedly fails.
+- Do not include Route E or even-modulus work in the active goal.
+- Do not reopen D7 as a construction target; use the existing D7 odd endpoint
+  as a seed.
+
+## One-Sentence Goal
+
+Close all odd `m >= 3` and all `d >= 2` by proving the two uniform branches
+that remain after the D2/product wrapper and odd seed reductions: the
+high-modulus prefix-count construction and the small-modulus Hall-slack
+packet-lift construction, with the high branch currently split into q>=2
+margin plans, q=1 compatible margins, and the geometric prefix-count criterion.

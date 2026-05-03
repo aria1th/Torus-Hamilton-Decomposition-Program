@@ -241,7 +241,9 @@ when `m` is odd and `m >= 3`.
   `PrefixCount.MarginTransportQeq1Goal`, which ask for row margin plans, signed
   correction matrices, and per-cell nonnegativity.  In the `q >= 2` branch,
   that nonnegativity is reduced by `PrefixCount.Qge2PlanBounds.step_nonneg` to
-  the row bound `2 <= q - tau i`.
+  the row bound `2 <= q - tau i`; in the `q = 1` branch,
+  `PrefixCount.StepNonnegCompatibility.step_nonneg` isolates the row-local
+  restrictions on where `-1` and `-2` entries may appear.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the
@@ -343,12 +345,14 @@ when `m` is odd and `m >= 3`.
   proof for every dimension `d >= 2` and odd modulus `m >= 3`, with even
   dimensions handled by the D2/product wrapper and the main construction
   concentrated in the odd-dimensional core.
-- `docs/ODD_TORI_CURRENT_GOAL_V2_1_20260503.md`: current concise goal reset
-  after the `d < 29` boundary review.  It records that the finite boundary
-  table is audit/regression evidence only, that `(13,3)` is absorbed by the
-  uniform small-modulus base-tail pattern, and that the active Lean endpoint is
-  conditional only on the high-modulus prefix-count theorem and the
-  small-modulus Hall-slack packet-lift theorem.
+- `docs/ODD_TORI_CURRENT_GOAL_V2_2_20260503.md`: current concise goal reset
+  after the `d < 29` boundary review and the q=1 transport-compatibility
+  split.  It records that the finite boundary table is audit/regression
+  evidence only, that `(13,3)` is absorbed by the uniform small-modulus
+  packet-lift pattern, and that the current lowest-level Lean endpoint has four
+  remaining assumptions: q>=2 margin plans, q=1 compatible margins, the
+  geometric prefix-count criterion, and the small-modulus Hall-slack
+  packet-lift theorem.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

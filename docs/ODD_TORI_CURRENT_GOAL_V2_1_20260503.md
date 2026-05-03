@@ -162,10 +162,16 @@ PrefixCount.Qge2PlanBounds
 PrefixCount.Qge2PlanBounds.step_nonneg
 PrefixCount.MarginTransportQge2PlanGoal
 PrefixCount.marginTransportQge2Goal_of_plan
+PrefixCount.StepNonnegCompatibility
+PrefixCount.StepNonnegCompatibility.step_nonneg
+PrefixCount.MarginTransportQeq1CompatibleGoal
+PrefixCount.marginTransportQeq1Goal_of_compatible
 oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
+oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Compat_and_geometry
 odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift
 odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift
+odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -193,6 +199,11 @@ row margin plan
 For the `q >= 2` transport branch, per-cell nonnegativity is now factored out:
 if the margin plan guarantees `2 <= q - tau i` in every row, then every signed
 entry in `{ -2, -1, 1, 2 }` is automatically allowed.
+
+For the `q = 1` branch, per-cell nonnegativity is factored through
+`StepNonnegCompatibility`: rows with `q - tau = 0` must have nonnegative
+entries, rows with `q - tau = 1` must avoid `-2`, and rows with
+`q - tau >= 2` are automatic from the signed-value lower bound.
 
 ### B. Small-Modulus Hall-Slack Packet-Lift Theorem
 
@@ -249,6 +260,8 @@ still open.
   geometry, and small packet lift to the all-dimensional theorem.
 - Q>=2 plan-bounds adapter reducing q>=2 transport nonnegativity to the row
   condition `2 <= q - tau i`.
+- Q=1 compatibility adapter reducing q=1 transport nonnegativity to row-local
+  restrictions on where negative entries can appear.
 - Signed-margin total-sum invariants: every signed correction matrix forces
   `sum sigma = 0`, and a margin plan has `sum sigma = m - sum zero`.
 - Matrix-layer realization for balanced dense count matrices, including the
