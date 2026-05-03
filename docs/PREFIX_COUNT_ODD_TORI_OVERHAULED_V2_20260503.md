@@ -117,6 +117,16 @@ base that makes even composite base dimensions such as `6 = 2 * 3` and
 `8 = 2^3` available.  Those even bases are exactly what remove apparent
 low-modulus boundary cases such as `(d,m) = (13,3)`.
 
+Literature support is available.  Keating's 1985 paper
+`Multiple-Ply Hamiltonian Graphs and Digraphs` determines when a two-generator
+finite abelian Cayley digraph is 2-ply Hamiltonian and explicitly lists as an
+application the decomposition of `DC_r x DC_s` into two Hamilton circuits.
+Bogdanowicz's later `Identifying Hamilton cycles in the Cartesian product of
+directed cycles` quotes the Trotter-Erdos Hamiltonicity criterion and Keating's
+Hamiltonian decomposition extension for the Cartesian product of two directed
+cycles.  For the equal-side case `r = s = m`, Keating's condition is immediate:
+take the two positive parts `1` and `m - 1`.
+
 There is a direct uniform construction for `D_2(m)`.  For
 `(x,y) in (ZMod m)^2`, set the phase
 
