@@ -110,6 +110,94 @@ The dimension choice uses a dyadic-triadic interval lemma: for every odd
 lift, this gives a solved base dimension `b`; for `d >= 29`, the inequality
 `3^(d/3) > d^3` supplies the Hall slack.
 
+## D2 Seed Audit
+
+The dimension-two seed should not be left implicit.  It is the small solved
+base that makes even composite base dimensions such as `6 = 2 * 3` and
+`8 = 2^3` available.  Those even bases are exactly what remove apparent
+low-modulus boundary cases such as `(d,m) = (13,3)`.
+
+There is a direct uniform construction for `D_2(m)`.  For
+`(x,y) in (ZMod m)^2`, set the phase
+
+```text
+s = x + y.
+```
+
+Use two factors.  In the first factor, take the horizontal edge when `s = 0`
+and the vertical edge otherwise.  In the second factor, take the complementary
+choice.  Every step increases `s` by `1`.  Over one phase lap:
+
+```text
+factor 0 uses the horizontal edge 1 time;
+factor 1 uses the horizontal edge m - 1 times.
+```
+
+Both `1` and `m - 1` are units modulo `m`, so the phase return translates the
+horizontal coordinate by a unit.  Hence both factors are Hamilton cycles, and
+the two factors partition the two outgoing directions at every vertex.  This
+works for every `m >= 2`, in particular for every odd `m >= 3`.
+
+This is essentially the `k = 2` cylinder lemma in the smallest possible
+dimension.  For the paper, it is better to state it explicitly as a seed lemma
+instead of treating dimension `2` as folklore.
+
+The finite boundary audit depends on whether this seed is included:
+
+```text
+seeds D3,D5 only:
+  unresolved below d = 29 are (7,3), (7,5), (13,3), (17,3)
+
+seeds D2,D3,D5:
+  unresolved below d = 29 are (7,3), (7,5)
+
+seeds D2,D3,D5,D7:
+  no unresolved odd (d,m) with d < 29 and m < d
+```
+
+The earlier apparent `(13,3)` gap disappears by taking `b = 6 = 2 * 3`:
+
+```text
+d = 13, m = 3, T = 7
+13 = 3 + 2 + 2 + 2 + 2 + 2
+3^6 = 729 > 3 * 13 * 7 = 273
+```
+
+Thus `(13,3)` does not need its own finite certificate once `D2` and `D3` are
+available and composite lift is allowed.
+
+## Finite Determinacy Message
+
+The most important conceptual value of the v2 manuscript is not just the
+individual D11 consequence.  The stronger message is:
+
+```text
+Odd-dimensional directed torus Hamilton decompositions are reduced to
+finite seed dimensions, finite low-modulus boundary checks, and the lifting
+machinery of this paper.
+```
+
+With uniform seed decompositions in dimensions `2`, `3`, `5`, and `7`, the
+current machinery proves every odd dimension `d >= 3` and every odd modulus
+`m >= 3`:
+
+```text
+m >= d:
+  prefix-count count branch
+
+m < d, d >= 29:
+  dyadic-triadic solved base + Hall-slack base-tail branch
+
+m < d, d < 29:
+  finite boundary audit using composite bases from D2,D3,D5,D7
+```
+
+If the paper wants to avoid taking uniform `D7` as an input theorem, then the
+remaining finite boundary consists only of `D_7(3)` and `D_7(5)`.  Once those
+two finite certificates are supplied, the same finite-determinacy conclusion
+follows.  This is a stronger and cleaner headline than presenting D11 as the
+main endpoint.
+
 ## Prefix-Count Core
 
 The symbol set for dimension `d` is
