@@ -186,6 +186,15 @@ theorem oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
     (PrefixCount.transportQeq1Goal_of_margin hQeq1)
     hGeom
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
+    (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
+    (PrefixCount.marginTransportQge2Goal_of_plan hQge2)
+    hQeq1 hGeom
+
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
     D11SmallModulusLiftFromD5Base StandardCayleySolved := by
@@ -470,6 +479,18 @@ theorem odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lif
     (oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
       hQge2 hQeq1 hGeom)
     hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
+    (hGeom : PrefixCountGeometricCriterionGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift
+    (PrefixCount.marginTransportQge2Goal_of_plan hQge2)
+    hQeq1 hGeom hSmallPacket hd2 hmodd hm3
 
 end Concrete
 end RoundComposite

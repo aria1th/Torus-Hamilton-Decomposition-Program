@@ -153,8 +153,16 @@ PrefixCount.MarginTransportQeq1Goal
 PrefixCount.transportQge2Goal_of_margin
 PrefixCount.transportQeq1Goal_of_margin
 PrefixCount.admissiblePartsCountBranchGoal_of_margin
+PrefixCount.signedVal_ge_neg_two
+PrefixCount.SignedMarginMatrix.eps_ge_neg_two
+PrefixCount.Qge2PlanBounds
+PrefixCount.Qge2PlanBounds.step_nonneg
+PrefixCount.MarginTransportQge2PlanGoal
+PrefixCount.marginTransportQge2Goal_of_plan
 oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
+oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
 odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift
+odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -178,6 +186,10 @@ row margin plan
 + signed correction matrix
 + per-cell nonnegativity
 ```
+
+For the `q >= 2` transport branch, per-cell nonnegativity is now factored out:
+if the margin plan guarantees `2 <= q - tau i` in every row, then every signed
+entry in `{ -2, -1, 1, 2 }` is automatically allowed.
 
 ### B. Small-Modulus Hall-Slack Packet-Lift Theorem
 
@@ -232,6 +244,8 @@ still open.
   correction matrices to the two transport goals.
 - Top-level conditional dispatcher from margin-facing transport inputs,
   geometry, and small packet lift to the all-dimensional theorem.
+- Q>=2 plan-bounds adapter reducing q>=2 transport nonnegativity to the row
+  condition `2 <= q - tau i`.
 - Matrix-layer realization for balanced dense count matrices, including the
   zero case, Hall extraction of a positive permutation, one-layer peeling, and
   induction on the row/column degree.

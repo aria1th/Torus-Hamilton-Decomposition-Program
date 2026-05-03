@@ -248,6 +248,15 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.admissiblePartsCountBranchGoal_of_margin`.  The corresponding
   global endpoint is
   `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
+- Q>=2 nonnegativity split:
+  `PrefixCount.signedVal_ge_neg_two`,
+  `PrefixCount.SignedMarginMatrix.eps_ge_neg_two`,
+  `PrefixCount.Qge2PlanBounds`,
+  `PrefixCount.Qge2PlanBounds.step_nonneg`,
+  `PrefixCount.MarginTransportQge2PlanGoal`, and
+  `PrefixCount.marginTransportQge2Goal_of_plan`.  The corresponding global
+  endpoint is
+  `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift`.
 
 ## Revised Goal in One Sentence
 

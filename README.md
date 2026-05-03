@@ -239,7 +239,9 @@ when `m` is odd and `m >= 3`.
   geometric criterion.  The transport goals are further exposed through
   `PrefixCount.MarginTransportQge2Goal` and
   `PrefixCount.MarginTransportQeq1Goal`, which ask for row margin plans, signed
-  correction matrices, and per-cell nonnegativity.
+  correction matrices, and per-cell nonnegativity.  In the `q >= 2` branch,
+  that nonnegativity is reduced by `PrefixCount.Qge2PlanBounds.step_nonneg` to
+  the row bound `2 <= q - tau i`.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the

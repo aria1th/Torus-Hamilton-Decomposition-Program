@@ -457,6 +457,18 @@ theorem signedVal_coprime_of_odd
   · simp [IntCoprime]
   · simpa [IntCoprime] using hm.coprime_two_left
 
+theorem signedVal_ge_neg_two {a : Int} (ha : IsSignedVal a) :
+    (-2 : Int) ≤ a := by
+  have ha' : a = -2 ∨ a = -1 ∨ a = 1 ∨ a = 2 := by
+    simpa [IsSignedVal, signedVals] using ha
+  rcases ha' with rfl | rfl | rfl | rfl <;> norm_num
+
+theorem signedVal_le_two {a : Int} (ha : IsSignedVal a) :
+    a ≤ (2 : Int) := by
+  have ha' : a = -2 ∨ a = -1 ∨ a = 1 ∨ a = 2 := by
+    simpa [IsSignedVal, signedVals] using ha
+  rcases ha' with rfl | rfl | rfl | rfl <;> norm_num
+
 theorem one_le_div_pred_of_le {d m : Nat} (hd2 : 2 ≤ d) (hmd : d ≤ m) :
     1 ≤ m / (d - 1) := by
   have hden : 0 < d - 1 := by omega
@@ -850,6 +862,20 @@ structure SignedMarginMatrix (d : Nat) (sigma : Fin d → Int) where
   row_sum : ∀ i : Fin d, (∑ k : Fin (d - 2), eps i k) = sigma i
   col_sum : ∀ k : Fin (d - 2), (∑ i : Fin d, eps i k) = 0
 
+namespace SignedMarginMatrix
+
+theorem eps_ge_neg_two {d : Nat} {sigma : Fin d → Int}
+    (E : SignedMarginMatrix d sigma) (i : Fin d) (k : Fin (d - 2)) :
+    (-2 : Int) ≤ E.eps i k :=
+  signedVal_ge_neg_two (E.eps_signed i k)
+
+theorem eps_le_two {d : Nat} {sigma : Fin d → Int}
+    (E : SignedMarginMatrix d sigma) (i : Fin d) (k : Fin (d - 2)) :
+    E.eps i k ≤ (2 : Int) :=
+  signedVal_le_two (E.eps_signed i k)
+
+end SignedMarginMatrix
+
 namespace MarginPlan
 
 /--
@@ -878,6 +904,31 @@ def toTransport {d m q r : Nat}
 
 end MarginPlan
 
+structure Qge2PlanBounds {d m q r : Nat}
+    (P : MarginPlan d m q r) : Prop where
+  delta_ge_two : ∀ i : Fin d, (2 : Int) ≤ (q : Int) - P.tau i
+
+namespace Qge2PlanBounds
+
+theorem step_nonneg {d m q r : Nat}
+    {P : MarginPlan d m q r} (hP : Qge2PlanBounds P)
+    {E : SignedMarginMatrix d P.sigma} :
+    ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k := by
+  intro i k
+  have hdelta := hP.delta_ge_two i
+  have heps := E.eps_ge_neg_two i k
+  linarith
+
+end Qge2PlanBounds
+
+def MarginTransportQge2PlanGoal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    ∃ P : MarginPlan d m q r,
+      Qge2PlanBounds P ∧ Nonempty (SignedMarginMatrix d P.sigma)
+
 def MarginTransportQge2Goal : Prop :=
   ∀ {d m q r : Nat},
     Odd d → 5 ≤ d → Odd m →
@@ -895,6 +946,14 @@ def MarginTransportQeq1Goal : Prop :=
     ∃ P : MarginPlan d m q r,
       ∃ E : SignedMarginMatrix d P.sigma,
         ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k
+
+theorem marginTransportQge2Goal_of_plan
+    (hPlan : MarginTransportQge2PlanGoal) :
+    MarginTransportQge2Goal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, hP, ⟨E⟩⟩
+  exact ⟨P, E, hP.step_nonneg⟩
 
 theorem transportQge2Goal_of_margin
     (hMargin : MarginTransportQge2Goal) :
