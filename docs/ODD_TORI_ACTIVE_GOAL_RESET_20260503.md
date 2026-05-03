@@ -294,7 +294,8 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.MarginTransportQge2Goal`; even
   `PrefixCount.MarginTransportQge2PlanGoal` is too strong as a universal q>=2
   target because `q = 2, r = 1` is incompatible with global
-  `Qge2PlanBounds`.
+  `Qge2PlanBounds`, as recorded by
+  `PrefixCount.Qge2PlanBounds.not_for_q_two_r_one`.
 - Q=1 compatibility split:
   `PrefixCount.StepNonnegCompatibility`,
   `PrefixCount.StepNonnegCompatibility.step_nonneg`,

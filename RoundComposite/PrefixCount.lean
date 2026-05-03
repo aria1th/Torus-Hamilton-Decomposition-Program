@@ -1044,6 +1044,33 @@ theorem step_nonneg {d m q r : Nat}
   have heps := E.eps_ge_neg_two i k
   linarith
 
+theorem tau_le_q_sub_two {d m q r : Nat}
+    {P : MarginPlan d m q r} (hP : Qge2PlanBounds P) (i : Fin d) :
+    P.tau i ≤ (q : Int) - 2 := by
+  have hdelta := hP.delta_ge_two i
+  linarith
+
+theorem tau_sum_le {d m q r : Nat}
+    {P : MarginPlan d m q r} (hP : Qge2PlanBounds P) :
+    (q : Int) - (r : Int) ≤ (d : Int) * ((q : Int) - 2) := by
+  have hsum :
+      (∑ i : Fin d, P.tau i) ≤ ∑ _i : Fin d, ((q : Int) - 2) := by
+    apply Finset.sum_le_sum
+    intro i _hi
+    exact hP.tau_le_q_sub_two i
+  have hconst :
+      (∑ _i : Fin d, ((q : Int) - 2)) =
+        (d : Int) * ((q : Int) - 2) := by
+    simp [Finset.sum_const]
+    ring
+  rw [P.tau_sum, hconst] at hsum
+  exact hsum
+
+theorem not_for_q_two_r_one {d m : Nat}
+    {P : MarginPlan d m 2 1} (hP : Qge2PlanBounds P) : False := by
+  have hsum := hP.tau_sum_le
+  norm_num at hsum
+
 end Qge2PlanBounds
 
 structure StepNonnegCompatibility {d m q r : Nat}

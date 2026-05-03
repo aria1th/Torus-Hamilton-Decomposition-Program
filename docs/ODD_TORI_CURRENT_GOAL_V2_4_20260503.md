@@ -103,7 +103,8 @@ matrix, and per-cell nonnegativity together.
 The intermediate `MarginTransportQge2PlanGoal` is also a compatibility layer
 rather than the preferred target: its global `Qge2PlanBounds` condition is too
 strong for cases such as `q = 2, r = 1`, where `tau_sum = q-r = 1` but
-`2 <= q - tau i` would force every `tau i <= 0`.
+`2 <= q - tau i` would force every `tau i <= 0`.  Lean records this obstruction
+as `Qge2PlanBounds.not_for_q_two_r_one`.
 
 ## Remaining Blocks
 
