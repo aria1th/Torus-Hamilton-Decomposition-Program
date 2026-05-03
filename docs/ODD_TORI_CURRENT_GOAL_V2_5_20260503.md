@@ -179,8 +179,9 @@ the global q=1 theorem family.
   `not_marginTransportQeq1PlusFamilyGoal` obstruction.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
-  Hall-realization interface, and the sanity converse from symbolings back to
-  feasible residue count matrices.
+  Hall-realization interface, color-degree double counting, full-set cut
+  cap/mass and equality reductions, and the sanity converse from symbolings
+  back to feasible residue count matrices.
 
 ## Non-Goals
 

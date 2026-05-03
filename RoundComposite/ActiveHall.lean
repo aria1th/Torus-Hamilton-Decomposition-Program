@@ -27,6 +27,89 @@ def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
   ∑ x : X, min ((I.active x ∩ U).card) S.card
 
+theorem sum_colorDegree {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] (I : Incidence T X C) :
+    (∑ c : C, I.colorDegree c) = T * Fintype.card X := by
+  classical
+  calc
+    (∑ c : C, I.colorDegree c)
+        = ∑ c : C, ∑ x : X, if c ∈ I.active x then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [colorDegree, Finset.card_filter]
+    _ = ∑ x : X, ∑ c : C, if c ∈ I.active x then 1 else 0 := by
+            rw [Finset.sum_comm]
+    _ = ∑ x : X, (I.active x).card := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            simp
+    _ = ∑ _x : X, T := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            exact I.active_card x
+    _ = T * Fintype.card X := by
+            simp [Finset.sum_const, Nat.mul_comm]
+
+theorem sum_colorDegree_on {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    (∑ c ∈ U, I.colorDegree c)
+      = ∑ x : X, (I.active x ∩ U).card := by
+  classical
+  calc
+    (∑ c ∈ U, I.colorDegree c)
+        = ∑ c ∈ U, ∑ x : X, if c ∈ I.active x then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [colorDegree, Finset.card_filter]
+    _ = ∑ x : X, ∑ c ∈ U, if c ∈ I.active x then 1 else 0 := by
+            rw [Finset.sum_comm]
+    _ = ∑ x : X, (I.active x ∩ U).card := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            have hfilter :
+                U.filter (fun c : C => c ∈ I.active x) = I.active x ∩ U := by
+              ext c
+              simp [and_comm]
+            rw [← hfilter]
+            exact (Finset.card_filter (fun c : C => c ∈ I.active x) U).symm
+
+theorem cutCap_symbols_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.cutCap U (Finset.univ : Finset (Fin T))
+      = ∑ x : X, (I.active x ∩ U).card := by
+  classical
+  unfold cutCap
+  apply Finset.sum_congr rfl
+  intro x _hx
+  rw [min_eq_left]
+  have hle : (I.active x ∩ U).card ≤ (I.active x).card := by
+    exact Finset.card_le_card (by
+      intro c hc
+      exact (Finset.mem_inter.mp hc).1)
+  rw [I.active_card x] at hle
+  simpa using hle
+
+theorem cutCap_colors_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (S : Finset (Fin T)) :
+    I.cutCap (Finset.univ : Finset C) S = S.card * Fintype.card X := by
+  classical
+  have hS : S.card ≤ T := by
+    simpa using Finset.card_le_univ S
+  calc
+    I.cutCap (Finset.univ : Finset C) S
+        = ∑ _x : X, S.card := by
+            unfold cutCap
+            apply Finset.sum_congr rfl
+            intro x _hx
+            have hactive : (I.active x ∩ (Finset.univ : Finset C)).card = T := by
+              simp [I.active_card x]
+            rw [hactive, min_eq_right hS]
+    _ = S.card * Fintype.card X := by
+            simp [Finset.sum_const, Nat.mul_comm]
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/
@@ -74,6 +157,53 @@ def HasResidues {m T : Nat} {X C : Type*}
     {I : Incidence T X C} (M : CountMatrix I)
     (R : ResidueSpec m T C) : Prop :=
   ∀ c σ, (M.val c σ : ZMod m) = R.target c σ
+
+theorem cutMass_symbols_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (U : Finset C) :
+    M.cutMass U (Finset.univ : Finset (Fin T))
+      = ∑ c ∈ U, I.colorDegree c := by
+  classical
+  calc
+    M.cutMass U (Finset.univ : Finset (Fin T))
+        = ∑ c ∈ U, ∑ σ : Fin T, M.val c σ := by
+            rfl
+    _ = ∑ c ∈ U, I.colorDegree c := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            exact M.row_sum c
+
+theorem cutMass_colors_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
+    M.cutMass (Finset.univ : Finset C) S = S.card * Fintype.card X := by
+  classical
+  calc
+    M.cutMass (Finset.univ : Finset C) S
+        = ∑ σ ∈ S, ∑ c : C, M.val c σ := by
+            unfold cutMass
+            rw [Finset.sum_comm]
+    _ = ∑ _σ ∈ S, Fintype.card X := by
+            apply Finset.sum_congr rfl
+            intro σ _hσ
+            exact M.col_sum σ
+    _ = S.card * Fintype.card X := by
+            simp [Finset.sum_const]
+
+theorem cutMass_symbols_univ_eq_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (U : Finset C) :
+    M.cutMass U (Finset.univ : Finset (Fin T))
+      = I.cutCap U (Finset.univ : Finset (Fin T)) := by
+  rw [M.cutMass_symbols_univ U, I.cutCap_symbols_univ U,
+    I.sum_colorDegree_on U]
+
+theorem cutMass_colors_univ_eq_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
+    M.cutMass (Finset.univ : Finset C) S
+      = I.cutCap (Finset.univ : Finset C) S := by
+  rw [M.cutMass_colors_univ S, I.cutCap_colors_univ S]
 
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
