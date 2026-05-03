@@ -360,7 +360,8 @@ when `m` is odd and `m >= 3`.
   realization, q=1 plus-set margins, root-flat return construction,
   root-flat equivalence step compatibility, and the small-modulus Hall-slack
   packet-lift theorem.  It also records the small-branch internal split through
-  Active-Hall feasible residues and Hall realization.
+  Active-Hall feasible residues and Hall realization, and the successor-indexed
+  canonical root-step Cayley lift now closed in Lean.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

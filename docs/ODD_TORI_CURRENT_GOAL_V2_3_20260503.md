@@ -103,7 +103,16 @@ So the active Lean goal is to remove exactly these six assumptions.
    Prove the coordinate equivalence and one-step compatibility between
    `ZMod m × PrefixCountRootState d m` and `Shared.TorusVertex d m`.  Lean
    already proves that this equivalence-level statement implies the Cayley
-   lift.
+   lift.  The arbitrary-`D` formulation is stronger than the actual geometric
+   need: the lift should consume a root-flat schedule whose `step` is the
+   canonical root step.  Lean now closes the successor-indexed canonical
+   coordinate lift:
+   `prefixCountRootLayerEquivSucc`, `prefixCountRootStepSucc`,
+   `prefixCountRootLayerEquivSucc_step`, and
+   `standardCayleySolved_of_rootFlatLayered_standardStepSucc`.  The remaining
+   refactor is to expose canonical-step equality from the return certificate
+   and transport this successor-indexed theorem back to the current `d`
+   interface.
 
 6. `OddCoreSmallModulusSlackPacketLiftGoal`
 
@@ -149,7 +158,8 @@ Already Lean-checked support includes:
 - Q>=2 nonnegativity adapter.
 - Q=1 compatibility, matched `±1`, and plus-family adapters.
 - Root-flat split of the prefix-count geometric criterion, including the
-  equivalence-to-Cayley lift adapter.
+  equivalence-to-Cayley lift adapter and the successor-indexed canonical
+  root-step Cayley lift.
 - Active-Hall symboling foundation: incidence data, symbolings, count
   matrices, residue specifications, row/column count lemmas, Hall cuts, and
   the feasible-residue to symboling adapter conditional on Hall realization.

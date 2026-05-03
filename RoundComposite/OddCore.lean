@@ -47,6 +47,88 @@ def PrefixCountGeometricCriterionGoal : Prop :=
 abbrev PrefixCountRootState (d m : Nat) :=
   Fin (d - 1) → ZMod m
 
+def prefixCountRootLayerEquivSucc (n m : Nat) :
+    ZMod m × (Fin n → ZMod m) ≃ Shared.TorusVertex (n + 1) m where
+  toFun tw := Fin.snoc tw.2 (tw.1 - ∑ j : Fin n, tw.2 j)
+  invFun x := (∑ i : Fin (n + 1), x i, fun j : Fin n => x j.castSucc)
+  left_inv := by
+    intro tw
+    ext
+    · simp [Fin.sum_snoc]
+    · simp
+  right_inv := by
+    intro x
+    funext i
+    rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+    · simp
+    · simp only [Fin.snoc_last]
+      rw [Fin.sum_univ_castSucc]
+      abel
+
+def prefixCountRootStepSucc {n m : Nat}
+    (i : Fin (n + 1)) (w : Fin n → ZMod m) : Fin n → ZMod m :=
+  fun j => if i = j.castSucc then w j + 1 else w j
+
+theorem prefixCountRootStepSucc_sum_castSucc {n m : Nat}
+    (i : Fin n) (w : Fin n → ZMod m) :
+    (∑ j : Fin n, prefixCountRootStepSucc i.castSucc w j)
+      = (∑ j : Fin n, w j) + 1 := by
+  classical
+  calc
+    (∑ j : Fin n, prefixCountRootStepSucc i.castSucc w j)
+        = ∑ j : Fin n, (w j + if i = j then (1 : ZMod m) else 0) := by
+            apply Finset.sum_congr rfl
+            intro j _hj
+            by_cases h : i = j
+            · subst j
+              simp [prefixCountRootStepSucc]
+            · have hcast : i.castSucc ≠ j.castSucc := by
+                intro hc
+                exact h (Fin.castSucc_injective n hc)
+              simp [prefixCountRootStepSucc, h, hcast]
+    _ = (∑ j : Fin n, w j) + ∑ j : Fin n, (if i = j then (1 : ZMod m) else 0) := by
+            rw [Finset.sum_add_distrib]
+    _ = (∑ j : Fin n, w j) + 1 := by
+            simp
+
+theorem prefixCountRootStepSucc_sum_last {n m : Nat}
+    (w : Fin n → ZMod m) :
+    (∑ j : Fin n, prefixCountRootStepSucc (Fin.last n) w j)
+      = ∑ j : Fin n, w j := by
+  classical
+  have hlast : ∀ j : Fin n, (Fin.last n : Fin (n + 1)) ≠ j.castSucc := by
+    intro j h
+    exact Fin.castSucc_ne_last j h.symm
+  simp [prefixCountRootStepSucc, hlast]
+
+theorem prefixCountRootLayerEquivSucc_step {n m : Nat}
+    (i : Fin (n + 1)) (tw : ZMod m × (Fin n → ZMod m)) :
+    prefixCountRootLayerEquivSucc n m
+        (tw.1 + 1, prefixCountRootStepSucc i tw.2)
+      =
+      prefixCountRootLayerEquivSucc n m tw + Shared.torusBasis (n + 1) m i := by
+  classical
+  funext k
+  rcases Fin.eq_castSucc_or_eq_last k with ⟨j, rfl⟩ | rfl
+  · simp only [prefixCountRootLayerEquivSucc, Equiv.coe_fn_mk,
+      Fin.snoc_castSucc, Pi.add_apply, Shared.torusBasis]
+    by_cases h : i = j.castSucc
+    · rw [prefixCountRootStepSucc, if_pos h, if_pos h.symm]
+    · have h' : j.castSucc ≠ i := h ∘ Eq.symm
+      rw [prefixCountRootStepSucc, if_neg h, if_neg h']
+      simp
+  · rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+    · simp only [prefixCountRootLayerEquivSucc, Equiv.coe_fn_mk,
+        Fin.snoc_last, Pi.add_apply, Shared.torusBasis]
+      have hlast : (Fin.last n : Fin (n + 1)) ≠ j.castSucc :=
+        (Fin.castSucc_ne_last j).symm
+      simp [prefixCountRootStepSucc_sum_castSucc, hlast]
+    · simp only [prefixCountRootLayerEquivSucc, Equiv.coe_fn_mk,
+        Fin.snoc_last, Pi.add_apply, Shared.torusBasis]
+      rw [prefixCountRootStepSucc_sum_last]
+      simp
+      ring_nf
+
 def PrefixCountRootFlatReturnGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -217,6 +299,18 @@ theorem standardCayleySolved_of_rootFlatLayeredEquiv
           = E.symm (E (D.schedule.fullStep c tw)) := by
               rw [hCompat c tw]
       _ = D.schedule.fullStep c tw := by simp
+
+theorem standardCayleySolved_of_rootFlatLayered_standardStepSucc
+    {n m : Nat} [NeZero m]
+    (D : Shared.RootFlatLayeredDecomposition
+      (Fin (n + 1)) (Fin (n + 1)) (Fin n → ZMod m) m)
+    (hStep : D.schedule.step = prefixCountRootStepSucc) :
+    StandardCayleySolved (n + 1) m := by
+  refine standardCayleySolved_of_rootFlatLayeredEquiv D
+    (prefixCountRootLayerEquivSucc n m) ?_
+  intro c tw
+  simp [Shared.RootFlatSchedule.fullStep, Shared.RootFlatSchedule.layerMap,
+    Shared.cayleyColorStep, hStep, prefixCountRootLayerEquivSucc_step]
 
 theorem prefixCountRootFlatCayleyLiftGoal_of_equiv
     (hEquiv : PrefixCountRootFlatEquivLiftGoal) :
