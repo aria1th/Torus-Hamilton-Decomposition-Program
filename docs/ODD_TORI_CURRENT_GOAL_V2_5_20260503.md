@@ -160,6 +160,8 @@ the global q=1 theorem family.
    Active-Hall: construct feasible residue count matrices with Hall cuts,
    prove the Hall/Hoffman realization theorem, then translate active
    symbolings into unit carries and the base-tail Hamilton lift.
+   The finite realization subproblem is isolated in
+   `docs/ACTIVE_HALL_REALIZATION_REQUEST_20260503.md`.
 
 ## Already Lean-Closed Support
 
