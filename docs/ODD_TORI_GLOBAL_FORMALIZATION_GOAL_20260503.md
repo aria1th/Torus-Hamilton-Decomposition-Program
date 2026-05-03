@@ -565,7 +565,17 @@ m/(d-1) = 1 or 2 <= m/(d-1).
 ```
 
 This isolates the manuscript's `q = 1` versus `q >= 2` split from the actual
-transport constructions.
+transport constructions.  The dispatcher
+`admissiblePartsCountBranchGoal_of_transports` then proves that the two
+remaining transport existence goals,
+
+```lean
+TransportQge2Goal
+TransportQeq1Goal
+```
+
+are enough to produce an admissible `Parts` certificate for the high-modulus
+count branch.
 
 `RoundComposite/SeedSemigroup.lean` also records the small-block arithmetic
 needed by the base-tail theorem:

@@ -571,6 +571,40 @@ theorem toSigned_admissible {d m q r : Nat}
 
 end QuotientTransport
 
+def TransportQge2Goal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    Nonempty (QuotientTransport d m q r)
+
+def TransportQeq1Goal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → q = 1 →
+    Nonempty (QuotientTransport d m q r)
+
+def AdmissiblePartsCountBranchGoal : Prop :=
+  ∀ {d m : Nat}, Odd d → Odd m → 5 ≤ d → d ≤ m →
+    ∃ C : Parts d, C.Admissible m
+
+theorem admissiblePartsCountBranchGoal_of_transports
+    (hQge2 : TransportQge2Goal)
+    (hQeq1 : TransportQeq1Goal) :
+    AdmissiblePartsCountBranchGoal := by
+  intro d m hdodd hmodd hd5 hdm
+  have hd2 : 2 ≤ d := by omega
+  rcases quotient_remainder_count_branch hdodd hmodd hd2 hdm with
+    ⟨hmqr, hrlt, hrpos, hq⟩
+  rcases hq with hq1 | hq2
+  · rcases hQeq1 hdodd hd5 hmodd hmqr hrlt hrpos hq1 with ⟨T⟩
+    exact ⟨(T.toSigned (by omega) hmqr).toParts,
+      T.toSigned_admissible hd2 hmodd hmqr⟩
+  · rcases hQge2 hdodd hd5 hmodd hmqr hrlt hrpos hq2 with ⟨T⟩
+    exact ⟨(T.toSigned (by omega) hmqr).toParts,
+      T.toSigned_admissible hd2 hmodd hmqr⟩
+
 /--
 Row-wise margin data for the signed transportation branch.
 

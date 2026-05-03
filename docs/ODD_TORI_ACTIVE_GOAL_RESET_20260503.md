@@ -199,6 +199,10 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - Quotient/remainder branch arithmetic for the count branch, including
   `quotient_remainder_count_branch`, `quotient_one_or_ge_two_of_le`, and the
   `q = 1` upper-bound helper `quotient_eq_one_upper_bound`.
+- Count-branch construction dispatcher:
+  `TransportQge2Goal`, `TransportQeq1Goal`,
+  `AdmissiblePartsCountBranchGoal`, and
+  `admissiblePartsCountBranchGoal_of_transports`.
 
 ## Revised Goal in One Sentence
 

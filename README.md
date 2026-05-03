@@ -212,7 +212,10 @@ when `m` is odd and `m >= 3`.
   `MarginPlan`, `SignedMarginMatrix`, and `MarginPlan.toTransport`, isolating
   row arithmetic, signed matrix construction, and cellwise nonnegativity.
   The quotient/remainder branch split for `q = m/(d-1)` and
-  `r = m%(d-1)` is packaged by `quotient_remainder_count_branch`.
+  `r = m%(d-1)` is packaged by `quotient_remainder_count_branch`, and
+  `admissiblePartsCountBranchGoal_of_transports` reduces construction of
+  admissible high-modulus parts to the two signed-transport existence goals
+  `TransportQge2Goal` and `TransportQeq1Goal`.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus
