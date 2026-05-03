@@ -82,6 +82,46 @@ theorem pred_mod_pos_of_odd
       _ = k * (m / (d - 1)) + k * (m / (d - 1)) := by ring
   exact (Nat.not_even_iff_odd.mpr hmodd) hmeven
 
+theorem pred_mul_div_add_mod (d m : Nat) :
+    (d - 1) * (m / (d - 1)) + m % (d - 1) = m := by
+  exact Nat.div_add_mod m (d - 1)
+
+theorem quotient_one_or_ge_two_of_le
+    {d m : Nat} (hd2 : 2 ≤ d) (hmd : d ≤ m) :
+    m / (d - 1) = 1 ∨ 2 ≤ m / (d - 1) := by
+  have hq : 1 ≤ m / (d - 1) := one_le_div_pred_of_le hd2 hmd
+  omega
+
+theorem quotient_remainder_count_branch
+    {d m : Nat} (hdodd : Odd d) (hmodd : Odd m)
+    (hd2 : 2 ≤ d) (hmd : d ≤ m) :
+    m = (d - 1) * (m / (d - 1)) + m % (d - 1) ∧
+    m % (d - 1) < d - 1 ∧
+    0 < m % (d - 1) ∧
+    (m / (d - 1) = 1 ∨ 2 ≤ m / (d - 1)) := by
+  have hden : 0 < d - 1 := by omega
+  exact ⟨
+    (pred_mul_div_add_mod d m).symm,
+    Nat.mod_lt m hden,
+    pred_mod_pos_of_odd hdodd hmodd hd2,
+    quotient_one_or_ge_two_of_le hd2 hmd
+  ⟩
+
+theorem eq_pred_add_mod_of_div_eq_one
+    {d m : Nat} (hq : m / (d - 1) = 1) :
+    m = (d - 1) + m % (d - 1) := by
+  have h := (Nat.div_add_mod m (d - 1)).symm
+  rw [hq] at h
+  simpa using h
+
+theorem quotient_eq_one_upper_bound
+    {d m : Nat} (hd2 : 2 ≤ d) (hq : m / (d - 1) = 1) :
+    m ≤ 2 * d - 3 := by
+  have hden : 0 < d - 1 := by omega
+  have hr : m % (d - 1) < d - 1 := Nat.mod_lt m hden
+  have hm_eq := eq_pred_add_mod_of_div_eq_one (d := d) (m := m) hq
+  omega
+
 /--
 A signed prefix-count certificate.
 

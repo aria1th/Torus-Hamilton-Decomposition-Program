@@ -548,6 +548,18 @@ into three smaller obligations:
   sums;
 - prove the per-cell nonnegativity needed for the resulting natural counts.
 
+The quotient/remainder case split for the same branch is also Lean-closed:
+`quotient_remainder_count_branch` packages
+
+```text
+m = (d-1) * (m/(d-1)) + m%(d-1),
+0 < m%(d-1) < d-1,
+m/(d-1) = 1 or 2 <= m/(d-1).
+```
+
+This isolates the manuscript's `q = 1` versus `q >= 2` split from the actual
+transport constructions.
+
 `RoundComposite/SeedSemigroup.lean` also records the small-block arithmetic
 needed by the base-tail theorem:
 
