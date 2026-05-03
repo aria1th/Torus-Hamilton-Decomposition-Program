@@ -83,6 +83,46 @@ theorem twoThreeBlockParts_tail_le_two_base {b d : Nat}
     d - b ≤ 2 * b := by
   omega
 
+theorem pow_three_three_mul_pred_gt_fifty_four_sq :
+    ∀ {p : Nat}, 2 ≤ p → 54 * p * p < 3 ^ (3 * p - 1) := by
+  intro p hp
+  induction p, hp using Nat.le_induction with
+  | base => norm_num
+  | succ p hp ih =>
+      have hle : 54 * (p + 1) * (p + 1) ≤ 27 * (54 * p * p) := by
+        nlinarith
+      have hpow :
+          27 * 3 ^ (3 * p - 1) = 3 ^ (3 * (p + 1) - 1) := by
+        rw [show 3 * (p + 1) - 1 = (3 * p - 1) + 3 by omega]
+        rw [pow_add]
+        norm_num
+        ring
+      calc
+        54 * (p + 1) * (p + 1) ≤ 27 * (54 * p * p) := hle
+        _ < 27 * 3 ^ (3 * p - 1) :=
+          Nat.mul_lt_mul_of_pos_left ih (by decide)
+        _ = 3 ^ (3 * (p + 1) - 1) := hpow
+
+theorem pow_three_four_mul_pred_gt_ninety_six_sq :
+    ∀ {p : Nat}, 2 ≤ p → 96 * p * p < 3 ^ (4 * p - 1) := by
+  intro p hp
+  induction p, hp using Nat.le_induction with
+  | base => norm_num
+  | succ p hp ih =>
+      have hle : 96 * (p + 1) * (p + 1) ≤ 81 * (96 * p * p) := by
+        nlinarith
+      have hpow :
+          81 * 3 ^ (4 * p - 1) = 3 ^ (4 * (p + 1) - 1) := by
+        rw [show 4 * (p + 1) - 1 = (4 * p - 1) + 4 by omega]
+        rw [pow_add]
+        norm_num
+        ring
+      calc
+        96 * (p + 1) * (p + 1) ≤ 81 * (96 * p * p) := hle
+        _ < 81 * 3 ^ (4 * p - 1) :=
+          Nat.mul_lt_mul_of_pos_left ih (by decide)
+        _ = 3 ^ (4 * (p + 1) - 1) := hpow
+
 def unitCarryPacket (m k : Nat) : List Nat :=
   if k = 2 then
     [1, m - 1]
@@ -249,6 +289,122 @@ theorem seed_semigroup_base_available
     · simpa [p, n] using SolvedBySeedSemigroup.four_mul_two_pow n
     · omega
     · omega
+
+theorem seed_semigroup_base_available_with_hall_slack
+    {d m : Nat} (_hdodd : Odd d) (hd13 : 13 ≤ d)
+    (hm3 : 3 ≤ m) (_hmd : m < d) :
+    ∃ b : Nat,
+      SolvedBySeedSemigroup b ∧
+      2 * b < d ∧ d ≤ 3 * b ∧
+      d - b > b ∧
+      m ^ b > m * d * (d - b) := by
+  let q := (d - 1) / 6
+  let n := Nat.log 2 q
+  let p := 2 ^ n
+  have hq2 : 2 ≤ q := by
+    have h12 : 2 * 6 ≤ d - 1 := by omega
+    exact (Nat.le_div_iff_mul_le (by decide : 0 < 6)).2 h12
+  have hqne : q ≠ 0 := by omega
+  have hp_le_q : p ≤ q := by
+    simpa [p, n] using Nat.pow_log_le_self 2 hqne
+  have hq_lt_2p : q < 2 * p := by
+    have h := Nat.lt_pow_succ_log_self (by decide : 1 < 2) q
+    simpa [p, n, pow_succ, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using h
+  have hp_pos : 0 < p := by
+    have hp_ne : p ≠ 0 := by
+      simp [p]
+    exact Nat.pos_of_ne_zero hp_ne
+  have hp2 : 2 ≤ p := by
+    by_contra hpnot
+    have hp_eq : p = 1 := by omega
+    omega
+  have hq_floor : q * 6 ≤ d - 1 := by
+    simpa [q] using Nat.div_mul_le_self (d - 1) 6
+  have h6p_le : 6 * p ≤ d - 1 := by
+    have hmul : p * 6 ≤ q * 6 := Nat.mul_le_mul_right 6 hp_le_q
+    omega
+  have h6p_lt : 6 * p < d := by omega
+  have hdsub_lt : d - 1 < (q + 1) * 6 := by
+    simpa [q] using
+      Nat.lt_mul_of_div_lt (Nat.lt_succ_self q) (by decide : 0 < 6)
+  have hd_le_6q1 : d ≤ (q + 1) * 6 := by omega
+  have hq1_le : q + 1 ≤ 2 * p := Nat.succ_le_of_lt hq_lt_2p
+  have hupper : d ≤ 12 * p := by
+    have hmul : (q + 1) * 6 ≤ (2 * p) * 6 :=
+      Nat.mul_le_mul_right 6 hq1_le
+    omega
+  have hallSlack3
+      (hd_le : d ≤ 9 * p) :
+      m ^ (3 * p) > m * d * (d - 3 * p) := by
+    have htail_le : d - 3 * p ≤ 6 * p := by omega
+    have hdt_le : d * (d - 3 * p) ≤ 54 * p * p := by
+      calc
+        d * (d - 3 * p) ≤ (9 * p) * (6 * p) :=
+          Nat.mul_le_mul hd_le htail_le
+        _ = 54 * p * p := by ring
+    have hdt_lt_three : d * (d - 3 * p) < 3 ^ (3 * p - 1) :=
+      lt_of_le_of_lt hdt_le
+        (pow_three_three_mul_pred_gt_fifty_four_sq hp2)
+    have hthree_le_m : 3 ^ (3 * p - 1) ≤ m ^ (3 * p - 1) :=
+      Nat.pow_le_pow_left hm3 (3 * p - 1)
+    have hdt_lt_m : d * (d - 3 * p) < m ^ (3 * p - 1) :=
+      lt_of_lt_of_le hdt_lt_three hthree_le_m
+    have hmpos : 0 < m := by omega
+    have hmul :
+        m * (d * (d - 3 * p)) < m * m ^ (3 * p - 1) :=
+      Nat.mul_lt_mul_of_pos_left hdt_lt_m hmpos
+    have hpoweq : m * m ^ (3 * p - 1) = m ^ (3 * p) := by
+      calc
+        m * m ^ (3 * p - 1) = m ^ (3 * p - 1) * m := by ring
+        _ = m ^ ((3 * p - 1) + 1) := by rw [pow_succ]
+        _ = m ^ (3 * p) := by rw [show (3 * p - 1) + 1 = 3 * p by omega]
+    calc
+      m * d * (d - 3 * p) = m * (d * (d - 3 * p)) := by ring
+      _ < m * m ^ (3 * p - 1) := hmul
+      _ = m ^ (3 * p) := hpoweq
+  have hallSlack4
+      (h9lt : 9 * p < d) :
+      m ^ (4 * p) > m * d * (d - 4 * p) := by
+    have htail_le : d - 4 * p ≤ 8 * p := by omega
+    have hdt_le : d * (d - 4 * p) ≤ 96 * p * p := by
+      calc
+        d * (d - 4 * p) ≤ (12 * p) * (8 * p) :=
+          Nat.mul_le_mul hupper htail_le
+        _ = 96 * p * p := by ring
+    have hdt_lt_three : d * (d - 4 * p) < 3 ^ (4 * p - 1) :=
+      lt_of_le_of_lt hdt_le
+        (pow_three_four_mul_pred_gt_ninety_six_sq hp2)
+    have hthree_le_m : 3 ^ (4 * p - 1) ≤ m ^ (4 * p - 1) :=
+      Nat.pow_le_pow_left hm3 (4 * p - 1)
+    have hdt_lt_m : d * (d - 4 * p) < m ^ (4 * p - 1) :=
+      lt_of_lt_of_le hdt_lt_three hthree_le_m
+    have hmpos : 0 < m := by omega
+    have hmul :
+        m * (d * (d - 4 * p)) < m * m ^ (4 * p - 1) :=
+      Nat.mul_lt_mul_of_pos_left hdt_lt_m hmpos
+    have hpoweq : m * m ^ (4 * p - 1) = m ^ (4 * p) := by
+      calc
+        m * m ^ (4 * p - 1) = m ^ (4 * p - 1) * m := by ring
+        _ = m ^ ((4 * p - 1) + 1) := by rw [pow_succ]
+        _ = m ^ (4 * p) := by rw [show (4 * p - 1) + 1 = 4 * p by omega]
+    calc
+      m * d * (d - 4 * p) = m * (d * (d - 4 * p)) := by ring
+      _ < m * m ^ (4 * p - 1) := hmul
+      _ = m ^ (4 * p) := hpoweq
+  by_cases hlow : d ≤ 9 * p
+  · refine ⟨3 * p, ?_, ?_, ?_, ?_, ?_⟩
+    · simpa [p, n] using SolvedBySeedSemigroup.three_mul_two_pow n
+    · omega
+    · omega
+    · omega
+    · exact hallSlack3 hlow
+  · have h9lt : 9 * p < d := lt_of_not_ge hlow
+    refine ⟨4 * p, ?_, ?_, ?_, ?_, ?_⟩
+    · simpa [p, n] using SolvedBySeedSemigroup.four_mul_two_pow n
+    · omega
+    · omega
+    · omega
+    · exact hallSlack4 h9lt
 
 noncomputable def smallBaseUnitPacketWitness
     {d m : Nat} (hdodd : Odd d) (hd13 : 13 ≤ d)

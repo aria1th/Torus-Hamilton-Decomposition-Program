@@ -37,7 +37,7 @@ boundary table as an input theorem or Lean dependency.
 
 | Requirement | Current artifact | Evidence | Status |
 |---|---|---|---|
-| Final theorem should cover every `d >= 2`, odd `m >= 3` | `RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_main_lemmas` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
+| Final theorem should cover every `d >= 2`, odd `m >= 3` | `RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
 | Proof spine should not depend on the `d < 29` finite boundary table | `docs/ODD_TORI_GLOBAL_FORMALIZATION_GOAL_20260503.md` and `RoundComposite/OddCore.lean` | Dispatcher uses branch interfaces, not the table | Satisfied at skeleton level |
 | D2 seed for even-dimensional wrapper | `Shared/D2Seed.lean`; `standard_cayley_odd_uniform_2` | `lake env lean Shared/D2Seed.lean`; imported in `ConcreteEndpoints` | Closed |
 | D3 seed for odd core | `Shared/D3Seed.lean`; `standard_cayley_odd_uniform_3` | `lake env lean Shared/D3Seed.lean`; `lake build Shared.D3Seed` | Closed |
@@ -50,7 +50,8 @@ boundary table as an input theorem or Lean dependency.
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
-| Unified packet-lift endpoint for D11-small and general small branch | `OddCoreSmallModulusUnitPacketLiftGoal`; `odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
+| Hall-slack packet-lift endpoint for D11-small and general small branch | `OddCoreSmallModulusSlackPacketLiftGoal`; `odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
+| Uniform small-base Hall-slack arithmetic witness | `seed_semigroup_base_available_with_hall_slack`; `oddCoreSmallBaseSlackWitnessGoal_of_seed_semigroup` | Lean-checked in `RoundComposite/SeedSemigroup.lean` and `RoundComposite/OddCore.lean` | Closed |
 | Seed/product base availability with `2*b < d <= 3*b` | `seed_semigroup_base_available` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Convert `2*b < d <= 3*b` to `b` blocks of size `2` or `3` | `twoThreeBlockParts_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Fill each `2`/`3` block with positive unit residues summing to `m` | `unitCarryPacket_spec`; `twoThreeBlockParts_unitCarryPacket_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
@@ -76,19 +77,21 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_main_lemmas
 This is intentionally conditional.  It verifies the dispatcher and reduction
 architecture, not the final theorem.
 
-The compressed active-goal dispatcher is:
+The manuscript-facing active-goal dispatcher is:
 
 ```lean
-theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift
+theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
     (hHigh : OddCoreHighModulusPrefixCountGoal)
-    (hSmallPacket : OddCoreSmallModulusUnitPacketLiftGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
 
 This shows that the D11-small branch and the general small branch can be
-treated as one packet-level base-tail theorem.
+treated by one Hall-slack packet-level base-tail theorem.  The separate
+small-base slack arithmetic witness for the general `d >= 13` small branch is
+already closed in Lean.
 
 The main new Lean files contain no `sorry`, `admit`, or explicit `axiom`:
 
@@ -141,7 +144,7 @@ interfaces elaborate without errors.
 
 ## Remaining Proof Blocks
 
-The exact remaining mathematical/Lean blocks are:
+The older refined dispatcher exposes these mathematical/Lean blocks:
 
 1. `hHigh`:
    the prefix-count theorem
@@ -167,7 +170,11 @@ The exact remaining mathematical/Lean blocks are:
    ```
    because `oddCoreSmallModulusOfBaseGoal_of_unitPackets` is Lean-checked.
 
-The preferred compressed version is now:
+This older view is useful but slightly too coarse for the v2 manuscript: the
+small branch should expose the Hall-slack inequalities rather than hiding them
+inside a packet-only lift assumption.
+
+The preferred manuscript-facing version is now:
 
 1. `hHigh`:
    ```lean
@@ -176,19 +183,21 @@ The preferred compressed version is now:
 
 2. `hSmallPacket`:
    ```lean
-   OddCoreSmallModulusUnitPacketLiftGoal
+   OddCoreSmallModulusSlackPacketLiftGoal
    ```
 
-The packet-lift goal derives both `D11SmallModulusFromD5BaseGoal` and
-`OddCoreSmallModulusOfBaseGoal`, so this is the cleanest current target.
+The slack packet-lift goal derives the D11 small branch with a Lean-closed
+`b = 5` slack calculation.  The general small branch consumes the already
+closed `OddCoreSmallBaseSlackWitnessGoal`.
 
-Once the three refined branch goals are formalized, or equivalently once the
-two compressed goals `hHigh` and `hSmallPacket` are formalized, the current
-dispatcher yields the target all-dimensional odd-modulus theorem without using
-the finite boundary table.
+Once the three refined branch goals are formalized, or equivalently once
+`hHigh` and `hSmallPacket` are formalized, the current dispatcher yields the
+target all-dimensional odd-modulus theorem without using the finite boundary
+table.
 
 ## Verdict
 
 Not complete.  The proof spine is now Lean-checked and the finite-boundary
 table has been removed from the intended proof path, but the final theorem is
-still conditional on the three branch goals above.
+still conditional on the high-modulus prefix-count branch and the Hall-slack
+packet-lift branch.

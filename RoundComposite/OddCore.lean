@@ -71,6 +71,49 @@ def OddCoreSmallModulusUnitPacketLiftGoal : Prop :=
       ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
     StandardCayleySolved d m
 
+def OddCoreSmallModulusSlackPacketLiftGoal : Prop :=
+  ∀ {d m b : Nat},
+    Odd d → 11 ≤ d →
+    Odd m → 3 ≤ m → m < d →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = d →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    d - b > b →
+    m ^ b > m * d * (d - b) →
+    StandardCayleySolved d m
+
+def OddCoreSmallBaseSlackWitnessGoal : Prop :=
+  ∀ {d m : Nat},
+    Odd d → 13 ≤ d →
+    Odd m → 3 ≤ m → m < d →
+    ∃ w : SmallBaseUnitPacketWitness d m,
+      d - w.b > w.b ∧
+      m ^ w.b > m * d * (d - w.b)
+
+theorem oddCoreSmallBaseSlackWitnessGoal_of_seed_semigroup :
+    OddCoreSmallBaseSlackWitnessGoal := by
+  intro d m hdodd hd13 hmodd hm3 hmd
+  rcases seed_semigroup_base_available_with_hall_slack
+      hdodd hd13 hm3 hmd with
+    ⟨b, hbSeed, hbLow, hbHigh, hTail, hSlack⟩
+  have hbRange : 2 * b < d ∧ d ≤ 3 * b := ⟨hbLow, hbHigh⟩
+  have hpackets :=
+    _root_.RoundComposite.unitCarryPackets_spec hm3 hmodd hbRange
+  refine ⟨{
+    b := b
+    seed := hbSeed
+    range := hbRange
+    packets := _root_.RoundComposite.unitCarryPackets m b d
+    packets_length := hpackets.1
+    packets_total_length := hpackets.2.1
+    packet_sum := fun packet hp => (hpackets.2.2 packet hp).1
+    packet_units := fun packet hp a ha => (hpackets.2.2 packet hp).2 a ha
+  }, hTail, hSlack⟩
+
 theorem oddCoreHighModulusPrefixCount_of_goal
     (hHigh : OddCoreHighModulusPrefixCountGoal) :
     OddCoreHighModulusPrefixCount StandardCayleySolved := by
@@ -132,6 +175,52 @@ theorem oddCoreSmallModulusOfBaseGoal_of_smallUnitPacketLift
     hpackets.2.1
     (fun packet hp => (hpackets.2.2 packet hp).1)
     (fun packet hp a ha => (hpackets.2.2 packet hp).2 a ha)
+
+theorem d11SmallModulusFromD5BaseGoal_of_slackPacketLift
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal) :
+    D11SmallModulusFromD5BaseGoal := by
+  intro m hm3 hmodd hm11 h5
+  have hrange : 2 * 5 < 11 ∧ 11 ≤ 3 * 5 := by omega
+  have hpackets :=
+    _root_.RoundComposite.unitCarryPackets_spec
+      (b := 5) (d := 11) (m := m) hm3 hmodd hrange
+  have hTail : 11 - 5 > 5 := by omega
+  have hpow4 : 66 < m ^ 4 := by
+    have hmono : 3 ^ 4 ≤ m ^ 4 := Nat.pow_le_pow_left hm3 4
+    norm_num at hmono ⊢
+    omega
+  have hSlack : m ^ 5 > m * 11 * (11 - 5) := by
+    have hmpos : 0 < m := by omega
+    have hmul : m * 66 < m * (m ^ 4) :=
+      Nat.mul_lt_mul_of_pos_left hpow4 hmpos
+    nlinarith
+  exact hSmallPacket
+    (by decide : Odd 11)
+    (by decide : 11 ≤ 11)
+    hmodd hm3 hm11 h5
+    (_root_.RoundComposite.unitCarryPackets m 5 11)
+    hpackets.1
+    hpackets.2.1
+    (fun packet hp => (hpackets.2.2 packet hp).1)
+    (fun packet hp a ha => (hpackets.2.2 packet hp).2 a ha)
+    hTail hSlack
+
+theorem oddCoreSmallGE13_of_slackPacketLift
+    (hBaseSlack : OddCoreSmallBaseSlackWitnessGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal) :
+    OddCoreSmallGE13 StandardCayleySolved := by
+  intro d m hd13 hdodd hm3 hmodd hmd
+  rcases hBaseSlack hdodd hd13 hmodd hm3 hmd with
+    ⟨w, hTail, hSlack⟩
+  exact hSmallPacket hdodd (by omega) hmodd hm3 hmd
+    (standard_cayley_odd_uniform_of_seed_semigroup w.seed hm3 hmodd)
+    w.packets
+    w.packets_length
+    w.packets_total_length
+    w.packet_sum
+    w.packet_units
+    hTail
+    hSlack
 
 theorem oddCoreHighGE13_of_prefix_count
     (hHigh : OddCoreHighModulusPrefixCount StandardCayleySolved) :
@@ -271,6 +360,23 @@ theorem odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift
     hHigh
     (d11SmallModulusFromD5BaseGoal_of_smallUnitPacketLift hSmallPacket)
     (oddCoreSmallModulusOfBaseGoal_of_smallUnitPacketLift hSmallPacket)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
+    (hHigh : OddCoreHighModulusPrefixCountGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_odd_core_branches
+    (standard_cayley_odd_uniform_11_of_high_and_d5_base_tail
+      (oddCoreHighModulusPrefixCount_of_goal hHigh)
+      (d11SmallModulusLiftFromD5Base_of_goal
+        (d11SmallModulusFromD5BaseGoal_of_slackPacketLift hSmallPacket)))
+    (oddCoreHighGE13_of_prefix_count
+      (oddCoreHighModulusPrefixCount_of_goal hHigh))
+    (oddCoreSmallGE13_of_slackPacketLift
+      oddCoreSmallBaseSlackWitnessGoal_of_seed_semigroup hSmallPacket)
     hd2 hmodd hm3
 
 end Concrete

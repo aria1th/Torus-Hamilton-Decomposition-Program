@@ -12,7 +12,9 @@ odd-modulus theorem.
 The most recent compressed active-goal statement is recorded in
 `docs/ODD_TORI_ACTIVE_GOAL_RESET_20260503.md`.  The key refinement is that the
 D11 small branch and the general `d >= 13, m < d` branch should both be viewed
-as consequences of one unit-packet base-tail lift theorem.
+through one Hall-slack unit-packet base-tail lift theorem.  The general small
+branch uses a uniform arithmetic witness for the Hall-slack inequality, now
+Lean-closed as `seed_semigroup_base_available_with_hall_slack`.
 
 ## New Primary Goal
 
@@ -212,24 +214,26 @@ architecture is now stable; the remaining work is to prove
 `OddCoreSmallModulusOfBaseGoal`.  The older `hD11` and `hSmall` assumptions
 are derivable from these refined branch interfaces.
 
-A more compressed endpoint is now available:
+A manuscript-facing compressed endpoint is now available:
 
 ```lean
-theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift
+theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
     (hHigh : OddCoreHighModulusPrefixCountGoal)
-    (hSmallPacket : OddCoreSmallModulusUnitPacketLiftGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-Thus the preferred active boundary is only two large theorem families:
+Thus the preferred active boundary is:
 
 - `OddCoreHighModulusPrefixCountGoal`;
-- `OddCoreSmallModulusUnitPacketLiftGoal`.
+- `OddCoreSmallModulusSlackPacketLiftGoal`.
 
-The second theorem supplies both `D11SmallModulusFromD5BaseGoal` and
-`OddCoreSmallModulusOfBaseGoal` through Lean-checked adapters.
+The slack packet-lift theorem supplies the D11 small branch through a
+Lean-checked `b = 5` Hall-slack adapter.  The general `d >= 13` small branch
+uses the closed `OddCoreSmallBaseSlackWitnessGoal` to provide the chosen
+seed-semigroup base, packet data, and Hall-slack inequality.
 
 For the small-modulus branch, it is enough to prove the more Lean-ready packet
 interface:

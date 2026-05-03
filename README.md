@@ -210,10 +210,12 @@ when `m` is odd and `m >= 3`.
   `odd_modulus_tori_all_dimensions_of_main_lemmas` exposes those same inputs as
   the theorem-shaped goals `OddCoreHighModulusPrefixCountGoal`,
   `D11SmallModulusFromD5BaseGoal`, and `OddCoreSmallModulusOfBaseGoal`.
-  The current compressed active-goal endpoint is
-  `odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift`, which leaves
-  only the high-modulus prefix-count theorem and one unified small-modulus
-  unit-packet base-tail lift theorem as assumptions.
+  The current manuscript-facing active-goal endpoint is
+  `odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift`, which
+  leaves the high-modulus prefix-count theorem and one unified small-modulus
+  Hall-slack unit-packet base-tail lift theorem as assumptions.  The
+  small-base Hall-slack witness is already closed by the seed-semigroup
+  arithmetic in `SeedSemigroup.lean`.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
@@ -304,8 +306,9 @@ when `m` is odd and `m >= 3`.
   concentrated in the odd-dimensional core.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
-  are Lean-closed, which are conditional skeletons, and the three remaining
-  proof blocks needed to remove all assumptions.
+  are Lean-closed, which are conditional skeletons, and the remaining
+  high-modulus prefix-count and Hall-slack packet-lift proof blocks needed to
+  remove all assumptions.
 - `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`: exhaustive finite
   boundary audit table for the global odd-modulus goal, covering all `169`
   pairs with `2 <= d < 29`, odd `m`, and `3 <= m < d` by seed-semigroup

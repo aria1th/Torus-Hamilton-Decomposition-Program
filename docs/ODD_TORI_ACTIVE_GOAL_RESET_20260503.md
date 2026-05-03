@@ -6,6 +6,11 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
+Correction after the first reset: the manuscript-facing small branch must
+explicitly expose the Hall-slack hypotheses `d - b > b` and
+`m^b > m*d*(d-b)`.  Packet data alone is a useful strong interface, but it is
+not the exact v2 proof spine.
+
 ## Final Target
 
 Formalize the all-dimensional odd-modulus theorem:
@@ -54,22 +59,24 @@ The intended proof has three levels.
 
 The seed-semigroup and packet arithmetic is already Lean-checked.  The
 remaining small-modulus content should be proved as a construction theorem,
-not as a dimension-by-dimension finite boundary table.
+with the Hall-slack arithmetic exposed separately, not as a
+dimension-by-dimension finite boundary table.
 
 ## Current Lean Boundary
 
-The most compressed conditional endpoint is now:
+The manuscript-facing conditional endpoint is now:
 
 ```lean
-theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift
+theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
     (hHigh : OddCoreHighModulusPrefixCountGoal)
-    (hSmallPacket : OddCoreSmallModulusUnitPacketLiftGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-So the active goal can be stated as two remaining theorem families.
+So the active goal is now two remaining theorem families.  The small-base
+Hall-slack arithmetic witness is already Lean-closed.
 
 ## Remaining Theorem 1: High Modulus
 
@@ -88,10 +95,30 @@ dispatch it supplies:
 - it may also cover D5 and D7 redundantly, although the seeds already close
   those dimensions.
 
-## Remaining Theorem 2: Small Modulus Unit-Packet Lift
+## Closed Arithmetic: Small-Base Hall-Slack Witness
 
 ```lean
-def RoundComposite.Concrete.OddCoreSmallModulusUnitPacketLiftGoal : Prop :=
+def RoundComposite.Concrete.OddCoreSmallBaseSlackWitnessGoal : Prop :=
+  ∀ {d m : Nat},
+    Odd d → 13 <= d →
+    Odd m → 3 <= m → m < d →
+    ∃ w : SmallBaseUnitPacketWitness d m,
+      d - w.b > w.b ∧
+      m ^ w.b > m * d * (d - w.b)
+```
+
+This is the uniform arithmetic part of the small branch.  The witness already
+contains the solved seed-semigroup base `b`, the unit-packet list, and the
+packet facts.  This theorem adds the Hall-slack inequalities needed by the v2
+base-tail proof.
+
+Lean now proves this goal by `seed_semigroup_base_available_with_hall_slack`
+and `oddCoreSmallBaseSlackWitnessGoal_of_seed_semigroup`.
+
+## Remaining Theorem 2: Small Modulus Hall-Slack Packet Lift
+
+```lean
+def RoundComposite.Concrete.OddCoreSmallModulusSlackPacketLiftGoal : Prop :=
   ∀ {d m b : Nat},
     Odd d → 11 <= d →
     Odd m → 3 <= m → m < d →
@@ -102,15 +129,17 @@ def RoundComposite.Concrete.OddCoreSmallModulusUnitPacketLiftGoal : Prop :=
     (∀ packet, packet ∈ packets → packet.sum = m) →
     (∀ packet, packet ∈ packets →
       ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    d - b > b →
+    m ^ b > m * d * (d - b) →
     StandardCayleySolved d m
 ```
 
 This is the unified base-tail theorem.  It simultaneously supplies:
 
 - the D11 small branch, by taking `b = 5` and the generated packet list for
-  `(d,b) = (11,5)`;
+  `(d,b) = (11,5)`.  The D11 Hall-slack arithmetic is already closed in Lean;
 - the general odd `d >= 13, m < d` branch, by taking the seed-semigroup base
-  `b` with `2*b < d <= 3*b` and the generated unit-packet list.
+  `b` supplied by the closed `OddCoreSmallBaseSlackWitnessGoal`.
 
 This is now the preferred Lean-facing form of the small branch.  The older
 interfaces
@@ -122,7 +151,13 @@ OddCoreSmallModulusOfUnitPacketsGoal
 ```
 
 remain useful local views, but they are derivable from the unified packet-lift
-goal where needed.
+goal only when their missing slack hypotheses are supplied.  In the current
+manuscript-facing dispatcher, the D11 goal is derived directly from the
+slack-packet lift, while the general small branch bypasses the older
+`OddCoreSmallModulusOfBaseGoal` interface and consumes
+the closed `OddCoreSmallBaseSlackWitnessGoal`.  The stronger packet-only endpoint
+`odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift` is retained as
+a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 
 ## Already Closed in Lean
 
@@ -135,10 +170,16 @@ goal where needed.
 - Unit packet construction for each size-`2` or size-`3` block.
 - Aggregated packet witness and adapters from packet data to the older
   base-tail interface.
+- Uniform seed-semigroup base availability with Hall slack:
+  `seed_semigroup_base_available_with_hall_slack`.
+- `OddCoreSmallBaseSlackWitnessGoal`, derived from that arithmetic theorem.
+- D11-specific Hall-slack arithmetic for `b = 5`, exposed through the adapter
+  from `OddCoreSmallModulusSlackPacketLiftGoal` to
+  `D11SmallModulusFromD5BaseGoal`.
 
 ## Revised Goal in One Sentence
 
 Prove all `d >= 2`, odd `m >= 3` by D2/product reduction to the odd core,
-then close the odd core with the high-modulus prefix-count theorem and one
-unified small-modulus base-tail unit-packet lift theorem; keep the `d < 29`
-table only as audit evidence.
+then close the odd core with the high-modulus prefix-count theorem and the
+Hall-slack base-tail unit-packet lift theorem; keep the `d < 29` table only as
+audit evidence.
