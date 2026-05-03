@@ -232,17 +232,23 @@ when `m` is odd and `m >= 3`.
   an `A2`-fiber finite-defect bridge and its implication for a possible
   `D4 -> D5` lane-splice interpretation of D5 even Route-E.
 - `docs/D_AGNOSTIC_BASE_TAIL_CERTIFICATE_PROGRAM_20260502.md`:
-  dimension-agnostic base-tail certificate/verifier design: reduce large
+  legacy dimension-agnostic base-tail certificate/verifier design: reduce large
   `(ZMod m)^(d-1)` cycle checks to small base cycles plus tail carry units,
-  with a D11 Lean status audit.
+  with a D11 Lean status audit.  Superseded as the primary D11 route by the
+  v2 prefix-count/base-tail Hall-slack manuscript note.
 - `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`: working D11 status
-  note: treats odd `m >= 11` as a closed non-Lean certificate, isolates
-  `m = 3,5,7,9` as finite base-tail search certificate tasks, and records the
-  Lean formalization order.
+  note: treats odd `m >= 11` as a closed non-Lean certificate and records the
+  older finite-search plan for `m = 3,5,7,9`; the small-case status is now
+  superseded by the v2 base-tail Hall-slack lift from D5.
 - `docs/D11_LEAN_HELPER_LEMMA_REQUESTS_20260502.md`: requested Lean helper
   lemma list for D11, covering generic skew-cycle facts, D11 coordinates,
   canonical layer/count arithmetic, triangular return, endpoint packaging, and
-  small-case base-tail certificate soundness.
+  the now-legacy small-case base-tail certificate checker.
+- `docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V2_20260503.md`: absorption note for
+  `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip`, recording
+  the new dimension-generic prefix-count branch, full-vertex base-tail
+  Hall-slack lift, D11-from-D5 consequence, eventual odd-dimension corollary,
+  and revised Lean formalization backlog.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.

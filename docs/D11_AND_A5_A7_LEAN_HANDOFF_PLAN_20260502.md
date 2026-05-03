@@ -2,6 +2,14 @@
 
 Date: 2026-05-02.
 
+Update 2026-05-03:
+
+The D11 half of this handoff plan is superseded by
+`docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V2_20260503.md`.  The old plan treated
+`m = 3,5,7,9` as D11 finite exceptions.  In the v2 manuscript these cases are
+covered by the base-tail Hall-slack theorem from the uniform D5 input.  The
+A5-to-A7 structural D7 handoff material below remains a separate track.
+
 Source artifacts read:
 
 - `/data/angel/repos/etc/D11_odd_canonical_schedule_certificate.md`
@@ -31,6 +39,10 @@ D11 is a new prime-dimension canonical schedule theorem; A5-to-A7 remains the
 structural explanation of D7.
 
 ## Track 1: D11 Odd Canonical Schedule
+
+Legacy track description.  The large `m >= 11` canonical schedule remains a
+valid special route, but v2 replaces the D11 exception handling with the
+generic count branch plus the base-tail Hall-slack lift from D5.
 
 The D11 certificate gives a complete mathematical recipe for directed positive
 Hamilton decompositions of `(ZMod m)^11` for all odd `m >= 11`.

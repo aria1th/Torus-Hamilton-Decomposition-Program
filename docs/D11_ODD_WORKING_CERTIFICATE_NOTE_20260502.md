@@ -2,6 +2,16 @@
 
 Date: 2026-05-02.
 
+Update 2026-05-03:
+
+This note is superseded as a D11 status document by
+`docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V2_20260503.md`.  The v2 manuscript
+replaces the old D11-small-case finite-search gap with a base-tail Hall-slack
+lift from the uniform D5 theorem: for `m < 11`, use `b = 5`, `T = 6`, and
+`11 = 3 + 2 + 2 + 2 + 2`.  Thus the statements below about
+`m = 3,5,7,9` being open raw-certificate tasks should now be read as legacy
+planning, not as the current primary proof route.
+
 This is the working version of the D11 status.  It separates the part that is
 already a non-Lean proof certificate from the part that still needs finite
 search certificates.
@@ -13,6 +23,10 @@ Source:
 - `docs/D11_LEAN_HELPER_LEMMA_REQUESTS_20260502.md`
 
 ## Status Summary
+
+Legacy status from 2026-05-02.  Current v2 status: D11 is closed outside Lean
+under the uniform D5 input; the small cases use the base-tail Hall-slack lift,
+not raw finite-search certificates.
 
 The D11 odd problem should be treated as:
 

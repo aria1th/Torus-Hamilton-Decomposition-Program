@@ -2,6 +2,16 @@
 
 Date: 2026-05-02.
 
+Update 2026-05-03:
+
+This is now a legacy finite-certificate/search design relative to
+`docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V2_20260503.md`.  The v2 manuscript
+uses a different base-tail proof architecture: a full-vertex skew product over
+`X = (ZMod m)^(b+1)` plus active arcs carrying an extended prefix-count system,
+with active Hall-slack realization.  The small-base-cycle plus tail-carry-unit
+program below may still be useful for experiments and low-slack finite
+certificates, but it is no longer the primary D11 proof route.
+
 This note records the optimized finite certificate program suggested after the
 D3 `A2` bridge rewrite and the D11 canonical schedule certificate.  The guiding
 principle is:
@@ -458,6 +468,10 @@ The verifier must recompute all witness data.  Witness fields are for debugging
 and fast failure diagnosis only.
 
 ## 15. D11 Application
+
+Legacy application from 2026-05-02.  The current v2 manuscript no longer uses
+this finite-search route as the primary D11 small-case proof; it uses the
+full-vertex base-tail Hall-slack theorem with base `b = 5`.
 
 For D11:
 

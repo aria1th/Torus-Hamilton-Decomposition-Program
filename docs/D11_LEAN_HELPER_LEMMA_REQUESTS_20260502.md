@@ -2,6 +2,16 @@
 
 Date: 2026-05-02.
 
+Update 2026-05-03:
+
+This request list is superseded in part by
+`docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V2_20260503.md`.  The large-branch
+D11 coordinate/count lemmas remain useful, but the small-case checker section
+for `m = 3,5,7,9` is no longer the preferred D11 route.  The v2 route asks
+instead for the extended prefix-count theorem, the full-vertex base-tail lift,
+cylinder decomposition, active Hall-slack realization, and the D11 corollary
+from the uniform D5 theorem.
+
 This note lists the Lean helper lemmas wanted for formalizing the D11 odd
 certificate.  The mathematical status is recorded in
 `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`: the large branch
@@ -365,6 +375,10 @@ Shared.CayleyHamiltonDecomposition 11 m
 or a D11-specific endpoint wrapper if one is introduced.
 
 ## G. Small-Case Certificate Checker
+
+Legacy section.  These lemmas are still useful if a raw finite D11 certificate
+is generated, but the v2 proof route replaces them with the full-vertex
+base-tail Hall-slack formalization from the D5 input.
 
 These are for `m = 3,5,7,9`.
 
