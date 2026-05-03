@@ -171,14 +171,21 @@ PrefixCount.PMOneBase.PlusOneMatching
 PrefixCount.MatchedPMOneMatrix
 PrefixCount.MarginTransportQeq1MatchedPMOneGoal
 PrefixCount.marginTransportQeq1CompatibleGoal_of_matchedPMOne
+PrefixCount.PMOneBase.PlusFamily
+PrefixCount.PMOneBase.PlusFamily.toBase
+PrefixCount.PMOneBase.PlusFamily.toMatching
+PrefixCount.MarginTransportQeq1PlusFamilyGoal
+PrefixCount.marginTransportQeq1MatchedPMOneGoal_of_plusFamily
 oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Compat_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1MatchedPMOne_and_geometry
+oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1PlusFamily_and_geometry
 odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift
 odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift
 odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift
 odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1MatchedPMOne_geometry_and_small_packet_lift
+odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -216,6 +223,9 @@ The q=1 branch is now further reducible to a matched `±1` matrix certificate:
 start from a `±1` matrix with column sums `-1`, choose one explicit `+1` in
 each column, and upgrade those entries to `+2` to obtain zero signed column
 sums.
+
+The matched `±1` matrix is in turn reducible to plus sets of size `(d-1)/2` in
+each numeric column, with an explicit injective mate inside each plus set.
 
 ### B. Small-Modulus Hall-Slack Packet-Lift Theorem
 
@@ -276,6 +286,8 @@ still open.
   restrictions on where negative entries can appear.
 - Q=1 matched `±1` adapter reducing q=1 signed corrections to an explicit
   columnwise upgrade certificate.
+- Q=1 plus-set-family adapter reducing q=1 base columns to cardinality
+  `(d-1)/2` plus sets.
 - Signed-margin total-sum invariants: every signed correction matrix forces
   `sum sigma = 0`, and a margin plan has `sum sigma = m - sum zero`.
 - Matrix-layer realization for balanced dense count matrices, including the

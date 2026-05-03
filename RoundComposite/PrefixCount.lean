@@ -1021,10 +1021,99 @@ structure PMOneBase (d : Nat) where
 
 namespace PMOneBase
 
+theorem sum_if_mem_one_neg_one {d : Nat} (s : Finset (Fin d)) :
+    (∑ i : Fin d, if i ∈ s then (1 : Int) else (-1 : Int))
+      = (2 * (s.card : Int)) - (d : Int) := by
+  rw [← Finset.sum_filter_add_sum_filter_not
+    (s := (Finset.univ : Finset (Fin d))) (p := fun i => i ∈ s)
+    (f := fun i => if i ∈ s then (1 : Int) else (-1 : Int))]
+  have hfilter : (Finset.univ.filter (fun i : Fin d => i ∈ s)) = s := by
+    ext i
+    simp
+  have hfilterNotCard :
+      (Finset.univ.filter (fun i : Fin d => i ∉ s)).card = d - s.card := by
+    have hcomp : (Finset.univ.filter (fun i : Fin d => i ∉ s)) = sᶜ := by
+      ext i
+      simp
+    rw [hcomp, Finset.card_compl, Fintype.card_fin]
+  rw [hfilter]
+  have hsum_s :
+      (∑ x ∈ s, if x ∈ s then (1 : Int) else (-1 : Int))
+        = (s.card : Int) := by
+    calc
+      (∑ x ∈ s, if x ∈ s then (1 : Int) else (-1 : Int))
+          = ∑ _x ∈ s, (1 : Int) := by
+              apply Finset.sum_congr rfl
+              intro x hx
+              simp [hx]
+      _ = (s.card : Int) := by
+              simp
+  have hsum_not :
+      (∑ x with x ∉ s, if x ∈ s then (1 : Int) else (-1 : Int))
+        = -((d - s.card : Nat) : Int) := by
+    calc
+      (∑ x with x ∉ s, if x ∈ s then (1 : Int) else (-1 : Int))
+          = ∑ _x ∈ (Finset.univ.filter (fun x : Fin d => x ∉ s)),
+              (-1 : Int) := by
+              apply Finset.sum_congr rfl
+              intro x hx
+              have hxnot : x ∉ s := by
+                simpa using hx
+              simp [hxnot]
+      _ = -((Finset.univ.filter (fun x : Fin d => x ∉ s)).card : Int) := by
+              simp
+      _ = -((d - s.card : Nat) : Int) := by
+              rw [hfilterNotCard]
+  rw [hsum_s, hsum_not]
+  have hcard_le : s.card ≤ d := by
+    calc
+      s.card ≤ (Finset.univ : Finset (Fin d)).card := Finset.card_le_univ s
+      _ = d := by simp
+  omega
+
+theorem sum_if_mem_one_neg_one_eq_neg_one_of_card_half {d : Nat}
+    (hdodd : Odd d) {s : Finset (Fin d)}
+    (hcard : s.card = (d - 1) / 2) :
+    (∑ i : Fin d, if i ∈ s then (1 : Int) else (-1 : Int)) = (-1 : Int) := by
+  rw [sum_if_mem_one_neg_one, hcard]
+  rcases hdodd with ⟨a, ha⟩
+  omega
+
+structure PlusFamily (d : Nat) where
+  plus : Fin (d - 2) → Finset (Fin d)
+  plus_card : ∀ k : Fin (d - 2), (plus k).card = (d - 1) / 2
+  mate : Fin (d - 2) → Fin d
+  mate_injective : Function.Injective mate
+  mate_mem : ∀ k : Fin (d - 2), mate k ∈ plus k
+
 structure PlusOneMatching {d : Nat} (B : PMOneBase d) where
   mate : Fin (d - 2) → Fin d
   injective : Function.Injective mate
   pos : ∀ k : Fin (d - 2), B.entry (mate k) k = 1
+
+namespace PlusFamily
+
+def toBase {d : Nat} (F : PlusFamily d) (hdodd : Odd d) : PMOneBase d where
+  entry := fun i k => if i ∈ F.plus k then (1 : Int) else (-1 : Int)
+  entry_pm_one := by
+    intro i k
+    by_cases h : i ∈ F.plus k
+    · simp [h]
+    · simp [h]
+  col_sum_neg_one := by
+    intro k
+    exact sum_if_mem_one_neg_one_eq_neg_one_of_card_half
+      hdodd (F.plus_card k)
+
+def toMatching {d : Nat} (F : PlusFamily d) (hdodd : Odd d) :
+    PlusOneMatching (F.toBase hdodd) where
+  mate := F.mate
+  injective := F.mate_injective
+  pos := by
+    intro k
+    simp [toBase, F.mate_mem k]
+
+end PlusFamily
 
 def upgrade {d : Nat} (B : PMOneBase d) (μ : PlusOneMatching B)
     (i : Fin d) (k : Fin (d - 2)) : Int :=
@@ -1175,6 +1264,21 @@ def MarginTransportQeq1MatchedPMOneGoal : Prop :=
       ∃ M : MatchedPMOneMatrix d P.sigma,
         ∀ i k, (q : Int) - P.tau i = 0 → 0 ≤ M.base.entry i k
 
+def MarginTransportQeq1PlusFamilyGoal : Prop :=
+  ∀ {d m q r : Nat},
+    (hdodd : Odd d) → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → q = 1 →
+    ∃ P : MarginPlan d m q r,
+      ∃ F : PMOneBase.PlusFamily d,
+        (∀ i : Fin d,
+          (∑ k : Fin (d - 2),
+            (F.toBase hdodd).upgrade (F.toMatching hdodd) i k)
+              = P.sigma i)
+        ∧
+        ∀ i k, (q : Int) - P.tau i = 0 →
+          0 ≤ (F.toBase hdodd).entry i k
+
 theorem marginTransportQge2Goal_of_plan
     (hPlan : MarginTransportQge2PlanGoal) :
     MarginTransportQge2Goal := by
@@ -1198,6 +1302,20 @@ theorem marginTransportQeq1CompatibleGoal_of_matchedPMOne
   rcases hMatched hdodd hd5 hmodd hmqr hrlt hrpos hq with
     ⟨P, M, hZeroRows⟩
   exact ⟨P, M.toSignedMarginMatrix, M.stepNonnegCompatibility hZeroRows⟩
+
+theorem marginTransportQeq1MatchedPMOneGoal_of_plusFamily
+    (hPlus : MarginTransportQeq1PlusFamilyGoal) :
+    MarginTransportQeq1MatchedPMOneGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hPlus hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, F, hrow, hZeroRows⟩
+  refine ⟨P, ?_, ?_⟩
+  · exact {
+      base := F.toBase hdodd
+      matching := F.toMatching hdodd
+      row_sum := hrow
+    }
+  · exact hZeroRows
 
 theorem transportQge2Goal_of_margin
     (hMargin : MarginTransportQge2Goal) :

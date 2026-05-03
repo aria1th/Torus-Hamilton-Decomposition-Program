@@ -350,7 +350,7 @@ when `m` is odd and `m >= 3`.
   split.  It records that the finite boundary table is audit/regression
   evidence only, that `(13,3)` is absorbed by the uniform small-modulus
   packet-lift pattern, and that the current lowest-level Lean endpoint has four
-  remaining assumptions: q>=2 margin plans, q=1 matched `±1` margins, the
+  remaining assumptions: q>=2 margin plans, q=1 plus-set margins, the
   geometric prefix-count criterion, and the small-modulus Hall-slack
   packet-lift theorem.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
