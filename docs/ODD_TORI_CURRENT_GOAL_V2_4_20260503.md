@@ -156,7 +156,8 @@ as `Qge2PlanBounds.not_for_q_two_r_one`.
 - Prefix-count quotient/remainder interfaces and margin-facing adapters.
 - Q>=2 nonnegativity adapter and signed-row necessary bounds.
 - Q=1 range arithmetic, compatibility, matched `+/-1`, and plus-family
-  adapters.
+  adapters, including row-plus-set and matched-row-sum lemmas for the
+  upgraded `+/-1` matrix.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
   Hall-realization interface, and the sanity converse from symbolings back to

@@ -1220,6 +1220,10 @@ structure PlusOneMatching {d : Nat} (B : PMOneBase d) where
 
 namespace PlusFamily
 
+def rowPlusSet {d : Nat} (F : PlusFamily d) (i : Fin d) :
+    Finset (Fin (d - 2)) :=
+  Finset.univ.filter (fun k : Fin (d - 2) => i ∈ F.plus k)
+
 theorem nonempty {d : Nat} (hdodd : Odd d) (hd5 : 5 ≤ d) :
     Nonempty (PlusFamily d) := by
   classical
@@ -1273,6 +1277,21 @@ def toMatching {d : Nat} (F : PlusFamily d) (hdodd : Odd d) :
     intro k
     simp [toBase, F.mate_mem k]
 
+theorem base_row_sum {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (i : Fin d) :
+    (∑ k : Fin (d - 2), (F.toBase hdodd).entry i k)
+      =
+      (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) := by
+  calc
+    (∑ k : Fin (d - 2), (F.toBase hdodd).entry i k)
+        = ∑ k : Fin (d - 2),
+            if k ∈ F.rowPlusSet i then (1 : Int) else (-1 : Int) := by
+            apply Finset.sum_congr rfl
+            intro k _hk
+            simp [toBase, rowPlusSet]
+    _ = (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) := by
+            exact sum_if_mem_one_neg_one (F.rowPlusSet i)
+
 end PlusFamily
 
 def upgrade {d : Nat} (B : PMOneBase d) (μ : PlusOneMatching B)
@@ -1311,6 +1330,39 @@ theorem upgrade_col_sum_zero {d : Nat} (B : PMOneBase d)
     _ = (-1 : Int) + 1 := by
             simp [B.col_sum_neg_one k]
     _ = 0 := by norm_num
+
+theorem upgrade_row_sum {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (i : Fin d) :
+    (∑ k : Fin (d - 2), B.upgrade μ i k)
+      =
+      (∑ k : Fin (d - 2), B.entry i k)
+        + ∑ k : Fin (d - 2), (if i = μ.mate k then (1 : Int) else 0) := by
+  simp [upgrade, Finset.sum_add_distrib]
+
+theorem mate_indicator_sum_eq_one {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (k : Fin (d - 2)) :
+    (∑ l : Fin (d - 2),
+      if μ.mate k = μ.mate l then (1 : Int) else 0) = 1 := by
+  calc
+    (∑ l : Fin (d - 2),
+      if μ.mate k = μ.mate l then (1 : Int) else 0)
+        = ∑ l : Fin (d - 2), if k = l then (1 : Int) else 0 := by
+            apply Finset.sum_congr rfl
+            intro l _hl
+            by_cases h : k = l
+            · subst l
+              simp
+            · have hmate : μ.mate k ≠ μ.mate l := by
+                intro hmk
+                exact h (μ.injective hmk)
+              simp [h, hmate]
+    _ = 1 := by simp
+
+theorem upgrade_row_sum_of_mate {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (k : Fin (d - 2)) :
+    (∑ l : Fin (d - 2), B.upgrade μ (μ.mate k) l)
+      = (∑ l : Fin (d - 2), B.entry (μ.mate k) l) + 1 := by
+  rw [B.upgrade_row_sum μ (μ.mate k), B.mate_indicator_sum_eq_one μ k]
 
 theorem upgrade_ge_neg_one {d : Nat} (B : PMOneBase d)
     (μ : PlusOneMatching B) (i : Fin d) (k : Fin (d - 2)) :
