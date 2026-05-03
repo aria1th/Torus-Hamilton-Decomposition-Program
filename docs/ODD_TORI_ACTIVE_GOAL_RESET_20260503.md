@@ -233,6 +233,13 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `prefixCountLayerRealizationGoal`, and
   `oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry`, which reduce the
   high-modulus public goal to admissible parts plus the geometric criterion.
+- Transport-facing high-branch endpoint:
+  `oddCoreHighModulusPrefixCountGoal_of_transports_and_geometry`, and the
+  top-level conditional dispatcher
+  `odd_modulus_tori_all_dimensions_of_transports_geometry_and_small_packet_lift`.
+  These reduce the current global theorem to the two transport constructions,
+  the geometric prefix-count criterion, and the small-modulus Hall-slack
+  packet lift.
 
 ## Revised Goal in One Sentence
 

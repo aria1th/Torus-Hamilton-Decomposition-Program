@@ -146,6 +146,8 @@ prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization
 prefixCountLayerRealizationGoal_of_matrixLayerRealization
 prefixCountLayerRealizationGoal
 oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry
+oddCoreHighModulusPrefixCountGoal_of_transports_and_geometry
+odd_modulus_tori_all_dimensions_of_transports_geometry_and_small_packet_lift
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -157,7 +159,7 @@ regularity degree.  Therefore the high-modulus public goal can now be closed
 from two ingredients:
 
 ```text
-admissible parts construction
+signed transport construction for q >= 2 and q = 1
 + geometric prefix-count Hamilton criterion
 ```
 
@@ -206,6 +208,10 @@ still open.
 - Prefix-count foundational algebra and transport interfaces.
 - High-branch Lean adapter from admissible prefix-count parts and geometric
   criterion to `OddCoreHighModulusPrefixCountGoal`.
+- High-branch Lean adapter from `TransportQge2Goal`, `TransportQeq1Goal`, and
+  the geometric criterion to `OddCoreHighModulusPrefixCountGoal`.
+- Top-level conditional dispatcher from those transport/geometry inputs plus
+  the small-modulus Hall-slack packet lift to the all-dimensional theorem.
 - Matrix-layer realization for balanced dense count matrices, including the
   zero case, Hall extraction of a positive permutation, one-layer peeling, and
   induction on the row/column degree.
