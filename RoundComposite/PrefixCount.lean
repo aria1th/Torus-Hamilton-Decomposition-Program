@@ -1415,6 +1415,49 @@ theorem upgraded_row_sum_of_mate {d : Nat} (F : PlusFamily d)
     linarith
   rw [hcardInt]
 
+theorem exists_rowMateSet_card_eq_zero {d : Nat} (F : PlusFamily d)
+    (hd5 : 5 ≤ d) :
+    ∃ i : Fin d, (F.rowMateSet i).card = 0 := by
+  classical
+  by_contra hnot
+  have hsurj : Function.Surjective F.mate := by
+    intro i
+    have hcard_ne : (F.rowMateSet i).card ≠ 0 := by
+      intro hzero
+      exact hnot ⟨i, hzero⟩
+    have hnonempty : (F.rowMateSet i).Nonempty := by
+      exact (Finset.card_ne_zero.mp hcard_ne)
+    rcases hnonempty with ⟨k, hk⟩
+    refine ⟨k, ?_⟩
+    have hik : i = F.mate k := by
+      simpa [rowMateSet] using hk
+    exact hik.symm
+  have hle := Fintype.card_le_of_surjective F.mate hsurj
+  simp at hle
+  omega
+
+theorem not_all_upgraded_row_sum_zero {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (hd5 : 5 ≤ d) :
+    ¬ ∀ i : Fin d,
+      (∑ k : Fin (d - 2), (F.toBase hdodd).upgrade (F.toMatching hdodd) i k)
+        = 0 := by
+  classical
+  intro hzero
+  rcases F.exists_rowMateSet_card_eq_zero hd5 with ⟨i, hiMate⟩
+  have hrow := F.upgraded_row_sum hdodd i
+  rw [hzero i, hiMate] at hrow
+  have hrow' :
+      (0 : Int) =
+        (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) := by
+    simpa only [Nat.cast_zero, add_zero] using hrow
+  have hInt :
+      (2 * ((F.rowPlusSet i).card : Int)) = ((d - 2 : Nat) : Int) := by
+    linarith
+  have hNat : 2 * (F.rowPlusSet i).card = d - 2 := by
+    exact_mod_cast hInt
+  rcases hdodd with ⟨a, ha⟩
+  omega
+
 end PlusFamily
 
 theorem upgrade_ge_neg_one {d : Nat} (B : PMOneBase d)

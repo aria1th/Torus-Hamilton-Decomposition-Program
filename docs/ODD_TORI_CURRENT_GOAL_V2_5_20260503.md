@@ -124,6 +124,15 @@ not as the preferred target.  Lean records the obstruction to the global
    `PlusFamily.upgraded_row_sum_of_mate`.  What remains is the coordinated
    construction satisfying the q=1 margin transport constraints.
 
+   Important caution: Lean now also records
+   `PlusFamily.not_all_upgraded_row_sum_zero`.  A pure plus-family upgrade
+   cannot make every upgraded row sum vanish when `d` is odd and `5 <= d`,
+   because at least one row is outside the mate image and would force
+   `2 * card = d - 2`.  Thus the `q = 1, r = 1` boundary should not be treated
+   as a trivial all-zero signed-row case.  The q=1 branch may need either a
+   nontrivial row-margin/zero choice or a slightly richer correction interface
+   for this boundary.
+
 3. `PrefixCountRootFlatCanonicalReturnGoal`
 
    Build the canonical root-flat prefix-count certificate.  The Cayley lift
@@ -153,7 +162,8 @@ not as the preferred target.  Lean records the obstruction to the global
   obstruction to global `Qge2PlanBounds`.
 - Q=1 range arithmetic, compatibility, matched `+/-1`, plus-family adapters,
   row-plus-set formulas, row-mate-set formulas, upgraded row sums, and
-  matched upgraded row sums.
+  matched upgraded row sums, plus the no-all-zero upgraded-row obstruction for
+  odd `d >= 5`.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
   Hall-realization interface, and the sanity converse from symbolings back to
