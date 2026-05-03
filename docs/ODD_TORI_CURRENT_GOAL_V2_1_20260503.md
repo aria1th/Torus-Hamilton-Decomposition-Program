@@ -128,8 +128,11 @@ admissiblePartsCountBranchGoal_of_transports
 Lean bridge now recorded in `RoundComposite/OddCore.lean`:
 
 ```lean
+PrefixCount.MatrixLayerRealizationGoal
+PrefixCount.layerRealization_of_matrixLayerRealizationGoal
 PrefixCountLayerRealizationGoal
 PrefixCountGeometricCriterionGoal
+prefixCountLayerRealizationGoal_of_matrixLayerRealization
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -140,7 +143,7 @@ high-modulus public goal can be closed from three ingredients:
 
 ```text
 admissible parts construction
-+ layer permutation realization of the dense count matrix
++ matrix layer decomposition for dense row/column count matrices
 + geometric prefix-count Hamilton criterion
 ```
 
@@ -189,6 +192,8 @@ still open.
 - Prefix-count foundational algebra and transport interfaces.
 - High-branch Lean adapter from admissible prefix-count parts, layer
   realization, and geometric criterion to `OddCoreHighModulusPrefixCountGoal`.
+- Matrix-layer realization interface reducing layer realization to the
+  permutation decomposition of dense admissible count matrices.
 
 ## Non-Goals For This Stage
 

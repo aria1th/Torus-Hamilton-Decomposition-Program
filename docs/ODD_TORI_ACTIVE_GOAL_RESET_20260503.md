@@ -211,6 +211,11 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `oddCoreHighModulusPrefixCountGoal_of_prefixCount`, which reduce
   `OddCoreHighModulusPrefixCountGoal` to admissible parts, layer-permutation
   realization, and the geometric prefix-count Hamilton criterion.
+- Matrix-layer realization split:
+  `PrefixCount.MatrixLayerRealizationGoal`,
+  `PrefixCount.layerRealization_of_matrixLayerRealizationGoal`, and
+  `prefixCountLayerRealizationGoal_of_matrixLayerRealization`, which isolate
+  the pure permutation-decomposition theorem for dense count matrices.
 
 ## Revised Goal in One Sentence
 

@@ -225,6 +225,18 @@ theorem Admissible.toMatrixAdmissible {d m : Nat} {C : Parts d}
 
 end Parts
 
+def MatrixLayerRealizationGoal : Prop :=
+  ∀ {d m : Nat} (hd : 2 ≤ d) (M : Matrix (Fin d) (Fin d) Nat),
+    MatrixAdmissible hd m M →
+    Nonempty (LayerPermCounts d m M)
+
+theorem layerRealization_of_matrixLayerRealizationGoal
+    (hMatrix : MatrixLayerRealizationGoal)
+    {d m : Nat} (hd : 2 ≤ d) (C : Parts d)
+    (hC : C.Admissible m) :
+    Nonempty (LayerPermCounts d m (C.toMatrix hd)) :=
+  hMatrix hd (C.toMatrix hd) (hC.toMatrixAdmissible hd)
+
 /-- The signed differences used by the high-modulus transportation branch. -/
 def signedVals : Finset Int :=
   {-2, -1, 1, 2}

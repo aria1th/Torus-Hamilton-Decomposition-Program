@@ -143,6 +143,13 @@ theorem oddCoreHighModulusPrefixCountGoal_of_prefixCount
   rcases hLayers hd2 C hC with ⟨L⟩
   exact hGeom hd2 hdodd hd5 hmodd hdm hC L
 
+theorem prefixCountLayerRealizationGoal_of_matrixLayerRealization
+    (hMatrix : PrefixCount.MatrixLayerRealizationGoal) :
+    PrefixCountLayerRealizationGoal := by
+  intro d m hd2 C hC
+  exact PrefixCount.layerRealization_of_matrixLayerRealizationGoal
+    hMatrix hd2 C hC
+
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
     D11SmallModulusLiftFromD5Base StandardCayleySolved := by
