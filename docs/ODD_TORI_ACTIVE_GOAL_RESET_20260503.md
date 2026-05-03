@@ -314,12 +314,17 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `prefixCountGeometricCriterionGoal_of_rootFlat`.  The corresponding global
   endpoint is
   `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift`.
-  The successor-indexed canonical coordinate lift is now Lean-closed through
+  The preferred canonical endpoint is now
+  `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`,
+  which replaces the separate arbitrary-`D` return/equivalence pair by
+  `PrefixCountRootFlatCanonicalReturnGoal`.  The successor-indexed and
+  `d`-indexed canonical coordinate lifts are Lean-closed through
   `prefixCountRootLayerEquivSucc`, `prefixCountRootStepSucc`,
-  `prefixCountRootLayerEquivSucc_step`, and
-  `standardCayleySolved_of_rootFlatLayered_standardStepSucc`.  The next
-  root-flat refactor should replace the arbitrary-`D` equivalence goal by a
-  canonical-step return certificate plus the `d = (d-1)+1` transport.
+  `prefixCountRootLayerEquivSucc_step`, `prefixCountRootLayerEquiv`,
+  `prefixCountRootStep`, `prefixCountRootLayerEquiv_step`,
+  `standardCayleySolved_of_rootFlatLayered_standardStepSucc`,
+  `standardCayleySolved_of_rootFlatLayered_standardStep`, and
+  `prefixCountGeometricCriterionGoal_of_rootFlatCanonical`.
 
 ## Revised Goal in One Sentence
 

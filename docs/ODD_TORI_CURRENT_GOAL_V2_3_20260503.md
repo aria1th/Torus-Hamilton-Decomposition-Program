@@ -54,7 +54,22 @@ OddCoreHighModulusPrefixCountGoal
 OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
-The current lowest-level Lean endpoint is sharper:
+The current preferred lowest-level Lean endpoint is:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+The older compatibility endpoint is still available:
 
 ```lean
 theorem RoundComposite.Concrete
@@ -70,7 +85,10 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-So the active Lean goal is to remove exactly these six assumptions.
+So the active Lean goal is now to remove the five preferred assumptions:
+q>=2 row margin plans, q>=2 signed matrix realization, q=1 plus-family
+margins, canonical root-flat return construction, and the small-modulus
+Hall-slack packet lift.
 
 ## Remaining Blocks
 
@@ -92,34 +110,29 @@ So the active Lean goal is to remove exactly these six assumptions.
    mates inside the plus sets, so that the matched `±1` matrix upgrades to the
    required nonnegative correction.
 
-4. `PrefixCountRootFlatReturnGoal`
+4. `PrefixCountRootFlatCanonicalReturnGoal`
 
-   Prove the root-flat return part of the prefix-count geometric theorem:
-   admissible prefix counts and layer permutations give a root-flat layered
-   schedule with row Latin, layer bijectivity, and single-cycle color returns.
+   Prove the root-flat return part of the prefix-count geometric theorem with
+   the canonical root step exposed:
+   admissible prefix counts and layer permutations give a root-flat certificate
+   with row Latin, layer bijectivity, single-cycle color returns, and
+   `cert.schedule.step = prefixCountRootStep d m`.  Lean now proves the Cayley
+   lift from this canonical-step certificate through
+   `prefixCountRootLayerEquiv`, `prefixCountRootLayerEquiv_step`,
+   `standardCayleySolved_of_rootFlatLayered_standardStep`, and
+   `prefixCountGeometricCriterionGoal_of_rootFlatCanonical`.
 
-5. `PrefixCountRootFlatEquivLiftGoal`
-
-   Prove the coordinate equivalence and one-step compatibility between
-   `ZMod m × PrefixCountRootState d m` and `Shared.TorusVertex d m`.  Lean
-   already proves that this equivalence-level statement implies the Cayley
-   lift.  The arbitrary-`D` formulation is stronger than the actual geometric
-   need: the lift should consume a root-flat schedule whose `step` is the
-   canonical root step.  Lean now closes the successor-indexed canonical
-   coordinate lift:
-   `prefixCountRootLayerEquivSucc`, `prefixCountRootStepSucc`,
-   `prefixCountRootLayerEquivSucc_step`, and
-   `standardCayleySolved_of_rootFlatLayered_standardStepSucc`.  The remaining
-   refactor is to expose canonical-step equality from the return certificate
-   and transport this successor-indexed theorem back to the current `d`
-   interface.
-
-6. `OddCoreSmallModulusSlackPacketLiftGoal`
+5. `OddCoreSmallModulusSlackPacketLiftGoal`
 
    Prove the uniform small-modulus base-tail lift from a solved base, unit
    packets, and Hall-slack inequalities.  The arithmetic witnesses are
    Lean-closed; the remaining content is the construction and proof of the
    lift.
+
+Legacy note: `PrefixCountRootFlatReturnGoal` and
+`PrefixCountRootFlatEquivLiftGoal` remain as older compatibility interfaces.
+They are no longer the preferred target because the arbitrary-`D` equivalence
+formulation is stronger than the actual geometric need.
 
 ## Small Branch Internal Split
 
@@ -159,8 +172,9 @@ Already Lean-checked support includes:
 - Q>=2 nonnegativity adapter.
 - Q=1 compatibility, matched `±1`, and plus-family adapters.
 - Root-flat split of the prefix-count geometric criterion, including the
-  equivalence-to-Cayley lift adapter and the successor-indexed canonical
-  root-step Cayley lift.
+  equivalence-to-Cayley lift adapter, the successor-indexed canonical root-step
+  Cayley lift, the `d`-indexed canonical root-step wrapper, and the preferred
+  canonical-return geometric adapter.
 - Active-Hall symboling foundation: incidence data, symbolings, count
   matrices, residue specifications, row/column count lemmas, Hall cuts, and
   the feasible-residue to symboling adapter conditional on Hall realization,
@@ -182,6 +196,6 @@ Already Lean-checked support includes:
 Close all `d >= 2` and odd `m >= 3` by proving the high-modulus prefix-count
 construction and the small-modulus Hall-slack packet-lift construction after
 D2/product and odd-seed reductions, with the high branch currently split into
-q>=2 margin plans, q>=2 signed matrices, q=1 plus-family margins, and two
-root-flat geometric pieces, and with the small branch now split through
-Active-Hall feasible residues plus Hall realization.
+q>=2 margin plans, q>=2 signed matrices, q=1 plus-family margins, and a
+canonical-step root-flat return certificate, and with the small branch now
+split through Active-Hall feasible residues plus Hall realization.

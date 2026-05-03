@@ -129,6 +129,55 @@ theorem prefixCountRootLayerEquivSucc_step {n m : Nat}
       simp
       ring_nf
 
+def prefixCountRootLayerEquiv (d m : Nat) (hd1 : 1 ≤ d) :
+    ZMod m × PrefixCountRootState d m ≃ Shared.TorusVertex d m :=
+  (prefixCountRootLayerEquivSucc (d - 1) m).trans
+    (Equiv.arrowCongr (finCongr (Nat.sub_add_cancel hd1)) (Equiv.refl _))
+
+def prefixCountRootStep (d m : Nat) :
+    Fin d → PrefixCountRootState d m → PrefixCountRootState d m :=
+  fun i w j => if (i : Nat) = j then w j + 1 else w j
+
+theorem prefixCountRootStep_eq_succ_cast {d m : Nat} (hd1 : 1 ≤ d)
+    (i : Fin d) (w : PrefixCountRootState d m) :
+    prefixCountRootStep d m i w =
+      prefixCountRootStepSucc
+        ((finCongr (Nat.sub_add_cancel hd1)).symm i) w := by
+  funext j
+  rw [prefixCountRootStep, prefixCountRootStepSucc]
+  by_cases hcast :
+      (finCongr (Nat.sub_add_cancel hd1)).symm i = j.castSucc
+  · have hval : (i : Nat) = j := by
+      have := congrArg Fin.val hcast
+      simpa using this
+    have hcast' :
+        Fin.cast (Nat.sub_add_cancel hd1).symm i = j.castSucc := by
+      simpa using hcast
+    simp [hcast', hval]
+  · have hval : ¬ (i : Nat) = j := by
+      intro hv
+      apply hcast
+      ext
+      simp [hv]
+    have hcast' :
+        ¬ Fin.cast (Nat.sub_add_cancel hd1).symm i = j.castSucc := by
+      intro h
+      exact hcast (by simpa using h)
+    simp [hcast', hval]
+
+theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
+    (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
+    prefixCountRootLayerEquiv d m hd1
+        (tw.1 + 1, prefixCountRootStep d m i tw.2)
+      =
+      prefixCountRootLayerEquiv d m hd1 tw + Shared.torusBasis d m i := by
+  rw [prefixCountRootStep_eq_succ_cast hd1 i tw.2]
+  unfold prefixCountRootLayerEquiv
+  simp only [Equiv.trans_apply]
+  rw [prefixCountRootLayerEquivSucc_step]
+  funext k
+  simp [Equiv.arrowCongr, Shared.torusBasis]
+
 def PrefixCountRootFlatReturnGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -136,6 +185,15 @@ def PrefixCountRootFlatReturnGoal : Prop :=
     PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
     Shared.RootFlatReturnCriterion
       (Fin d) (Fin d) (PrefixCountRootState d m) m
+
+def PrefixCountRootFlatCanonicalReturnGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
+    ∃ cert : Shared.RootFlatCertificate
+      (Fin d) (Fin d) (PrefixCountRootState d m) m,
+      cert.schedule.step = prefixCountRootStep d m
 
 def PrefixCountRootFlatCayleyLiftGoal : Prop :=
   ∀ {d m : Nat} [NeZero m],
@@ -312,6 +370,34 @@ theorem standardCayleySolved_of_rootFlatLayered_standardStepSucc
   simp [Shared.RootFlatSchedule.fullStep, Shared.RootFlatSchedule.layerMap,
     Shared.cayleyColorStep, hStep, prefixCountRootLayerEquivSucc_step]
 
+theorem standardCayleySolved_of_rootFlatLayered_standardStep
+    {d m : Nat} [NeZero m] (hd1 : 1 ≤ d)
+    (D : Shared.RootFlatLayeredDecomposition
+      (Fin d) (Fin d) (PrefixCountRootState d m) m)
+    (hStep : D.schedule.step = prefixCountRootStep d m) :
+    StandardCayleySolved d m := by
+  refine standardCayleySolved_of_rootFlatLayeredEquiv D
+    (prefixCountRootLayerEquiv d m hd1) ?_
+  intro c tw
+  simp [Shared.RootFlatSchedule.fullStep, Shared.RootFlatSchedule.layerMap,
+    Shared.cayleyColorStep, hStep, prefixCountRootLayerEquiv_step]
+
+theorem prefixCountGeometricCriterionGoal_of_rootFlatCanonical
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    PrefixCountGeometricCriterionGoal := by
+  intro d m hd2 C hdodd hd5 hmodd hdm hC L
+  haveI : NeZero m := ⟨by omega⟩
+  rcases hReturn hd2 hdodd hd5 hmodd hdm hC L with ⟨cert, hStep⟩
+  let D : Shared.RootFlatLayeredDecomposition
+      (Fin d) (Fin d) (PrefixCountRootState d m) m := {
+    schedule := cert.schedule
+    edgePartition := cert.schedule.edgePartition_of_rowLatin cert.rowLatin
+    colorHamiltonian := cert.schedule.fullStepsHamiltonian_of_return
+      cert.layerBijective cert.returnsSingleCycle
+  }
+  exact standardCayleySolved_of_rootFlatLayered_standardStep
+    (by omega : 1 ≤ d) D hStep
+
 theorem prefixCountRootFlatCayleyLiftGoal_of_equiv
     (hEquiv : PrefixCountRootFlatEquivLiftGoal) :
     PrefixCountRootFlatCayleyLiftGoal := by
@@ -434,6 +520,16 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_ro
   oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlat
     hQge2Plan hQge2Matrix hQeq1 hReturn
     (prefixCountRootFlatCayleyLiftGoal_of_equiv hEquiv)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlatCanonical
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_geometry
+    hQge2Plan hQge2Matrix hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
@@ -813,6 +909,20 @@ theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat
   odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift
     hQge2Plan hQge2Matrix hQeq1 hReturn
     (prefixCountRootFlatCayleyLiftGoal_of_equiv hEquiv)
+    hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
+    (oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlatCanonical
+      hQge2Plan hQge2Matrix hQeq1 hReturn)
     hSmallPacket hd2 hmodd hm3
 
 end Concrete
