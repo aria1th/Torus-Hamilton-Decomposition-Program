@@ -111,6 +111,11 @@ theorem colCompatible_of_hasResidues {m T : Nat} {X C : Type*}
 
 end CountMatrix
 
+def FeasibleWithResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
+  ∃ M : CountMatrix I, M.HallCuts ∧ M.HasResidues R
+
 /-- A symboling assigns each active set bijectively to the `T` active symbols. -/
 structure Symboling {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
@@ -364,6 +369,38 @@ theorem toCountMatrix_hallCuts {T : Nat} {X C : Type*}
             rfl
 
 end Symboling
+
+def SymbolingWithResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
+  ∃ Φ : Symboling I, Φ.HasResidues R
+
+universe uX uC
+
+/--
+The Hoffman/Hall realization theorem needed by the active branch.
+
+This is intentionally isolated from rounding and residue arithmetic: once a
+count matrix has the forced row/column sums and Hall cuts, it can be realized by
+a symboling.
+-/
+def HallRealizationGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence T X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ Φ : Symboling I, Φ.Realizes M.val
+
+theorem symbolingWithResidues_of_feasible_and_realization
+    (hRealize : HallRealizationGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R := by
+  rcases hFeasible with ⟨M, hHall, hResidues⟩
+  rcases @hRealize T X C _ _ _ _ I M hHall with ⟨Φ, hRealizes⟩
+  exact ⟨Φ, Φ.hasResidues_of_realizes hRealizes hResidues⟩
 
 end ActiveHall
 end RoundComposite

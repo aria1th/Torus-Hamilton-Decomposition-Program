@@ -6,9 +6,10 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
-Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_2_20260503.md`.
-That note is the preferred short reference after the `d < 29` boundary review
-and the q=1 transport-compatibility split.
+Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_3_20260503.md`.
+That note is the preferred short reference after the `d < 29` boundary review,
+the q=1 plus-family split, the root-flat geometry split, and the first
+Active-Hall residue-symboling interface.
 
 Correction after the first reset: the manuscript-facing small branch must
 explicitly expose the Hall-slack hypotheses `d - b > b` and
@@ -189,7 +190,12 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `ActiveHall.ResidueSpec`, `ActiveHall.Symboling.count_row_sum`,
   `ActiveHall.Symboling.count_col_sum`, residue compatibility lemmas,
   `ActiveHall.CountMatrix.HallCuts`, and
-  `ActiveHall.Symboling.toCountMatrix_hallCuts`.
+  `ActiveHall.Symboling.toCountMatrix_hallCuts`.  The active branch now also
+  exposes `ActiveHall.FeasibleWithResidues`,
+  `ActiveHall.SymbolingWithResidues`, `ActiveHall.HallRealizationGoal`, and
+  `ActiveHall.symbolingWithResidues_of_feasible_and_realization`, splitting
+  the small packet lift into feasible residue count-matrix construction plus
+  Hall/Hoffman realization.
 - Prefix-count foundation module `RoundComposite/PrefixCount.lean`, including
   `Parts`, `SignedPrefixCounts`, `signedVal_coprime_of_odd`,
   `SignedPrefixCounts.toParts_admissible`, `one_le_div_pred_of_le`, and
@@ -312,5 +318,6 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 
 Prove all `d >= 2`, odd `m >= 3` by D2/product reduction to the odd core,
 then close the odd core with the high-modulus prefix-count theorem and the
-Hall-slack base-tail unit-packet lift theorem; keep the `d < 29` table only as
-audit evidence.
+Hall-slack base-tail unit-packet lift theorem; internally, treat the small
+branch as Active-Hall feasible residues plus Hall realization; keep the
+`d < 29` table only as audit evidence.

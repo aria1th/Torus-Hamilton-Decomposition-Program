@@ -350,15 +350,17 @@ when `m` is odd and `m >= 3`.
   proof for every dimension `d >= 2` and odd modulus `m >= 3`, with even
   dimensions handled by the D2/product wrapper and the main construction
   concentrated in the odd-dimensional core.
-- `docs/ODD_TORI_CURRENT_GOAL_V2_2_20260503.md`: current concise goal reset
-  after the `d < 29` boundary review and the q=1 transport-compatibility
-  split.  It records that the finite boundary table is audit/regression
+- `docs/ODD_TORI_CURRENT_GOAL_V2_3_20260503.md`: current concise goal reset
+  after the `d < 29` boundary review, the q=1 plus-family split, the
+  root-flat geometry split, and the first Active-Hall residue-symboling
+  interface.  It records that the finite boundary table is audit/regression
   evidence only, that `(13,3)` is absorbed by the uniform small-modulus
   packet-lift pattern, and that the current lowest-level Lean endpoint has six
   remaining assumptions: q>=2 row margin plans, q>=2 signed matrix
   realization, q=1 plus-set margins, root-flat return construction,
   root-flat equivalence step compatibility, and the small-modulus Hall-slack
-  packet-lift theorem.
+  packet-lift theorem.  It also records the small-branch internal split through
+  Active-Hall feasible residues and Hall realization.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
