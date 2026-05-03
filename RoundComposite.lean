@@ -1,4 +1,5 @@
 import Mathlib
+import RoundComposite.PrefixCount
 import Shared.CayleyProduct
 
 namespace RoundComposite

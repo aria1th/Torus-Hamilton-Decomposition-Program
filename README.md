@@ -195,6 +195,11 @@ when `m` is odd and `m >= 3`.
   summing to `m`, `unitCarryPackets_spec` for the aggregate packet list, and
   `SmallBaseUnitPacketWitness` for packaging the solved base with that packet
   data.
+- `RoundComposite/PrefixCount.lean`: foundational high-modulus prefix-count
+  definitions.  It introduces `Parts`, `SignedPrefixCounts`, the signed
+  difference set `{ -2, -1, 1, 2 }`, proves those signed values are primitive
+  modulo any odd `m`, and records the quotient/remainder facts used when
+  `m = (d-1)q + r`.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus

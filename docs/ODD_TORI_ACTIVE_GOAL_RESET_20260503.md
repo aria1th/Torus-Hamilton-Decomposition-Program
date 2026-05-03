@@ -176,6 +176,9 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - D11-specific Hall-slack arithmetic for `b = 5`, exposed through the adapter
   from `OddCoreSmallModulusSlackPacketLiftGoal` to
   `D11SmallModulusFromD5BaseGoal`.
+- Prefix-count foundation module `RoundComposite/PrefixCount.lean`, including
+  `Parts`, `SignedPrefixCounts`, `signedVal_coprime_of_odd`,
+  `one_le_div_pred_of_le`, and `pred_mod_pos_of_odd`.
 
 ## Revised Goal in One Sentence
 

@@ -49,6 +49,7 @@ boundary table as an input theorem or Lean dependency.
 | Small odd dimension `d = 11` | `standard_cayley_odd_uniform_11_of_high_and_d5_base_tail` | Splits into prefix-count for `m >= 11` and D5-base tail lift for `m < 11` | Conditional |
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
+| Prefix-count signed foundation | `Parts`; `SignedPrefixCounts`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
 | Hall-slack packet-lift endpoint for D11-small and general small branch | `OddCoreSmallModulusSlackPacketLiftGoal`; `odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
 | Uniform small-base Hall-slack arithmetic witness | `seed_semigroup_base_available_with_hall_slack`; `oddCoreSmallBaseSlackWitnessGoal_of_seed_semigroup` | Lean-checked in `RoundComposite/SeedSemigroup.lean` and `RoundComposite/OddCore.lean` | Closed |
@@ -99,6 +100,7 @@ The main new Lean files contain no `sorry`, `admit`, or explicit `axiom`:
 grep -RIn "sorry\|axiom\|admit" \
   RoundComposite/OddCore.lean \
   RoundComposite/SeedSemigroup.lean \
+  RoundComposite/PrefixCount.lean \
   Shared/D2Seed.lean \
   Shared/D3Seed.lean \
   RoundComposite/ConcreteEndpoints.lean
@@ -113,6 +115,7 @@ table:
 grep -RIn "D_LT_29\|BOUNDARY\|169\|ODD_TORI_D_LT_29" \
   RoundComposite/OddCore.lean \
   RoundComposite/SeedSemigroup.lean \
+  RoundComposite/PrefixCount.lean \
   RoundComposite/ConcreteEndpoints.lean \
   Shared/D2Seed.lean \
   Shared/D3Seed.lean
@@ -130,6 +133,7 @@ lake env lean Shared/D3Seed.lean
 lake build Shared.D3Seed
 lake env lean RoundComposite/ConcreteEndpoints.lean
 lake env lean RoundComposite/SeedSemigroup.lean
+lake build RoundComposite.PrefixCount
 lake env lean RoundComposite/OddCore.lean
 lake build RoundComposite.OddCore
 git diff --check

@@ -522,6 +522,12 @@ The proof uses the interval cover supplied by the two seed-semigroup families
 `3 * 2^n` and `4 * 2^n`.  Every `d >= 13` has one of these bases in the
 interval `(d/3, d/2)`.
 
+The first high-modulus prefix-count foundation is also formalized in
+`RoundComposite/PrefixCount.lean`.  It records the `Parts` and
+`SignedPrefixCounts` certificate shapes, proves the signed values
+`{-2,-1,1,2}` are primitive modulo every odd `m`, and closes the basic
+quotient/remainder facts needed for `m = (d-1)q + r`.
+
 The same file now also records the small-block arithmetic needed by the
 base-tail theorem:
 
