@@ -180,8 +180,9 @@ the global q=1 theorem family.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
   Hall-realization interface, color-degree double counting, full-set cut
-  cap/mass and equality reductions, and the sanity converse from symbolings
-  back to feasible residue count matrices.
+  cap/mass and equality reductions, empty/full cut reductions, nontrivial
+  Hall-cut reduction, and the sanity converse from symbolings back to feasible
+  residue count matrices.
 
 ## Non-Goals
 

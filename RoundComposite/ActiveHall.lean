@@ -110,6 +110,18 @@ theorem cutCap_colors_univ {T : Nat} {X C : Type*}
     _ = S.card * Fintype.card X := by
             simp [Finset.sum_const, Nat.mul_comm]
 
+theorem cutCap_colors_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (S : Finset (Fin T)) :
+    I.cutCap (∅ : Finset C) S = 0 := by
+  simp [cutCap]
+
+theorem cutCap_symbols_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.cutCap U (∅ : Finset (Fin T)) = 0 := by
+  simp [cutCap]
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/
@@ -204,6 +216,69 @@ theorem cutMass_colors_univ_eq_cutCap {T : Nat} {X C : Type*}
     M.cutMass (Finset.univ : Finset C) S
       = I.cutCap (Finset.univ : Finset C) S := by
   rw [M.cutMass_colors_univ S, I.cutCap_colors_univ S]
+
+theorem cutMass_colors_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
+    M.cutMass (∅ : Finset C) S = 0 := by
+  simp [cutMass]
+
+theorem cutMass_symbols_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (U : Finset C) :
+    M.cutMass U (∅ : Finset (Fin T)) = 0 := by
+  simp [cutMass]
+
+theorem cutMass_colors_empty_eq_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
+    M.cutMass (∅ : Finset C) S = I.cutCap (∅ : Finset C) S := by
+  rw [M.cutMass_colors_empty S, I.cutCap_colors_empty S]
+
+theorem cutMass_symbols_empty_eq_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (U : Finset C) :
+    M.cutMass U (∅ : Finset (Fin T)) = I.cutCap U (∅ : Finset (Fin T)) := by
+  rw [M.cutMass_symbols_empty U, I.cutCap_symbols_empty U]
+
+theorem hallCuts_of_nontrivial {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (hCuts :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        U.Nonempty → U ≠ (Finset.univ : Finset C) →
+        S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+        M.cutMass U S ≤ I.cutCap U S) :
+    M.HallCuts := by
+  intro U S
+  by_cases hUempty : U = ∅
+  · subst U
+    rw [M.cutMass_colors_empty_eq_cutCap S]
+  by_cases hSempty : S = ∅
+  · subst S
+    rw [M.cutMass_symbols_empty_eq_cutCap U]
+  by_cases hUuniv : U = (Finset.univ : Finset C)
+  · subst U
+    rw [M.cutMass_colors_univ_eq_cutCap S]
+  by_cases hSuniv : S = (Finset.univ : Finset (Fin T))
+  · subst S
+    rw [M.cutMass_symbols_univ_eq_cutCap U]
+  exact hCuts U S
+    (Finset.nonempty_iff_ne_empty.mpr hUempty) hUuniv
+    (Finset.nonempty_iff_ne_empty.mpr hSempty) hSuniv
+
+theorem hallCuts_iff_nontrivial {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) :
+    M.HallCuts ↔
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        U.Nonempty → U ≠ (Finset.univ : Finset C) →
+        S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+        M.cutMass U S ≤ I.cutCap U S := by
+  constructor
+  · intro hCuts U S _hUne _hUuniv _hSne _hSuniv
+    exact hCuts U S
+  · exact M.hallCuts_of_nontrivial
 
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
