@@ -538,7 +538,15 @@ The first high-modulus prefix-count foundation is also formalized in
 `SignedPrefixCounts.toParts_admissible`, and closes the basic quotient/remainder
 facts needed for `m = (d-1)q + r`.  The same module now defines
 `QuotientTransport` and proves `QuotientTransport.toSigned_admissible`, so a
-transport construction only has to produce the quotient/remainder fields.
+transport construction only has to produce the quotient/remainder fields.  It
+also defines `MarginPlan`, `SignedMarginMatrix`, and
+`MarginPlan.toTransport`, so the high-modulus construction can now be split
+into three smaller obligations:
+
+- construct row margins `zero`, `tau`, and `sigma`;
+- construct a signed correction matrix with row sums `sigma` and zero column
+  sums;
+- prove the per-cell nonnegativity needed for the resulting natural counts.
 
 `RoundComposite/SeedSemigroup.lean` also records the small-block arithmetic
 needed by the base-tail theorem:

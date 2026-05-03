@@ -203,7 +203,9 @@ when `m` is odd and `m >= 3`.
   defines `QuotientTransport` and proves
   `QuotientTransport.toSigned_admissible`, the algebraic bridge from
   quotient/remainder transportation data to an admissible prefix-count
-  certificate.
+  certificate.  The signed transportation input is further split into
+  `MarginPlan`, `SignedMarginMatrix`, and `MarginPlan.toTransport`, isolating
+  row arithmetic, signed matrix construction, and cellwise nonnegativity.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus

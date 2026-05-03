@@ -346,5 +346,64 @@ theorem toSigned_admissible {d m q r : Nat}
 
 end QuotientTransport
 
+/--
+Row-wise margin data for the signed transportation branch.
+
+The field `sigma` is the desired row sum of the signed correction matrix
+`eps`.  The identity `sigma_def` is arranged so that a signed matrix with row
+sum `sigma` gives exactly the `zero_eq` field of `QuotientTransport`.
+-/
+structure MarginPlan (d m q r : Nat) where
+  zero : Fin d → Nat
+  tau : Fin d → Int
+  sigma : Fin d → Int
+  sigma_def :
+    ∀ i : Fin d,
+      sigma i =
+        (r : Int)
+          + (((d - 1 : Nat) : Int) * tau i)
+          - (zero i : Int)
+  tau_sum : (∑ i : Fin d, tau i) = (q : Int) - (r : Int)
+  delta_nonneg : ∀ i : Fin d, 0 ≤ (q : Int) - tau i
+  prim_zero : ∀ i : Fin d, Nat.Coprime (zero i) m
+
+/--
+A signed correction matrix with entries in `{ -2, -1, 1, 2 }`, prescribed row
+sums, and zero column sums.
+-/
+structure SignedMarginMatrix (d : Nat) (sigma : Fin d → Int) where
+  eps : Fin d → Fin (d - 2) → Int
+  eps_signed : ∀ i k, IsSignedVal (eps i k)
+  row_sum : ∀ i : Fin d, (∑ k : Fin (d - 2), eps i k) = sigma i
+  col_sum : ∀ k : Fin (d - 2), (∑ i : Fin d, eps i k) = 0
+
+namespace MarginPlan
+
+/--
+Combine a row margin plan and a signed correction matrix into the quotient
+transport data consumed by `QuotientTransport.toSigned_admissible`.
+-/
+def toTransport {d m q r : Nat}
+    (P : MarginPlan d m q r)
+    (E : SignedMarginMatrix d P.sigma)
+    (hstep : ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k) :
+    QuotientTransport d m q r where
+  zero := P.zero
+  tau := P.tau
+  eps := E.eps
+  eps_signed := E.eps_signed
+  eps_col_zero := E.col_sum
+  tau_sum := P.tau_sum
+  delta_nonneg := P.delta_nonneg
+  step_nonneg := hstep
+  zero_eq := by
+    intro i
+    have hsigma := P.sigma_def i
+    have hrow := E.row_sum i
+    linarith
+  prim_zero := P.prim_zero
+
+end MarginPlan
+
 end PrefixCount
 end RoundComposite

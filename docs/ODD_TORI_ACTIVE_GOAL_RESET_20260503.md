@@ -183,6 +183,10 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - `QuotientTransport` and `QuotientTransport.toSigned_admissible`, giving the
   algebraic bridge from quotient/remainder transportation data to admissible
   prefix-count data.
+- `MarginPlan`, `SignedMarginMatrix`, and `MarginPlan.toTransport`, splitting
+  the remaining high-modulus signed-transport construction into row-margin
+  arithmetic, signed correction matrix construction, and per-cell
+  nonnegativity.
 
 ## Revised Goal in One Sentence
 
