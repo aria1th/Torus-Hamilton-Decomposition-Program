@@ -874,9 +874,69 @@ theorem eps_le_two {d : Nat} {sigma : Fin d → Int}
     E.eps i k ≤ (2 : Int) :=
   signedVal_le_two (E.eps_signed i k)
 
+theorem sigma_sum_eq_zero {d : Nat} {sigma : Fin d → Int}
+    (E : SignedMarginMatrix d sigma) :
+    (∑ i : Fin d, sigma i) = 0 := by
+  calc
+    (∑ i : Fin d, sigma i)
+        = ∑ i : Fin d, ∑ k : Fin (d - 2), E.eps i k := by
+            simp [E.row_sum]
+    _ = ∑ k : Fin (d - 2), ∑ i : Fin d, E.eps i k := by
+            rw [Finset.sum_comm]
+    _ = 0 := by
+            simp [E.col_sum]
+
 end SignedMarginMatrix
 
 namespace MarginPlan
+
+theorem sigma_sum_eq {d m q r : Nat}
+    (P : MarginPlan d m q r)
+    (hdpos : 0 < d)
+    (hmqr : m = (d - 1) * q + r) :
+    (∑ i : Fin d, P.sigma i)
+      = (m : Int) - (∑ i : Fin d, (P.zero i : Int)) := by
+  calc
+    (∑ i : Fin d, P.sigma i)
+        = ∑ i : Fin d,
+            ((r : Int)
+              + (((d - 1 : Nat) : Int) * P.tau i)
+              - (P.zero i : Int)) := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact P.sigma_def i
+    _ = (d : Int) * (r : Int)
+          + (((d - 1 : Nat) : Int) * ((q : Int) - (r : Int)))
+          - (∑ i : Fin d, (P.zero i : Int)) := by
+            rw [Finset.sum_sub_distrib, Finset.sum_add_distrib]
+            have htau :
+                (∑ i : Fin d, ((d - 1 : Nat) : Int) * P.tau i)
+                  = ((d - 1 : Nat) : Int) * ((q : Int) - (r : Int)) := by
+              rw [← Finset.mul_sum, P.tau_sum]
+            rw [htau]
+            simp [Finset.sum_const]
+    _ = (m : Int) - (∑ i : Fin d, (P.zero i : Int)) := by
+            have hmqrInt :
+                (m : Int) =
+                  (((d - 1 : Nat) : Int) * (q : Int)) + (r : Int) := by
+              rw [hmqr]
+              norm_num [Nat.cast_add, Nat.cast_mul]
+            rw [hmqrInt]
+            have hdsub : (d : Int) = ((d - 1 : Nat) : Int) + 1 := by
+              omega
+            rw [hdsub]
+            ring
+
+theorem sigma_sum_eq_zero_of_zero_sum {d m q r : Nat}
+    (P : MarginPlan d m q r)
+    (hdpos : 0 < d)
+    (hmqr : m = (d - 1) * q + r)
+    (hzero : (∑ i : Fin d, P.zero i) = m) :
+    (∑ i : Fin d, P.sigma i) = 0 := by
+  have hzeroInt : (∑ i : Fin d, (P.zero i : Int)) = (m : Int) := by
+    exact_mod_cast hzero
+  rw [P.sigma_sum_eq hdpos hmqr, hzeroInt]
+  simp
 
 /--
 Combine a row margin plan and a signed correction matrix into the quotient

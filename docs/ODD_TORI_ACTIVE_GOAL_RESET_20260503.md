@@ -250,6 +250,9 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
 - Q>=2 nonnegativity split:
   `PrefixCount.signedVal_ge_neg_two`,
+  `PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero`,
+  `PrefixCount.MarginPlan.sigma_sum_eq`,
+  `PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum`,
   `PrefixCount.SignedMarginMatrix.eps_ge_neg_two`,
   `PrefixCount.Qge2PlanBounds`,
   `PrefixCount.Qge2PlanBounds.step_nonneg`,

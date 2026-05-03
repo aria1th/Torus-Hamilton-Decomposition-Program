@@ -154,6 +154,9 @@ PrefixCount.transportQge2Goal_of_margin
 PrefixCount.transportQeq1Goal_of_margin
 PrefixCount.admissiblePartsCountBranchGoal_of_margin
 PrefixCount.signedVal_ge_neg_two
+PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero
+PrefixCount.MarginPlan.sigma_sum_eq
+PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum
 PrefixCount.SignedMarginMatrix.eps_ge_neg_two
 PrefixCount.Qge2PlanBounds
 PrefixCount.Qge2PlanBounds.step_nonneg
@@ -246,6 +249,8 @@ still open.
   geometry, and small packet lift to the all-dimensional theorem.
 - Q>=2 plan-bounds adapter reducing q>=2 transport nonnegativity to the row
   condition `2 <= q - tau i`.
+- Signed-margin total-sum invariants: every signed correction matrix forces
+  `sum sigma = 0`, and a margin plan has `sum sigma = m - sum zero`.
 - Matrix-layer realization for balanced dense count matrices, including the
   zero case, Hall extraction of a positive permutation, one-layer peeling, and
   induction on the row/column degree.
