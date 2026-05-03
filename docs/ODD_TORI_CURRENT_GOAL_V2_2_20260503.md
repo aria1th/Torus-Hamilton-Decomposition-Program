@@ -115,7 +115,8 @@ The following are already available as Lean-checked support for this goal:
 - Q>=2 nonnegativity adapter.
 - Q=1 compatibility-to-nonnegativity adapter.
 - Q=1 matched `±1` matrix adapter.
-- Q=1 plus-set-family adapter.
+- Q=1 plus-set-family adapter, including nonemptiness of the plus-family
+  certificate layer.
 
 ## Non-Goals
 

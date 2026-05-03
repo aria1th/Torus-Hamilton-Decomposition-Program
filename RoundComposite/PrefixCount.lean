@@ -1079,6 +1079,28 @@ theorem sum_if_mem_one_neg_one_eq_neg_one_of_card_half {d : Nat}
   rcases hdodd with ⟨a, ha⟩
   omega
 
+theorem exists_finset_card_eq_and_mem {α : Type*}
+    [Fintype α] (a : α) {n : Nat}
+    (hpos : 1 ≤ n) (hle : n ≤ Fintype.card α) :
+    ∃ s : Finset α, a ∈ s ∧ s.card = n := by
+  classical
+  have hauniv : a ∈ (Finset.univ : Finset α) := by
+    simp
+  have hcardErase :
+      ((Finset.univ : Finset α).erase a).card = Fintype.card α - 1 := by
+    rw [Finset.card_erase_of_mem hauniv, Finset.card_univ]
+  have hsub : n - 1 ≤ ((Finset.univ : Finset α).erase a).card := by
+    rw [hcardErase]
+    omega
+  rcases Finset.exists_subset_card_eq hsub with ⟨t, ht_subset, ht_card⟩
+  refine ⟨insert a t, by simp, ?_⟩
+  have hnot : a ∉ t := by
+    intro hat
+    have : a ∈ (Finset.univ : Finset α).erase a := ht_subset hat
+    simp at this
+  rw [Finset.card_insert_of_notMem hnot, ht_card]
+  omega
+
 structure PlusFamily (d : Nat) where
   plus : Fin (d - 2) → Finset (Fin d)
   plus_card : ∀ k : Fin (d - 2), (plus k).card = (d - 1) / 2
@@ -1092,6 +1114,39 @@ structure PlusOneMatching {d : Nat} (B : PMOneBase d) where
   pos : ∀ k : Fin (d - 2), B.entry (mate k) k = 1
 
 namespace PlusFamily
+
+theorem nonempty {d : Nat} (hdodd : Odd d) (hd5 : 5 ≤ d) :
+    Nonempty (PlusFamily d) := by
+  classical
+  let n := (d - 1) / 2
+  let mate : Fin (d - 2) → Fin d := fun k => ⟨k.val, by omega⟩
+  have hmate_injective : Function.Injective mate := by
+    intro k l h
+    apply Fin.ext
+    change k.val = l.val
+    simpa [mate] using congrArg Fin.val h
+  have hnpos : 1 ≤ n := by
+    rcases hdodd with ⟨a, ha⟩
+    omega
+  have hnle : n ≤ Fintype.card (Fin d) := by
+    simp [n]
+    omega
+  have hexists :
+      ∀ k : Fin (d - 2), ∃ s : Finset (Fin d), mate k ∈ s ∧ s.card = n := by
+    intro k
+    exact exists_finset_card_eq_and_mem (mate k) hnpos hnle
+  choose plus hplus using hexists
+  exact ⟨{
+    plus := plus
+    plus_card := by
+      intro k
+      simpa [n] using (hplus k).2
+    mate := mate
+    mate_injective := hmate_injective
+    mate_mem := by
+      intro k
+      exact (hplus k).1
+  }⟩
 
 def toBase {d : Nat} (F : PlusFamily d) (hdodd : Odd d) : PMOneBase d where
   entry := fun i k => if i ∈ F.plus k then (1 : Int) else (-1 : Int)
