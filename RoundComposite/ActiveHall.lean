@@ -702,5 +702,37 @@ theorem feasibleWithResidues_of_symbolingWithResidues
   rcases hSymboling with ⟨Φ, hResidues⟩
   exact ⟨Φ.toCountMatrix, Φ.toCountMatrix_hallCuts, hResidues⟩
 
+namespace SymbolingWithResidues
+
+theorem feasible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hSymboling : SymbolingWithResidues I R) :
+    FeasibleWithResidues I R :=
+  feasibleWithResidues_of_symbolingWithResidues hSymboling
+
+theorem rowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hSymboling : SymbolingWithResidues I R) :
+    R.RowCompatible I :=
+  hSymboling.feasible.rowCompatible
+
+theorem colCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hSymboling : SymbolingWithResidues I R) :
+    R.ColCompatible I :=
+  hSymboling.feasible.colCompatible
+
+theorem compatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hSymboling : SymbolingWithResidues I R) :
+    R.RowCompatible I ∧ R.ColCompatible I :=
+  hSymboling.feasible.compatible
+
+end SymbolingWithResidues
+
 end ActiveHall
 end RoundComposite
