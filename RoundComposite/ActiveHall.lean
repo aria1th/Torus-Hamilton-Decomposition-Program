@@ -122,6 +122,32 @@ theorem cutCap_symbols_empty {T : Nat} {X C : Type*}
     I.cutCap U (∅ : Finset (Fin T)) = 0 := by
   simp [cutCap]
 
+theorem cutCap_mono {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) {U₁ U₂ : Finset C} {S₁ S₂ : Finset (Fin T)}
+    (hU : U₁ ⊆ U₂) (hS : S₁ ⊆ S₂) :
+    I.cutCap U₁ S₁ ≤ I.cutCap U₂ S₂ := by
+  unfold cutCap
+  apply Finset.sum_le_sum
+  intro x _hx
+  exact min_le_min
+    (Finset.card_le_card (Finset.inter_subset_inter_left hU))
+    (Finset.card_le_card hS)
+
+theorem cutCap_mono_colors {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) {U₁ U₂ : Finset C} (hU : U₁ ⊆ U₂)
+    (S : Finset (Fin T)) :
+    I.cutCap U₁ S ≤ I.cutCap U₂ S :=
+  I.cutCap_mono hU (fun _ h => h)
+
+theorem cutCap_mono_symbols {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) {S₁ S₂ : Finset (Fin T)}
+    (hS : S₁ ⊆ S₂) :
+    I.cutCap U S₁ ≤ I.cutCap U S₂ :=
+  I.cutCap_mono (fun _ h => h) hS
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/
@@ -240,6 +266,39 @@ theorem cutMass_symbols_empty_eq_cutCap {T : Nat} {X C : Type*}
     {I : Incidence T X C} (M : CountMatrix I) (U : Finset C) :
     M.cutMass U (∅ : Finset (Fin T)) = I.cutCap U (∅ : Finset (Fin T)) := by
   rw [M.cutMass_symbols_empty U, I.cutCap_symbols_empty U]
+
+theorem cutMass_mono {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    {U₁ U₂ : Finset C} {S₁ S₂ : Finset (Fin T)}
+    (hU : U₁ ⊆ U₂) (hS : S₁ ⊆ S₂) :
+    M.cutMass U₁ S₁ ≤ M.cutMass U₂ S₂ := by
+  unfold cutMass
+  have hcolor :
+      (∑ c ∈ U₁, ∑ σ ∈ S₁, M.val c σ)
+        ≤ ∑ c ∈ U₂, ∑ σ ∈ S₁, M.val c σ :=
+    Finset.sum_le_sum_of_subset hU
+  have hsymbol :
+      (∑ c ∈ U₂, ∑ σ ∈ S₁, M.val c σ)
+        ≤ ∑ c ∈ U₂, ∑ σ ∈ S₂, M.val c σ := by
+    apply Finset.sum_le_sum
+    intro c _hc
+    exact Finset.sum_le_sum_of_subset hS
+  exact hcolor.trans hsymbol
+
+theorem cutMass_mono_colors {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    {U₁ U₂ : Finset C} (hU : U₁ ⊆ U₂) (S : Finset (Fin T)) :
+    M.cutMass U₁ S ≤ M.cutMass U₂ S :=
+  M.cutMass_mono hU (fun _ h => h)
+
+theorem cutMass_mono_symbols {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (U : Finset C) {S₁ S₂ : Finset (Fin T)} (hS : S₁ ⊆ S₂) :
+    M.cutMass U S₁ ≤ M.cutMass U S₂ :=
+  M.cutMass_mono (fun _ h => h) hS
 
 theorem hallCuts_of_nontrivial {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
