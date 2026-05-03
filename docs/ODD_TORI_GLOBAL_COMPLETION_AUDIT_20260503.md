@@ -52,11 +52,13 @@ boundary table as an input theorem or Lean dependency.
 | Dense matrix layer realization | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.balancedMatrixLayerRealization_zero`; `PrefixCount.matrixBalanced_exists_positive_perm`; `PrefixCount.peelLayer_balanced`; `PrefixCount.balancedMatrixLayerRealizationGoal`; `PrefixCount.matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Closed |
 | Margin-facing transport split | `PrefixCount.MarginTransportQge2Goal`; `PrefixCount.MarginTransportQeq1Goal`; `PrefixCount.transportQge2Goal_of_margin`; `PrefixCount.transportQeq1Goal_of_margin`; `PrefixCount.admissiblePartsCountBranchGoal_of_margin`; `oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry`; `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q>=2 transport nonnegativity split | `PrefixCount.signedVal_ge_neg_two`; `PrefixCount.SignedMarginMatrix.eps_ge_neg_two`; `PrefixCount.SignedMarginMatrix.neg_two_mul_le_row_sum`; `PrefixCount.SignedMarginMatrix.row_sum_le_two_mul`; `PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero`; `PrefixCount.MarginPlan.sigma_sum_eq`; `PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum`; `PrefixCount.Qge2PlanBounds`; `PrefixCount.Qge2PlanBounds.step_nonneg`; `PrefixCount.MarginTransportQge2PlanGoal`; `PrefixCount.marginTransportQge2Goal_of_plan`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
-| Q>=2 plan/matrix split | `PrefixCount.MarginPlanQge2Goal`; `PrefixCount.SignedMarginMatrixForQge2PlanGoal`; `PrefixCount.marginTransportQge2PlanGoal_of_plan_and_matrix`; `oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
+| Q>=2 direct margin target | `PrefixCount.MarginTransportQge2Goal`; `oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_geometry`; `oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_rootFlatCanonical`; `odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_geometry_and_small_packet_lift`; `odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Preferred conditional adapter |
+| Q>=2 global-`Qge2PlanBounds` split | `PrefixCount.MarginTransportQge2PlanGoal`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1PlusFamily_and_geometry`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1PlusFamily_and_rootFlatCanonical`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Compatibility adapter only; too strong for universal q>=2 because `q = 2, r = 1` is incompatible with global `Qge2PlanBounds` |
+| Q>=2 plan/matrix split | `PrefixCount.MarginPlanQge2Goal`; `PrefixCount.SignedMarginMatrixForQge2PlanGoal`; `PrefixCount.marginTransportQge2PlanGoal_of_plan_and_matrix`; `oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Compatibility adapter only; too broad as preferred target unless plan feasibility is strengthened |
 | Q=1 transport compatibility split | `PrefixCount.quotient_eq_one_range_of_mqr`; `PrefixCount.quotient_eq_one_m_eq_pred_add`; `PrefixCount.MarginPlan.delta_eq_zero_iff`; `PrefixCount.MarginPlan.delta_eq_one_iff`; `PrefixCount.MarginPlan.tau_le_q`; `PrefixCount.StepNonnegCompatibility`; `PrefixCount.StepNonnegCompatibility.step_nonneg`; `PrefixCount.MarginTransportQeq1CompatibleGoal`; `PrefixCount.marginTransportQeq1Goal_of_compatible`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Compat_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q=1 matched `±1` matrix split | `PrefixCount.PMOneBase`; `PrefixCount.PMOneBase.PlusOneMatching`; `PrefixCount.PMOneBase.upgrade_signed`; `PrefixCount.PMOneBase.upgrade_col_sum_zero`; `PrefixCount.MatchedPMOneMatrix`; `PrefixCount.MatchedPMOneMatrix.toSignedMarginMatrix`; `PrefixCount.MatchedPMOneMatrix.stepNonnegCompatibility`; `PrefixCount.MarginTransportQeq1MatchedPMOneGoal`; `PrefixCount.marginTransportQeq1CompatibleGoal_of_matchedPMOne`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1MatchedPMOne_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1MatchedPMOne_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q=1 plus-set-family split | `PrefixCount.PMOneBase.sum_if_mem_one_neg_one`; `PrefixCount.PMOneBase.sum_if_mem_one_neg_one_eq_neg_one_of_card_half`; `PrefixCount.PMOneBase.exists_finset_card_eq_and_mem`; `PrefixCount.PMOneBase.PlusFamily`; `PrefixCount.PMOneBase.PlusFamily.nonempty`; `PrefixCount.PMOneBase.PlusFamily.toBase`; `PrefixCount.PMOneBase.PlusFamily.toMatching`; `PrefixCount.MarginTransportQeq1PlusFamilyGoal`; `PrefixCount.marginTransportQeq1MatchedPMOneGoal_of_plusFamily`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1PlusFamily_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
-| Root-flat geometric split | `PrefixCountRootState`; `PrefixCountRootFlatReturnGoal`; `PrefixCountRootFlatCayleyLiftGoal`; `RootFlatCayleyStepCompatible`; `PrefixCountRootFlatEquivLiftGoal`; `PrefixCountRootFlatCanonicalReturnGoal`; `standardCayleySolved_of_rootFlatLayeredEquiv`; `prefixCountRootFlatCayleyLiftGoal_of_equiv`; `prefixCountGeometricCriterionGoal_of_rootFlat`; `prefixCountRootLayerEquivSucc`; `prefixCountRootStepSucc`; `prefixCountRootLayerEquivSucc_step`; `standardCayleySolved_of_rootFlatLayered_standardStepSucc`; `prefixCountRootLayerEquiv`; `prefixCountRootStep`; `prefixCountRootStep_eq_succ_cast`; `prefixCountRootLayerEquiv_step`; `standardCayleySolved_of_rootFlatLayered_standardStep`; `prefixCountGeometricCriterionGoal_of_rootFlatCanonical`; `oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlatCanonical`; `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`; legacy `rootFlatEquiv` endpoints | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter; canonical-step lift closed |
+| Root-flat geometric split | `PrefixCountRootState`; `PrefixCountRootFlatReturnGoal`; `PrefixCountRootFlatCayleyLiftGoal`; `RootFlatCayleyStepCompatible`; `PrefixCountRootFlatEquivLiftGoal`; `PrefixCountRootFlatCanonicalReturnGoal`; `standardCayleySolved_of_rootFlatLayeredEquiv`; `prefixCountRootFlatCayleyLiftGoal_of_equiv`; `prefixCountGeometricCriterionGoal_of_rootFlat`; `prefixCountRootLayerEquivSucc`; `prefixCountRootStepSucc`; `prefixCountRootLayerEquivSucc_step`; `standardCayleySolved_of_rootFlatLayered_standardStepSucc`; `prefixCountRootLayerEquiv`; `prefixCountRootStep`; `prefixCountRootStep_eq_succ_cast`; `prefixCountRootLayerEquiv_step`; `standardCayleySolved_of_rootFlatLayered_standardStep`; `prefixCountGeometricCriterionGoal_of_rootFlatCanonical`; `oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_rootFlatCanonical`; `odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`; legacy `rootFlatEquiv`, `qge2Plan`, and `qge2PlanParts` endpoints | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter; canonical-step lift closed |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -263,19 +265,23 @@ PrefixCountGeometricCriterionGoal
 The global endpoint in that shape is
 `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
 
-For the `q >= 2` branch, nonnegativity has been split out further.  Since every
-signed correction entry is at least `-2`, `Qge2PlanBounds.step_nonneg` proves
-the per-cell condition from the row bound `2 <= q - tau i`.  The current
-lowest-level high-modulus endpoint therefore asks for:
+For the `q >= 2` branch, the safest current target is the direct margin
+transport interface:
 
 ```lean
-PrefixCount.MarginTransportQge2PlanGoal
+PrefixCount.MarginTransportQge2Goal
 PrefixCount.MarginTransportQeq1Goal
 PrefixCountGeometricCriterionGoal
 ```
 
 and the global endpoint in that shape is
-`odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift`.
+`odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
+
+The global `Qge2PlanBounds` split remains useful where it applies: since every
+signed correction entry is at least `-2`, `Qge2PlanBounds.step_nonneg` proves
+the per-cell condition from the row bound `2 <= q - tau i`.  It is not,
+however, a universal q>=2 target because `q = 2, r = 1` would force every
+`tau i <= 0` while `tau_sum = q-r = 1`.
 
 For the `q = 1` branch, `StepNonnegCompatibility.step_nonneg` now isolates the
 exact row-local restrictions needed for nonnegativity:
@@ -316,16 +322,18 @@ upgraded row sums match `P.sigma` and satisfy the zero-row restriction.
 The corresponding global endpoint is
 `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift`.
 
-For q>=2, the bundled margin transport goal has been split into a row-margin
-plan goal and a signed matrix realization goal.  The corresponding global
-endpoint is
-`odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift`.
+For q>=2, the direct margin transport goal should remain the preferred target
+unless the row-margin plan interface is strengthened with matrix-feasibility
+and low-delta compatibility data.  The plan/matrix split endpoint
+`odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift`
+is retained only as a compatibility adapter.
 
 The geometric criterion has also been split into root-flat return construction
-and an equivalence-level root-flat-to-Cayley coordinate lift.  Lean proves that
-the equivalence plus one-step compatibility yields the Cayley endpoint.  The
-corresponding global endpoint is
-`odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift`.
+and canonical-step root-flat-to-Cayley coordinate lift.  The preferred global
+endpoint is now
+`odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`.
+The older `rootFlatEquiv`, `qge2Plan`, and `qge2PlanParts` endpoints remain
+available as compatibility adapters.
 
 ## Verdict
 

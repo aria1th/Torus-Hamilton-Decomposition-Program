@@ -73,14 +73,13 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-The preferred lowest-level Lean endpoint currently exposes five remaining
+The preferred lowest-level Lean endpoint currently exposes four remaining
 assumptions:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
-    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
-    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+  .odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2Goal)
     (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
     (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
@@ -89,31 +88,43 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-So the active goal is to remove exactly these five preferred assumptions.
+So the active goal is to remove exactly these four preferred assumptions.
+
+The older endpoint
+`odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`
+is retained as a compatibility adapter, but it is no longer preferred.  Its
+split assumption `SignedMarginMatrixForQge2PlanGoal` asks for a signed matrix
+for every `MarginPlan` satisfying only `Qge2PlanBounds`.  That is too broad
+unless the plan interface is strengthened with matrix-feasibility constraints
+such as zero-column sum and signed row bounds.  The safe q>=2 target is
+therefore `MarginTransportQge2Goal`, which constructs the margin plan, signed
+matrix, and per-cell nonnegativity together.
+
+The intermediate `MarginTransportQge2PlanGoal` is also a compatibility layer
+rather than the preferred target: its global `Qge2PlanBounds` condition is too
+strong for cases such as `q = 2, r = 1`, where `tau_sum = q-r = 1` but
+`2 <= q - tau i` would force every `tau i <= 0`.
 
 ## Remaining Blocks
 
-1. `PrefixCount.MarginPlanQge2Goal`
+1. `PrefixCount.MarginTransportQge2Goal`
 
-   Construct q>=2 row-margin plans with `Qge2PlanBounds`, in particular the
-   rowwise lower bound `2 <= q - tau i`.
-
-2. `PrefixCount.SignedMarginMatrixForQge2PlanGoal`
-
-   Realize the q>=2 signed correction matrix for each margin plan.  The Lean
-   side now records the necessary row bounds
+   Construct q>=2 row-margin plans, signed correction matrices, and the
+   per-cell nonnegativity proof directly.  The Lean side now records the
+   necessary row bounds
    `SignedMarginMatrix.neg_two_mul_le_row_sum` and
-   `SignedMarginMatrix.row_sum_le_two_mul`, but the constructive realization
-   theorem is still open.
+   `SignedMarginMatrix.row_sum_le_two_mul`; any further split must ensure
+   those bounds and the exceptional low-delta cases are part of the plan-side
+   feasibility data.
 
-3. `PrefixCount.MarginTransportQeq1PlusFamilyGoal`
+2. `PrefixCount.MarginTransportQeq1PlusFamilyGoal`
 
    Close the high-modulus q=1 boundary.  The remaining content is the
    coordinated choice of row margins and plus sets of size `(d-1)/2`, with
    injective mates inside the plus sets.  Plus-family nonemptiness alone is
    not enough; the choices must satisfy the margin transport constraints.
 
-4. `PrefixCountRootFlatCanonicalReturnGoal`
+3. `PrefixCountRootFlatCanonicalReturnGoal`
 
    Build the canonical root-flat prefix-count certificate.  The Cayley lift
    from a canonical-step certificate is already Lean-closed; what remains is
@@ -121,7 +132,7 @@ So the active goal is to remove exactly these five preferred assumptions.
    returns, and
    `cert.schedule.step = prefixCountRootStep d m`.
 
-5. `OddCoreSmallModulusSlackPacketLiftGoal`
+4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
    Prove the uniform base-tail lift from a solved base, unit packets, and
    Hall-slack inequalities.  The current split goes through Active-Hall:
