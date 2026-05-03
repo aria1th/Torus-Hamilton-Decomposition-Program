@@ -257,6 +257,9 @@ when `m` is odd and `m >= 3`.
   boundary witness table for the global odd-tori goal, covering all `78` odd
   pairs with `3 <= d < 29` and `3 <= m < d` by seed-semigroup dimensions or
   explicit base-tail witnesses.
+- `docs/GPT55_PRO_ODD_TORI_LEAN_REQUESTS_20260503.md`: high-cost GPT-5.5 Pro
+  background requests for the two largest Lean-formalization planning blocks:
+  active Hall-slack realization and signed transportation/count branch.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
