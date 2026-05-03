@@ -249,6 +249,10 @@ when `m` is odd and `m >= 3`.
   the new dimension-generic prefix-count branch, full-vertex base-tail
   Hall-slack lift, D11-from-D5 consequence, eventual odd-dimension corollary,
   and revised Lean formalization backlog.
+- `docs/ODD_TORI_GLOBAL_FORMALIZATION_GOAL_20260503.md`: revised primary goal
+  after the v2 absorption and D2 seed audit: defer Route E, use D2/D3/D5/D7
+  seeds plus prefix-count and base-tail Hall-slack machinery, and target a Lean
+  proof for every odd dimension `d >= 3` and odd modulus `m >= 3`.
 - `docs/D7_ODD_SPECIAL_THEOREM_REQUESTS.md`: D7 handoff/proof-status notes.
 - `scripts/d5_odd_paper_verify.py`: audit-only Python verifier used for independent sanity checks.
 - `scripts/verify_4plus2_allN_bridge_cert.py`: audit verifier for the bundled `m=5,7,9` all-zero-set `4+2` bridge certificates, including canonical base `m^4` and fiber-section `m^2` rank-step checks plus product `m^6` cycle checks.
