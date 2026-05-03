@@ -137,6 +137,77 @@ theorem diff_coprime {d m : Nat} (S : SignedPrefixCounts d m)
     IntCoprime (S.diff i k) m :=
   signedVal_coprime_of_odd (S.diff_signed i k) hm
 
+theorem toParts_step_int {d m : Nat} (S : SignedPrefixCounts d m)
+    (i : Fin d) (k : Fin (d - 2)) :
+    (S.toParts.step i k : Int) = (S.delta i : Int) + S.diff i k := by
+  simp [toParts, Int.toNat_of_nonneg (S.step_nonneg i k)]
+
+theorem toParts_row_sum {d m : Nat} (S : SignedPrefixCounts d m)
+    (hd2 : 2 ≤ d) (i : Fin d) :
+    S.toParts.zero i + S.toParts.delta i
+      + (∑ k : Fin (d - 2), S.toParts.step i k) = m := by
+  apply Int.ofNat.inj
+  calc
+    (((S.toParts.zero i + S.toParts.delta i
+        + (∑ k : Fin (d - 2), S.toParts.step i k) : Nat) : Int))
+        = (S.zero i : Int) + (S.delta i : Int)
+          + (∑ k : Fin (d - 2), ((S.toParts.step i k : Nat) : Int)) := by
+            simp
+    _ = (S.zero i : Int) + (S.delta i : Int)
+          + (∑ k : Fin (d - 2), ((S.delta i : Int) + S.diff i k)) := by
+            simp_rw [S.toParts_step_int]
+    _ = (S.zero i : Int)
+          + (((d - 1 : Nat) : Int) * (S.delta i : Int))
+          + (∑ k : Fin (d - 2), S.diff i k) := by
+            rw [Finset.sum_add_distrib]
+            simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+              nsmul_eq_mul]
+            have hdsub :
+                (((d - 1 : Nat) : Int)) = (((d - 2 : Nat) : Int)) + 1 := by
+              omega
+            rw [hdsub]
+            ring
+    _ = (m : Int) := S.row_eq i
+
+theorem toParts_col_step {d m : Nat} (S : SignedPrefixCounts d m)
+    (k : Fin (d - 2)) :
+    (∑ i : Fin d, S.toParts.step i k) = m := by
+  apply Int.ofNat.inj
+  calc
+    (((∑ i : Fin d, S.toParts.step i k) : Nat) : Int)
+        = (∑ i : Fin d, ((S.toParts.step i k : Nat) : Int)) := by
+          simp
+    _ = (∑ i : Fin d, ((S.delta i : Int) + S.diff i k)) := by
+          simp_rw [S.toParts_step_int]
+    _ = (∑ i : Fin d, (S.delta i : Int)) + (∑ i : Fin d, S.diff i k) := by
+          rw [Finset.sum_add_distrib]
+    _ = (m : Int) := by
+          have hdelta : (∑ i : Fin d, (S.delta i : Int)) = (m : Int) := by
+            exact_mod_cast S.col_delta
+          rw [hdelta, S.diff_col_zero k]
+          simp
+
+theorem toParts_prim_step {d m : Nat} (S : SignedPrefixCounts d m)
+    (hm : Odd m) (i : Fin d) (k : Fin (d - 2)) :
+    IntCoprime ((S.toParts.step i k : Int) - (S.toParts.delta i : Int)) m := by
+  have hstep := S.toParts_step_int i k
+  have hdiff :
+      (S.toParts.step i k : Int) - (S.toParts.delta i : Int) = S.diff i k := by
+    rw [hstep]
+    simp
+  rw [hdiff]
+  exact signedVal_coprime_of_odd (S.diff_signed i k) hm
+
+theorem toParts_admissible {d m : Nat} (S : SignedPrefixCounts d m)
+    (hd2 : 2 ≤ d) (hm : Odd m) :
+    S.toParts.Admissible m where
+  row_sum := S.toParts_row_sum hd2
+  col_zero := S.col_zero
+  col_delta := S.col_delta
+  col_step := S.toParts_col_step
+  prim_zero := S.prim_zero
+  prim_step := S.toParts_prim_step hm
+
 end SignedPrefixCounts
 
 end PrefixCount

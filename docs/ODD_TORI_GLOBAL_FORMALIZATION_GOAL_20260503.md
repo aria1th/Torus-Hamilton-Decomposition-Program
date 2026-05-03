@@ -525,8 +525,9 @@ interval `(d/3, d/2)`.
 The first high-modulus prefix-count foundation is also formalized in
 `RoundComposite/PrefixCount.lean`.  It records the `Parts` and
 `SignedPrefixCounts` certificate shapes, proves the signed values
-`{-2,-1,1,2}` are primitive modulo every odd `m`, and closes the basic
-quotient/remainder facts needed for `m = (d-1)q + r`.
+`{-2,-1,1,2}` are primitive modulo every odd `m`, proves the bridge
+`SignedPrefixCounts.toParts_admissible`, and closes the basic quotient/remainder
+facts needed for `m = (d-1)q + r`.
 
 The same file now also records the small-block arithmetic needed by the
 base-tail theorem:
