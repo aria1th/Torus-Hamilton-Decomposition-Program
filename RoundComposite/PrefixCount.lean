@@ -1009,6 +1009,128 @@ theorem step_nonneg {d m q r : Nat}
 
 end StepNonnegCompatibility
 
+/--
+A base matrix with only `±1` entries and column sums `-1`.  The q=1 branch can
+upgrade one explicit `+1` in each column to `+2`, producing signed column sums
+zero without using an abstract matching theorem at this layer.
+-/
+structure PMOneBase (d : Nat) where
+  entry : Fin d → Fin (d - 2) → Int
+  entry_pm_one : ∀ i k, entry i k = (-1 : Int) ∨ entry i k = 1
+  col_sum_neg_one : ∀ k : Fin (d - 2), (∑ i : Fin d, entry i k) = (-1 : Int)
+
+namespace PMOneBase
+
+structure PlusOneMatching {d : Nat} (B : PMOneBase d) where
+  mate : Fin (d - 2) → Fin d
+  injective : Function.Injective mate
+  pos : ∀ k : Fin (d - 2), B.entry (mate k) k = 1
+
+def upgrade {d : Nat} (B : PMOneBase d) (μ : PlusOneMatching B)
+    (i : Fin d) (k : Fin (d - 2)) : Int :=
+  B.entry i k + if i = μ.mate k then (1 : Int) else 0
+
+theorem upgrade_eq_two_of_mate {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (k : Fin (d - 2)) :
+    B.upgrade μ (μ.mate k) k = 2 := by
+  simp [upgrade, μ.pos k]
+
+theorem upgrade_eq_entry_of_ne {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) {i : Fin d} {k : Fin (d - 2)}
+    (h : i ≠ μ.mate k) :
+    B.upgrade μ i k = B.entry i k := by
+  simp [upgrade, h]
+
+theorem upgrade_signed {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (i : Fin d) (k : Fin (d - 2)) :
+    IsSignedVal (B.upgrade μ i k) := by
+  by_cases h : i = μ.mate k
+  · subst i
+    simp [upgrade, μ.pos k, IsSignedVal, signedVals]
+  · rcases B.entry_pm_one i k with hneg | hpos
+    · simp [upgrade, h, hneg, IsSignedVal, signedVals]
+    · simp [upgrade, h, hpos, IsSignedVal, signedVals]
+
+theorem upgrade_col_sum_zero {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (k : Fin (d - 2)) :
+    (∑ i : Fin d, B.upgrade μ i k) = 0 := by
+  calc
+    (∑ i : Fin d, B.upgrade μ i k)
+        = (∑ i : Fin d, B.entry i k)
+            + ∑ i : Fin d, (if i = μ.mate k then (1 : Int) else 0) := by
+            simp [upgrade, Finset.sum_add_distrib]
+    _ = (-1 : Int) + 1 := by
+            simp [B.col_sum_neg_one k]
+    _ = 0 := by norm_num
+
+theorem upgrade_ge_neg_one {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) (i : Fin d) (k : Fin (d - 2)) :
+    (-1 : Int) ≤ B.upgrade μ i k := by
+  have hentry : (-1 : Int) ≤ B.entry i k := by
+    rcases B.entry_pm_one i k with hneg | hpos
+    · simp [hneg]
+    · simp [hpos]
+  have hind : 0 ≤ (if i = μ.mate k then (1 : Int) else 0) := by
+    by_cases h : i = μ.mate k <;> simp [h]
+  unfold upgrade
+  linarith
+
+theorem upgrade_nonneg_of_entry_nonneg {d : Nat} (B : PMOneBase d)
+    (μ : PlusOneMatching B) {i : Fin d} {k : Fin (d - 2)}
+    (hentry : 0 ≤ B.entry i k) :
+    0 ≤ B.upgrade μ i k := by
+  have hind : 0 ≤ (if i = μ.mate k then (1 : Int) else 0) := by
+    by_cases h : i = μ.mate k <;> simp [h]
+  unfold upgrade
+  linarith
+
+end PMOneBase
+
+/--
+The matched `±1` q=1 matrix after upgrading one explicit `+1` in every column.
+The row-sum field is stated after upgrade so it can be consumed directly by
+`SignedMarginMatrix`.
+-/
+structure MatchedPMOneMatrix (d : Nat) (sigma : Fin d → Int) where
+  base : PMOneBase d
+  matching : PMOneBase.PlusOneMatching base
+  row_sum :
+    ∀ i : Fin d,
+      (∑ k : Fin (d - 2), base.upgrade matching i k) = sigma i
+
+namespace MatchedPMOneMatrix
+
+def eps {d : Nat} {sigma : Fin d → Int}
+    (M : MatchedPMOneMatrix d sigma) :
+    Fin d → Fin (d - 2) → Int :=
+  M.base.upgrade M.matching
+
+def toSignedMarginMatrix {d : Nat} {sigma : Fin d → Int}
+    (M : MatchedPMOneMatrix d sigma) :
+    SignedMarginMatrix d sigma where
+  eps := M.eps
+  eps_signed := M.base.upgrade_signed M.matching
+  row_sum := M.row_sum
+  col_sum := M.base.upgrade_col_sum_zero M.matching
+
+theorem stepNonnegCompatibility {d m q r : Nat}
+    {P : MarginPlan d m q r}
+    (M : MatchedPMOneMatrix d P.sigma)
+    (hZeroRows :
+      ∀ i k, (q : Int) - P.tau i = 0 → 0 ≤ M.base.entry i k) :
+    StepNonnegCompatibility P M.toSignedMarginMatrix where
+  eps_nonneg_of_delta_zero := by
+    intro i k hdelta
+    have hentry := hZeroRows i k hdelta
+    simpa [toSignedMarginMatrix, eps] using
+      M.base.upgrade_nonneg_of_entry_nonneg M.matching hentry
+  eps_ge_neg_one_of_delta_one := by
+    intro i k _hdelta
+    simpa [toSignedMarginMatrix, eps] using
+      M.base.upgrade_ge_neg_one M.matching i k
+
+end MatchedPMOneMatrix
+
 def MarginTransportQge2PlanGoal : Prop :=
   ∀ {d m q r : Nat},
     Odd d → 5 ≤ d → Odd m →
@@ -1044,6 +1166,15 @@ def MarginTransportQeq1CompatibleGoal : Prop :=
       ∃ E : SignedMarginMatrix d P.sigma,
         StepNonnegCompatibility P E
 
+def MarginTransportQeq1MatchedPMOneGoal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → q = 1 →
+    ∃ P : MarginPlan d m q r,
+      ∃ M : MatchedPMOneMatrix d P.sigma,
+        ∀ i k, (q : Int) - P.tau i = 0 → 0 ≤ M.base.entry i k
+
 theorem marginTransportQge2Goal_of_plan
     (hPlan : MarginTransportQge2PlanGoal) :
     MarginTransportQge2Goal := by
@@ -1059,6 +1190,14 @@ theorem marginTransportQeq1Goal_of_compatible
   rcases hCompatGoal hdodd hd5 hmodd hmqr hrlt hrpos hq with
     ⟨P, E, hCompat⟩
   exact ⟨P, E, hCompat.step_nonneg⟩
+
+theorem marginTransportQeq1CompatibleGoal_of_matchedPMOne
+    (hMatched : MarginTransportQeq1MatchedPMOneGoal) :
+    MarginTransportQeq1CompatibleGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hMatched hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, M, hZeroRows⟩
+  exact ⟨P, M.toSignedMarginMatrix, M.stepNonnegCompatibility hZeroRows⟩
 
 theorem transportQge2Goal_of_margin
     (hMargin : MarginTransportQge2Goal) :

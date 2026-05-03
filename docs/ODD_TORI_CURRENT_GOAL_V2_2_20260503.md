@@ -57,9 +57,9 @@ from the following four remaining blocks:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift
+  .odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1MatchedPMOne_geometry_and_small_packet_lift
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
-    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1MatchedPMOneGoal)
     (hGeom : PrefixCountGeometricCriterionGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -78,13 +78,13 @@ So the active Lean goal is to remove exactly these four assumptions.
    `Qge2PlanBounds.step_nonneg` supplies per-cell nonnegativity from the
    universal lower bound `eps >= -2`.
 
-2. `PrefixCount.MarginTransportQeq1CompatibleGoal`
+2. `PrefixCount.MarginTransportQeq1MatchedPMOneGoal`
 
-   The high-modulus boundary branch with `q = 1`.  The remaining content is to
-   construct row margins and signed corrections satisfying
-   `StepNonnegCompatibility`: rows with `q - tau = 0` admit only nonnegative
-   correction entries, rows with `q - tau = 1` avoid `-2`, and rows with
-   `q - tau >= 2` are automatic.
+   The high-modulus boundary branch with `q = 1`.  This is now reduced to a
+   matched `±1` certificate: construct row margins, a `±1` base matrix with
+   column sums `-1`, and an explicit `+1` matching so that upgrading the matched
+   entries to `+2` gives the required signed correction matrix.  Rows with
+   `q - tau = 0` must see only nonnegative base entries.
 
 3. `PrefixCountGeometricCriterionGoal`
 
@@ -113,6 +113,7 @@ The following are already available as Lean-checked support for this goal:
 - Margin-facing transport adapters.
 - Q>=2 nonnegativity adapter.
 - Q=1 compatibility-to-nonnegativity adapter.
+- Q=1 matched `±1` matrix adapter.
 
 ## Non-Goals
 
@@ -130,4 +131,5 @@ Close all odd `m >= 3` and all `d >= 2` by proving the two uniform branches
 that remain after the D2/product wrapper and odd seed reductions: the
 high-modulus prefix-count construction and the small-modulus Hall-slack
 packet-lift construction, with the high branch currently split into q>=2
-margin plans, q=1 compatible margins, and the geometric prefix-count criterion.
+margin plans, q=1 matched `±1` margins, and the geometric prefix-count
+criterion.

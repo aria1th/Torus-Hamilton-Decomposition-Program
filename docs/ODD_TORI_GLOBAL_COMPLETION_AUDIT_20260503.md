@@ -53,6 +53,7 @@ boundary table as an input theorem or Lean dependency.
 | Margin-facing transport split | `PrefixCount.MarginTransportQge2Goal`; `PrefixCount.MarginTransportQeq1Goal`; `PrefixCount.transportQge2Goal_of_margin`; `PrefixCount.transportQeq1Goal_of_margin`; `PrefixCount.admissiblePartsCountBranchGoal_of_margin`; `oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry`; `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q>=2 transport nonnegativity split | `PrefixCount.signedVal_ge_neg_two`; `PrefixCount.SignedMarginMatrix.eps_ge_neg_two`; `PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero`; `PrefixCount.MarginPlan.sigma_sum_eq`; `PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum`; `PrefixCount.Qge2PlanBounds`; `PrefixCount.Qge2PlanBounds.step_nonneg`; `PrefixCount.MarginTransportQge2PlanGoal`; `PrefixCount.marginTransportQge2Goal_of_plan`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | Q=1 transport compatibility split | `PrefixCount.StepNonnegCompatibility`; `PrefixCount.StepNonnegCompatibility.step_nonneg`; `PrefixCount.MarginTransportQeq1CompatibleGoal`; `PrefixCount.marginTransportQeq1Goal_of_compatible`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Compat_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
+| Q=1 matched `±1` matrix split | `PrefixCount.PMOneBase`; `PrefixCount.PMOneBase.PlusOneMatching`; `PrefixCount.PMOneBase.upgrade_signed`; `PrefixCount.PMOneBase.upgrade_col_sum_zero`; `PrefixCount.MatchedPMOneMatrix`; `PrefixCount.MatchedPMOneMatrix.toSignedMarginMatrix`; `PrefixCount.MatchedPMOneMatrix.stepNonnegCompatibility`; `PrefixCount.MarginTransportQeq1MatchedPMOneGoal`; `PrefixCount.marginTransportQeq1CompatibleGoal_of_matchedPMOne`; `oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1MatchedPMOne_and_geometry`; `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1MatchedPMOne_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -283,6 +284,18 @@ q - tau >= 2 -> automatic from eps >= -2
 
 The corresponding global endpoint is
 `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift`.
+
+The q=1 branch has also been reduced to the matched `±1` certificate shape:
+
+```text
+PMOneBase:             entries are ±1 and every column sums to -1
+PlusOneMatching:       one explicit +1 is chosen in each column
+matched upgrade:       chosen +1 entries become +2, so column sums become 0
+zero-row compatibility: rows with q - tau = 0 have no negative base entries
+```
+
+The corresponding global endpoint is
+`odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1MatchedPMOne_geometry_and_small_packet_lift`.
 
 ## Verdict
 
