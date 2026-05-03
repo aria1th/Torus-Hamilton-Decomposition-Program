@@ -1504,6 +1504,14 @@ theorem marginTransportQeq1Goal_of_compatible
     ⟨P, E, hCompat⟩
   exact ⟨P, E, hCompat.step_nonneg⟩
 
+theorem marginTransportQeq1CompatibleGoal_of_margin
+    (hMargin : MarginTransportQeq1Goal) :
+    MarginTransportQeq1CompatibleGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hMargin hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hstep⟩
+  exact ⟨P, E, StepNonnegCompatibility.of_step_nonneg hstep⟩
+
 theorem marginTransportQeq1CompatibleGoal_of_matchedPMOne
     (hMatched : MarginTransportQeq1MatchedPMOneGoal) :
     MarginTransportQeq1CompatibleGoal := by
