@@ -878,5 +878,47 @@ def toTransport {d m q r : Nat}
 
 end MarginPlan
 
+def MarginTransportQge2Goal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    ∃ P : MarginPlan d m q r,
+      ∃ E : SignedMarginMatrix d P.sigma,
+        ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k
+
+def MarginTransportQeq1Goal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → q = 1 →
+    ∃ P : MarginPlan d m q r,
+      ∃ E : SignedMarginMatrix d P.sigma,
+        ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k
+
+theorem transportQge2Goal_of_margin
+    (hMargin : MarginTransportQge2Goal) :
+    TransportQge2Goal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hMargin hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hstep⟩
+  exact ⟨P.toTransport E hstep⟩
+
+theorem transportQeq1Goal_of_margin
+    (hMargin : MarginTransportQeq1Goal) :
+    TransportQeq1Goal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hMargin hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hstep⟩
+  exact ⟨P.toTransport E hstep⟩
+
+theorem admissiblePartsCountBranchGoal_of_margin
+    (hQge2 : MarginTransportQge2Goal)
+    (hQeq1 : MarginTransportQeq1Goal) :
+    AdmissiblePartsCountBranchGoal :=
+  admissiblePartsCountBranchGoal_of_transports
+    (transportQge2Goal_of_margin hQge2)
+    (transportQeq1Goal_of_margin hQeq1)
+
 end PrefixCount
 end RoundComposite

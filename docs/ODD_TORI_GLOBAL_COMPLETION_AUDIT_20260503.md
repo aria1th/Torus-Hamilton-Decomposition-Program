@@ -50,6 +50,7 @@ boundary table as an input theorem or Lean dependency.
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | High-modulus branch decomposition | `PrefixCountLayerRealizationGoal`; `PrefixCountGeometricCriterionGoal`; `oddCoreHighModulusPrefixCountGoal_of_prefixCount`; `oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry`; `oddCoreHighModulusPrefixCountGoal_of_transports_and_geometry` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter |
 | Dense matrix layer realization | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.balancedMatrixLayerRealization_zero`; `PrefixCount.matrixBalanced_exists_positive_perm`; `PrefixCount.peelLayer_balanced`; `PrefixCount.balancedMatrixLayerRealizationGoal`; `PrefixCount.matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Closed |
+| Margin-facing transport split | `PrefixCount.MarginTransportQge2Goal`; `PrefixCount.MarginTransportQeq1Goal`; `PrefixCount.transportQge2Goal_of_margin`; `PrefixCount.transportQeq1Goal_of_margin`; `PrefixCount.admissiblePartsCountBranchGoal_of_margin`; `oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry`; `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -241,6 +242,19 @@ theorem RoundComposite.Concrete
 
 It requires the two transport goals, the geometric prefix-count criterion, and
 the small-modulus Hall-slack packet lift.
+
+The transport goals are further decomposed by
+`PrefixCount.admissiblePartsCountBranchGoal_of_margin`.  Thus a lower-level
+high-branch path now asks for:
+
+```lean
+PrefixCount.MarginTransportQge2Goal
+PrefixCount.MarginTransportQeq1Goal
+PrefixCountGeometricCriterionGoal
+```
+
+The global endpoint in that shape is
+`odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
 
 ## Verdict
 

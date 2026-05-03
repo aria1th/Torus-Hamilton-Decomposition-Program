@@ -236,7 +236,10 @@ when `m` is odd and `m >= 3`.
   is correspondingly reduced to admissible parts plus the geometric
   prefix-count Hamilton criterion, and then to the two transport goals
   `PrefixCount.TransportQge2Goal`/`PrefixCount.TransportQeq1Goal` plus that
-  geometric criterion.
+  geometric criterion.  The transport goals are further exposed through
+  `PrefixCount.MarginTransportQge2Goal` and
+  `PrefixCount.MarginTransportQeq1Goal`, which ask for row margin plans, signed
+  correction matrices, and per-cell nonnegativity.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the

@@ -148,6 +148,13 @@ prefixCountLayerRealizationGoal
 oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_transports_and_geometry
 odd_modulus_tori_all_dimensions_of_transports_geometry_and_small_packet_lift
+PrefixCount.MarginTransportQge2Goal
+PrefixCount.MarginTransportQeq1Goal
+PrefixCount.transportQge2Goal_of_margin
+PrefixCount.transportQeq1Goal_of_margin
+PrefixCount.admissiblePartsCountBranchGoal_of_margin
+oddCoreHighModulusPrefixCountGoal_of_margins_and_geometry
+odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
@@ -161,6 +168,15 @@ from two ingredients:
 ```text
 signed transport construction for q >= 2 and q = 1
 + geometric prefix-count Hamilton criterion
+```
+
+The transport construction is now also exposed through a margin-facing
+interface:
+
+```text
+row margin plan
++ signed correction matrix
++ per-cell nonnegativity
 ```
 
 ### B. Small-Modulus Hall-Slack Packet-Lift Theorem
@@ -212,6 +228,10 @@ still open.
   the geometric criterion to `OddCoreHighModulusPrefixCountGoal`.
 - Top-level conditional dispatcher from those transport/geometry inputs plus
   the small-modulus Hall-slack packet lift to the all-dimensional theorem.
+- Margin-facing transport interfaces and adapters from margin plans plus signed
+  correction matrices to the two transport goals.
+- Top-level conditional dispatcher from margin-facing transport inputs,
+  geometry, and small packet lift to the all-dimensional theorem.
 - Matrix-layer realization for balanced dense count matrices, including the
   zero case, Hall extraction of a positive permutation, one-layer peeling, and
   induction on the row/column degree.

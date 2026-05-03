@@ -240,6 +240,14 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   These reduce the current global theorem to the two transport constructions,
   the geometric prefix-count criterion, and the small-modulus Hall-slack
   packet lift.
+- Margin-facing transport split:
+  `PrefixCount.MarginTransportQge2Goal`,
+  `PrefixCount.MarginTransportQeq1Goal`,
+  `PrefixCount.transportQge2Goal_of_margin`,
+  `PrefixCount.transportQeq1Goal_of_margin`, and
+  `PrefixCount.admissiblePartsCountBranchGoal_of_margin`.  The corresponding
+  global endpoint is
+  `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
 
 ## Revised Goal in One Sentence
 
