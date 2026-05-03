@@ -1415,6 +1415,56 @@ theorem upgraded_row_sum_of_mate {d : Nat} (F : PlusFamily d)
     linarith
   rw [hcardInt]
 
+theorem rowMateSet_card_le_one {d : Nat} (F : PlusFamily d)
+    (i : Fin d) :
+    (F.rowMateSet i).card ≤ 1 := by
+  rw [Finset.card_le_one]
+  intro k hk l hl
+  have hik : i = F.mate k := by
+    simpa [rowMateSet] using hk
+  have hil : i = F.mate l := by
+    simpa [rowMateSet] using hl
+  exact F.mate_injective (hik.symm.trans hil)
+
+theorem rowMateSet_card_eq_one_of_mate {d : Nat} (F : PlusFamily d)
+    (k : Fin (d - 2)) :
+    (F.rowMateSet (F.mate k)).card = 1 := by
+  have hpos : 1 ≤ (F.rowMateSet (F.mate k)).card := by
+    rw [Finset.one_le_card]
+    exact ⟨k, by simp [rowMateSet]⟩
+  exact Nat.le_antisymm (F.rowMateSet_card_le_one (F.mate k)) hpos
+
+theorem rowMateSet_card_eq_zero_of_not_mate {d : Nat} (F : PlusFamily d)
+    {i : Fin d} (hnot : ∀ k : Fin (d - 2), i ≠ F.mate k) :
+    (F.rowMateSet i).card = 0 := by
+  rw [Finset.card_eq_zero]
+  ext k
+  simp [rowMateSet, hnot k]
+
+theorem upgraded_row_sum_of_not_mate {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) {i : Fin d}
+    (hnot : ∀ k : Fin (d - 2), i ≠ F.mate k) :
+    (∑ k : Fin (d - 2), (F.toBase hdodd).upgrade (F.toMatching hdodd) i k)
+      = (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) := by
+  rw [F.upgraded_row_sum hdodd i, F.rowMateSet_card_eq_zero_of_not_mate hnot]
+  simp
+
+theorem upgraded_row_sum_ne_zero_of_not_mate {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (hd5 : 5 ≤ d) {i : Fin d}
+    (hnot : ∀ k : Fin (d - 2), i ≠ F.mate k) :
+    (∑ k : Fin (d - 2), (F.toBase hdodd).upgrade (F.toMatching hdodd) i k)
+      ≠ 0 := by
+  intro hzero
+  have hrow := F.upgraded_row_sum_of_not_mate hdodd hnot
+  rw [hzero] at hrow
+  have hInt :
+      (2 * ((F.rowPlusSet i).card : Int)) = ((d - 2 : Nat) : Int) := by
+    linarith
+  have hNat : 2 * (F.rowPlusSet i).card = d - 2 := by
+    exact_mod_cast hInt
+  rcases hdodd with ⟨a, ha⟩
+  omega
+
 theorem exists_rowMateSet_card_eq_zero {d : Nat} (F : PlusFamily d)
     (hd5 : 5 ≤ d) :
     ∃ i : Fin d, (F.rowMateSet i).card = 0 := by

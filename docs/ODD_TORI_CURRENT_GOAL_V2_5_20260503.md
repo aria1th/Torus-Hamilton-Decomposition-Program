@@ -133,6 +133,12 @@ not as the preferred target.  Lean records the obstruction to the global
    nontrivial row-margin/zero choice or a slightly richer correction interface
    for this boundary.
 
+   The local form is also Lean-recorded: `PlusFamily.rowMateSet_card_le_one`,
+   `PlusFamily.rowMateSet_card_eq_one_of_mate`,
+   `PlusFamily.rowMateSet_card_eq_zero_of_not_mate`,
+   `PlusFamily.upgraded_row_sum_of_not_mate`, and
+   `PlusFamily.upgraded_row_sum_ne_zero_of_not_mate`.
+
 3. `PrefixCountRootFlatCanonicalReturnGoal`
 
    Build the canonical root-flat prefix-count certificate.  The Cayley lift
@@ -163,7 +169,7 @@ not as the preferred target.  Lean records the obstruction to the global
 - Q=1 range arithmetic, compatibility, matched `+/-1`, plus-family adapters,
   row-plus-set formulas, row-mate-set formulas, upgraded row sums, and
   matched upgraded row sums, plus the no-all-zero upgraded-row obstruction for
-  odd `d >= 5`.
+  odd `d >= 5` and its row-local non-mate form.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
   Hall-realization interface, and the sanity converse from symbolings back to
