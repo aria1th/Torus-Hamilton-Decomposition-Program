@@ -32,6 +32,68 @@ structure CountMatrix {T : Nat} {X C : Type*}
   row_sum : ∀ c : C, (∑ σ : Fin T, val c σ) = I.colorDegree c
   col_sum : ∀ σ : Fin T, (∑ c : C, val c σ) = Fintype.card X
 
+/-- Desired residues for active symbol counts. -/
+structure ResidueSpec (m T : Nat) (C : Type*) [Fintype C] where
+  target : C → Fin T → ZMod m
+
+namespace ResidueSpec
+
+def RowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
+  ∀ c : C, (I.colorDegree c : ZMod m) = ∑ σ : Fin T, R.target c σ
+
+def ColCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (_I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
+  ∀ σ : Fin T, (Fintype.card X : ZMod m) = ∑ c : C, R.target c σ
+
+end ResidueSpec
+
+namespace CountMatrix
+
+def HasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (R : ResidueSpec m T C) : Prop :=
+  ∀ c σ, (M.val c σ : ZMod m) = R.target c σ
+
+theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    {R : ResidueSpec m T C} (hres : M.HasResidues R) :
+    R.RowCompatible I := by
+  intro c
+  calc
+    (I.colorDegree c : ZMod m)
+        = ((∑ σ : Fin T, M.val c σ : Nat) : ZMod m) := by
+            rw [M.row_sum c]
+    _ = ∑ σ : Fin T, (M.val c σ : ZMod m) := by
+            simp
+    _ = ∑ σ : Fin T, R.target c σ := by
+            apply Finset.sum_congr rfl
+            intro σ _hσ
+            exact hres c σ
+
+theorem colCompatible_of_hasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    {R : ResidueSpec m T C} (hres : M.HasResidues R) :
+    R.ColCompatible I := by
+  intro σ
+  calc
+    (Fintype.card X : ZMod m)
+        = ((∑ c : C, M.val c σ : Nat) : ZMod m) := by
+            rw [M.col_sum σ]
+    _ = ∑ c : C, (M.val c σ : ZMod m) := by
+            simp
+    _ = ∑ c : C, R.target c σ := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            exact hres c σ
+
+end CountMatrix
+
 /-- A symboling assigns each active set bijectively to the `T` active symbols. -/
 structure Symboling {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
@@ -151,6 +213,22 @@ def Realizes {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) (M : C → Fin T → Nat) : Prop :=
   ∀ c σ, Φ.count c σ = M c σ
+
+def HasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) : Prop :=
+  ∀ c σ, (Φ.count c σ : ZMod m) = R.target c σ
+
+theorem hasResidues_of_realizes {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {Φ : Symboling I} {M : CountMatrix I}
+    {R : ResidueSpec m T C}
+    (hreal : Φ.Realizes M.val) (hres : M.HasResidues R) :
+    Φ.HasResidues R := by
+  intro c σ
+  rw [hreal c σ]
+  exact hres c σ
 
 end Symboling
 

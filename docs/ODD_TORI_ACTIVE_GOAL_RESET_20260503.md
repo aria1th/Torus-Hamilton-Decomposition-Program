@@ -186,8 +186,8 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `D11SmallModulusFromD5BaseGoal`.
 - Active-Hall symboling foundation for the small branch:
   `ActiveHall.Incidence`, `ActiveHall.Symboling`, `ActiveHall.CountMatrix`,
-  `ActiveHall.Symboling.count_row_sum`, and
-  `ActiveHall.Symboling.count_col_sum`.
+  `ActiveHall.ResidueSpec`, `ActiveHall.Symboling.count_row_sum`,
+  `ActiveHall.Symboling.count_col_sum`, and residue compatibility lemmas.
 - Prefix-count foundation module `RoundComposite/PrefixCount.lean`, including
   `Parts`, `SignedPrefixCounts`, `signedVal_coprime_of_odd`,
   `SignedPrefixCounts.toParts_admissible`, `one_le_div_pred_of_le`, and
