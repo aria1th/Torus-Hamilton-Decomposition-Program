@@ -50,6 +50,39 @@ theorem oddUniformSolved
 
 end SolvedBySeedSemigroup
 
+def twoThreeBlockParts (b d : Nat) : List Nat :=
+  let r := d - 2 * b
+  List.replicate r 3 ++ List.replicate (b - r) 2
+
+theorem twoThreeBlockParts_spec {b d : Nat}
+    (h : 2 * b < d ∧ d ≤ 3 * b) :
+    (twoThreeBlockParts b d).length = b ∧
+    (twoThreeBlockParts b d).sum = d ∧
+    ∀ k, k ∈ twoThreeBlockParts b d → k = 2 ∨ k = 3 := by
+  let r := d - 2 * b
+  have hrb : r ≤ b := by omega
+  have hd : d = 2 * b + r := by omega
+  refine ⟨?_, ?_, ?_⟩
+  · simp [twoThreeBlockParts]
+    omega
+  · simp [twoThreeBlockParts, List.sum_replicate]
+    omega
+  · intro k hk
+    simp [twoThreeBlockParts] at hk
+    rcases hk with hk | hk
+    · exact Or.inr hk.2
+    · exact Or.inl hk.2
+
+theorem twoThreeBlockParts_tail_gt_base {b d : Nat}
+    (h : 2 * b < d ∧ d ≤ 3 * b) :
+    b < d - b := by
+  omega
+
+theorem twoThreeBlockParts_tail_le_two_base {b d : Nat}
+    (h : 2 * b < d ∧ d ≤ 3 * b) :
+    d - b ≤ 2 * b := by
+  omega
+
 namespace Concrete
 
 theorem standard_cayley_odd_uniform_of_seed_semigroup

@@ -481,6 +481,22 @@ The proof uses the interval cover supplied by the two seed-semigroup families
 `3 * 2^n` and `4 * 2^n`.  Every `d >= 13` has one of these bases in the
 interval `(d/3, d/2)`.
 
+The same file now also records the small-block arithmetic needed by the
+base-tail theorem:
+
+```lean
+def RoundComposite.twoThreeBlockParts (b d : Nat) : List Nat
+
+theorem RoundComposite.twoThreeBlockParts_spec
+    {b d : Nat} (h : 2 * b < d ∧ d <= 3 * b) :
+    (twoThreeBlockParts b d).length = b ∧
+    (twoThreeBlockParts b d).sum = d ∧
+    ∀ k, k ∈ twoThreeBlockParts b d → k = 2 ∨ k = 3
+```
+
+Thus the range condition `2*b < d <= 3*b` has already been lowered to the
+Lean-level statement that `d` is a sum of `b` blocks, each of size `2` or `3`.
+
 The remaining public small-modulus branch is:
 
 ```lean

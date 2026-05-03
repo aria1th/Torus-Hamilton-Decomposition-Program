@@ -50,6 +50,7 @@ boundary table as an input theorem or Lean dependency.
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Seed/product base availability with `2*b < d <= 3*b` | `seed_semigroup_base_available` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
+| Convert `2*b < d <= 3*b` to `b` blocks of size `2` or `3` | `twoThreeBlockParts_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Convert seed-semigroup base to solved base using D2/D3 | `standard_cayley_odd_uniform_of_seed_semigroup` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Keep `d < 29` table as audit/regression only | `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md` | Documentation explicitly marks it non-spine | Satisfied |
 
