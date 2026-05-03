@@ -223,7 +223,11 @@ when `m` is odd and `m >= 3`.
   adapter from the seed-semigroup base availability lemma to the small branch.
   It also exposes `OddCoreSmallModulusOfUnitPacketsGoal`, a packet-level
   interface for the heavy base-tail theorem, and adapts it back to
-  `OddCoreSmallModulusOfBaseGoal`.
+  `OddCoreSmallModulusOfBaseGoal`.  For the high-modulus branch it records
+  `PrefixCountLayerRealizationGoal`, `PrefixCountGeometricCriterionGoal`, and
+  `oddCoreHighModulusPrefixCountGoal_of_prefixCount`, splitting the
+  prefix-count endpoint into admissible parts, layer-permutation realization,
+  and the geometric Hamilton criterion.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the
@@ -325,6 +329,12 @@ when `m` is odd and `m >= 3`.
   proof for every dimension `d >= 2` and odd modulus `m >= 3`, with even
   dimensions handled by the D2/product wrapper and the main construction
   concentrated in the odd-dimensional core.
+- `docs/ODD_TORI_CURRENT_GOAL_V2_1_20260503.md`: current concise goal reset
+  after the `d < 29` boundary review.  It records that the finite boundary
+  table is audit/regression evidence only, that `(13,3)` is absorbed by the
+  uniform small-modulus base-tail pattern, and that the active Lean endpoint is
+  conditional only on the high-modulus prefix-count theorem and the
+  small-modulus Hall-slack packet-lift theorem.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

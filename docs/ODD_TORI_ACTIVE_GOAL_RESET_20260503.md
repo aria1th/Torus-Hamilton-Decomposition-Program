@@ -6,6 +6,9 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
+Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_1_20260503.md`.
+That note is the preferred short reference after the `d < 29` boundary review.
+
 Correction after the first reset: the manuscript-facing small branch must
 explicitly expose the Hall-slack hypotheses `d - b > b` and
 `m^b > m*d*(d-b)`.  Packet data alone is a useful strong interface, but it is
@@ -203,6 +206,11 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `TransportQge2Goal`, `TransportQeq1Goal`,
   `AdmissiblePartsCountBranchGoal`, and
   `admissiblePartsCountBranchGoal_of_transports`.
+- High-branch closure adapter:
+  `PrefixCountLayerRealizationGoal`, `PrefixCountGeometricCriterionGoal`, and
+  `oddCoreHighModulusPrefixCountGoal_of_prefixCount`, which reduce
+  `OddCoreHighModulusPrefixCountGoal` to admissible parts, layer-permutation
+  realization, and the geometric prefix-count Hamilton criterion.
 
 ## Revised Goal in One Sentence
 

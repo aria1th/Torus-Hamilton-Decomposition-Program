@@ -32,6 +32,18 @@ def OddCoreHighModulusPrefixCountGoal : Prop :=
   ∀ {d m : Nat}, Odd d → 5 ≤ d → Odd m → d ≤ m →
     StandardCayleySolved d m
 
+def PrefixCountLayerRealizationGoal : Prop :=
+  ∀ {d m : Nat} (hd2 : 2 ≤ d) (C : PrefixCount.Parts d),
+    C.Admissible m →
+    Nonempty (PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+
+def PrefixCountGeometricCriterionGoal : Prop :=
+  ∀ {d m : Nat} (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
+    StandardCayleySolved d m
+
 def D11SmallModulusFromD5BaseGoal : Prop :=
   ∀ {m : Nat}, 3 ≤ m → Odd m → m < 11 →
     StandardCayleySolved 5 m →
@@ -119,6 +131,17 @@ theorem oddCoreHighModulusPrefixCount_of_goal
     OddCoreHighModulusPrefixCount StandardCayleySolved := by
   intro d m hdodd hd5 _hm3 hmodd hdm
   exact hHigh hdodd hd5 hmodd hdm
+
+theorem oddCoreHighModulusPrefixCountGoal_of_prefixCount
+    (hParts : PrefixCount.AdmissiblePartsCountBranchGoal)
+    (hLayers : PrefixCountLayerRealizationGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal := by
+  intro d m hdodd hd5 hmodd hdm
+  have hd2 : 2 ≤ d := by omega
+  rcases hParts hdodd hmodd hd5 hdm with ⟨C, hC⟩
+  rcases hLayers hd2 C hC with ⟨L⟩
+  exact hGeom hd2 hdodd hd5 hmodd hdm hC L
 
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :

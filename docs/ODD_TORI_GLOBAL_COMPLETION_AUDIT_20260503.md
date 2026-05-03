@@ -48,6 +48,7 @@ boundary table as an input theorem or Lean dependency.
 | Small odd dimension `d = 9` | `standard_cayley_odd_uniform_9_of_3` | Derived from `D3 * D3` in `OddCore.lean` | Closed |
 | Small odd dimension `d = 11` | `standard_cayley_odd_uniform_11_of_high_and_d5_base_tail` | Splits into prefix-count for `m >= 11` and D5-base tail lift for `m < 11` | Conditional |
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
+| High-modulus branch decomposition | `PrefixCountLayerRealizationGoal`; `PrefixCountGeometricCriterionGoal`; `oddCoreHighModulusPrefixCountGoal_of_prefixCount` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -198,6 +199,20 @@ Once the three refined branch goals are formalized, or equivalently once
 `hHigh` and `hSmallPacket` are formalized, the current dispatcher yields the
 target all-dimensional odd-modulus theorem without using the finite boundary
 table.
+
+The high branch is now further split at Lean level.  The theorem
+`oddCoreHighModulusPrefixCountGoal_of_prefixCount` proves
+`OddCoreHighModulusPrefixCountGoal` from:
+
+```lean
+PrefixCount.AdmissiblePartsCountBranchGoal
+PrefixCountLayerRealizationGoal
+PrefixCountGeometricCriterionGoal
+```
+
+So the remaining high-modulus work is no longer a single opaque block: it is
+admissible parts construction, layer-permutation realization, and the geometric
+prefix-count Hamilton criterion.
 
 ## Verdict
 
