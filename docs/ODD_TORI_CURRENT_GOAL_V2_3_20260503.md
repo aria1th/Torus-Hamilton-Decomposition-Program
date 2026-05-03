@@ -108,7 +108,10 @@ Hall-slack packet lift.
    Close the high-modulus q=1 boundary through plus-family certificates.  The
    local target is now a family of plus sets of size `(d-1)/2`, with injective
    mates inside the plus sets, so that the matched `±1` matrix upgrades to the
-   required nonnegative correction.
+   required nonnegative correction.  The q=1 range arithmetic is Lean-closed
+   through `quotient_eq_one_range_of_mqr` and
+   `quotient_eq_one_m_eq_pred_add`; the remaining content is the actual
+   coordinated choice of row margins and plus sets.
 
 4. `PrefixCountRootFlatCanonicalReturnGoal`
 
@@ -170,7 +173,7 @@ Already Lean-checked support includes:
 - Dense matrix layer realization for balanced count matrices.
 - Prefix-count quotient/remainder interfaces and margin-facing adapters.
 - Q>=2 nonnegativity adapter.
-- Q=1 compatibility, matched `±1`, and plus-family adapters.
+- Q=1 range arithmetic, compatibility, matched `±1`, and plus-family adapters.
 - Root-flat split of the prefix-count geometric criterion, including the
   equivalence-to-Cayley lift adapter, the successor-indexed canonical root-step
   Cayley lift, the `d`-indexed canonical root-step wrapper, and the preferred

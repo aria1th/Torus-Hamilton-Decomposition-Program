@@ -533,6 +533,21 @@ theorem quotient_eq_one_upper_bound
   have hm_eq := eq_pred_add_mod_of_div_eq_one (d := d) (m := m) hq
   omega
 
+theorem quotient_eq_one_range_of_mqr
+    {d m q r : Nat}
+    (hmqr : m = (d - 1) * q + r)
+    (hrlt : r < d - 1) (hrpos : 0 < r) (hq : q = 1) :
+    d ≤ m ∧ m ≤ 2 * d - 3 := by
+  subst q
+  constructor <;> omega
+
+theorem quotient_eq_one_m_eq_pred_add
+    {d m q r : Nat}
+    (hmqr : m = (d - 1) * q + r) (hq : q = 1) :
+    m = d - 1 + r := by
+  subst q
+  omega
+
 /--
 A signed prefix-count certificate.
 
@@ -889,6 +904,22 @@ theorem sigma_sum_eq_zero {d : Nat} {sigma : Fin d → Int}
 end SignedMarginMatrix
 
 namespace MarginPlan
+
+theorem delta_eq_zero_iff {d m q r : Nat}
+    (P : MarginPlan d m q r) (i : Fin d) :
+    (q : Int) - P.tau i = 0 ↔ P.tau i = (q : Int) := by
+  constructor <;> intro h <;> linarith
+
+theorem delta_eq_one_iff {d m q r : Nat}
+    (P : MarginPlan d m q r) (i : Fin d) :
+    (q : Int) - P.tau i = 1 ↔ P.tau i = (q : Int) - 1 := by
+  constructor <;> intro h <;> linarith
+
+theorem tau_le_q {d m q r : Nat}
+    (P : MarginPlan d m q r) (i : Fin d) :
+    P.tau i ≤ (q : Int) := by
+  have hdelta := P.delta_nonneg i
+  linarith
 
 theorem sigma_sum_eq {d m q r : Nat}
     (P : MarginPlan d m q r)

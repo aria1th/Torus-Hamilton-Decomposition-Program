@@ -219,7 +219,8 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   nonnegativity.
 - Quotient/remainder branch arithmetic for the count branch, including
   `quotient_remainder_count_branch`, `quotient_one_or_ge_two_of_le`, and the
-  `q = 1` upper-bound helper `quotient_eq_one_upper_bound`.
+  `q = 1` helpers `quotient_eq_one_upper_bound`,
+  `quotient_eq_one_range_of_mqr`, and `quotient_eq_one_m_eq_pred_add`.
 - Count-branch construction dispatcher:
   `TransportQge2Goal`, `TransportQeq1Goal`,
   `AdmissiblePartsCountBranchGoal`, and
@@ -288,8 +289,11 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.StepNonnegCompatibility`,
   `PrefixCount.StepNonnegCompatibility.step_nonneg`,
   `PrefixCount.MarginTransportQeq1CompatibleGoal`, and
-  `PrefixCount.marginTransportQeq1Goal_of_compatible`.  The corresponding
-  global endpoint is
+  `PrefixCount.marginTransportQeq1Goal_of_compatible`.  The margin-plan delta
+  shorthands `PrefixCount.MarginPlan.delta_eq_zero_iff`,
+  `PrefixCount.MarginPlan.delta_eq_one_iff`, and
+  `PrefixCount.MarginPlan.tau_le_q` are also closed.  The corresponding global
+  endpoint is
   `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Compat_geometry_and_small_packet_lift`.
 - Q=1 matched `±1` split:
   `PrefixCount.PMOneBase`, `PrefixCount.PMOneBase.PlusOneMatching`,
