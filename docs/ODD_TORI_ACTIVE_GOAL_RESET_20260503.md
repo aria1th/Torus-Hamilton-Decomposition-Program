@@ -80,10 +80,11 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_an
 ```
 
 So the public active goal is now two remaining theorem families.  At the
-current Lean endpoint, the high branch has been split further, leaving four
-explicit assumptions: q>=2 margin plans, q=1 plus-set margins, the
-geometric prefix-count criterion, and the small-modulus Hall-slack packet lift.
-The small-base Hall-slack arithmetic witness is already Lean-closed.
+current Lean endpoint, the high branch has been split further, leaving five
+explicit assumptions: q>=2 row margin plans, q>=2 signed matrix realization,
+q=1 plus-set margins, the geometric prefix-count criterion, and the
+small-modulus Hall-slack packet lift.  The small-base Hall-slack arithmetic
+witness is already Lean-closed.
 
 ## Remaining Theorem 1: High Modulus
 
@@ -264,6 +265,12 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.marginTransportQge2Goal_of_plan`.  The corresponding global
   endpoint is
   `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift`.
+- Q>=2 plan/matrix split:
+  `PrefixCount.MarginPlanQge2Goal`,
+  `PrefixCount.SignedMarginMatrixForQge2PlanGoal`, and
+  `PrefixCount.marginTransportQge2PlanGoal_of_plan_and_matrix`.  The
+  corresponding global endpoint is
+  `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift`.
 - Q=1 compatibility split:
   `PrefixCount.StepNonnegCompatibility`,
   `PrefixCount.StepNonnegCompatibility.step_nonneg`,

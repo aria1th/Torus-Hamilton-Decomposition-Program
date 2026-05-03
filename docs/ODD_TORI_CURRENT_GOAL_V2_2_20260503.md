@@ -53,12 +53,13 @@ OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
 The current lowest-level endpoint is sharper.  It proves the final theorem
-from the following four remaining blocks:
+from the following five remaining blocks:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift
-    (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
+  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
     (hGeom : PrefixCountGeometricCriterionGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
@@ -73,10 +74,20 @@ So the active Lean goal is to remove exactly these four assumptions.
 
 1. `PrefixCount.MarginTransportQge2PlanGoal`
 
-   The high-modulus quotient branch with `q >= 2`.  The nonnegativity part is
-   already factored out: once the margin plan proves `2 <= q - tau i` rowwise,
-   `Qge2PlanBounds.step_nonneg` supplies per-cell nonnegativity from the
-   universal lower bound `eps >= -2`.
+   Superseded at the lowest level by the next two goals, but retained as a
+   useful bundled interface.
+
+1a. `PrefixCount.MarginPlanQge2Goal`
+
+   The row-margin part of the high-modulus quotient branch with `q >= 2`.
+   It asks for `P : MarginPlan d m q r` satisfying `Qge2PlanBounds P`, namely
+   `2 <= q - tau i` rowwise.
+
+1b. `PrefixCount.SignedMarginMatrixForQge2PlanGoal`
+
+   The signed-matrix realization part for q>=2 margin plans.  Once it supplies
+   `SignedMarginMatrix d P.sigma`, `Qge2PlanBounds.step_nonneg` gives per-cell
+   nonnegativity from the universal lower bound `eps >= -2`.
 
 2. `PrefixCount.MarginTransportQeq1PlusFamilyGoal`
 
@@ -134,4 +145,5 @@ Close all odd `m >= 3` and all `d >= 2` by proving the two uniform branches
 that remain after the D2/product wrapper and odd seed reductions: the
 high-modulus prefix-count construction and the small-modulus Hall-slack
 packet-lift construction, with the high branch currently split into q>=2
-margin plans, q=1 plus-set margins, and the geometric prefix-count criterion.
+row margin plans, q>=2 signed matrix realization, q=1 plus-set margins, and
+the geometric prefix-count criterion.

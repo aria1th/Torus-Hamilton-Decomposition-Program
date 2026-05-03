@@ -1283,6 +1283,22 @@ def MarginTransportQge2PlanGoal : Prop :=
     ∃ P : MarginPlan d m q r,
       Qge2PlanBounds P ∧ Nonempty (SignedMarginMatrix d P.sigma)
 
+def MarginPlanQge2Goal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    ∃ P : MarginPlan d m q r,
+      Qge2PlanBounds P
+
+def SignedMarginMatrixForQge2PlanGoal : Prop :=
+  ∀ {d m q r : Nat} {P : MarginPlan d m q r},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    Qge2PlanBounds P →
+    Nonempty (SignedMarginMatrix d P.sigma)
+
 def MarginTransportQge2Goal : Prop :=
   ∀ {d m q r : Nat},
     Odd d → 5 ≤ d → Odd m →
@@ -1341,6 +1357,14 @@ theorem marginTransportQge2Goal_of_plan
   rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with
     ⟨P, hP, ⟨E⟩⟩
   exact ⟨P, E, hP.step_nonneg⟩
+
+theorem marginTransportQge2PlanGoal_of_plan_and_matrix
+    (hPlan : MarginPlanQge2Goal)
+    (hMatrix : SignedMarginMatrixForQge2PlanGoal) :
+    MarginTransportQge2PlanGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with ⟨P, hP⟩
+  exact ⟨P, hP, hMatrix hdodd hd5 hmodd hmqr hrlt hrpos hq hP⟩
 
 theorem marginTransportQeq1Goal_of_compatible
     (hCompatGoal : MarginTransportQeq1CompatibleGoal) :
