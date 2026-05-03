@@ -246,6 +246,25 @@ def BalancedMatrixLayerRealizationGoal : Prop :=
     MatrixBalanced m M →
     Nonempty (LayerPermCounts d m M)
 
+theorem balancedMatrixLayerRealization_zero
+    {d : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (hM : MatrixBalanced 0 M) :
+    Nonempty (LayerPermCounts d 0 M) := by
+  classical
+  refine ⟨{
+    layer := fun t => nomatch t
+    count_eq := ?_
+  }⟩
+  intro i j
+  have hzero : M i j = 0 := by
+    have hrow := hM.row_sum i
+    have hentries :
+        ∀ x ∈ (Finset.univ : Finset (Fin d)), 0 ≤ M i x := by
+      intro x hx
+      exact Nat.zero_le (M i x)
+    exact (Finset.sum_eq_zero_iff_of_nonneg hentries).mp hrow j (by simp)
+  simp [hzero]
+
 def MatrixLayerRealizationGoal : Prop :=
   ∀ {d m : Nat} (hd : 2 ≤ d) (M : Matrix (Fin d) (Fin d) Nat),
     MatrixAdmissible hd m M →

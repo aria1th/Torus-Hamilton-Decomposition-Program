@@ -130,6 +130,7 @@ Lean bridge now recorded in `RoundComposite/OddCore.lean`:
 ```lean
 PrefixCount.MatrixBalanced
 PrefixCount.BalancedMatrixLayerRealizationGoal
+PrefixCount.balancedMatrixLayerRealization_zero
 PrefixCount.MatrixAdmissible.toBalanced
 PrefixCount.matrixLayerRealizationGoal_of_balanced
 PrefixCount.MatrixLayerRealizationGoal
@@ -201,6 +202,7 @@ still open.
   permutation decomposition of dense admissible count matrices.
 - Balanced-matrix split showing that the permutation-decomposition theorem only
   needs row/column regularity, not primitive prefix-count data.
+- The zero-layer base case for balanced matrix layer realization.
 
 ## Non-Goals For This Stage
 

@@ -219,10 +219,12 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - Balanced-matrix regularity split:
   `PrefixCount.MatrixBalanced`,
   `PrefixCount.BalancedMatrixLayerRealizationGoal`,
+  `PrefixCount.balancedMatrixLayerRealization_zero`,
   `PrefixCount.MatrixAdmissible.toBalanced`,
   `PrefixCount.matrixLayerRealizationGoal_of_balanced`, and
   `prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization`, which
-  remove primitive conditions from the pure layer-decomposition target.
+  remove primitive conditions from the pure layer-decomposition target and
+  close its zero-layer base case.
 
 ## Revised Goal in One Sentence
 
