@@ -4,8 +4,9 @@ Date: 2026-05-03.
 
 This note records the current goal after the `d < 29` boundary review, the D2
 all-dimensional wrapper correction, the D3/D5/D7 seed audit, the D9 product
-seed, the high-prefix-count split, the q=1 plus-family split, the canonical
-root-flat lift, and the first Active-Hall slack interface.
+seed, the high-prefix-count split, the q=1 compatibility split and
+plus-family obstruction audit, the canonical root-flat lift, and the first
+Active-Hall slack interface.
 
 It supersedes `docs/ODD_TORI_CURRENT_GOAL_V2_4_20260503.md` as the concise
 active-goal reference.
@@ -82,9 +83,9 @@ assumptions:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+  .odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical_and_small_packet_lift
     (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
-    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
     (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -103,6 +104,13 @@ not as the preferred target.  Lean records the obstruction to the global
 `MarginTransportQge2CompatibleGoal`, or equivalently the direct
 `MarginTransportQge2Goal`.
 
+Correction after the q=1 obstruction audit: the older
+`MarginTransportQeq1PlusFamilyGoal` endpoint is no longer a preferred target.
+Lean proves `PrefixCount.not_marginTransportQeq1PlusFamilyGoal`, by
+instantiating the `q = 1, r = 1, d = m = 5` boundary.  The plus-family layer
+remains useful as a diagnostic and partial certificate layer, but it cannot be
+the global q=1 theorem family.
+
 ## Remaining Blocks
 
 1. `PrefixCount.MarginTransportQge2CompatibleGoal`
@@ -113,25 +121,23 @@ not as the preferred target.  Lean records the obstruction to the global
    compatibility.  The remaining proof should be a feasible transport
    construction, not the too-strong global `Qge2PlanBounds` statement.
 
-2. `PrefixCount.MarginTransportQeq1PlusFamilyGoal`
+2. `PrefixCount.MarginTransportQeq1CompatibleGoal`
 
-   Close the q=1 high-modulus boundary.  The current interface uses
-   plus-family data: each column has a plus set of size `(d - 1)/2`, the mate
-   row lies in that plus set, and mates are injective.  Lean now has the
-   upgraded row-sum tools needed for this path, including
-   `PlusFamily.rowMateSet`, `PlusFamily.toBase_entry_nonneg_iff`,
-   `PlusFamily.upgraded_row_sum`, and
-   `PlusFamily.upgraded_row_sum_of_mate`.  What remains is the coordinated
-   construction satisfying the q=1 margin transport constraints.
+   Close the q=1 high-modulus boundary through a compatible margin plan and
+   signed correction matrix.  This replaces the over-specific plus-family
+   target.
 
-   Important caution: Lean now also records
+   Lean records why the old plus-family target cannot be the final q=1 goal:
+   `PrefixCount.not_marginTransportQeq1PlusFamilyGoal`, and locally
    `PlusFamily.not_all_upgraded_row_sum_zero`.  A pure plus-family upgrade
    cannot make every upgraded row sum vanish when `d` is odd and `5 <= d`,
    because at least one row is outside the mate image and would force
-   `2 * card = d - 2`.  Thus the `q = 1, r = 1` boundary should not be treated
-   as a trivial all-zero signed-row case.  The q=1 branch may need either a
-   nontrivial row-margin/zero choice or a slightly richer correction interface
-   for this boundary.
+   `2 * card = d - 2`.  In fact the global plus-family goal itself is
+   inconsistent at `d = m = 5`, `q = r = 1`.
+
+   The q=1 branch therefore needs either a direct compatible signed transport
+   construction or a richer certificate interface than pure plus-family
+   upgrade.
 
    The local form is also Lean-recorded: `PlusFamily.rowMateSet_card_le_one`,
    `PlusFamily.rowMateSet_card_eq_one_of_mate`,
@@ -169,7 +175,8 @@ not as the preferred target.  Lean records the obstruction to the global
 - Q=1 range arithmetic, compatibility, matched `+/-1`, plus-family adapters,
   row-plus-set formulas, row-mate-set formulas, upgraded row sums, and
   matched upgraded row sums, plus the no-all-zero upgraded-row obstruction for
-  odd `d >= 5` and its row-local non-mate form.
+  odd `d >= 5`, its row-local non-mate form, and the global
+  `not_marginTransportQeq1PlusFamilyGoal` obstruction.
 - Root-flat equivalence and canonical-step Cayley lifts.
 - Active-Hall foundation: feasible residues, symbolings with residues,
   Hall-realization interface, and the sanity converse from symbolings back to

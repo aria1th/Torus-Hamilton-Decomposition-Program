@@ -1662,6 +1662,99 @@ def MarginTransportQeq1PlusFamilyGoal : Prop :=
         ∀ i k, (q : Int) - P.tau i = 0 →
           0 ≤ (F.toBase hdodd).entry i k
 
+theorem not_marginTransportQeq1PlusFamilyGoal :
+    ¬ MarginTransportQeq1PlusFamilyGoal := by
+  classical
+  intro hGoal
+  have hdodd : Odd 5 := by norm_num
+  rcases hGoal (d := 5) (m := 5) (q := 1) (r := 1)
+      hdodd (by norm_num) (by norm_num)
+      (by norm_num) (by norm_num) (by norm_num) rfl with
+    ⟨P, F, hrow, _hZeroRows⟩
+  have hsigma_lower : ∀ i : Fin 5, (-3 : Int) ≤ P.sigma i := by
+    intro i
+    have hform := F.upgraded_row_sum hdodd i
+    rw [hrow i] at hform
+    have hplus_nonneg : 0 ≤ 2 * ((F.rowPlusSet i).card : Int) := by
+      positivity
+    have hmate_nonneg : 0 ≤ ((F.rowMateSet i).card : Int) := by
+      positivity
+    norm_num at hform
+    linarith
+  have htau_nonneg : ∀ i : Fin 5, 0 ≤ P.tau i := by
+    intro i
+    by_contra hneg
+    have htaule : P.tau i ≤ (-1 : Int) := by omega
+    have hsig := hsigma_lower i
+    have hdef := P.sigma_def i
+    norm_num at hdef
+    have hzero_le : ((P.zero i : Nat) : Int) ≤ 0 := by
+      linarith
+    have hzero_eq : P.zero i = 0 := by
+      omega
+    have hcop := P.prim_zero i
+    rw [hzero_eq] at hcop
+    norm_num at hcop
+  have htau_zero : ∀ i : Fin 5, P.tau i = 0 := by
+    have hsum : (∑ i : Fin 5, P.tau i) = 0 := by
+      simpa using P.tau_sum
+    have hall :
+        ∀ i ∈ (Finset.univ : Finset (Fin 5)), P.tau i = 0 := by
+      exact (Finset.sum_eq_zero_iff_of_nonneg
+        (s := (Finset.univ : Finset (Fin 5)))
+        (f := fun i : Fin 5 => P.tau i)
+        (by
+          intro i _hi
+          exact htau_nonneg i)).mp hsum
+    intro i
+    exact hall i (by simp)
+  have hsigma_nonpos : ∀ i : Fin 5, P.sigma i ≤ 0 := by
+    intro i
+    have hzero_ne : P.zero i ≠ 0 := by
+      intro hzero
+      have hcop := P.prim_zero i
+      rw [hzero] at hcop
+      norm_num at hcop
+    have hzero_pos : 1 ≤ P.zero i := Nat.pos_of_ne_zero hzero_ne
+    have hdef := P.sigma_def i
+    rw [htau_zero i] at hdef
+    norm_num at hdef
+    linarith
+  have hsigma_sum : (∑ i : Fin 5, P.sigma i) = 0 := by
+    calc
+      (∑ i : Fin 5, P.sigma i)
+          = ∑ i : Fin 5,
+              ∑ k : Fin (5 - 2),
+                (F.toBase hdodd).upgrade (F.toMatching hdodd) i k := by
+              apply Finset.sum_congr rfl
+              intro i _hi
+              exact (hrow i).symm
+      _ = ∑ k : Fin (5 - 2),
+              ∑ i : Fin 5,
+                (F.toBase hdodd).upgrade (F.toMatching hdodd) i k := by
+              rw [Finset.sum_comm]
+      _ = 0 := by
+              simp [(F.toBase hdodd).upgrade_col_sum_zero (F.toMatching hdodd)]
+  have hsigma_zero : ∀ i : Fin 5, P.sigma i = 0 := by
+    have hsum_neg : (∑ i : Fin 5, -P.sigma i) = 0 := by
+      rw [Finset.sum_neg_distrib, hsigma_sum]
+      simp
+    have hall :
+        ∀ i ∈ (Finset.univ : Finset (Fin 5)), -P.sigma i = 0 := by
+      exact (Finset.sum_eq_zero_iff_of_nonneg
+        (s := (Finset.univ : Finset (Fin 5)))
+        (f := fun i : Fin 5 => -P.sigma i)
+        (by
+          intro i _hi
+          have h := hsigma_nonpos i
+          linarith)).mp hsum_neg
+    intro i
+    have h := hall i (by simp)
+    linarith
+  exact F.not_all_upgraded_row_sum_zero hdodd (by norm_num) (by
+    intro i
+    rw [hrow i, hsigma_zero i])
+
 theorem marginTransportQge2Goal_of_plan
     (hPlan : MarginTransportQge2PlanGoal) :
     MarginTransportQge2Goal := by
