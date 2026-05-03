@@ -536,9 +536,11 @@ The first high-modulus prefix-count foundation is also formalized in
 `SignedPrefixCounts` certificate shapes, proves the signed values
 `{-2,-1,1,2}` are primitive modulo every odd `m`, proves the bridge
 `SignedPrefixCounts.toParts_admissible`, and closes the basic quotient/remainder
-facts needed for `m = (d-1)q + r`.  `Parts.toMatrix` and its column simp lemmas
-now give the first bridge from the internal `{0, Delta, step}` representation
-to a dense `Fin d x Fin d` count matrix.  The same module now defines
+facts needed for `m = (d-1)q + r`.  `Parts.toMatrix`, `Parts.sum_cols_split`,
+`MatrixAdmissible`, and `Parts.Admissible.toMatrixAdmissible` now bridge the
+internal `{0, Delta, step}` representation to a dense `Fin d x Fin d` count
+matrix with row sums, column sums, and primitive row conditions.  The same
+module now defines
 `QuotientTransport` and proves `QuotientTransport.toSigned_admissible`, so a
 transport construction only has to produce the quotient/remainder fields.  It
 also defines `MarginPlan`, `SignedMarginMatrix`, and

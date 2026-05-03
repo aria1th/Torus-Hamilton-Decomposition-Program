@@ -80,6 +80,86 @@ def toMatrix {d : Nat} (hd : 2 ≤ d) (C : Parts d) :
     C.toMatrix hd i (colStep hd k) = C.step i k := by
   simp [toMatrix, colStep, stepIndexOfColumn]
 
+def colsEquiv {d : Nat} (hd : 2 ≤ d) : Fin d ≃ Fin 2 ⊕ Fin (d - 2) :=
+  (finCongr (by omega : d = 2 + (d - 2))).trans finSumFinEquiv.symm
+
+@[simp] theorem colsEquiv_symm_inl_zero {d : Nat} (hd : 2 ≤ d) :
+    (colsEquiv hd).symm (Sum.inl (0 : Fin 2)) = colZero hd := by
+  ext
+  simp [colsEquiv, colZero]
+
+@[simp] theorem colsEquiv_symm_inl_one {d : Nat} (hd : 2 ≤ d) :
+    (colsEquiv hd).symm (Sum.inl (1 : Fin 2)) = colDelta hd := by
+  ext
+  simp [colsEquiv, colDelta]
+
+@[simp] theorem colsEquiv_symm_inr {d : Nat} (hd : 2 ≤ d)
+    (k : Fin (d - 2)) :
+    (colsEquiv hd).symm (Sum.inr k) = colStep hd k := by
+  ext
+  simp [colsEquiv, colStep, finSumFinEquiv_apply_right]
+  omega
+
+theorem sum_cols_split {d : Nat} (hd : 2 ≤ d)
+    {α : Type*} [AddCommMonoid α] (f : Fin d → α) :
+    (∑ j : Fin d, f j)
+      = f (colZero hd) + f (colDelta hd)
+          + ∑ k : Fin (d - 2), f (colStep hd k) := by
+  trans ∑ x : Fin 2 ⊕ Fin (d - 2), f ((colsEquiv hd).symm x)
+  · exact Fintype.sum_equiv (colsEquiv hd) f
+      (fun x => f ((colsEquiv hd).symm x)) (by intro x; simp)
+  rw [Fintype.sum_sum_type]
+  rw [Fin.sum_univ_two]
+  simp [add_assoc]
+
+end Parts
+
+/-- Dense matrix version of prefix-count admissibility. -/
+structure MatrixAdmissible {d : Nat} (hd : 2 ≤ d) (m : Nat)
+    (M : Matrix (Fin d) (Fin d) Nat) : Prop where
+  row_sum : ∀ i : Fin d, (∑ j : Fin d, M i j) = m
+  col_sum : ∀ j : Fin d, (∑ i : Fin d, M i j) = m
+  prim_zero : ∀ i : Fin d, Nat.Coprime (M i (Parts.colZero hd)) m
+  prim_step : ∀ i : Fin d, ∀ k : Fin (d - 2),
+    IntCoprime ((M i (Parts.colStep hd k) : Int)
+      - (M i (Parts.colDelta hd) : Int)) m
+
+namespace Parts
+
+theorem Admissible.toMatrixAdmissible {d m : Nat} {C : Parts d}
+    (hd : 2 ≤ d) (hC : C.Admissible m) :
+    MatrixAdmissible hd m (C.toMatrix hd) where
+  row_sum := by
+    intro i
+    rw [sum_cols_split hd (fun j => C.toMatrix hd i j)]
+    simpa [add_assoc] using hC.row_sum i
+  col_sum := by
+    intro j
+    by_cases hj0 : j.val = 0
+    · have hj : j = colZero hd := by
+        ext
+        simp [colZero, hj0]
+      subst j
+      simpa using hC.col_zero
+    · by_cases hj1 : j.val = 1
+      · have hj : j = colDelta hd := by
+          ext
+          simp [colDelta, hj1]
+        subst j
+        simpa using hC.col_delta
+      · have hj : j = colStep hd (stepIndexOfColumn hd j hj0 hj1) := by
+          ext
+          simp [colStep, stepIndexOfColumn]
+          omega
+        rw [hj]
+        simpa using hC.col_step (stepIndexOfColumn hd j hj0 hj1)
+  prim_zero := by
+    intro i
+    simpa using hC.prim_zero i
+  prim_step := by
+    intro i k
+    simpa using hC.prim_step i k
+
 end Parts
 
 /-- The signed differences used by the high-modulus transportation branch. -/

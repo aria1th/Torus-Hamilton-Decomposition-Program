@@ -183,6 +183,9 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - The first dense-matrix bridge for prefix-count parts:
   `Parts.toMatrix`, `Parts.toMatrix_colZero`, `Parts.toMatrix_colDelta`, and
   `Parts.toMatrix_colStep`.
+- Dense matrix admissibility bridge:
+  `MatrixAdmissible`, `Parts.sum_cols_split`, and
+  `Parts.Admissible.toMatrixAdmissible`.
 - `QuotientTransport` and `QuotientTransport.toSigned_admissible`, giving the
   algebraic bridge from quotient/remainder transportation data to admissible
   prefix-count data.
