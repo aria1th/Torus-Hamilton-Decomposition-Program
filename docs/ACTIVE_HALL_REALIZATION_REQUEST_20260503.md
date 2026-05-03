@@ -90,6 +90,25 @@ condition for this realization problem.
 Thus the missing theorem should not reprove the torus machinery.  It should
 focus only on finite realization.
 
+## Brute-Force Sanity Check
+
+There is a small executable sanity check:
+
+```text
+python3 scripts/active_hall_realization_bruteforce.py
+```
+
+It exhaustively checks the default cases
+
+```text
+(T,C,X) = (2,2,2), (2,3,2), (2,3,3), (2,4,3), (3,3,3), (3,4,3)
+```
+
+by enumerating active incidences, all row/column compatible matrices, all
+matrices satisfying `HallCuts`, and all realized symboling count matrices.  The
+current default run finds no counterexample.  This is only evidence; it is not
+a proof and should not be used as a theorem dependency.
+
 ## Requested Output
 
 Please provide one of the following:
