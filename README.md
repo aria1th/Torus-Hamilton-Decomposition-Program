@@ -216,6 +216,10 @@ when `m` is odd and `m >= 3`.
   `admissiblePartsCountBranchGoal_of_transports` reduces construction of
   admissible high-modulus parts to the two signed-transport existence goals
   `TransportQge2Goal` and `TransportQeq1Goal`.
+- `RoundComposite/ActiveHall.lean`: active Hall-symboling foundation for the
+  small-modulus Hall-slack branch.  It defines incidence data, symbolings,
+  count matrices, realization, and proves that every symboling has the required
+  row and column count sums.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus

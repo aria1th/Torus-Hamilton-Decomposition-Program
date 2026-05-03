@@ -118,7 +118,9 @@ Bundled interface: `PrefixCount.MarginTransportQge2PlanGoal`
 
    The uniform base-tail theorem for `m < d`.  The required seed-semigroup base
    and Hall-slack arithmetic witnesses are already Lean-closed; the remaining
-   work is the actual packet/base-tail lift construction.
+   work is the actual packet/base-tail lift construction.  The first generic
+   active-Hall layer is now Lean-closed: incidence data, symbolings, count
+   matrices, and row/column count lemmas.
 
 ## Closed Support
 
@@ -139,6 +141,9 @@ The following are already available as Lean-checked support for this goal:
   certificate layer.
 - Root-flat split of the prefix-count geometric criterion, including the
   generic equivalence-to-Cayley lift adapter.
+- Active-Hall symboling foundation:
+  `ActiveHall.Incidence`, `ActiveHall.Symboling`, `ActiveHall.CountMatrix`,
+  and symboling row/column count lemmas.
 
 ## Non-Goals
 
