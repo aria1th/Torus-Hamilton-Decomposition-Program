@@ -192,7 +192,7 @@ when `m` is odd and `m >= 3`.
   `twoThreeBlockParts_spec`, the arithmetic decomposition of this range into
   `b` blocks of size `2` or `3` for the later base-tail lift, plus
   `unitCarryPacket_spec` for filling each such block by positive unit residues
-  summing to `m`.
+  summing to `m`, and `unitCarryPackets_spec` for the aggregate packet list.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus

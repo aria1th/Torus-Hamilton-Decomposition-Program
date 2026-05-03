@@ -504,12 +504,24 @@ theorem RoundComposite.twoThreeBlockParts_unitCarryPacket_spec
     (unitCarryPacket m k).sum = m ∧
     ∀ a, a ∈ unitCarryPacket m k →
       0 < a ∧ a < m ∧ Nat.Coprime a m
+
+def RoundComposite.unitCarryPackets (m b d : Nat) : List (List Nat)
+
+theorem RoundComposite.unitCarryPackets_spec
+    {b d m : Nat} (hm3 : 3 <= m) (hodd : Odd m)
+    (hbd : 2 * b < d ∧ d <= 3 * b) :
+    (unitCarryPackets m b d).length = b ∧
+    ((unitCarryPackets m b d).map List.length).sum = d ∧
+    ∀ packet, packet ∈ unitCarryPackets m b d →
+      packet.sum = m ∧
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m
 ```
 
 Thus the range condition `2*b < d <= 3*b` has already been lowered to the
 Lean-level statement that `d` is a sum of `b` blocks, each of size `2` or `3`,
-and that each such block can be filled by positive unit residues whose sum is
-`m`.
+and to the aggregate packet statement required by the base-tail lift: there are
+`b` packets, the packet lengths sum to `d`, each packet sums to `m`, and every
+packet entry is a positive unit modulo `m`.
 
 The remaining public small-modulus branch is:
 

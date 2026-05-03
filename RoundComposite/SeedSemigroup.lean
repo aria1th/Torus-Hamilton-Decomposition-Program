@@ -139,6 +139,49 @@ theorem twoThreeBlockParts_unitCarryPacket_spec {b d m k : Nat}
     ∀ a, a ∈ unitCarryPacket m k → 0 < a ∧ a < m ∧ Nat.Coprime a m := by
   exact unitCarryPacket_spec hm3 hodd ((twoThreeBlockParts_spec hbd).2.2 k hk)
 
+def unitCarryPackets (m b d : Nat) : List (List Nat) :=
+  (twoThreeBlockParts b d).map (unitCarryPacket m)
+
+theorem unitCarryPacketsForBlocks_spec {m : Nat}
+    (hm3 : 3 ≤ m) (hodd : Odd m) :
+    ∀ ks : List Nat,
+      (∀ k, k ∈ ks → k = 2 ∨ k = 3) →
+      ((ks.map (unitCarryPacket m)).map List.length).sum = ks.sum ∧
+      ∀ packet, packet ∈ ks.map (unitCarryPacket m) →
+        packet.sum = m ∧
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m
+  | [], _ => by
+      simp
+  | k :: ks, hks => by
+      have hk : k = 2 ∨ k = 3 := hks k (by simp)
+      have htail : ∀ j, j ∈ ks → j = 2 ∨ j = 3 := by
+        intro j hj
+        exact hks j (by simp [hj])
+      have hpacket := unitCarryPacket_spec hm3 hodd hk
+      have ih := unitCarryPacketsForBlocks_spec hm3 hodd ks htail
+      refine ⟨?_, ?_⟩
+      · simp [hpacket.1]
+        simpa [List.map_map, Function.comp_def] using ih.1
+      · intro packet hpacketMem
+        rcases List.mem_map.mp hpacketMem with ⟨j, hj, rfl⟩
+        exact (unitCarryPacket_spec hm3 hodd (hks j (by simp [hj]))).2
+
+theorem unitCarryPackets_spec {b d m : Nat}
+    (hm3 : 3 ≤ m) (hodd : Odd m)
+    (hbd : 2 * b < d ∧ d ≤ 3 * b) :
+    (unitCarryPackets m b d).length = b ∧
+    ((unitCarryPackets m b d).map List.length).sum = d ∧
+    ∀ packet, packet ∈ unitCarryPackets m b d →
+      packet.sum = m ∧
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m := by
+  have hparts := twoThreeBlockParts_spec hbd
+  have hpackets :=
+    unitCarryPacketsForBlocks_spec hm3 hodd (twoThreeBlockParts b d) hparts.2.2
+  refine ⟨?_, ?_, ?_⟩
+  · simpa [unitCarryPackets] using hparts.1
+  · exact hpackets.1.trans hparts.2.1
+  · simpa [unitCarryPackets] using hpackets.2
+
 namespace Concrete
 
 theorem standard_cayley_odd_uniform_of_seed_semigroup
