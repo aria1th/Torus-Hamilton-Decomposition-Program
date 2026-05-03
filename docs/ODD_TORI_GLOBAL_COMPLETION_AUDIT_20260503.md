@@ -48,9 +48,8 @@ boundary table as an input theorem or Lean dependency.
 | Small odd dimension `d = 9` | `standard_cayley_odd_uniform_9_of_3` | Derived from `D3 * D3` in `OddCore.lean` | Closed |
 | Small odd dimension `d = 11` | `standard_cayley_odd_uniform_11_of_high_and_d5_base_tail` | Splits into prefix-count for `m >= 11` and D5-base tail lift for `m < 11` | Conditional |
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
-| High-modulus branch decomposition | `PrefixCountLayerRealizationGoal`; `PrefixCountGeometricCriterionGoal`; `oddCoreHighModulusPrefixCountGoal_of_prefixCount` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter |
-| Dense matrix layer decomposition split | `PrefixCount.MatrixLayerRealizationGoal`; `PrefixCount.layerRealization_of_matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal_of_matrixLayerRealization` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
-| Balanced matrix decomposition split | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.balancedMatrixLayerRealization_zero`; `PrefixCount.MatrixAdmissible.toBalanced`; `PrefixCount.matrixLayerRealizationGoal_of_balanced`; `prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter; zero case closed |
+| High-modulus branch decomposition | `PrefixCountLayerRealizationGoal`; `PrefixCountGeometricCriterionGoal`; `oddCoreHighModulusPrefixCountGoal_of_prefixCount`; `oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter |
+| Dense matrix layer realization | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.balancedMatrixLayerRealization_zero`; `PrefixCount.matrixBalanced_exists_positive_perm`; `PrefixCount.peelLayer_balanced`; `PrefixCount.balancedMatrixLayerRealizationGoal`; `PrefixCount.matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Closed |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -208,9 +207,6 @@ The high branch is now further split at Lean level.  The theorem
 
 ```lean
 PrefixCount.AdmissiblePartsCountBranchGoal
-PrefixCount.BalancedMatrixLayerRealizationGoal
-PrefixCount.balancedMatrixLayerRealization_zero
-PrefixCount.MatrixLayerRealizationGoal
 PrefixCountLayerRealizationGoal
 PrefixCountGeometricCriterionGoal
 ```
@@ -222,7 +218,17 @@ criterion.  The layer-realization interface is itself reduced to
 `PrefixCount.MatrixLayerRealizationGoal`, and then to
 `PrefixCount.BalancedMatrixLayerRealizationGoal`, a pure
 permutation-decomposition statement for dense row/column count matrices with
-no primitive prefix-count hypotheses.
+no primitive prefix-count hypotheses.  This layer-decomposition statement is
+now Lean-closed by `PrefixCount.balancedMatrixLayerRealizationGoal`, using
+Hall's theorem to extract a positive permutation and induction to peel one
+permutation layer at a time.
+
+Consequently, the high-modulus public goal is now reduced to:
+
+```lean
+PrefixCount.AdmissiblePartsCountBranchGoal
+PrefixCountGeometricCriterionGoal
+```
 
 ## Verdict
 

@@ -156,6 +156,17 @@ theorem prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization
   prefixCountLayerRealizationGoal_of_matrixLayerRealization
     (PrefixCount.matrixLayerRealizationGoal_of_balanced hBalanced)
 
+theorem prefixCountLayerRealizationGoal : PrefixCountLayerRealizationGoal :=
+  prefixCountLayerRealizationGoal_of_matrixLayerRealization
+    PrefixCount.matrixLayerRealizationGoal
+
+theorem oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry
+    (hParts : PrefixCount.AdmissiblePartsCountBranchGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_prefixCount
+    hParts prefixCountLayerRealizationGoal hGeom
+
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
     D11SmallModulusLiftFromD5Base StandardCayleySolved := by

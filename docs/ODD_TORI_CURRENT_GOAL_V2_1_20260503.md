@@ -131,25 +131,33 @@ Lean bridge now recorded in `RoundComposite/OddCore.lean`:
 PrefixCount.MatrixBalanced
 PrefixCount.BalancedMatrixLayerRealizationGoal
 PrefixCount.balancedMatrixLayerRealization_zero
+PrefixCount.matrixBalanced_exists_positive_perm
+PrefixCount.peelLayer
+PrefixCount.peelLayer_balanced
+PrefixCount.balancedMatrixLayerRealizationGoal
 PrefixCount.MatrixAdmissible.toBalanced
 PrefixCount.matrixLayerRealizationGoal_of_balanced
+PrefixCount.matrixLayerRealizationGoal
 PrefixCount.MatrixLayerRealizationGoal
 PrefixCount.layerRealization_of_matrixLayerRealizationGoal
 PrefixCountLayerRealizationGoal
 PrefixCountGeometricCriterionGoal
 prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization
 prefixCountLayerRealizationGoal_of_matrixLayerRealization
+prefixCountLayerRealizationGoal
+oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
 
 The count-branch algebra is being split into quotient/remainder branch
 arithmetic, signed transportation, dense matrix admissibility, layer-count
-realization, and the geometric root-flat/Hamilton lift.  Therefore the
-high-modulus public goal can be closed from three ingredients:
+realization, and the geometric root-flat/Hamilton lift.  The layer-count
+realization part is now Lean-closed by Hall's theorem and induction on the
+regularity degree.  Therefore the high-modulus public goal can now be closed
+from two ingredients:
 
 ```text
 admissible parts construction
-+ matrix layer decomposition for dense row/column count matrices
 + geometric prefix-count Hamilton criterion
 ```
 
@@ -196,13 +204,11 @@ still open.
 - Hall-slack arithmetic witness for the general small branch.
 - D11-specific `b = 5` Hall-slack arithmetic adapter.
 - Prefix-count foundational algebra and transport interfaces.
-- High-branch Lean adapter from admissible prefix-count parts, layer
-  realization, and geometric criterion to `OddCoreHighModulusPrefixCountGoal`.
-- Matrix-layer realization interface reducing layer realization to the
-  permutation decomposition of dense admissible count matrices.
-- Balanced-matrix split showing that the permutation-decomposition theorem only
-  needs row/column regularity, not primitive prefix-count data.
-- The zero-layer base case for balanced matrix layer realization.
+- High-branch Lean adapter from admissible prefix-count parts and geometric
+  criterion to `OddCoreHighModulusPrefixCountGoal`.
+- Matrix-layer realization for balanced dense count matrices, including the
+  zero case, Hall extraction of a positive permutation, one-layer peeling, and
+  induction on the row/column degree.
 
 ## Non-Goals For This Stage
 

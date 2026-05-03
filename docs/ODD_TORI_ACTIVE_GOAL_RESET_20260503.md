@@ -220,11 +220,19 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.MatrixBalanced`,
   `PrefixCount.BalancedMatrixLayerRealizationGoal`,
   `PrefixCount.balancedMatrixLayerRealization_zero`,
+  `PrefixCount.matrixBalanced_exists_positive_perm`,
+  `PrefixCount.peelLayer_balanced`,
+  `PrefixCount.balancedMatrixLayerRealizationGoal`,
   `PrefixCount.MatrixAdmissible.toBalanced`,
   `PrefixCount.matrixLayerRealizationGoal_of_balanced`, and
   `prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization`, which
   remove primitive conditions from the pure layer-decomposition target and
-  close its zero-layer base case.
+  close it by Hall extraction plus one-layer peeling.
+- Closed layer-realization endpoint:
+  `PrefixCount.matrixLayerRealizationGoal`,
+  `prefixCountLayerRealizationGoal`, and
+  `oddCoreHighModulusPrefixCountGoal_of_parts_and_geometry`, which reduce the
+  high-modulus public goal to admissible parts plus the geometric criterion.
 
 ## Revised Goal in One Sentence
 

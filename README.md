@@ -230,7 +230,11 @@ when `m` is odd and `m >= 3`.
   and the geometric Hamilton criterion.  The layer-realization side is further
   reduced to the pure dense-matrix permutation decomposition interface
   `PrefixCount.MatrixLayerRealizationGoal`, and then to the row/column-only
-  regularity interface `PrefixCount.BalancedMatrixLayerRealizationGoal`.
+  regularity interface `PrefixCount.BalancedMatrixLayerRealizationGoal`.  That
+  layer-realization goal is now closed by Hall extraction of a positive
+  permutation and induction on the row/column degree; the high-modulus branch
+  is correspondingly reduced to admissible parts plus the geometric
+  prefix-count Hamilton criterion.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the

@@ -265,6 +265,159 @@ theorem balancedMatrixLayerRealization_zero
     exact (Finset.sum_eq_zero_iff_of_nonneg hentries).mp hrow j (by simp)
   simp [hzero]
 
+def positiveCols {d : Nat} (M : Matrix (Fin d) (Fin d) Nat)
+    (i : Fin d) : Finset (Fin d) :=
+  Finset.univ.filter fun j => 0 < M i j
+
+theorem matrixBalanced_exists_positive_perm
+    {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (hM : MatrixBalanced (m + 1) M) :
+    ∃ π : Equiv.Perm (Fin d), ∀ i : Fin d, 0 < M i (π i) := by
+  classical
+  let n := m + 1
+  have hnpos : 0 < n := by omega
+  have hHall :
+      ∀ S : Finset (Fin d),
+        S.card ≤ (S.biUnion (positiveCols M)).card := by
+    intro S
+    let B := S.biUnion (positiveCols M)
+    have hrowRestrict :
+        ∀ i ∈ S, (∑ j : Fin d, M i j) = ∑ j ∈ B, M i j := by
+      intro i hi
+      symm
+      apply Finset.sum_subset (by intro x hx; simp)
+      intro x _ hxB
+      have hxnot : x ∉ positiveCols M i := by
+        intro hxpos
+        exact hxB (Finset.mem_biUnion.mpr ⟨i, hi, hxpos⟩)
+      have hnotpos : ¬ 0 < M i x := by
+        simpa [positiveCols] using hxnot
+      omega
+    have hleft :
+        (∑ _i ∈ S, n) = S.card * n := by
+      simp [n]
+    have hright :
+        (∑ _j ∈ B, n) = B.card * n := by
+      simp [n]
+    have hmul : S.card * n ≤ B.card * n := by
+      rw [← hleft, ← hright]
+      calc
+        (∑ _i ∈ S, n)
+            = ∑ i ∈ S, ∑ j : Fin d, M i j := by
+                apply Finset.sum_congr rfl
+                intro i hi
+                simp [n, hM.row_sum i]
+        _ = ∑ i ∈ S, ∑ j ∈ B, M i j := by
+                apply Finset.sum_congr rfl
+                intro i hi
+                exact hrowRestrict i hi
+        _ = ∑ j ∈ B, ∑ i ∈ S, M i j := by
+                rw [Finset.sum_comm]
+        _ ≤ ∑ j ∈ B, ∑ i : Fin d, M i j := by
+                apply Finset.sum_le_sum
+                intro j hj
+                exact Finset.sum_le_sum_of_subset
+                  (by intro i hi; simp)
+        _ = ∑ _j ∈ B, n := by
+                apply Finset.sum_congr rfl
+                intro j hj
+                simp [n, hM.col_sum j]
+    exact Nat.le_of_mul_le_mul_right hmul hnpos
+  rcases (Finset.all_card_le_biUnion_card_iff_existsInjective'
+      (positiveCols M)).mp hHall with
+    ⟨f, hfInj, hfMem⟩
+  have hfSurj : Function.Surjective f :=
+    hfInj.surjective_of_finite (Equiv.refl (Fin d))
+  refine ⟨Equiv.ofBijective f ⟨hfInj, hfSurj⟩, ?_⟩
+  intro i
+  simpa [positiveCols, Equiv.ofBijective] using hfMem i
+
+def peelLayer {d : Nat} (M : Matrix (Fin d) (Fin d) Nat)
+    (π : Equiv.Perm (Fin d)) : Matrix (Fin d) (Fin d) Nat :=
+  fun i j => if π i = j then M i j - 1 else M i j
+
+theorem peelLayer_entry_add {d : Nat}
+    {M : Matrix (Fin d) (Fin d) Nat} {π : Equiv.Perm (Fin d)}
+    (hπ : ∀ i : Fin d, 0 < M i (π i)) (i j : Fin d) :
+    peelLayer M π i j + (if π i = j then (1 : Nat) else 0) = M i j := by
+  by_cases h : π i = j
+  · have hpos : 0 < M i j := by
+      simpa [h] using hπ i
+    simp [peelLayer, h, Nat.sub_add_cancel hpos]
+  · simp [peelLayer, h]
+
+theorem peelLayer_balanced
+    {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (hM : MatrixBalanced (m + 1) M)
+    {π : Equiv.Perm (Fin d)}
+    (hπ : ∀ i : Fin d, 0 < M i (π i)) :
+    MatrixBalanced m (peelLayer M π) where
+  row_sum := by
+    intro i
+    have hsum :
+        (∑ j : Fin d, M i j)
+          = (∑ j : Fin d, peelLayer M π i j) + 1 := by
+      calc
+        (∑ j : Fin d, M i j)
+            = ∑ j : Fin d,
+                (peelLayer M π i j
+                  + if π i = j then (1 : Nat) else 0) := by
+                apply Finset.sum_congr rfl
+                intro j hj
+                exact (peelLayer_entry_add hπ i j).symm
+        _ = (∑ j : Fin d, peelLayer M π i j)
+              + ∑ j : Fin d, (if π i = j then (1 : Nat) else 0) := by
+                rw [Finset.sum_add_distrib]
+        _ = (∑ j : Fin d, peelLayer M π i j) + 1 := by
+                simp
+    have hrow := hM.row_sum i
+    omega
+  col_sum := by
+    intro j
+    have hsum :
+        (∑ i : Fin d, M i j)
+          = (∑ i : Fin d, peelLayer M π i j) + 1 := by
+      calc
+        (∑ i : Fin d, M i j)
+            = ∑ i : Fin d,
+                (peelLayer M π i j
+                  + if π i = j then (1 : Nat) else 0) := by
+                apply Finset.sum_congr rfl
+                intro i hi
+                exact (peelLayer_entry_add hπ i j).symm
+        _ = (∑ i : Fin d, peelLayer M π i j)
+              + ∑ i : Fin d, (if π i = j then (1 : Nat) else 0) := by
+                rw [Finset.sum_add_distrib]
+        _ = (∑ i : Fin d, peelLayer M π i j) + 1 := by
+                congr 1
+                trans ∑ x : Fin d, if x = j then (1 : Nat) else 0
+                · exact Fintype.sum_equiv π
+                    (fun i => if π i = j then (1 : Nat) else 0)
+                    (fun x => if x = j then (1 : Nat) else 0)
+                    (by intro i; rfl)
+                · simp
+    have hcol := hM.col_sum j
+    omega
+
+theorem balancedMatrixLayerRealizationGoal :
+    BalancedMatrixLayerRealizationGoal := by
+  intro d m
+  induction m with
+  | zero =>
+      intro M hM
+      exact balancedMatrixLayerRealization_zero hM
+  | succ m ih =>
+      intro M hM
+      rcases matrixBalanced_exists_positive_perm hM with ⟨π, hπ⟩
+      rcases ih (peelLayer M π) (peelLayer_balanced hM hπ) with ⟨L⟩
+      refine ⟨{
+        layer := Fin.lastCases π (fun t => L.layer t)
+        count_eq := ?_
+      }⟩
+      intro i j
+      rw [Fin.sum_univ_castSucc]
+      simp [L.count_eq i j, peelLayer_entry_add hπ i j]
+
 def MatrixLayerRealizationGoal : Prop :=
   ∀ {d m : Nat} (hd : 2 ≤ d) (M : Matrix (Fin d) (Fin d) Nat),
     MatrixAdmissible hd m M →
@@ -275,6 +428,9 @@ theorem matrixLayerRealizationGoal_of_balanced
     MatrixLayerRealizationGoal := by
   intro d m hd M hM
   exact hBalanced M hM.toBalanced
+
+theorem matrixLayerRealizationGoal : MatrixLayerRealizationGoal :=
+  matrixLayerRealizationGoal_of_balanced balancedMatrixLayerRealizationGoal
 
 theorem layerRealization_of_matrixLayerRealizationGoal
     (hMatrix : MatrixLayerRealizationGoal)
