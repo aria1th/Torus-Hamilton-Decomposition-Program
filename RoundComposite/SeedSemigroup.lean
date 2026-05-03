@@ -83,6 +83,62 @@ theorem twoThreeBlockParts_tail_le_two_base {b d : Nat}
     d - b ≤ 2 * b := by
   omega
 
+def unitCarryPacket (m k : Nat) : List Nat :=
+  if k = 2 then
+    [1, m - 1]
+  else if k = 3 then
+    [1, 1, m - 2]
+  else
+    []
+
+theorem coprime_m_sub_one {m : Nat} (hm1 : 1 ≤ m) :
+    Nat.Coprime (m - 1) m := by
+  exact (Nat.coprime_self_sub_left hm1).2 (by simp)
+
+theorem odd_coprime_m_sub_two {m : Nat} (hm2 : 2 ≤ m) (hodd : Odd m) :
+    Nat.Coprime (m - 2) m := by
+  exact (Nat.coprime_self_sub_left hm2).2 hodd.coprime_two_left
+
+theorem unitCarryPacket_spec {m k : Nat}
+    (hm3 : 3 ≤ m) (hodd : Odd m) (hk : k = 2 ∨ k = 3) :
+    (unitCarryPacket m k).length = k ∧
+    (unitCarryPacket m k).sum = m ∧
+    ∀ a, a ∈ unitCarryPacket m k → 0 < a ∧ a < m ∧ Nat.Coprime a m := by
+  rcases hk with rfl | rfl
+  · have hcop1 : Nat.Coprime 1 m := by simp
+    have hcopm1 : Nat.Coprime (m - 1) m :=
+      coprime_m_sub_one (by omega)
+    refine ⟨by simp [unitCarryPacket], ?_, ?_⟩
+    · simp [unitCarryPacket]
+      omega
+    · intro a ha
+      simp [unitCarryPacket] at ha
+      rcases ha with rfl | ha
+      · exact ⟨by omega, by omega, hcop1⟩
+      · rcases ha with rfl
+        · exact ⟨by omega, by omega, hcopm1⟩
+  · have hcop1 : Nat.Coprime 1 m := by simp
+    have hcopm2 : Nat.Coprime (m - 2) m :=
+      odd_coprime_m_sub_two (by omega) hodd
+    refine ⟨by simp [unitCarryPacket], ?_, ?_⟩
+    · simp [unitCarryPacket]
+      omega
+    · intro a ha
+      simp [unitCarryPacket] at ha
+      rcases ha with rfl | ha
+      · exact ⟨by omega, by omega, hcop1⟩
+      · rcases ha with rfl
+        · exact ⟨by omega, by omega, hcopm2⟩
+
+theorem twoThreeBlockParts_unitCarryPacket_spec {b d m k : Nat}
+    (hm3 : 3 ≤ m) (hodd : Odd m)
+    (hbd : 2 * b < d ∧ d ≤ 3 * b)
+    (hk : k ∈ twoThreeBlockParts b d) :
+    (unitCarryPacket m k).length = k ∧
+    (unitCarryPacket m k).sum = m ∧
+    ∀ a, a ∈ unitCarryPacket m k → 0 < a ∧ a < m ∧ Nat.Coprime a m := by
+  exact unitCarryPacket_spec hm3 hodd ((twoThreeBlockParts_spec hbd).2.2 k hk)
+
 namespace Concrete
 
 theorem standard_cayley_odd_uniform_of_seed_semigroup

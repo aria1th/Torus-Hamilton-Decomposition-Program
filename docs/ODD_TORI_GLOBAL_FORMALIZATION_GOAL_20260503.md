@@ -492,10 +492,24 @@ theorem RoundComposite.twoThreeBlockParts_spec
     (twoThreeBlockParts b d).length = b ∧
     (twoThreeBlockParts b d).sum = d ∧
     ∀ k, k ∈ twoThreeBlockParts b d → k = 2 ∨ k = 3
+
+def RoundComposite.unitCarryPacket (m k : Nat) : List Nat
+
+theorem RoundComposite.twoThreeBlockParts_unitCarryPacket_spec
+    {b d m k : Nat}
+    (hm3 : 3 <= m) (hodd : Odd m)
+    (hbd : 2 * b < d ∧ d <= 3 * b)
+    (hk : k ∈ twoThreeBlockParts b d) :
+    (unitCarryPacket m k).length = k ∧
+    (unitCarryPacket m k).sum = m ∧
+    ∀ a, a ∈ unitCarryPacket m k →
+      0 < a ∧ a < m ∧ Nat.Coprime a m
 ```
 
 Thus the range condition `2*b < d <= 3*b` has already been lowered to the
-Lean-level statement that `d` is a sum of `b` blocks, each of size `2` or `3`.
+Lean-level statement that `d` is a sum of `b` blocks, each of size `2` or `3`,
+and that each such block can be filled by positive unit residues whose sum is
+`m`.
 
 The remaining public small-modulus branch is:
 
