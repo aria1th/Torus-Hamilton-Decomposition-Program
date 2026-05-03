@@ -50,6 +50,7 @@ boundary table as an input theorem or Lean dependency.
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
+| Unified packet-lift endpoint for D11-small and general small branch | `OddCoreSmallModulusUnitPacketLiftGoal`; `odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional skeleton |
 | Seed/product base availability with `2*b < d <= 3*b` | `seed_semigroup_base_available` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Convert `2*b < d <= 3*b` to `b` blocks of size `2` or `3` | `twoThreeBlockParts_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Fill each `2`/`3` block with positive unit residues summing to `m` | `unitCarryPacket_spec`; `twoThreeBlockParts_unitCarryPacket_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
@@ -74,6 +75,20 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_main_lemmas
 
 This is intentionally conditional.  It verifies the dispatcher and reduction
 architecture, not the final theorem.
+
+The compressed active-goal dispatcher is:
+
+```lean
+theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift
+    (hHigh : OddCoreHighModulusPrefixCountGoal)
+    (hSmallPacket : OddCoreSmallModulusUnitPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+This shows that the D11-small branch and the general small branch can be
+treated as one packet-level base-tail theorem.
 
 The main new Lean files contain no `sorry`, `admit`, or explicit `axiom`:
 
@@ -152,9 +167,25 @@ The exact remaining mathematical/Lean blocks are:
    ```
    because `oddCoreSmallModulusOfBaseGoal_of_unitPackets` is Lean-checked.
 
-Once these three are formalized, the current refined dispatcher yields the
-target all-dimensional odd-modulus theorem without using the finite boundary
-table.
+The preferred compressed version is now:
+
+1. `hHigh`:
+   ```lean
+   OddCoreHighModulusPrefixCountGoal
+   ```
+
+2. `hSmallPacket`:
+   ```lean
+   OddCoreSmallModulusUnitPacketLiftGoal
+   ```
+
+The packet-lift goal derives both `D11SmallModulusFromD5BaseGoal` and
+`OddCoreSmallModulusOfBaseGoal`, so this is the cleanest current target.
+
+Once the three refined branch goals are formalized, or equivalently once the
+two compressed goals `hHigh` and `hSmallPacket` are formalized, the current
+dispatcher yields the target all-dimensional odd-modulus theorem without using
+the finite boundary table.
 
 ## Verdict
 

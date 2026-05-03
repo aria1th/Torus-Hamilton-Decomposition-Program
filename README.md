@@ -210,6 +210,10 @@ when `m` is odd and `m >= 3`.
   `odd_modulus_tori_all_dimensions_of_main_lemmas` exposes those same inputs as
   the theorem-shaped goals `OddCoreHighModulusPrefixCountGoal`,
   `D11SmallModulusFromD5BaseGoal`, and `OddCoreSmallModulusOfBaseGoal`.
+  The current compressed active-goal endpoint is
+  `odd_modulus_tori_all_dimensions_of_high_and_small_packet_lift`, which leaves
+  only the high-modulus prefix-count theorem and one unified small-modulus
+  unit-packet base-tail lift theorem as assumptions.
 - `Shared/TorusCayley.lean`: standard dimension-indexed directed torus/Cayley
   Hamilton-decomposition proposition used by the composite-reduction interface,
   block-coordinate equivalences for composite dimensions, and cycle-coordinate
