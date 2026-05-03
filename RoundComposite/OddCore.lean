@@ -44,6 +44,24 @@ def PrefixCountGeometricCriterionGoal : Prop :=
     PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
     StandardCayleySolved d m
 
+abbrev PrefixCountRootState (d m : Nat) :=
+  Fin (d - 1) → ZMod m
+
+def PrefixCountRootFlatReturnGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
+    Shared.RootFlatReturnCriterion
+      (Fin d) (Fin d) (PrefixCountRootState d m) m
+
+def PrefixCountRootFlatCayleyLiftGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m],
+    2 ≤ d → Odd d → 5 ≤ d → Odd m → d ≤ m →
+    Shared.RootFlatLayeredHamiltonDecomposition
+      (Fin d) (Fin d) (PrefixCountRootState d m) m →
+    StandardCayleySolved d m
+
 def D11SmallModulusFromD5BaseGoal : Prop :=
   ∀ {m : Nat}, 3 ≤ m → Odd m → m < 11 →
     StandardCayleySolved 5 m →
@@ -143,6 +161,16 @@ theorem oddCoreHighModulusPrefixCountGoal_of_prefixCount
   rcases hLayers hd2 C hC with ⟨L⟩
   exact hGeom hd2 hdodd hd5 hmodd hdm hC L
 
+theorem prefixCountGeometricCriterionGoal_of_rootFlat
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hLift : PrefixCountRootFlatCayleyLiftGoal) :
+    PrefixCountGeometricCriterionGoal := by
+  intro d m hd2 C hdodd hd5 hmodd hdm hC L
+  haveI : NeZero m := ⟨by omega⟩
+  rcases hReturn hd2 hdodd hd5 hmodd hdm hC L with ⟨cert⟩
+  exact hLift hd2 hdodd hd5 hmodd hdm
+    (Shared.rootFlatLayeredDecomposition_of_certificate cert)
+
 theorem prefixCountLayerRealizationGoal_of_matrixLayerRealization
     (hMatrix : PrefixCount.MatrixLayerRealizationGoal) :
     PrefixCountLayerRealizationGoal := by
@@ -235,6 +263,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_ge
     (PrefixCount.marginTransportQge2PlanGoal_of_plan_and_matrix
       hQge2Plan hQge2Matrix)
     hQeq1 hGeom
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlat
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hLift : PrefixCountRootFlatCayleyLiftGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_geometry
+    hQge2Plan hQge2Matrix hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlat hReturn hLift)
 
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
@@ -585,6 +624,21 @@ theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry
     (PrefixCount.marginTransportQge2PlanGoal_of_plan_and_matrix
       hQge2Plan hQge2Matrix)
     hQeq1 hGeom hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hLift : PrefixCountRootFlatCayleyLiftGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift
+    hQge2Plan hQge2Matrix hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlat hReturn hLift)
+    hSmallPacket hd2 hmodd hm3
 
 end Concrete
 end RoundComposite

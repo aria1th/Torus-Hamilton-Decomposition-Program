@@ -53,15 +53,16 @@ OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
 The current lowest-level endpoint is sharper.  It proves the final theorem
-from the following five remaining blocks:
+from the following six remaining blocks:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift
+  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift
     (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
     (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
-    (hGeom : PrefixCountGeometricCriterionGoal)
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hLift : PrefixCountRootFlatCayleyLiftGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
@@ -98,12 +99,18 @@ So the active Lean goal is to remove exactly these four assumptions.
    each matched `+1` to `+2` gives the required signed correction matrix.  Rows
    with `q - tau = 0` must see only nonnegative base entries.
 
-3. `PrefixCountGeometricCriterionGoal`
+3a. `PrefixCountRootFlatReturnGoal`
 
-   The geometric prefix-count Hamilton criterion.  This should package the
-   root-flat coordinates, the canonical layer rule, the Latin property, the
-   triangular return/skew-cycle argument, the primitive row criterion, and the
-   lift from first return cycles to Hamilton cycles on the full torus.
+   The root-flat return part of the geometric prefix-count theorem.  Given
+   admissible prefix counts and layer permutations, it should build a
+   root-flat schedule on `PrefixCountRootState d m` with row Latin, layer
+   bijectivity, and single-cycle return maps.
+
+3b. `PrefixCountRootFlatCayleyLiftGoal`
+
+   The coordinate/lift part of the geometric theorem.  It should transport a
+   root-flat layered Hamilton decomposition for the prefix-count root state to
+   the standard Cayley Hamilton decomposition on `(ZMod m)^d`.
 
 4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
@@ -128,6 +135,7 @@ The following are already available as Lean-checked support for this goal:
 - Q=1 matched `±1` matrix adapter.
 - Q=1 plus-set-family adapter, including nonemptiness of the plus-family
   certificate layer.
+- Root-flat split of the prefix-count geometric criterion.
 
 ## Non-Goals
 
@@ -146,4 +154,4 @@ that remain after the D2/product wrapper and odd seed reductions: the
 high-modulus prefix-count construction and the small-modulus Hall-slack
 packet-lift construction, with the high branch currently split into q>=2
 row margin plans, q>=2 signed matrix realization, q=1 plus-set margins, and
-the geometric prefix-count criterion.
+the two root-flat geometric pieces.
