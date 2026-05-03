@@ -1224,6 +1224,10 @@ def rowPlusSet {d : Nat} (F : PlusFamily d) (i : Fin d) :
     Finset (Fin (d - 2)) :=
   Finset.univ.filter (fun k : Fin (d - 2) => i ∈ F.plus k)
 
+def rowMateSet {d : Nat} (F : PlusFamily d) (i : Fin d) :
+    Finset (Fin (d - 2)) :=
+  Finset.univ.filter (fun k : Fin (d - 2) => i = F.mate k)
+
 theorem nonempty {d : Nat} (hdodd : Odd d) (hd5 : 5 ≤ d) :
     Nonempty (PlusFamily d) := by
   classical
@@ -1291,6 +1295,13 @@ theorem base_row_sum {d : Nat} (F : PlusFamily d)
             simp [toBase, rowPlusSet]
     _ = (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) := by
             exact sum_if_mem_one_neg_one (F.rowPlusSet i)
+
+theorem toBase_entry_nonneg_iff {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (i : Fin d) (k : Fin (d - 2)) :
+    0 ≤ (F.toBase hdodd).entry i k ↔ i ∈ F.plus k := by
+  by_cases h : i ∈ F.plus k
+  · simp [toBase, h]
+  · simp [toBase, h]
 
 end PlusFamily
 
@@ -1363,6 +1374,48 @@ theorem upgrade_row_sum_of_mate {d : Nat} (B : PMOneBase d)
     (∑ l : Fin (d - 2), B.upgrade μ (μ.mate k) l)
       = (∑ l : Fin (d - 2), B.entry (μ.mate k) l) + 1 := by
   rw [B.upgrade_row_sum μ (μ.mate k), B.mate_indicator_sum_eq_one μ k]
+
+namespace PlusFamily
+
+theorem upgraded_row_sum {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (i : Fin d) :
+    (∑ k : Fin (d - 2), (F.toBase hdodd).upgrade (F.toMatching hdodd) i k)
+      =
+      (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int)
+        + ((F.rowMateSet i).card : Int) := by
+  rw [(F.toBase hdodd).upgrade_row_sum (F.toMatching hdodd) i,
+    F.base_row_sum hdodd i]
+  have hmateCard :
+      (∑ k : Fin (d - 2), if i = F.mate k then (1 : Int) else 0)
+        = ((F.rowMateSet i).card : Int) := by
+    simp [rowMateSet]
+  simp only [toMatching]
+  exact congrArg
+    (fun z : Int =>
+      (2 * ((F.rowPlusSet i).card : Int)) - ((d - 2 : Nat) : Int) + z)
+    hmateCard
+
+theorem upgraded_row_sum_of_mate {d : Nat} (F : PlusFamily d)
+    (hdodd : Odd d) (k : Fin (d - 2)) :
+    (∑ l : Fin (d - 2),
+      (F.toBase hdodd).upgrade (F.toMatching hdodd) (F.mate k) l)
+      = (2 * ((F.rowPlusSet (F.mate k)).card : Int))
+        - ((d - 2 : Nat) : Int) + 1 := by
+  rw [F.upgraded_row_sum hdodd (F.mate k)]
+  have hsumCard :
+      (∑ l : Fin (d - 2), if F.mate k = F.mate l then (1 : Int) else 0)
+        = ((F.rowMateSet (F.mate k)).card : Int) := by
+    simp [rowMateSet]
+  have hsumOne :
+      (∑ l : Fin (d - 2), if F.mate k = F.mate l then (1 : Int) else 0)
+        = 1 := by
+    simpa only [toMatching] using
+      (F.toBase hdodd).mate_indicator_sum_eq_one (F.toMatching hdodd) k
+  have hcardInt : ((F.rowMateSet (F.mate k)).card : Int) = 1 := by
+    linarith
+  rw [hcardInt]
+
+end PlusFamily
 
 theorem upgrade_ge_neg_one {d : Nat} (B : PMOneBase d)
     (μ : PlusOneMatching B) (i : Fin d) (k : Fin (d - 2)) :
