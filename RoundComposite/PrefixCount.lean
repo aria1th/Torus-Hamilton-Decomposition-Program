@@ -124,6 +124,69 @@ structure MatrixAdmissible {d : Nat} (hd : 2 ≤ d) (m : Nat)
     IntCoprime ((M i (Parts.colStep hd k) : Int)
       - (M i (Parts.colDelta hd) : Int)) m
 
+/-- A decomposition of a dense count matrix into `m` layer permutations. -/
+structure LayerPermCounts (d m : Nat)
+    (M : Matrix (Fin d) (Fin d) Nat) where
+  layer : Fin m → Equiv.Perm (Fin d)
+  count_eq : ∀ i j : Fin d,
+    (∑ t : Fin m, if layer t i = j then (1 : Nat) else 0) = M i j
+
+namespace LayerPermCounts
+
+theorem row_sum {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (L : LayerPermCounts d m M) :
+    ∀ i : Fin d, (∑ j : Fin d, M i j) = m := by
+  intro i
+  calc
+    (∑ j : Fin d, M i j)
+        = ∑ j : Fin d, ∑ t : Fin m,
+            if L.layer t i = j then (1 : Nat) else 0 := by
+          simp [← L.count_eq]
+    _ = ∑ t : Fin m, ∑ j : Fin d,
+            if L.layer t i = j then (1 : Nat) else 0 := by
+          rw [Finset.sum_comm]
+    _ = ∑ _t : Fin m, 1 := by
+          simp
+    _ = m := by
+          simp
+
+theorem col_sum {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (L : LayerPermCounts d m M) :
+    ∀ j : Fin d, (∑ i : Fin d, M i j) = m := by
+  intro j
+  calc
+    (∑ i : Fin d, M i j)
+        = ∑ i : Fin d, ∑ t : Fin m,
+            if L.layer t i = j then (1 : Nat) else 0 := by
+          simp [← L.count_eq]
+    _ = ∑ t : Fin m, ∑ i : Fin d,
+            if L.layer t i = j then (1 : Nat) else 0 := by
+          rw [Finset.sum_comm]
+    _ = ∑ _t : Fin m, 1 := by
+          congr with t
+          trans ∑ x : Fin d, if x = j then (1 : Nat) else 0
+          · exact Fintype.sum_equiv (L.layer t)
+              (fun i => if L.layer t i = j then (1 : Nat) else 0)
+              (fun x => if x = j then (1 : Nat) else 0)
+              (by intro i; rfl)
+          · simp
+    _ = m := by
+          simp
+
+theorem toMatrixAdmissible {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    (hd : 2 ≤ d) (L : LayerPermCounts d m M)
+    (hzero : ∀ i : Fin d, Nat.Coprime (M i (Parts.colZero hd)) m)
+    (hstep : ∀ i : Fin d, ∀ k : Fin (d - 2),
+      IntCoprime ((M i (Parts.colStep hd k) : Int)
+        - (M i (Parts.colDelta hd) : Int)) m) :
+    MatrixAdmissible hd m M where
+  row_sum := L.row_sum
+  col_sum := L.col_sum
+  prim_zero := hzero
+  prim_step := hstep
+
+end LayerPermCounts
+
 namespace Parts
 
 theorem Admissible.toMatrixAdmissible {d m : Nat} {C : Parts d}

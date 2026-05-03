@@ -539,7 +539,10 @@ The first high-modulus prefix-count foundation is also formalized in
 facts needed for `m = (d-1)q + r`.  `Parts.toMatrix`, `Parts.sum_cols_split`,
 `MatrixAdmissible`, and `Parts.Admissible.toMatrixAdmissible` now bridge the
 internal `{0, Delta, step}` representation to a dense `Fin d x Fin d` count
-matrix with row sums, column sums, and primitive row conditions.  The same
+matrix with row sums, column sums, and primitive row conditions.
+`LayerPermCounts` also records explicit layer permutations realizing a dense
+count matrix and proves the resulting row and column sums automatically from
+the count equations.  The same
 module now defines
 `QuotientTransport` and proves `QuotientTransport.toSigned_admissible`, so a
 transport construction only has to produce the quotient/remainder fields.  It

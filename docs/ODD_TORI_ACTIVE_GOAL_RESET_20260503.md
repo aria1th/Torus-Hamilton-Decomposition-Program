@@ -186,6 +186,9 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
 - Dense matrix admissibility bridge:
   `MatrixAdmissible`, `Parts.sum_cols_split`, and
   `Parts.Admissible.toMatrixAdmissible`.
+- Layer-count realization interface:
+  `LayerPermCounts`, `LayerPermCounts.row_sum`, `LayerPermCounts.col_sum`,
+  and `LayerPermCounts.toMatrixAdmissible`.
 - `QuotientTransport` and `QuotientTransport.toSigned_admissible`, giving the
   algebraic bridge from quotient/remainder transportation data to admissible
   prefix-count data.

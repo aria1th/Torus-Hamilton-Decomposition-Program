@@ -204,7 +204,8 @@ when `m` is odd and `m >= 3`.
   `Parts.sum_cols_split`, and
   `Parts.Admissible.toMatrixAdmissible`, which turns the internal parts
   certificate into dense matrix row/column/primitive admissibility.  It also
-  defines `QuotientTransport` and proves
+  defines `LayerPermCounts` and proves its row/column sums automatically from
+  the layer count equations.  It also defines `QuotientTransport` and proves
   `QuotientTransport.toSigned_admissible`, the algebraic bridge from
   quotient/remainder transportation data to an admissible prefix-count
   certificate.  The signed transportation input is further split into
