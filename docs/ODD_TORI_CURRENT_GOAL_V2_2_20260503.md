@@ -57,23 +57,23 @@ from the following six remaining blocks:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift
+  .odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift
     (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
     (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
     (hReturn : PrefixCountRootFlatReturnGoal)
-    (hLift : PrefixCountRootFlatCayleyLiftGoal)
+    (hEquiv : PrefixCountRootFlatEquivLiftGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-So the active Lean goal is to remove exactly these four assumptions.
+So the active Lean goal is to remove exactly these six assumptions.
 
 ## Remaining Blocks
 
-1. `PrefixCount.MarginTransportQge2PlanGoal`
+Bundled interface: `PrefixCount.MarginTransportQge2PlanGoal`
 
    Superseded at the lowest level by the next two goals, but retained as a
    useful bundled interface.
@@ -106,11 +106,13 @@ So the active Lean goal is to remove exactly these four assumptions.
    root-flat schedule on `PrefixCountRootState d m` with row Latin, layer
    bijectivity, and single-cycle return maps.
 
-3b. `PrefixCountRootFlatCayleyLiftGoal`
+3b. `PrefixCountRootFlatEquivLiftGoal`
 
-   The coordinate/lift part of the geometric theorem.  It should transport a
-   root-flat layered Hamilton decomposition for the prefix-count root state to
-   the standard Cayley Hamilton decomposition on `(ZMod m)^d`.
+   The coordinate/lift part of the geometric theorem.  It asks for an
+   equivalence
+   `ZMod m × PrefixCountRootState d m ≃ Shared.TorusVertex d m` and a one-step
+   compatibility law.  Lean now proves that this equivalence-level statement
+   implies the root-flat-to-Cayley lift.
 
 4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
@@ -135,7 +137,8 @@ The following are already available as Lean-checked support for this goal:
 - Q=1 matched `±1` matrix adapter.
 - Q=1 plus-set-family adapter, including nonemptiness of the plus-family
   certificate layer.
-- Root-flat split of the prefix-count geometric criterion.
+- Root-flat split of the prefix-count geometric criterion, including the
+  generic equivalence-to-Cayley lift adapter.
 
 ## Non-Goals
 

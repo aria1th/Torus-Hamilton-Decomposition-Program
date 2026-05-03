@@ -62,6 +62,23 @@ def PrefixCountRootFlatCayleyLiftGoal : Prop :=
       (Fin d) (Fin d) (PrefixCountRootState d m) m →
     StandardCayleySolved d m
 
+def RootFlatCayleyStepCompatible {d m : Nat} [NeZero m] {RootState : Type*}
+    (D : Shared.RootFlatLayeredDecomposition (Fin d) (Fin d) RootState m)
+    (E : ZMod m × RootState ≃ Shared.TorusVertex d m) : Prop :=
+  ∀ c : Fin d, ∀ tw : ZMod m × RootState,
+    E (D.schedule.fullStep c tw) =
+      Shared.cayleyColorStep
+        (fun c x => D.schedule.dir (E.symm x).1 (E.symm x).2 c)
+        c (E tw)
+
+def PrefixCountRootFlatEquivLiftGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m],
+    2 ≤ d → Odd d → 5 ≤ d → Odd m → d ≤ m →
+    (D : Shared.RootFlatLayeredDecomposition
+      (Fin d) (Fin d) (PrefixCountRootState d m) m) →
+    ∃ E : ZMod m × PrefixCountRootState d m ≃ Shared.TorusVertex d m,
+      RootFlatCayleyStepCompatible D E
+
 def D11SmallModulusFromD5BaseGoal : Prop :=
   ∀ {m : Nat}, 3 ≤ m → Odd m → m < 11 →
     StandardCayleySolved 5 m →
@@ -171,6 +188,44 @@ theorem prefixCountGeometricCriterionGoal_of_rootFlat
   exact hLift hd2 hdodd hd5 hmodd hdm
     (Shared.rootFlatLayeredDecomposition_of_certificate cert)
 
+theorem standardCayleySolved_of_rootFlatLayeredEquiv
+    {d m : Nat} [NeZero m] {RootState : Type*}
+    (D : Shared.RootFlatLayeredDecomposition (Fin d) (Fin d) RootState m)
+    (E : ZMod m × RootState ≃ Shared.TorusVertex d m)
+    (hCompat : RootFlatCayleyStepCompatible D E) :
+    StandardCayleySolved d m := by
+  let colorDir : Shared.TorusColor d → Shared.TorusVertex d m →
+      Shared.TorusDirection d :=
+    fun c x => D.schedule.dir (E.symm x).1 (E.symm x).2 c
+  refine ⟨{
+    colorDir := colorDir
+    edgePartition := ?_
+    colorHamiltonian := ?_
+  }⟩
+  · intro x i
+    rcases D.edgePartition (E.symm x).1 (E.symm x).2 i with
+      ⟨c, hc, huniq⟩
+    exact ⟨c, hc, fun c' hc' => huniq c' hc'⟩
+  · intro c
+    refine Shared.single_cycle_of_equiv_conj E
+      (Shared.cayleyColorStep colorDir c)
+      (D.schedule.fullStep c)
+      (D.colorHamiltonian c) ?_
+    intro tw
+    calc
+      E.symm (Shared.cayleyColorStep colorDir c (E tw))
+          = E.symm (E (D.schedule.fullStep c tw)) := by
+              rw [hCompat c tw]
+      _ = D.schedule.fullStep c tw := by simp
+
+theorem prefixCountRootFlatCayleyLiftGoal_of_equiv
+    (hEquiv : PrefixCountRootFlatEquivLiftGoal) :
+    PrefixCountRootFlatCayleyLiftGoal := by
+  intro d m _inst hd2 hdodd hd5 hmodd hdm hRoot
+  rcases hRoot with ⟨D⟩
+  rcases hEquiv hd2 hdodd hd5 hmodd hdm D with ⟨E, hCompat⟩
+  exact standardCayleySolved_of_rootFlatLayeredEquiv D E hCompat
+
 theorem prefixCountLayerRealizationGoal_of_matrixLayerRealization
     (hMatrix : PrefixCount.MatrixLayerRealizationGoal) :
     PrefixCountLayerRealizationGoal := by
@@ -274,6 +329,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_ro
   oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_geometry
     hQge2Plan hQge2Matrix hQeq1
     (prefixCountGeometricCriterionGoal_of_rootFlat hReturn hLift)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlatEquiv
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hEquiv : PrefixCountRootFlatEquivLiftGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2PlanParts_qeq1PlusFamily_and_rootFlat
+    hQge2Plan hQge2Matrix hQeq1 hReturn
+    (prefixCountRootFlatCayleyLiftGoal_of_equiv hEquiv)
 
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
@@ -638,6 +704,21 @@ theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat
   odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_geometry_and_small_packet_lift
     hQge2Plan hQge2Matrix hQeq1
     (prefixCountGeometricCriterionGoal_of_rootFlat hReturn hLift)
+    hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift
+    (hQge2Plan : PrefixCount.MarginPlanQge2Goal)
+    (hQge2Matrix : PrefixCount.SignedMarginMatrixForQge2PlanGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatReturnGoal)
+    (hEquiv : PrefixCountRootFlatEquivLiftGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift
+    hQge2Plan hQge2Matrix hQeq1 hReturn
+    (prefixCountRootFlatCayleyLiftGoal_of_equiv hEquiv)
     hSmallPacket hd2 hmodd hm3
 
 end Concrete

@@ -82,9 +82,9 @@ theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_high_slack_an
 So the public active goal is now two remaining theorem families.  At the
 current Lean endpoint, the high branch has been split further, leaving six
 explicit assumptions: q>=2 row margin plans, q>=2 signed matrix realization,
-q=1 plus-set margins, root-flat return construction, root-flat-to-Cayley lift,
-and the small-modulus Hall-slack packet lift.  The small-base Hall-slack
-arithmetic witness is already Lean-closed.
+q=1 plus-set margins, root-flat return construction, root-flat equivalence
+step compatibility, and the small-modulus Hall-slack packet lift.  The
+small-base Hall-slack arithmetic witness is already Lean-closed.
 
 ## Remaining Theorem 1: High Modulus
 
@@ -295,10 +295,12 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1PlusFamily_geometry_and_small_packet_lift`.
 - Root-flat geometric split:
   `PrefixCountRootState`, `PrefixCountRootFlatReturnGoal`,
-  `PrefixCountRootFlatCayleyLiftGoal`, and
+  `RootFlatCayleyStepCompatible`, `PrefixCountRootFlatEquivLiftGoal`,
+  `standardCayleySolved_of_rootFlatLayeredEquiv`,
+  `prefixCountRootFlatCayleyLiftGoal_of_equiv`, and
   `prefixCountGeometricCriterionGoal_of_rootFlat`.  The corresponding global
   endpoint is
-  `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlat_and_small_packet_lift`.
+  `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift`.
 
 ## Revised Goal in One Sentence
 

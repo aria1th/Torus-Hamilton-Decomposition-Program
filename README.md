@@ -352,8 +352,8 @@ when `m` is odd and `m >= 3`.
   packet-lift pattern, and that the current lowest-level Lean endpoint has six
   remaining assumptions: q>=2 row margin plans, q>=2 signed matrix
   realization, q=1 plus-set margins, root-flat return construction,
-  root-flat-to-Cayley lift, and the small-modulus Hall-slack packet-lift
-  theorem.
+  root-flat equivalence step compatibility, and the small-modulus Hall-slack
+  packet-lift theorem.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
