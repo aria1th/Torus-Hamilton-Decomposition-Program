@@ -470,6 +470,24 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_rootF
     hQge2 hQeq1
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1PlusFamily_and_geometry
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_geometry
+    (PrefixCount.marginTransportQge2Goal_of_compatible hQge2)
+    hQeq1 hGeom
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1PlusFamily_and_rootFlatCanonical
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1PlusFamily_and_geometry
+    hQge2 hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
+
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
@@ -871,6 +889,30 @@ theorem odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCan
     (oddCoreHighModulusPrefixCountGoal_of_qge2Margin_qeq1PlusFamily_and_rootFlatCanonical
       hQge2 hQeq1 hReturn)
     hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1PlusFamily_geometry_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_geometry_and_small_packet_lift
+    (PrefixCount.marginTransportQge2Goal_of_compatible hQge2)
+    hQeq1 hGeom hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (PrefixCount.marginTransportQge2Goal_of_compatible hQge2)
+    hQeq1 hReturn hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qge2Plan_qeq1Margin_geometry_and_small_packet_lift
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)

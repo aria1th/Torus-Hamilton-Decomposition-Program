@@ -290,8 +290,12 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   This split is now treated as a compatibility adapter rather than the
   preferred goal, because `SignedMarginMatrixForQge2PlanGoal` is too broad
   unless the margin-plan side is strengthened with matrix-feasibility data.
-  The preferred q>=2 target is the direct
-  `PrefixCount.MarginTransportQge2Goal`; even
+  The preferred q>=2 target is the compatible transport interface
+  `PrefixCount.MarginTransportQge2CompatibleGoal`, which is equivalent to the
+  direct `PrefixCount.MarginTransportQge2Goal` through
+  `PrefixCount.StepNonnegCompatibility.of_step_nonneg`,
+  `PrefixCount.marginTransportQge2Goal_of_compatible`, and
+  `PrefixCount.marginTransportQge2CompatibleGoal_of_margin`.  Even
   `PrefixCount.MarginTransportQge2PlanGoal` is too strong as a universal q>=2
   target because `q = 2, r = 1` is incompatible with global
   `Qge2PlanBounds`, as recorded by
@@ -330,10 +334,10 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   endpoint is
   `odd_modulus_tori_all_dimensions_of_qge2PlanParts_qeq1PlusFamily_rootFlatEquiv_and_small_packet_lift`.
   The preferred canonical endpoint is now
-  `odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`,
+  `odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift`,
   which replaces the separate arbitrary-`D` return/equivalence pair and
   avoids the over-broad q>=2 plan/matrix and global-`Qge2PlanBounds` splits.
-  It leaves direct q>=2 margin transport, q=1 plus-family transport,
+  It leaves q>=2 compatible margin transport, q=1 plus-family transport,
   canonical return, and small packet-lift
   assumptions.  The successor-indexed and
   `d`-indexed canonical coordinate lifts are Lean-closed through

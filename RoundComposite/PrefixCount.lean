@@ -1082,6 +1082,19 @@ structure StepNonnegCompatibility {d m q r : Nat}
 
 namespace StepNonnegCompatibility
 
+theorem of_step_nonneg {d m q r : Nat}
+    {P : MarginPlan d m q r} {E : SignedMarginMatrix d P.sigma}
+    (hstep : ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k) :
+    StepNonnegCompatibility P E where
+  eps_nonneg_of_delta_zero := by
+    intro i k hdelta
+    have h := hstep i k
+    linarith
+  eps_ge_neg_one_of_delta_one := by
+    intro i k hdelta
+    have h := hstep i k
+    linarith
+
 theorem step_nonneg {d m q r : Nat}
     {P : MarginPlan d m q r} {E : SignedMarginMatrix d P.sigma}
     (hCompat : StepNonnegCompatibility P E) :
@@ -1400,6 +1413,15 @@ def MarginTransportQge2Goal : Prop :=
       ∃ E : SignedMarginMatrix d P.sigma,
         ∀ i k, 0 ≤ (q : Int) - P.tau i + E.eps i k
 
+def MarginTransportQge2CompatibleGoal : Prop :=
+  ∀ {d m q r : Nat},
+    Odd d → 5 ≤ d → Odd m →
+    m = (d - 1) * q + r →
+    r < d - 1 → 0 < r → 2 ≤ q →
+    ∃ P : MarginPlan d m q r,
+      ∃ E : SignedMarginMatrix d P.sigma,
+        StepNonnegCompatibility P E
+
 def MarginTransportQeq1Goal : Prop :=
   ∀ {d m q r : Nat},
     Odd d → 5 ≤ d → Odd m →
@@ -1457,6 +1479,22 @@ theorem marginTransportQge2PlanGoal_of_plan_and_matrix
   intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
   rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with ⟨P, hP⟩
   exact ⟨P, hP, hMatrix hdodd hd5 hmodd hmqr hrlt hrpos hq hP⟩
+
+theorem marginTransportQge2Goal_of_compatible
+    (hCompatGoal : MarginTransportQge2CompatibleGoal) :
+    MarginTransportQge2Goal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hCompatGoal hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hCompat⟩
+  exact ⟨P, E, hCompat.step_nonneg⟩
+
+theorem marginTransportQge2CompatibleGoal_of_margin
+    (hMargin : MarginTransportQge2Goal) :
+    MarginTransportQge2CompatibleGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hMargin hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨P, E, hstep⟩
+  exact ⟨P, E, StepNonnegCompatibility.of_step_nonneg hstep⟩
 
 theorem marginTransportQeq1Goal_of_compatible
     (hCompatGoal : MarginTransportQeq1CompatibleGoal) :

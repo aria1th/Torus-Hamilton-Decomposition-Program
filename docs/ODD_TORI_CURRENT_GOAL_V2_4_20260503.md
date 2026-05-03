@@ -78,8 +78,8 @@ assumptions:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2Margin_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
-    (hQge2 : PrefixCount.MarginTransportQge2Goal)
+  .odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1PlusFamily_rootFlatCanonical_and_small_packet_lift
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1PlusFamilyGoal)
     (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
@@ -97,8 +97,12 @@ split assumption `SignedMarginMatrixForQge2PlanGoal` asks for a signed matrix
 for every `MarginPlan` satisfying only `Qge2PlanBounds`.  That is too broad
 unless the plan interface is strengthened with matrix-feasibility constraints
 such as zero-column sum and signed row bounds.  The safe q>=2 target is
-therefore `MarginTransportQge2Goal`, which constructs the margin plan, signed
-matrix, and per-cell nonnegativity together.
+therefore `MarginTransportQge2Goal`, or equivalently the structured
+`MarginTransportQge2CompatibleGoal`, which constructs the margin plan, signed
+matrix, and the exact low-delta compatibility conditions together.  Lean
+records the equivalence through `StepNonnegCompatibility.of_step_nonneg`,
+`marginTransportQge2Goal_of_compatible`, and
+`marginTransportQge2CompatibleGoal_of_margin`.
 
 The intermediate `MarginTransportQge2PlanGoal` is also a compatibility layer
 rather than the preferred target: its global `Qge2PlanBounds` condition is too
@@ -108,11 +112,11 @@ as `Qge2PlanBounds.not_for_q_two_r_one`.
 
 ## Remaining Blocks
 
-1. `PrefixCount.MarginTransportQge2Goal`
+1. `PrefixCount.MarginTransportQge2CompatibleGoal`
 
-   Construct q>=2 row-margin plans, signed correction matrices, and the
-   per-cell nonnegativity proof directly.  The Lean side now records the
-   necessary row bounds
+   Construct q>=2 row-margin plans, signed correction matrices, and the exact
+   low-delta compatibility proof.  The Lean side now records the necessary row
+   bounds
    `SignedMarginMatrix.neg_two_mul_le_row_sum` and
    `SignedMarginMatrix.row_sum_le_two_mul`; any further split must ensure
    those bounds and the exceptional low-delta cases are part of the plan-side
