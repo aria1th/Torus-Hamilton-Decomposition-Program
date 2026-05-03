@@ -6,9 +6,9 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
-Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_3_20260503.md`.
+Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_4_20260503.md`.
 That note is the preferred short reference after the `d < 29` boundary review,
-the q=1 plus-family split, the root-flat geometry split, and the first
+the q=1 plus-family split, the canonical root-flat lift, and the first
 Active-Hall residue-symboling interface.
 
 Correction after the first reset: the manuscript-facing small branch must
@@ -269,6 +269,8 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `odd_modulus_tori_all_dimensions_of_margins_geometry_and_small_packet_lift`.
 - Q>=2 nonnegativity split:
   `PrefixCount.signedVal_ge_neg_two`,
+  `PrefixCount.SignedMarginMatrix.neg_two_mul_le_row_sum`,
+  `PrefixCount.SignedMarginMatrix.row_sum_le_two_mul`,
   `PrefixCount.SignedMarginMatrix.sigma_sum_eq_zero`,
   `PrefixCount.MarginPlan.sigma_sum_eq`,
   `PrefixCount.MarginPlan.sigma_sum_eq_zero_of_zero_sum`,

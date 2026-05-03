@@ -2,6 +2,9 @@
 
 Date: 2026-05-03.
 
+This note has been superseded by
+`docs/ODD_TORI_CURRENT_GOAL_V2_4_20260503.md`.
+
 This is the current working goal after the `d < 29` boundary review, the
 D2/product-wrapper review, the q=1 plus-family split, the root-flat geometry
 split, and the first Active-Hall residue-symboling interface.
@@ -101,7 +104,9 @@ Hall-slack packet lift.
 
    Realize the q>=2 signed correction matrix for each margin plan.  The
    existing Lean adapter then gets nonnegativity from the universal bound
-   `eps >= -2`.
+   `eps >= -2`.  Lean now also records the necessary signed-row bounds
+   `SignedMarginMatrix.neg_two_mul_le_row_sum` and
+   `SignedMarginMatrix.row_sum_le_two_mul`.
 
 3. `PrefixCount.MarginTransportQeq1PlusFamilyGoal`
 

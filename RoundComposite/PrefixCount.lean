@@ -889,6 +889,40 @@ theorem eps_le_two {d : Nat} {sigma : Fin d → Int}
     E.eps i k ≤ (2 : Int) :=
   signedVal_le_two (E.eps_signed i k)
 
+theorem neg_two_mul_le_row_sum {d : Nat} {sigma : Fin d → Int}
+    (E : SignedMarginMatrix d sigma) (i : Fin d) :
+    -((2 * (d - 2) : Nat) : Int) ≤ sigma i := by
+  have hsum :
+      (∑ _k : Fin (d - 2), (-2 : Int))
+        ≤ ∑ k : Fin (d - 2), E.eps i k := by
+    apply Finset.sum_le_sum
+    intro k _hk
+    exact E.eps_ge_neg_two i k
+  have hconst :
+      (∑ _k : Fin (d - 2), (-2 : Int))
+        = -((2 * (d - 2) : Nat) : Int) := by
+    simp [Finset.sum_const]
+    omega
+  rw [hconst] at hsum
+  simpa [E.row_sum i] using hsum
+
+theorem row_sum_le_two_mul {d : Nat} {sigma : Fin d → Int}
+    (E : SignedMarginMatrix d sigma) (i : Fin d) :
+    sigma i ≤ ((2 * (d - 2) : Nat) : Int) := by
+  have hsum :
+      (∑ k : Fin (d - 2), E.eps i k)
+        ≤ ∑ _k : Fin (d - 2), (2 : Int) := by
+    apply Finset.sum_le_sum
+    intro k _hk
+    exact E.eps_le_two i k
+  have hconst :
+      (∑ _k : Fin (d - 2), (2 : Int))
+        = ((2 * (d - 2) : Nat) : Int) := by
+    simp [Finset.sum_const]
+    omega
+  rw [hconst] at hsum
+  simpa [E.row_sum i] using hsum
+
 theorem sigma_sum_eq_zero {d : Nat} {sigma : Fin d → Int}
     (E : SignedMarginMatrix d sigma) :
     (∑ i : Fin d, sigma i) = 0 := by
