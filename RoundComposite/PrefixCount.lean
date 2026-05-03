@@ -124,6 +124,22 @@ structure MatrixAdmissible {d : Nat} (hd : 2 ≤ d) (m : Nat)
     IntCoprime ((M i (Parts.colStep hd k) : Int)
       - (M i (Parts.colDelta hd) : Int)) m
 
+/-- The row/column regularity needed for permutation-layer realization. -/
+structure MatrixBalanced {d : Nat} (m : Nat)
+    (M : Matrix (Fin d) (Fin d) Nat) : Prop where
+  row_sum : ∀ i : Fin d, (∑ j : Fin d, M i j) = m
+  col_sum : ∀ j : Fin d, (∑ i : Fin d, M i j) = m
+
+namespace MatrixAdmissible
+
+theorem toBalanced {d m : Nat} {M : Matrix (Fin d) (Fin d) Nat}
+    {hd : 2 ≤ d} (hM : MatrixAdmissible hd m M) :
+    MatrixBalanced m M where
+  row_sum := hM.row_sum
+  col_sum := hM.col_sum
+
+end MatrixAdmissible
+
 /-- A decomposition of a dense count matrix into `m` layer permutations. -/
 structure LayerPermCounts (d m : Nat)
     (M : Matrix (Fin d) (Fin d) Nat) where
@@ -225,10 +241,21 @@ theorem Admissible.toMatrixAdmissible {d m : Nat} {C : Parts d}
 
 end Parts
 
+def BalancedMatrixLayerRealizationGoal : Prop :=
+  ∀ {d m : Nat} (M : Matrix (Fin d) (Fin d) Nat),
+    MatrixBalanced m M →
+    Nonempty (LayerPermCounts d m M)
+
 def MatrixLayerRealizationGoal : Prop :=
   ∀ {d m : Nat} (hd : 2 ≤ d) (M : Matrix (Fin d) (Fin d) Nat),
     MatrixAdmissible hd m M →
     Nonempty (LayerPermCounts d m M)
+
+theorem matrixLayerRealizationGoal_of_balanced
+    (hBalanced : BalancedMatrixLayerRealizationGoal) :
+    MatrixLayerRealizationGoal := by
+  intro d m hd M hM
+  exact hBalanced M hM.toBalanced
 
 theorem layerRealization_of_matrixLayerRealizationGoal
     (hMatrix : MatrixLayerRealizationGoal)

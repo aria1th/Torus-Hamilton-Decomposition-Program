@@ -216,6 +216,13 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `PrefixCount.layerRealization_of_matrixLayerRealizationGoal`, and
   `prefixCountLayerRealizationGoal_of_matrixLayerRealization`, which isolate
   the pure permutation-decomposition theorem for dense count matrices.
+- Balanced-matrix regularity split:
+  `PrefixCount.MatrixBalanced`,
+  `PrefixCount.BalancedMatrixLayerRealizationGoal`,
+  `PrefixCount.MatrixAdmissible.toBalanced`,
+  `PrefixCount.matrixLayerRealizationGoal_of_balanced`, and
+  `prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization`, which
+  remove primitive conditions from the pure layer-decomposition target.
 
 ## Revised Goal in One Sentence
 

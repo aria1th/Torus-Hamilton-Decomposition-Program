@@ -150,6 +150,12 @@ theorem prefixCountLayerRealizationGoal_of_matrixLayerRealization
   exact PrefixCount.layerRealization_of_matrixLayerRealizationGoal
     hMatrix hd2 C hC
 
+theorem prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization
+    (hBalanced : PrefixCount.BalancedMatrixLayerRealizationGoal) :
+    PrefixCountLayerRealizationGoal :=
+  prefixCountLayerRealizationGoal_of_matrixLayerRealization
+    (PrefixCount.matrixLayerRealizationGoal_of_balanced hBalanced)
+
 theorem d11SmallModulusLiftFromD5Base_of_goal
     (hSmall11 : D11SmallModulusFromD5BaseGoal) :
     D11SmallModulusLiftFromD5Base StandardCayleySolved := by

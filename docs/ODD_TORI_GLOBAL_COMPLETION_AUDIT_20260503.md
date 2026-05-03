@@ -50,6 +50,7 @@ boundary table as an input theorem or Lean dependency.
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | High-modulus branch decomposition | `PrefixCountLayerRealizationGoal`; `PrefixCountGeometricCriterionGoal`; `oddCoreHighModulusPrefixCountGoal_of_prefixCount` | Lean-checked in `RoundComposite/OddCore.lean` | Conditional adapter |
 | Dense matrix layer decomposition split | `PrefixCount.MatrixLayerRealizationGoal`; `PrefixCount.layerRealization_of_matrixLayerRealizationGoal`; `prefixCountLayerRealizationGoal_of_matrixLayerRealization` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
+| Balanced matrix decomposition split | `PrefixCount.MatrixBalanced`; `PrefixCount.BalancedMatrixLayerRealizationGoal`; `PrefixCount.MatrixAdmissible.toBalanced`; `PrefixCount.matrixLayerRealizationGoal_of_balanced`; `prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization` | Lean-checked in `RoundComposite/PrefixCount.lean` and `RoundComposite/OddCore.lean` | Conditional adapter |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
 | Prefix-count signed foundation | `Parts`; `Parts.toMatrix`; `Parts.sum_cols_split`; `MatrixAdmissible`; `Parts.Admissible.toMatrixAdmissible`; `LayerPermCounts`; `LayerPermCounts.row_sum`; `LayerPermCounts.col_sum`; `SignedPrefixCounts`; `SignedPrefixCounts.toParts_admissible`; `QuotientTransport`; `QuotientTransport.toSigned_admissible`; `TransportQge2Goal`; `TransportQeq1Goal`; `admissiblePartsCountBranchGoal_of_transports`; `MarginPlan`; `SignedMarginMatrix`; `MarginPlan.toTransport`; `quotient_remainder_count_branch`; `signedVal_coprime_of_odd`; `pred_mod_pos_of_odd` | Lean-checked in `RoundComposite/PrefixCount.lean` | Closed foundation |
 | Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
@@ -207,6 +208,7 @@ The high branch is now further split at Lean level.  The theorem
 
 ```lean
 PrefixCount.AdmissiblePartsCountBranchGoal
+PrefixCount.BalancedMatrixLayerRealizationGoal
 PrefixCount.MatrixLayerRealizationGoal
 PrefixCountLayerRealizationGoal
 PrefixCountGeometricCriterionGoal
@@ -216,8 +218,10 @@ So the remaining high-modulus work is no longer a single opaque block: it is
 admissible parts construction, dense matrix layer decomposition,
 layer-permutation realization, and the geometric prefix-count Hamilton
 criterion.  The layer-realization interface is itself reduced to
-`PrefixCount.MatrixLayerRealizationGoal`, a pure permutation-decomposition
-statement for dense row/column count matrices.
+`PrefixCount.MatrixLayerRealizationGoal`, and then to
+`PrefixCount.BalancedMatrixLayerRealizationGoal`, a pure
+permutation-decomposition statement for dense row/column count matrices with
+no primitive prefix-count hypotheses.
 
 ## Verdict
 

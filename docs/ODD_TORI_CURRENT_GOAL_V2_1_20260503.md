@@ -128,10 +128,15 @@ admissiblePartsCountBranchGoal_of_transports
 Lean bridge now recorded in `RoundComposite/OddCore.lean`:
 
 ```lean
+PrefixCount.MatrixBalanced
+PrefixCount.BalancedMatrixLayerRealizationGoal
+PrefixCount.MatrixAdmissible.toBalanced
+PrefixCount.matrixLayerRealizationGoal_of_balanced
 PrefixCount.MatrixLayerRealizationGoal
 PrefixCount.layerRealization_of_matrixLayerRealizationGoal
 PrefixCountLayerRealizationGoal
 PrefixCountGeometricCriterionGoal
+prefixCountLayerRealizationGoal_of_balancedMatrixLayerRealization
 prefixCountLayerRealizationGoal_of_matrixLayerRealization
 oddCoreHighModulusPrefixCountGoal_of_prefixCount
 ```
@@ -194,6 +199,8 @@ still open.
   realization, and geometric criterion to `OddCoreHighModulusPrefixCountGoal`.
 - Matrix-layer realization interface reducing layer realization to the
   permutation decomposition of dense admissible count matrices.
+- Balanced-matrix split showing that the permutation-decomposition theorem only
+  needs row/column regularity, not primitive prefix-count data.
 
 ## Non-Goals For This Stage
 
