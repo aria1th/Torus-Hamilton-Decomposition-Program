@@ -201,6 +201,11 @@ proof should still contain a deterministic witness table for `d < 29`, showing
 which solved base `b` satisfies the base-tail hypotheses whenever `m < d` and
 `d` is not already a seed-semigroup dimension.
 
+The exact finite boundary table is recorded in
+`docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`.  It enumerates all
+`78` odd pairs `(d,m)` with `3 <= d < 29` and `3 <= m < d`, and records either
+a direct seed-semigroup witness or a base-tail witness.
+
 Important correction:
 
 ```text
