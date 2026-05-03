@@ -190,6 +190,7 @@ remaining inputs in theorem-shaped, manuscript-facing names:
 def RoundComposite.Concrete.OddCoreHighModulusPrefixCountGoal : Prop
 def RoundComposite.Concrete.D11SmallModulusFromD5BaseGoal : Prop
 def RoundComposite.Concrete.OddCoreSmallModulusOfBaseGoal : Prop
+def RoundComposite.Concrete.OddCoreSmallModulusOfUnitPacketsGoal : Prop
 
 theorem RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_main_lemmas
     (hHigh : OddCoreHighModulusPrefixCountGoal)
@@ -205,6 +206,18 @@ architecture is now stable; the remaining work is to prove
 `OddCoreHighModulusPrefixCountGoal`, `D11SmallModulusFromD5BaseGoal`, and
 `OddCoreSmallModulusOfBaseGoal`.  The older `hD11` and `hSmall` assumptions
 are derivable from these refined branch interfaces.
+
+For the small-modulus branch, it is enough to prove the more Lean-ready packet
+interface:
+
+```lean
+theorem RoundComposite.Concrete.oddCoreSmallModulusOfBaseGoal_of_unitPackets
+    (hPacketLift : OddCoreSmallModulusOfUnitPacketsGoal) :
+    OddCoreSmallModulusOfBaseGoal
+```
+
+This adapter constructs the unit-packet data from `2*b < d <= 3*b` using the
+closed arithmetic lemmas in `RoundComposite/SeedSemigroup.lean`.
 
 The small-branch hypothesis can already be reduced one step further.  The
 seed-semigroup arithmetic is closed in `RoundComposite/SeedSemigroup.lean`:

@@ -200,6 +200,9 @@ when `m` is odd and `m >= 3`.
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus
   prefix-count branch or small-modulus base-tail branch, and includes the
   adapter from the seed-semigroup base availability lemma to the small branch.
+  It also exposes `OddCoreSmallModulusOfUnitPacketsGoal`, a packet-level
+  interface for the heavy base-tail theorem, and adapts it back to
+  `OddCoreSmallModulusOfBaseGoal`.
   The refined endpoint
   `odd_modulus_tori_all_dimensions_of_refined_branches` leaves only the
   high-modulus prefix-count theorem, the D11-from-D5 small lift, and the

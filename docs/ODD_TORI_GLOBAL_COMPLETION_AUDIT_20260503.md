@@ -49,6 +49,7 @@ boundary table as an input theorem or Lean dependency.
 | Small odd dimension `d = 11` | `standard_cayley_odd_uniform_11_of_high_and_d5_base_tail` | Splits into prefix-count for `m >= 11` and D5-base tail lift for `m < 11` | Conditional |
 | General odd `d >= 13`, `m >= d` | `OddCoreHighModulusPrefixCount` | Interface only | Open |
 | General odd `d >= 13`, `m < d` | `OddCoreSmallModulusLiftOfBase` | Interface only | Open |
+| Packet-based adapter for the small branch | `OddCoreSmallModulusOfUnitPacketsGoal`; `oddCoreSmallModulusOfBaseGoal_of_unitPackets` | Lean-checked in `RoundComposite/OddCore.lean` | Closed adapter |
 | Seed/product base availability with `2*b < d <= 3*b` | `seed_semigroup_base_available` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Convert `2*b < d <= 3*b` to `b` blocks of size `2` or `3` | `twoThreeBlockParts_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Fill each `2`/`3` block with positive unit residues summing to `m` | `unitCarryPacket_spec`; `twoThreeBlockParts_unitCarryPacket_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
@@ -145,6 +146,11 @@ The exact remaining mathematical/Lean blocks are:
    ```lean
    OddCoreSmallModulusOfBaseGoal
    ```
+   It may equivalently be supplied through the packet-level interface:
+   ```lean
+   OddCoreSmallModulusOfUnitPacketsGoal
+   ```
+   because `oddCoreSmallModulusOfBaseGoal_of_unitPackets` is Lean-checked.
 
 Once these three are formalized, the current refined dispatcher yields the
 target all-dimensional odd-modulus theorem without using the finite boundary

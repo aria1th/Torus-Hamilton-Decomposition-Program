@@ -45,6 +45,19 @@ def OddCoreSmallModulusOfBaseGoal : Prop :=
     2 * b < d ∧ d ≤ 3 * b →
     StandardCayleySolved d m
 
+def OddCoreSmallModulusOfUnitPacketsGoal : Prop :=
+  ∀ {d m b : Nat},
+    Odd d → 13 ≤ d →
+    Odd m → 3 ≤ m → m < d →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = d →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    StandardCayleySolved d m
+
 theorem oddCoreHighModulusPrefixCount_of_goal
     (hHigh : OddCoreHighModulusPrefixCountGoal) :
     OddCoreHighModulusPrefixCount StandardCayleySolved := by
@@ -62,6 +75,19 @@ theorem oddCoreSmallModulusLiftOfBase_of_goal
     OddCoreSmallModulusLiftOfBase StandardCayleySolved := by
   intro d m b hdodd hd13 hmodd hm3 hmd hbSolved hbRange
   exact hSmallLift hdodd hd13 hmodd hm3 hmd hbSolved hbRange
+
+theorem oddCoreSmallModulusOfBaseGoal_of_unitPackets
+    (hPacketLift : OddCoreSmallModulusOfUnitPacketsGoal) :
+    OddCoreSmallModulusOfBaseGoal := by
+  intro d m b hdodd hd13 hmodd hm3 hmd hbSolved hbRange
+  have hpackets :=
+    _root_.RoundComposite.unitCarryPackets_spec hm3 hmodd hbRange
+  exact hPacketLift hdodd hd13 hmodd hm3 hmd hbSolved
+    (_root_.RoundComposite.unitCarryPackets m b d)
+    hpackets.1
+    hpackets.2.1
+    (fun packet hp => (hpackets.2.2 packet hp).1)
+    (fun packet hp a ha => (hpackets.2.2 packet hp).2 a ha)
 
 theorem oddCoreHighGE13_of_prefix_count
     (hHigh : OddCoreHighModulusPrefixCount StandardCayleySolved) :
