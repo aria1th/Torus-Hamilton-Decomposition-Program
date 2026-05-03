@@ -53,6 +53,7 @@ boundary table as an input theorem or Lean dependency.
 | Convert `2*b < d <= 3*b` to `b` blocks of size `2` or `3` | `twoThreeBlockParts_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Fill each `2`/`3` block with positive unit residues summing to `m` | `unitCarryPacket_spec`; `twoThreeBlockParts_unitCarryPacket_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Aggregate the unit packets for the whole base-tail input | `unitCarryPackets_spec` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
+| Package solved seed base plus unit packet data | `SmallBaseUnitPacketWitness`; `smallBaseUnitPacketWitness`; `smallBaseUnitPacketWitness_solvedBase` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Convert seed-semigroup base to solved base using D2/D3 | `standard_cayley_odd_uniform_of_seed_semigroup` | Lean-checked in `RoundComposite/SeedSemigroup.lean` | Closed |
 | Keep `d < 29` table as audit/regression only | `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md` | Documentation explicitly marks it non-spine | Satisfied |
 

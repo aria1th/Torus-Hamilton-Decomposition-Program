@@ -182,6 +182,18 @@ theorem unitCarryPackets_spec {b d m : Nat}
   · exact hpackets.1.trans hparts.2.1
   · simpa [unitCarryPackets] using hpackets.2
 
+structure SmallBaseUnitPacketWitness (d m : Nat) where
+  b : Nat
+  seed : SolvedBySeedSemigroup b
+  range : 2 * b < d ∧ d ≤ 3 * b
+  packets : List (List Nat)
+  packets_length : packets.length = b
+  packets_total_length : (packets.map List.length).sum = d
+  packet_sum : ∀ packet, packet ∈ packets → packet.sum = m
+  packet_units :
+    ∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m
+
 namespace Concrete
 
 theorem standard_cayley_odd_uniform_of_seed_semigroup
@@ -237,6 +249,34 @@ theorem seed_semigroup_base_available
     · simpa [p, n] using SolvedBySeedSemigroup.four_mul_two_pow n
     · omega
     · omega
+
+noncomputable def smallBaseUnitPacketWitness
+    {d m : Nat} (hdodd : Odd d) (hd13 : 13 ≤ d)
+    (hm3 : 3 ≤ m) (hmodd : Odd m) :
+    SmallBaseUnitPacketWitness d m := by
+  let ex := seed_semigroup_base_available hdodd hd13
+  let b := Classical.choose ex
+  have hbSpec :
+      SolvedBySeedSemigroup b ∧ 2 * b < d ∧ d ≤ 3 * b :=
+    Classical.choose_spec ex
+  let hbSeed := hbSpec.1
+  let hbRange := hbSpec.2
+  have hpackets := unitCarryPackets_spec hm3 hmodd hbRange
+  exact {
+    b := b
+    seed := hbSeed
+    range := hbRange
+    packets := unitCarryPackets m b d
+    packets_length := hpackets.1
+    packets_total_length := hpackets.2.1
+    packet_sum := fun packet hp => (hpackets.2.2 packet hp).1
+    packet_units := fun packet hp a ha => (hpackets.2.2 packet hp).2 a ha
+  }
+
+theorem smallBaseUnitPacketWitness_solvedBase
+    {d m : Nat} (w : SmallBaseUnitPacketWitness d m) :
+    OddUniformSolved StandardCayleySolved w.b :=
+  standard_cayley_odd_uniform_of_seed_semigroup w.seed
 
 end Concrete
 

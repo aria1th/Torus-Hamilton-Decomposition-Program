@@ -515,13 +515,22 @@ theorem RoundComposite.unitCarryPackets_spec
     ∀ packet, packet ∈ unitCarryPackets m b d →
       packet.sum = m ∧
       ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m
+
+structure RoundComposite.SmallBaseUnitPacketWitness (d m : Nat)
+
+noncomputable def RoundComposite.Concrete.smallBaseUnitPacketWitness
+    {d m : Nat} (hdodd : Odd d) (hd13 : 13 <= d)
+    (hm3 : 3 <= m) (hmodd : Odd m) :
+    SmallBaseUnitPacketWitness d m
 ```
 
 Thus the range condition `2*b < d <= 3*b` has already been lowered to the
 Lean-level statement that `d` is a sum of `b` blocks, each of size `2` or `3`,
 and to the aggregate packet statement required by the base-tail lift: there are
 `b` packets, the packet lengths sum to `d`, each packet sums to `m`, and every
-packet entry is a positive unit modulo `m`.
+packet entry is a positive unit modulo `m`.  The `SmallBaseUnitPacketWitness`
+wrapper packages this with a seed-semigroup base and the proof that the chosen
+base is solved by the existing D2/D3 product machinery.
 
 The remaining public small-modulus branch is:
 
