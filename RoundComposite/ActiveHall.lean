@@ -380,6 +380,33 @@ def FeasibleWithResidues {m T : Nat} {X C : Type*}
     (I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
   ∃ M : CountMatrix I, M.HallCuts ∧ M.HasResidues R
 
+namespace FeasibleWithResidues
+
+theorem rowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    R.RowCompatible I := by
+  rcases hFeasible with ⟨M, _hHall, hResidues⟩
+  exact M.rowCompatible_of_hasResidues hResidues
+
+theorem colCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    R.ColCompatible I := by
+  rcases hFeasible with ⟨M, _hHall, hResidues⟩
+  exact M.colCompatible_of_hasResidues hResidues
+
+theorem compatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    R.RowCompatible I ∧ R.ColCompatible I :=
+  ⟨hFeasible.rowCompatible, hFeasible.colCompatible⟩
+
+end FeasibleWithResidues
+
 /-- A symboling assigns each active set bijectively to the `T` active symbols. -/
 structure Symboling {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
