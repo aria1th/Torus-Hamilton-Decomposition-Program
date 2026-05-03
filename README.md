@@ -199,7 +199,9 @@ when `m` is odd and `m >= 3`.
   definitions.  It introduces `Parts`, `SignedPrefixCounts`, the signed
   difference set `{ -2, -1, 1, 2 }`, proves those signed values are primitive
   modulo any odd `m`, proves `SignedPrefixCounts.toParts_admissible`, and
-  records the quotient/remainder facts used when `m = (d-1)q + r`.  It also
+  records the quotient/remainder facts used when `m = (d-1)q + r`.  `Parts`
+  also has the first dense-matrix bridge `Parts.toMatrix` with simp lemmas for
+  the zero, delta, and step columns.  It also
   defines `QuotientTransport` and proves
   `QuotientTransport.toSigned_admissible`, the algebraic bridge from
   quotient/remainder transportation data to an admissible prefix-count

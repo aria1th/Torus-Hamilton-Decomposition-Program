@@ -180,6 +180,9 @@ a convenience, but the Hall-slack endpoint above is the accurate v2 target.
   `Parts`, `SignedPrefixCounts`, `signedVal_coprime_of_odd`,
   `SignedPrefixCounts.toParts_admissible`, `one_le_div_pred_of_le`, and
   `pred_mod_pos_of_odd`.
+- The first dense-matrix bridge for prefix-count parts:
+  `Parts.toMatrix`, `Parts.toMatrix_colZero`, `Parts.toMatrix_colDelta`, and
+  `Parts.toMatrix_colStep`.
 - `QuotientTransport` and `QuotientTransport.toSigned_admissible`, giving the
   algebraic bridge from quotient/remainder transportation data to admissible
   prefix-count data.

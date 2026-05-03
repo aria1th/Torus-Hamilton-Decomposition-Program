@@ -40,6 +40,48 @@ structure Admissible {d : Nat} (m : Nat) (C : Parts d) : Prop where
 
 end Parts
 
+namespace Parts
+
+def colZero {d : Nat} (hd : 2 ≤ d) : Fin d :=
+  ⟨0, by omega⟩
+
+def colDelta {d : Nat} (hd : 2 ≤ d) : Fin d :=
+  ⟨1, by omega⟩
+
+def colStep {d : Nat} (hd : 2 ≤ d) (k : Fin (d - 2)) : Fin d :=
+  ⟨k.val + 2, by omega⟩
+
+def stepIndexOfColumn {d : Nat} (hd : 2 ≤ d)
+    (j : Fin d) (hj0 : j.val ≠ 0) (hj1 : j.val ≠ 1) : Fin (d - 2) :=
+  ⟨j.val - 2, by omega⟩
+
+def toMatrix {d : Nat} (hd : 2 ≤ d) (C : Parts d) :
+    Matrix (Fin d) (Fin d) Nat :=
+  fun i j =>
+    if hj0 : j.val = 0 then
+      C.zero i
+    else if hj1 : j.val = 1 then
+      C.delta i
+    else
+      C.step i (stepIndexOfColumn hd j hj0 hj1)
+
+@[simp] theorem toMatrix_colZero {d : Nat} (hd : 2 ≤ d)
+    (C : Parts d) (i : Fin d) :
+    C.toMatrix hd i (colZero hd) = C.zero i := by
+  simp [toMatrix, colZero]
+
+@[simp] theorem toMatrix_colDelta {d : Nat} (hd : 2 ≤ d)
+    (C : Parts d) (i : Fin d) :
+    C.toMatrix hd i (colDelta hd) = C.delta i := by
+  simp [toMatrix, colDelta]
+
+@[simp] theorem toMatrix_colStep {d : Nat} (hd : 2 ≤ d)
+    (C : Parts d) (i : Fin d) (k : Fin (d - 2)) :
+    C.toMatrix hd i (colStep hd k) = C.step i k := by
+  simp [toMatrix, colStep, stepIndexOfColumn]
+
+end Parts
+
 /-- The signed differences used by the high-modulus transportation branch. -/
 def signedVals : Finset Int :=
   {-2, -1, 1, 2}
