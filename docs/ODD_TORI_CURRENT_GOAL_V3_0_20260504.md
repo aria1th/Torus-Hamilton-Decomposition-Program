@@ -152,6 +152,7 @@ def RoundComposite.ActiveHall.EraseLastHallCutsSelectionGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsNontrivialSlackChoiceGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsLinearChoiceGoal : Prop
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -190,6 +191,16 @@ theorem RoundComposite.ActiveHall
     EraseLastHallCutsGoal
 
 theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+    (hLinear : EraseLastHallCutsLinearChoiceGoal) :
+    EraseLastHallCutsNontrivialSlackChoiceGoal
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsGoal_of_linearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal) :
+    EraseLastHallCutsGoal
+
+theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsChoice
     (hChoice : EraseLastHallCutsChoiceGoal) :
     HallRealizationGoal
@@ -202,6 +213,11 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice
     (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal) :
     HallRealizationGoal
 
 theorem RoundComposite.ActiveHall
@@ -219,6 +235,12 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_eraseLastHallCutsNontrivialSlackChoice
     (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
 ```
@@ -239,6 +261,23 @@ checked for `U.Nonempty`, `U != Finset.univ`, and `S.Nonempty`.  The cases
 `U = empty`, `U = univ`, and `S = empty` are Lean-closed because their
 low-hit count is zero.
 
+The current smallest interface is the linear form, using
+
+```lean
+Incidence.lowCutSet I U S
+Incidence.choiceDegreeOn (Incidence.lowCutSet I U S) choice c
+```
+
+and requiring
+
+```lean
+sum c in U,
+  Incidence.choiceDegreeOn (Incidence.lowCutSet I U S) choice c
+<= M.cutSlack U (S.image Fin.castSucc)
+```
+
+for the same nontrivial cuts.
+
 Closed support includes:
 
 ```lean
@@ -248,6 +287,7 @@ theorem RoundComposite.ActiveHall.eraseLastHallCuts_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsChoice_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsSlackChoice_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsNontrivialSlackChoice_zero
+theorem RoundComposite.ActiveHall.eraseLastHallCutsLinearChoice_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
@@ -255,7 +295,16 @@ def RoundComposite.ActiveHall.Incidence.eraseChoice
 def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
 def RoundComposite.ActiveHall.CountMatrix.cutSlack
 theorem RoundComposite.ActiveHall.CountMatrix.cutMass_add_le_iff_le_cutSlack
+def RoundComposite.ActiveHall.Incidence.choiceDegreeOn
+def RoundComposite.ActiveHall.Incidence.choiceHitCountOn
+def RoundComposite.ActiveHall.Incidence.lowCutSet
 def RoundComposite.ActiveHall.Incidence.choiceLowHitCount
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_eq_choiceHitCountOn_lowCutSet
+theorem RoundComposite.ActiveHall.Incidence
+  .sum_choiceDegreeOn_on
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_symbols_empty
 theorem RoundComposite.ActiveHall.Incidence
@@ -286,15 +335,16 @@ theorem RoundComposite.ActiveHall.Incidence
 Remaining Active Hall proof obligation:
 
 ```lean
-EraseLastHallCutsNontrivialSlackChoiceGoal
+EraseLastHallCutsLinearChoiceGoal
 ```
 
 Equivalently, the remaining theorem is a degree-constrained active choice
 theorem with the cut condition
 
 ```lean
-Incidence.choiceLowHitCount I choice U S
-  <= M.cutSlack U (S.image Fin.castSucc)
+sum c in U,
+  Incidence.choiceDegreeOn (Incidence.lowCutSet I U S) choice c
+<= M.cutSlack U (S.image Fin.castSucc)
 ```
 
 for every nonempty proper color cut `U` and nonempty lower-symbol cut `S`.
