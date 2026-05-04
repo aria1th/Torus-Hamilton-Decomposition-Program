@@ -196,6 +196,9 @@ bridges
 Given the corresponding target Hall condition, Lean now derives an injective
 matching hitting every high column and the chosen special low column via
 `PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_target_matching`.
+The subsequent bridge from such a target Hall condition plus the distinguished
+negative low column to the preferred P-row data packet is Lean-closed as
+`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.nonempty_of_targetHall`.
 The paper-facing P-row matching interface is now separated from the stronger
 all-row column-count interface as
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
