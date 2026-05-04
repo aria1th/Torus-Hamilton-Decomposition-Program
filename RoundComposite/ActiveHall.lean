@@ -300,6 +300,44 @@ theorem cutCap_mono_symbols {T : Nat} {X C : Type*}
     I.cutCap U S₁ ≤ I.cutCap U S₂ :=
   I.cutCap_mono (fun _ h => h) hS
 
+theorem card_image_castSucc {T : Nat} (S : Finset (Fin T)) :
+    (S.image (Fin.castSucc : Fin T → Fin (T + 1))).card = S.card := by
+  exact Finset.card_image_of_injective _ (Fin.castSucc_injective T)
+
+theorem last_notMem_image_castSucc {T : Nat} (S : Finset (Fin T)) :
+    Fin.last T ∉ S.image (Fin.castSucc : Fin T → Fin (T + 1)) := by
+  intro h
+  rcases Finset.mem_image.mp h with ⟨σ, _hσ, hlast⟩
+  exact Fin.castSucc_ne_last σ hlast
+
+theorem card_image_castSucc_insert_last {T : Nat}
+    (S : Finset (Fin T)) :
+    (insert (Fin.last T)
+        (S.image (Fin.castSucc : Fin T → Fin (T + 1)))).card =
+      S.card + 1 := by
+  rw [Finset.card_insert_of_notMem (last_notMem_image_castSucc S),
+    card_image_castSucc]
+
+theorem cutCap_image_castSucc {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    (S : Finset (Fin T)) :
+    I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+      ∑ x : X, min ((I.active x ∩ U).card) S.card := by
+  unfold cutCap
+  rw [card_image_castSucc]
+
+theorem cutCap_image_castSucc_insert_last {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    (S : Finset (Fin T)) :
+    I.cutCap U
+        (insert (Fin.last T)
+          (S.image (Fin.castSucc : Fin T → Fin (T + 1)))) =
+      ∑ x : X, min ((I.active x ∩ U).card) (S.card + 1) := by
+  unfold cutCap
+  rw [card_image_castSucc_insert_last]
+
 theorem exists_injective_token_matching_of_hall
     {T : Nat} {X C Q : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C]
