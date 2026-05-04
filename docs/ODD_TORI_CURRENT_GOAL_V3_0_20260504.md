@@ -154,7 +154,22 @@ def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsNontrivialSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsLinearChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal : Prop
+def RoundComposite.ActiveHall.HoffmanOrderedSDRGoal : Prop
 def RoundComposite.ActiveHall.ColumnFillingUpgradeGoal : Prop
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hoffmanOrderedSDRGoal_of_hallRealization
+    (hRealize : HallRealizationGoal) :
+    HoffmanOrderedSDRGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_iff_hoffmanOrderedSDRGoal :
+    HallRealizationGoal <-> HoffmanOrderedSDRGoal
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_columnFillingUpgrade
@@ -265,6 +280,11 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsTokenLinearChoiceGoal_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal) :
+    EraseLastHallCutsTokenLinearChoiceGoal
 
 theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_eraseLastHallCutsChoice

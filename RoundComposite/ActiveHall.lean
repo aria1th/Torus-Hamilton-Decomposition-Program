@@ -2456,6 +2456,59 @@ def HallRealizationGoal : Prop :=
       M.HallCuts →
       ∃ Φ : Symboling I, Φ.Realizes M.val
 
+def HoffmanOrderedSDRGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence T X C) (m : C → Fin T → Nat),
+      (∀ c : C, (∑ σ : Fin T, m c σ) = I.colorDegree c) →
+      (∀ σ : Fin T, (∑ c : C, m c σ) = Fintype.card X) →
+      (∀ U : Finset C, ∀ S : Finset (Fin T),
+        (∑ c ∈ U, ∑ σ ∈ S, m c σ) ≤ I.cutCap U S) →
+      ∃ e : (∀ x : X, Fin T ≃ {c : C // c ∈ I.active x}),
+        ∀ c : C, ∀ σ : Fin T,
+          Incidence.choiceDegree (fun x : X => ((e x) σ).1) c = m c σ
+
+theorem hallRealizationGoal_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hHoffman I M.val M.row_sum M.col_sum (by
+      intro U S
+      simpa [CountMatrix.cutMass] using hHall U S) with
+    ⟨e, he⟩
+  let Φ : Symboling I := { equiv := e }
+  refine ⟨Φ, ?_⟩
+  intro c σ
+  rw [Φ.count_eq_choiceDegree c σ]
+  exact he c σ
+
+theorem hoffmanOrderedSDRGoal_of_hallRealization
+    (hRealize : HallRealizationGoal.{uX, uC}) :
+    HoffmanOrderedSDRGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I m hrow hcol hcut
+  let M : CountMatrix I := {
+    val := m
+    row_sum := hrow
+    col_sum := hcol
+  }
+  have hHall : M.HallCuts := by
+    intro U S
+    change (∑ c ∈ U, ∑ σ ∈ S, m c σ) ≤ I.cutCap U S
+    exact hcut U S
+  rcases hRealize I M hHall with ⟨Φ, hReal⟩
+  refine ⟨Φ.equiv, ?_⟩
+  intro c σ
+  change Incidence.choiceDegree (fun x : X => Φ.color x σ) c = m c σ
+  rw [← Φ.count_eq_choiceDegree c σ]
+  exact hReal c σ
+
+theorem hallRealizationGoal_iff_hoffmanOrderedSDRGoal :
+    HallRealizationGoal.{uX, uC} ↔ HoffmanOrderedSDRGoal.{uX, uC} :=
+  ⟨hoffmanOrderedSDRGoal_of_hallRealization,
+    hallRealizationGoal_of_hoffmanOrderedSDR⟩
+
 def ColumnFillingUpgradeGoal : Prop :=
   ∀ {T : Nat} {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
@@ -3116,6 +3169,12 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
       EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
   ⟨eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization,
     hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice⟩
+
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal.{uX, uC}) :
+    EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
+  eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+    (hallRealizationGoal_of_hoffmanOrderedSDR hHoffman)
 
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
