@@ -182,6 +182,14 @@ theorem prefixCountRootStep_apply_inv {d m : Nat}
       sub_eq_add_neg, add_assoc]
   · simp [prefixCountRootStepInv, prefixCountRootStep, hij]
 
+theorem prefixCountRootStep_apply_zero {d m : Nat} (hd2 : 2 ≤ d)
+    (i : Fin d) (w : PrefixCountRootState d m) :
+    prefixCountRootStep d m i w ⟨0, by omega⟩ =
+      if i.val = 0 then w ⟨0, by omega⟩ + 1 else w ⟨0, by omega⟩ := by
+  by_cases hi : i.val = 0
+  · simp [prefixCountRootStep, hi]
+  · simp [prefixCountRootStep, hi]
+
 theorem prefixCountRootStep_eq_succ_cast {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (w : PrefixCountRootState d m) :
     prefixCountRootStep d m i w =
@@ -288,6 +296,31 @@ theorem prefixCountLambdaRho_eq_pred
       ⟨s.val - 1, by omega⟩ := by
   ext
   exact prefixCountLambdaRho_val_eq_pred rho hs0 hs1 hlt
+
+theorem prefixCountLambdaRho_val_eq_zero_iff
+    {d : Nat} (rho : Fin d) {s : Fin d}
+    (hrho : rho.val ≠ 0) :
+    (prefixCountLambdaRho d rho s).val = 0 ↔ s.val = 0 := by
+  constructor
+  · intro h
+    by_cases hs0 : s.val = 0
+    · exact hs0
+    · by_cases hs1 : s.val = 1
+      · have hval : (prefixCountLambdaRho d rho s).val = rho.val := by
+          rw [prefixCountLambdaRho_eq_rho_of_val_one rho hs1]
+        exact False.elim (hrho (hval ▸ h))
+      · by_cases hlt : rho.val < s.val
+        · have hval : prefixCountLambdaRho d rho s = s :=
+            prefixCountLambdaRho_eq_self_of_rho_lt rho hs0 hs1 hlt
+          exact hval.symm ▸ h
+        · have hval :
+            (prefixCountLambdaRho d rho s).val = s.val - 1 :=
+            prefixCountLambdaRho_val_eq_pred rho hs0 hs1 hlt
+          have hsge : 2 ≤ s.val := by omega
+          omega
+  · intro hs
+    simpa [hs] using
+      congrArg Fin.val (prefixCountLambdaRho_eq_self_of_val_zero rho hs)
 
 def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
   if _hs0 : s.val = 0 then
@@ -959,6 +992,32 @@ noncomputable def prefixCountFirstHitSymbolMapInv
   fun w =>
     prefixCountRootStepInv d m
       (prefixCountLambdaRho d (prefixCountCanonicalRho d m hd2 t w) s) w
+
+theorem prefixCountFirstHitSymbolMap_apply_zero
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (s : Fin d) (w : PrefixCountRootState d m) :
+    prefixCountFirstHitSymbolMap hd2 t s w ⟨0, by omega⟩ =
+      if s.val = 0 then w ⟨0, by omega⟩ + 1 else w ⟨0, by omega⟩ := by
+  unfold prefixCountFirstHitSymbolMap
+  rw [prefixCountRootStep_apply_zero hd2]
+  have hrho :
+      (prefixCountCanonicalRho d m hd2 t w).val ≠ 0 :=
+    prefixCountCanonicalRho_ne_zero hd2 t w
+  by_cases hs0 : s.val = 0
+  · have hLambda :
+        (prefixCountLambdaRho d
+          (prefixCountCanonicalRho d m hd2 t w) s).val = 0 :=
+      (prefixCountLambdaRho_val_eq_zero_iff
+        (prefixCountCanonicalRho d m hd2 t w) hrho).2 hs0
+    simp [hs0, hLambda]
+  · have hLambda :
+        (prefixCountLambdaRho d
+          (prefixCountCanonicalRho d m hd2 t w) s).val ≠ 0 := by
+      intro hzero
+      exact hs0
+        ((prefixCountLambdaRho_val_eq_zero_iff
+          (prefixCountCanonicalRho d m hd2 t w) hrho).1 hzero)
+    simp [hs0, hLambda]
 
 theorem prefixCountFirstHitSymbolMap_bijective_of_val_zero
     {d m : Nat} (hd2 : 2 ≤ d)
