@@ -193,7 +193,7 @@ def RoundComposite.Concrete
           tail2
 ```
 
-If an odometer coordinate is more natural, either of the following sufficient
+If an odometer coordinate is more natural, any of the following sufficient
 targets is preferable:
 
 ```lean
@@ -223,6 +223,16 @@ def RoundComposite.Concrete
         forall tail : Fin (d - 2) -> ZMod m,
           e (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
             e tail + 1
+
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      Shared.CycleCoordinate (m ^ (d - 2))
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
 ```
 
 ### Already Lean-Closed
@@ -253,6 +263,11 @@ theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
     PrefixCountFirstHitReturnTailRankGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailRankEquivGoal
 
 theorem Shared.single_cycle_of_zmod_rank
     (f : alpha -> alpha) (rank : alpha -> ZMod N)
@@ -295,7 +310,7 @@ theorem RoundComposite.Concrete
 
 Prove the high-modulus first-hit return-tail orbit theorem
 `PrefixCountFirstHitReturnTailMonodromyOrbitGoal`.  It is also sufficient to
-prove either rank target above.
+prove either rank target above, or the `CycleCoordinate` target.
 
 The proof should focus on the tail map
 
@@ -319,7 +334,13 @@ or equivalence
 e : (Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))
 ```
 
-such that the monodromy increments that coordinate by `1`.
+such that the monodromy increments that coordinate by `1`.  Equivalently, a
+forward odometer proof may provide:
+
+```lean
+K : Shared.CycleCoordinate (m ^ (d - 2))
+      (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+```
 
 The expected mathematical route is triangular/skew:
 

@@ -2088,6 +2088,15 @@ def PrefixCountFirstHitReturnTailRankEquivGoal : Prop :=
           e (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
             e tail + 1
 
+def PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d,
+      Shared.CycleCoordinate (m ^ (d - 2))
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailMonodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
     PrefixCountFirstHitHeadTailSectionMonodromyGoal := by
@@ -2233,11 +2242,24 @@ theorem prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
     ⟨e, hstep⟩
   exact ⟨e, Equiv.bijective e, hstep⟩
 
+theorem prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailRankEquivGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
+  let K := hCycle hd2 hdodd hd5 hmodd hdm hC L c
+  exact ⟨K.equiv.symm, fun tail => Shared.CycleCoordinate.rank_step K tail⟩
+
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
   prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank
     (prefixCountFirstHitReturnTailRankGoal_of_rankEquiv hEquiv)
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
+    (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hCycle)
 
 theorem prefixCountFirstHitReturnTailMonodromyGoal_of_rank
     (hRank : PrefixCountFirstHitReturnTailRankGoal) :
@@ -2250,6 +2272,12 @@ theorem prefixCountFirstHitReturnTailMonodromyGoal_of_rankEquiv
     PrefixCountFirstHitReturnTailMonodromyGoal :=
   prefixCountFirstHitReturnTailMonodromyGoal_of_rank
     (prefixCountFirstHitReturnTailRankGoal_of_rankEquiv hEquiv)
+
+theorem prefixCountFirstHitReturnTailMonodromyGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailMonodromyGoal :=
+  prefixCountFirstHitReturnTailMonodromyGoal_of_rankEquiv
+    (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hCycle)
 
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailOrbit
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
@@ -3787,6 +3815,10 @@ def OddCoreHighModulusReturnTailRankEquivBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountFirstHitReturnTailRankEquivGoal
 
+def OddCoreHighModulusReturnTailCycleCoordinateBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  PrefixCountFirstHitReturnTailCycleCoordinateGoal
+
 def OddCoreHighModulusColumnPackingScheduleBlocksGoal : Prop :=
   PrefixCount.Qge2SignedColumnPackingGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal
@@ -3818,6 +3850,10 @@ def OddModulusToriV4ReturnTailRankBlocksGoal : Prop :=
 
 def OddModulusToriV4ReturnTailRankEquivBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailRankEquivBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+def OddModulusToriV4ReturnTailCycleCoordinateBlocksGoal : Prop :=
+  OddCoreHighModulusReturnTailCycleCoordinateBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
 
 def OddModulusToriV4MinimalAddBlocksGoal : Prop :=
@@ -4273,6 +4309,20 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailRankEquiv
   oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailRankEquiv_blocks
     ⟨hQge2Proper, hEquiv⟩
 
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate_blocks
+    (hBlocks : OddCoreHighModulusReturnTailCycleCoordinateBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailRankEquiv
+    hBlocks.1
+    (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hBlocks.2)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate_blocks
+    ⟨hQge2Proper, hCycle⟩
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
@@ -4362,6 +4412,14 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailRankEquiv_blocks
       hBlocks.1)
     hBlocks.2
 
+theorem oddSuccessorClosureGoal_of_v4_returnTailCycleCoordinate_blocks
+    (hBlocks : OddModulusToriV4ReturnTailCycleCoordinateBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate_blocks
+      hBlocks.1)
+    hBlocks.2
+
 theorem oddSuccessorClosureGoal_of_v4_minimalAdd_blocks
     (hBlocks : OddModulusToriV4MinimalAddBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -4427,6 +4485,16 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailRankEquiv
   oddSuccessorClosureGoal_of_high_and_successorSmall
     (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailRankEquiv
       hQge2Proper hEquiv)
+    hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailCycleCoordinate
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate
+      hQge2Proper hCycle)
     hSmall
 
 theorem oddSuccessorClosureGoal_of_v4_successorScheduleAdd
@@ -4722,6 +4790,28 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRankEquiv
     ⟨⟨hQge2Proper, hEquiv⟩, hSmall⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate_blocks
+    (hBlocks : OddModulusToriV4ReturnTailCycleCoordinateBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_high_and_successor_small
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate_blocks
+      hBlocks.1)
+    hBlocks.2
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate_blocks
+    ⟨⟨hQge2Proper, hCycle⟩, hSmall⟩
+    hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_sectionMonodromy_blocks
     (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal) :
     OddModulusToriAllDimensionsGoal := by
@@ -4801,6 +4891,22 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRankEquiv
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailRankEquiv
     hQge2Proper hEquiv hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailCycleCoordinate_blocks
+    (hBlocks : OddModulusToriV4ReturnTailCycleCoordinateBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate_blocks
+    hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailCycleCoordinate
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
+    hQge2Proper hCycle hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
     (hBlocks : OddModulusToriV4MinimalBlocksGoal) :

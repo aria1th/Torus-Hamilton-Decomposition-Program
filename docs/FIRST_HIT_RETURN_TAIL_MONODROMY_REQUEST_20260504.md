@@ -17,10 +17,12 @@ reduced the root-flat return to a head-tail skew product.
 1. `RoundComposite/OddCore.lean`
 2. `RoundComposite/PrefixCount.lean`
 3. `Shared/Monodromy.lean`
-4. `Shared/RootFlat.lean`
-5. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
-6. Optional legacy context: `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`
-7. Optional older request: `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`
+4. `Shared/RankCycle.lean`
+5. `Shared/TorusCayley.lean`
+6. `Shared/RootFlat.lean`
+7. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
+8. Optional legacy context: `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`
+9. Optional older request: `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`
 
 ## Preferred Lean Target
 
@@ -122,6 +124,26 @@ theorem Shared.single_cycle_of_zmod_rank_equiv
     Shared.IsSingleCycleMap f
 ```
 
+If the proof is naturally a forward odometer parameterization rather than a
+rank map, use this `CycleCoordinate` target:
+
+```lean
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      Shared.CycleCoordinate (m ^ (d - 2))
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailRankEquivGoal
+```
+
 The generic cardinality/equivalence facts for the tail space are already
 available in `Shared/TorusCayley.lean`:
 
@@ -219,6 +241,16 @@ theorem RoundComposite.Concrete
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
 ```
 
 ## Mathematical Shape Expected
@@ -246,7 +278,8 @@ Fin (d - 2) -> ZMod m
 ```
 
 Lean already supplies bijectivity, so orbit-transitivity is enough to recover
-`Shared.IsSingleCycleMap`.
+`Shared.IsSingleCycleMap`.  It is also enough to construct either a rank
+coordinate or a forward `Shared.CycleCoordinate` for the same map.
 
 The expected route is triangular/skew:
 

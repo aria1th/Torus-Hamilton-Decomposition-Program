@@ -150,6 +150,25 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailRankGoal
 ```
 
+If the proof is naturally built as a forward cycle parameterization, Lean now
+also exposes the `CycleCoordinate` route:
+
+```lean
+def PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      Shared.CycleCoordinate (m ^ (d - 2))
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
+    PrefixCountFirstHitReturnTailRankEquivGoal
+```
+
 The generic tail-space equivalence is available as:
 
 ```lean
@@ -170,6 +189,11 @@ OddSuccessorSmallModulusBaseTailGoal
 The first field is the q>=2 proper-cut signed decomposition theorem.  The
 second is the high-modulus first-hit tail orbit theorem.  The third is the
 successor small-modulus base-tail branch.
+
+For the second field, any of the stronger targets
+`PrefixCountFirstHitReturnTailRankGoal`,
+`PrefixCountFirstHitReturnTailRankEquivGoal`, or
+`PrefixCountFirstHitReturnTailCycleCoordinateGoal` is sufficient.
 
 ## Verification Gate
 

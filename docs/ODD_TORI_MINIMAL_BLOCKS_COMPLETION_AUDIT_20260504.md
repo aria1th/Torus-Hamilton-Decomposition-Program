@@ -111,6 +111,7 @@ theorem RoundComposite.Concrete
 | Tail monodromy bijectivity | `prefixCountFirstHitReturnTailMonodromy_bijective` | Lean-closed | Leaves only orbit/transitivity for the tail map |
 | Tail orbit from rank | `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank` | Lean-closed conditional | A bijective odometer rank is enough |
 | Tail rank from equivalence | `prefixCountFirstHitReturnTailRankGoal_of_rankEquiv` | Lean-closed conditional | An explicit equivalence odometer is enough |
+| Tail rank equivalence from cycle coordinate | `prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate` | Lean-closed conditional | A forward `Shared.CycleCoordinate` is enough |
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
@@ -169,6 +170,7 @@ directly by orbit-transitivity, or by either odometer sufficient target:
 ```lean
 PrefixCountFirstHitReturnTailRankGoal
 PrefixCountFirstHitReturnTailRankEquivGoal
+PrefixCountFirstHitReturnTailCycleCoordinateGoal
 ```
 
 ## Field 3: Successor Small-Modulus Branch
