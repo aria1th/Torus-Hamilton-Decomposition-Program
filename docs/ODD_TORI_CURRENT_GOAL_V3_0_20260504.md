@@ -491,11 +491,19 @@ def RoundComposite.ActiveHall.Symboling.toColumnFilling
 Remaining Active Hall proof obligation:
 
 ```lean
+HoffmanOrderedSDRGoal
+```
+
+This is Lean-equivalent to all of the following interfaces:
+
+```lean
+HallRealizationGoal
+ColumnFillingUpgradeGoal
 EraseLastHallCutsTokenLinearChoiceGoal
 ```
 
-Equivalently, the remaining theorem is a degree-constrained active token
-placement theorem with the cut condition
+The token-linear form is a degree-constrained active token placement theorem
+with the cut condition
 
 ```lean
 Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
@@ -515,5 +523,5 @@ ColumnFillingUpgradeGoal
 ```
 
 It is Lean-equivalent to `HallRealizationGoal`, so the true abstract finite
-combinatorics blocker is the Hoffman/capacitated upgrade from column-wise
-fillings to genuine `Symboling`s.
+combinatorics blocker is Hoffman's ordered-SDR theorem, equivalently the
+capacitated upgrade from column-wise fillings to genuine `Symboling`s.
