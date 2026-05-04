@@ -581,6 +581,31 @@ def prefixCountCanonicalRhoHitNat {d m : Nat}
   ∃ hj : j < d - 1,
     j + 1 < d - 1 ∧ w ⟨j, hj⟩ = t
 
+theorem prefixCountCanonicalRhoHit_congr
+    {d m : Nat} {t : ZMod m} {w v : PrefixCountRootState d m}
+    {j : Fin (d - 1)} (h : w j = v j) :
+    prefixCountCanonicalRhoHit t w j ↔
+      prefixCountCanonicalRhoHit t v j := by
+  constructor
+  · intro hj
+    exact ⟨hj.1, by simpa [h] using hj.2⟩
+  · intro hj
+    exact ⟨hj.1, by simpa [h] using hj.2⟩
+
+theorem prefixCountCanonicalRhoHitNat_congr
+    {d m : Nat} {t : ZMod m} {w v : PrefixCountRootState d m}
+    {j : Nat}
+    (h : ∀ hj : j < d - 1, w ⟨j, hj⟩ = v ⟨j, hj⟩) :
+    prefixCountCanonicalRhoHitNat t w j ↔
+      prefixCountCanonicalRhoHitNat t v j := by
+  constructor
+  · intro hj
+    rcases hj with ⟨hjlt, hnext, hw⟩
+    exact ⟨hjlt, hnext, by simpa [h hjlt] using hw⟩
+  · intro hj
+    rcases hj with ⟨hjlt, hnext, hv⟩
+    exact ⟨hjlt, hnext, by simpa [h hjlt] using hv⟩
+
 theorem prefixCountCanonicalRhoHitNat_of_fin
     {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
     {j : Fin (d - 1)}
