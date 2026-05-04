@@ -2401,6 +2401,10 @@ theorem pRows_card {n r : Nat} (hrlt : r < n) :
       _ = n := by simp
   omega
 
+def pRowNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
+    (X : Finset (Fin n)) : Finset (Fin (n - 1)) :=
+  X.biUnion fun i => A.posCols i
+
 theorem exists_distinguished_low_neg {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
     (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
@@ -2491,6 +2495,109 @@ theorem posRows_card_lt_pRow_posCols_card_of_one_lt_r {n r : Nat}
   subst n
   subst r
   omega
+
+theorem pRows_hall {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrpos : 0 < r) (X : Finset (Fin n)) (hX : X ⊆ pRows n r) :
+    X.card ≤ (A.pRowNeighbors X).card := by
+  classical
+  let N := A.pRowNeighbors X
+  let degP : Nat := (n + r - 3) / 2
+  let degC : Nat := (n - 2) / 2
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  have hdegP_pos : 0 < degP := by
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    have hn : n = 2 * a := by omega
+    have hr : r = 2 * s + 1 := by omega
+    subst n
+    subst r
+    omega
+  have hdegC_le : degC ≤ degP := by
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    have hn : n = 2 * a := by omega
+    have hr : r = 2 * s + 1 := by omega
+    subst n
+    subst r
+    omega
+  have hrow :
+      ∀ i ∈ X, (A.posCols i).card = degP := by
+    intro i hi
+    have hip : r ≤ i.val := by
+      have hmem := hX hi
+      simpa [pRows] using hmem
+    exact A.pRow_posCols_card hdodd hmodd hip
+  have hrowSum :
+      (∑ i ∈ X, (A.posCols i).card) = X.card * degP := by
+    calc
+      (∑ i ∈ X, (A.posCols i).card)
+          = ∑ _i ∈ X, degP := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              exact hrow i hi
+      _ = X.card * degP := by simp
+  have hrowRestrict :
+      ∀ i ∈ X,
+        (∑ k ∈ N, if A.B i k = 1 then (1 : Nat) else 0) =
+          (A.posCols i).card := by
+    intro i hi
+    rw [← Finset.card_filter]
+    have hfilter :
+        N.filter (fun k : Fin (n - 1) => A.B i k = 1) = A.posCols i := by
+      ext k
+      constructor
+      · intro hk
+        have hkB : A.B i k = 1 := by
+          exact (Finset.mem_filter.mp hk).2
+        simp [posCols, hkB]
+      · intro hk
+        have hkB : A.B i k = 1 := by simpa [posCols] using hk
+        have hkN : k ∈ N := by
+          exact Finset.mem_biUnion.mpr ⟨i, hi, hk⟩
+        simp [hkN, hkB]
+    rw [hfilter]
+  have hcolBound :
+      ∀ k ∈ N, (∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0) ≤ degC := by
+    intro k _hk
+    rw [← Finset.card_filter]
+    have hsubset :
+        X.filter (fun i : Fin n => A.B i k = 1) ⊆ A.posRows k := by
+      intro i hi
+      have hB : A.B i k = 1 := by
+        exact (Finset.mem_filter.mp hi).2
+      simp [posRows, hB]
+    have hcardle := Finset.card_le_card hsubset
+    rw [A.posRows_card k] at hcardle
+    exact hcardle
+  have hedge_eq :
+      (∑ i ∈ X, (A.posCols i).card) =
+        ∑ k ∈ N, ∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0 := by
+    calc
+      (∑ i ∈ X, (A.posCols i).card)
+          = ∑ i ∈ X, ∑ k ∈ N,
+              if A.B i k = 1 then (1 : Nat) else 0 := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              exact (hrowRestrict i hi).symm
+      _ = ∑ k ∈ N, ∑ i ∈ X,
+              if A.B i k = 1 then (1 : Nat) else 0 := by
+              rw [Finset.sum_comm]
+  have hedge_le : X.card * degP ≤ N.card * degC := by
+    rw [← hrowSum, hedge_eq]
+    calc
+      (∑ k ∈ N, ∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0)
+          ≤ ∑ _k ∈ N, degC := by
+              apply Finset.sum_le_sum
+              intro k hk
+              exact hcolBound k hk
+      _ = N.card * degC := by simp [Nat.mul_comm]
+  have hmul : X.card * degP ≤ N.card * degP :=
+    le_trans hedge_le (Nat.mul_le_mul_left N.card hdegC_le)
+  exact Nat.le_of_mul_le_mul_right hmul hdegP_pos
 
 theorem pRow_exists_distinguished_neg_pos {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)

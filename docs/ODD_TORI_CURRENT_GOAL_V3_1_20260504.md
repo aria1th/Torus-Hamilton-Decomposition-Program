@@ -182,7 +182,9 @@ argument as `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows`,
 degree comparison and forced distinguished-negative edge are also exposed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_le_pRow_posCols_card`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_lt_pRow_posCols_card_of_one_lt_r`,
-and `PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_exists_distinguished_neg_pos`.
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_exists_distinguished_neg_pos`,
+and the P-row Hall condition
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.
