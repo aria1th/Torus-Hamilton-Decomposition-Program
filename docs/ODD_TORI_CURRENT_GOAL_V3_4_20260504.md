@@ -380,6 +380,24 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+The small branch can also be supplied through the copied-edge finite Hoffman
+interface:
+
+```lean
+def RoundComposite.Concrete
+  .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryEdge
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
 ## Remaining Fields
 
 The goal is not complete.  For the sharpest Lean-exposed split, the remaining
@@ -388,12 +406,14 @@ hard fields are:
 ```lean
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
-OddSuccessorSmallModulusBaseTailGoal
+OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
 ```
 
 Equivalently, the first two fields may be replaced by the single coarser field
-`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.  Lean also exposes the
-separation endpoint
+`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields may
+be replaced by the single coarser field
+`OddSuccessorSmallModulusBaseTailGoal`.  Lean also exposes the separation endpoint
 `PrefixCount.OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, which implies
 the indicator-to-full-support half.
 

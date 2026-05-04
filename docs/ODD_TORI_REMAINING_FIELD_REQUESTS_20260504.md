@@ -48,16 +48,35 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
-Remaining fields for the split endpoint:
+Lean also exposes the fully split small-branch endpoint:
+
+```lean
+def RoundComposite.Concrete
+  .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryEdge
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+Remaining fields for the most split endpoint:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
-OddSuccessorSmallModulusBaseTailGoal
+OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
 ```
 
 Equivalently, the first two fields can be replaced by the coarser field
-`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.
+`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields can
+be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.
 
 After the completed q>=2 GPT-5.5 Pro response, Lean now exposes a sharper
 standard finite-Hoffman split for the first field:
