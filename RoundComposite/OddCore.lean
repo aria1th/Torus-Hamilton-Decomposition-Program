@@ -442,6 +442,29 @@ theorem prefixCountFirstHitCanonicalSchedule_step
     (prefixCountFirstHitCanonicalSchedule hd2 L).step =
       prefixCountRootStep d m := rfl
 
+noncomputable def prefixCountFirstHitSymbolMap
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (s : Fin d) :
+    PrefixCountRootState d m → PrefixCountRootState d m :=
+  fun w =>
+    prefixCountRootStep d m
+      (prefixCountLambdaRho d (prefixCountCanonicalRho d m hd2 t w) s) w
+
+theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M)
+    (t : ZMod m) (c : Fin d) :
+    (prefixCountFirstHitCanonicalSchedule hd2 L).layerMap t c =
+      prefixCountFirstHitSymbolMap hd2 t
+        (L.layer (prefixCountLayerIndex t) c) := rfl
+
+def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    ∀ t : ZMod m, ∀ s : Fin d,
+      Function.Bijective (prefixCountFirstHitSymbolMap hd2 t s)
+
 def PrefixCountFirstHitCanonicalLayerBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -459,6 +482,13 @@ def PrefixCountFirstHitCanonicalReturnsSingleCycleGoal : Prop :=
 def PrefixCountFirstHitCanonicalScheduleAuxGoal : Prop :=
   PrefixCountFirstHitCanonicalLayerBijectiveGoal ∧
   PrefixCountFirstHitCanonicalReturnsSingleCycleGoal
+
+theorem prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
+    (hSym : PrefixCountFirstHitSymbolMapsBijectiveGoal) :
+    PrefixCountFirstHitCanonicalLayerBijectiveGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm _hC L t c
+  rw [prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap]
+  exact hSym hd2 hdodd hd5 hmodd hdm t (L.layer (prefixCountLayerIndex t) c)
 
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
