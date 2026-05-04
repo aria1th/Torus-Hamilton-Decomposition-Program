@@ -1397,6 +1397,36 @@ theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
       prefixCountFirstHitSymbolMap hd2 t
         (L.layer (prefixCountLayerIndex t) c) := rfl
 
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_apply_zero
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c : Fin d) :
+    ∀ k : Nat, ∀ w : PrefixCountRootState d m,
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c k w)
+          ⟨0, by omega⟩ =
+        w ⟨0, by omega⟩ +
+          ∑ t ∈ Finset.range k,
+            if (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val = 0
+            then (1 : ZMod m) else 0
+  | 0, w => by
+      simp [Shared.RootFlatSchedule.prefixMap]
+  | k + 1, w => by
+      rw [Shared.RootFlatSchedule.prefixMap]
+      rw [prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap]
+      change
+        prefixCountFirstHitSymbolMap hd2 ((k : Nat) : ZMod m)
+          (L.layer (prefixCountLayerIndex ((k : Nat) : ZMod m)) c)
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c k w)
+          ⟨0, by omega⟩ = _
+      rw [prefixCountFirstHitSymbolMap_apply_zero]
+      rw [prefixCountFirstHitCanonicalSchedule_prefixMap_apply_zero
+        hd2 L c k w]
+      rw [Finset.sum_range_succ]
+      by_cases hzero :
+          (L.layer (prefixCountLayerIndex ((k : Nat) : ZMod m)) c).val = 0
+      · simp [hzero, add_assoc]
+      · simp [hzero, add_assoc]
+
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
     Odd d → 5 ≤ d → Odd m → d ≤ m →
