@@ -300,11 +300,18 @@ def RoundComposite.ActiveHall.Incidence.choiceHitCountOn
 def RoundComposite.ActiveHall.Incidence.lowCutSet
 def RoundComposite.ActiveHall.Incidence.choiceLowHitCount
 theorem RoundComposite.ActiveHall.Incidence.choiceDegreeOn_le_card
+theorem RoundComposite.ActiveHall.Incidence.choiceDegreeOn_mono_set
 theorem RoundComposite.ActiveHall.Incidence.choiceDegreeOn_le_choiceDegree
 theorem RoundComposite.ActiveHall.Incidence.choiceDegreeOn_univ
 theorem RoundComposite.ActiveHall.Incidence.choiceHitCountOn_le_card
+theorem RoundComposite.ActiveHall.Incidence.choiceHitCountOn_mono_set
+theorem RoundComposite.ActiveHall.Incidence.choiceHitCountOn_mono_colors
 theorem RoundComposite.ActiveHall.Incidence.choiceHitCountOn_le_choiceHitCount
 theorem RoundComposite.ActiveHall.Incidence.choiceHitCountOn_univ
+theorem RoundComposite.ActiveHall.Incidence.lowCutSet_mono_symbols
+theorem RoundComposite.ActiveHall.Incidence.lowCutSet_mono_symbols_of_subset
+theorem RoundComposite.ActiveHall.Incidence.lowCutSet_colors_empty
+theorem RoundComposite.ActiveHall.Incidence.lowCutSet_colors_univ
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_eq_choiceHitCountOn_lowCutSet
 theorem RoundComposite.ActiveHall.Incidence
@@ -315,6 +322,10 @@ theorem RoundComposite.ActiveHall.Incidence
   .sum_choiceDegreeOn_on_le_choiceHitCount
 theorem RoundComposite.ActiveHall.Incidence
   .sum_choiceDegreeOn_on_le_sum_choiceDegree
+theorem RoundComposite.ActiveHall.Incidence
+  .sum_choiceDegreeOn_on_mono_set
+theorem RoundComposite.ActiveHall.Incidence
+  .sum_choiceDegreeOn_on_mono_colors
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
 theorem RoundComposite.ActiveHall.Incidence
