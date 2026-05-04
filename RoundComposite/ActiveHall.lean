@@ -1667,6 +1667,45 @@ def EraseLastHallCutsGoal : Prop :=
             fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
           (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
 
+def EraseLastHallCutsSelectionGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            simpa [choice] using hfActive (f.symm x)
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            I.cutCap U
+                (insert (Fin.last T)
+                  (S.image (Fin.castSucc : Fin T → Fin (T + 1))))
+              ≤ (I.eraseChoice choice hchoice).cutCap U S
+                  + Incidence.choiceHitCount choice U
+
+theorem eraseLastHallCutsGoal_of_selection
+    (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hSelect I M hHall with ⟨f, hfActive, hCover⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    simpa [choice] using hfActive (f.symm x)
+  have hdegree :
+      ∀ c : C,
+        Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
+  refine ⟨f, hfActive, ?_⟩
+  change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+  exact M.eraseLastCountMatrix_hallCuts_of_cutCap_insert_le
+    choice hchoice hdegree hHall hCover
+
 theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 1 X C) (M : CountMatrix I)
