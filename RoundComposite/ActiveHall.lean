@@ -2087,6 +2087,12 @@ theorem hallRealizationGoal_of_eraseLastHallCuts
       exact ⟨Φ.extendLast choice hchoice,
         Φ.extendLast_realizes_eraseLastCountMatrix M choice hchoice hdegree hReal⟩
 
+theorem hallRealizationGoal_of_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCuts
+    (eraseLastHallCutsGoal_of_choice hChoice)
+
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
@@ -2107,6 +2113,16 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCuts
     SymbolingWithResidues I R :=
   symbolingWithResidues_of_feasible_and_realization
     (hallRealizationGoal_of_eraseLastHallCuts hErase) hFeasible
+
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCutsChoice hChoice) hFeasible
 
 theorem feasibleWithResidues_of_symbolingWithResidues
     {m T : Nat} {X C : Type*}
