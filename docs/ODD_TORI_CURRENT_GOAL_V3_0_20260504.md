@@ -244,6 +244,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxMatching_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxSpecialMatchingData_and_rootFlatCanonical
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
 RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
@@ -263,6 +265,12 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
+RoundComposite.Concrete
+  .oddSuccessorClosureGoal_of_v4_preferred_blocks
+RoundComposite.Concrete
+  .odd_successor_closure_of_v4_preferred_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
 RoundComposite.Concrete
@@ -396,6 +404,30 @@ theorem RoundComposite.Concrete
 Here the q=1 matching-facing block keeps the auxiliary matrix and its special
 matching in one joint data theorem.  This avoids the false universal
 arbitrary-auxiliary matching interface.
+
+The same preferred packet also exposes the successor-closure interface required
+by the top-level dispatcher:
+
+```lean
+theorem RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal
+
+theorem RoundComposite.Concrete
+  .oddSuccessorClosureGoal_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal) :
+    OddSuccessorClosureGoal
+
+theorem RoundComposite.Concrete
+  .odd_successor_closure_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 <= b)
+    (hmodd : Odd m) (hm3 : 3 <= m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2*b + 1) m
+```
 
 The older v4 construction-block packet is still available as a lower endpoint
 from canonical correction data:
