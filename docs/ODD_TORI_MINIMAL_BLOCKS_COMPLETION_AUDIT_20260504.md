@@ -119,6 +119,7 @@ theorem RoundComposite.Concrete
 | Root-flat certificate wrapper | `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` | Lean-closed | Schedule-facing field is enough |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
+| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
 ## Remaining External Fields
 
