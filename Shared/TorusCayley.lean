@@ -52,6 +52,16 @@ theorem card_torusVertex (d m : Nat) [NeZero m] :
     _ = m ^ d := by
       rw [ZMod.card m]
 
+theorem card_zmodVector (n m : Nat) [NeZero m] :
+    Fintype.card (Fin n → ZMod m) = m ^ n := by
+  exact card_torusVertex n m
+
+noncomputable def zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
+    (Fin n → ZMod m) ≃ ZMod (m ^ n) :=
+  Fintype.equivOfCardEq (by
+    rw [card_zmodVector n m]
+    rw [ZMod.card (m ^ n)])
+
 theorem torusVertexBlockEquiv_torusBasis_apply
     {a b m : Nat} (j j' : Fin b) (i i' : Fin a) :
     torusVertexBlockEquiv a b m
