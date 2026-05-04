@@ -1441,11 +1441,6 @@ def PrefixCountFirstHitCanonicalScheduleAuxGoal : Prop :=
   PrefixCountFirstHitCanonicalLayerBijectiveGoal ∧
   PrefixCountFirstHitCanonicalReturnsSingleCycleGoal
 
-theorem prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns
-    (hReturn : PrefixCountFirstHitCanonicalReturnsSingleCycleGoal) :
-    PrefixCountFirstHitCanonicalScheduleAuxGoal :=
-  ⟨prefixCountFirstHitCanonicalLayerBijectiveGoal, hReturn⟩
-
 theorem prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
     (hSym : PrefixCountFirstHitSymbolMapsBijectiveGoal) :
     PrefixCountFirstHitCanonicalLayerBijectiveGoal := by
@@ -1457,6 +1452,11 @@ theorem prefixCountFirstHitCanonicalLayerBijectiveGoal :
     PrefixCountFirstHitCanonicalLayerBijectiveGoal :=
   prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
     prefixCountFirstHitSymbolMapsBijectiveGoal
+
+theorem prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns
+    (hReturn : PrefixCountFirstHitCanonicalReturnsSingleCycleGoal) :
+    PrefixCountFirstHitCanonicalScheduleAuxGoal :=
+  ⟨prefixCountFirstHitCanonicalLayerBijectiveGoal, hReturn⟩
 
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
