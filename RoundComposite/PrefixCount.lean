@@ -2892,6 +2892,16 @@ structure OrdinaryQeq1AuxPRowSpecialMatchingData (n r : Nat) where
   aux : OrdinaryQeq1AuxMatrixData n r
   matching : OrdinaryQeq1PRowSpecialMatchingData aux
 
+structure OrdinaryQeq1AuxTargetHallData (n r : Nat) where
+  aux : OrdinaryQeq1AuxMatrixData n r
+  specialCol : Fin (n - 1)
+  special_low : specialCol.val < r
+  special_neg :
+    ∀ i : Fin n, i.val = r - 1 → aux.B i specialCol = (-1 : Int)
+  target_hall :
+    ∀ X : Finset (Fin n), X ⊆ OrdinaryQeq1AuxMatrixData.pRows n r →
+      X.card ≤ (aux.pRowTargetNeighbors specialCol X).card
+
 namespace OrdinaryQeq1SpecialMatchingData
 
 def toCorrectionData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
@@ -3111,6 +3121,19 @@ def toSpecialMatchingData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
   special_neg := M.special_neg
 
 end OrdinaryQeq1PRowSpecialMatchingData
+
+namespace OrdinaryQeq1AuxTargetHallData
+
+noncomputable def toAuxPRowSpecialMatchingData {n r : Nat}
+    (D : OrdinaryQeq1AuxTargetHallData n r) (hrlt : r < n) :
+    OrdinaryQeq1AuxPRowSpecialMatchingData n r where
+  aux := D.aux
+  matching :=
+    Classical.choice
+      (OrdinaryQeq1PRowSpecialMatchingData.nonempty_of_targetHall
+        D.aux hrlt D.special_low D.special_neg D.target_hall)
+
+end OrdinaryQeq1AuxTargetHallData
 
 namespace OrdinaryQeq1AuxSpecialMatchingData
 
@@ -3888,6 +3911,13 @@ def OrdinaryQeq1AuxPRowSpecialMatchingDataGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1AuxPRowSpecialMatchingData n r)
 
+def OrdinaryQeq1AuxTargetHallDataGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1AuxTargetHallData n r)
+
 def OrdinaryQeq1DegreeSpecialMatchingGoal : Prop :=
   ∀ {n r : Nat}
     (hdodd : Odd (n + 1)) (_hd5 : 5 ≤ n + 1)
@@ -4044,6 +4074,19 @@ theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_pRowSpecialMatchingData
   intro n r hdodd hd5 hmodd hrlt hrpos
   rcases hData hdodd hd5 hmodd hrlt hrpos with ⟨D⟩
   exact ⟨D.toAuxSpecialMatchingData⟩
+
+theorem ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData
+    (hData : OrdinaryQeq1AuxTargetHallDataGoal) :
+    OrdinaryQeq1AuxPRowSpecialMatchingDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hData hdodd hd5 hmodd hrlt hrpos with ⟨D⟩
+  exact ⟨D.toAuxPRowSpecialMatchingData hrlt⟩
+
+theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_targetHallData
+    (hData : OrdinaryQeq1AuxTargetHallDataGoal) :
+    OrdinaryQeq1AuxSpecialMatchingDataGoal :=
+  ordinaryQeq1AuxSpecialMatchingDataGoal_of_pRowSpecialMatchingData
+    (ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData hData)
 
 theorem ordinaryQeq1AuxDegreeArithmeticGoal_of_total
     (hTotal : OrdinaryQeq1AuxDegreeTotalGoal) :

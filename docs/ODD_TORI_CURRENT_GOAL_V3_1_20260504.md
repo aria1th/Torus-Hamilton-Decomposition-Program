@@ -119,7 +119,7 @@ The current preferred Lean packet that closes both branches is:
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PreferredBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal ∧
+  PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
@@ -162,7 +162,7 @@ The active proof obligations are exactly the four fields of
 `OddModulusToriV4PreferredBlocksGoal`:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedClosureGoal`
-2. `PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal`
+2. `PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal`
 3. `PrefixCountRootFlatCanonicalReturnGoal`
 4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
@@ -172,8 +172,9 @@ asking for a special matching for every such degree matrix is too strong:
 Lean records this as `PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal`.
 The corresponding four-field block packet is also Lean-proved impossible as
 `RoundComposite.Concrete.not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal`.
-Thus the preferred q=1 obligation remains the joint data theorem, where the
-auxiliary degree matrix and its special matching are selected together.
+Thus the preferred q=1 obligation is now the target-Hall data theorem, where
+the auxiliary matrix, special low column, distinguished negative entry, and
+target Hall condition are selected together.
 Lean now exposes the P-row set and local P-row degree inputs for that Hall
 argument as `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card`,
@@ -204,10 +205,13 @@ all-row column-count interface as
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.toSpecialMatchingData` and
 `PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingData.toAuxSpecialMatchingData`.
-The preferred q=1 field is therefore the P-row data goal
-`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal`; it is bridged back
-to the older `PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal` by
-`PrefixCount.ordinaryQeq1AuxSpecialMatchingDataGoal_of_pRowSpecialMatchingData`.
+The preferred q=1 field is therefore the target-Hall data goal
+`PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal`; it is bridged to
+`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal` by
+`PrefixCount.ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData`,
+and then back to the older
+`PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal` by
+`PrefixCount.ordinaryQeq1AuxSpecialMatchingDataGoal_of_targetHallData`.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.

@@ -818,6 +818,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxPRowSpecialM
       hQeq1Data)
     hReturn
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxTargetHallData_and_rootFlatCanonical
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Data : PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxPRowSpecialMatchingData_and_rootFlatCanonical
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData
+      hQeq1Data)
+    hReturn
+
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1DegreeSpecialMatching_and_rootFlatCanonical
     (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
     (hQeq1Match : PrefixCount.OrdinaryQeq1DegreeSpecialMatchingGoal)
@@ -1402,6 +1413,20 @@ theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxPRowSpecialMat
       hQeq1Data)
     hReturn hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxTargetHallData_rootFlatCanonical_and_slackPacketLift
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Data : PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxPRowSpecialMatchingData_rootFlatCanonical_and_slackPacketLift
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData
+      hQeq1Data)
+    hReturn hSmallPacket hd2 hmodd hm3
+
 def OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal ∧
@@ -1420,6 +1445,12 @@ def OddModulusToriV4PRowMatchingBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4TargetHallBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
 def OddModulusToriV4DegreeSpecialMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1DegreeSpecialMatchingGoal ∧
@@ -1432,7 +1463,7 @@ theorem not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal :
   exact PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal hBlocks.2.1
 
 def OddModulusToriV4PreferredBlocksGoal : Prop :=
-  OddModulusToriV4PRowMatchingBlocksGoal
+  OddModulusToriV4TargetHallBlocksGoal
 
 def OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
@@ -1514,6 +1545,16 @@ theorem odd_modulus_tori_all_dimensions_of_v4_pRow_matching_blocks
     odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxPRowSpecialMatchingData_rootFlatCanonical_and_slackPacketLift
       hQge2Closure hQeq1Data hReturn hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_targetHall_blocks
+    (hBlocks : OddModulusToriV4TargetHallBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m := by
+  rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, hSmallPacket⟩
+  exact
+    odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxTargetHallData_rootFlatCanonical_and_slackPacketLift
+      hQge2Closure hQeq1Data hReturn hSmallPacket hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_degree_special_matching_blocks
     (hBlocks : OddModulusToriV4DegreeSpecialMatchingBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1532,7 +1573,7 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
     OddCoreHighModulusPrefixCountGoal := by
   rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, _hSmallPacket⟩
   exact
-    oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxPRowSpecialMatchingData_and_rootFlatCanonical
+    oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxTargetHallData_and_rootFlatCanonical
       hQge2Closure hQeq1Data hReturn
 
 theorem odd_successor_small_modulus_base_tail_of_v4_preferred_blocks
@@ -1552,7 +1593,7 @@ theorem oddSuccessorClosureGoal_of_v4_preferred_blocks
     OddSuccessorClosureGoal := by
   rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, hSmallPacket⟩
   exact oddSuccessorClosureGoal_of_high_and_slackPacketLift
-    (oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxPRowSpecialMatchingData_and_rootFlatCanonical
+    (oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxTargetHallData_and_rootFlatCanonical
       hQge2Closure hQeq1Data hReturn)
     hSmallPacket
 
@@ -1571,7 +1612,7 @@ theorem odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
     {d m : Nat} (hd2 : 2 ≤ d)
     (hmodd : Odd m) (hm3 : 3 ≤ m) :
     Shared.CayleyHamiltonDecomposition d m :=
-  odd_modulus_tori_all_dimensions_of_v4_pRow_matching_blocks
+  odd_modulus_tori_all_dimensions_of_v4_targetHall_blocks
     hBlocks hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching

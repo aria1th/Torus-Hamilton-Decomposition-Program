@@ -356,10 +356,10 @@ when `m` is odd and `m >= 3`.
   `b -> 2*b + 1`; the dispatcher and conditional successor split are already
   Lean-closed.  The remaining work is exactly the four-field preferred block
   packet `OddModulusToriV4PreferredBlocksGoal`: q>=2 signed seed closure,
-  q=1 joint auxiliary special-matching data, root-flat canonical return, and
-  the small-modulus slack-packet lift.  The q=1 auxiliary degree-matrix
-  existence theorem is Lean-closed separately, while the universal
-  degree-matrix matching variant is Lean-proved too strong.
+  q=1 target-Hall auxiliary data, root-flat canonical return, and the
+  small-modulus slack-packet lift.  The q=1 auxiliary degree-matrix existence
+  theorem is Lean-closed separately, while the universal degree-matrix matching
+  variant is Lean-proved too strong.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
