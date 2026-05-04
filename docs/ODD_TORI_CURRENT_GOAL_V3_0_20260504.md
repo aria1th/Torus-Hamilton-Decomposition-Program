@@ -140,3 +140,40 @@ Thus the concrete Lean work is exactly:
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
+## Active Hall Current Boundary
+
+The finite Active Hall realization has been reduced to one narrower selection
+interface:
+
+```lean
+def RoundComposite.ActiveHall.EraseLastHallCutsGoal : Prop
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+```
+
+Closed support includes:
+
+```lean
+theorem RoundComposite.ActiveHall.hallRealization_zero
+theorem RoundComposite.ActiveHall.hallRealization_one
+noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
+theorem RoundComposite.ActiveHall.Symboling
+  .extendLast_realizes_eraseLastCountMatrix
+def RoundComposite.ActiveHall.Incidence.eraseChoice
+def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
+```
+
+Remaining Active Hall proof obligation:
+
+```lean
+EraseLastHallCutsGoal
+```
