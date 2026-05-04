@@ -165,11 +165,19 @@ Closed support includes:
 ```lean
 theorem RoundComposite.ActiveHall.hallRealization_zero
 theorem RoundComposite.ActiveHall.hallRealization_one
+theorem RoundComposite.ActiveHall.eraseLastHallCuts_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
 def RoundComposite.ActiveHall.Incidence.eraseChoice
 def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
+theorem RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix_cutMass
+theorem RoundComposite.ActiveHall.CountMatrix.cutMass_last_eq_choiceHitCount
+theorem RoundComposite.ActiveHall.Incidence.sum_choiceDegree_on
+theorem RoundComposite.ActiveHall.Incidence
+  .eraseChoice_active_inter_card_add_indicator
+theorem RoundComposite.ActiveHall.Incidence.cutCap_image_castSucc
+theorem RoundComposite.ActiveHall.Incidence.cutCap_image_castSucc_insert_last
 ```
 
 Remaining Active Hall proof obligation:
