@@ -58,6 +58,35 @@ theorem single_cycle_of_zmod_rank_equiv
     IsSingleCycleMap f :=
   single_cycle_of_zmod_rank f rank (Equiv.bijective rank) hstep
 
+theorem zmod_rank_iterate_period
+    {α : Type*} {N : Nat} [NeZero N] (f : α → α)
+    (rank : α ≃ ZMod N)
+    (hstep : ∀ x : α, rank (f x) = rank x + 1)
+    (x : α) :
+    (f^[N]) x = x := by
+  apply rank.injective
+  calc
+    rank ((f^[N]) x) = rank x + (N : ZMod N) :=
+      iterate_rank_add_one f rank hstep N x
+    _ = rank x := by simp
+
+theorem zmod_rank_orbit_cover_lt
+    {α : Type*} {N : Nat} [NeZero N] (f : α → α)
+    (rank : α ≃ ZMod N)
+    (hstep : ∀ x : α, rank (f x) = rank x + 1)
+    (base : α) :
+    ∀ x : α, ∃ k : Nat, k < N ∧ (f^[k]) base = x := by
+  intro x
+  let delta : ZMod N := rank x - rank base
+  refine ⟨delta.val, delta.val_lt, ?_⟩
+  apply rank.injective
+  calc
+    rank ((f^[delta.val]) base) = rank base + (delta.val : ZMod N) :=
+      iterate_rank_add_one f rank hstep delta.val base
+    _ = rank base + delta := by rw [ZMod.natCast_zmod_val]
+    _ = rank x := by
+      simp [delta]
+
 theorem zmod_add_single_cycle_of_coprime
     {m a : Nat} [NeZero m] (ha : Nat.Coprime a m) :
     IsSingleCycleMap (fun x : ZMod m => x + (a : ZMod m)) := by

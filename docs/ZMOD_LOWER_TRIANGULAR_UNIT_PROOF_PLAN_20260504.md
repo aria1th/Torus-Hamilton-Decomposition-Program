@@ -66,6 +66,13 @@ theorem Shared.zmodVectorTake_snoc_self
 
 These express that `take` ignores the final coordinate of `Fin.snoc`.
 
+The ranked-base period and orbit-cover lemmas are now Lean-closed:
+
+```lean
+theorem Shared.zmod_rank_iterate_period
+theorem Shared.zmod_rank_orbit_cover_lt
+```
+
 ## Remaining Helper Lemmas
 
 The full proof should live in `Shared/Monodromy.lean`, not
@@ -100,13 +107,6 @@ once the section-return carry is identified with the finite sum over all base
 states.
 
 Still needed:
-
-```lean
-theorem Shared.zmod_rank_iterate_period
-theorem Shared.zmod_rank_orbit_cover_lt
-```
-
-for a map whose rank into `ZMod N` increments by `1`.
 
 ```lean
 theorem Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
