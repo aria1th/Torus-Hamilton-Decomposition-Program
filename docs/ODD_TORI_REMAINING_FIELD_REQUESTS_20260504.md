@@ -339,6 +339,15 @@ response doc: docs/GPT55_PRO_QGE2_INDICATOR_TO_FULL_SUPPORT_RESPONSE_20260504.md
 latest status: in_progress on 2026-05-04
 ```
 
+Follow-up q>=2 full-support trellis request:
+
+```text
+request doc: docs/GPT55_PRO_QGE2_FULL_SUPPORT_TRELLIS_REQUEST_20260504.md
+response id: resp_0bcd9e078159726f0069f8ebcb1594819db42229b737abe499
+response doc: docs/GPT55_PRO_QGE2_FULL_SUPPORT_TRELLIS_RESPONSE_20260504.md
+latest status: in_progress on 2026-05-04
+```
+
 ## Closed Record: First-Hit Return-Tail Cocycle Sum
 
 This branch is no longer a remaining proof request.  Lean now closes the full
