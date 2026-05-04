@@ -88,6 +88,20 @@ theorem RoundComposite.Concrete
         m (0 : ZMod m)
 ```
 
+The one-return fiber coordinate formula is named:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberStep_apply :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j +
+        sum_over_layers_of_the_first_hit_direction_equaling_j_plus_one
+```
+
+The right side is written in Lean as a `Finset.range m` sum using
+`prefixCountLambdaRho`, `prefixCountCanonicalRho`, and `L.layer`.  This is the
+first lemma to rewrite when extracting the coordinate carry.
+
 For one-coordinate skew extensions over `ZMod m`, the reusable carry lemmas
 are already in `Shared/Monodromy.lean`:
 
