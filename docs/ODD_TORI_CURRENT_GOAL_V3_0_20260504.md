@@ -197,6 +197,12 @@ theorem RoundComposite.ActiveHall
     SymbolingWithResidues I R
 
 theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_columnFillingUpgrade
     (hUpgrade : ColumnFillingUpgradeGoal)
     (hFeasible : FeasibleWithResidues I R) :

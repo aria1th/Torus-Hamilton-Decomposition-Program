@@ -3197,6 +3197,16 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCuts
   symbolingWithResidues_of_feasible_and_realization
     (hallRealizationGoal_of_eraseLastHallCuts hErase) hFeasible
 
+theorem symbolingWithResidues_of_feasible_and_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_hoffmanOrderedSDR hHoffman) hFeasible
+
 theorem symbolingWithResidues_of_feasible_and_columnFillingUpgrade
     (hUpgrade : ColumnFillingUpgradeGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}

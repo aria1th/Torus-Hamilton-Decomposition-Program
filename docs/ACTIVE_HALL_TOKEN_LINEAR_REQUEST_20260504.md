@@ -78,6 +78,11 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hoffmanOrderedSDR
     (hHoffman : HoffmanOrderedSDRGoal) :
     EraseLastHallCutsTokenLinearChoiceGoal
 
+theorem symbolingWithResidues_of_feasible_and_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
 def ColumnFillingUpgradeGoal : Prop
 
 theorem hallRealizationGoal_iff_columnFillingUpgradeGoal :
