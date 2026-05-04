@@ -2428,6 +2428,80 @@ theorem pRow_posCols_card_pos {n r : Nat}
   subst r
   omega
 
+theorem posRows_card_le_pRow_posCols_card {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
+    (hrpos : 0 < r) {i : Fin n} (hi : r ≤ i.val) (k : Fin (n - 1)) :
+    (A.posRows k).card ≤ (A.posCols i).card := by
+  rw [A.posRows_card k, A.pRow_posCols_card hdodd hmodd hi]
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  rcases hdodd with ⟨a, ha⟩
+  rcases hrodd with ⟨s, hs⟩
+  have hn : n = 2 * a := by omega
+  have hr : r = 2 * s + 1 := by omega
+  subst n
+  subst r
+  omega
+
+theorem posRows_card_lt_pRow_posCols_card_of_one_lt_r {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
+    (hr1 : 1 < r) {i : Fin n} (hi : r ≤ i.val) (k : Fin (n - 1)) :
+    (A.posRows k).card < (A.posCols i).card := by
+  rw [A.posRows_card k, A.pRow_posCols_card hdodd hmodd hi]
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  rcases hdodd with ⟨a, ha⟩
+  rcases hrodd with ⟨s, hs⟩
+  have hn : n = 2 * a := by omega
+  have hr : r = 2 * s + 1 := by omega
+  subst n
+  subst r
+  omega
+
+theorem pRow_exists_distinguished_neg_pos {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrlt : r < n) (hrpos : 0 < r) {i : Fin n} (hi : r ≤ i.val) :
+    ∃ k : Fin (n - 1),
+      A.B i k = 1 ∧ A.B ⟨r - 1, by omega⟩ k = (-1 : Int) := by
+  let nu : Fin n := ⟨r - 1, by omega⟩
+  by_contra hnone
+  have hsubset : A.posCols i ⊆ A.posCols nu := by
+    intro k hk
+    have hBi : A.B i k = 1 := by
+      simpa [posCols] using hk
+    rcases A.B_pm_one nu k with hnu | hnu
+    · exfalso
+      exact hnone ⟨k, hBi, hnu⟩
+    · simp [posCols, hnu]
+  have hcardle := Finset.card_le_card hsubset
+  have hp := A.pRow_posCols_card hdodd hmodd hi
+  have hnu := A.posCols_card hdodd hmodd nu
+  have hnu_low : ¬ nu.val < r - 1 := by
+    simp [nu]
+  have hnu_mid : nu.val < r := by
+    simp [nu]
+    omega
+  have hnuCard : (A.posCols nu).card = (r - 1) / 2 := by
+    simpa [ordinaryQeq1AuxDegree, hnu_low, hnu_mid] using hnu
+  rw [hp, hnuCard] at hcardle
+  have hgt : (r - 1) / 2 < (n + r - 3) / 2 := by
+    have hrodd : Odd r :=
+      OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+        hdodd hmodd
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    have hn : n = 2 * a := by omega
+    have hr : r = 2 * s + 1 := by omega
+    subst n
+    subst r
+    omega
+  omega
+
 end OrdinaryQeq1AuxMatrixData
 
 /--
