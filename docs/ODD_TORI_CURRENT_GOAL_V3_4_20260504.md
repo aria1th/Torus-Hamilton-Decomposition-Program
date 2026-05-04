@@ -124,27 +124,32 @@ theorem PrefixCount
 
 Equivalent stronger routes are also available through return-tail rank,
 rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
-request response, Lean also exposes the preferred triangular/unit split:
+request response, Lean now exposes the preferred triangular/unit split with the
+generic lower-triangular theorem already closed:
 
 ```lean
-def Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal : Prop := ...
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
 
-def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
-  Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
+def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailTriangularGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
-Here the shared lower-triangular theorem is stated as a rank-equivalence
-witness, so it remains a `Prop`; Lean converts the witness to
-`Shared.CycleCoordinate` inside the wrapper.
+The shared theorem is:
+
+```lean
+theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
+    Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
+```
+
+Lean converts its rank-equivalence witness to `Shared.CycleCoordinate` inside
+the wrapper.
 
 The one-coordinate and skew-product unit-carry pieces for this route are now
 closed in `Shared`:
@@ -164,7 +169,7 @@ Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
 Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
 ```
 
-The remaining generic lower-triangular proof plan is recorded in
+The closed generic lower-triangular proof note is recorded in
 `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`.
 
 ### 3.2 Small Modulus
@@ -209,9 +214,9 @@ theorem RoundComposite.Concrete
 There is an analogous `...FromHoffmanGoal` wrapper using
 `ActiveHall.HoffmanOrderedSDRGoal`.
 
-## Minimal Active Packet
+## Active Packets
 
-The current minimal packet for completing the final theorem is:
+The older orbit packet for completing the final theorem is still available:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4ReturnTailOrbitBlocksGoal :
@@ -252,6 +257,25 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
+and triangular/cocycle-unit fields for the return-tail branch:
+
+```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailTriangularTrellisBlocksGoal : Prop :=
+  (PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
+   PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
 With the additive small branch:
 
 ```lean
@@ -269,7 +293,8 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
@@ -277,15 +302,13 @@ The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
 form above.
 
-The second field can now be replaced by the triangular/unit packet:
+Equivalently, the middle two fields can be replaced by the older orbit field:
 
 ```lean
-Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
-PrefixCountFirstHitReturnTailTriangularGoal
-PrefixCountFirstHitReturnTailCocycleUnitGoal
+PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
-or, replacing the third line by the sufficient additive form:
+or, replacing the small-modulus line by the sufficient additive form:
 
 ```lean
 OddSuccessorSmallModulusSlackPacketLiftAddGoal

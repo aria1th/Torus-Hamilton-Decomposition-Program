@@ -1,4 +1,4 @@
-# ZMod Lower-Triangular Unit Odometer Proof Plan
+# ZMod Lower-Triangular Unit Odometer Proof Note
 
 Date: 2026-05-04.
 
@@ -8,7 +8,8 @@ Target:
 Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
 ```
 
-This is the generic theorem needed by the return-tail triangular/unit route:
+This generic theorem is now Lean-closed.  It is needed by the return-tail
+triangular/unit route:
 if a map on `Fin r -> ZMod m` has lower-triangular form
 
 ```lean
@@ -25,6 +26,13 @@ is a unit in `ZMod m`, then `F` admits a rank equivalence to
 `ZMod (m^r)` incremented by `1`.
 
 ## Lean Progress
+
+The final theorem is closed in `Shared/Monodromy.lean`:
+
+```lean
+theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
+    Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
+```
 
 The unit one-coordinate additive facts are now Lean-closed:
 
@@ -89,16 +97,16 @@ noncomputable def
 These say that a ranked base odometer together with a unit total carry gives a
 single cycle, or a `CycleCoordinate`, for the additive skew product.
 
-## Remaining Proof Assembly
+## Closed Proof Assembly
 
-The full proof should live in `Shared/Monodromy.lean`, not
+The full proof lives in `Shared/Monodromy.lean`, not
 `Shared/TorusCayley.lean`, because the target is defined in `TorusCayley` while
 the proof needs the skew-product API from `Monodromy`.
 
-The intended theorem:
+The theorem:
 
 ```lean
-noncomputable theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
+theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
     Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
 ```
 
@@ -127,4 +135,27 @@ With these helpers, the remaining induction should be a conjugation of `F` to
 Shared.skewProductMap baseStep (fun u z => z + carry u)
 ```
 
-followed by the unit-carry skew-product theorem above.
+followed by the unit-carry skew-product theorem above.  This is now the actual
+Lean proof shape.
+
+## Remaining Return-Tail Fields
+
+The generic vector theorem is no longer an external field.  For the first-hit
+return-tail route, the remaining Lean obligations are now only:
+
+```lean
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
+```
+
+Lean packages those two fields as:
+
+```lean
+def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnTailTriangularGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+```

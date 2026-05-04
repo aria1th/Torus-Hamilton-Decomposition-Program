@@ -75,6 +75,16 @@ def zmodVectorSnocEquiv (n m : Nat) :
   (Fin.snocEquiv (fun _ : Fin (n + 1) => ZMod m)).symm.trans
     (Equiv.prodComm _ _)
 
+@[simp] theorem zmodVectorSnocEquiv_apply {n m : Nat}
+    (x : Fin (n + 1) → ZMod m) :
+    zmodVectorSnocEquiv n m x = (Fin.init x, x (Fin.last n)) := by
+  rfl
+
+@[simp] theorem zmodVectorSnocEquiv_symm_apply {n m : Nat}
+    (x : Fin n → ZMod m) (a : ZMod m) :
+    (zmodVectorSnocEquiv n m).symm (x, a) = Fin.snoc x a := by
+  rfl
+
 @[simp] theorem zmodVectorTake_snoc_self {m n : Nat}
     (x : Fin n → ZMod m) (a : ZMod m) :
     zmodVectorTake (m := m) (r := n + 1) (k := n)

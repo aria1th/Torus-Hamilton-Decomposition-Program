@@ -4,7 +4,7 @@ Date: 2026-05-04.
 
 This audit records the current Lean state for the all-dimensional odd-modulus
 goal after the v3.4 closure-goal reset.  The file name is historical; the
-current endpoint is the return-tail orbit packet recorded in
+current endpoint is the return-tail triangular/trellis packet recorded in
 `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`.
 
 ## Objective
@@ -36,22 +36,19 @@ The intended proof spine is:
 
 ## Current Lean Endpoint
 
-The current preferred conditional endpoint is:
+The current sharp preferred conditional endpoint is:
 
 ```lean
-def RoundComposite.Concrete.OddCoreHighModulusReturnTailOrbitBlocksGoal :
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailTriangularTrellisBlocksGoal :
     Prop :=
-  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
-  PrefixCountFirstHitReturnTailMonodromyOrbitGoal
-
-def RoundComposite.Concrete.OddModulusToriV4ReturnTailOrbitBlocksGoal :
-    Prop :=
-  OddCoreHighModulusReturnTailOrbitBlocksGoal ∧
+  (PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
+   PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) ∧
   OddSuccessorSmallModulusBaseTailGoal
 
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks
-    (hBlocks : OddModulusToriV4ReturnTailOrbitBlocksGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailTriangularTrellisBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
@@ -61,18 +58,18 @@ For proof scripts that prefer the three arguments directly:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddSuccessorClosureGoal_of_v4_returnTailOrbit
-    (hQge2Proper :
-      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
-    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+  .oddSuccessorClosureGoal_of_v4_returnTailTriangularTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddSuccessorClosureGoal
 
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
-    (hQge2Proper :
-      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
-    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
@@ -83,8 +80,11 @@ The same endpoint is also packaged as the named final target:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks
-    (hBlocks : OddModulusToriV4ReturnTailOrbitBlocksGoal) :
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
 ```
 
@@ -118,7 +118,7 @@ theorem RoundComposite.Concrete
 | Tail rank equivalence from cycle coordinate | `prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate` | Lean-closed conditional | A forward `Shared.CycleCoordinate` is enough |
 | Tail cycle coordinate from monodromy | `prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy` | Lean-closed conditional | On the finite tail vector space, a single-cycle monodromy also yields a `CycleCoordinate` |
 | Tail formulation equivalences | `prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal`, `..._iff_rankGoal`, `..._iff_rankEquivGoal`, `..._iff_cycleCoordinateGoal` | Lean-closed | The external tail request can be supplied in whichever of these four forms is easiest |
-| Tail triangular/unit split | `Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal`, `PrefixCountFirstHitReturnTailTriangularGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks` | Lean-closed conditional | Implements the GPT-5.5 Pro recommendation: prove lower-triangular form plus unit total carries instead of orbit-transitivity directly |
+| Tail triangular/unit split | `PrefixCountFirstHitReturnTailTriangularGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks` | Lean-closed conditional | The generic lower-triangular odometer theorem is now closed, so the remaining tail request is only triangular form plus unit total carries |
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Unit additive cycle coordinate | `Shared.zmod_add_single_cycle_of_unit`, `Shared.CycleCoordinate.zmodAddConstOfUnit`, plus the older coprime variants | Lean-closed | Gives a coordinate-level base case for `x ↦ x + a` directly from `IsUnit a : ZMod m`, avoiding a Nat/coprime conversion |
 | Section-return additive cycle coordinate | `Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit`, plus the older coprime variant | Lean-closed | Converts a computed unit total carry into a `CycleCoordinate` for the section return |
@@ -126,6 +126,7 @@ theorem RoundComposite.Concrete
 | Lower-triangular vector split | `Shared.zmodVectorSnocEquiv`, `Shared.zmodVectorTake_snoc`, `Shared.zmodVectorTake_snoc_self` | Lean-closed | Provides the last-coordinate split needed for the induction proof of the generic lower-triangular odometer theorem |
 | Ranked base orbit helpers | `Shared.zmod_rank_iterate_period`, `Shared.zmod_rank_orbit_cover_lt` | Lean-closed | A rank map incrementing by `1` over `ZMod N` returns after `N` steps and covers every base point within one period |
 | Ranked base carry-sum helpers | `Shared.skewFiberAdditiveCarry_eq_sum_range`, `Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step`, `Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum`, `Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum` | Lean-closed conditional | One full ranked base cycle accumulates the finite carry sum; if that sum is a unit, the additive skew product is a single cycle or has a `CycleCoordinate` |
+| Generic lower-triangular unit theorem | `Shared.zmodVectorLowerTriangularUnitCycleCoordinate` | Lean-closed | Inductively splits `Fin r -> ZMod m` by `snoc` and applies the ranked-base unit-carry skew-product coordinate theorem |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Return-tail additive endpoints | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd`, `odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd` | Lean-closed conditional | Final theorem wrappers that consume `OddSuccessorSmallModulusSlackPacketLiftAddGoal` directly |
 | Successor-small Hall/geometry split | `OddSuccessorSmallModulusBaseTailGeometryFromHallGoal`, `OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal` | Lean-closed conditional | Lets the small branch be supplied as base-tail geometry assuming `ActiveHall.HallRealizationGoal` or `HoffmanOrderedSDRGoal` |
@@ -133,10 +134,10 @@ theorem RoundComposite.Concrete
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
 | Active-Hall selection-token equivalence | `eraseLastHallCutsTokenLinearChoiceGoal_of_selection`, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` | Lean-closed conditional | A selection-form erase-last proof now directly satisfies the token-linear request |
-| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends on proper-cut q>=2, tail orbit, and successor-small fields |
+| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellis`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellis` | Lean-closed conditional | Depends on trellis-Hoffman q>=2, tail triangular/cocycle-unit fields, and successor-small field |
 | Trellis compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis` | Lean-closed conditional | Direct three-argument endpoint depending on the smaller trellis-Hoffman q>=2 field, tail orbit, and successor-small field |
 | Successor-high compact final theorem | `oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks`, `...Add_blocks` | Lean-closed conditional | Allows a direct successor-high theorem plus small branch to close the final target |
-| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
+| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellis` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
 ## Remaining External Fields
 
@@ -145,7 +146,8 @@ obligations are exactly:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
@@ -184,44 +186,50 @@ ordinary proper-cut exhaustive check passed: n=4, checked=168, skipped=0
 ordinary proper-cut exhaustive check passed: n=6, checked=10560, skipped=0
 ```
 
-## Field 2: First-Hit Return-Tail Orbit
+## Fields 2-3: First-Hit Return-Tail Triangular And Unit Carry
 
-The remaining high-modulus monodromy statement is:
+The preferred remaining high-modulus monodromy fields are:
 
 ```lean
-PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
 For every admissible prefix-count certificate, layer-permutation count
-decomposition, and color, it asks that the first-hit return-tail monodromy on
+decomposition, and color, these ask that the first-hit return-tail monodromy on
 
 ```lean
 Fin (d - 2) -> ZMod m
 ```
 
-is orbit-transitive.  Lean already proves the schedule construction, row-Latin
-property, layer bijectivity, the root-flat/head-tail return bridges, and
-bijectivity of this tail map.  Therefore the remaining field can be closed
-directly by orbit-transitivity, by either odometer sufficient target, or by the
-new triangular/unit sufficient packet:
+has lower-triangular coordinate form and that every rank cocycle has unit total
+carry.  Lean already proves the schedule construction, row-Latin property,
+layer bijectivity, the root-flat/head-tail return bridges, bijectivity of this
+tail map, and the generic lower-triangular unit odometer theorem.  Therefore the
+older orbit field can now be closed from:
 
 ```lean
-PrefixCountFirstHitReturnTailRankGoal
-PrefixCountFirstHitReturnTailRankEquivGoal
-PrefixCountFirstHitReturnTailCycleCoordinateGoal
-PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal
+PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal
 ```
 
 The response in
-`docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` recommends the last
-route: prove that the tail monodromy is lower triangular and that every rank
-has unit total carry.  Lean packages that as:
+`docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` recommends this route.
+Lean packages it as:
 
 ```lean
-prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
+prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
 ```
 
-## Field 3: Successor Small-Modulus Branch
+The older sufficient alternatives remain valid:
+
+```lean
+PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+PrefixCountFirstHitReturnTailRankGoal
+PrefixCountFirstHitReturnTailRankEquivGoal
+PrefixCountFirstHitReturnTailCycleCoordinateGoal
+```
+
+## Field 4: Successor Small-Modulus Branch
 
 The minimal field is:
 
@@ -318,12 +326,12 @@ The GPT-5.5 Pro background requests for the remaining hard fields are:
 | Field | Request Doc | Response Id | Latest Status |
 |---|---|---|---|
 | q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md`, `docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `completed` |
-| first-hit return-tail orbit/rank | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `completed` |
+| first-hit return-tail triangular/unit | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `completed`; generic lower-triangular theorem now Lean-closed |
 | successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md`, `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `completed` |
 
 ## Verdict
 
 The global theorem is not complete.  The dispatcher, seed/product closure, and
 conditional successor split are Lean-closed.  The remaining work is concentrated
-in three explicit mathematical fields, with the strongest current endpoint being
-`odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks`.
+in four explicit mathematical fields, with the strongest current endpoint being
+`odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellis`.

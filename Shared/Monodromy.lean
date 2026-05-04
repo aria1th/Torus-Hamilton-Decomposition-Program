@@ -573,4 +573,149 @@ noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_uni
     (skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
       baseStep rank carry base hstep)
 
+theorem zmodVectorLowerTriangularUnitCycleCoordinate :
+    ZModVectorLowerTriangularUnitCycleCoordinateGoal := by
+  intro m r _inst F gamma htri hunit
+  classical
+  by_cases hm1 : m = 1
+  · subst m
+    refine ⟨zmodVectorPowerEquiv r 1, ?_⟩
+    intro x
+    haveI : Subsingleton (ZMod (1 ^ r)) := by
+      simpa using (inferInstance : Subsingleton (ZMod 1))
+    exact Subsingleton.elim _ _
+  · have hmgt : 1 < m := by
+      have hm0 : m ≠ 0 := NeZero.ne m
+      omega
+    induction r with
+    | zero =>
+        refine ⟨zmodVectorPowerEquiv 0 m, ?_⟩
+        intro x
+        haveI : Subsingleton (ZMod (m ^ 0)) := by
+          simpa using (inferInstance : Subsingleton (ZMod 1))
+        exact Subsingleton.elim _ _
+    | succ n ih =>
+        let Base := Fin n → ZMod m
+        let baseStep : Base → Base := fun u =>
+          zmodVectorTake (m := m) (r := n + 1) (k := n)
+            (Nat.le_succ n) (F (Fin.snoc u 0))
+        let carry : Base → ZMod m := fun u =>
+          gamma n (Nat.lt_succ_self n) u
+        let gammaBase :
+            ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m :=
+          fun k hk => gamma k (lt_of_lt_of_le hk (Nat.le_succ n))
+        have htriBase :
+            ∀ x : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+              baseStep x ⟨k, hk⟩ =
+                x ⟨k, hk⟩ +
+                  gammaBase k hk (zmodVectorTake (Nat.le_of_lt hk) x) := by
+          intro x k hk
+          have hk' : k < n + 1 := lt_of_lt_of_le hk (Nat.le_succ n)
+          have h := htri (Fin.snoc x (0 : ZMod m)) k hk'
+          have hsnoc :
+              (@Fin.snoc n (fun _ => ZMod m) x (0 : ZMod m))
+                ⟨k, hk'⟩ = x ⟨k, hk⟩ := by
+            have hidx :
+                (⟨k, hk'⟩ : Fin (n + 1)) =
+                  (⟨k, hk⟩ : Fin n).castSucc := rfl
+            rw [hidx]
+            exact Fin.snoc_castSucc
+              (α := fun _ : Fin (n + 1) => ZMod m) (0 : ZMod m) x ⟨k, hk⟩
+          have htake :
+              zmodVectorTake (Nat.le_of_lt hk') (Fin.snoc x (0 : ZMod m)) =
+                zmodVectorTake (Nat.le_of_lt hk) x := by
+            simpa using
+              zmodVectorTake_snoc (m := m) (n := n) (k := k)
+                (Nat.le_of_lt hk) x (0 : ZMod m)
+          change F (Fin.snoc x (0 : ZMod m))
+              (⟨k, lt_of_lt_of_le hk (Nat.le_succ n)⟩ : Fin (n + 1)) =
+            x ⟨k, hk⟩ +
+              gammaBase k hk (zmodVectorTake (Nat.le_of_lt hk) x)
+          rw [h, hsnoc, htake]
+        have hunitBase :
+            ∀ k : Nat, ∀ hk : k < n,
+              IsUnit (∑ x : (Fin k → ZMod m), gammaBase k hk x) := by
+          intro k hk
+          exact hunit k (lt_of_lt_of_le hk (Nat.le_succ n))
+        rcases ih baseStep gammaBase htriBase hunitBase with
+          ⟨rankBase, hrankBase⟩
+        have hcard :
+            Fintype.card (Base × ZMod m) = m ^ (n + 1) := by
+          simp [Base, pow_succ]
+        have hncard : 1 < m ^ (n + 1) :=
+          one_lt_pow₀ hmgt (Nat.succ_ne_zero n)
+        let C : CycleCoordinate (m ^ (n + 1))
+            (skewProductMap baseStep (fun b z => z + carry b)) :=
+          cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+            (N := m ^ n) (m := m) (n := m ^ (n + 1))
+            baseStep rankBase carry (0 : Base)
+            hcard hncard hrankBase
+            (hunit n (Nat.lt_succ_self n))
+        let eSplit := zmodVectorSnocEquiv n m
+        let S := skewProductMap baseStep (fun b z => z + carry b)
+        have hconjPair :
+            ∀ p : Base × ZMod m, eSplit (F (eSplit.symm p)) = S p := by
+          intro p
+          rcases p with ⟨u, a⟩
+          ext i
+          · have hk' : i.val < n + 1 :=
+              lt_of_lt_of_le i.isLt (Nat.le_succ n)
+            have hidx :
+                i.castSucc = (⟨i.val, hk'⟩ : Fin (n + 1)) := rfl
+            have htake_a :
+                zmodVectorTake (Nat.le_of_lt hk') (Fin.snoc u a) =
+                  zmodVectorTake (Nat.le_of_lt i.isLt) u := by
+              simp
+            have htake_0 :
+                zmodVectorTake (Nat.le_of_lt hk') (Fin.snoc u (0 : ZMod m)) =
+                  zmodVectorTake (Nat.le_of_lt i.isLt) u := by
+              simp
+            have hsnoc_a :
+                (@Fin.snoc n (fun _ => ZMod m) u a) ⟨i.val, hk'⟩ = u i := by
+              rw [show (⟨i.val, hk'⟩ : Fin (n + 1)) = i.castSucc by rfl]
+              exact Fin.snoc_castSucc
+                (α := fun _ : Fin (n + 1) => ZMod m) a u i
+            have hsnoc_0 :
+                (@Fin.snoc n (fun _ => ZMod m) u (0 : ZMod m))
+                  ⟨i.val, hk'⟩ = u i := by
+              rw [show (⟨i.val, hk'⟩ : Fin (n + 1)) = i.castSucc by rfl]
+              exact Fin.snoc_castSucc
+                (α := fun _ : Fin (n + 1) => ZMod m) (0 : ZMod m) u i
+            have hFa := htri (Fin.snoc u a) i.val hk'
+            have hF0 := htri (Fin.snoc u (0 : ZMod m)) i.val hk'
+            have eqFa :
+                F (Fin.snoc u a) ⟨i.val, hk'⟩ =
+                  u i + gamma i.val hk'
+                    (zmodVectorTake (Nat.le_of_lt i.isLt) u) := by
+              rw [hFa, hsnoc_a, htake_a]
+            have eqF0 :
+                F (Fin.snoc u (0 : ZMod m)) ⟨i.val, hk'⟩ =
+                  u i + gamma i.val hk'
+                    (zmodVectorTake (Nat.le_of_lt i.isLt) u) := by
+              rw [hF0, hsnoc_0, htake_0]
+            change F (Fin.snoc u a) i.castSucc =
+              F (Fin.snoc u (0 : ZMod m)) i.castSucc
+            rw [hidx]
+            exact eqFa.trans eqF0.symm
+          · have hlast := htri (Fin.snoc u a) n (Nat.lt_succ_self n)
+            have htake :
+                zmodVectorTake (Nat.le_of_lt (Nat.lt_succ_self n))
+                    (Fin.snoc u a) = u := by
+              simp
+            have hsnocLast :
+                (@Fin.snoc n (fun _ => ZMod m) u a)
+                  ⟨n, Nat.lt_succ_self n⟩ = a := by
+              change (@Fin.snoc n (fun _ => ZMod m) u a) (Fin.last n) = a
+              exact Fin.snoc_last (α := fun _ : Fin (n + 1) => ZMod m) a u
+            change F (Fin.snoc u a) ⟨n, Nat.lt_succ_self n⟩ = a + carry u
+            rw [hlast, htake, hsnocLast]
+        refine ⟨eSplit.trans C.equiv.symm, ?_⟩
+        intro x
+        have hx : eSplit (F x) = S (eSplit x) := by
+          simpa using hconjPair (eSplit x)
+        have hstep := CycleCoordinate.rank_step C (eSplit x)
+        change C.equiv.symm (eSplit (F x)) = C.equiv.symm (eSplit x) + 1
+        rw [hx]
+        simpa [S] using hstep
+
 end Shared
