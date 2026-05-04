@@ -1109,6 +1109,96 @@ theorem cutMass_last_eq_choiceHitCount
     _ = Incidence.choiceHitCount choice U :=
             Incidence.sum_choiceDegree_on choice U
 
+theorem cutMass_image_castSucc_insert_last_eq_eraseLast_add_choiceHitCount
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (U : Finset C) (S : Finset (Fin T)) :
+    M.cutMass U
+        (insert (Fin.last T)
+          (S.image (Fin.castSucc : Fin T → Fin (T + 1)))) =
+      (M.eraseLastCountMatrix choice hchoice hdegree).cutMass U S
+        + Incidence.choiceHitCount choice U := by
+  classical
+  have hlast :
+      Fin.last T ∉ S.image (Fin.castSucc : Fin T → Fin (T + 1)) :=
+    Incidence.last_notMem_image_castSucc S
+  have hlastMass :
+      (∑ c ∈ U, M.val c (Fin.last T)) =
+        Incidence.choiceHitCount choice U := by
+    simpa [cutMass] using
+      (M.cutMass_last_eq_choiceHitCount choice hdegree U)
+  rw [M.eraseLastCountMatrix_cutMass choice hchoice hdegree U S]
+  unfold cutMass
+  calc
+    (∑ c ∈ U,
+        ∑ σ ∈ insert (Fin.last T)
+          (S.image (Fin.castSucc : Fin T → Fin (T + 1))),
+          M.val c σ)
+        =
+      ∑ c ∈ U,
+        (M.val c (Fin.last T) +
+          ∑ σ ∈ S.image (Fin.castSucc : Fin T → Fin (T + 1)),
+            M.val c σ) := by
+          apply Finset.sum_congr rfl
+          intro c _hc
+          rw [Finset.sum_insert hlast]
+    _ =
+      (∑ c ∈ U,
+        ∑ σ ∈ S.image (Fin.castSucc : Fin T → Fin (T + 1)),
+          M.val c σ)
+        + ∑ c ∈ U, M.val c (Fin.last T) := by
+          rw [Finset.sum_add_distrib]
+          omega
+    _ =
+      (∑ c ∈ U,
+        ∑ σ ∈ S.image (Fin.castSucc : Fin T → Fin (T + 1)),
+          M.val c σ)
+        + Incidence.choiceHitCount choice U := by
+          rw [hlastMass]
+
+theorem eraseLastCountMatrix_hallCuts_of_cutCap_insert_le
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (hHall : M.HallCuts)
+    (hCover :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        I.cutCap U
+            (insert (Fin.last T)
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1))))
+          ≤ (I.eraseChoice choice hchoice).cutCap U S
+              + Incidence.choiceHitCount choice U) :
+    (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  intro U S
+  let M' := M.eraseLastCountMatrix choice hchoice hdegree
+  let hit := Incidence.choiceHitCount choice U
+  have hMass :
+      M.cutMass U
+          (insert (Fin.last T)
+            (S.image (Fin.castSucc : Fin T → Fin (T + 1)))) =
+        M'.cutMass U S + hit := by
+    simpa [M', hit] using
+      M.cutMass_image_castSucc_insert_last_eq_eraseLast_add_choiceHitCount
+        choice hchoice hdegree U S
+  have hStep :
+      M'.cutMass U S + hit
+        ≤ (I.eraseChoice choice hchoice).cutCap U S + hit := by
+    rw [← hMass]
+    exact (hHall U
+      (insert (Fin.last T)
+        (S.image (Fin.castSucc : Fin T → Fin (T + 1))))).trans
+      (hCover U S)
+  change M'.cutMass U S ≤ (I.eraseChoice choice hchoice).cutCap U S
+  omega
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
