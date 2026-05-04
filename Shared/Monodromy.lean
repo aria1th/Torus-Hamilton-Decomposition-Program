@@ -330,6 +330,30 @@ theorem single_cycle_of_skewProduct_base_orbit_monodromy
     (S := S) (base := base) (period := period)
     hS hreturn (by simpa [S] using hmonodromy) hcover
 
+noncomputable def cycleCoordinate_of_skewProduct_base_orbit_monodromy
+    {Base Fiber : Type*} [Fintype Base] [Fintype Fiber]
+    [DecidableEq Base] [DecidableEq Fiber]
+    {n : Nat} [NeZero n]
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (base : Base) (period : Nat)
+    (hcard : Fintype.card (Base × Fiber) = n)
+    (hn : 1 < n)
+    (hbase : Function.Bijective baseStep)
+    (hfiber : ∀ u : Base, Function.Bijective (fiberStep u))
+    (hreturnBase : (baseStep^[period]) base = base)
+    (hbaseCover : ∀ b : Base, ∃ k : Nat,
+      k < period ∧ (baseStep^[k]) base = b)
+    (hmonodromy :
+      IsSingleCycleMap
+        (sectionReturn (skewProductMap baseStep fiberStep) base period)) :
+    CycleCoordinate n (skewProductMap baseStep fiberStep) :=
+  CycleCoordinate.ofFiniteSingleCycle
+    (f := skewProductMap baseStep fiberStep)
+    hcard hn
+    (single_cycle_of_skewProduct_base_orbit_monodromy
+      baseStep fiberStep base period hbase hfiber hreturnBase hbaseCover
+      hmonodromy)
+
 theorem single_cycle_of_skewProduct_zmod_additive_carry
     {Base : Type*} {m : Nat} [NeZero m]
     (baseStep : Base → Base) (carry : Base → ZMod m)
@@ -345,6 +369,31 @@ theorem single_cycle_of_skewProduct_zmod_additive_carry
       (skewProductMap baseStep (fun b z => z + carry b)) :=
   single_cycle_of_skewProduct_base_orbit_monodromy
     baseStep (fun b z => z + carry b) base period
+    hbase
+    (fun b => zmod_add_const_bijective (carry b))
+    hreturnBase hbaseCover
+    (sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
+      baseStep carry base period a ha hcarry)
+
+noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry
+    {Base : Type*} [Fintype Base] [DecidableEq Base]
+    {m n : Nat} [NeZero m] [NeZero n]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period a : Nat)
+    (hcard : Fintype.card (Base × ZMod m) = n)
+    (hn : 1 < n)
+    (hbase : Function.Bijective baseStep)
+    (hreturnBase : (baseStep^[period]) base = base)
+    (hbaseCover : ∀ b : Base, ∃ k : Nat,
+      k < period ∧ (baseStep^[k]) base = b)
+    (ha : Nat.Coprime a m)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m)) :
+    CycleCoordinate n
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  cycleCoordinate_of_skewProduct_base_orbit_monodromy
+    baseStep (fun b z => z + carry b) base period
+    hcard hn
     hbase
     (fun b => zmod_add_const_bijective (carry b))
     hreturnBase hbaseCover

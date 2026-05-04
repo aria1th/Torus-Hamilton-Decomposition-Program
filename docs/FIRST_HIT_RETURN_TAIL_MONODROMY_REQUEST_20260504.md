@@ -162,6 +162,12 @@ noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
 noncomputable def Shared.CycleCoordinate.zmodAddConstOfCoprime
     {m a : Nat} [NeZero m] (ha : Nat.Coprime a m) :
     Shared.CycleCoordinate m (fun x : ZMod m => x + (a : ZMod m))
+
+noncomputable def Shared.cycleCoordinate_of_skewProduct_base_orbit_monodromy
+    ...
+
+noncomputable def Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry
+    ...
 ```
 
 The full tail-monodromy target is enough for the previous section-monodromy

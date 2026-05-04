@@ -179,6 +179,12 @@ The generic tail-space equivalence is available as:
 ```lean
 noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
     (Fin n -> ZMod m) ≃ ZMod (m ^ n)
+
+noncomputable def Shared.cycleCoordinate_of_skewProduct_base_orbit_monodromy
+    ...
+
+noncomputable def Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry
+    ...
 ```
 
 ## Remaining External Fields

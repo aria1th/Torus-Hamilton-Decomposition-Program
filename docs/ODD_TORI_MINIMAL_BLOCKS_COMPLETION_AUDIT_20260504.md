@@ -117,6 +117,7 @@ theorem RoundComposite.Concrete
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Unit additive cycle coordinate | `Shared.CycleCoordinate.zmodAddConstOfCoprime` | Lean-closed | Gives a coordinate-level base case for `x ↦ x + a` when `gcd(a,m)=1` |
 | Section-return additive cycle coordinate | `Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime` | Lean-closed | Converts a computed unit total carry into a `CycleCoordinate` for the section return |
+| Full skew-product cycle coordinate | `Shared.cycleCoordinate_of_skewProduct_base_orbit_monodromy`, `Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry` | Lean-closed conditional | Turns the base-cover plus section-monodromy/carry proof into a coordinate for the full skew product |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
