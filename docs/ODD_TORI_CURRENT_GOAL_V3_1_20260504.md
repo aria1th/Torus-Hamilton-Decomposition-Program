@@ -187,6 +187,14 @@ direct three-argument alias:
 
 ```lean
 theorem RoundComposite.Concrete
+  .oddSuccessorClosureGoal_of_v4_successorSchedule
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal
+
+theorem RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_successorSchedule
     (hQge2Proper :
       PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)

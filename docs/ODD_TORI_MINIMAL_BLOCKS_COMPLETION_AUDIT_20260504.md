@@ -49,6 +49,14 @@ For proof scripts that prefer the three arguments directly:
 
 ```lean
 theorem RoundComposite.Concrete
+  .oddSuccessorClosureGoal_of_v4_successorSchedule
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal
+
+theorem RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_successorSchedule
     (hQge2Proper :
       PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
@@ -70,6 +78,7 @@ theorem RoundComposite.Concrete
 | Even/composite dimensions | product wrappers | Lean-closed | `odd_uniform_cayley_mul_of_standard`, `standard_cayley_odd_uniform_all_dimensions_of_odd_core` |
 | Dispatcher from seeds + successor | `odd_modulus_tori_all_dimensions_of_357_and_successor` | Lean-closed | `RoundComposite/ConcreteEndpoints.lean` |
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
+| Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_successorSchedule` | Lean-closed conditional | Directly consumes the three remaining fields |
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
