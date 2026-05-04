@@ -1727,6 +1727,49 @@ theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
       prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero_parts]
   · rfl
 
+theorem prefixCountFirstHitReturnSkew_iterate_conj
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d) :
+    ∀ n : Nat, ∀ x : ZMod m × (Fin (d - 2) → ZMod m),
+      (Shared.skewProductMap
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c))^[n] x =
+      prefixCountRootStateHeadTailEquiv d m hd2
+        (((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)^[n]
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm x))
+  | 0, x => by simp
+  | n + 1, x => by
+      rw [Function.iterate_succ_apply']
+      rw [prefixCountFirstHitReturnSkew_iterate_conj hd2 L c n x]
+      rw [← prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
+        (hd2 := hd2) L c
+        (prefixCountRootStateHeadTailEquiv d m hd2
+          (((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)^[n]
+            ((prefixCountRootStateHeadTailEquiv d m hd2).symm x)))]
+      simp
+      exact
+        (Function.Commute.refl
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)).iterate_right n
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm x)
+
+theorem prefixCountFirstHitSectionReturn_eq_tail_of_returnMap_iterate
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (tail : Fin (d - 2) → ZMod m) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c))
+        (0 : ZMod m) m tail =
+      (prefixCountRootStateHeadTailEquiv d m hd2
+        (((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)^[m]
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+            ((0 : ZMod m), tail)))).2 := by
+  unfold Shared.sectionReturn
+  rw [prefixCountFirstHitReturnSkew_iterate_conj]
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_headTailMonodromy
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d} (hC : C.Admissible m)
