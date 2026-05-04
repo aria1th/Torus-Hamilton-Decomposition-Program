@@ -174,8 +174,10 @@ The corresponding four-field block packet is also Lean-proved impossible as
 `RoundComposite.Concrete.not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal`.
 Thus the preferred q=1 obligation remains the joint data theorem, where the
 auxiliary degree matrix and its special matching are selected together.
-Lean now exposes the local P-row degree inputs for that Hall argument as
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_posCols_card` and
+Lean now exposes the P-row set and local P-row degree inputs for that Hall
+argument as `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows`,
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card`,
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_posCols_card`, and
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_posCols_card_pos`; the column
 degree comparison and forced distinguished-negative edge are also exposed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_le_pRow_posCols_card`,

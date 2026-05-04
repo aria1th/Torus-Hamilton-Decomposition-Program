@@ -2371,6 +2371,36 @@ theorem lowCols_card {n r : Nat} (hrlt : r < n) :
   rw [sum_fin_indicator_val_lt]
   omega
 
+def pRows (n r : Nat) : Finset (Fin n) :=
+  Finset.univ.filter fun i => r ≤ i.val
+
+theorem pRows_card {n r : Nat} (hrlt : r < n) :
+    (pRows n r).card = n - r := by
+  dsimp [pRows]
+  rw [Finset.card_filter]
+  have hlt :
+      (∑ i : Fin n, if i.val < r then (1 : Nat) else 0) = r := by
+    rw [sum_fin_indicator_val_lt]
+    omega
+  have hpartition :
+      (∑ i : Fin n, if r ≤ i.val then (1 : Nat) else 0) +
+        (∑ i : Fin n, if i.val < r then (1 : Nat) else 0) = n := by
+    rw [← Finset.sum_add_distrib]
+    calc
+      (∑ x : Fin n,
+          ((if r ≤ x.val then (1 : Nat) else 0) +
+            if x.val < r then 1 else 0))
+          = ∑ _x : Fin n, (1 : Nat) := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            by_cases hxlt : x.val < r
+            · have hxge : ¬ r ≤ x.val := by omega
+              simp [hxlt, hxge]
+            · have hxge : r ≤ x.val := by omega
+              simp [hxlt, hxge]
+      _ = n := by simp
+  omega
+
 theorem exists_distinguished_low_neg {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
     (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
