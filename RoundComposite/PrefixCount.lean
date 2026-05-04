@@ -3588,6 +3588,13 @@ def OrdinaryQeq1AuxSpecialMatchingDataGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1AuxSpecialMatchingData n r)
 
+def OrdinaryQeq1AuxPRowSpecialMatchingDataGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1AuxPRowSpecialMatchingData n r)
+
 def OrdinaryQeq1DegreeSpecialMatchingGoal : Prop :=
   ∀ {n r : Nat}
     (hdodd : Odd (n + 1)) (_hd5 : 5 ≤ n + 1)
@@ -3737,6 +3744,13 @@ theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_degreeMatrix_and_degreeSpecial
     aux := G.toAuxMatrixData hdodd hmodd
     matching := M
   }⟩
+
+theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_pRowSpecialMatchingData
+    (hData : OrdinaryQeq1AuxPRowSpecialMatchingDataGoal) :
+    OrdinaryQeq1AuxSpecialMatchingDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hData hdodd hd5 hmodd hrlt hrpos with ⟨D⟩
+  exact ⟨D.toAuxSpecialMatchingData⟩
 
 theorem ordinaryQeq1AuxDegreeArithmeticGoal_of_total
     (hTotal : OrdinaryQeq1AuxDegreeTotalGoal) :

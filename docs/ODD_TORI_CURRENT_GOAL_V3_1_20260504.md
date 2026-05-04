@@ -119,7 +119,7 @@ The current preferred Lean packet that closes both branches is:
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PreferredBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
+  PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
@@ -162,7 +162,7 @@ The active proof obligations are exactly the four fields of
 `OddModulusToriV4PreferredBlocksGoal`:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedClosureGoal`
-2. `PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal`
+2. `PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal`
 3. `PrefixCountRootFlatCanonicalReturnGoal`
 4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
@@ -192,6 +192,10 @@ all-row column-count interface as
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.toSpecialMatchingData` and
 `PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingData.toAuxSpecialMatchingData`.
+The preferred q=1 field is therefore the P-row data goal
+`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal`; it is bridged back
+to the older `PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal` by
+`PrefixCount.ordinaryQeq1AuxSpecialMatchingDataGoal_of_pRowSpecialMatchingData`.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.
