@@ -277,6 +277,50 @@ theorem prefixCountLambdaRho_bijective
     refine ⟨prefixCountLambdaRhoInv d rho s, ?_⟩
     exact prefixCountLambdaRho_apply_inv rho hrho s
 
+def prefixCountLayerIndex {m : Nat} [NeZero m] (t : ZMod m) : Fin m :=
+  ⟨t.val, ZMod.val_lt t⟩
+
+def prefixCountCanonicalDir {d m : Nat} [NeZero m]
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (rho : ZMod m → PrefixCountRootState d m → Fin d)
+    (L : PrefixCount.LayerPermCounts d m M)
+    (t : ZMod m) (w : PrefixCountRootState d m)
+    (c : Fin d) : Fin d :=
+  prefixCountLambdaRho d (rho t w) (L.layer (prefixCountLayerIndex t) c)
+
+theorem prefixCountCanonicalDir_bijective {d m : Nat} [NeZero m]
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (rho : ZMod m → PrefixCountRootState d m → Fin d)
+    (hrho : ∀ t w, (rho t w).val ≠ 0)
+    (L : PrefixCount.LayerPermCounts d m M) :
+    ∀ t w, Function.Bijective (prefixCountCanonicalDir rho L t w) := by
+  intro t w
+  exact (prefixCountLambdaRho_bijective (rho t w) (hrho t w)).comp
+    (L.layer (prefixCountLayerIndex t)).bijective
+
+def prefixCountCanonicalSchedule {d m : Nat} [NeZero m]
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (rho : ZMod m → PrefixCountRootState d m → Fin d)
+    (L : PrefixCount.LayerPermCounts d m M) :
+    Shared.RootFlatSchedule (Fin d) (Fin d) (PrefixCountRootState d m) m where
+  dir := prefixCountCanonicalDir rho L
+  step := prefixCountRootStep d m
+
+theorem prefixCountCanonicalSchedule_rowLatin {d m : Nat} [NeZero m]
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (rho : ZMod m → PrefixCountRootState d m → Fin d)
+    (hrho : ∀ t w, (rho t w).val ≠ 0)
+    (L : PrefixCount.LayerPermCounts d m M) :
+    (prefixCountCanonicalSchedule rho L).rowLatin := by
+  intro t w
+  exact prefixCountCanonicalDir_bijective rho hrho L t w
+
+theorem prefixCountCanonicalSchedule_step {d m : Nat} [NeZero m]
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (rho : ZMod m → PrefixCountRootState d m → Fin d)
+    (L : PrefixCount.LayerPermCounts d m M) :
+    (prefixCountCanonicalSchedule rho L).step = prefixCountRootStep d m := rfl
+
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
     prefixCountRootLayerEquiv d m hd1
