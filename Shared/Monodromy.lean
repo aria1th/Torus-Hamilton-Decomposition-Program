@@ -1,4 +1,4 @@
-import Shared.ReturnLift
+import Shared.RankCycle
 
 namespace Shared
 
@@ -159,6 +159,51 @@ theorem sectionReturn_skewProductMap_eq_fiberIterate {Base Fiber : Type*}
   funext fiber
   unfold sectionReturn
   rw [skewProductMap_snd_iterate]
+
+def skewFiberAdditiveCarry {Base : Type*} {m : Nat}
+    (baseStep : Base → Base) (carry : Base → ZMod m) :
+    Nat → Base → ZMod m
+  | 0, _base => 0
+  | n + 1, base =>
+      carry base + skewFiberAdditiveCarry baseStep carry n (baseStep base)
+
+theorem skewFiberIterate_zmod_add {Base : Type*} {m : Nat}
+    (baseStep : Base → Base) (carry : Base → ZMod m) :
+    ∀ n : Nat, ∀ base : Base, ∀ fiber : ZMod m,
+      skewFiberIterate baseStep (fun b z => z + carry b) n base fiber =
+        fiber + skewFiberAdditiveCarry baseStep carry n base
+  | 0, _base, _fiber => by simp [skewFiberIterate, skewFiberAdditiveCarry]
+  | n + 1, base, fiber => by
+      rw [skewFiberIterate, skewFiberIterate_zmod_add baseStep carry n]
+      simp [skewFiberAdditiveCarry]
+      ring
+
+theorem sectionReturn_skewProductMap_zmod_add {Base : Type*} {m : Nat}
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) :
+    sectionReturn (skewProductMap baseStep (fun b z => z + carry b))
+        base period =
+      fun fiber : ZMod m =>
+        fiber + skewFiberAdditiveCarry baseStep carry period base := by
+  funext fiber
+  unfold sectionReturn
+  rw [skewProductMap_snd_iterate]
+  rw [skewFiberIterate_zmod_add]
+
+theorem sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period a : Nat)
+    (ha : Nat.Coprime a m)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m)) :
+    IsSingleCycleMap
+      (sectionReturn
+        (skewProductMap baseStep (fun b z => z + carry b))
+        base period) := by
+  rw [sectionReturn_skewProductMap_zmod_add]
+  rw [hcarry]
+  exact zmod_add_single_cycle_of_coprime ha
 
 theorem single_cycle_of_skewProduct_monodromy
     {Base Fiber : Type*} (S : Base × Fiber → Base × Fiber)
