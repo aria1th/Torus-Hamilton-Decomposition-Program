@@ -209,6 +209,9 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 8. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 9. `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`
 10. `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`
+11. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md`
+12. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md`
+    once available
 
 ### Exact Lean Target
 
@@ -282,6 +285,16 @@ This route avoids proving orbit transitivity directly.  It asks for:
 ```text
 each one-step fiber hit condition depends only on the lower prefix
 + every rank cocycle has unit total carry
+```
+
+The older GPT-5.5 Pro response established the triangular/unit route and led
+to the now-closed generic lower-triangular odometer theorem.  A narrower
+follow-up request is now in progress for the actual remaining first-hit
+one-step locality and unit-carry calculation:
+
+```text
+docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md
+response id: resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37
 ```
 
 ### Already Lean-Closed
