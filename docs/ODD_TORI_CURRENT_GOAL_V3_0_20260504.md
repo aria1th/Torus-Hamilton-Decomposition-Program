@@ -150,6 +150,7 @@ choice-function level:
 def RoundComposite.ActiveHall.EraseLastHallCutsGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsSelectionGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsChoiceGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -168,8 +169,23 @@ theorem RoundComposite.ActiveHall
     EraseLastHallCutsGoal
 
 theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsChoiceGoal_of_slackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal) :
+    EraseLastHallCutsChoiceGoal
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsGoal_of_slackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal) :
+    EraseLastHallCutsGoal
+
+theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsChoice
     (hChoice : EraseLastHallCutsChoiceGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCutsSlackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal) :
     HallRealizationGoal
 
 theorem RoundComposite.ActiveHall
@@ -177,12 +193,24 @@ theorem RoundComposite.ActiveHall
     (hChoice : EraseLastHallCutsChoiceGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCutsSlackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
 ```
 
 The choice-level form asks for a function `choice : X -> C` selecting one active
 color at each vertex, with the prescribed last-column degrees, such that every
 lower-symbol cut has enough existing Hall slack to absorb exactly the low-hit
-loss introduced by erasing `choice`.
+loss introduced by erasing `choice`.  The preferred remaining interface is now
+the slack form:
+
+```lean
+Incidence.choiceLowHitCount I choice U S
+  <= M.cutSlack U (S.image Fin.castSucc)
+```
 
 Closed support includes:
 
@@ -191,11 +219,14 @@ theorem RoundComposite.ActiveHall.hallRealization_zero
 theorem RoundComposite.ActiveHall.hallRealization_one
 theorem RoundComposite.ActiveHall.eraseLastHallCuts_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsChoice_zero
+theorem RoundComposite.ActiveHall.eraseLastHallCutsSlackChoice_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
 def RoundComposite.ActiveHall.Incidence.eraseChoice
 def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
+def RoundComposite.ActiveHall.CountMatrix.cutSlack
+theorem RoundComposite.ActiveHall.CountMatrix.cutMass_add_le_iff_le_cutSlack
 def RoundComposite.ActiveHall.Incidence.choiceLowHitCount
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_symbols_empty
@@ -205,6 +236,8 @@ theorem RoundComposite.ActiveHall.CountMatrix
   .cutMass_image_castSucc_insert_last_eq_eraseLast_add_choiceHitCount
 theorem RoundComposite.ActiveHall.CountMatrix
   .eraseLastCountMatrix_hallCuts_of_cutCap_slack
+theorem RoundComposite.ActiveHall.CountMatrix
+  .eraseLastCountMatrix_hallCuts_of_cutSlack
 theorem RoundComposite.ActiveHall.Incidence.sum_choiceDegree_on
 theorem RoundComposite.ActiveHall.Incidence
   .eraseChoice_active_inter_card_add_indicator
@@ -219,17 +252,15 @@ theorem RoundComposite.ActiveHall.Incidence
 Remaining Active Hall proof obligation:
 
 ```lean
-EraseLastHallCutsChoiceGoal
+EraseLastHallCutsSlackChoiceGoal
 ```
 
 Equivalently, the remaining theorem is a degree-constrained active choice
 theorem with the cut condition
 
 ```lean
-M.cutMass U (S.image Fin.castSucc)
-  + Incidence.choiceLowHitCount I choice U S
-<=
-I.cutCap U (S.image Fin.castSucc)
+Incidence.choiceLowHitCount I choice U S
+  <= M.cutSlack U (S.image Fin.castSucc)
 ```
 
 for every color cut `U` and lower-symbol cut `S`.
