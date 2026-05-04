@@ -1632,22 +1632,23 @@ theorem sum_qge2RowTarget_of_sums {n C r : Nat}
     _ = - (C : Int) := by ring
 
 /--
-Pure signed-column packing form of the `q >= 2` closure theorem.  The torus
-row-target data has been erased: this asks only that row targets `R` with the
-right total and all cut upper bounds can be packed by signed columns of total
-`-c k`.
+Pure signed-column packing form of the `q >= 2` closure theorem in the exact
+ordinary branch shape.  The torus row-target data has been erased: this asks
+only that row targets `R` with the right total and all cut upper bounds can be
+packed by the `n - 1` signed columns of total `-c k`.
 -/
 def Qge2SignedColumnPackingGoal : Prop :=
-  ∀ {n K : Nat} (R : Fin n → Int) (c : Fin K → Nat),
-    (∀ k : Fin K, c k = 1 ∨ c k = 2) →
-    (∑ i : Fin n, R i) = - (∑ k : Fin K, (c k : Int)) →
+  ∀ {n : Nat}, 4 ≤ n →
+    ∀ (R : Fin n → Int) (c : Fin (n - 1) → Nat),
+    (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+    (∑ i : Fin n, R i) = - (∑ k : Fin (n - 1), (c k : Int)) →
     (∀ J : Finset (Fin n),
       (∑ i ∈ J, R i)
-        ≤ ∑ k : Fin K, qge2ColumnCapacity n J.card (c k)) →
-    ∃ S : Fin n → Fin K → Int,
+        ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+    ∃ S : Fin n → Fin (n - 1) → Int,
       (∀ i k, IsSignedVal (S i k)) ∧
-      (∀ i : Fin n, (∑ k : Fin K, S i k) = R i) ∧
-      (∀ k : Fin K, (∑ i : Fin n, S i k) = - (c k : Int))
+      (∀ i : Fin n, (∑ k : Fin (n - 1), S i k) = R i) ∧
+      (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
 
 theorem ordinaryQge2PlanData_row_cut_first_bound
     {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
@@ -1863,7 +1864,7 @@ theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
     (hPacking : Qge2SignedColumnPackingGoal) :
     OrdinaryQge2SignedSeedClosureGoal := by
   classical
-  intro n C r _hnEven _hn4 _hrOdd _hrlt _hrpos a epsBit c
+  intro n C r _hnEven hn4 _hrOdd _hrlt _hrpos a epsBit c
     _ha _heps hc ha_sum heps_sum hc_sum hCuts
   let R : Fin n → Int :=
     fun i => (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)
@@ -1886,7 +1887,7 @@ theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
           ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k) := by
     intro J
     simpa [R] using hCuts J
-  rcases hPacking R c hc hRsum hCutsR with ⟨S, hSigned, hRow, hCol⟩
+  rcases hPacking hn4 R c hc hRsum hCutsR with ⟨S, hSigned, hRow, hCol⟩
   exact ⟨S, hSigned, by
     intro i
     simpa [R] using hRow i, hCol⟩

@@ -36,21 +36,29 @@ OddSuccessorSmallModulusBaseTailGoal
 
 ### Exact Lean Target
 
-The cleanest current target is the pure signed-column packing theorem:
+The cleanest current target is the pure signed-column packing theorem in the
+exact ordinary q>=2 branch shape:
 
 ```lean
 def RoundComposite.PrefixCount.Qge2SignedColumnPackingGoal : Prop :=
-  forall {n K : Nat} (R : Fin n -> Int) (c : Fin K -> Nat),
-    (forall k : Fin K, c k = 1 ∨ c k = 2) ->
-    (sum i : Fin n, R i) = - (sum k : Fin K, (c k : Int)) ->
+  forall {n : Nat}, 4 <= n ->
+    forall (R : Fin n -> Int) (c : Fin (n - 1) -> Nat),
+    (forall k : Fin (n - 1), c k = 1 ∨ c k = 2) ->
+    (sum i : Fin n, R i) =
+      - (sum k : Fin (n - 1), (c k : Int)) ->
     (forall J : Finset (Fin n),
       (sum i in J, R i)
-        <= sum k : Fin K, qge2ColumnCapacity n J.card (c k)) ->
-    exists S : Fin n -> Fin K -> Int,
+        <= sum k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) ->
+    exists S : Fin n -> Fin (n - 1) -> Int,
       (forall i k, IsSignedVal (S i k)) ∧
-      (forall i : Fin n, (sum k : Fin K, S i k) = R i) ∧
-      (forall k : Fin K, (sum i : Fin n, S i k) = - (c k : Int))
+      (forall i : Fin n, (sum k : Fin (n - 1), S i k) = R i) ∧
+      (forall k : Fin (n - 1),
+        (sum i : Fin n, S i k) = - (c k : Int))
 ```
+
+The `n - 1` column count and `4 <= n` hypothesis are intentional.  A completely
+free column count would be too strong: for very small or single-column cases,
+the cut upper bounds alone do not characterize entrywise nonzero signed columns.
 
 Lean proves the adapter:
 
