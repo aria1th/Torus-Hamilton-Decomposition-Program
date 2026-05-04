@@ -125,8 +125,13 @@ PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
+PrefixCount.OrdinaryQeq1AuxMatrixData
+PrefixCount.OrdinaryQeq1SpecialMatchingData
+PrefixCount.OrdinaryQeq1AuxMatrixGoal
+PrefixCount.OrdinaryQeq1SpecialMatchingGoal
 PrefixCount.OrdinaryQeq1CanonicalCorrectionData
 PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal
+PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
 PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal
 PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
 PrefixCount.ordinaryQeq1PlanGoal
@@ -157,6 +162,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_and_rootFlatCanonical
 RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxMatching_and_rootFlatCanonical
+RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
@@ -184,6 +191,8 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxMatching_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
 RoundComposite.Concrete
@@ -217,6 +226,11 @@ matching output is Lean-closed as
 remaining q=1 mathematical input can be stated as the data-level existence
 theorem `PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal`, whose content is
 the Gale-Ryser auxiliary matrix and special Hall matching construction.
+This has also been split into the two paper-facing subgoals
+`PrefixCount.OrdinaryQeq1AuxMatrixGoal` and
+`PrefixCount.OrdinaryQeq1SpecialMatchingGoal`; their combination is Lean-closed
+through
+`PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching`.
 
 Small-modulus successor branch:
 

@@ -2030,6 +2030,25 @@ structure OrdinaryQeq1CanonicalMatrixData (n m r : Nat) where
         if k.val < r then (-2 : Int) else (-1 : Int)
 
 /--
+Auxiliary `±1` matrix in the restricted `q = 1` construction, before the
+special matching correction.
+-/
+structure OrdinaryQeq1AuxMatrixData (n r : Nat) where
+  B : Fin n → Fin (n - 1) → Int
+  B_pm_one : ∀ i k, B i k = (-1 : Int) ∨ B i k = 1
+  B_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), B i k) =
+        if i.val < r - 1 then
+          (r : Int) - 2 - (n : Int)
+        else if i.val < r then
+          (r : Int) - (n : Int)
+        else
+          (r : Int) - 2
+  B_col_sum :
+    ∀ k : Fin (n - 1), (∑ i : Fin n, B i k) = (-2 : Int)
+
+/--
 Paper-facing output for the restricted `q = 1` matching correction before the
 final `+1` and `-1` edits are applied.  Rows with `r <= i.val` are the `P` rows, the
 row with `i.val = r - 1` is the distinguished row, and columns with
@@ -2064,6 +2083,43 @@ structure OrdinaryQeq1CanonicalCorrectionData (n r : Nat) where
   special_low : (mate special).val < r
   special_neg :
     ∀ i : Fin n, i.val = r - 1 → B i (mate special) = (-1 : Int)
+
+structure OrdinaryQeq1SpecialMatchingData {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r) where
+  mate : Fin n → Fin (n - 1)
+  special : Fin n
+  mate_pos : ∀ i : Fin n, r ≤ i.val → A.B i (mate i) = 1
+  mate_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n,
+        if r ≤ i.val ∧ mate i = k then (1 : Int) else 0)
+        = if k.val < r then
+            if k = mate special then (1 : Int) else 0
+          else
+            1
+  special_mem : r ≤ special.val
+  special_low : (mate special).val < r
+  special_neg :
+    ∀ i : Fin n, i.val = r - 1 → A.B i (mate special) = (-1 : Int)
+
+namespace OrdinaryQeq1SpecialMatchingData
+
+def toCorrectionData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
+    (M : OrdinaryQeq1SpecialMatchingData A) :
+    OrdinaryQeq1CanonicalCorrectionData n r where
+  B := A.B
+  mate := M.mate
+  special := M.special
+  B_pm_one := A.B_pm_one
+  B_row_sum := A.B_row_sum
+  B_col_sum := A.B_col_sum
+  mate_pos := M.mate_pos
+  mate_col_sum := M.mate_col_sum
+  special_mem := M.special_mem
+  special_low := M.special_low
+  special_neg := M.special_neg
+
+end OrdinaryQeq1SpecialMatchingData
 
 namespace OrdinaryQeq1CanonicalCorrectionData
 
@@ -2248,12 +2304,35 @@ def toCanonicalMatrixData {n r : Nat}
 
 end OrdinaryQeq1CanonicalCorrectionData
 
+def OrdinaryQeq1AuxMatrixGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1AuxMatrixData n r)
+
+def OrdinaryQeq1SpecialMatchingGoal : Prop :=
+  ∀ {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r),
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1SpecialMatchingData A)
+
 def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
     Odd (n + r) →
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1CanonicalCorrectionData n r)
+
+theorem ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
+    (hAux : OrdinaryQeq1AuxMatrixGoal)
+    (hMatch : OrdinaryQeq1SpecialMatchingGoal) :
+    OrdinaryQeq1CanonicalCorrectionDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hAux hdodd hd5 hmodd hrlt hrpos with ⟨A⟩
+  rcases hMatch A hdodd hd5 hmodd hrlt hrpos with ⟨M⟩
+  exact ⟨M.toCorrectionData⟩
 
 def OrdinaryQeq1CanonicalMatrixGoal : Prop :=
   ∀ {n m r : Nat},

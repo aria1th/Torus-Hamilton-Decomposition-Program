@@ -755,6 +755,18 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_
     (PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal hQeq1Data)
     hReturn
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxMatching_and_rootFlatCanonical
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Aux : PrefixCount.OrdinaryQeq1AuxMatrixGoal)
+    (hQeq1Match : PrefixCount.OrdinaryQeq1SpecialMatchingGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_and_rootFlatCanonical
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
+      hQeq1Aux hQeq1Match)
+    hReturn
+
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
@@ -1272,6 +1284,21 @@ theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_ro
   odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
     hQge2Closure
     (PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal hQeq1Data)
+    hReturn hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxMatching_rootFlatCanonical_and_slackPacketLift
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Aux : PrefixCount.OrdinaryQeq1AuxMatrixGoal)
+    (hQeq1Match : PrefixCount.OrdinaryQeq1SpecialMatchingGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_rootFlatCanonical_and_slackPacketLift
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
+      hQeq1Aux hQeq1Match)
     hReturn hSmallPacket hd2 hmodd hm3
 
 def OddModulusToriV4ConstructionBlocksGoal : Prop :=
