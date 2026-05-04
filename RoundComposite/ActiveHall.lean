@@ -1447,6 +1447,16 @@ theorem symbolingWithResidues_of_feasible_and_realization
   rcases @hRealize T X C _ _ _ _ I M hHall with ⟨Φ, hRealizes⟩
   exact ⟨Φ, Φ.hasResidues_of_realizes hRealizes hResidues⟩
 
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCuts hErase) hFeasible
+
 theorem feasibleWithResidues_of_symbolingWithResidues
     {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
