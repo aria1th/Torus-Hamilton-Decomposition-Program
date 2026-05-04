@@ -350,6 +350,20 @@ theorem exists_balanced_unit_residues_fin {d m : Nat}
   · intro i
     exact balancedUnitResidues_isUnit hmodd (e i)
 
+theorem zmod_natCast_pow_eq_zero_of_pos {m n : Nat} (hn : 0 < n) :
+    ((m ^ n : Nat) : ZMod m) = 0 := by
+  rcases n with _ | n
+  · omega
+  · simp [pow_succ]
+
+theorem zmod_natCast_mul_pow_eq_zero_of_pos {m n a : Nat} (hn : 0 < n) :
+    ((a * m ^ n : Nat) : ZMod m) = 0 := by
+  rw [Nat.cast_mul, zmod_natCast_pow_eq_zero_of_pos hn, mul_zero]
+
+theorem zmod_natCast_pow_mul_eq_zero_of_pos {m n a : Nat} (hn : 0 < n) :
+    ((m ^ n * a : Nat) : ZMod m) = 0 := by
+  rw [Nat.cast_mul, zmod_natCast_pow_eq_zero_of_pos hn, zero_mul]
+
 noncomputable def universalUnitResidueSpec (m d n : Nat)
     (u : Fin d → ZMod m) : ResidueSpec m (n + 2) (Fin d) where
   target := fun c σ =>

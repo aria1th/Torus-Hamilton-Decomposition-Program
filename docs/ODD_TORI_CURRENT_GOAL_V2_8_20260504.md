@@ -225,6 +225,9 @@ theorem RoundComposite.ActiveHall.universalUnitResidueSpec_rowCompatible
 theorem RoundComposite.ActiveHall.universalUnitResidueSpec_colCompatible
 theorem RoundComposite.ActiveHall
   .exists_universalUnitResidueSpec_compatible_primitive
+theorem RoundComposite.ActiveHall.zmod_natCast_pow_eq_zero_of_pos
+theorem RoundComposite.ActiveHall.zmod_natCast_mul_pow_eq_zero_of_pos
+theorem RoundComposite.ActiveHall.zmod_natCast_pow_mul_eq_zero_of_pos
 ```
 
 Closed support added for the successor arithmetic:
