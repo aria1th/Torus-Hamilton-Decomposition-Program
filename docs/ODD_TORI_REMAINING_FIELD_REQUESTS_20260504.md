@@ -354,6 +354,8 @@ prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
 prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
 PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+prefixCountReturnTailLocalSymbolSplitIndicatorSum
+prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex
 prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
 ```
 
@@ -369,6 +371,11 @@ The full signed cocycle-sum goal is now Lean-reduced to the fixed-`t` local
 hit-condition sum target; Lean handles the remaining `x,u,t` sum commuting,
 signed layer-symbol coefficient sum, and `toMatrix` to `C.step - C.delta`
 conversion.
+It also closes the pure symbol split from the three residual events to
+`prefixCountReturnTailSignedCoeff`, and an abstract wrapper from a low-residual
+reindex theorem plus hit-condition iff to the fixed-`t` local sum.  The open
+return-tail proof is therefore precisely the construction of that residual map
+and the two facts about it.
 
 ### Already Lean-Closed
 

@@ -1013,6 +1013,214 @@ theorem prefixCountPcHitBeforeLastZeroIndicatorSum
             (m := m) (n := k)
             (P := fun x : Fin k → ZMod m => ∃ i : Fin k, x i = 0)
 
+theorem prefixCountReturnTailLocalSymbolSplitIndicatorSum
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {k : Nat} (hk : k < d - 2) (s : Fin d) :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if
+          (s = prefixCountReturnTailDeltaCol hd2 ∧
+              prefixCountPcExactLastZero y) ∨
+            (s.val = k + 1 ∧ 1 < s.val ∧
+              prefixCountPcHitBeforeLastZero y) ∨
+            (s = prefixCountReturnTailStepCol hd2 hk ∧
+              prefixCountPcNoZero y)
+        then (1 : ZMod m) else 0) =
+      prefixCountReturnTailSignedCoeff hd2 hk s := by
+  classical
+  have hDeltaStep :
+      prefixCountReturnTailDeltaCol hd2 ≠
+        prefixCountReturnTailStepCol hd2 hk := by
+    intro h
+    have hval := congrArg Fin.val h
+    simp [prefixCountReturnTailDeltaCol, prefixCountReturnTailStepCol,
+      PrefixCount.Parts.colDelta, PrefixCount.Parts.colStep] at hval
+  by_cases hDelta : s = prefixCountReturnTailDeltaCol hd2
+  · have hNotStep : s ≠ prefixCountReturnTailStepCol hd2 hk := by
+      intro hStep
+      exact hDeltaStep (hDelta.symm.trans hStep)
+    have hNotMiddle : ¬ (s.val = k + 1 ∧ 1 < s.val) := by
+      intro h
+      have hsval : s.val = 1 := by
+        simpa [hDelta, prefixCountReturnTailDeltaCol,
+          PrefixCount.Parts.colDelta]
+      omega
+    calc
+      (∑ y : Fin (k + 1) → ZMod m,
+          if
+            (s = prefixCountReturnTailDeltaCol hd2 ∧
+                prefixCountPcExactLastZero y) ∨
+              (s.val = k + 1 ∧ 1 < s.val ∧
+                prefixCountPcHitBeforeLastZero y) ∨
+              (s = prefixCountReturnTailStepCol hd2 hk ∧
+                prefixCountPcNoZero y)
+          then (1 : ZMod m) else 0)
+          =
+          ∑ y : Fin (k + 1) → ZMod m,
+            if prefixCountPcExactLastZero y then (1 : ZMod m) else 0 := by
+            apply Finset.sum_congr rfl
+            intro y _hy
+            have hiff :
+                ((s = prefixCountReturnTailDeltaCol hd2 ∧
+                    prefixCountPcExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    prefixCountPcHitBeforeLastZero y) ∨
+                  (s = prefixCountReturnTailStepCol hd2 hk ∧
+                    prefixCountPcNoZero y)) ↔
+                  prefixCountPcExactLastZero y := by
+              constructor
+              · intro h
+                rcases h with h | h | h
+                · exact h.2
+                · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                · exact False.elim (hNotStep h.1)
+              · intro hy
+                exact Or.inl ⟨hDelta, hy⟩
+            by_cases hP :
+                (s = prefixCountReturnTailDeltaCol hd2 ∧
+                    prefixCountPcExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    prefixCountPcHitBeforeLastZero y) ∨
+                  (s = prefixCountReturnTailStepCol hd2 hk ∧
+                    prefixCountPcNoZero y)
+            · have hy : prefixCountPcExactLastZero y := hiff.mp hP
+              rw [if_pos hP, if_pos hy]
+            · have hy : ¬ prefixCountPcExactLastZero y := by
+                intro hy
+                exact hP (hiff.mpr hy)
+              rw [if_neg hP, if_neg hy]
+      _ = prefixCountReturnTailSignedCoeff hd2 hk s := by
+            rw [prefixCountPcExactLastZeroIndicatorSum]
+            simp [prefixCountReturnTailSignedCoeff, hDelta, hDeltaStep]
+  · by_cases hStep : s = prefixCountReturnTailStepCol hd2 hk
+    · have hNotMiddle : ¬ (s.val = k + 1 ∧ 1 < s.val) := by
+        intro h
+        have hsval : s.val = k + 2 := by
+          simpa [hStep, prefixCountReturnTailStepCol,
+            PrefixCount.Parts.colStep]
+        omega
+      calc
+        (∑ y : Fin (k + 1) → ZMod m,
+            if
+              (s = prefixCountReturnTailDeltaCol hd2 ∧
+                  prefixCountPcExactLastZero y) ∨
+                (s.val = k + 1 ∧ 1 < s.val ∧
+                  prefixCountPcHitBeforeLastZero y) ∨
+                (s = prefixCountReturnTailStepCol hd2 hk ∧
+                  prefixCountPcNoZero y)
+            then (1 : ZMod m) else 0)
+            =
+            ∑ y : Fin (k + 1) → ZMod m,
+              if prefixCountPcNoZero y then (1 : ZMod m) else 0 := by
+              apply Finset.sum_congr rfl
+              intro y _hy
+              have hiff :
+                  ((s = prefixCountReturnTailDeltaCol hd2 ∧
+                      prefixCountPcExactLastZero y) ∨
+                    (s.val = k + 1 ∧ 1 < s.val ∧
+                      prefixCountPcHitBeforeLastZero y) ∨
+                    (s = prefixCountReturnTailStepCol hd2 hk ∧
+                      prefixCountPcNoZero y)) ↔
+                    prefixCountPcNoZero y := by
+                constructor
+                · intro h
+                  rcases h with h | h | h
+                  · exact False.elim (hDelta h.1)
+                  · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                  · exact h.2
+                · intro hy
+                  exact Or.inr (Or.inr ⟨hStep, hy⟩)
+              by_cases hP :
+                  (s = prefixCountReturnTailDeltaCol hd2 ∧
+                      prefixCountPcExactLastZero y) ∨
+                    (s.val = k + 1 ∧ 1 < s.val ∧
+                      prefixCountPcHitBeforeLastZero y) ∨
+                    (s = prefixCountReturnTailStepCol hd2 hk ∧
+                      prefixCountPcNoZero y)
+              · have hy : prefixCountPcNoZero y := hiff.mp hP
+                rw [if_pos hP, if_pos hy]
+              · have hy : ¬ prefixCountPcNoZero y := by
+                  intro hy
+                  exact hP (hiff.mpr hy)
+                rw [if_neg hP, if_neg hy]
+        _ = prefixCountReturnTailSignedCoeff hd2 hk s := by
+              rw [prefixCountPcNoZeroIndicatorSum]
+              have hStepDelta :
+                  prefixCountReturnTailStepCol hd2 hk ≠
+                    prefixCountReturnTailDeltaCol hd2 :=
+                hDeltaStep ∘ Eq.symm
+              simp [prefixCountReturnTailSignedCoeff, hStep, hStepDelta]
+    · by_cases hMiddle : s.val = k + 1 ∧ 1 < s.val
+      · calc
+          (∑ y : Fin (k + 1) → ZMod m,
+              if
+                (s = prefixCountReturnTailDeltaCol hd2 ∧
+                    prefixCountPcExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    prefixCountPcHitBeforeLastZero y) ∨
+                  (s = prefixCountReturnTailStepCol hd2 hk ∧
+                    prefixCountPcNoZero y)
+              then (1 : ZMod m) else 0)
+              =
+              ∑ y : Fin (k + 1) → ZMod m,
+                if prefixCountPcHitBeforeLastZero y
+                then (1 : ZMod m) else 0 := by
+                apply Finset.sum_congr rfl
+                intro y _hy
+                have hiff :
+                    ((s = prefixCountReturnTailDeltaCol hd2 ∧
+                        prefixCountPcExactLastZero y) ∨
+                      (s.val = k + 1 ∧ 1 < s.val ∧
+                        prefixCountPcHitBeforeLastZero y) ∨
+                      (s = prefixCountReturnTailStepCol hd2 hk ∧
+                        prefixCountPcNoZero y)) ↔
+                      prefixCountPcHitBeforeLastZero y := by
+                  constructor
+                  · intro h
+                    rcases h with h | h | h
+                    · exact False.elim (hDelta h.1)
+                    · exact h.2.2
+                    · exact False.elim (hStep h.1)
+                  · intro hy
+                    exact Or.inr (Or.inl ⟨hMiddle.1, hMiddle.2, hy⟩)
+                by_cases hP :
+                    (s = prefixCountReturnTailDeltaCol hd2 ∧
+                        prefixCountPcExactLastZero y) ∨
+                      (s.val = k + 1 ∧ 1 < s.val ∧
+                        prefixCountPcHitBeforeLastZero y) ∨
+                      (s = prefixCountReturnTailStepCol hd2 hk ∧
+                        prefixCountPcNoZero y)
+                · have hy : prefixCountPcHitBeforeLastZero y := hiff.mp hP
+                  rw [if_pos hP, if_pos hy]
+                · have hy : ¬ prefixCountPcHitBeforeLastZero y := by
+                    intro hy
+                    exact hP (hiff.mpr hy)
+                  rw [if_neg hP, if_neg hy]
+          _ = prefixCountReturnTailSignedCoeff hd2 hk s := by
+                rw [prefixCountPcHitBeforeLastZeroIndicatorSum]
+                simp [prefixCountReturnTailSignedCoeff, hDelta, hStep]
+      · calc
+          (∑ y : Fin (k + 1) → ZMod m,
+              if
+                (s = prefixCountReturnTailDeltaCol hd2 ∧
+                    prefixCountPcExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    prefixCountPcHitBeforeLastZero y) ∨
+                  (s = prefixCountReturnTailStepCol hd2 hk ∧
+                    prefixCountPcNoZero y)
+              then (1 : ZMod m) else 0)
+              =
+              ∑ y : Fin (k + 1) → ZMod m, 0 := by
+                apply Finset.sum_congr rfl
+                intro y _hy
+                have hNoMiddle :
+                    ¬ (s.val = k + 1 ∧ 1 < s.val ∧
+                        prefixCountPcHitBeforeLastZero y) := by
+                  intro h
+                  exact hMiddle ⟨h.1, h.2.1⟩
+                simp [hDelta, hStep, hNoMiddle]
+          _ = prefixCountReturnTailSignedCoeff hd2 hk s := by
+                simp [prefixCountReturnTailSignedCoeff, hDelta, hStep]
+
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
     (rho : ZMod m → PrefixCountRootState d m → Fin d)
@@ -3769,6 +3977,119 @@ theorem prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
           prefixCountFirstHitReturnTailCocycle hd2 L c k hk
             (Shared.zmodVectorTake (Nat.le_of_lt hk) tail) := by
           rw [h]
+
+theorem prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    {k : Nat} (hk : k < d - 2) {t : Nat} (_ht : t ∈ Finset.range m)
+    (R : Nat → (Fin k → ZMod m) → (Fin (k + 1) → ZMod m))
+    (hReindex :
+      ∀ F : (Fin (k + 1) → ZMod m) → ZMod m,
+        (∑ x : (Fin k → ZMod m),
+          ∑ u ∈ Finset.range m, F (R u x)) =
+          ∑ y : (Fin (k + 1) → ZMod m), F y)
+    (hHit :
+      ∀ x : Fin k → ZMod m, ∀ u ∈ Finset.range m,
+        prefixCountFirstHitReturnFiberHitCondition hd2 L c
+            (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+              (0 : ZMod m))
+            (Shared.skewFiberIterate
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+            ⟨k, hk⟩ t ↔
+          (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+              prefixCountReturnTailDeltaCol hd2 ∧
+                prefixCountPcExactLastZero (R u x)) ∨
+            ((L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val =
+                k + 1 ∧
+              1 < (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val ∧
+                prefixCountPcHitBeforeLastZero (R u x)) ∨
+            (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+              prefixCountReturnTailStepCol hd2 hk ∧
+                prefixCountPcNoZero (R u x))) :
+    (∑ x : (Fin k → ZMod m),
+      ∑ u ∈ Finset.range m,
+        if prefixCountFirstHitReturnFiberHitCondition hd2 L c
+            (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+              (0 : ZMod m))
+            (Shared.skewFiberIterate
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+            ⟨k, hk⟩ t
+        then (1 : ZMod m) else 0) =
+      prefixCountReturnTailSignedCoeff hd2 hk
+        (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c) := by
+  classical
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  let F : (Fin (k + 1) → ZMod m) → ZMod m := fun y =>
+    if
+      (s = prefixCountReturnTailDeltaCol hd2 ∧
+          prefixCountPcExactLastZero y) ∨
+        (s.val = k + 1 ∧ 1 < s.val ∧
+          prefixCountPcHitBeforeLastZero y) ∨
+        (s = prefixCountReturnTailStepCol hd2 hk ∧
+          prefixCountPcNoZero y)
+    then (1 : ZMod m) else 0
+  calc
+    (∑ x : (Fin k → ZMod m),
+      ∑ u ∈ Finset.range m,
+        if prefixCountFirstHitReturnFiberHitCondition hd2 L c
+            (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+              (0 : ZMod m))
+            (Shared.skewFiberIterate
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+            ⟨k, hk⟩ t
+        then (1 : ZMod m) else 0)
+        =
+        ∑ x : (Fin k → ZMod m),
+          ∑ u ∈ Finset.range m, F (R u x) := by
+          apply Finset.sum_congr rfl
+          intro x _hx
+          apply Finset.sum_congr rfl
+          intro u hu
+          have hiff := hHit x u hu
+          by_cases hP :
+              prefixCountFirstHitReturnFiberHitCondition hd2 L c
+                (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+                  (0 : ZMod m))
+                (Shared.skewFiberIterate
+                  (prefixCountFirstHitReturnBaseStep (m := m) C c)
+                  (prefixCountFirstHitReturnFiberStep hd2 L c)
+                  u (0 : ZMod m)
+                  (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+                ⟨k, hk⟩ t
+          · have hQ := hiff.mp hP
+            simp [F, s, hP, hQ]
+          · have hQ :
+                ¬ ((L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                    prefixCountReturnTailDeltaCol hd2 ∧
+                      prefixCountPcExactLastZero (R u x)) ∨
+                  ((L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val =
+                      k + 1 ∧
+                    1 < (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val ∧
+                      prefixCountPcHitBeforeLastZero (R u x)) ∨
+                  (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                    prefixCountReturnTailStepCol hd2 hk ∧
+                      prefixCountPcNoZero (R u x))) := by
+              intro hQ
+              exact hP (hiff.mpr hQ)
+            simp [F, s, hP, hQ]
+    _ = ∑ y : (Fin (k + 1) → ZMod m), F y := hReindex F
+    _ =
+        prefixCountReturnTailSignedCoeff hd2 hk
+          (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c) := by
+          simpa [F, s] using
+            prefixCountReturnTailLocalSymbolSplitIndicatorSum
+              (m := m) hd2 hk
+              (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
 
 theorem prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
     (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :
