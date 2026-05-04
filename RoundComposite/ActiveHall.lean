@@ -26,6 +26,10 @@ def choiceDegree {X C : Type*} [Fintype X] [DecidableEq X] [DecidableEq C]
     (choice : X → C) (c : C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => choice x = c)).card
 
+def choiceHitCount {X C : Type*} [Fintype X] [DecidableEq X]
+    [DecidableEq C] (choice : X → C) (U : Finset C) : Nat :=
+  ((Finset.univ : Finset X).filter (fun x => choice x ∈ U)).card
+
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
@@ -134,6 +138,45 @@ theorem eraseChoice_colorDegree_add_choiceDegree
       · simp [A, B, D, hcx, hxD]
   change B.card + D.card = A.card
   rw [← hUnion, Finset.card_union_of_disjoint hdisj]
+
+theorem sum_choiceDegree_on {X C : Type*}
+    [Fintype X] [DecidableEq X] [DecidableEq C]
+    (choice : X → C) (U : Finset C) :
+    (∑ c ∈ U, choiceDegree choice c) = choiceHitCount choice U := by
+  classical
+  unfold choiceDegree choiceHitCount
+  calc
+    (∑ c ∈ U, ((Finset.univ : Finset X).filter
+        (fun x => choice x = c)).card)
+        = ∑ c ∈ U, ∑ x : X, if choice x = c then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [Finset.card_filter]
+    _ = ∑ x : X, ∑ c ∈ U, if choice x = c then 1 else 0 := by
+            rw [Finset.sum_comm]
+    _ = ∑ x : X, if choice x ∈ U then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            by_cases hx : choice x ∈ U
+            · rw [Finset.sum_eq_single (choice x)]
+              · simp [hx]
+              · intro c _hc hne
+                have hneq : choice x ≠ c := by
+                  intro h
+                  exact hne h.symm
+                simp [hneq]
+              · intro hnot
+                exact False.elim (hnot hx)
+            · have hneq : ∀ c ∈ U, choice x ≠ c := by
+                intro c hc h
+                exact hx (by rw [h]; exact hc)
+              rw [if_neg hx]
+              apply Finset.sum_eq_zero
+              intro c hc
+              simp [hneq c hc]
+    _ = ((Finset.univ : Finset X).filter
+        (fun x => choice x ∈ U)).card := by
+            rw [Finset.card_filter]
 
 theorem sum_colorDegree_on {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -873,6 +916,26 @@ theorem eraseLastCountMatrix_cutMass
   rw [Finset.sum_image]
   intro a _ha b _hb hab
   exact Fin.castSucc_injective T hab
+
+theorem cutMass_last_eq_choiceHitCount
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (U : Finset C) :
+    M.cutMass U ({Fin.last T} : Finset (Fin (T + 1))) =
+      Incidence.choiceHitCount choice U := by
+  rw [M.cutMass_symbol_singleton U (Fin.last T)]
+  calc
+    (∑ c ∈ U, M.val c (Fin.last T))
+        = ∑ c ∈ U, Incidence.choiceDegree choice c := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [hdegree c]
+    _ = Incidence.choiceHitCount choice U :=
+            Incidence.sum_choiceDegree_on choice U
 
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
