@@ -646,6 +646,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_g
       hQge2Closure)
     hQeq1Matrix hGeom
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_geometry
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Correction : PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_geometry
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
+      hQeq1Correction)
+    hGeom
+
 theorem oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
     (hQge2Plan : PrefixCount.OrdinaryQge2PlanGoal)
     (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
@@ -723,6 +734,15 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_r
     OddCoreHighModulusPrefixCountGoal :=
   oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_geometry
     hQge2Closure hQeq1Matrix
+    (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_rootFlatCanonical
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Correction : PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_geometry
+    hQge2Closure hQeq1Correction
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
@@ -1217,9 +1237,23 @@ theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFla
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
     hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Correction : PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
+      hQeq1Correction)
+    hReturn hSmallPacket hd2 hmodd hm3
+
 def OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1CanonicalMatrixGoal ∧
+  PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
@@ -1228,10 +1262,10 @@ theorem odd_modulus_tori_all_dimensions_of_v4_construction_blocks
     {d m : Nat} (hd2 : 2 ≤ d)
     (hmodd : Odd m) (hm3 : 3 ≤ m) :
     Shared.CayleyHamiltonDecomposition d m := by
-  rcases hBlocks with ⟨hQge2Closure, hQeq1Matrix, hReturn, hSmallPacket⟩
+  rcases hBlocks with ⟨hQge2Closure, hQeq1Correction, hReturn, hSmallPacket⟩
   exact
-    odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
-      hQge2Closure hQeq1Matrix hReturn hSmallPacket hd2 hmodd hm3
+    odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
+      hQge2Closure hQeq1Correction hReturn hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
     (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)

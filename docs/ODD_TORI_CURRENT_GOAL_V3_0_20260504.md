@@ -94,13 +94,8 @@ def RoundComposite.Concrete.OddCoreHighModulusPrefixCountGoal : Prop :=
 Preferred Lean inputs for this branch:
 
 ```lean
-PrefixCount.OrdinaryQge2SeedGoal
-PrefixCount.OrdinaryQge2PlanGoal
-PrefixCount.OrdinaryQge2SignedMatrixGoal
-PrefixCount.OrdinaryQge2SignedCoreGoal
-PrefixCount.OrdinaryQeq1PlanGoal
-PrefixCount.OrdinaryQeq1SignedMatrixGoal
-PrefixCount.OrdinaryQeq1SignedCoreGoal
+PrefixCount.OrdinaryQge2SignedSeedClosureGoal
+PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal
 PrefixCount.MarginTransportQge2CompatibleGoal
 PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
@@ -130,6 +125,7 @@ PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
+PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
 PrefixCount.ordinaryQeq1PlanGoal
 PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
 PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
@@ -151,6 +147,10 @@ RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_rootFlatCanonical
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_geometry
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_rootFlatCanonical
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
@@ -176,6 +176,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
@@ -186,21 +188,19 @@ RoundComposite.Concrete
 ```
 
 so the `q >= 2` ordinary plan is reduced to the signed-column closure theorem
-alone,
-and the restricted `q = 1` construction can be supplied either as a direct
-signed-core theorem or as the stronger matrix-for-plan theorem.  The direct
-signed-core route is the preferred paper-facing target because the manuscript
-constructs a canonical `q = 1` matrix rather than an arbitrary matrix for every
-possible plan.  Lean now exposes that canonical target as
-`PrefixCount.OrdinaryQeq1CanonicalMatrixGoal`, with row/column sums matching
-the v4 matching-correction construction.  The `geometry` variants are available
-if the count-matrix/root-flat
-criterion is proved directly, while the
+alone.  The restricted `q = 1` construction is now exposed in its paper-facing
+form as `PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal`: it constructs the
+canonical matching-correction matrix only in the relevant case `m = n + r`.
+Lean then derives the more general compatibility-facing matrix interface through
+`PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction`.  Thus
+`OddModulusToriV4ConstructionBlocksGoal` consumes the narrow correction theorem,
+not the broader arbitrary-`m` matrix gate.  The `geometry` variants are available
+if the count-matrix/root-flat criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
 signed-column/matching-correction matrix closure.  The `q = 1` plan data is
 Lean-closed as `PrefixCount.ordinaryQeq1PlanGoal`, so that branch now only needs
-the restricted canonical matching-correction matrix theorem.
+the restricted canonical matching-correction theorem.
 
 Small-modulus successor branch:
 
@@ -222,24 +222,31 @@ def RoundComposite.Concrete.OddCoreSmallModulusSlackPacketLiftGoal : Prop
 
 ## Current Working Endpoint
 
-The strongest current all-dimensional adapter is:
+The current all-dimensional endpoint is the v4 construction-block packet:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical_and_slackPacketLift
-    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
-    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
-    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
-    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
+    (hBlocks : OddModulusToriV4ConstructionBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+where
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+```
+
 Thus the concrete Lean work is exactly:
 
-1. prove the q>=2 compatible signed-transport constructor;
-2. prove the q=1 compatible signed-transport constructor;
+1. prove the q>=2 signed-column closure theorem;
+2. prove the q=1 canonical matching-correction theorem;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
