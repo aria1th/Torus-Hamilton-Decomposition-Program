@@ -3328,6 +3328,33 @@ theorem feasibleWithResidues_of_symbolingWithResidues
   rcases hSymboling with ⟨Φ, hResidues⟩
   exact ⟨Φ.toCountMatrix, Φ.toCountMatrix_hallCuts, hResidues⟩
 
+theorem symbolingWithResidues_iff_feasible_of_realization
+    (hRealize : HallRealizationGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  ⟨feasibleWithResidues_of_symbolingWithResidues,
+    symbolingWithResidues_of_feasible_and_realization hRealize⟩
+
+theorem symbolingWithResidues_iff_feasible_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_hoffmanOrderedSDR hHoffman)
+
+theorem symbolingWithResidues_iff_feasible_of_columnFillingUpgrade
+    (hUpgrade : ColumnFillingUpgradeGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_columnFillingUpgrade hUpgrade)
+
 namespace SymbolingWithResidues
 
 theorem feasible {m T : Nat} {X C : Type*}

@@ -131,6 +131,18 @@ theorem symbolingWithResidues_of_feasible_and_columnFillingUpgrade
     (hUpgrade : ColumnFillingUpgradeGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_realization
+    (hRealize : HallRealizationGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_hoffmanOrderedSDR
+    (hHoffman : HoffmanOrderedSDRGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_columnFillingUpgrade
+    (hUpgrade : ColumnFillingUpgradeGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
 ```
 
 Also available:

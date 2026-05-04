@@ -105,6 +105,7 @@ theorem RoundComposite.Concrete
 | q>=2 proper-cut direct wrappers | `ordinaryQge2SignedMatrixGoal_of_properCutClosure`, `ordinaryQge2SignedCoreGoal_of_properCutClosure` | Lean-closed | Routes the first remaining field directly into the q>=2 matrix/core branch |
 | Root-flat certificate wrapper | `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` | Lean-closed | Schedule-facing field is enough |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
+| Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 

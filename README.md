@@ -224,7 +224,9 @@ when `m` is odd and `m >= 3`.
   that every symboling has the required row, column, and Hall-cut count
   properties.  It also exposes named equivalences between
   `HallRealizationGoal` and the erase-last choice/slack/linear/token-linear
-  formulations used to request or import the remaining abstract Hall layer.
+  formulations used to request or import the remaining abstract Hall layer,
+  plus the conditional equivalence between residue feasibility and actual
+  residue symbolings under `HallRealizationGoal`.
 - `RoundComposite/OddCore.lean`: Lean-facing odd-core dispatcher for the new
   global odd-modulus goal.  It closes `d = 3,5,7,9,11` from seeds/composites
   plus a D11 branch hypothesis, reduces all odd `d >= 13` to the high-modulus
