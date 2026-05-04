@@ -1,23 +1,47 @@
-# Active Hall Token-Linear Choice Request
+# Active Hall Ordered-SDR / Erase-Last Request
 
 Date: 2026-05-04.
 
 ## Purpose
 
-The current abstract Active Hall realization is reduced to one finite
-token-placement theorem.  A proof of this theorem would close the
-erase-last induction used by `RoundComposite.ActiveHall.HallRealizationGoal`.
+The current abstract Active Hall realization is reduced to one finite ordered
+SDR theorem, equivalently one of several erase-last choice theorems.  A proof
+of any equivalent target below would close the erase-last induction used by
+`RoundComposite.ActiveHall.HallRealizationGoal`.
 
 ## Files To Read
 
 1. `RoundComposite/ActiveHall.lean`
-2. `docs/ODD_TORI_CURRENT_GOAL_V3_0_20260504.md`
+2. `docs/ODD_TORI_CURRENT_GOAL_V3_1_20260504.md`
 3. Optionally, for broader context:
-   `docs/GPT55_PRO_ACTIVE_HALL_SLACK_RESPONSE_20260503.md`
+   `docs/GPT55_PRO_ACTIVE_HALL_TOKEN_LINEAR_RESPONSE_20260504.md`
 
-## Exact Lean Target
+## Preferred Lean Target
 
-The preferred remaining theorem is:
+The cleanest standalone theorem is the Hoffman ordered-SDR formulation:
+
+```lean
+def RoundComposite.ActiveHall.HoffmanOrderedSDRGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence T X C) (m : C → Fin T → Nat),
+      (∀ c : C, (∑ σ : Fin T, m c σ) = I.colorDegree c) →
+      (∀ σ : Fin T, (∑ c : C, m c σ) = Fintype.card X) →
+      (∀ U : Finset C, ∀ S : Finset (Fin T),
+        (∑ c ∈ U, ∑ σ ∈ S, m c σ) ≤ I.cutCap U S) →
+      ∃ e : (∀ x : X, Fin T ≃ {c : C // c ∈ I.active x}),
+        ∀ c : C, ∀ σ : Fin T,
+          Incidence.choiceDegree (fun x : X => ((e x) σ).1) c
+            = m c σ
+```
+
+This is Lean-equivalent to `HallRealizationGoal`, and it is the mathematically
+standard form: ordered systems of distinct representatives with prescribed
+symbol counts.
+
+## Equivalent Erase-Last Target
+
+The token-linear erase-last theorem remains a sharp alternative target:
 
 ```lean
 def RoundComposite.ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal : Prop :=
@@ -68,6 +92,21 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
+    HallRealizationGoal <-> EraseLastHallCutsGoal
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsChoiceGoal
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsSlackChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsSlackChoiceGoal
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsNontrivialSlackChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsNontrivialSlackChoiceGoal
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsLinearChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsLinearChoiceGoal
 
 def HoffmanOrderedSDRGoal : Prop
 
@@ -125,7 +164,8 @@ matrix.  This is Lean-equivalent to `HallRealizationGoal`.
 
 ## Mathematical Request
 
-Find a proof strategy for the token-linear choice theorem above.
+Find a proof strategy for `HoffmanOrderedSDRGoal` or any of the equivalent
+erase-last choice theorems above.
 
 The expected proof should be a pure finite combinatorics argument, independent
 of torus geometry.  It may use Hall's theorem, max-flow/min-cut,
