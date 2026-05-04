@@ -321,6 +321,63 @@ theorem sum_choiceDegreeOn_on_mono_colors {X C : Type*}
       ≤ ∑ c ∈ U₂, choiceDegreeOn E choice c := by
   exact Finset.sum_le_sum_of_subset hU
 
+def tokenLoadOn {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] {n : C → Nat}
+    (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) (U : Finset C) : Nat :=
+  ((Finset.univ : Finset (Sigma fun c : C => Fin (n c))).filter
+    (fun q => q.1 ∈ U ∧ f q ∈ E)).card
+
+theorem tokenLoadOn_eq_choiceHitCountOn {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) (U : Finset C) :
+    tokenLoadOn f E U =
+      choiceHitCountOn E (fun x : X => (f.symm x).1) U := by
+  classical
+  unfold tokenLoadOn choiceHitCountOn
+  calc
+    ((Finset.univ : Finset (Sigma fun c : C => Fin (n c))).filter
+        (fun q => q.1 ∈ U ∧ f q ∈ E)).card
+        =
+      ∑ q : Sigma fun c : C => Fin (n c),
+        if q.1 ∈ U ∧ f q ∈ E then 1 else 0 := by
+          rw [Finset.card_filter]
+    _ =
+      ∑ x : X, if (f.symm x).1 ∈ U ∧ x ∈ E then 1 else 0 := by
+          exact (Fintype.sum_equiv f.symm
+            (fun x : X =>
+              if (f.symm x).1 ∈ U ∧ x ∈ E then (1 : Nat) else 0)
+            (fun q : Sigma fun c : C => Fin (n c) =>
+              if q.1 ∈ U ∧ f q ∈ E then (1 : Nat) else 0)
+            (by intro x; simp)).symm
+    _ =
+      ∑ x ∈ E, if (f.symm x).1 ∈ U then 1 else 0 := by
+          calc
+            (∑ x : X, if (f.symm x).1 ∈ U ∧ x ∈ E
+                then (1 : Nat) else 0)
+                =
+              ∑ x : X, if x ∈ E then
+                (if (f.symm x).1 ∈ U then (1 : Nat) else 0) else 0 := by
+                  apply Finset.sum_congr rfl
+                  intro x _hx
+                  by_cases hxE : x ∈ E <;>
+                    by_cases hxU : (f.symm x).1 ∈ U <;> simp [hxE, hxU]
+            _ =
+              ∑ x ∈ E, if (f.symm x).1 ∈ U then 1 else 0 := by
+                  rw [← Finset.sum_filter]
+                  simp
+    _ = (E.filter (fun x : X => (f.symm x).1 ∈ U)).card := by
+          rw [Finset.card_filter]
+
+theorem tokenLoadOn_eq_sum_choiceDegreeOn {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) (U : Finset C) :
+    tokenLoadOn f E U =
+      ∑ c ∈ U, choiceDegreeOn E (fun x : X => (f.symm x).1) c := by
+  rw [tokenLoadOn_eq_choiceHitCountOn, ← sum_choiceDegreeOn_on]
+
 theorem choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
     {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -2264,6 +2321,40 @@ def EraseLastHallCutsLinearChoiceGoal : Prop :=
                     choice c)
                   ≤ M.cutSlack U
                       (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+def EraseLastHallCutsTokenLinearChoiceGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ M.cutSlack U
+                    (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsLinearChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hToken I M hHall with ⟨f, hfActive, hSlack⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    simpa [choice] using hfActive (f.symm x)
+  have hdegree :
+      ∀ c : C,
+        Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
+  refine ⟨choice, hchoice, hdegree, ?_⟩
+  intro U S hUne hUuniv hSne
+  simpa [choice, Incidence.tokenLoadOn_eq_sum_choiceDegreeOn f
+      (Incidence.lowCutSet I U S) U] using
+    hSlack U S hUne hUuniv hSne
 
 theorem eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
     (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC}) :

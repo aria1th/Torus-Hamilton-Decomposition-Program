@@ -153,6 +153,7 @@ def RoundComposite.ActiveHall.EraseLastHallCutsChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsNontrivialSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsLinearChoiceGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal : Prop
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -194,6 +195,11 @@ theorem RoundComposite.ActiveHall
   .eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
     (hLinear : EraseLastHallCutsLinearChoiceGoal) :
     EraseLastHallCutsNontrivialSlackChoiceGoal
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
+    EraseLastHallCutsLinearChoiceGoal
 
 theorem RoundComposite.ActiveHall
   .eraseLastHallCutsGoal_of_linearChoice
@@ -278,6 +284,31 @@ sum c in U,
 
 for the same nontrivial cuts.
 
+After the token-load bridge, an even cleaner equivalent target is the
+token-linear form:
+
+```lean
+def EraseLastHallCutsTokenLinearChoiceGoal : Prop :=
+  forall I M, M.HallCuts ->
+    exists f : (Sigma fun c => Fin (M.val c (Fin.last T))) ≃ X,
+      (forall q, q.1 ∈ I.active (f q)) ∧
+        forall U S,
+          U.Nonempty -> U != Finset.univ -> S.Nonempty ->
+            Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+              <= M.cutSlack U (S.image Fin.castSucc)
+```
+
+Here `f` places the last-column tokens directly into vertices.  The induced
+choice is `fun x => (f.symm x).1`, so the prescribed degrees follow from the
+token bijection, and the linear cut inequality follows from:
+
+```lean
+Incidence.tokenLoadOn_eq_sum_choiceDegreeOn
+```
+
+Thus the preferred remaining Active Hall request is now
+`EraseLastHallCutsTokenLinearChoiceGoal`.
+
 Closed support includes:
 
 ```lean
@@ -326,6 +357,11 @@ theorem RoundComposite.ActiveHall.Incidence
   .sum_choiceDegreeOn_on_mono_set
 theorem RoundComposite.ActiveHall.Incidence
   .sum_choiceDegreeOn_on_mono_colors
+def RoundComposite.ActiveHall.Incidence.tokenLoadOn
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_eq_choiceHitCountOn
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_eq_sum_choiceDegreeOn
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
 theorem RoundComposite.ActiveHall.Incidence
@@ -358,15 +394,14 @@ theorem RoundComposite.ActiveHall.Incidence
 Remaining Active Hall proof obligation:
 
 ```lean
-EraseLastHallCutsLinearChoiceGoal
+EraseLastHallCutsTokenLinearChoiceGoal
 ```
 
-Equivalently, the remaining theorem is a degree-constrained active choice
-theorem with the cut condition
+Equivalently, the remaining theorem is a degree-constrained active token
+placement theorem with the cut condition
 
 ```lean
-sum c in U,
-  Incidence.choiceDegreeOn (Incidence.lowCutSet I U S) choice c
+Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
 <= M.cutSlack U (S.image Fin.castSucc)
 ```
 
