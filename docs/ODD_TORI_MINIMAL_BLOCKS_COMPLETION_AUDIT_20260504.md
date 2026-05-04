@@ -211,8 +211,22 @@ The completed GPT-5.5 Pro follow-up gives the Lean-friendly intermediate value
 (((C.toMatrix hd2) c ⟨1, _⟩ : Nat) : ZMod m)
 ```
 
-and the remaining local work is to prove the cocycle expansion, the low-prefix
-finite count, and the `toMatrix` projection to `C.step - C.delta`.
+Lean now proves the first and last parts of this local route:
+
+```lean
+Shared.skewFiberIterate_coord_eq_add_sum_range
+prefixCountFirstHitReturnFiberStep_increment_eq_hitCondition_sum
+prefixCountFirstHitReturnTailCocycle_eq_fiberIterate
+prefixCountFirstHitReturnTailCocycle_eq_sum_fiberStep_increment
+prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
+prefixCountLayerCount_range_eq_matrix_zmod
+prefixCount_toMatrix_rawStep_sub_delta_zmod
+```
+
+The remaining local work is the middle counting step: reindex the
+`u,x` low-prefix states for each layer `t`, prove the local first-hit finite
+count, and fold the resulting layer indicator sums through the matrix-count
+helpers above.
 
 Lean already proves that the one-step dependency is preserved by
 `Shared.skewFiberIterate`, then implies lower-triangular form and closes the

@@ -311,6 +311,19 @@ and warns that this value should only be converted to the named
 `C.step c ⟨k, hk⟩ - C.delta c` expression after unfolding the local
 `Parts.toMatrix` definitions.
 
+Lean now has the cocycle expansion and matrix-projection endpoints for this
+route:
+
+```lean
+prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
+prefixCountLayerCount_range_eq_matrix_zmod
+prefixCount_toMatrix_rawStep_sub_delta_zmod
+```
+
+So the open return-tail proof request should focus on the low-prefix
+reindexing/bijection and local finite first-hit count, not on generic
+skew-iterate expansion or `toMatrix` arithmetic.
+
 ### Already Lean-Closed
 
 Lean already builds the first-hit schedule, proves the row-Latin and
