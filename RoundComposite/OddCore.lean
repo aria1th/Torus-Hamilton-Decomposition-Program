@@ -280,6 +280,15 @@ theorem prefixCountLambdaRho_val_eq_pred
     (prefixCountLambdaRho d rho s).val = s.val - 1 := by
   simp [prefixCountLambdaRho, hs0, hs1, hlt]
 
+theorem prefixCountLambdaRho_eq_pred
+    {d : Nat} (rho : Fin d) {s : Fin d}
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : ¬rho.val < s.val) :
+    prefixCountLambdaRho d rho s =
+      ⟨s.val - 1, by omega⟩ := by
+  ext
+  exact prefixCountLambdaRho_val_eq_pred rho hs0 hs1 hlt
+
 def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
   if _hs0 : s.val = 0 then
     ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
@@ -1128,6 +1137,198 @@ theorem prefixCountFirstHitSymbolMap_apply_inv_of_rho_lt
       (prefixCountRootStepInv d m s w)) hs0 hs1 hlt']
   exact prefixCountRootStep_apply_inv s w
 
+theorem prefixCountFirstHitSymbolMap_not_rho_lt_of_not_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hnot : ¬(prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    ¬ (prefixCountCanonicalRho d m hd2 t
+        (prefixCountFirstHitSymbolMap hd2 t s w)).val < s.val := by
+  intro hlt'
+  let i : Fin d := ⟨s.val - 1, by omega⟩
+  have hs_ge_two : 2 ≤ s.val := by omega
+  have hrho_ge : s.val ≤ (prefixCountCanonicalRho d m hd2 t w).val := by
+    omega
+  have hmap :
+      prefixCountFirstHitSymbolMap hd2 t s w =
+        prefixCountRootStep d m i w := by
+    unfold prefixCountFirstHitSymbolMap
+    rw [prefixCountLambdaRho_eq_pred
+      (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  let rho' :=
+    prefixCountCanonicalRho d m hd2 t
+      (prefixCountFirstHitSymbolMap hd2 t s w)
+  have hrho'_lt_last : rho'.val < d - 1 := by
+    have : rho'.val < s.val := hlt'
+    have hslt : s.val < d := s.isLt
+    omega
+  have hhit' :
+      prefixCountCanonicalRhoHitNat t
+        (prefixCountFirstHitSymbolMap hd2 t s w) (rho'.val - 1) := by
+    simpa [rho'] using
+      (prefixCountCanonicalRho_pred_hitNat
+        (d := d) (m := m) hd2 (t := t)
+        (w := prefixCountFirstHitSymbolMap hd2 t s w) hrho'_lt_last)
+  have hne : i.val ≠ rho'.val - 1 := by
+    have hnonzero' : rho'.val ≠ 0 := by
+      simpa [rho'] using
+        prefixCountCanonicalRho_ne_zero
+          (d := d) (m := m) hd2 t
+          (prefixCountFirstHitSymbolMap hd2 t s w)
+    have hi_val : i.val = s.val - 1 := rfl
+    omega
+  have hhit :
+      prefixCountCanonicalRhoHitNat t w (rho'.val - 1) := by
+    rw [hmap] at hhit'
+    exact
+      (prefixCountCanonicalRhoHitNat_rootStep_iff_of_ne
+        (d := d) (m := m) (t := t) (w := w)
+        (i := i) (j := rho'.val - 1) hne).1 hhit'
+  have hbefore :
+      (rho'.val - 1) + 1 <
+        (prefixCountCanonicalRho d m hd2 t w).val := by
+    have hnonzero' : rho'.val ≠ 0 := by
+      simpa [rho'] using
+        prefixCountCanonicalRho_ne_zero
+          (d := d) (m := m) hd2 t
+          (prefixCountFirstHitSymbolMap hd2 t s w)
+    omega
+  exact
+    (prefixCountCanonicalRho_no_hit_before
+      (d := d) (m := m) hd2 (t := t) (w := w) hbefore)
+      hhit
+
+theorem prefixCountFirstHitSymbolMapInv_not_rho_lt_of_not_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hnot : ¬(prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    ¬ (prefixCountCanonicalRho d m hd2 t
+        (prefixCountFirstHitSymbolMapInv hd2 t s w)).val < s.val := by
+  intro hlt'
+  let i : Fin d := ⟨s.val - 1, by omega⟩
+  have hs_ge_two : 2 ≤ s.val := by omega
+  have hrho_ge : s.val ≤ (prefixCountCanonicalRho d m hd2 t w).val := by
+    omega
+  have hmap :
+      prefixCountFirstHitSymbolMapInv hd2 t s w =
+        prefixCountRootStepInv d m i w := by
+    unfold prefixCountFirstHitSymbolMapInv
+    rw [prefixCountLambdaRho_eq_pred
+      (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  let rho' :=
+    prefixCountCanonicalRho d m hd2 t
+      (prefixCountFirstHitSymbolMapInv hd2 t s w)
+  have hrho'_lt_last : rho'.val < d - 1 := by
+    have : rho'.val < s.val := hlt'
+    have hslt : s.val < d := s.isLt
+    omega
+  have hhit' :
+      prefixCountCanonicalRhoHitNat t
+        (prefixCountFirstHitSymbolMapInv hd2 t s w) (rho'.val - 1) := by
+    simpa [rho'] using
+      (prefixCountCanonicalRho_pred_hitNat
+        (d := d) (m := m) hd2 (t := t)
+        (w := prefixCountFirstHitSymbolMapInv hd2 t s w) hrho'_lt_last)
+  have hne : i.val ≠ rho'.val - 1 := by
+    have hnonzero' : rho'.val ≠ 0 := by
+      simpa [rho'] using
+        prefixCountCanonicalRho_ne_zero
+          (d := d) (m := m) hd2 t
+          (prefixCountFirstHitSymbolMapInv hd2 t s w)
+    have hi_val : i.val = s.val - 1 := rfl
+    omega
+  have hhit :
+      prefixCountCanonicalRhoHitNat t w (rho'.val - 1) := by
+    rw [hmap] at hhit'
+    exact
+      (prefixCountCanonicalRhoHitNat_rootStepInv_iff_of_ne
+        (d := d) (m := m) (t := t) (w := w)
+        (i := i) (j := rho'.val - 1) hne).1 hhit'
+  have hbefore :
+      (rho'.val - 1) + 1 <
+        (prefixCountCanonicalRho d m hd2 t w).val := by
+    have hnonzero' : rho'.val ≠ 0 := by
+      simpa [rho'] using
+        prefixCountCanonicalRho_ne_zero
+          (d := d) (m := m) hd2 t
+          (prefixCountFirstHitSymbolMapInv hd2 t s w)
+    omega
+  exact
+    (prefixCountCanonicalRho_no_hit_before
+      (d := d) (m := m) hd2 (t := t) (w := w) hbefore)
+      hhit
+
+theorem prefixCountFirstHitSymbolMapInv_apply_symbolMap_of_not_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hnot : ¬(prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountFirstHitSymbolMapInv hd2 t s
+        (prefixCountFirstHitSymbolMap hd2 t s w) = w := by
+  let i : Fin d := ⟨s.val - 1, by omega⟩
+  have hmap :
+      prefixCountFirstHitSymbolMap hd2 t s w =
+        prefixCountRootStep d m i w := by
+    unfold prefixCountFirstHitSymbolMap
+    rw [prefixCountLambdaRho_eq_pred
+      (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  have hnot' :
+      ¬ (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStep d m i w)).val < s.val := by
+    have h0 :=
+      prefixCountFirstHitSymbolMap_not_rho_lt_of_not_rho_lt
+        hd2 t w hs0 hs1 hnot
+    simpa [hmap] using h0
+  unfold prefixCountFirstHitSymbolMapInv prefixCountFirstHitSymbolMap
+  rw [prefixCountLambdaRho_eq_pred
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  change
+    prefixCountRootStepInv d m
+        (prefixCountLambdaRho d
+          (prefixCountCanonicalRho d m hd2 t
+            (prefixCountRootStep d m i w)) s)
+        (prefixCountRootStep d m i w) = w
+  rw [prefixCountLambdaRho_eq_pred
+    (prefixCountCanonicalRho d m hd2 t
+      (prefixCountRootStep d m i w)) hs0 hs1 hnot']
+  exact prefixCountRootStepInv_apply_step i w
+
+theorem prefixCountFirstHitSymbolMap_apply_inv_of_not_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hnot : ¬(prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountFirstHitSymbolMap hd2 t s
+        (prefixCountFirstHitSymbolMapInv hd2 t s w) = w := by
+  let i : Fin d := ⟨s.val - 1, by omega⟩
+  have hmap :
+      prefixCountFirstHitSymbolMapInv hd2 t s w =
+        prefixCountRootStepInv d m i w := by
+    unfold prefixCountFirstHitSymbolMapInv
+    rw [prefixCountLambdaRho_eq_pred
+      (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  have hnot' :
+      ¬ (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStepInv d m i w)).val < s.val := by
+    have h0 :=
+      prefixCountFirstHitSymbolMapInv_not_rho_lt_of_not_rho_lt
+        hd2 t w hs0 hs1 hnot
+    simpa [hmap] using h0
+  unfold prefixCountFirstHitSymbolMapInv prefixCountFirstHitSymbolMap
+  rw [prefixCountLambdaRho_eq_pred
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hnot]
+  change
+    prefixCountRootStep d m
+        (prefixCountLambdaRho d
+          (prefixCountCanonicalRho d m hd2 t
+            (prefixCountRootStepInv d m i w)) s)
+        (prefixCountRootStepInv d m i w) = w
+  rw [prefixCountLambdaRho_eq_pred
+    (prefixCountCanonicalRho d m hd2 t
+      (prefixCountRootStepInv d m i w)) hs0 hs1 hnot']
+  exact prefixCountRootStep_apply_inv i w
+
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
@@ -1166,6 +1367,25 @@ def PrefixCountFirstHitTailSymbolMapInverseLawGoal : Prop :=
         (prefixCountFirstHitSymbolMapInv hd2 t s)
         (prefixCountFirstHitSymbolMap hd2 t s)
 
+theorem prefixCountFirstHitTailSymbolMapInverseLawGoal :
+    PrefixCountFirstHitTailSymbolMapInverseLawGoal := by
+  intro d m _inst hd2 _hdodd _hd5 _hmodd _hdm t s hs0 hs1
+  constructor
+  · intro w
+    by_cases hlt :
+        (prefixCountCanonicalRho d m hd2 t w).val < s.val
+    · exact prefixCountFirstHitSymbolMapInv_apply_symbolMap_of_rho_lt
+        hd2 t w hs0 hs1 hlt
+    · exact prefixCountFirstHitSymbolMapInv_apply_symbolMap_of_not_rho_lt
+        hd2 t w hs0 hs1 hlt
+  · intro w
+    by_cases hlt :
+        (prefixCountCanonicalRho d m hd2 t w).val < s.val
+    · exact prefixCountFirstHitSymbolMap_apply_inv_of_rho_lt
+        hd2 t w hs0 hs1 hlt
+    · exact prefixCountFirstHitSymbolMap_apply_inv_of_not_rho_lt
+        hd2 t w hs0 hs1 hlt
+
 theorem prefixCountFirstHitSymbolMapInverseLawGoal_of_tail
     (hTail : PrefixCountFirstHitTailSymbolMapInverseLawGoal) :
     PrefixCountFirstHitSymbolMapInverseLawGoal := by
@@ -1175,6 +1395,11 @@ theorem prefixCountFirstHitSymbolMapInverseLawGoal_of_tail
   · by_cases hs1 : s.val = 1
     · exact prefixCountFirstHitSymbolMap_inverseLaw_of_val_one hd2 t hs1
     · exact hTail hd2 hdodd hd5 hmodd hdm t s hs0 hs1
+
+theorem prefixCountFirstHitSymbolMapInverseLawGoal :
+    PrefixCountFirstHitSymbolMapInverseLawGoal :=
+  prefixCountFirstHitSymbolMapInverseLawGoal_of_tail
+    prefixCountFirstHitTailSymbolMapInverseLawGoal
 
 theorem prefixCountFirstHitSymbolMapsBijectiveGoal_of_inverseLaw
     (hInv : PrefixCountFirstHitSymbolMapInverseLawGoal) :
@@ -1192,6 +1417,11 @@ theorem prefixCountFirstHitSymbolMapsBijectiveGoal_of_inverseLaw
       _ = y := hLeft y
   · intro y
     exact ⟨prefixCountFirstHitSymbolMapInv hd2 t s y, hRight y⟩
+
+theorem prefixCountFirstHitSymbolMapsBijectiveGoal :
+    PrefixCountFirstHitSymbolMapsBijectiveGoal :=
+  prefixCountFirstHitSymbolMapsBijectiveGoal_of_inverseLaw
+    prefixCountFirstHitSymbolMapInverseLawGoal
 
 def PrefixCountFirstHitCanonicalLayerBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
@@ -1217,6 +1447,11 @@ theorem prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
   intro d m _inst hd2 C hdodd hd5 hmodd hdm _hC L t c
   rw [prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap]
   exact hSym hd2 hdodd hd5 hmodd hdm t (L.layer (prefixCountLayerIndex t) c)
+
+theorem prefixCountFirstHitCanonicalLayerBijectiveGoal :
+    PrefixCountFirstHitCanonicalLayerBijectiveGoal :=
+  prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
+    prefixCountFirstHitSymbolMapsBijectiveGoal
 
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
