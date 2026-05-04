@@ -64,11 +64,11 @@ def RoundComposite.Concrete
   ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
 
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryEdge
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge
     (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
     (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
     OddModulusToriAllDimensionsGoal
 ```
 

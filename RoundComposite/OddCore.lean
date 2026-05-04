@@ -5279,6 +5279,10 @@ def OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
   OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
   ActiveHall.FiniteHoffman.ExactEdgeColoringGoal.{0, 0}
 
+def OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}
+
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
     (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
@@ -5307,6 +5311,19 @@ theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryExactE
     (hBlocks : OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
   oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromExactEdgeColoring
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawEdgeColoring
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromExactEdgeColoring
+    hGeom (ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw hRaw)
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryRawEdgeColoring
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawEdgeColoring
     hBlocks.1 hBlocks.2
 
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_coreAdd
@@ -5509,6 +5526,19 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryExactEdgeColorin
     (hBlocks : OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal) :
     OddSuccessorSmallModulusBaseTailGoal :=
   oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromExactEdgeColoring
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawEdgeColoring
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromExactEdgeColoring
+    hGeom (ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw hRaw)
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawEdgeColoring
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawEdgeColoring
     hBlocks.1 hBlocks.2
 
 theorem odd_successor_small_modulus_base_tail_of_slackPacketLiftAdd
@@ -6735,6 +6765,10 @@ def OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryEdgeBlocksGoal : P
   OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal
 
+def OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryRawEdgeBlocksGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal
+
 def OddModulusToriV4ReturnTailTriangularBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailTriangularBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
@@ -7481,6 +7515,15 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellisGeometry
       oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryExactEdgeColoring
         hBlocks.2⟩
 
+theorem oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge_blocks
+    (hBlocks :
+      OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryRawEdgeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellis_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawEdgeColoring
+        hBlocks.2⟩
+
 theorem oddSuccessorClosureGoal_of_v4_returnTailTriangular_blocks
     (hBlocks : OddModulusToriV4ReturnTailTriangularBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -8088,6 +8131,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
         hBlocks.2⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge_blocks
+    (hBlocks :
+      OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryRawEdgeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawEdgeColoring
+        hBlocks.2⟩
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
@@ -8379,6 +8434,19 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
       hGeom hEdge)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryEdge
+    hFull hLift hGeom
+    (ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw hRaw)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
@@ -8547,6 +8615,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
   intro d m hd2 hmodd hm3
   exact
     odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryEdge_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge_blocks
+    (hBlocks :
+      OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryRawEdgeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge_blocks
       hBlocks hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis
@@ -8766,6 +8843,17 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
   exact
     odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryEdge
       hFull hLift hGeom hEdge hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge
+      hFull hLift hGeom hRaw hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellisAdd
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
