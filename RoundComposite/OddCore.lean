@@ -1395,6 +1395,11 @@ def OddModulusToriV4DegreeSpecialMatchingBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+theorem not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal :
+    ¬ OddModulusToriV4DegreeSpecialMatchingBlocksGoal := by
+  intro hBlocks
+  exact PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal hBlocks.2.1
+
 def OddModulusToriV4PreferredBlocksGoal : Prop :=
   OddModulusToriV4JointMatchingBlocksGoal
 

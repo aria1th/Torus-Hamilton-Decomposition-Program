@@ -170,6 +170,8 @@ The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  However the universal theorem
 asking for a special matching for every such degree matrix is too strong:
 Lean records this as `PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal`.
+The corresponding four-field block packet is also Lean-proved impossible as
+`RoundComposite.Concrete.not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal`.
 Thus the preferred q=1 obligation remains the joint data theorem, where the
 auxiliary degree matrix and its special matching are selected together.
 
