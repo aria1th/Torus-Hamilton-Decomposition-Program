@@ -162,9 +162,12 @@ Location: `RoundComposite/OddCore.lean`.
 The current minimal Lean-facing packet is now:
 
 ```lean
-def RoundComposite.Concrete.OddModulusToriV4SuccessorScheduleBlocksGoal : Prop :=
+def RoundComposite.Concrete.OddCoreHighModulusScheduleBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
-  PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
+  PrefixCountRootFlatCanonicalScheduleCriterionGoal
+
+def RoundComposite.Concrete.OddModulusToriV4MinimalBlocksGoal : Prop :=
+  OddCoreHighModulusScheduleBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
 ```
 
@@ -172,8 +175,8 @@ Its endpoint is:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks
-    (hBlocks : OddModulusToriV4SuccessorScheduleBlocksGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
+    (hBlocks : OddModulusToriV4MinimalBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
@@ -193,6 +196,11 @@ theorem RoundComposite.Concrete
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
+
+The older tuple shape
+`OddModulusToriV4SuccessorScheduleBlocksGoal` is definitionally equivalent for
+workflow purposes; Lean records this as
+`oddModulusToriV4MinimalBlocksGoal_iff_successorScheduleBlocks`.
 
 The active proof obligations are exactly the three fields of this packet:
 

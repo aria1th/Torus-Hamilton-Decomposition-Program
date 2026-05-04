@@ -367,14 +367,14 @@ when `m` is odd and `m >= 3`.
   canonical schedule with row-Latin, layer-bijective, and return-single-cycle
   proofs.  The universal q=1 degree-matrix matching variant remains Lean-proved
   too strong and is retained as a negative audit.  The current minimal endpoint
-  is `odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks`, from
-  `OddModulusToriV4SuccessorScheduleBlocksGoal`; its small-branch field is the
-  successor-only theorem `OddSuccessorSmallModulusBaseTailGoal`.  The
+  is `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks`, from
+  `OddModulusToriV4MinimalBlocksGoal`, which separates the two high-modulus
+  schedule fields into `OddCoreHighModulusScheduleBlocksGoal` and the
+  successor-only small field `OddSuccessorSmallModulusBaseTailGoal`.  The
   certificate-facing additive variant is
-  `odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks`, from
-  `OddModulusToriV4SuccessorScheduleAddBlocksGoal`, where the small branch uses
-  the explicit `T = b + 1` form
-  `OddSuccessorSmallModulusSlackPacketLiftAddGoal`.
+  `odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks`, from
+  `OddModulusToriV4MinimalAddBlocksGoal`, where the small branch uses the
+  explicit `T = b + 1` form `OddSuccessorSmallModulusSlackPacketLiftAddGoal`.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
