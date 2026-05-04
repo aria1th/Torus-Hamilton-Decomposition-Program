@@ -1483,6 +1483,202 @@ theorem ordinaryQge2SeedGoal : OrdinaryQge2SeedGoal := by
 theorem ordinaryQge2PlanGoal : OrdinaryQge2PlanGoal :=
   ordinaryQge2PlanGoal_of_seed ordinaryQge2SeedGoal
 
+def qge2ColumnCapacity (n j c : Nat) : Int :=
+  min (2 * (j : Int)) (2 * ((n - j : Nat) : Int) - (c : Int))
+
+theorem qge2ColumnCapacity_eq_left {n j c : Nat}
+    (h : 2 * (j : Int) ≤ 2 * ((n - j : Nat) : Int) - (c : Int)) :
+    qge2ColumnCapacity n j c = 2 * (j : Int) := by
+  simp [qge2ColumnCapacity, min_eq_left h]
+
+theorem qge2ColumnCapacity_eq_right {n j c : Nat}
+    (h : 2 * ((n - j : Nat) : Int) - (c : Int) ≤ 2 * (j : Int)) :
+    qge2ColumnCapacity n j c = 2 * ((n - j : Nat) : Int) - (c : Int) := by
+  simp [qge2ColumnCapacity, min_eq_right h]
+
+theorem ordinaryQge2PlanData_row_cut_first_bound
+    {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
+    (J : Finset (Fin n)) :
+    (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+        - (n : Int) * (P.epsBit i : Int)))
+      ≤ (J.card : Int) * ((r : Int) - 1) := by
+  classical
+  calc
+    (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+        - (n : Int) * (P.epsBit i : Int)))
+        ≤ ∑ _i ∈ J, ((r : Int) - 1) := by
+          apply Finset.sum_le_sum
+          intro i _hi
+          have ha : 1 ≤ (P.a i : Int) := by
+            rcases P.a_one_two i with h | h <;> simp [h]
+          have heps : 0 ≤ (P.epsBit i : Int) := by omega
+          have hn : 0 ≤ (n : Int) := by omega
+          nlinarith
+    _ = (J.card : Int) * ((r : Int) - 1) := by
+          simp [Finset.sum_const, mul_comm]
+          ring
+
+theorem ordinaryQge2PlanData_row_cut_second_bound
+    {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
+    (J : Finset (Fin n)) :
+    (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+        - (n : Int) * (P.epsBit i : Int)))
+      ≤ - (P.C : Int) + ((n - J.card : Nat) : Int)
+          * ((n : Int) + 2 - (r : Int)) := by
+  classical
+  let R : Fin n → Int :=
+    fun i => (r : Int) - (P.a i : Int)
+      - (n : Int) * (P.epsBit i : Int)
+  have htotal : (∑ i : Fin n, R i) = - (P.C : Int) := by
+    calc
+      (∑ i : Fin n, R i)
+          = (∑ _i : Fin n, (r : Int))
+              - (∑ i : Fin n, (P.a i : Int))
+              - (n : Int) * (∑ i : Fin n, (P.epsBit i : Int)) := by
+                simp [R, Finset.sum_sub_distrib, Finset.mul_sum,
+                  Finset.sum_const]
+      _ = (n : Int) * (r : Int) - (P.C : Int)
+              - (n : Int) * (r : Int) := by
+                have ha : (∑ i : Fin n, (P.a i : Int)) = (P.C : Int) := by
+                  exact_mod_cast P.a_sum
+                have heps :
+                    (∑ i : Fin n, (P.epsBit i : Int)) = (r : Int) := by
+                  exact_mod_cast P.eps_sum
+                rw [ha, heps]
+                simp [Finset.sum_const]
+      _ = - (P.C : Int) := by ring
+  have hcompl_card : ((Jᶜ).card : Int) = ((n - J.card : Nat) : Int) := by
+    have hcard : Jᶜ.card = n - J.card := by
+      simpa [Fintype.card_fin] using Finset.card_compl J
+    exact_mod_cast hcard
+  have hcompl_lower :
+      ((Jᶜ).card : Int) * ((r : Int) - (n : Int) - 2)
+        ≤ ∑ i ∈ Jᶜ, R i := by
+    calc
+      ((Jᶜ).card : Int) * ((r : Int) - (n : Int) - 2)
+          = ∑ _i ∈ Jᶜ, ((r : Int) - (n : Int) - 2) := by
+              simp [Finset.sum_const, mul_comm]
+              ring
+      _ ≤ ∑ i ∈ Jᶜ, R i := by
+              apply Finset.sum_le_sum
+              intro i _hi
+              have ha : (P.a i : Int) ≤ 2 := by
+                rcases P.a_one_two i with h | h <;> simp [h]
+              have heps : (P.epsBit i : Int) ≤ 1 := by
+                rcases P.eps_zero_one i with h | h <;> simp [h]
+              have hn : 0 ≤ (n : Int) := by omega
+              simp [R]
+              nlinarith
+  have hsplit :
+      (∑ i : Fin n, R i) = (∑ i ∈ J, R i) + ∑ i ∈ Jᶜ, R i := by
+    rw [← Finset.sum_union]
+    · simp
+    · exact disjoint_compl_right
+  have hJ :
+      (∑ i ∈ J, R i)
+        ≤ - (P.C : Int)
+            - ((Jᶜ).card : Int) * ((r : Int) - (n : Int) - 2) := by
+    rw [hsplit] at htotal
+    nlinarith
+  calc
+    (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+        - (n : Int) * (P.epsBit i : Int)))
+        = ∑ i ∈ J, R i := rfl
+    _ ≤ - (P.C : Int)
+            - ((Jᶜ).card : Int) * ((r : Int) - (n : Int) - 2) := hJ
+    _ = - (P.C : Int) + ((n - J.card : Nat) : Int)
+          * ((n : Int) + 2 - (r : Int)) := by
+            rw [hcompl_card]
+            ring
+
+theorem ordinaryQge2PlanData_column_capacity_low
+    {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
+    {j : Nat} (hn1 : 1 ≤ n) (hj : 2 * j ≤ n - 1) :
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n j (P.c k))
+      = ((n - 1 : Nat) : Int) * (2 * (j : Int)) := by
+  classical
+  calc
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n j (P.c k))
+        = ∑ _k : Fin (n - 1), 2 * (j : Int) := by
+            apply Finset.sum_congr rfl
+            intro k _hk
+            apply qge2ColumnCapacity_eq_left
+            have hjIntNat : ((2 * j : Nat) : Int) ≤ ((n - 1 : Nat) : Int) := by
+              exact_mod_cast hj
+            have hjInt : 2 * (j : Int) ≤ (n : Int) - 1 := by
+              have hpred : ((n - 1 : Nat) : Int) = (n : Int) - 1 := by
+                omega
+              rw [← hpred]
+              exact hjIntNat
+            have hjn : j ≤ n := by omega
+            have hsub : ((n - j : Nat) : Int) = (n : Int) - (j : Int) := by
+              omega
+            rw [hsub]
+            rcases P.c_one_two k with hc | hc <;> simp [hc] <;> omega
+    _ = ((n - 1 : Nat) : Int) * (2 * (j : Int)) := by
+          simp [Finset.sum_const]
+
+theorem ordinaryQge2PlanData_column_capacity_high
+    {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
+    {j : Nat} (hj : n ≤ 2 * j) :
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n j (P.c k))
+      =
+      ((n - 1 : Nat) : Int) * (2 * ((n - j : Nat) : Int))
+        - (P.C : Int) := by
+  classical
+  calc
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n j (P.c k))
+        = ∑ k : Fin (n - 1),
+            (2 * ((n - j : Nat) : Int) - (P.c k : Int)) := by
+              apply Finset.sum_congr rfl
+              intro k _hk
+              apply qge2ColumnCapacity_eq_right
+              have hc : 1 ≤ (P.c k : Int) := by
+                rcases P.c_one_two k with h | h <;> simp [h]
+              have hjn : j ≤ n ∨ n ≤ j := by omega
+              have hsub_nonneg : 0 ≤ ((n - j : Nat) : Int) := by omega
+              have hsub_le : ((n - j : Nat) : Int) ≤ (j : Int) := by
+                omega
+              nlinarith
+    _ = (∑ _k : Fin (n - 1), 2 * ((n - j : Nat) : Int))
+          - ∑ k : Fin (n - 1), (P.c k : Int) := by
+            rw [Finset.sum_sub_distrib]
+    _ =
+      ((n - 1 : Nat) : Int) * (2 * ((n - j : Nat) : Int))
+        - (P.C : Int) := by
+          have hc_sum : (∑ k : Fin (n - 1), (P.c k : Int)) = (P.C : Int) := by
+            exact_mod_cast P.c_sum
+          rw [hc_sum]
+          simp [Finset.sum_const]
+
+theorem ordinaryQge2PlanData_row_cut_capacity
+    {n m q r : Nat}
+    (_hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1)
+    (hrlt : r < n)
+    (P : OrdinaryQge2PlanData n m q r)
+    (J : Finset (Fin n)) :
+    (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+        - (n : Int) * (P.epsBit i : Int)))
+      ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (P.c k) := by
+  classical
+  have hn4 : 4 ≤ n := by omega
+  by_cases hjlow : 2 * J.card ≤ n - 1
+  · rw [ordinaryQge2PlanData_column_capacity_low P (by omega) hjlow]
+    have hfirst := ordinaryQge2PlanData_row_cut_first_bound P J
+    have hcard_nonneg : 0 ≤ (J.card : Int) := by omega
+    have hrle : (r : Int) - 1 ≤ 2 * ((n - 1 : Nat) : Int) := by omega
+    nlinarith
+  · have hjhigh : n ≤ 2 * J.card := by omega
+    rw [ordinaryQge2PlanData_column_capacity_high P hjhigh]
+    have hsecond := ordinaryQge2PlanData_row_cut_second_bound P J
+    have hcardle : J.card ≤ n := by
+      simpa using Finset.card_le_univ J
+    have hnonneg : 0 ≤ ((n - J.card : Nat) : Int) := by omega
+    have hfactor :
+        (n : Int) + 2 - (r : Int)
+          ≤ 2 * ((n - 1 : Nat) : Int) := by omega
+    nlinarith
+
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →

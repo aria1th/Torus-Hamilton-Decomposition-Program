@@ -111,11 +111,16 @@ The `q >= 2` seed choice is now closed in Lean:
 ```lean
 PrefixCount.ordinaryQge2SeedGoal
 PrefixCount.ordinaryQge2PlanGoal
+PrefixCount.qge2ColumnCapacity
+PrefixCount.ordinaryQge2PlanData_row_cut_capacity
 ```
 
 It chooses a power of two in `[n, 2*n - 2]`; since `m` is odd, that choice is
-coprime to `m`, then packages the `1/2` row and column plan.  The v4 ordinary
-signed-core data now has Lean bridges:
+coprime to `m`, then packages the `1/2` row and column plan.  Lean also proves
+the ordinary branch row-cut inequality against the appendix capacity
+`min(2*j, 2*(n-j)-c)`.  Thus the remaining q>=2 signed-column theorem is the
+Hoffman/Rado-Edmonds integral decomposition input itself, not the surrounding
+cut arithmetic.  The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
 PrefixCount.ordinaryQge2PlanGoal_of_seed
@@ -165,7 +170,8 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_rootFlatCanonical_and_slackPacketLift
 ```
 
-so the `q >= 2` ordinary plan is reduced to the signed-column theorem alone,
+so the `q >= 2` ordinary plan is reduced to the signed-column closure theorem
+alone,
 and the restricted `q = 1` construction can be supplied either as a direct
 signed-core theorem or as the stronger matrix-for-plan theorem.  The direct
 signed-core route is the preferred paper-facing target because the manuscript
