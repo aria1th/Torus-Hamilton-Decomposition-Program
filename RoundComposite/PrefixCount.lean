@@ -1528,6 +1528,31 @@ noncomputable def qge2SignedColumnSupport (n c : Nat) (w : Fin n → Int) : Int 
   | ⊥ => 0
   | (z : Int) => z
 
+theorem qge2SignedColumnFinset_sum {n c : Nat}
+    {x : Fin n → SignedValInt}
+    (hx : x ∈ qge2SignedColumnFinset n c) :
+    (∑ i : Fin n, SignedValInt.toInt (x i)) = - (c : Int) := by
+  simpa [qge2SignedColumnFinset] using (Finset.mem_filter.mp hx).2
+
+theorem qge2SignedColumnSupport_ge_of_mem {n c : Nat}
+    (w : Fin n → Int) {x : Fin n → SignedValInt}
+    (hx : x ∈ qge2SignedColumnFinset n c) :
+    (∑ i : Fin n, w i * SignedValInt.toInt (x i))
+      ≤ qge2SignedColumnSupport n c w := by
+  classical
+  let vals : Finset Int :=
+    (qge2SignedColumnFinset n c).image
+      (fun x : Fin n → SignedValInt =>
+        ∑ i : Fin n, w i * SignedValInt.toInt (x i))
+  have hmem :
+      (∑ i : Fin n, w i * SignedValInt.toInt (x i)) ∈ vals := by
+    exact Finset.mem_image.mpr ⟨x, hx, rfl⟩
+  rcases Finset.max_of_mem hmem with ⟨z, hz⟩
+  have hle :
+      (∑ i : Fin n, w i * SignedValInt.toInt (x i)) ≤ z :=
+    Finset.le_max_of_eq hmem hz
+  simpa [qge2SignedColumnSupport, vals, hz] using hle
+
 theorem qge2ColumnCapacity_eq_left {n j c : Nat}
     (h : 2 * (j : Int) ≤ 2 * ((n - j : Nat) : Int) - (c : Int)) :
     qge2ColumnCapacity n j c = 2 * (j : Int) := by
