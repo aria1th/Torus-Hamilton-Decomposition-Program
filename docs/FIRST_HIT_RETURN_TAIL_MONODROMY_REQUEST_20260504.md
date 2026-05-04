@@ -224,6 +224,15 @@ theorem Shared.single_cycle_of_skewProduct_zmod_additive_carry :
     Shared.skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m) ->
     Shared.IsSingleCycleMap
       (Shared.skewProductMap baseStep (fun b z => z + carry b))
+
+noncomputable def Shared
+  .sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime :
+    Nat.Coprime a m ->
+    Shared.skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m) ->
+    Shared.CycleCoordinate m
+      (Shared.sectionReturn
+        (Shared.skewProductMap baseStep (fun b z => z + carry b))
+        base period)
 ```
 
 and the final high-branch/final-theorem adapters:

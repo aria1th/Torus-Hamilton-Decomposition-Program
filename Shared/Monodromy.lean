@@ -1,4 +1,4 @@
-import Shared.RankCycle
+import Shared.TorusCayley
 
 namespace Shared
 
@@ -239,6 +239,21 @@ theorem sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
   rw [sectionReturn_skewProductMap_zmod_add]
   rw [hcarry]
   exact zmod_add_single_cycle_of_coprime ha
+
+noncomputable def sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period a : Nat)
+    (ha : Nat.Coprime a m)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m)) :
+    CycleCoordinate m
+      (sectionReturn
+        (skewProductMap baseStep (fun b z => z + carry b))
+        base period) := by
+  rw [sectionReturn_skewProductMap_zmod_add]
+  rw [hcarry]
+  exact CycleCoordinate.zmodAddConstOfCoprime ha
 
 theorem zmod_add_const_bijective {m : Nat} (a : ZMod m) :
     Function.Bijective (fun z : ZMod m => z + a) := by
