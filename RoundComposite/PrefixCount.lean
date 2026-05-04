@@ -1679,6 +1679,33 @@ theorem ordinaryQge2PlanData_row_cut_capacity
           ≤ 2 * ((n - 1 : Nat) : Int) := by omega
     nlinarith
 
+/--
+The exact external signed-column closure input used by the ordinary `q >= 2`
+branch.  The preceding Lean lemmas prove the row-cut side condition for the
+canonical ordinary plans; this goal is only the integral Hoffman/Rado-Edmonds
+decomposition of those cuts into columns with entries in `{±1, ±2}`.
+-/
+def OrdinaryQge2SignedSeedClosureGoal : Prop :=
+  ∀ {n C r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, a i) = C →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ k : Fin (n - 1), c k) = C →
+      (∀ J : Finset (Fin n),
+        (∑ i ∈ J, ((r : Int) - (a i : Int)
+            - (n : Int) * (epsBit i : Int)))
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+      ∃ S : Fin n → Fin (n - 1) → Int,
+        (∀ i k, IsSignedVal (S i k)) ∧
+        (∀ i : Fin n,
+          (∑ k : Fin (n - 1), S i k)
+            = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) ∧
+        (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
+
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →
@@ -1686,6 +1713,40 @@ def OrdinaryQge2SignedMatrixGoal : Prop :=
     r < n → 0 < r → 2 ≤ q →
     ∀ P : OrdinaryQge2PlanData n m q r,
       Nonempty P.SignedMatrixData
+
+theorem ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
+    (hClosure : OrdinaryQge2SignedSeedClosureGoal) :
+    OrdinaryQge2SignedMatrixGoal := by
+  intro n m q r hdodd hd5 hmodd hmqr hrlt hrpos _hq P
+  have hnEven : Even n := by
+    rcases hdodd with ⟨k, hk⟩
+    exact ⟨k, by omega⟩
+  have hrodd : Odd r := by
+    by_contra hnot
+    have hre : Even r := Nat.not_odd_iff_even.mp hnot
+    rcases hnEven with ⟨a, ha⟩
+    rcases hre with ⟨b, hb⟩
+    have hmeven : Even m := by
+      refine ⟨a * q + b, ?_⟩
+      rw [hmqr, ha, hb]
+      ring
+    exact (Nat.not_even_iff_odd.mpr hmodd) hmeven
+  have hCuts :
+      ∀ J : Finset (Fin n),
+        (∑ i ∈ J, ((r : Int) - (P.a i : Int)
+            - (n : Int) * (P.epsBit i : Int)))
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (P.c k) :=
+    ordinaryQge2PlanData_row_cut_capacity hdodd hd5 hrlt P
+  rcases hClosure hnEven (by omega) hrodd hrlt hrpos
+      P.a P.epsBit P.c P.a_one_two P.eps_zero_one P.c_one_two
+      P.a_sum P.eps_sum P.c_sum hCuts with
+    ⟨S, hSigned, hRow, hCol⟩
+  exact ⟨{
+    S := S
+    S_signed := hSigned
+    S_row_sum := hRow
+    S_col_sum := hCol
+  }⟩
 
 theorem ordinaryQge2SignedCoreGoal_of_plan_and_matrix
     (hPlan : OrdinaryQge2PlanGoal)

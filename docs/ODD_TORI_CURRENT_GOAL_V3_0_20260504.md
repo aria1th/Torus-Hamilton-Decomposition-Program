@@ -113,6 +113,8 @@ PrefixCount.ordinaryQge2SeedGoal
 PrefixCount.ordinaryQge2PlanGoal
 PrefixCount.qge2ColumnCapacity
 PrefixCount.ordinaryQge2PlanData_row_cut_capacity
+PrefixCount.OrdinaryQge2SignedSeedClosureGoal
+PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 ```
 
 It chooses a power of two in `[n, 2*n - 2]`; since `m` is odd, that choice is
@@ -124,6 +126,7 @@ cut arithmetic.  The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
 PrefixCount.ordinaryQge2PlanGoal_of_seed
+PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
@@ -145,6 +148,10 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Canonical_and_rootFlatCanonical
 RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_geometry
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Canonical_and_rootFlatCanonical
+RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
@@ -164,6 +171,10 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Canonical_geometry_and_slackPacketLift
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_geometry_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
