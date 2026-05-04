@@ -184,7 +184,9 @@ degree comparison and forced distinguished-negative edge are also exposed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_lt_pRow_posCols_card_of_one_lt_r`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_exists_distinguished_neg_pos`,
 and the P-row Hall condition
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.  The resulting injective
+matching covering all P-rows is Lean-closed as
+`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching`.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.

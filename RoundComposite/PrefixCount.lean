@@ -2599,6 +2599,49 @@ theorem pRows_hall {n r : Nat}
     le_trans hedge_le (Nat.mul_le_mul_left N.card hdegC_le)
   exact Nat.le_of_mul_le_mul_right hmul hdegP_pos
 
+theorem exists_pRows_matching {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrpos : 0 < r) :
+    ∃ f : {i : Fin n // i ∈ pRows n r} → Fin (n - 1),
+      Function.Injective f ∧ ∀ i, A.B i.1 (f i) = 1 := by
+  classical
+  let P := {i : Fin n // i ∈ pRows n r}
+  let neigh : P → Finset (Fin (n - 1)) := fun i => A.posCols i.1
+  have hHall :
+      ∀ S : Finset P, S.card ≤ (S.biUnion neigh).card := by
+    intro S
+    let X : Finset (Fin n) := S.image fun i : P => i.1
+    have hcardX : X.card = S.card := by
+      dsimp [X]
+      exact Finset.card_image_of_injective
+        S (fun a b h => Subtype.ext h)
+    have hX : X ⊆ pRows n r := by
+      intro i hi
+      rcases Finset.mem_image.mp hi with ⟨x, hx, rfl⟩
+      exact x.2
+    have hneigh :
+        (S.biUnion neigh).card = (A.pRowNeighbors X).card := by
+      congr 1
+      ext k
+      constructor
+      · intro hk
+        rcases Finset.mem_biUnion.mp hk with ⟨i, hiS, hik⟩
+        exact Finset.mem_biUnion.mpr
+          ⟨i.1, Finset.mem_image.mpr ⟨i, hiS, rfl⟩, hik⟩
+      · intro hk
+        rcases Finset.mem_biUnion.mp hk with ⟨i, hiX, hik⟩
+        rcases Finset.mem_image.mp hiX with ⟨j, hjS, hji⟩
+        subst i
+        exact Finset.mem_biUnion.mpr ⟨j, hjS, hik⟩
+    rw [← hcardX, hneigh]
+    exact A.pRows_hall hdodd hd5 hmodd hrpos X hX
+  rcases (Finset.all_card_le_biUnion_card_iff_existsInjective' neigh).mp
+      hHall with ⟨f, hfInj, hfMem⟩
+  refine ⟨f, hfInj, ?_⟩
+  intro i
+  simpa [neigh, posCols] using hfMem i
+
 theorem pRow_exists_distinguished_neg_pos {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
     (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
