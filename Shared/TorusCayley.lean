@@ -62,6 +62,14 @@ noncomputable def zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
     rw [card_zmodVector n m]
     rw [ZMod.card (m ^ n)])
 
+def zmodVectorTake {m r k : Nat} (hk : k ≤ r)
+    (x : Fin r → ZMod m) : Fin k → ZMod m :=
+  fun i => x ⟨i.val, lt_of_lt_of_le i.isLt hk⟩
+
+def zmodVectorExtendZero {m k r : Nat} (_hk : k ≤ r)
+    (x : Fin k → ZMod m) : Fin r → ZMod m :=
+  fun i => if h : i.val < k then x ⟨i.val, h⟩ else 0
+
 theorem torusVertexBlockEquiv_torusBasis_apply
     {a b m : Nat} (j j' : Fin b) (i i' : Fin a) :
     torusVertexBlockEquiv a b m
@@ -103,6 +111,26 @@ structure CycleCoordinate (n : Nat) [NeZero n]
     {α : Type*} (f : α → α) where
   equiv : ZMod n ≃ α
   step : ∀ z : ZMod n, equiv (z + 1) = f (equiv z)
+
+/--
+Generic lower-triangular odometer theorem for `ZMod m` vector spaces.  A map
+whose `k`-th coordinate is `x_k + gamma_k(x_0,...,x_{k-1})` is a single cycle
+when every total carry `sum gamma_k` is a unit.  The target is stated as a
+rank-equivalence witness so this remains a `Prop`; callers can convert it to
+`CycleCoordinate` with `CycleCoordinate.ofRankEquiv`.
+-/
+def ZModVectorLowerTriangularUnitCycleCoordinateGoal : Prop :=
+  ∀ {m r : Nat} [NeZero m],
+    ∀ (F : (Fin r → ZMod m) → (Fin r → ZMod m))
+      (gamma : ∀ k : Nat, k < r → (Fin k → ZMod m) → ZMod m),
+      (∀ x : Fin r → ZMod m, ∀ k : Nat, ∀ hk : k < r,
+        F x ⟨k, hk⟩ =
+          x ⟨k, hk⟩ +
+            gamma k hk (zmodVectorTake (Nat.le_of_lt hk) x)) →
+      (∀ k : Nat, ∀ hk : k < r,
+        IsUnit (∑ x : (Fin k → ZMod m), gamma k hk x)) →
+      ∃ e : ((Fin r → ZMod m) ≃ ZMod (m ^ r)),
+        ∀ x : Fin r → ZMod m, e (F x) = e x + 1
 
 namespace CycleCoordinate
 

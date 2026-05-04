@@ -123,7 +123,28 @@ theorem PrefixCount
 ```
 
 Equivalent stronger routes are also available through return-tail rank,
-rank-equivalence, or cycle-coordinate goals.
+rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
+request response, Lean also exposes the preferred triangular/unit split:
+
+```lean
+def Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal : Prop := ...
+def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
+def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
+
+def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
+  Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
+  PrefixCountFirstHitReturnTailTriangularGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+```
+
+Here the shared lower-triangular theorem is stated as a rank-equivalence
+witness, so it remains a `Prop`; Lean converts the witness to
+`Shared.CycleCoordinate` inside the wrapper.
 
 ### 3.2 Small Modulus
 
@@ -234,6 +255,14 @@ OddSuccessorSmallModulusBaseTailGoal
 The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
 form above.
+
+The second field can now be replaced by the triangular/unit packet:
+
+```lean
+Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
+```
 
 or, replacing the third line by the sufficient additive form:
 

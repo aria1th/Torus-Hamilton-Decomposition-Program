@@ -118,6 +118,7 @@ theorem RoundComposite.Concrete
 | Tail rank equivalence from cycle coordinate | `prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate` | Lean-closed conditional | A forward `Shared.CycleCoordinate` is enough |
 | Tail cycle coordinate from monodromy | `prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy` | Lean-closed conditional | On the finite tail vector space, a single-cycle monodromy also yields a `CycleCoordinate` |
 | Tail formulation equivalences | `prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal`, `..._iff_rankGoal`, `..._iff_rankEquivGoal`, `..._iff_cycleCoordinateGoal` | Lean-closed | The external tail request can be supplied in whichever of these four forms is easiest |
+| Tail triangular/unit split | `Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal`, `PrefixCountFirstHitReturnTailTriangularGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks` | Lean-closed conditional | Implements the GPT-5.5 Pro recommendation: prove lower-triangular form plus unit total carries instead of orbit-transitivity directly |
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Unit additive cycle coordinate | `Shared.CycleCoordinate.zmodAddConstOfCoprime` | Lean-closed | Gives a coordinate-level base case for `x ↦ x + a` when `gcd(a,m)=1` |
 | Section-return additive cycle coordinate | `Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime` | Lean-closed | Converts a computed unit total carry into a `CycleCoordinate` for the section return |
@@ -198,12 +199,23 @@ Fin (d - 2) -> ZMod m
 is orbit-transitive.  Lean already proves the schedule construction, row-Latin
 property, layer bijectivity, the root-flat/head-tail return bridges, and
 bijectivity of this tail map.  Therefore the remaining field can be closed
-directly by orbit-transitivity, or by either odometer sufficient target:
+directly by orbit-transitivity, by either odometer sufficient target, or by the
+new triangular/unit sufficient packet:
 
 ```lean
 PrefixCountFirstHitReturnTailRankGoal
 PrefixCountFirstHitReturnTailRankEquivGoal
 PrefixCountFirstHitReturnTailCycleCoordinateGoal
+PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal
+```
+
+The response in
+`docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` recommends the last
+route: prove that the tail monodromy is lower triangular and that every rank
+has unit total carry.  Lean packages that as:
+
+```lean
+prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
 ```
 
 ## Field 3: Successor Small-Modulus Branch
@@ -240,6 +252,13 @@ OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal
 The first asks for the base-tail/cylinder geometry assuming
 `ActiveHall.HallRealizationGoal`; the second asks for the same assuming
 `ActiveHall.HoffmanOrderedSDRGoal`.
+
+The response in
+`docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md` recommends
+keeping the hard work in this exact split: pure cylinder expansion, active
+symboling using Hall once, and pure base-tail lift.  It also warns not to
+generalize the packet theorem away from `T = b + 1` unless packet-prefix sums
+are strengthened.
 
 ## Active-Hall Status
 
@@ -291,13 +310,13 @@ expected to exit with status 1 and no output when no forbidden token is found.
 
 ## Active External Requests
 
-Three GPT-5.5 Pro background requests are active for the remaining hard fields:
+The GPT-5.5 Pro background requests for the remaining hard fields are:
 
 | Field | Request Doc | Response Id | Latest Status |
 |---|---|---|---|
 | q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md`, `docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `completed` |
-| first-hit return-tail orbit/rank | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `in_progress` |
-| successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `in_progress` |
+| first-hit return-tail orbit/rank | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `completed` |
+| successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md`, `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `completed` |
 
 ## Verdict
 

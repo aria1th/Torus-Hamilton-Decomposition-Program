@@ -26,6 +26,17 @@ PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
+The second field now has a preferred lower-level replacement:
+
+```lean
+Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
+PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailCocycleUnitGoal
+```
+
+Lean proves that these three imply
+`PrefixCountFirstHitReturnTailMonodromyOrbitGoal`.
+
 ## Request 1: q>=2 Proper-Cut Signed Closure
 
 ### Files To Read
@@ -186,6 +197,7 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 6. `Shared/RootFlat.lean`
 7. `docs/FIRST_HIT_RETURN_TAIL_MONODROMY_REQUEST_20260504.md`
 8. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
+9. `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`
 
 ### Exact Lean Target
 
@@ -248,6 +260,45 @@ def RoundComposite.Concrete
         (prefixCountFirstHitReturnTailMonodromy hd2 L c)
 ```
 
+The currently preferred target, following the GPT-5.5 Pro response, is the
+triangular/unit split:
+
+```lean
+def Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal : Prop :=
+  forall {m r : Nat} [NeZero m],
+    forall (F : (Fin r -> ZMod m) -> (Fin r -> ZMod m))
+      (gamma : forall k : Nat, k < r -> (Fin k -> ZMod m) -> ZMod m),
+      (forall x : Fin r -> ZMod m, forall k : Nat, forall hk : k < r,
+        F x ⟨k, hk⟩ =
+          x ⟨k, hk⟩ +
+            gamma k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) x)) ->
+      (forall k : Nat, forall hk : k < r,
+        IsUnit (∑ x : (Fin k -> ZMod m), gamma k hk x)) ->
+      exists e : ((Fin r -> ZMod m) ≃ ZMod (m ^ r)),
+        forall x : Fin r -> ZMod m, e (F x) = e x + 1
+
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
+
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit
+    (hLower : Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+```
+
+This route avoids proving orbit transitivity directly.  It asks for:
+
+```text
+tail monodromy is lower triangular
++ every rank cocycle has unit total carry
++ a generic lower-triangular odometer theorem over ZMod m vectors
+```
+
 ### Already Lean-Closed
 
 Lean already builds the first-hit schedule, proves the row-Latin and
@@ -281,6 +332,11 @@ theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
     (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
     PrefixCountFirstHitReturnTailRankEquivGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 
 theorem Shared.single_cycle_of_zmod_rank
     (f : alpha -> alpha) (rank : alpha -> ZMod N)
@@ -322,8 +378,9 @@ theorem RoundComposite.Concrete
 ### Prompt
 
 Prove the high-modulus first-hit return-tail orbit theorem
-`PrefixCountFirstHitReturnTailMonodromyOrbitGoal`.  It is also sufficient to
-prove either rank target above, or the `CycleCoordinate` target.
+`PrefixCountFirstHitReturnTailMonodromyOrbitGoal`.  Prefer proving the
+triangular/unit split above; it is also sufficient to prove either rank target
+or the `CycleCoordinate` target.
 
 The proof should focus on the tail map
 
@@ -378,6 +435,7 @@ the open field is exactly the tail orbit/rank argument.
 5. `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`
 6. `docs/GPT55_PRO_ACTIVE_HALL_TOKEN_LINEAR_RESPONSE_20260504.md`
 7. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
+8. `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md`
 
 ### Exact Lean Target
 
@@ -437,6 +495,19 @@ Alternatively, prove `OddSuccessorSmallModulusBaseTailGeometryFromHallGoal`
 and supply `ActiveHall.HallRealizationGoal`, or prove
 `OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal` and supply
 `ActiveHall.HoffmanOrderedSDRGoal`.
+
+The GPT-5.5 Pro response recommends the following internal split for the Hall
+geometry route:
+
+```text
+cylinder expansion from StandardCayleySolved b m and UnitSlackPackets
++ active symboling with residues, using ActiveHall.HallRealizationGoal once
++ pure base-tail lift from valid cylinder and active symboling
+```
+
+It also warns that the successor hypothesis `T = b + 1` should remain in this
+target unless packet-prefix sums are strengthened.  Unit entries alone do not
+force all proper packet-prefix sums to be units for composite odd moduli.
 
 ### Prompt
 

@@ -20,6 +20,8 @@ Response id:
 ```text
 resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33
 initial_status = queued
+final_status = completed
+response_doc = docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md
 ```
 
 Retrieve with:

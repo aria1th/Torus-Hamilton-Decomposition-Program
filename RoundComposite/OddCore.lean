@@ -2177,6 +2177,43 @@ def PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
       Shared.CycleCoordinate (m ^ (d - 2))
         (prefixCountFirstHitReturnTailMonodromy hd2 L c)
 
+noncomputable def prefixCountFirstHitReturnTailCocycle
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) (k : Nat) (hk : k < d - 2) :
+    (Fin k → ZMod m) → ZMod m :=
+  fun x =>
+    prefixCountFirstHitReturnTailMonodromy hd2 L c
+      (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩
+
+def PrefixCountFirstHitReturnTailTriangularGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ tail : Fin (d - 2) → ZMod m,
+      ∀ k : Nat, ∀ hk : k < d - 2,
+        prefixCountFirstHitReturnTailMonodromy hd2 L c tail ⟨k, hk⟩ =
+          tail ⟨k, hk⟩ +
+            prefixCountFirstHitReturnTailCocycle hd2 L c k hk
+              (Shared.zmodVectorTake (Nat.le_of_lt hk) tail)
+
+def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ k : Nat, ∀ hk : k < d - 2,
+      IsUnit
+        (∑ x : (Fin k → ZMod m),
+          prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
+
+def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
+  Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
+  PrefixCountFirstHitReturnTailTriangularGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailMonodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
     PrefixCountFirstHitHeadTailSectionMonodromyGoal := by
@@ -2340,6 +2377,47 @@ theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
   prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hCycle)
+
+theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit
+    (hLower : Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
+  rcases hLower
+    (m := m) (r := d - 2)
+    (F := prefixCountFirstHitReturnTailMonodromy hd2 L c)
+    (gamma := fun k hk =>
+      prefixCountFirstHitReturnTailCocycle hd2 L c k hk)
+    (by
+      intro tail k hk
+      exact hTri hd2 hdodd hd5 hmodd hdm hC L c tail k hk)
+    (by
+      intro k hk
+      exact hUnit hd2 hdodd hd5 hmodd hdm hC L c k hk)
+    with ⟨e, hstep⟩
+  exact Shared.CycleCoordinate.ofRankEquiv e hstep
+
+theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangularUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal :=
+  prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit
+    hBlocks.1 hBlocks.2.1 hBlocks.2.2
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit
+    (hLower : Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal)
+    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
+    (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit
+      hLower hTri hUnit)
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit
+    hBlocks.1 hBlocks.2.1 hBlocks.2.2
 
 theorem prefixCountFirstHitReturnTailMonodromyGoal_of_rank
     (hRank : PrefixCountFirstHitReturnTailRankGoal) :

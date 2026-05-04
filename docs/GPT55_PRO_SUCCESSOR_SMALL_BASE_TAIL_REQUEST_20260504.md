@@ -20,6 +20,8 @@ Response id:
 ```text
 resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9
 initial_status = queued
+final_status = completed
+response_doc = docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md
 ```
 
 Retrieve with:
