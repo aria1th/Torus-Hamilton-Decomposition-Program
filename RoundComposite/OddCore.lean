@@ -651,6 +651,25 @@ theorem prefixCountLayerCount_range_eq_matrix_zmod
     simp [fNat]
   rw [← hCast, hNat]
 
+theorem prefixCount_toMatrix_colStep_sub_colDelta_zmod
+    {d m : Nat} (hd2 : 2 ≤ d) (C : PrefixCount.Parts d)
+    (c : Fin d) (k : Fin (d - 2)) :
+    (((C.toMatrix hd2) c (PrefixCount.Parts.colStep hd2 k) : Nat) : ZMod m) -
+        (((C.toMatrix hd2) c (PrefixCount.Parts.colDelta hd2) : Nat) :
+          ZMod m) =
+      (((C.step c k : Int) - (C.delta c : Int)) : ZMod m) := by
+  simp [Int.cast_natCast]
+
+theorem prefixCount_toMatrix_rawStep_sub_delta_zmod
+    {d m : Nat} (hd2 : 2 ≤ d) (C : PrefixCount.Parts d)
+    (c : Fin d) {k : Nat} (hk : k < d - 2) :
+    (((C.toMatrix hd2) c ⟨k + 2, by omega⟩ : Nat) : ZMod m) -
+        (((C.toMatrix hd2) c ⟨1, by omega⟩ : Nat) : ZMod m) =
+      (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m) := by
+  simpa [PrefixCount.Parts.colStep, PrefixCount.Parts.colDelta] using
+    prefixCount_toMatrix_colStep_sub_colDelta_zmod
+      (m := m) hd2 C c ⟨k, hk⟩
+
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
     (rho : ZMod m → PrefixCountRootState d m → Fin d)
