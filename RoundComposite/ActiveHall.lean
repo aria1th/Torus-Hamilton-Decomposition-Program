@@ -836,6 +836,26 @@ theorem eraseChoice_colorDegree_add_val_of_bijective_token_matching
   rw [← M.choiceDegree_of_bijective_token_matching σ f c]
   exact I.eraseChoice_colorDegree_add_choiceDegree choice hchoice c
 
+def eraseLastCountMatrix
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T)) :
+    CountMatrix (I.eraseChoice choice hchoice) where
+  val := fun c σ => M.val c σ.castSucc
+  row_sum := by
+    intro c
+    have hrow := M.row_sum c
+    rw [Fin.sum_univ_castSucc] at hrow
+    have herase := I.eraseChoice_colorDegree_add_choiceDegree choice hchoice c
+    rw [hdegree c] at herase
+    omega
+  col_sum := by
+    intro σ
+    exact M.col_sum σ.castSucc
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
