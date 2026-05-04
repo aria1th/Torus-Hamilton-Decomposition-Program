@@ -324,6 +324,17 @@ theorem oddSuccessorClosureGoal_of_high_and_successorSmall
   · exact hHigh ⟨b, rfl⟩ (by omega) hmodd hmd
   · exact hSmall hb5 hmodd hm3 (lt_of_not_ge hmd) hbSolved
 
+theorem odd_successor_closure_of_high_and_successorSmall
+    (hHigh : OddCoreHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_high_and_successorSmall hHigh hSmall)
+    hb5 hmodd hm3 hb
+
 theorem oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLift
     (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal) :
     OddSuccessorSmallModulusBaseTailGoal := by

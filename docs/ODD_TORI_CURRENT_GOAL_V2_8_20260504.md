@@ -77,6 +77,20 @@ theorem RoundComposite.Concrete
     OddSuccessorClosureGoal
 ```
 
+and the direct theorem-shaped branch split:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_successor_closure_of_high_and_successorSmall
+    (hHigh : OddCoreHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {b m : Nat}
+    (hb5 : 5 <= b)
+    (hmodd : Odd m) (hm3 : 3 <= m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2*b + 1) m
+```
+
 and the corresponding all-dimensional endpoint:
 
 ```lean
