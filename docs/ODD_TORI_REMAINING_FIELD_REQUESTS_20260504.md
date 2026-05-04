@@ -334,11 +334,14 @@ route:
 prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
 prefixCountLayerCount_range_eq_matrix_zmod
 prefixCount_toMatrix_rawStep_sub_delta_zmod
+prefixCountNoHitSubtypeCard
+prefixCountNoHitIndicatorSum
+prefixCountHasHitIndicatorSum
 ```
 
 So the open return-tail proof request should focus on the low-prefix
-reindexing/bijection and local finite first-hit count, not on generic
-skew-iterate expansion or `toMatrix` arithmetic.
+reindexing/bijection and the split by layer symbol.  The raw no-hit/has-hit
+cardinalities modulo `m` are now Lean-closed.
 
 ### Already Lean-Closed
 

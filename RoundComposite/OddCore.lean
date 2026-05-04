@@ -670,6 +670,105 @@ theorem prefixCount_toMatrix_rawStep_sub_delta_zmod
     prefixCount_toMatrix_colStep_sub_colDelta_zmod
       (m := m) hd2 C c ⟨k, hk⟩
 
+theorem prefixCountNoHitSubtypeCard
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t} =
+      (m - 1) ^ n := by
+  classical
+  let e :
+      {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t} ≃
+        (Fin n → {a : ZMod m // a ≠ t}) :=
+  { toFun := fun x i => ⟨x.1 i, x.2 i⟩
+    invFun := fun y => ⟨fun i => (y i).1, fun i => (y i).2⟩
+    left_inv := by
+      intro x
+      ext i
+      rfl
+    right_inv := by
+      intro y
+      ext i
+      rfl }
+  calc
+    Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t}
+        = Fintype.card (Fin n → {a : ZMod m // a ≠ t}) :=
+          Fintype.card_congr e
+    _ = Fintype.card {a : ZMod m // a ≠ t} ^ n := by
+          simp
+    _ = (m - 1) ^ n := by
+          have hsub :
+              Fintype.card {a : ZMod m // a ≠ t} = m - 1 := by
+            have hcompl :=
+              Fintype.card_subtype_compl (fun a : ZMod m => a = t)
+            rw [Fintype.card_subtype_eq t] at hcompl
+            rw [ZMod.card m] at hcompl
+            exact hcompl
+          rw [hsub]
+
+theorem prefixCountNoHitIndicatorSum
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    (∑ x : (Fin n → ZMod m),
+        if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  classical
+  calc
+    (∑ x : (Fin n → ZMod m),
+        if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0)
+        =
+        ((Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t}) :
+          ZMod m) := by
+          simp [Fintype.card_subtype]
+    _ = (((m - 1) ^ n : Nat) : ZMod m) := by
+          rw [prefixCountNoHitSubtypeCard (m := m) (n := n) t]
+    _ = (-1 : ZMod m) ^ n := by
+          rw [Nat.cast_pow]
+          have hbase : ((m - 1 : Nat) : ZMod m) = (-1 : ZMod m) := by
+            rw [Nat.cast_pred (NeZero.pos m)]
+            simp
+          rw [hbase]
+
+theorem prefixCountHasHitIndicatorSum
+    {m n : Nat} [NeZero m] (hn : 0 < n) (t : ZMod m) :
+    (∑ x : (Fin n → ZMod m),
+        if (∃ i : Fin n, x i = t) then (1 : ZMod m) else 0) =
+      -((-1 : ZMod m) ^ n) := by
+  classical
+  have hall : (∑ x : (Fin n → ZMod m), (1 : ZMod m)) = 0 := by
+    calc
+      (∑ x : (Fin n → ZMod m), (1 : ZMod m))
+          = (Fintype.card (Fin n → ZMod m) : ZMod m) := by
+            simp
+      _ = ((m ^ n : Nat) : ZMod m) := by
+            simp [ZMod.card]
+      _ = 0 := by
+            rw [Nat.cast_pow]
+            simp [hn.ne']
+  have hno := prefixCountNoHitIndicatorSum (m := m) (n := n) t
+  have hsplit :
+      (∑ x : (Fin n → ZMod m),
+          if (∃ i : Fin n, x i = t) then (1 : ZMod m) else 0) +
+        (∑ x : (Fin n → ZMod m),
+          if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0) =
+        (∑ x : (Fin n → ZMod m), (1 : ZMod m)) := by
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro x _hx
+    by_cases hhit : ∃ i : Fin n, x i = t
+    · have hnall : ¬ ∀ i : Fin n, x i ≠ t := by
+        intro hno
+        rcases hhit with ⟨i, hi⟩
+        exact hno i hi
+      simp [hhit, hnall]
+    · have hallno : ∀ i : Fin n, x i ≠ t := by
+        intro i hi
+        exact hhit ⟨i, hi⟩
+      simp [hallno]
+  have hzero :
+      (∑ x : (Fin n → ZMod m),
+          if (∃ i : Fin n, x i = t) then (1 : ZMod m) else 0) +
+        (-1 : ZMod m) ^ n = 0 := by
+    simpa [hno, hall] using hsplit
+  exact eq_neg_of_add_eq_zero_left hzero
+
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
     (rho : ZMod m → PrefixCountRootState d m → Fin d)
