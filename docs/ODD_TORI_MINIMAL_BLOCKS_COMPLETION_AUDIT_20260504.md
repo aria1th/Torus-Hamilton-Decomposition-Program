@@ -16,6 +16,14 @@ theorem odd_modulus_tori_all_dimensions
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+Lean now also names this final target as:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriAllDimensionsGoal : Prop :=
+  forall {d m : Nat}, 2 <= d -> Odd m -> 3 <= m ->
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 The intended proof spine is:
 
 1. D2, D3, D5, D7 seed decompositions.

@@ -378,7 +378,9 @@ when `m` is odd and `m >= 3`.
   After the q>=2 refactor, the proper-cut field can also be supplied by the
   pure column-packing theorem `PrefixCount.Qge2SignedColumnPackingGoal`; the
   compact block endpoint is
-  `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks`.
+  `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks`, and
+  the named final-goal wrapper is
+  `oddModulusToriAllDimensionsGoal_of_v4_columnPackingSchedule_blocks`.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

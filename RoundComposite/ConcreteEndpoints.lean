@@ -50,6 +50,10 @@ def OddSuccessorClosureGoal : Prop :=
     StandardCayleySolved b m →
     StandardCayleySolved (2 * b + 1) m
 
+def OddModulusToriAllDimensionsGoal : Prop :=
+  ∀ {d m : Nat}, 2 ≤ d → Odd m → 3 ≤ m →
+    Shared.CayleyHamiltonDecomposition d m
+
 theorem standard_cayley_odd_uniform_all_dimensions_of_odd_core
     (hOddCore :
       ∀ {d : Nat}, Odd d → 3 ≤ d →
@@ -97,6 +101,15 @@ theorem odd_modulus_tori_all_dimensions_of_odd_core
     Shared.CayleyHamiltonDecomposition d m :=
   odd_modulus_tori_all_dimensions_uniform_of_odd_core
     hOddCore hd2 hm3 hmodd
+
+theorem oddModulusToriAllDimensionsGoal_of_odd_core
+    (hOddCore :
+      ∀ {d : Nat}, 3 ≤ d → Odd d →
+        OddUniformSolved StandardCayleySolved d) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_odd_core
+    hOddCore hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_uniform_of_357_and_successor
     (hSucc : OddSuccessorClosureGoal)
@@ -150,6 +163,13 @@ theorem odd_modulus_tori_all_dimensions_of_357_and_successor
     Shared.CayleyHamiltonDecomposition d m :=
   odd_modulus_tori_all_dimensions_uniform_of_357_and_successor
     hSucc hd2 hm3 hmodd
+
+theorem oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (hSucc : OddSuccessorClosureGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_357_and_successor
+    hSucc hd2 hmodd hm3
 
 theorem standard_cayley_odd_uniform_35_of_pointwise
     (hExp : OddPointwiseCompositeExpansion StandardCayleySolved) :
