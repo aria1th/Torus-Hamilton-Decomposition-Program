@@ -172,6 +172,16 @@ noncomputable theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
     PrefixCountFirstHitReturnTailCycleCoordinateGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal <->
+      PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyGoal_iff_cycleCoordinateGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal <->
+      PrefixCountFirstHitReturnTailCycleCoordinateGoal
 ```
 
 The generic tail-space equivalence is available as:

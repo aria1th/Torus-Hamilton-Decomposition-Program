@@ -114,6 +114,7 @@ theorem RoundComposite.Concrete
 | Tail rank from equivalence | `prefixCountFirstHitReturnTailRankGoal_of_rankEquiv` | Lean-closed conditional | An explicit equivalence odometer is enough |
 | Tail rank equivalence from cycle coordinate | `prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate` | Lean-closed conditional | A forward `Shared.CycleCoordinate` is enough |
 | Tail cycle coordinate from monodromy | `prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy` | Lean-closed conditional | On the finite tail vector space, a single-cycle monodromy also yields a `CycleCoordinate` |
+| Tail formulation equivalences | `prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal`, `..._iff_rankGoal`, `..._iff_rankEquivGoal`, `..._iff_cycleCoordinateGoal` | Lean-closed | The external tail request can be supplied in whichever of these four forms is easiest |
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Unit additive cycle coordinate | `Shared.CycleCoordinate.zmodAddConstOfCoprime` | Lean-closed | Gives a coordinate-level base case for `x ↦ x + a` when `gcd(a,m)=1` |
 | Section-return additive cycle coordinate | `Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime` | Lean-closed | Converts a computed unit total carry into a `CycleCoordinate` for the section return |

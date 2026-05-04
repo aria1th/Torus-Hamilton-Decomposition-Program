@@ -2309,6 +2309,42 @@ theorem prefixCountFirstHitReturnTailRankEquivGoal_of_monodromy
   prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
     (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy hTail)
 
+theorem prefixCountFirstHitReturnTailRankGoal_of_monodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitReturnTailRankGoal :=
+  prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
+    (prefixCountFirstHitReturnTailRankEquivGoal_of_monodromy hTail)
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_monodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c tail₁ tail₂
+  exact (hTail hd2 hdodd hd5 hmodd hdm hC L c).2 tail₁ tail₂
+
+theorem prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal ↔
+      PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  ⟨prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_monodromy,
+    prefixCountFirstHitReturnTailMonodromyGoal_of_orbit⟩
+
+theorem prefixCountFirstHitReturnTailMonodromyGoal_iff_rankGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal ↔
+      PrefixCountFirstHitReturnTailRankGoal :=
+  ⟨prefixCountFirstHitReturnTailRankGoal_of_monodromy,
+    prefixCountFirstHitReturnTailMonodromyGoal_of_rank⟩
+
+theorem prefixCountFirstHitReturnTailMonodromyGoal_iff_rankEquivGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal ↔
+      PrefixCountFirstHitReturnTailRankEquivGoal :=
+  ⟨prefixCountFirstHitReturnTailRankEquivGoal_of_monodromy,
+    prefixCountFirstHitReturnTailMonodromyGoal_of_rankEquiv⟩
+
+theorem prefixCountFirstHitReturnTailMonodromyGoal_iff_cycleCoordinateGoal :
+    PrefixCountFirstHitReturnTailMonodromyGoal ↔
+      PrefixCountFirstHitReturnTailCycleCoordinateGoal :=
+  ⟨prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy,
+    prefixCountFirstHitReturnTailMonodromyGoal_of_cycleCoordinate⟩
+
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailOrbit
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
     PrefixCountFirstHitHeadTailSectionMonodromyGoal :=
