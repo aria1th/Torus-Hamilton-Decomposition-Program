@@ -581,6 +581,178 @@ theorem prefixCountCanonicalRho_pred_hit
   exact prefixCountCanonicalRhoHit_of_nat
     (prefixCountCanonicalRho_pred_hitNat hd2 hrho)
 
+theorem prefixCountCanonicalRho_rootStep_self
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (w : PrefixCountRootState d m) :
+    prefixCountCanonicalRho d m hd2 t
+        (prefixCountRootStep d m
+          (prefixCountCanonicalRho d m hd2 t w) w)
+      =
+    prefixCountCanonicalRho d m hd2 t w := by
+  let rho := prefixCountCanonicalRho d m hd2 t w
+  by_cases hlast : rho.val = d - 1
+  · have hstep :
+        prefixCountRootStep d m rho w = w :=
+      prefixCountRootStep_eq_self_of_last rho hlast w
+    simp [rho, hstep]
+  · have hrho : rho.val < d - 1 := by
+      have hrho_lt : rho.val < d := rho.isLt
+      omega
+    have hhit :
+        prefixCountCanonicalRhoHitNat t w (rho.val - 1) := by
+      simpa [rho] using
+        (prefixCountCanonicalRho_pred_hitNat
+          (d := d) (m := m) hd2 (t := t) (w := w) (by simpa [rho] using hrho))
+    have hne_moved : rho.val ≠ rho.val - 1 := by
+      have hnonzero : rho.val ≠ 0 := by
+        simpa [rho] using prefixCountCanonicalRho_ne_zero hd2 t w
+      omega
+    have hhit' :
+        prefixCountCanonicalRhoHitNat t
+          (prefixCountRootStep d m rho w) (rho.val - 1) :=
+      (prefixCountCanonicalRhoHitNat_rootStep_iff_of_ne
+        (d := d) (m := m) (t := t) (w := w)
+        (i := rho) (j := rho.val - 1) hne_moved).2 hhit
+    have hex' :
+        ∃ j : Nat,
+          prefixCountCanonicalRhoHitNat t
+            (prefixCountRootStep d m rho w) j :=
+      ⟨rho.val - 1, hhit'⟩
+    have hle :
+        (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStep d m rho w)).val ≤ rho.val := by
+      have hmin :=
+        prefixCountCanonicalRho_minimal
+          (d := d) (m := m) hd2 (t := t)
+          (w := prefixCountRootStep d m rho w) hex' hhit'
+      omega
+    have hnotlt :
+        ¬ (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStep d m rho w)).val < rho.val := by
+      intro hlt
+      let rho' :=
+        prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStep d m rho w)
+      have hrho' : rho'.val < d - 1 := by
+        have : rho'.val < rho.val := hlt
+        omega
+      have hhit_pred' :
+          prefixCountCanonicalRhoHitNat t
+            (prefixCountRootStep d m rho w) (rho'.val - 1) := by
+        simpa [rho'] using
+          (prefixCountCanonicalRho_pred_hitNat
+            (d := d) (m := m) hd2 (t := t)
+            (w := prefixCountRootStep d m rho w) hrho')
+      have hne' : rho.val ≠ rho'.val - 1 := by omega
+      have hhit_pred :
+          prefixCountCanonicalRhoHitNat t w (rho'.val - 1) :=
+        (prefixCountCanonicalRhoHitNat_rootStep_iff_of_ne
+          (d := d) (m := m) (t := t) (w := w)
+          (i := rho) (j := rho'.val - 1) hne').1 hhit_pred'
+      have hbefore : (rho'.val - 1) + 1 < rho.val := by
+        have hnonzero' : rho'.val ≠ 0 := by
+          simpa [rho'] using
+            prefixCountCanonicalRho_ne_zero
+              (d := d) (m := m) hd2 t (prefixCountRootStep d m rho w)
+        omega
+      exact
+        (prefixCountCanonicalRho_no_hit_before
+          (d := d) (m := m) hd2 (t := t) (w := w) hbefore)
+          hhit_pred
+    apply Fin.ext
+    have hge :
+        rho.val ≤
+          (prefixCountCanonicalRho d m hd2 t
+            (prefixCountRootStep d m rho w)).val := by
+      omega
+    exact Nat.le_antisymm hle hge
+
+theorem prefixCountCanonicalRho_rootStepInv_self
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (w : PrefixCountRootState d m) :
+    prefixCountCanonicalRho d m hd2 t
+        (prefixCountRootStepInv d m
+          (prefixCountCanonicalRho d m hd2 t w) w)
+      =
+    prefixCountCanonicalRho d m hd2 t w := by
+  let rho := prefixCountCanonicalRho d m hd2 t w
+  by_cases hlast : rho.val = d - 1
+  · have hstep :
+        prefixCountRootStepInv d m rho w = w :=
+      prefixCountRootStepInv_eq_self_of_last rho hlast w
+    simp [rho, hstep]
+  · have hrho : rho.val < d - 1 := by
+      have hrho_lt : rho.val < d := rho.isLt
+      omega
+    have hhit :
+        prefixCountCanonicalRhoHitNat t w (rho.val - 1) := by
+      simpa [rho] using
+        (prefixCountCanonicalRho_pred_hitNat
+          (d := d) (m := m) hd2 (t := t) (w := w) (by simpa [rho] using hrho))
+    have hne_moved : rho.val ≠ rho.val - 1 := by
+      have hnonzero : rho.val ≠ 0 := by
+        simpa [rho] using prefixCountCanonicalRho_ne_zero hd2 t w
+      omega
+    have hhit' :
+        prefixCountCanonicalRhoHitNat t
+          (prefixCountRootStepInv d m rho w) (rho.val - 1) :=
+      (prefixCountCanonicalRhoHitNat_rootStepInv_iff_of_ne
+        (d := d) (m := m) (t := t) (w := w)
+        (i := rho) (j := rho.val - 1) hne_moved).2 hhit
+    have hex' :
+        ∃ j : Nat,
+          prefixCountCanonicalRhoHitNat t
+            (prefixCountRootStepInv d m rho w) j :=
+      ⟨rho.val - 1, hhit'⟩
+    have hle :
+        (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStepInv d m rho w)).val ≤ rho.val := by
+      have hmin :=
+        prefixCountCanonicalRho_minimal
+          (d := d) (m := m) hd2 (t := t)
+          (w := prefixCountRootStepInv d m rho w) hex' hhit'
+      omega
+    have hnotlt :
+        ¬ (prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStepInv d m rho w)).val < rho.val := by
+      intro hlt
+      let rho' :=
+        prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStepInv d m rho w)
+      have hrho' : rho'.val < d - 1 := by
+        have : rho'.val < rho.val := hlt
+        omega
+      have hhit_pred' :
+          prefixCountCanonicalRhoHitNat t
+            (prefixCountRootStepInv d m rho w) (rho'.val - 1) := by
+        simpa [rho'] using
+          (prefixCountCanonicalRho_pred_hitNat
+            (d := d) (m := m) hd2 (t := t)
+            (w := prefixCountRootStepInv d m rho w) hrho')
+      have hne' : rho.val ≠ rho'.val - 1 := by omega
+      have hhit_pred :
+          prefixCountCanonicalRhoHitNat t w (rho'.val - 1) :=
+        (prefixCountCanonicalRhoHitNat_rootStepInv_iff_of_ne
+          (d := d) (m := m) (t := t) (w := w)
+          (i := rho) (j := rho'.val - 1) hne').1 hhit_pred'
+      have hbefore : (rho'.val - 1) + 1 < rho.val := by
+        have hnonzero' : rho'.val ≠ 0 := by
+          simpa [rho'] using
+            prefixCountCanonicalRho_ne_zero
+              (d := d) (m := m) hd2 t (prefixCountRootStepInv d m rho w)
+        omega
+      exact
+        (prefixCountCanonicalRho_no_hit_before
+          (d := d) (m := m) hd2 (t := t) (w := w) hbefore)
+          hhit_pred
+    apply Fin.ext
+    have hge :
+        rho.val ≤
+          (prefixCountCanonicalRho d m hd2 t
+            (prefixCountRootStepInv d m rho w)).val := by
+      omega
+    exact Nat.le_antisymm hle hge
+
 noncomputable def prefixCountFirstHitCanonicalSchedule
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
@@ -662,6 +834,33 @@ theorem prefixCountFirstHitSymbolMap_inverseLaw_of_val_zero
   · intro w
     rw [hfun, hinv]
     exact prefixCountRootStep_apply_inv s w
+
+theorem prefixCountFirstHitSymbolMap_inverseLaw_of_val_one
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (hs : s.val = 1) :
+    Function.LeftInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) ∧
+      Function.RightInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) := by
+  constructor
+  · intro w
+    simpa [prefixCountFirstHitSymbolMapInv,
+      prefixCountFirstHitSymbolMap,
+      prefixCountLambdaRho_eq_rho_of_val_one _ hs,
+      prefixCountCanonicalRho_rootStep_self hd2 t w]
+      using
+        prefixCountRootStepInv_apply_step
+          (prefixCountCanonicalRho d m hd2 t w) w
+  · intro w
+    simpa [prefixCountFirstHitSymbolMapInv,
+      prefixCountFirstHitSymbolMap,
+      prefixCountLambdaRho_eq_rho_of_val_one _ hs,
+      prefixCountCanonicalRho_rootStepInv_self hd2 t w]
+      using
+        prefixCountRootStep_apply_inv
+          (prefixCountCanonicalRho d m hd2 t w) w
 
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
