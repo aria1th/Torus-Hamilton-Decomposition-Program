@@ -1899,6 +1899,31 @@ def PrefixCountFirstHitCanonicalReturnsSingleCycleGoal : Prop :=
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
     (prefixCountFirstHitCanonicalSchedule hd2 L).returnsSingleCycle
 
+def PrefixCountFirstHitHeadTailMonodromyGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d,
+      (∀ z : ZMod m,
+        Function.Bijective (prefixCountFirstHitReturnFiberStep hd2 L c z)) ∧
+      Shared.IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c))
+          (0 : ZMod m) m)
+
+theorem prefixCountFirstHitCanonicalReturnsSingleCycleGoal_of_headTailMonodromy
+    (hMono : PrefixCountFirstHitHeadTailMonodromyGoal) :
+    PrefixCountFirstHitCanonicalReturnsSingleCycleGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
+  rcases hMono hd2 hdodd hd5 hmodd hdm hC L c with
+    ⟨hfiber, hmonodromy⟩
+  exact
+    prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_unitBaseHeadTailMonodromy
+      hd2 hC L c hfiber hmonodromy
+
 def PrefixCountFirstHitCanonicalScheduleAuxGoal : Prop :=
   PrefixCountFirstHitCanonicalLayerBijectiveGoal ∧
   PrefixCountFirstHitCanonicalReturnsSingleCycleGoal
