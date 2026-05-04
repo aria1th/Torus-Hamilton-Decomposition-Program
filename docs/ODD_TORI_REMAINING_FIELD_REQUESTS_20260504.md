@@ -353,6 +353,8 @@ prefixCountFirstHitReturnBaseStep_sum_fin_iterate
 prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
 prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
+PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
 ```
 
 So the open return-tail proof request should focus on the low-prefix
@@ -363,6 +365,10 @@ The pair-count lemmas also cover the local cases where the final coordinate is
 free, or is the first hit after a no-hit prefix.
 The named `pc...` predicates from the GPT response and their pure finite
 first-hit count lemmas are now Lean-closed.
+The full signed cocycle-sum goal is now Lean-reduced to the fixed-`t` local
+hit-condition sum target; Lean handles the remaining `x,u,t` sum commuting,
+signed layer-symbol coefficient sum, and `toMatrix` to `C.step - C.delta`
+conversion.
 
 ### Already Lean-Closed
 

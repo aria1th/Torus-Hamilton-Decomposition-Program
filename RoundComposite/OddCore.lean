@@ -3419,6 +3419,28 @@ def PrefixCountFirstHitReturnTailCocycleSumGoal : Prop :=
         ((-1 : ZMod m) ^ (k + 1)) *
           (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
 
+def PrefixCountFirstHitReturnTailLocalHitConditionSumGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ k : Nat, ∀ hk : k < d - 2,
+      ∀ t ∈ Finset.range m,
+        (∑ x : (Fin k → ZMod m),
+          ∑ u ∈ Finset.range m,
+            if prefixCountFirstHitReturnFiberHitCondition hd2 L c
+                (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+                  (0 : ZMod m))
+                (Shared.skewFiberIterate
+                  (prefixCountFirstHitReturnBaseStep (m := m) C c)
+                  (prefixCountFirstHitReturnFiberStep hd2 L c)
+                  u (0 : ZMod m)
+                  (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+                ⟨k, hk⟩ t
+            then (1 : ZMod m) else 0) =
+          prefixCountReturnTailSignedCoeff hd2 hk
+            (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+
 def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
   Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
   PrefixCountFirstHitReturnTailTriangularGoal ∧
@@ -3747,6 +3769,83 @@ theorem prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
           prefixCountFirstHitReturnTailCocycle hd2 L c k hk
             (Shared.zmodVectorTake (Nat.le_of_lt hk) tail) := by
           rw [h]
+
+theorem prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
+    (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :
+    PrefixCountFirstHitReturnTailCocycleSumGoal := by
+  classical
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c k hk
+  let f : (Fin k → ZMod m) → Nat → Nat → ZMod m := fun x u t =>
+    if prefixCountFirstHitReturnFiberHitCondition hd2 L c
+        (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+          (0 : ZMod m))
+        (Shared.skewFiberIterate
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)
+          u (0 : ZMod m)
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+        ⟨k, hk⟩ t
+    then (1 : ZMod m) else 0
+  calc
+    (∑ x : (Fin k → ZMod m),
+        prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
+        =
+        ∑ x : (Fin k → ZMod m),
+          ∑ u ∈ Finset.range m,
+            ∑ t ∈ Finset.range m, f x u t := by
+          apply Finset.sum_congr rfl
+          intro x _hx
+          rw [prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
+            (hd2 := hd2) (C := C) L c k hk x]
+    _ =
+        ∑ u ∈ Finset.range m,
+          ∑ x : (Fin k → ZMod m),
+            ∑ t ∈ Finset.range m, f x u t := by
+          rw [Finset.sum_comm]
+    _ =
+        ∑ u ∈ Finset.range m,
+          ∑ t ∈ Finset.range m,
+            ∑ x : (Fin k → ZMod m), f x u t := by
+          apply Finset.sum_congr rfl
+          intro u _hu
+          rw [Finset.sum_comm]
+    _ =
+        ∑ t ∈ Finset.range m,
+          ∑ u ∈ Finset.range m,
+            ∑ x : (Fin k → ZMod m), f x u t := by
+          rw [Finset.sum_comm]
+    _ =
+        ∑ t ∈ Finset.range m,
+          ∑ x : (Fin k → ZMod m),
+            ∑ u ∈ Finset.range m, f x u t := by
+          apply Finset.sum_congr rfl
+          intro t _ht
+          rw [Finset.sum_comm]
+    _ =
+        ∑ t ∈ Finset.range m,
+          prefixCountReturnTailSignedCoeff hd2 hk
+            (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c) := by
+          apply Finset.sum_congr rfl
+          intro t ht
+          simpa [f] using
+            hLocal hd2 hdodd hd5 hmodd hdm hC L c k hk t ht
+    _ =
+        ((-1 : ZMod m) ^ (k + 1)) *
+          ((((C.toMatrix hd2)
+              c (prefixCountReturnTailStepCol hd2 hk) : Nat) : ZMod m) -
+            (((C.toMatrix hd2)
+              c (prefixCountReturnTailDeltaCol hd2) : Nat) : ZMod m)) := by
+          exact prefixCountReturnTailSignedCoeff_layer_sum_eq_matrix
+            (hd2 := hd2) (C := C) L c hk
+    _ =
+        ((-1 : ZMod m) ^ (k + 1)) *
+          (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m) := by
+          have hmat :=
+            prefixCount_toMatrix_rawStep_sub_delta_zmod
+              (m := m) hd2 C c (k := k) hk
+          simpa [prefixCountReturnTailStepCol, prefixCountReturnTailDeltaCol]
+            using congrArg
+              (fun q : ZMod m => ((-1 : ZMod m) ^ (k + 1)) * q) hmat
 
 theorem prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
     (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :

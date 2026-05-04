@@ -187,6 +187,12 @@ theorem prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective :
           (prefixCountFirstHitReturnFiberStep hd2 L c)
           u 0
           (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))
+
+def PrefixCountFirstHitReturnTailLocalHitConditionSumGoal : Prop := ...
+
+theorem prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
+  (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :
+  PrefixCountFirstHitReturnTailCocycleSumGoal
 ```
 
 Lean has already closed row-Latin, layer bijectivity, root-flat schedule
@@ -206,8 +212,13 @@ last coordinate is either free or is the first hit.
 The named `pc...` predicates and their four pure finite first-hit counts from
 the completed response are now Lean-closed.
 The signed coefficient and layer-symbol matrix sum from the completed response
-are also now Lean-closed; the only large remaining return-tail piece is the
-actual low-residual reindexing/local hit-condition theorem.
+are also now Lean-closed.  Lean now additionally proves that the fixed-`t`
+local hit-condition sum goal implies the full signed cocycle-sum goal, by
+expanding `prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition`,
+commuting the `x,u,t` sums, applying the layer-symbol signed coefficient sum,
+and converting the matrix columns to `C.step - C.delta`.
+The only large remaining return-tail piece is therefore the local fixed-`t`
+low-residual reindexing/hit-condition theorem.
 
 ## Mathematical Source
 
@@ -222,8 +233,10 @@ where the Lean tail rank `k` corresponds to the paper next prefix rank
 
 ## Prompt
 
-Prove the corrected signed exact cocycle-sum target above, or give a sharper
-Lean interface that implies it.
+Prove the corrected local fixed-`t` first-hit count target
+`PrefixCountFirstHitReturnTailLocalHitConditionSumGoal`, or give a sharper
+Lean interface that implies it.  Lean already proves that this local target
+implies the full signed exact cocycle-sum target.
 
 Please focus on the missing low-prefix reindexing and finite first-hit count.
 Do not reprove the generic lower-triangular odometer theorem, row-Latin,
@@ -231,9 +244,8 @@ layer bijectivity, or the final torus lift.
 
 The proof route should identify Lean-friendly lemmas for:
 
-1. replacing the nested `u,t,x` sum in
-   `prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition` by a layer-symbol
-   count over `L.layer`;
+1. replacing the fixed-`t` nested `x,u` sum by the signed coefficient of the
+   layer symbol `L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c`;
 2. proving the local first-hit cardinalities modulo `m`:
    no hit among `k+1` coordinates contributes `(m-1)^(k+1) = (-1)^(k+1)`;
    at least one hit contributes `-(-1)^(k+1)`;
