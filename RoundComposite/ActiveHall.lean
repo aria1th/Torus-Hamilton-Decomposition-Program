@@ -1049,6 +1049,35 @@ def HallRealizationGoal : Prop :=
       M.HallCuts →
       ∃ Φ : Symboling I, Φ.Realizes M.val
 
+theorem hallRealization_zero {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 0 X C) (M : CountMatrix I) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  classical
+  refine ⟨{
+    equiv := fun x => ?_
+  }, ?_⟩
+  · refine {
+      toFun := fun σ => Fin.elim0 σ
+      invFun := fun c => ?_
+      left_inv := fun σ => Fin.elim0 σ
+      right_inv := fun c => ?_
+    }
+    · have hEmpty : I.active x = ∅ :=
+        Finset.card_eq_zero.mp (I.active_card x)
+      exact False.elim (by
+        have hc : c.1 ∈ (∅ : Finset C) := by
+          simpa [hEmpty] using c.2
+        simp at hc)
+    · have hEmpty : I.active x = ∅ :=
+        Finset.card_eq_zero.mp (I.active_card x)
+      exact False.elim (by
+        have hc : c.1 ∈ (∅ : Finset C) := by
+          simpa [hEmpty] using c.2
+        simp at hc)
+  · intro c σ
+    exact Fin.elim0 σ
+
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
