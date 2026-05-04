@@ -54,6 +54,18 @@ These avoid converting a `ZMod m` unit carry into a natural-number coprime
 witness.  This matters for composite odd moduli: the relevant hypothesis is
 unit carry, not merely nonzero carry.
 
+The vector split needed for the induction step is now Lean-closed:
+
+```lean
+def Shared.zmodVectorSnocEquiv (n m : Nat) :
+    (Fin (n + 1) -> ZMod m) ≃ (Fin n -> ZMod m) × ZMod m
+
+theorem Shared.zmodVectorTake_snoc
+theorem Shared.zmodVectorTake_snoc_self
+```
+
+These express that `take` ignores the final coordinate of `Fin.snoc`.
+
 ## Remaining Helper Lemmas
 
 The full proof should live in `Shared/Monodromy.lean`, not
@@ -78,8 +90,8 @@ Step `r = n + 1`: split the vector into
 (Fin n -> ZMod m) × ZMod m
 ```
 
-by a `Fin.snoc` equivalence.  Define the base map by taking the lower `n`
-coordinates of `F` after zero-extending the last coordinate, and define the
+using `Shared.zmodVectorSnocEquiv`.  Define the base map by taking the lower
+`n` coordinates of `F` after zero-extending the last coordinate, and define the
 last-coordinate carry as `gamma n`.
 
 The induction hypothesis gives a rank equivalence for the base map.  The
@@ -88,20 +100,6 @@ once the section-return carry is identified with the finite sum over all base
 states.
 
 Still needed:
-
-```lean
-def Shared.zmodVectorSnocEquiv (n m : Nat) :
-    (Fin (n + 1) -> ZMod m) ≃ (Fin n -> ZMod m) × ZMod m
-```
-
-with simp lemmas for projection and inverse.
-
-```lean
-theorem Shared.zmodVectorTake_snoc
-theorem Shared.zmodVectorTake_snoc_self
-```
-
-to express that `take` ignores the final coordinate.
 
 ```lean
 theorem Shared.zmod_rank_iterate_period

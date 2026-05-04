@@ -154,6 +154,9 @@ Shared.zmod_add_single_cycle_of_unit
 Shared.CycleCoordinate.zmodAddConstOfUnit
 Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit
 Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
+Shared.zmodVectorSnocEquiv
+Shared.zmodVectorTake_snoc
+Shared.zmodVectorTake_snoc_self
 ```
 
 The remaining generic lower-triangular proof plan is recorded in

@@ -70,6 +70,36 @@ def zmodVectorExtendZero {m k r : Nat} (_hk : k ≤ r)
     (x : Fin k → ZMod m) : Fin r → ZMod m :=
   fun i => if h : i.val < k then x ⟨i.val, h⟩ else 0
 
+def zmodVectorSnocEquiv (n m : Nat) :
+    (Fin (n + 1) → ZMod m) ≃ (Fin n → ZMod m) × ZMod m :=
+  (Fin.snocEquiv (fun _ : Fin (n + 1) => ZMod m)).symm.trans
+    (Equiv.prodComm _ _)
+
+@[simp] theorem zmodVectorTake_snoc_self {m n : Nat}
+    (x : Fin n → ZMod m) (a : ZMod m) :
+    zmodVectorTake (m := m) (r := n + 1) (k := n)
+      (Nat.le_succ n) (Fin.snoc x a) = x := by
+  funext i
+  change @Fin.snoc n (fun _ => ZMod m) x a i.castSucc = x i
+  exact Fin.snoc_castSucc (α := fun _ : Fin (n + 1) => ZMod m) a x i
+
+@[simp] theorem zmodVectorTake_snoc {m n k : Nat} (hk : k ≤ n)
+    (x : Fin n → ZMod m) (a : ZMod m) :
+    zmodVectorTake (m := m) (r := n + 1) (k := k)
+      (Nat.le_trans hk (Nat.le_succ n)) (Fin.snoc x a) =
+        zmodVectorTake (m := m) (r := n) (k := k) hk x := by
+  funext i
+  let j : Fin n := ⟨i.val, lt_of_lt_of_le i.isLt hk⟩
+  have hidx :
+      (⟨i.val, lt_of_lt_of_le i.isLt
+        (Nat.le_trans hk (Nat.le_succ n))⟩ : Fin (n + 1)) =
+        j.castSucc := rfl
+  change @Fin.snoc n (fun _ => ZMod m) x a
+      (⟨i.val, lt_of_lt_of_le i.isLt
+        (Nat.le_trans hk (Nat.le_succ n))⟩ : Fin (n + 1)) = x j
+  rw [hidx]
+  exact Fin.snoc_castSucc (α := fun _ : Fin (n + 1) => ZMod m) a x j
+
 theorem torusVertexBlockEquiv_torusBasis_apply
     {a b m : Nat} (j j' : Fin b) (i i' : Fin a) :
     torusVertexBlockEquiv a b m
