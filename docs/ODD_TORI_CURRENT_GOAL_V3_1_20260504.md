@@ -166,6 +166,26 @@ The active proof obligations are exactly the three fields of
 2. `PrefixCountRootFlatCanonicalReturnGoal`
 3. `OddCoreSmallModulusSlackPacketLiftGoal`
 
+The current most convenient Lean-facing packet is now:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4ScheduleBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+```
+
+Its endpoint is:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_schedule_blocks
+    (hBlocks : OddModulusToriV4ScheduleBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 For the first item, Lean now exposes the equivalent nontrivial-cut formulation
 `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`.  The endpoint cuts
 `J = empty` and `J = univ` are no longer external obligations:
