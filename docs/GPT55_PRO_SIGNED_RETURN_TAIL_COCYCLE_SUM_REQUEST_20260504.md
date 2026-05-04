@@ -122,6 +122,11 @@ theorem prefixCountFirstHitReturnBaseStep_sum_range_iterate :
   (sum u in Finset.range m,
     F (((prefixCountFirstHitReturnBaseStep C c)^[u]) (0 : ZMod m))) =
     sum z : ZMod m, F z
+
+theorem Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake :
+  Function.Bijective
+    (fun x : Fin k -> ZMod m =>
+      Shared.zmodVectorTake hk (F (Shared.zmodVectorExtendZero hk x)))
 ```
 
 Lean has already closed row-Latin, layer bijectivity, root-flat schedule
@@ -131,6 +136,9 @@ lower-triangular odometer theorem.  After submitting this request, Lean also
 closed the no-hit and has-hit modular counting atoms listed above.
 It also closed the base-orbit sum reindexing lemmas listed above, using
 `C.Admissible.prim_zero`.
+Finally, `Shared` now has the generic projected-low-prefix bijection lemma
+listed above: increment-dependency plus full bijectivity of `F` makes the
+`extendZero -> F -> take` map on `Fin k -> ZMod m` bijective.
 
 ## Mathematical Source
 
