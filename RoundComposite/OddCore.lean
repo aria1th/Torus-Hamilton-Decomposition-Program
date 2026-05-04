@@ -2092,6 +2092,13 @@ theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_returns
   prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_aux
     (prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns hReturn)
 
+theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_sectionMonodromy
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal) :
+    PrefixCountRootFlatCanonicalScheduleCriterionGoal :=
+  prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_returns
+    (prefixCountFirstHitCanonicalReturnsSingleCycleGoal_of_sectionMonodromy
+      hSection)
+
 theorem prefixCountRootFlatCanonicalReturnGoal_of_scheduleCriterion
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
     PrefixCountRootFlatCanonicalReturnGoal := by
@@ -3512,6 +3519,10 @@ def OddCoreHighModulusScheduleBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal
 
+def OddCoreHighModulusSectionMonodromyBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  PrefixCountFirstHitHeadTailSectionMonodromyGoal
+
 def OddCoreHighModulusColumnPackingScheduleBlocksGoal : Prop :=
   PrefixCount.Qge2SignedColumnPackingGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal
@@ -3523,6 +3534,10 @@ theorem not_oddCoreHighModulusColumnPackingScheduleBlocksGoal :
 
 def OddModulusToriV4MinimalBlocksGoal : Prop :=
   OddCoreHighModulusScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+def OddModulusToriV4SectionMonodromyBlocksGoal : Prop :=
+  OddCoreHighModulusSectionMonodromyBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
 
 def OddModulusToriV4MinimalAddBlocksGoal : Prop :=
@@ -3906,6 +3921,21 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule
   oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks
     ⟨hQge2Proper, hSchedule⟩
 
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy_blocks
+    (hBlocks : OddCoreHighModulusSectionMonodromyBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule
+    hBlocks.1
+    (prefixCountRootFlatCanonicalScheduleCriterionGoal_of_sectionMonodromy
+      hBlocks.2)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy_blocks
+    ⟨hQge2Proper, hSection⟩
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
@@ -4154,6 +4184,24 @@ theorem odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
   odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks
     (oddModulusToriV4SuccessorScheduleBlocksGoal_of_minimalBlocks hBlocks)
     hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy_blocks
+    (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_high_and_successor_small
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy_blocks
+      hBlocks.1)
+    hBlocks.2
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_sectionMonodromy_blocks
+    (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy_blocks
+    hBlocks hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
     (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
