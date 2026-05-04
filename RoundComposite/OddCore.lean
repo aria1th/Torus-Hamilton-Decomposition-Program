@@ -1812,6 +1812,35 @@ theorem prefixCountFirstHitReturnFiberStep_apply_cases
         exact h (hiff.mpr hcase)
     simp [rho, s, h, hcase]
 
+def prefixCountFirstHitReturnFiberHitCondition
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m)
+    (j : Fin (d - 2)) (t : Nat) : Prop :=
+  let rho :=
+    prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+        ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+          (z, tail)))
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  (s.val = 1 ∧ rho.val = j.val + 1) ∨
+    (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+    (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
+
+theorem prefixCountFirstHitReturnFiberStep_apply_hitCondition
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m) (j : Fin (d - 2)) :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j +
+        ∑ t ∈ Finset.range m,
+          if prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t
+          then (1 : ZMod m) else 0 := by
+  rw [prefixCountFirstHitReturnFiberStep_apply_cases]
+  rfl
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
@@ -2208,6 +2237,19 @@ def PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal : Prop :=
       Shared.ZModVectorIncrementDependsOnTake
         (prefixCountFirstHitReturnFiberStep hd2 L c z)
 
+def PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ z : ZMod m,
+      ∀ x y : Fin (d - 2) → ZMod m, ∀ k : Nat, ∀ hk : k < d - 2,
+        Shared.zmodVectorTake (Nat.le_of_lt hk) x =
+          Shared.zmodVectorTake (Nat.le_of_lt hk) y →
+        ∀ t ∈ Finset.range m,
+          prefixCountFirstHitReturnFiberHitCondition hd2 L c z x ⟨k, hk⟩ t ↔
+            prefixCountFirstHitReturnFiberHitCondition hd2 L c z y ⟨k, hk⟩ t
+
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -2245,6 +2287,10 @@ def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
 
 def PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal : Prop :=
   PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+def PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailMonodromy
@@ -2399,6 +2445,37 @@ theorem prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
   let K := hCycle hd2 hdodd hd5 hmodd hdm hC L c
   exact ⟨K.equiv.symm, fun tail => Shared.CycleCoordinate.rank_step K tail⟩
 
+theorem prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal) :
+    PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c z x y k hk hxy
+  rw [prefixCountFirstHitReturnFiberStep_apply_hitCondition
+    (hd2 := hd2) (C := C) L c z x ⟨k, hk⟩]
+  rw [prefixCountFirstHitReturnFiberStep_apply_hitCondition
+    (hd2 := hd2) (C := C) L c z y ⟨k, hk⟩]
+  have hsum :
+      (∑ t ∈ Finset.range m,
+          if prefixCountFirstHitReturnFiberHitCondition hd2 L c z x ⟨k, hk⟩ t
+          then (1 : ZMod m) else 0) =
+        ∑ t ∈ Finset.range m,
+          if prefixCountFirstHitReturnFiberHitCondition hd2 L c z y ⟨k, hk⟩ t
+          then (1 : ZMod m) else 0 := by
+    apply Finset.sum_congr rfl
+    intro t ht
+    have hiff := hHit hd2 hdodd hd5 hmodd hdm hC L c z x y k hk hxy t ht
+    by_cases hx :
+        prefixCountFirstHitReturnFiberHitCondition hd2 L c z x ⟨k, hk⟩ t
+    · have hy : prefixCountFirstHitReturnFiberHitCondition
+          hd2 L c z y ⟨k, hk⟩ t := hiff.mp hx
+      simp [hx, hy]
+    · have hy : ¬ prefixCountFirstHitReturnFiberHitCondition
+          hd2 L c z y ⟨k, hk⟩ t := by
+        intro hy
+        exact hx (hiff.mpr hy)
+      simp [hx, hy]
+  rw [hsum]
+  abel
+
 theorem prefixCountFirstHitReturnTailIncrementDependsOnTakeGoal_of_fiber
     (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal) :
     PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal := by
@@ -2518,6 +2595,14 @@ theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_fiberIncrementUnitBl
       hBlocks.1,
     hBlocks.2⟩
 
+theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal :=
+  prefixCountFirstHitReturnTailCycleCoordinateGoal_of_fiberIncrementUnitBlocks
+    ⟨prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+      hBlocks.1,
+    hBlocks.2⟩
+
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit
     (hLower : Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal)
     (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
@@ -2559,6 +2644,13 @@ theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlo
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
   prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
     (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_fiberIncrementUnitBlocks
+      hBlocks)
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
+    (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_hitConditionUnitBlocks
       hBlocks)
 
 theorem prefixCountFirstHitReturnTailMonodromyGoal_of_rank
@@ -4897,6 +4989,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailFiberIncrementTrel
       hFiber)
     hUnit
 
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailHitConditionTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailFiberIncrementTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+      hHit)
+    hUnit
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
@@ -5180,6 +5283,28 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailFiberIncrementTrellisAdd
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v4_returnTailFiberIncrementTrellis
     hQge2Trellis hFiber hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailFiberIncrementTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+      hHit)
+    hUnit hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellis
+    hQge2Trellis hHit hUnit
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
 
 theorem oddSuccessorClosureGoal_of_v4_returnTailRank
@@ -5667,6 +5792,33 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellisAdd
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+      hHit)
+    hUnit hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
+    hQge2Trellis hHit hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -5924,6 +6076,26 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellisAdd
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellisAdd
     hQge2Trellis hFiber hUnit hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
+    hQge2Trellis hHit hUnit hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellisAdd
+    hQge2Trellis hHit hUnit hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :

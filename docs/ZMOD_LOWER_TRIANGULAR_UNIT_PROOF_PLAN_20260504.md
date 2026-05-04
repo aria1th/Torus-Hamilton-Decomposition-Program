@@ -144,20 +144,20 @@ The generic vector theorem is no longer an external field.  For the first-hit
 return-tail route, the currently preferred remaining Lean obligations are:
 
 ```lean
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
-Lean proves the one-step fiber increment-dependency field is preserved by
+Lean proves the one-step hit-condition dependency field is preserved by
 `Shared.skewFiberIterate`, implies the tail increment-dependency field, and then
 implies the triangular field.  It packages the two preferred fields as:
 
 ```lean
-def PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal : Prop :=
-  PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal ∧
+def PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
-theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```

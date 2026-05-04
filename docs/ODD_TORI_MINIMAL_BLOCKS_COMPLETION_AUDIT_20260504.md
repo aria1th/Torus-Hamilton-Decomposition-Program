@@ -40,9 +40,9 @@ The current sharp preferred conditional endpoint is:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -54,17 +54,17 @@ For proof scripts that prefer the three arguments directly:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddSuccessorClosureGoal_of_v4_returnTailFiberIncrementTrellis
+  .oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddSuccessorClosureGoal
 
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -76,9 +76,9 @@ The same endpoint is also packaged as the named final target:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
@@ -115,8 +115,8 @@ theorem RoundComposite.Concrete
 | Tail cycle coordinate from monodromy | `prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy` | Lean-closed conditional | On the finite tail vector space, a single-cycle monodromy also yields a `CycleCoordinate` |
 | Tail formulation equivalences | `prefixCountFirstHitReturnTailMonodromyGoal_iff_orbitGoal`, `..._iff_rankGoal`, `..._iff_rankEquivGoal`, `..._iff_cycleCoordinateGoal` | Lean-closed | The external tail request can be supplied in whichever of these four forms is easiest |
 | Generic increment-dependency preservation | `Shared.ZModVectorIncrementDependsOnTake`, `Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate` | Lean-closed | If every fiber step has lower-prefix-dependent increments, every skew fiber iterate has the same property |
-| Tail fiber-increment/unit split | `PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks` | Lean-closed conditional | One-step fiber increment dependency is preserved by `skewFiberIterate`; with unit total carries and the generic odometer theorem, it closes the tail orbit |
-| Tail increment/unit split | `PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks` | Lean-closed conditional | Stronger than the fiber-increment packet; kept as a sufficient route |
+| Tail hit-condition/unit split | `PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks` | Lean-closed conditional | One-step hit-condition dependency gives fiber increment dependency, which is preserved by `skewFiberIterate`; with unit total carries and the generic odometer theorem, it closes the tail orbit |
+| Tail increment/unit split | `PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks` | Lean-closed conditional | Stronger than the hit-condition packet; kept as a sufficient route |
 | Tail triangular/unit split | `PrefixCountFirstHitReturnTailTriangularGoal`, `PrefixCountFirstHitReturnTailCocycleUnitGoal`, `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks` | Lean-closed conditional | Stronger than the increment dependency packet; kept as an equivalent sufficient route |
 | Shared rank cycle criterion | `Shared.single_cycle_of_zmod_rank`, `Shared.single_cycle_of_zmod_rank_equiv` | Lean-closed | Generic `ZMod N` rank increment cycle lemma |
 | Unit additive cycle coordinate | `Shared.zmod_add_single_cycle_of_unit`, `Shared.CycleCoordinate.zmodAddConstOfUnit`, plus the older coprime variants | Lean-closed | Gives a coordinate-level base case for `x ↦ x + a` directly from `IsUnit a : ZMod m`, avoiding a Nat/coprime conversion |
@@ -133,10 +133,10 @@ theorem RoundComposite.Concrete
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
 | Active-Hall selection-token equivalence | `eraseLastHallCutsTokenLinearChoiceGoal_of_selection`, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` | Lean-closed conditional | A selection-form erase-last proof now directly satisfies the token-linear request |
-| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellis` | Lean-closed conditional | Depends on trellis-Hoffman q>=2, one-step fiber-increment/unit-carry fields, and successor-small field |
+| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis` | Lean-closed conditional | Depends on trellis-Hoffman q>=2, one-step hit-condition/unit-carry fields, and successor-small field |
 | Trellis compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis` | Lean-closed conditional | Direct three-argument endpoint depending on the smaller trellis-Hoffman q>=2 field, tail orbit, and successor-small field |
 | Successor-high compact final theorem | `oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks`, `...Add_blocks` | Lean-closed conditional | Allows a direct successor-high theorem plus small branch to close the final target |
-| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellis` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
+| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
 ## Remaining External Fields
 
@@ -145,7 +145,7 @@ obligations are exactly:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -190,7 +190,7 @@ ordinary proper-cut exhaustive check passed: n=6, checked=10560, skipped=0
 The preferred remaining high-modulus monodromy fields are:
 
 ```lean
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
@@ -201,14 +201,14 @@ decomposition, and color, these ask that the first-hit return-tail monodromy on
 Fin (d - 2) -> ZMod m
 ```
 
-has one-step fiber coordinate increments depending only on the lower prefix and
+has one-step fiber hit condition depending only on the lower prefix and
 that every rank cocycle has unit total carry.  Lean already proves that this
 one-step dependency is preserved by `Shared.skewFiberIterate`, then implies
 lower-triangular form and closes the tail orbit through the generic odometer
 theorem.  Therefore the older orbit field can now be closed from:
 
 ```lean
-PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal
+PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal
 ```
 
 The response in
@@ -216,7 +216,7 @@ The response in
 Lean packages it as:
 
 ```lean
-prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
+prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
 ```
 
 The older sufficient alternatives remain valid:
@@ -327,7 +327,7 @@ The GPT-5.5 Pro background requests for the remaining hard fields are:
 | Field | Request Doc | Response Id | Latest Status |
 |---|---|---|---|
 | q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md`, `docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `completed` |
-| first-hit return-fiber increment/unit | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `completed`; generic lower-triangular theorem and skewFiberIterate preservation now Lean-closed |
+| first-hit return-fiber hit-condition/unit | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `completed`; generic lower-triangular theorem and skewFiberIterate preservation now Lean-closed |
 | successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md`, `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `completed` |
 
 ## Verdict
@@ -335,4 +335,4 @@ The GPT-5.5 Pro background requests for the remaining hard fields are:
 The global theorem is not complete.  The dispatcher, seed/product closure, and
 conditional successor split are Lean-closed.  The remaining work is concentrated
 in four explicit mathematical fields, with the strongest current endpoint being
-`odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis`.
+`odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis`.

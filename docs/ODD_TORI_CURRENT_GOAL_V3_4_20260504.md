@@ -124,13 +124,13 @@ theorem PrefixCount
 
 Equivalent stronger routes are also available through return-tail rank,
 rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
-request response, Lean now exposes the preferred one-step fiber increment/unit
+request response, Lean now exposes the preferred one-step hit-condition/unit
 refinement of the triangular route, with the generic lower-triangular theorem
 already closed:
 
 ```lean
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
-def PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal : Prop := ...
+def PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
 
@@ -142,8 +142,8 @@ def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
-def PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal : Prop :=
-  PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal ∧
+def PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem RoundComposite.Concrete
@@ -157,8 +157,8 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -281,13 +281,13 @@ theorem RoundComposite.Concrete
 ```
 
 The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
-and one-step fiber-increment/unit-carry fields for the return-tail branch:
+and one-step hit-condition/unit-carry fields for the return-tail branch:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
@@ -310,7 +310,7 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```

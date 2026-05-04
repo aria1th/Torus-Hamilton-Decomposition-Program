@@ -11,9 +11,9 @@ Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
+    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -25,7 +25,7 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -39,8 +39,8 @@ theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
     Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -212,19 +212,24 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
 ### Exact Lean Target
 
-The preferred target is now the one-step fiber increment/unit split for the first-hit
+The preferred target is now the one-step hit-condition/unit split for the first-hit
 return-tail monodromy:
 
 ```lean
 def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal : Prop :=
+  .PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop :=
   forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
     Odd d -> 5 <= d -> Odd m -> d <= m ->
     C.Admissible m ->
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
     forall c : Fin d, forall z : ZMod m,
-      Shared.ZModVectorIncrementDependsOnTake
-        (prefixCountFirstHitReturnFiberStep hd2 L c z)
+      forall x y : Fin (d - 2) -> ZMod m, forall k : Nat,
+        forall hk : k < d - 2,
+          Shared.zmodVectorTake (Nat.le_of_lt hk) x =
+            Shared.zmodVectorTake (Nat.le_of_lt hk) y ->
+          forall t, t ∈ Finset.range m ->
+            prefixCountFirstHitReturnFiberHitCondition hd2 L c z x ⟨k, hk⟩ t <->
+              prefixCountFirstHitReturnFiberHitCondition hd2 L c z y ⟨k, hk⟩ t
 
 def RoundComposite.Concrete
   .PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop :=
@@ -238,8 +243,8 @@ def RoundComposite.Concrete
           prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -275,7 +280,7 @@ theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
 This route avoids proving orbit transitivity directly.  It asks for:
 
 ```text
-each one-step fiber coordinate increment depends only on the lower prefix
+each one-step fiber hit condition depends only on the lower prefix
 + every rank cocycle has unit total carry
 ```
 
@@ -316,8 +321,8 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailRankEquivGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 
 theorem Shared.single_cycle_of_zmod_rank
@@ -359,10 +364,10 @@ theorem RoundComposite.Concrete
 
 ### Prompt
 
-Prove the high-modulus first-hit return-fiber increment/unit split:
+Prove the high-modulus first-hit return-fiber hit-condition/unit split:
 
 ```lean
-PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
@@ -413,12 +418,12 @@ The expected mathematical route is:
 1. choose a tail-coordinate order compatible with the first-hit rule;
 2. prove each next coordinate is a skew extension over the previous prefix;
 3. compute the total carry from the primitive row data in `C.Admissible`;
-4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks`.
+4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks`.
 
 Do not spend effort on the generic lower-triangular odometer theorem, row-Latin,
 layer bijectivity, root-flat schedule construction, or the final torus lift.
 Those bridges are already Lean-closed; the open field is exactly the first-hit
-one-step fiber increment-dependency and unit carry calculation.
+one-step hit-condition dependency and unit carry calculation.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 
