@@ -618,6 +618,14 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometr
       hQge2Plan hQge2Matrix)
     hQeq1 hGeom
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_geometry
+    (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
+    (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
+    PrefixCount.ordinaryQge2PlanGoal hQge2Matrix hQeq1 hGeom
+
 theorem oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
     (hQge2Plan : PrefixCount.OrdinaryQge2PlanGoal)
     (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
@@ -669,6 +677,15 @@ theorem oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_rootFlatCan
     (PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
       hQeq1)
     hReturn
+
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_rootFlatCanonical
+    (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
+    (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_geometry
+    hQge2Matrix hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
@@ -1082,6 +1099,32 @@ theorem odd_modulus_tori_all_dimensions_of_ordinarySignedCores_geometry_and_slac
   odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
     (oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_geometry
       hQge2 hQeq1 hGeom)
+    hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Core_geometry_and_slackPacketLift
+    (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
+    (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_high_slack_and_small_packet_lift
+    (oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_geometry
+      hQge2Matrix hQeq1 hGeom)
+    hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Core_rootFlatCanonical_and_slackPacketLift
+    (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
+    (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Core_geometry_and_slackPacketLift
+    hQge2Matrix hQeq1
+    (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
     hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift

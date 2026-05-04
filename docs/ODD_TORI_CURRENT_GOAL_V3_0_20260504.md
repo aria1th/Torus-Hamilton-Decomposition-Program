@@ -131,6 +131,10 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Matrix_and_geometry
 RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_geometry
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Core_and_rootFlatCanonical
+RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
@@ -143,21 +147,27 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_ordinarySignedCores_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Core_geometry_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Core_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_rootFlatCanonical_and_slackPacketLift
 ```
 
 so the `q >= 2` ordinary plan is reduced to the signed-column theorem alone,
-and the restricted `q = 1` matching correction can be supplied in paper-facing
-forms and then consumed by the existing high-branch and all-dimensional
-adapters.  The `geometry` variants are available if the count-matrix/root-flat
+and the restricted `q = 1` construction can be supplied either as a direct
+signed-core theorem or as the stronger matrix-for-plan theorem.  The direct
+signed-core route is the preferred paper-facing target because the manuscript
+constructs a canonical `q = 1` matrix rather than an arbitrary matrix for every
+possible plan.  The `geometry` variants are available if the count-matrix/root-flat
 criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
 signed-column/matching-correction matrix closure.  The `q = 1` plan data is
 Lean-closed as `PrefixCount.ordinaryQeq1PlanGoal`, so that branch now only needs
-the restricted matching-correction matrix theorem.
+the restricted matching-correction signed-core theorem.
 
 Small-modulus successor branch:
 
