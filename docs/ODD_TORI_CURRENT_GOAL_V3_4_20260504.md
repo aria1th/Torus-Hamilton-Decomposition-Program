@@ -410,6 +410,19 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+The q>=2 indicator-to-full-support field is also split by the level-set
+half-slack bridge:
+
+```lean
+def PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal : Prop := ...
+def PrefixCount.Qge2OrdinaryHalfSlackGoal : Prop := ...
+
+theorem PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_halfSlackBridge
+    (hBridge : PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal)
+    (hHalf : PrefixCount.Qge2OrdinaryHalfSlackGoal) :
+    PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+```
+
 ## Remaining Fields
 
 The goal is not complete.  For the sharpest Lean-exposed split, the remaining
@@ -417,13 +430,17 @@ hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
-PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal
+PrefixCount.Qge2OrdinaryHalfSlackGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
 ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
 ```
 
-Equivalently, the first two fields may be replaced by the single coarser field
-`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields may
+Equivalently, the first three q>=2 fields may be replaced by the coarser pair
+`PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal` and
+`PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal`, or by the single still
+coarser field `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.  The last two
+fields may
 be replaced by the single coarser field
 `OddSuccessorSmallModulusBaseTailGoal`.  The raw ActiveHall field may also be
 used in place of `ActiveHall.FiniteHoffman.CompatibleDeWerraGoal`, and

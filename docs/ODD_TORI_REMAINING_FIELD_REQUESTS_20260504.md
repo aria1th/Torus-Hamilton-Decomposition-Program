@@ -77,18 +77,34 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+The q>=2 indicator-to-full-support field is further split by the level-set
+half-slack bridge:
+
+```lean
+def PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal : Prop := ...
+def PrefixCount.Qge2OrdinaryHalfSlackGoal : Prop := ...
+
+theorem PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_halfSlackBridge
+    (hBridge : PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal)
+    (hHalf : PrefixCount.Qge2OrdinaryHalfSlackGoal) :
+    PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+```
+
 Remaining fields for the most split endpoint:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
-PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal
+PrefixCount.Qge2OrdinaryHalfSlackGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
 ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
 ```
 
-Equivalently, the first two fields can be replaced by the coarser field
-`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields can
-be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.  The
+Equivalently, the first three q>=2 fields can be replaced by the coarser pair
+`PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal` and
+`PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal`, or by the single still
+coarser field `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.  The last two
+fields can be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.  The
 raw ActiveHall field can be used instead of
 `ActiveHall.FiniteHoffman.CompatibleDeWerraGoal`; the slightly coarser field
 `ActiveHall.FiniteHoffman.ExactEdgeColoringGoal` is also sufficient.
@@ -342,7 +358,7 @@ Follow-up q>=2 cut-completion request:
 request doc: docs/GPT55_PRO_QGE2_INDICATOR_TO_FULL_SUPPORT_REQUEST_20260504.md
 response id: resp_0c636bbdc33191c10069f8e747ade0819c8ef13cac38681513
 response doc: docs/GPT55_PRO_QGE2_INDICATOR_TO_FULL_SUPPORT_RESPONSE_20260504.md
-latest status: in_progress on 2026-05-04
+latest status: completed on 2026-05-04
 ```
 
 Follow-up q>=2 full-support trellis request:

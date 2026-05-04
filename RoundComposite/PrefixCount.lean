@@ -1528,6 +1528,13 @@ def qge2OrdinaryRowTarget (n r : Nat)
     (a epsBit : Fin n → Nat) (i : Fin n) : Int :=
   (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)
 
+def qge2UpperLevel {n : Nat} (u : Fin n → Nat) (t : Nat) :
+    Finset (Fin n) :=
+  Finset.univ.filter (fun i => t < u i)
+
+def qge2HalfLevelPenalty (n : Nat) (u : Fin n → Nat) (t : Nat) : Int :=
+  if (qge2UpperLevel u t).card = n / 2 then 1 else 0
+
 def qge2SignedColumnFinset (n c : Nat) :
     Finset (Fin n → SignedValInt) :=
   Finset.univ.filter
@@ -1744,6 +1751,21 @@ theorem sum_qge2RowTarget_of_sums {n C r : Nat}
             rw [ha, heps]
             simp [Finset.sum_const]
     _ = - (C : Int) := by ring
+
+theorem qge2OrdinaryRowTarget_sum_eq_neg_columnSum {n r : Nat}
+    (a epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat)
+    (heps_sum : (∑ i : Fin n, epsBit i) = r)
+    (ha_eq_c : (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k)) :
+    (∑ i : Fin n, qge2OrdinaryRowTarget n r a epsBit i)
+      = - (∑ k : Fin (n - 1), (c k : Int)) := by
+  have hrow := sum_qge2RowTarget_of_sums
+    (n := n) (C := ∑ k : Fin (n - 1), c k) (r := r)
+    (a := a) (epsBit := epsBit) ha_eq_c heps_sum
+  have hcol :
+      ((∑ k : Fin (n - 1), c k : Nat) : Int)
+        = ∑ k : Fin (n - 1), (c k : Int) := by
+    exact_mod_cast rfl
+  simpa [qge2OrdinaryRowTarget, hcol] using hrow
 
 /--
 Pure signed-column packing form of the `q >= 2` closure theorem in the exact
@@ -2168,6 +2190,78 @@ def OrdinaryQge2SupportViolationGivesIndicatorCutGoal : Prop :=
       ∃ J : Finset (Fin n),
         (∑ i ∈ J, qge2OrdinaryRowTarget n r a epsBit i)
           > ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)
+
+/--
+Reusable cut-completion theorem suggested by the level-set proof: cardinality
+cuts plus an extra half-size slack imply all full support inequalities.
+-/
+def Qge2IndicatorCutsHalfSlackToSupportGoal : Prop :=
+  ∀ {n : Nat},
+    Even n → 4 ≤ n →
+    ∀ (c : Fin (n - 1) → Nat),
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      ∀ (R : Fin n → Int),
+        (∑ i : Fin n, R i)
+          = - (∑ k : Fin (n - 1), (c k : Int)) →
+        (∀ J : Finset (Fin n),
+          (∑ i ∈ J, R i)
+            ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+        (∀ J : Finset (Fin n), J.card = n / 2 →
+          (∑ i ∈ J, R i)
+            ≤ (∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k))
+                - ((n - 1 : Nat) : Int)) →
+        ∀ w : Fin n → Int,
+          (∑ i : Fin n, w i * R i)
+            ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w
+
+/--
+Ordinary-row half-size slack needed because the signed `c = 2` column support
+has a one-unit defect at the middle level.
+-/
+def Qge2OrdinaryHalfSlackGoal : Prop :=
+  ∀ {n r : Nat},
+    Even n → 4 ≤ n → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat)
+      (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, epsBit i) = r →
+      ∀ J : Finset (Fin n), J.card = n / 2 →
+        (∑ i ∈ J, qge2OrdinaryRowTarget n r a epsBit i)
+          ≤ (∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k))
+              - ((n - 1 : Nat) : Int)
+
+theorem ordinaryQge2IndicatorToFullSupportGoal_of_halfSlackBridge
+    (hBridge : Qge2IndicatorCutsHalfSlackToSupportGoal)
+    (hHalf : Qge2OrdinaryHalfSlackGoal) :
+    OrdinaryQge2IndicatorToFullSupportGoal := by
+  classical
+  intro n r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc heps_sum ha_eq_c hCuts w
+  let R : Fin n → Int := fun i => qge2OrdinaryRowTarget n r a epsBit i
+  have hTotal :
+      (∑ i : Fin n, R i)
+        = - (∑ k : Fin (n - 1), (c k : Int)) := by
+    simpa [R] using
+      qge2OrdinaryRowTarget_sum_eq_neg_columnSum
+        a epsBit c heps_sum ha_eq_c
+  have hCutsR :
+      ∀ J : Finset (Fin n),
+        (∑ i ∈ J, R i)
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k) := by
+    intro J
+    simpa [R] using hCuts J
+  have hHalfR :
+      ∀ J : Finset (Fin n), J.card = n / 2 →
+        (∑ i ∈ J, R i)
+          ≤ (∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k))
+              - ((n - 1 : Nat) : Int) := by
+    intro J hJ
+    simpa [R] using
+      hHalf hnEven hn4 hrlt hrpos a epsBit c
+        ha heps hc heps_sum J hJ
+  exact hBridge hnEven hn4 c hc R hTotal hCutsR hHalfR w
 
 theorem ordinaryQge2IndicatorToFullSupportGoal_of_separation
     (hSep : OrdinaryQge2SupportViolationGivesIndicatorCutGoal) :
