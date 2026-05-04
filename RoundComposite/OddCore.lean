@@ -393,6 +393,17 @@ theorem prefixCountLambdaRho_bijective
 def prefixCountLayerIndex {m : Nat} [NeZero m] (t : ZMod m) : Fin m :=
   ⟨t.val, ZMod.val_lt t⟩
 
+theorem prefixCountLayerIndex_natCast_of_lt {m : Nat} [NeZero m]
+    {t : Nat} (ht : t < m) :
+    prefixCountLayerIndex ((t : Nat) : ZMod m) = ⟨t, ht⟩ := by
+  ext
+  simp [prefixCountLayerIndex, ZMod.val_natCast, Nat.mod_eq_of_lt ht]
+
+theorem prefixCountLayerIndex_natCast_val {m : Nat} [NeZero m]
+    (t : Fin m) :
+    prefixCountLayerIndex ((t.val : Nat) : ZMod m) = t := by
+  exact prefixCountLayerIndex_natCast_of_lt t.isLt
+
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
     (rho : ZMod m → PrefixCountRootState d m → Fin d)
@@ -1424,8 +1435,60 @@ theorem prefixCountFirstHitCanonicalSchedule_prefixMap_apply_zero
       rw [Finset.sum_range_succ]
       by_cases hzero :
           (L.layer (prefixCountLayerIndex ((k : Nat) : ZMod m)) c).val = 0
-      · simp [hzero, add_assoc]
-      · simp [hzero, add_assoc]
+      · simp [hzero]
+        ring
+      · simp [hzero]
+
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c : Fin d)
+    (w : PrefixCountRootState d m) :
+    ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c w)
+        ⟨0, by omega⟩ =
+      w ⟨0, by omega⟩ +
+        (M c (PrefixCount.Parts.colZero hd2) : ZMod m) := by
+  rw [Shared.RootFlatSchedule.returnMap_eq_prefixMap]
+  rw [prefixCountFirstHitCanonicalSchedule_prefixMap_apply_zero]
+  congr 1
+  let fNat : Nat → Nat := fun t =>
+    if (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val = 0
+    then 1 else 0
+  have hRangeNat :
+      (∑ t ∈ Finset.range m, fNat t) =
+        M c (PrefixCount.Parts.colZero hd2) := by
+    calc
+      (∑ t ∈ Finset.range m, fNat t)
+          = ∑ t : Fin m, fNat t.val := by
+              rw [Fin.sum_univ_eq_sum_range fNat m]
+      _ = ∑ t : Fin m,
+            if L.layer t c = PrefixCount.Parts.colZero hd2
+            then 1 else 0 := by
+              apply Finset.sum_congr rfl
+              intro t _ht
+              have hidx := prefixCountLayerIndex_natCast_val t
+              by_cases hzero : (L.layer t c).val = 0
+              · have hcol :
+                    L.layer t c = PrefixCount.Parts.colZero hd2 := by
+                  ext
+                  simpa [PrefixCount.Parts.colZero] using hzero
+                simp [fNat, hidx, hzero, hcol, PrefixCount.Parts.colZero]
+              · have hcol :
+                    L.layer t c ≠ (⟨0, by omega⟩ : Fin d) := by
+                  intro h
+                  apply hzero
+                  exact congrArg Fin.val h
+                simp [fNat, hidx, hcol, PrefixCount.Parts.colZero]
+                exact hzero
+      _ = M c (PrefixCount.Parts.colZero hd2) :=
+          L.count_eq c (PrefixCount.Parts.colZero hd2)
+  have hCast :
+      ((∑ t ∈ Finset.range m, fNat t : Nat) : ZMod m) =
+        ∑ t ∈ Finset.range m,
+          if (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val = 0
+          then (1 : ZMod m) else 0 := by
+    simp [fNat]
+  rw [← hCast, hRangeNat]
 
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
