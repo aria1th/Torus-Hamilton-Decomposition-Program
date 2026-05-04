@@ -3394,6 +3394,60 @@ theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection
   symbolingWithResidues_iff_feasible_of_realization
     (hallRealizationGoal_of_eraseLastHallCutsSelection hSelect)
 
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCuts hErase)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsChoice hChoice)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSlackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsSlackChoice hSlackChoice)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsNontrivialSlackChoice
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice hNontriv)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsLinearChoice hLinear)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice hToken)
+
 namespace SymbolingWithResidues
 
 theorem feasible {m T : Nat} {X C : Type*}

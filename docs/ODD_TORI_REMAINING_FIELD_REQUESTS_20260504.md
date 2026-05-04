@@ -406,6 +406,13 @@ Lean already proves:
 oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
 successor_hall_slack
 unitCarryPackets_spec
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCuts
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsChoice
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSlackChoice
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsNontrivialSlackChoice
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsLinearChoice
+ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCutsTokenLinearChoice
 ```
 
 So it is enough to prove the additive packet-lift theorem.
@@ -445,8 +452,10 @@ If proving `ActiveHall.HallRealizationGoal` separately, use
 `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`; it is the current sharp
 abstract combinatorics request for that layer.  Lean now exposes named `iff`
 wrappers from `HallRealizationGoal` to the erase-last choice, slack, linear,
-and token-linear formulations, so an external proof can target whichever of
-these equivalent statements is most natural.
+and token-linear formulations.  It also exposes residue-level iff wrappers from
+each erase-last formulation to
+`ActiveHall.SymbolingWithResidues I R <-> ActiveHall.FeasibleWithResidues I R`,
+so an external proof can target whichever equivalent statement is most natural.
 
 ## Mathlib Hall Survey
 

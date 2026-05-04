@@ -124,6 +124,7 @@ theorem RoundComposite.Concrete
 | Return-tail additive endpoints | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd`, `odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd` | Lean-closed conditional | Final theorem wrappers that consume `OddSuccessorSmallModulusSlackPacketLiftAddGoal` directly |
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
+| Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
@@ -240,7 +241,10 @@ EraseLastHallCutsTokenLinearChoiceGoal
 and the bridges from these goals to `SymbolingWithResidues` are Lean-closed.
 The named `iff` wrappers, including
 `hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal`, make any one of the
-erase-last formulations enough to recover `HallRealizationGoal`.
+erase-last formulations enough to recover `HallRealizationGoal`.  The residue
+level iff wrappers
+`symbolingWithResidues_iff_feasible_of_eraseLastHallCuts*` also let any
+erase-last formulation consume `FeasibleWithResidues` data directly.
 This does not yet prove `OddSuccessorSmallModulusBaseTailGoal`; it is the
 abstract combinatorial realization layer expected to be used inside that branch.
 

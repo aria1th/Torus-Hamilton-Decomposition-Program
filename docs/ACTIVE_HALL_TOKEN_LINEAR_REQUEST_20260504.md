@@ -155,6 +155,30 @@ theorem symbolingWithResidues_iff_feasible_of_columnFillingUpgrade
 theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection
     (hSelect : EraseLastHallCutsSelectionGoal) :
     SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSlackChoice
+    (hSlackChoice : EraseLastHallCutsSlackChoiceGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsNontrivialSlackChoice
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
 ```
 
 Also available:
