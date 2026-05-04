@@ -934,6 +934,32 @@ theorem odd_modulus_tori_all_dimensions_of_high_and_successor_small
     (oddSuccessorClosureGoal_of_high_and_successorSmall hHigh hSmall)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_high_and_successor_small
+    (oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1Compat_and_rootFlatCanonical
+      hQge2 hQeq1 hReturn)
+    hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical_and_slackPacketLift
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical
+    hQge2 hQeq1 hReturn
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLift hSmallPacket)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_transports_geometry_and_small_packet_lift
     (hQge2 : PrefixCount.TransportQge2Goal)
     (hQeq1 : PrefixCount.TransportQeq1Goal)

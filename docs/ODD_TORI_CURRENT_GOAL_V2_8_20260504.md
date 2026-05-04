@@ -123,6 +123,20 @@ PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
 
+Together with the successor-small branch, these now feed the final theorem via:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical
+    (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 ### Successor Small Branch
 
 Suggested narrow endpoint:
