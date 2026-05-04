@@ -165,6 +165,35 @@ theorem prefixCountRootStep_eq_succ_cast {d m : Nat} (hd1 : 1 ≤ d)
       exact hcast (by simpa using h)
     simp [hcast', hval]
 
+theorem prefixCountRootStepSucc_bijective {n m : Nat}
+    (i : Fin (n + 1)) :
+    Function.Bijective (prefixCountRootStepSucc (m := m) i) := by
+  constructor
+  · intro w v h
+    funext j
+    have hj := congrFun h j
+    by_cases hij : i = j.castSucc
+    · have hj' := congrArg (fun x : ZMod m => x - 1) hj
+      simpa [prefixCountRootStepSucc, hij, sub_eq_add_neg, add_assoc] using hj'
+    · simpa [prefixCountRootStepSucc, hij] using hj
+  · intro v
+    refine ⟨fun j => if i = j.castSucc then v j - 1 else v j, ?_⟩
+    funext j
+    by_cases hij : i = j.castSucc
+    · simp [prefixCountRootStepSucc, hij, sub_eq_add_neg, add_assoc]
+    · simp [prefixCountRootStepSucc, hij]
+
+theorem prefixCountRootStep_bijective {d m : Nat}
+    (i : Fin d) :
+    Function.Bijective (prefixCountRootStep d m i) := by
+  have hdpos : 0 < d := Nat.lt_of_le_of_lt (Nat.zero_le i.val) i.isLt
+  have hd1 : 1 ≤ d := Nat.succ_le_iff.mpr hdpos
+  let e := (finCongr (Nat.sub_add_cancel hd1)).symm i
+  have hfun : prefixCountRootStep d m i = prefixCountRootStepSucc e := by
+    funext w
+    exact prefixCountRootStep_eq_succ_cast hd1 i w
+  simpa [hfun] using prefixCountRootStepSucc_bijective (m := m) e
+
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
     prefixCountRootLayerEquiv d m hd1

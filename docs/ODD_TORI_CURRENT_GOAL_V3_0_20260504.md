@@ -101,6 +101,12 @@ PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
 
+Root-flat coordinate support now includes the direction-step bijectivity lemmas
+`RoundComposite.Concrete.prefixCountRootStepSucc_bijective` and
+`RoundComposite.Concrete.prefixCountRootStep_bijective`.  These close the
+`layerBijective` side of the eventual canonical certificate once the schedule
+and return-cycle proof are supplied.
+
 The `q >= 2` seed choice is now closed in Lean:
 
 ```lean
