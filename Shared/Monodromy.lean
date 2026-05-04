@@ -41,6 +41,27 @@ theorem skewProductMap_bijective {Base Fiber : Type*}
     rcases (hfiber u).2 v' with ⟨v, hv⟩
     exact ⟨(u, v), Prod.ext hu hv⟩
 
+theorem skewProductMap_fiber_bijective_of_bijective {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (hS : Function.Bijective (skewProductMap baseStep fiberStep))
+    (hbase : Function.Bijective baseStep) :
+    ∀ u : Base, Function.Bijective (fiberStep u) := by
+  intro u
+  constructor
+  · intro x y hxy
+    have hprod :
+        skewProductMap baseStep fiberStep (u, x) =
+          skewProductMap baseStep fiberStep (u, y) := by
+      exact Prod.ext rfl hxy
+    exact congrArg Prod.snd (hS.1 hprod)
+  · intro y
+    rcases hS.2 (baseStep u, y) with ⟨ux, hux⟩
+    rcases ux with ⟨u', x⟩
+    have hu : u' = u := by
+      exact hbase.1 (congrArg Prod.fst hux)
+    subst u'
+    exact ⟨x, congrArg Prod.snd hux⟩
+
 theorem bijective_of_equiv_conj {α β : Type*} (e : α ≃ β)
     (f : β → β) (g : α → α)
     (hg : Function.Bijective g)

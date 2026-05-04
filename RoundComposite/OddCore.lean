@@ -1914,6 +1914,19 @@ def PrefixCountFirstHitHeadTailMonodromyGoal : Prop :=
             (prefixCountFirstHitReturnFiberStep hd2 L c))
           (0 : ZMod m) m)
 
+def PrefixCountFirstHitHeadTailSectionMonodromyGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d,
+      Shared.IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c))
+          (0 : ZMod m) m)
+
 theorem prefixCountFirstHitCanonicalReturnsSingleCycleGoal_of_headTailMonodromy
     (hMono : PrefixCountFirstHitHeadTailMonodromyGoal) :
     PrefixCountFirstHitCanonicalReturnsSingleCycleGoal := by
@@ -1939,6 +1952,84 @@ theorem prefixCountFirstHitCanonicalLayerBijectiveGoal :
     PrefixCountFirstHitCanonicalLayerBijectiveGoal :=
   prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
     prefixCountFirstHitSymbolMapsBijectiveGoal
+
+theorem prefixCountFirstHitReturnFiberStep_bijective
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (hdodd : Odd d) (hd5 : 5 ≤ d) (hmodd : Odd m) (hdm : d ≤ m)
+    (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d) :
+    ∀ z : ZMod m,
+      Function.Bijective (prefixCountFirstHitReturnFiberStep hd2 L c z) := by
+  have hLayer :
+      (prefixCountFirstHitCanonicalSchedule hd2 L).layerBijective :=
+    prefixCountFirstHitCanonicalLayerBijectiveGoal
+      hd2 hdodd hd5 hmodd hdm hC L
+  have hReturn :
+      Function.Bijective
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c) := by
+    rw [Shared.RootFlatSchedule.returnMap_eq_prefixMap]
+    exact Shared.RootFlatSchedule.prefixMap_bijective
+      (prefixCountFirstHitCanonicalSchedule hd2 L) hLayer c m
+  have hbase :
+      Function.Bijective
+        (prefixCountFirstHitReturnBaseStep (m := m) C c) := by
+    have hcycle :=
+      prefixCountFirstHitCanonicalSchedule_zeroCoordinateCycle
+        (hd2 := hd2) (hC := hC) c
+    simpa [prefixCountFirstHitReturnBaseStep] using hcycle.1
+  have hSkew :
+      Function.Bijective
+        (Shared.skewProductMap
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)) := by
+    refine Shared.bijective_of_equiv_conj
+      (prefixCountRootStateHeadTailEquiv d m hd2)
+      (Shared.skewProductMap
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c))
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)
+      hReturn ?_
+    intro w
+    apply (prefixCountRootStateHeadTailEquiv d m hd2).injective
+    calc
+      prefixCountRootStateHeadTailEquiv d m hd2
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+            (Shared.skewProductMap
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              (prefixCountRootStateHeadTailEquiv d m hd2 w)))
+          =
+          Shared.skewProductMap
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c)
+            (prefixCountRootStateHeadTailEquiv d m hd2 w) := by simp
+      _ =
+          prefixCountRootStateHeadTailEquiv d m hd2
+            ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c w) := by
+            rw [← prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
+              (hd2 := hd2) L c (prefixCountRootStateHeadTailEquiv d m hd2 w)]
+            simp
+  exact
+    Shared.skewProductMap_fiber_bijective_of_bijective
+      (prefixCountFirstHitReturnBaseStep (m := m) C c)
+      (prefixCountFirstHitReturnFiberStep hd2 L c)
+      hSkew hbase
+
+theorem prefixCountFirstHitHeadTailMonodromyGoal_of_sectionMonodromy
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal) :
+    PrefixCountFirstHitHeadTailMonodromyGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
+  exact ⟨
+    prefixCountFirstHitReturnFiberStep_bijective
+      hd2 hdodd hd5 hmodd hdm hC L c,
+    hSection hd2 hdodd hd5 hmodd hdm hC L c⟩
+
+theorem prefixCountFirstHitCanonicalReturnsSingleCycleGoal_of_sectionMonodromy
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal) :
+    PrefixCountFirstHitCanonicalReturnsSingleCycleGoal :=
+  prefixCountFirstHitCanonicalReturnsSingleCycleGoal_of_headTailMonodromy
+    (prefixCountFirstHitHeadTailMonodromyGoal_of_sectionMonodromy hSection)
 
 theorem prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns
     (hReturn : PrefixCountFirstHitCanonicalReturnsSingleCycleGoal) :
