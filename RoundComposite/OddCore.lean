@@ -992,6 +992,21 @@ theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonic
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLift hSmallPacket)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_ordinarySignedCores_rootFlatCanonical_and_slackPacketLift
+    (hQge2 : PrefixCount.OrdinaryQge2SignedCoreGoal)
+    (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical_and_slackPacketLift
+    (PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
+      hQge2)
+    (PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
+      hQeq1)
+    hReturn hSmallPacket hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_transports_geometry_and_small_packet_lift
     (hQge2 : PrefixCount.TransportQge2Goal)
     (hQeq1 : PrefixCount.TransportQeq1Goal)

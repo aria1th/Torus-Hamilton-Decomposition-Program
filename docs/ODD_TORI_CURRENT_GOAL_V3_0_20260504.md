@@ -108,11 +108,13 @@ PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
 PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_rootFlatCanonical
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_ordinarySignedCores_rootFlatCanonical_and_slackPacketLift
 ```
 
 so the ordinary signed-column theorem and the restricted `q = 1` matching
 correction can be supplied in paper-facing forms and then consumed by the
-existing high-branch adapters.
+existing high-branch and all-dimensional adapters.
 
 Small-modulus successor branch:
 
