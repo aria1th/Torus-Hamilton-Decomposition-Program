@@ -420,6 +420,36 @@ theorem prefixCountCanonicalRhoHit_of_nat
   · exact hlt
   · convert hw
 
+theorem prefixCountCanonicalRhoHitNat_rootStep_iff_of_ne
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    {i : Fin d} {j : Nat} (hij : i.val ≠ j) :
+    prefixCountCanonicalRhoHitNat t (prefixCountRootStep d m i w) j ↔
+      prefixCountCanonicalRhoHitNat t w j := by
+  constructor
+  · intro h
+    rcases h with ⟨hj, hlt, hw⟩
+    refine ⟨hj, hlt, ?_⟩
+    simpa [prefixCountRootStep, hij] using hw
+  · intro h
+    rcases h with ⟨hj, hlt, hw⟩
+    refine ⟨hj, hlt, ?_⟩
+    simpa [prefixCountRootStep, hij] using hw
+
+theorem prefixCountCanonicalRhoHitNat_rootStepInv_iff_of_ne
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    {i : Fin d} {j : Nat} (hij : i.val ≠ j) :
+    prefixCountCanonicalRhoHitNat t (prefixCountRootStepInv d m i w) j ↔
+      prefixCountCanonicalRhoHitNat t w j := by
+  constructor
+  · intro h
+    rcases h with ⟨hj, hlt, hw⟩
+    refine ⟨hj, hlt, ?_⟩
+    simpa [prefixCountRootStepInv, hij] using hw
+  · intro h
+    rcases h with ⟨hj, hlt, hw⟩
+    refine ⟨hj, hlt, ?_⟩
+    simpa [prefixCountRootStepInv, hij] using hw
+
 noncomputable def prefixCountCanonicalRhoFirstNat
     {d m : Nat} (t : ZMod m) (w : PrefixCountRootState d m)
     (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) : Nat := by
