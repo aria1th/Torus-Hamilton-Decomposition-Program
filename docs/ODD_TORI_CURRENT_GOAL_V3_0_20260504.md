@@ -143,10 +143,13 @@ Thus the concrete Lean work is exactly:
 ## Active Hall Current Boundary
 
 The finite Active Hall realization has been reduced to one narrower selection
-interface:
+interface.  As of the latest Lean state, this is best viewed at the
+choice-function level:
 
 ```lean
 def RoundComposite.ActiveHall.EraseLastHallCutsGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsSelectionGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsChoiceGoal : Prop
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -158,7 +161,28 @@ theorem RoundComposite.ActiveHall
     (hErase : EraseLastHallCutsGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsGoal_of_choice
+    (hChoice : EraseLastHallCutsChoiceGoal) :
+    EraseLastHallCutsGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCutsChoice
+    (hChoice : EraseLastHallCutsChoiceGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
 ```
+
+The choice-level form asks for a function `choice : X -> C` selecting one active
+color at each vertex, with the prescribed last-column degrees, such that every
+lower-symbol cut has enough existing Hall slack to absorb exactly the low-hit
+loss introduced by erasing `choice`.
 
 Closed support includes:
 
@@ -166,22 +190,46 @@ Closed support includes:
 theorem RoundComposite.ActiveHall.hallRealization_zero
 theorem RoundComposite.ActiveHall.hallRealization_one
 theorem RoundComposite.ActiveHall.eraseLastHallCuts_zero
+theorem RoundComposite.ActiveHall.eraseLastHallCutsChoice_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
 def RoundComposite.ActiveHall.Incidence.eraseChoice
 def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
+def RoundComposite.ActiveHall.Incidence.choiceLowHitCount
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_symbols_empty
 theorem RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix_cutMass
 theorem RoundComposite.ActiveHall.CountMatrix.cutMass_last_eq_choiceHitCount
+theorem RoundComposite.ActiveHall.CountMatrix
+  .cutMass_image_castSucc_insert_last_eq_eraseLast_add_choiceHitCount
+theorem RoundComposite.ActiveHall.CountMatrix
+  .eraseLastCountMatrix_hallCuts_of_cutCap_slack
 theorem RoundComposite.ActiveHall.Incidence.sum_choiceDegree_on
 theorem RoundComposite.ActiveHall.Incidence
   .eraseChoice_active_inter_card_add_indicator
 theorem RoundComposite.ActiveHall.Incidence.cutCap_image_castSucc
 theorem RoundComposite.ActiveHall.Incidence.cutCap_image_castSucc_insert_last
+theorem RoundComposite.ActiveHall.Incidence
+  .cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
+theorem RoundComposite.ActiveHall.Incidence
+  .exists_choiceDegree_bijective_token_matching
 ```
 
 Remaining Active Hall proof obligation:
 
 ```lean
-EraseLastHallCutsGoal
+EraseLastHallCutsChoiceGoal
 ```
+
+Equivalently, the remaining theorem is a degree-constrained active choice
+theorem with the cut condition
+
+```lean
+M.cutMass U (S.image Fin.castSucc)
+  + Incidence.choiceLowHitCount I choice U S
+<=
+I.cutCap U (S.image Fin.castSucc)
+```
+
+for every color cut `U` and lower-symbol cut `S`.
