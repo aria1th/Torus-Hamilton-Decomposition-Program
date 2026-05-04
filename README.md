@@ -170,7 +170,9 @@ when `m` is odd and `m >= 3`.
 - `Shared/RankCycle.lean`: shared rank-map criterion for proving finite return maps are single cycles.
 - `Shared/RootFlat.lean`: generic root-flat schedule, certificate, and
   layered full-step lift: row Latin gives edge partition, and layer bijective
-  plus return single-cycle gives Hamiltonian full color steps.
+  plus return single-cycle gives Hamiltonian full color steps.  It also records
+  `edgePartition_iff_rowLatin`, so future schedule proofs may provide either
+  the edge-partition or row-Latin form.
 - `Shared/D2Seed.lean`: direct D2 phase schedule.  It proves the two color
   returns are translations by `1` and `m - 1`, transfers the root-flat cycle to
   the standard Cayley torus, and exposes `Shared.D2.shared_cayley_uniform`.

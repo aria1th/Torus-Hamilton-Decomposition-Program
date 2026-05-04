@@ -66,6 +66,26 @@ theorem edgePartition_of_rowLatin
       S.dir t w c' = i := hc'
       _ = S.dir t w c := hc.symm)
 
+theorem rowLatin_of_edgePartition
+    {Color Direction RootState : Type*} {m : Nat}
+    {S : RootFlatSchedule Color Direction RootState m}
+    (hEdge : S.edgePartition) :
+    S.rowLatin := by
+  intro t w
+  constructor
+  · intro c c' hcc'
+    rcases hEdge t w (S.dir t w c) with ⟨_c0, _hc0, huniq⟩
+    exact ((huniq c' hcc'.symm).trans (huniq c rfl).symm).symm
+  · intro i
+    rcases hEdge t w i with ⟨c, hc, _huniq⟩
+    exact ⟨c, hc⟩
+
+theorem edgePartition_iff_rowLatin
+    {Color Direction RootState : Type*} {m : Nat}
+    {S : RootFlatSchedule Color Direction RootState m} :
+    S.edgePartition ↔ S.rowLatin :=
+  ⟨rowLatin_of_edgePartition, edgePartition_of_rowLatin⟩
+
 theorem prefixMap_eq_range_foldl
     {Color Direction RootState : Type*} {m : Nat}
     (S : RootFlatSchedule Color Direction RootState m)
