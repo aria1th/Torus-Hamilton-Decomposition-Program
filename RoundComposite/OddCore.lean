@@ -2483,6 +2483,18 @@ theorem prefixCountFirstHitReturnFiberStep_apply_hitCondition
   rw [prefixCountFirstHitReturnFiberStep_apply_cases]
   rfl
 
+theorem prefixCountFirstHitReturnFiberStep_increment_eq_hitCondition_sum
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m) (j : Fin (d - 2)) :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j - tail j =
+      ∑ t ∈ Finset.range m,
+        if prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t
+        then (1 : ZMod m) else 0 := by
+  rw [prefixCountFirstHitReturnFiberStep_apply_hitCondition]
+  abel
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
@@ -2858,6 +2870,33 @@ noncomputable def prefixCountFirstHitReturnTailCocycle
   fun x =>
     prefixCountFirstHitReturnTailMonodromy hd2 L c
       (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩
+
+theorem prefixCountFirstHitReturnTailCocycle_eq_monodromy_increment
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) (k : Nat) (hk : k < d - 2)
+    (x : Fin k → ZMod m) :
+    prefixCountFirstHitReturnTailCocycle hd2 L c k hk x =
+      prefixCountFirstHitReturnTailMonodromy hd2 L c
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩ -
+        Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x ⟨k, hk⟩ := by
+  simp [prefixCountFirstHitReturnTailCocycle]
+
+theorem prefixCountFirstHitReturnTailCocycle_eq_fiberIterate
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) (k : Nat) (hk : k < d - 2)
+    (x : Fin k → ZMod m) :
+    prefixCountFirstHitReturnTailCocycle hd2 L c k hk x =
+      Shared.skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        m (0 : ZMod m)
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩ := by
+  unfold prefixCountFirstHitReturnTailCocycle
+  rw [prefixCountFirstHitReturnTailMonodromy_apply_eq_fiberIterate]
 
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},

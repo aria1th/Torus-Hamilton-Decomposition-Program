@@ -210,6 +210,44 @@ theorem zmodVectorIncrementDependsOnTake_skewFiberIterate
         (zmodVectorIncrementDependsOnTake_skewFiberIterate
           baseStep fiberStep hfiber n (baseStep base))
 
+theorem skewFiberIterate_coord_eq_add_sum_range
+    {Base : Type*} {m r : Nat}
+    (baseStep : Base → Base)
+    (fiberStep : Base → (Fin r → ZMod m) → (Fin r → ZMod m))
+    (carry : Base → (Fin r → ZMod m) → ZMod m) (j : Fin r)
+    (hstep : ∀ base fiber,
+      fiberStep base fiber j = fiber j + carry base fiber) :
+    ∀ n : Nat, ∀ base : Base, ∀ fiber : Fin r → ZMod m,
+      skewFiberIterate baseStep fiberStep n base fiber j =
+        fiber j +
+          ∑ u ∈ Finset.range n,
+            carry ((baseStep^[u]) base)
+              (skewFiberIterate baseStep fiberStep u base fiber)
+  | 0, _base, _fiber => by
+      simp [skewFiberIterate]
+  | n + 1, base, fiber => by
+      rw [skewFiberIterate]
+      rw [skewFiberIterate_coord_eq_add_sum_range
+        baseStep fiberStep carry j hstep n (baseStep base)
+        (fiberStep base fiber)]
+      rw [hstep]
+      let f : Nat → ZMod m := fun u =>
+        carry ((baseStep^[u]) base)
+          (skewFiberIterate baseStep fiberStep u base fiber)
+      rw [Finset.sum_range_succ' f n]
+      have hshift :
+          (∑ u ∈ Finset.range n,
+              carry ((baseStep^[u]) (baseStep base))
+                (skewFiberIterate baseStep fiberStep u
+                  (baseStep base) (fiberStep base fiber))) =
+            ∑ u ∈ Finset.range n, f (u + 1) := by
+        apply Finset.sum_congr rfl
+        intro u _hu
+        simp [f, skewFiberIterate, Function.iterate_succ_apply]
+      rw [hshift]
+      simp [f, skewFiberIterate]
+      abel
+
 theorem bijective_of_equiv_conj {α β : Type*} (e : α ≃ β)
     (f : β → β) (g : α → α)
     (hg : Function.Bijective g)
