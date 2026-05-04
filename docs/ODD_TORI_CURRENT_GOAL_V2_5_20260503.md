@@ -184,8 +184,8 @@ the global q=1 theorem family.
   Hall-realization interface, color-degree double counting, full-set cut
   cap/mass and equality reductions, empty/full cut reductions, nontrivial
   Hall-cut reduction, cut cap/mass monotonicity, residue compatibility from
-  feasible matrices and symbolings, and the sanity converse from symbolings
-  back to feasible residue count matrices.
+  feasible matrices and symbolings, one-symbol Hall extraction, and the sanity
+  converse from symbolings back to feasible residue count matrices.
 
 ## Non-Goals
 

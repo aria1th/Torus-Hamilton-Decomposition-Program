@@ -85,6 +85,9 @@ condition for this realization problem.
   `CountMatrix.hallCuts_iff_nontrivial`;
 - cut monotonicity:
   `Incidence.cutCap_mono`, `CountMatrix.cutMass_mono`;
+- one-symbol Hall extraction:
+  `Incidence.hitCount`, `Incidence.cutCap_symbol_singleton`,
+  `CountMatrix.cutMass_symbol_singleton`, `CountMatrix.singleSymbol_hall`;
 - residue compatibility adapters for feasible matrices and symbolings.
 
 Thus the missing theorem should not reprove the torus machinery.  It should

@@ -27,6 +27,12 @@ def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
   ∑ x : X, min ((I.active x ∩ U).card) S.card
 
+def hitCount {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
+    (U : Finset C) : Nat :=
+  ((Finset.univ : Finset X).filter
+    (fun x : X => (I.active x ∩ U).Nonempty)).card
+
 theorem sum_colorDegree {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C) :
     (∑ c : C, I.colorDegree c) = T * Fintype.card X := by
@@ -121,6 +127,30 @@ theorem cutCap_symbols_empty {T : Nat} {X C : Type*}
     (I : Incidence T X C) (U : Finset C) :
     I.cutCap U (∅ : Finset (Fin T)) = 0 := by
   simp [cutCap]
+
+theorem cutCap_symbol_singleton {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) (σ : Fin T) :
+    I.cutCap U ({σ} : Finset (Fin T)) = I.hitCount U := by
+  classical
+  calc
+    I.cutCap U ({σ} : Finset (Fin T))
+        = ∑ x : X,
+            if (I.active x ∩ U).Nonempty then 1 else 0 := by
+            unfold cutCap
+            apply Finset.sum_congr rfl
+            intro x _hx
+            by_cases hhit : (I.active x ∩ U).Nonempty
+            · have hcard : 1 ≤ (I.active x ∩ U).card :=
+                hhit.card_pos
+              rw [Finset.card_singleton, min_eq_right hcard]
+              simp [hhit]
+            · have hcard : (I.active x ∩ U).card = 0 := by
+                rw [Finset.card_eq_zero]
+                exact Finset.not_nonempty_iff_eq_empty.mp hhit
+              simp [hhit, hcard]
+    _ = I.hitCount U := by
+            rw [hitCount, Finset.card_filter]
 
 theorem cutCap_mono {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -255,6 +285,13 @@ theorem cutMass_symbols_empty {T : Nat} {X C : Type*}
     M.cutMass U (∅ : Finset (Fin T)) = 0 := by
   simp [cutMass]
 
+theorem cutMass_symbol_singleton {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (U : Finset C) (σ : Fin T) :
+    M.cutMass U ({σ} : Finset (Fin T)) = ∑ c ∈ U, M.val c σ := by
+  simp [cutMass]
+
 theorem cutMass_colors_empty_eq_cutCap {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
@@ -338,6 +375,14 @@ theorem hallCuts_iff_nontrivial {T : Nat} {X C : Type*}
   · intro hCuts U S _hUne _hUuniv _hSne _hSuniv
     exact hCuts U S
   · exact M.hallCuts_of_nontrivial
+
+theorem singleSymbol_hall {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) (U : Finset C) (σ : Fin T) :
+    (∑ c ∈ U, M.val c σ) ≤ I.hitCount U := by
+  rw [← M.cutMass_symbol_singleton U σ, ← I.cutCap_symbol_singleton U σ]
+  exact hHall U ({σ} : Finset (Fin T))
 
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
