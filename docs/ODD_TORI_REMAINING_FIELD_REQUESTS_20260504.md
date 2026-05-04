@@ -36,6 +36,36 @@ OddSuccessorSmallModulusBaseTailGoal
 
 ### Exact Lean Target
 
+The cleanest current target is the pure signed-column packing theorem:
+
+```lean
+def RoundComposite.PrefixCount.Qge2SignedColumnPackingGoal : Prop :=
+  forall {n K : Nat} (R : Fin n -> Int) (c : Fin K -> Nat),
+    (forall k : Fin K, c k = 1 ∨ c k = 2) ->
+    (sum i : Fin n, R i) = - (sum k : Fin K, (c k : Int)) ->
+    (forall J : Finset (Fin n),
+      (sum i in J, R i)
+        <= sum k : Fin K, qge2ColumnCapacity n J.card (c k)) ->
+    exists S : Fin n -> Fin K -> Int,
+      (forall i k, IsSignedVal (S i k)) ∧
+      (forall i : Fin n, (sum k : Fin K, S i k) = R i) ∧
+      (forall k : Fin K, (sum i : Fin n, S i k) = - (c k : Int))
+```
+
+Lean proves the adapter:
+
+```lean
+theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
+    (hPacking : Qge2SignedColumnPackingGoal) :
+    OrdinaryQge2SignedSeedClosureGoal
+```
+
+Together with
+`ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure`, this is sufficient
+for the q>=2 field in the minimal odd-tori endpoint.
+
+The torus-shaped target is:
+
 ```lean
 def RoundComposite.PrefixCount
   .OrdinaryQge2SignedSeedProperCutClosureGoal : Prop :=

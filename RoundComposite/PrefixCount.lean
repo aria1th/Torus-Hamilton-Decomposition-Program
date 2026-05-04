@@ -1631,6 +1631,24 @@ theorem sum_qge2RowTarget_of_sums {n C r : Nat}
             simp [Finset.sum_const]
     _ = - (C : Int) := by ring
 
+/--
+Pure signed-column packing form of the `q >= 2` closure theorem.  The torus
+row-target data has been erased: this asks only that row targets `R` with the
+right total and all cut upper bounds can be packed by signed columns of total
+`-c k`.
+-/
+def Qge2SignedColumnPackingGoal : Prop :=
+  ∀ {n K : Nat} (R : Fin n → Int) (c : Fin K → Nat),
+    (∀ k : Fin K, c k = 1 ∨ c k = 2) →
+    (∑ i : Fin n, R i) = - (∑ k : Fin K, (c k : Int)) →
+    (∀ J : Finset (Fin n),
+      (∑ i ∈ J, R i)
+        ≤ ∑ k : Fin K, qge2ColumnCapacity n J.card (c k)) →
+    ∃ S : Fin n → Fin K → Int,
+      (∀ i k, IsSignedVal (S i k)) ∧
+      (∀ i : Fin n, (∑ k : Fin K, S i k) = R i) ∧
+      (∀ k : Fin K, (∑ i : Fin n, S i k) = - (c k : Int))
+
 theorem ordinaryQge2PlanData_row_cut_first_bound
     {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
     (J : Finset (Fin n)) :
@@ -1840,6 +1858,38 @@ def OrdinaryQge2SignedSeedClosureGoal : Prop :=
           (∑ k : Fin (n - 1), S i k)
             = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) ∧
         (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
+
+theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
+    (hPacking : Qge2SignedColumnPackingGoal) :
+    OrdinaryQge2SignedSeedClosureGoal := by
+  classical
+  intro n C r _hnEven _hn4 _hrOdd _hrlt _hrpos a epsBit c
+    _ha _heps hc ha_sum heps_sum hc_sum hCuts
+  let R : Fin n → Int :=
+    fun i => (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)
+  have hRsum : (∑ i : Fin n, R i)
+      = - (∑ k : Fin (n - 1), (c k : Int)) := by
+    have hrow := sum_qge2RowTarget_of_sums
+      (n := n) (C := C) (r := r) (a := a) (epsBit := epsBit)
+      ha_sum heps_sum
+    have hcol : (∑ k : Fin (n - 1), (c k : Int)) = (C : Int) := by
+      exact_mod_cast hc_sum
+    calc
+      (∑ i : Fin n, R i)
+          = ∑ i : Fin n,
+              ((r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) := rfl
+      _ = - (C : Int) := hrow
+      _ = - (∑ k : Fin (n - 1), (c k : Int)) := by rw [hcol]
+  have hCutsR :
+      ∀ J : Finset (Fin n),
+        (∑ i ∈ J, R i)
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k) := by
+    intro J
+    simpa [R] using hCuts J
+  rcases hPacking R c hc hRsum hCutsR with ⟨S, hSigned, hRow, hCol⟩
+  exact ⟨S, hSigned, by
+    intro i
+    simpa [R] using hRow i, hCol⟩
 
 /--
 The same signed-column closure, but only the nonempty proper row cuts are
