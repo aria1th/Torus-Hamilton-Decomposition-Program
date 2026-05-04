@@ -397,6 +397,11 @@ when `m` is odd and `m >= 3`.
   for those three fields, listing the files to read, exact Lean targets, and
   requested outputs for the q>=2 signed closure, root-flat canonical schedule,
   and successor small-modulus branch.
+- `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`: standalone prompt
+  for the remaining root-flat canonical schedule field, including the expected
+  first-hit/lambda rule, already-closed root-flat lift infrastructure, and the
+  warning that state-independent layer permutations cannot prove the return
+  cycle in higher rank.
 - `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`: exhaustive finite
   boundary audit table for the global odd-modulus goal, covering all `169`
   pairs with `2 <= d < 29`, odd `m`, and `3 <= m < d` by seed-semigroup
