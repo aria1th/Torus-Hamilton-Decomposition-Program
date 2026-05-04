@@ -670,6 +670,82 @@ theorem prefixCount_toMatrix_rawStep_sub_delta_zmod
     prefixCount_toMatrix_colStep_sub_colDelta_zmod
       (m := m) hd2 C c ⟨k, hk⟩
 
+abbrev prefixCountReturnTailDeltaCol {d : Nat} (hd2 : 2 ≤ d) : Fin d :=
+  PrefixCount.Parts.colDelta hd2
+
+abbrev prefixCountReturnTailStepCol
+    {d : Nat} (hd2 : 2 ≤ d) {k : Nat} (hk : k < d - 2) : Fin d :=
+  PrefixCount.Parts.colStep hd2 ⟨k, hk⟩
+
+def prefixCountReturnTailSignedCoeff
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {k : Nat} (hk : k < d - 2) (s : Fin d) : ZMod m :=
+  ((-1 : ZMod m) ^ (k + 1)) *
+    ((if s = prefixCountReturnTailStepCol hd2 hk then (1 : ZMod m) else 0) -
+      if s = prefixCountReturnTailDeltaCol hd2 then (1 : ZMod m) else 0)
+
+theorem prefixCountReturnTailSignedCoeff_layer_sum_eq_matrix
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2) :
+    (∑ t ∈ Finset.range m,
+      prefixCountReturnTailSignedCoeff hd2 hk
+        (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)) =
+      ((-1 : ZMod m) ^ (k + 1)) *
+        ((((C.toMatrix hd2)
+            c (prefixCountReturnTailStepCol hd2 hk) : Nat) : ZMod m) -
+          (((C.toMatrix hd2)
+            c (prefixCountReturnTailDeltaCol hd2) : Nat) : ZMod m)) := by
+  classical
+  let eps : ZMod m := (-1 : ZMod m) ^ (k + 1)
+  let stepCol : Fin d := prefixCountReturnTailStepCol hd2 hk
+  let deltaCol : Fin d := prefixCountReturnTailDeltaCol hd2
+  calc
+    (∑ t ∈ Finset.range m,
+      prefixCountReturnTailSignedCoeff hd2 hk
+        (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c))
+        =
+        (∑ t ∈ Finset.range m,
+          eps *
+            ((if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                stepCol then (1 : ZMod m) else 0) -
+              if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                deltaCol then (1 : ZMod m) else 0)) := by
+          simp [prefixCountReturnTailSignedCoeff, eps, stepCol, deltaCol,
+            eq_comm]
+    _ =
+        eps *
+          (∑ t ∈ Finset.range m,
+            ((if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                stepCol then (1 : ZMod m) else 0) -
+              if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                deltaCol then (1 : ZMod m) else 0)) := by
+          rw [Finset.mul_sum]
+    _ =
+        eps *
+          ((∑ t ∈ Finset.range m,
+              if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                stepCol then (1 : ZMod m) else 0) -
+            (∑ t ∈ Finset.range m,
+              if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+                deltaCol then (1 : ZMod m) else 0)) := by
+          rw [Finset.sum_sub_distrib]
+    _ =
+        eps *
+          ((((C.toMatrix hd2) c stepCol : Nat) : ZMod m) -
+            (((C.toMatrix hd2) c deltaCol : Nat) : ZMod m)) := by
+          rw [prefixCountLayerCount_range_eq_matrix_zmod
+            (m := m) L c stepCol]
+          rw [prefixCountLayerCount_range_eq_matrix_zmod
+            (m := m) L c deltaCol]
+    _ =
+      ((-1 : ZMod m) ^ (k + 1)) *
+        ((((C.toMatrix hd2)
+            c (prefixCountReturnTailStepCol hd2 hk) : Nat) : ZMod m) -
+          (((C.toMatrix hd2)
+            c (prefixCountReturnTailDeltaCol hd2) : Nat) : ZMod m)) := by
+          rfl
+
 theorem prefixCountNoHitSubtypeCard
     {m n : Nat} [NeZero m] (t : ZMod m) :
     Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t} =
@@ -768,6 +844,42 @@ theorem prefixCountHasHitIndicatorSum
         (-1 : ZMod m) ^ n = 0 := by
     simpa [hno, hall] using hsplit
   exact eq_neg_of_add_eq_zero_left hzero
+
+theorem prefixCountPairFreeLastIndicatorSum_zero
+    {m n : Nat} [NeZero m]
+    (P : (Fin n → ZMod m) → Prop) [DecidablePred P] :
+    (∑ p : (Fin n → ZMod m) × ZMod m,
+        if P p.1 then (1 : ZMod m) else 0) = 0 := by
+  classical
+  rw [Fintype.sum_prod_type]
+  apply Finset.sum_eq_zero
+  intro x _hx
+  by_cases hx : P x
+  · simp [hx]
+  · simp [hx]
+
+theorem prefixCountPairFirstHitLastIndicatorSum
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    (∑ p : (Fin n → ZMod m) × ZMod m,
+        if (∀ i : Fin n, p.1 i ≠ t) ∧ p.2 = t
+        then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  classical
+  rw [Fintype.sum_prod_type]
+  calc
+    (∑ x : Fin n → ZMod m, ∑ a : ZMod m,
+        if (∀ i : Fin n, x i ≠ t) ∧ a = t
+        then (1 : ZMod m) else 0)
+        =
+        ∑ x : Fin n → ZMod m,
+          if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0 := by
+          apply Finset.sum_congr rfl
+          intro x _hx
+          by_cases hx : ∀ i : Fin n, x i ≠ t
+          · simp [hx]
+          · simp [hx]
+    _ = (-1 : ZMod m) ^ n :=
+          prefixCountNoHitIndicatorSum (m := m) (n := n) t
 
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}

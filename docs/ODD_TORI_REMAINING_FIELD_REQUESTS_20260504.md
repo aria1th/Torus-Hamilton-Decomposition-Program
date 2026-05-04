@@ -334,9 +334,13 @@ route:
 prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
 prefixCountLayerCount_range_eq_matrix_zmod
 prefixCount_toMatrix_rawStep_sub_delta_zmod
+prefixCountReturnTailSignedCoeff
+prefixCountReturnTailSignedCoeff_layer_sum_eq_matrix
 prefixCountNoHitSubtypeCard
 prefixCountNoHitIndicatorSum
 prefixCountHasHitIndicatorSum
+prefixCountPairFreeLastIndicatorSum_zero
+prefixCountPairFirstHitLastIndicatorSum
 prefixCountFirstHitReturnBaseStep_sum_fin_iterate
 prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
@@ -347,6 +351,8 @@ So the open return-tail proof request should focus on the low-prefix
 reindexing across the actual nested `u,t,x` sum and the split by layer symbol.
 The raw no-hit/has-hit cardinalities modulo `m`, the base-orbit `u`-sum
 reindexing, and the projected-low-prefix bijections are now Lean-closed.
+The pair-count lemmas also cover the local cases where the final coordinate is
+free, or is the first hit after a no-hit prefix.
 
 ### Already Lean-Closed
 

@@ -22,6 +22,9 @@ initial_status = queued
 initial_submit_date = 2026-05-04
 latest_poll_status = in_progress
 latest_poll_date = 2026-05-04
+final_status = completed
+final_poll_date = 2026-05-04
+response_doc = docs/GPT55_PRO_SIGNED_RETURN_TAIL_COCYCLE_SUM_RESPONSE_20260504.md
 ```
 
 Retrieve with:
@@ -98,6 +101,17 @@ theorem prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
   (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
+def prefixCountReturnTailSignedCoeff :
+  ZMod m
+
+theorem prefixCountReturnTailSignedCoeff_layer_sum_eq_matrix :
+  (sum t in Finset.range m,
+    prefixCountReturnTailSignedCoeff hd2 hk
+      (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)) =
+  ((-1 : ZMod m) ^ (k + 1)) *
+    (((C.toMatrix hd2) c (prefixCountReturnTailStepCol hd2 hk) : ZMod m) -
+     ((C.toMatrix hd2) c (prefixCountReturnTailDeltaCol hd2) : ZMod m))
+
 theorem prefixCountNoHitSubtypeCard :
   Fintype.card {x : Fin n -> ZMod m // forall i : Fin n, x i != t} =
     (m - 1) ^ n
@@ -112,6 +126,16 @@ theorem prefixCountHasHitIndicatorSum :
   (sum x : (Fin n -> ZMod m),
     if (exists i : Fin n, x i = t) then (1 : ZMod m) else 0) =
     -((-1 : ZMod m) ^ n)
+
+theorem prefixCountPairFreeLastIndicatorSum_zero :
+  (sum p : (Fin n -> ZMod m) × ZMod m,
+    if P p.1 then (1 : ZMod m) else 0) = 0
+
+theorem prefixCountPairFirstHitLastIndicatorSum :
+  (sum p : (Fin n -> ZMod m) × ZMod m,
+    if (forall i : Fin n, p.1 i != t) /\ p.2 = t
+    then (1 : ZMod m) else 0) =
+    (-1 : ZMod m) ^ n
 
 theorem prefixCountFirstHitReturnBaseStep_sum_fin_iterate :
   (sum u : Fin m,
@@ -151,6 +175,11 @@ listed above: increment-dependency plus full bijectivity of `F` makes the
 `extendZero -> F -> take` map on `Fin k -> ZMod m` bijective.
 `RoundComposite.Concrete` also exposes the prefix-count specialization for the
 actual `skewFiberIterate`.
+The two pair-count lemmas above are intended to match the local split where the
+last coordinate is either free or is the first hit.
+The signed coefficient and layer-symbol matrix sum from the completed response
+are also now Lean-closed; the only large remaining return-tail piece is the
+actual low-residual reindexing/local hit-condition theorem.
 
 ## Mathematical Source
 
