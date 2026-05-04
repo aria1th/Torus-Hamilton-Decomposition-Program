@@ -94,10 +94,21 @@ def RoundComposite.Concrete.OddCoreHighModulusPrefixCountGoal : Prop :=
 Preferred Lean inputs for this branch:
 
 ```lean
+PrefixCount.OrdinaryQge2SignedCoreGoal
 PrefixCount.MarginTransportQge2CompatibleGoal
 PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
+
+The v4 ordinary `q >= 2` signed-core data now has a Lean bridge:
+
+```lean
+PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
+```
+
+so the ordinary signed-column theorem can be supplied in the paper-facing
+`OrdinaryQge2SignedCoreGoal` form and then consumed by the existing high-branch
+adapters.
 
 Small-modulus successor branch:
 

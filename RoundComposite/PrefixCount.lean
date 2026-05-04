@@ -1150,6 +1150,166 @@ theorem step_nonneg {d m q r : Nat}
 end StepNonnegCompatibility
 
 /--
+The ordinary `q >= 2` signed-core data from the v4 prefix-count proof.
+
+Here `n` is the number of non-final rows, so the count matrix has dimension
+`n + 1`; the final row carries `m - C` in the zero column and the compensating
+column sums `c`.
+-/
+structure OrdinaryQge2SignedCoreData (n m q r : Nat) where
+  C : Nat
+  a : Fin n → Nat
+  epsBit : Fin n → Nat
+  c : Fin (n - 1) → Nat
+  S : Fin n → Fin (n - 1) → Int
+  C_le_m : C ≤ m
+  a_sum : (∑ i : Fin n, a i) = C
+  eps_sum : (∑ i : Fin n, epsBit i) = r
+  c_sum : (∑ k : Fin (n - 1), c k) = C
+  a_one_two : ∀ i : Fin n, a i = 1 ∨ a i = 2
+  eps_zero_one : ∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1
+  c_one_two : ∀ k : Fin (n - 1), c k = 1 ∨ c k = 2
+  final_zero_coprime : Nat.Coprime (m - C) m
+  S_signed : ∀ i k, IsSignedVal (S i k)
+  S_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), S i k)
+        = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)
+  S_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n, S i k) = - (c k : Int)
+
+namespace OrdinaryQge2SignedCoreData
+
+theorem a_coprime {n m q r : Nat} (D : OrdinaryQge2SignedCoreData n m q r)
+    (hmodd : Odd m) (i : Fin n) :
+    Nat.Coprime (D.a i) m := by
+  rcases D.a_one_two i with h | h
+  · simp [h]
+  · simpa [h] using hmodd.coprime_two_left
+
+theorem c_signed {n m q r : Nat} (D : OrdinaryQge2SignedCoreData n m q r)
+    (k : Fin (n - 1)) :
+    IsSignedVal (D.c k : Int) := by
+  rcases D.c_one_two k with h | h <;> simp [h, IsSignedVal, signedVals]
+
+theorem c_nonneg {n m q r : Nat} (D : OrdinaryQge2SignedCoreData n m q r)
+    (k : Fin (n - 1)) :
+    0 ≤ (D.c k : Int) := by
+  rcases D.c_one_two k with h | h <;> simp [h]
+
+theorem sum_a_add_final_zero {n m q r : Nat}
+    (D : OrdinaryQge2SignedCoreData n m q r) :
+    (∑ i : Fin (n + 1),
+        Fin.lastCases (m - D.C) D.a i) = m := by
+  rw [Fin.sum_univ_castSucc]
+  simp [D.a_sum]
+  have hC := D.C_le_m
+  omega
+
+theorem sum_c_int {n m q r : Nat}
+    (D : OrdinaryQge2SignedCoreData n m q r) :
+    (∑ k : Fin (n - 1), (D.c k : Int)) = (D.C : Int) := by
+  exact_mod_cast D.c_sum
+
+theorem sum_eps_int {n m q r : Nat}
+    (D : OrdinaryQge2SignedCoreData n m q r) :
+    (∑ i : Fin n, (D.epsBit i : Int)) = (r : Int) := by
+  exact_mod_cast D.eps_sum
+
+theorem marginTransportQge2Compatible_of_ordinaryData
+    {n m q r : Nat} (hmodd : Odd m) (hmqr : m = n * q + r)
+    (hq : 2 ≤ q)
+    (D : OrdinaryQge2SignedCoreData n m q r) :
+    ∃ P : MarginPlan (n + 1) m q r,
+      ∃ E : SignedMarginMatrix (n + 1) P.sigma,
+        StepNonnegCompatibility P E := by
+  classical
+  let zero : Fin (n + 1) → Nat := Fin.lastCases (m - D.C) D.a
+  let tau : Fin (n + 1) → Int :=
+    Fin.lastCases (q : Int) (fun i : Fin n => - (D.epsBit i : Int))
+  let sigma : Fin (n + 1) → Int :=
+    Fin.lastCases (D.C : Int)
+      (fun i : Fin n =>
+        (r : Int) - (D.a i : Int) - (n : Int) * (D.epsBit i : Int))
+  let P : MarginPlan (n + 1) m q r := {
+    zero := zero
+    tau := tau
+    sigma := sigma
+    sigma_def := by
+      intro i
+      rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+      · simp [zero, tau, sigma]
+        ring
+      · simp only [zero, tau, sigma, Fin.lastCases_last, add_tsub_cancel_right]
+        have hmqrInt : (m : Int) = (n : Int) * (q : Int) + (r : Int) := by
+          rw [hmqr]
+          norm_num [Nat.cast_add, Nat.cast_mul]
+        have hsub : ((m - D.C : Nat) : Int) = (m : Int) - (D.C : Int) := by
+          have hC := D.C_le_m
+          omega
+        rw [hsub, hmqrInt]
+        ring
+    tau_sum := by
+      rw [Fin.sum_univ_castSucc]
+      simp [tau, D.sum_eps_int]
+      ring
+    delta_nonneg := by
+      intro i
+      rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+      · have heps : 0 ≤ (D.epsBit j : Int) := by omega
+        simp [tau]
+        omega
+      · simp [tau]
+    prim_zero := by
+      intro i
+      rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+      · simpa [zero] using D.a_coprime hmodd j
+      · simpa [zero] using D.final_zero_coprime
+  }
+  let E : SignedMarginMatrix (n + 1) P.sigma := {
+    eps := Fin.lastCases (fun k : Fin (n - 1) => (D.c k : Int)) D.S
+    eps_signed := by
+      intro i k
+      rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+      · simpa using D.S_signed j k
+      · simpa using D.c_signed k
+    row_sum := by
+      intro i
+      rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+      · simpa [sigma, P] using D.S_row_sum j
+      · simpa [sigma, P] using D.sum_c_int
+    col_sum := by
+      intro k
+      rw [Fin.sum_univ_castSucc]
+      simp [D.S_col_sum k]
+  }
+  refine ⟨P, E, StepNonnegCompatibility.of_step_nonneg ?_⟩
+  intro i k
+  rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
+  · have hqInt : (2 : Int) ≤ (q : Int) := by exact_mod_cast hq
+    have hepsLower := signedVal_ge_neg_two (D.S_signed j k)
+    have hepsBit : 0 ≤ (D.epsBit j : Int) := by omega
+    simp [P, tau, E]
+    linarith
+  · simp [P, tau, E, D.c_nonneg k]
+
+end OrdinaryQge2SignedCoreData
+
+/--
+Paper-facing ordinary signed-core theorem for the `q >= 2` branch.
+
+The parameter `n` is `d - 1`; this keeps the distinguished final row
+definitionally visible as the last row of `Fin (n + 1)`.
+-/
+def OrdinaryQge2SignedCoreGoal : Prop :=
+  ∀ {n m q r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n * q + r →
+    r < n → 0 < r → 2 ≤ q →
+    Nonempty (OrdinaryQge2SignedCoreData n m q r)
+
+/--
 A base matrix with only `±1` entries and column sums `-1`.  The q=1 branch can
 upgrade one explicit `+1` in each column to `+2`, producing signed column sums
 zero without using an abstract matching theorem at this layer.
@@ -1654,6 +1814,22 @@ def MarginTransportQge2CompatibleGoal : Prop :=
     ∃ P : MarginPlan d m q r,
       ∃ E : SignedMarginMatrix d P.sigma,
         StepNonnegCompatibility P E
+
+theorem marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
+    (hCore : OrdinaryQge2SignedCoreGoal) :
+    MarginTransportQge2CompatibleGoal := by
+  intro d m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  have hd1 : 1 ≤ d := by omega
+  have hsucc : d - 1 + 1 = d := Nat.sub_add_cancel hd1
+  have hdodd' : Odd (d - 1 + 1) := by
+    simpa [hsucc] using hdodd
+  have hd5' : 5 ≤ d - 1 + 1 := by
+    simpa [hsucc] using hd5
+  rcases hCore hdodd' hd5' hmodd hmqr hrlt hrpos hq with ⟨D⟩
+  have h :=
+    D.marginTransportQge2Compatible_of_ordinaryData hmodd hmqr hq
+  rw [hsucc] at h
+  exact h
 
 def MarginTransportQeq1Goal : Prop :=
   ∀ {d m q r : Nat},

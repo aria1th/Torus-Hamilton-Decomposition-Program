@@ -585,6 +585,16 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1Compat_and_rootFlatC
     hQge2 hQeq1
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2OrdinaryCore_qeq1Compat_and_rootFlatCanonical
+    (hQge2 : PrefixCount.OrdinaryQge2SignedCoreGoal)
+    (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2Compat_qeq1Compat_and_rootFlatCanonical
+    (PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
+      hQge2)
+    hQeq1 hReturn
+
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
