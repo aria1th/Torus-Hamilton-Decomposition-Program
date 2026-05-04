@@ -18,23 +18,24 @@ reduced the root-flat return to a head-tail skew product.
 2. `RoundComposite/PrefixCount.lean`
 3. `Shared/Monodromy.lean`
 4. `Shared/RootFlat.lean`
-5. `docs/ODD_TORI_CURRENT_GOAL_V3_2_20260504.md`
+5. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
 6. Optional legacy context: `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`
 7. Optional older request: `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`
 
-## Exact Lean Target
+## Preferred Lean Target
 
 ```lean
 def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnTailMonodromyGoal : Prop :=
+  .PrefixCountFirstHitReturnTailMonodromyOrbitGoal : Prop :=
   forall {d m : Nat} [NeZero m] (hd2 : 2 <= d)
       {C : PrefixCount.Parts d},
     Odd d -> 5 <= d -> Odd m -> d <= m ->
     C.Admissible m ->
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
-    forall c : Fin d,
-      Shared.IsSingleCycleMap
-        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+    forall c : Fin d, forall tail1 tail2 : Fin (d - 2) -> ZMod m,
+      exists n : Nat,
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)^[n] tail1 =
+          tail2
 ```
 
 where:
@@ -53,7 +54,25 @@ coordinate `0`.
 
 ## Already Lean-Closed Bridges
 
-Lean proves that this target is enough for the previous section-monodromy
+Lean proves the bijective part of the tail monodromy automatically:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromy_bijective :
+    Function.Bijective (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+```
+
+Therefore the preferred orbit target is enough for the full tail-monodromy
+target:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyGoal_of_orbit
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
+    PrefixCountFirstHitReturnTailMonodromyGoal
+```
+
+The full tail-monodromy target is enough for the previous section-monodromy
 target:
 
 ```lean
@@ -124,17 +143,17 @@ and the final high-branch/final-theorem adapters:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailMonodromy
+  .oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailOrbit
     (hQge2Proper :
       PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
-    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
     OddCoreHighModulusPrefixCountGoal
 
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailMonodromy
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
     (hQge2Proper :
       PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
-    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
@@ -159,11 +178,14 @@ C.Admissible m
 and specifically `Nat.Coprime (C.zero c) m`.
 
 The requested theorem should prove that the full-round tail monodromy over one
-head cycle is a single cycle on:
+head cycle is orbit-transitive on:
 
 ```lean
 Fin (d - 2) -> ZMod m
 ```
+
+Lean already supplies bijectivity, so orbit-transitivity is enough to recover
+`Shared.IsSingleCycleMap`.
 
 The expected route is triangular/skew:
 
