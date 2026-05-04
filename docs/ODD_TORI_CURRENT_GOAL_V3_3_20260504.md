@@ -107,6 +107,28 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailMonodromyGoal
 ```
 
+An alternate odometer/rank route is also available:
+
+```lean
+def PrefixCountFirstHitReturnTailRankGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      exists rank :
+          ((Fin (d - 2) -> ZMod m) -> ZMod (m ^ (d - 2))),
+        Function.Bijective rank /\
+        forall tail : Fin (d - 2) -> ZMod m,
+          rank (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
+            rank tail + 1
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank
+    (hRank : PrefixCountFirstHitReturnTailRankGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+```
+
 ## Remaining External Fields
 
 The goal is not complete.  The current preferred packet leaves exactly:
@@ -131,4 +153,3 @@ git diff --check
 grep -R -n -E '\b(sorry|admit|axiom|constant)\b' \
   RoundComposite Shared D5Odd D7Odd --include='*.lean'
 ```
-
