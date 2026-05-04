@@ -187,6 +187,15 @@ and the P-row Hall condition
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.  The resulting injective
 matching covering all P-rows is Lean-closed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching`.
+The exact target set for the remaining matching is now also exposed:
+`PrefixCount.OrdinaryQeq1AuxMatrixData.highCols`,
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols`, and the cardinality
+bridges
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card_eq_highCols_card_succ` and
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card_eq_pRowTargetCols_card`.
+Given the corresponding target Hall condition, Lean now derives an injective
+matching hitting every high column and the chosen special low column via
+`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_target_matching`.
 The paper-facing P-row matching interface is now separated from the stronger
 all-row column-count interface as
 `PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
