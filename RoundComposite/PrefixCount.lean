@@ -2445,6 +2445,19 @@ theorem pRows_card_eq_pRowTargetCols_card {n r : Nat} (hrlt : r < n)
     (pRows n r).card = (pRowTargetCols n r special).card := by
   rw [pRows_card hrlt, pRowTargetCols_card hrlt hspecial]
 
+theorem pRowTargetCols_zero_eq_univ_of_r_eq_one {n r : Nat}
+    (hr : r = 1) (hcols : 0 < n - 1) :
+    pRowTargetCols n r ⟨0, hcols⟩ = Finset.univ := by
+  subst r
+  ext k
+  by_cases hk0 : k.val = 0
+  · have hk : k = ⟨0, hcols⟩ := by
+      ext
+      exact hk0
+    simp [pRowTargetCols, hk]
+  · have hkge : 1 ≤ k.val := Nat.pos_of_ne_zero hk0
+    simp [pRowTargetCols, highCols, hkge]
+
 def pRowNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
     (X : Finset (Fin n)) : Finset (Fin (n - 1)) :=
   X.biUnion fun i => A.posCols i
@@ -2453,6 +2466,14 @@ def pRowTargetNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
     (special : Fin (n - 1)) (X : Finset (Fin n)) :
     Finset (Fin (n - 1)) :=
   X.biUnion fun i => A.posCols i ∩ pRowTargetCols n r special
+
+theorem pRowTargetNeighbors_zero_eq_pRowNeighbors_of_r_eq_one {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hr : r = 1) (hcols : 0 < n - 1) (X : Finset (Fin n)) :
+    A.pRowTargetNeighbors ⟨0, hcols⟩ X = A.pRowNeighbors X := by
+  rw [pRowTargetNeighbors, pRowNeighbors,
+    pRowTargetCols_zero_eq_univ_of_r_eq_one hr hcols]
+  simp
 
 theorem exists_distinguished_low_neg {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
@@ -3026,6 +3047,30 @@ theorem pRow_exists_distinguished_neg_pos {n r : Nat}
     omega
   omega
 
+theorem distinguished_row_all_neg_of_r_eq_one {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
+    (hrlt : r < n) (hr : r = 1) :
+    ∀ i : Fin n, i.val = r - 1 →
+      ∀ k : Fin (n - 1), A.B i k = (-1 : Int) := by
+  subst r
+  intro i hi k
+  let nu : Fin n := ⟨0, by omega⟩
+  have hi0 : i = nu := by
+    ext
+    simpa using hi
+  rw [hi0]
+  have hcard : (A.posCols nu).card = 0 := by
+    have h := A.posCols_card hdodd hmodd nu
+    simpa [ordinaryQeq1AuxDegree, nu] using h
+  rcases A.B_pm_one nu k with hneg | hpos
+  · exact hneg
+  · exfalso
+    have hk : k ∈ A.posCols nu := by
+      simp [posCols, hpos]
+    have hcardPos : 0 < (A.posCols nu).card := Finset.card_pos.mpr ⟨k, hk⟩
+    omega
+
 end OrdinaryQeq1AuxMatrixData
 
 /--
@@ -3339,6 +3384,29 @@ def toSpecialMatchingData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
 end OrdinaryQeq1PRowSpecialMatchingData
 
 namespace OrdinaryQeq1AuxTargetHallData
+
+theorem nonempty_of_auxMatrix_r_eq_one {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrlt : r < n) (hr : r = 1) :
+    Nonempty (OrdinaryQeq1AuxTargetHallData n r) := by
+  classical
+  let special : Fin (n - 1) := ⟨0, by omega⟩
+  refine ⟨{
+    aux := A
+    specialCol := special
+    special_low := ?_
+    special_neg := ?_
+    target_hall := ?_
+  }⟩
+  · simp [special, hr]
+  · intro i hi
+    exact A.distinguished_row_all_neg_of_r_eq_one
+      hdodd hmodd hrlt hr i hi special
+  · intro X hX
+    rw [A.pRowTargetNeighbors_zero_eq_pRowNeighbors_of_r_eq_one
+      hr (by omega : 0 < n - 1) X]
+    exact A.pRows_hall hdodd hd5 hmodd (by omega) X hX
 
 noncomputable def toAuxPRowSpecialMatchingData {n r : Nat}
     (D : OrdinaryQeq1AuxTargetHallData n r) (hrlt : r < n) :

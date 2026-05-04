@@ -195,6 +195,13 @@ Consequently Lean now proves the forced-edge matching form
 `PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching_with_forced_of_one_lt_r`,
 which produces a P-row matching containing a prescribed positive edge when
 `1 < r`.
+The boundary `r = 1` branch is separately reduced: Lean proves that the target
+columns are all columns
+(`PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols_zero_eq_univ_of_r_eq_one`),
+the distinguished row is entirely negative
+(`PrefixCount.OrdinaryQeq1AuxMatrixData.distinguished_row_all_neg_of_r_eq_one`),
+and any auxiliary matrix yields target-Hall data through
+`PrefixCount.OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_r_eq_one`.
 The exact target set for the remaining matching is now also exposed:
 `PrefixCount.OrdinaryQeq1AuxMatrixData.highCols`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols`, and the cardinality
