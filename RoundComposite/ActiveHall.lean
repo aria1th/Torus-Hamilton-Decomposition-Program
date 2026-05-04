@@ -3170,6 +3170,54 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
   ⟨eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization,
     hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice⟩
 
+theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsGoal_of_tokenLinearChoice
+        (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization hRealize),
+    hallRealizationGoal_of_eraseLastHallCuts⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsChoiceGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsChoiceGoal_of_slackChoice
+        (eraseLastHallCutsSlackChoiceGoal_of_nontrivial
+          (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+            (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+              (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+                hRealize)))),
+    hallRealizationGoal_of_eraseLastHallCutsChoice⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsSlackChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsSlackChoiceGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsSlackChoiceGoal_of_nontrivial
+        (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+          (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+            (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+              hRealize))),
+    hallRealizationGoal_of_eraseLastHallCutsSlackChoice⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsNontrivialSlackChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsNontrivialSlackChoiceGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+        (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+          (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization hRealize)),
+    hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsLinearChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsLinearChoiceGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+        (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization hRealize),
+    hallRealizationGoal_of_eraseLastHallCutsLinearChoice⟩
+
 theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hoffmanOrderedSDR
     (hHoffman : HoffmanOrderedSDRGoal.{uX, uC}) :
     EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=

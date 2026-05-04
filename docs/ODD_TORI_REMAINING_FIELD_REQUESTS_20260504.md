@@ -302,7 +302,10 @@ The likely fastest order is:
 
 If proving `ActiveHall.HallRealizationGoal` separately, use
 `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`; it is the current sharp
-abstract combinatorics request for that layer.
+abstract combinatorics request for that layer.  Lean now exposes named `iff`
+wrappers from `HallRealizationGoal` to the erase-last choice, slack, linear,
+and token-linear formulations, so an external proof can target whichever of
+these equivalent statements is most natural.
 
 ## Mathlib Hall Survey
 
