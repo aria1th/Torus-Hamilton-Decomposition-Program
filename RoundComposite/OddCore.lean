@@ -1463,7 +1463,9 @@ theorem not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal :
   exact PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal hBlocks.2.1
 
 def OddModulusToriV4PreferredBlocksGoal : Prop :=
-  OddModulusToriV4TargetHallBlocksGoal
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
 
 def OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
@@ -1571,10 +1573,10 @@ theorem odd_modulus_tori_all_dimensions_of_v4_degree_special_matching_blocks
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
     (hBlocks : OddModulusToriV4PreferredBlocksGoal) :
     OddCoreHighModulusPrefixCountGoal := by
-  rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, _hSmallPacket⟩
+  rcases hBlocks with ⟨hQge2Closure, hReturn, _hSmallPacket⟩
   exact
     oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxTargetHallData_and_rootFlatCanonical
-      hQge2Closure hQeq1Data hReturn
+      hQge2Closure PrefixCount.ordinaryQeq1AuxTargetHallDataGoal hReturn
 
 theorem odd_successor_small_modulus_base_tail_of_v4_preferred_blocks
     (hBlocks : OddModulusToriV4PreferredBlocksGoal)
@@ -1584,17 +1586,17 @@ theorem odd_successor_small_modulus_base_tail_of_v4_preferred_blocks
     (hmSmall : m < 2 * b + 1)
     (hb : StandardCayleySolved b m) :
     StandardCayleySolved (2 * b + 1) m := by
-  rcases hBlocks with ⟨_hQge2Closure, _hQeq1Data, _hReturn, hSmallPacket⟩
+  rcases hBlocks with ⟨_hQge2Closure, _hReturn, hSmallPacket⟩
   exact odd_successor_small_modulus_base_tail_of_slackPacketLift
     hSmallPacket hb5 hmodd hm3 hmSmall hb
 
 theorem oddSuccessorClosureGoal_of_v4_preferred_blocks
     (hBlocks : OddModulusToriV4PreferredBlocksGoal) :
     OddSuccessorClosureGoal := by
-  rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, hSmallPacket⟩
+  rcases hBlocks with ⟨hQge2Closure, hReturn, hSmallPacket⟩
   exact oddSuccessorClosureGoal_of_high_and_slackPacketLift
     (oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxTargetHallData_and_rootFlatCanonical
-      hQge2Closure hQeq1Data hReturn)
+      hQge2Closure PrefixCount.ordinaryQeq1AuxTargetHallDataGoal hReturn)
     hSmallPacket
 
 theorem odd_successor_closure_of_v4_preferred_blocks
@@ -1612,8 +1614,11 @@ theorem odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
     {d m : Nat} (hd2 : 2 ≤ d)
     (hmodd : Odd m) (hm3 : 3 ≤ m) :
     Shared.CayleyHamiltonDecomposition d m :=
+  let targetHallBlocks : OddModulusToriV4TargetHallBlocksGoal :=
+    ⟨hBlocks.1, PrefixCount.ordinaryQeq1AuxTargetHallDataGoal,
+      hBlocks.2.1, hBlocks.2.2⟩
   odd_modulus_tori_all_dimensions_of_v4_targetHall_blocks
-    hBlocks hd2 hmodd hm3
+    targetHallBlocks hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
     (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)

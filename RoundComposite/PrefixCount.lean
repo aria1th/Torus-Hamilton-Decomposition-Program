@@ -2214,6 +2214,31 @@ end OrdinaryQeq1AuxDegreeMatrixData
 
 namespace OrdinaryQeq1AuxMatrixData
 
+def relabelColumns {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
+    (σ : Equiv.Perm (Fin (n - 1))) : OrdinaryQeq1AuxMatrixData n r where
+  B := fun i k => A.B i (σ.symm k)
+  B_pm_one := by
+    intro i k
+    exact A.B_pm_one i (σ.symm k)
+  B_row_sum := by
+    intro i
+    calc
+      (∑ k : Fin (n - 1), A.B i (σ.symm k))
+          = ∑ k : Fin (n - 1), A.B i k := by
+              exact Fintype.sum_equiv σ.symm
+                (fun k : Fin (n - 1) => A.B i (σ.symm k))
+                (fun k : Fin (n - 1) => A.B i k)
+                (by intro k; rfl)
+      _ = if i.val < r - 1 then
+            (r : Int) - 2 - (n : Int)
+          else if i.val < r then
+            (r : Int) - (n : Int)
+          else
+            (r : Int) - 2 := A.B_row_sum i
+  B_col_sum := by
+    intro k
+    exact A.B_col_sum (σ.symm k)
+
 def posCols {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
     (i : Fin n) : Finset (Fin (n - 1)) :=
   Finset.univ.filter fun k => A.B i k = 1
@@ -2444,6 +2469,62 @@ theorem pRows_card_eq_pRowTargetCols_card {n r : Nat} (hrlt : r < n)
     {special : Fin (n - 1)} (hspecial : special.val < r) :
     (pRows n r).card = (pRowTargetCols n r special).card := by
   rw [pRows_card hrlt, pRowTargetCols_card hrlt hspecial]
+
+def pRowTargetZero {n r : Nat} (hrlt : r < n) (hrpos : 0 < r) :
+    Fin (n - 1) :=
+  ⟨0, by omega⟩
+
+theorem pRowTargetZero_low {n r : Nat} (hrlt : r < n) (hrpos : 0 < r) :
+    (pRowTargetZero hrlt hrpos).val < r := by
+  simp [pRowTargetZero]
+  omega
+
+def pRowTargetMap {n r : Nat} (hrlt : r < n) (hrpos : 0 < r) :
+    {i : Fin n // i ∈ pRows n r} → Fin (n - 1) :=
+  fun i =>
+    if h : i.1.val = r then
+      pRowTargetZero hrlt hrpos
+    else
+      ⟨i.1.val - 1, by
+        have hi : r ≤ i.1.val := by
+          exact (Finset.mem_filter.mp i.2).2
+        omega⟩
+
+theorem pRowTargetMap_injective {n r : Nat}
+    (hrlt : r < n) (hrpos : 0 < r) :
+    Function.Injective (pRowTargetMap hrlt hrpos) := by
+  intro a b hab
+  apply Subtype.ext
+  apply Fin.ext
+  have haP : r ≤ a.1.val := (Finset.mem_filter.mp a.2).2
+  have hbP : r ≤ b.1.val := (Finset.mem_filter.mp b.2).2
+  have hval := congrArg Fin.val hab
+  by_cases ha : a.1.val = r
+  · by_cases hb : b.1.val = r
+    · omega
+    · simp [pRowTargetMap, pRowTargetZero, ha, hb] at hval
+      omega
+  · by_cases hb : b.1.val = r
+    · simp [pRowTargetMap, pRowTargetZero, ha, hb] at hval
+      omega
+    · simp [pRowTargetMap, ha, hb] at hval
+      omega
+
+theorem pRowTargetMap_mem_target {n r : Nat}
+    (hrlt : r < n) (hrpos : 0 < r)
+    (i : {i : Fin n // i ∈ pRows n r}) :
+    pRowTargetMap hrlt hrpos i ∈
+      pRowTargetCols n r (pRowTargetZero hrlt hrpos) := by
+  have hiP : r ≤ i.1.val := (Finset.mem_filter.mp i.2).2
+  by_cases hi : i.1.val = r
+  · have hmap :
+        pRowTargetMap hrlt hrpos i = pRowTargetZero hrlt hrpos := by
+      simp [pRowTargetMap, hi]
+    simp [pRowTargetCols, hmap]
+  · have hge : r ≤ (pRowTargetMap hrlt hrpos i).val := by
+      simp [pRowTargetMap, hi]
+      omega
+    simp [pRowTargetCols, highCols, hge]
 
 theorem pRowTargetCols_zero_eq_univ_of_r_eq_one {n r : Nat}
     (hr : r = 1) (hcols : 0 < n - 1) :
@@ -3407,6 +3488,91 @@ theorem nonempty_of_auxMatrix_r_eq_one {n r : Nat}
     rw [A.pRowTargetNeighbors_zero_eq_pRowNeighbors_of_r_eq_one
       hr (by omega : 0 < n - 1) X]
     exact A.pRows_hall hdodd hd5 hmodd (by omega) X hX
+
+theorem nonempty_of_auxMatrix_one_lt_r {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrlt : r < n) (hr1 : 1 < r) :
+    Nonempty (OrdinaryQeq1AuxTargetHallData n r) := by
+  classical
+  let P := {i : Fin n // i ∈ OrdinaryQeq1AuxMatrixData.pRows n r}
+  let i0 : Fin n := ⟨r, by omega⟩
+  have hi0 : r ≤ i0.val := by simp [i0]
+  have hi0mem : i0 ∈ OrdinaryQeq1AuxMatrixData.pRows n r := by
+    simp [OrdinaryQeq1AuxMatrixData.pRows, hi0]
+  let i0P : P := ⟨i0, hi0mem⟩
+  have hrpos : 0 < r := by omega
+  rcases A.pRow_exists_distinguished_neg_pos
+      hdodd hd5 hmodd hrlt hrpos hi0 with
+    ⟨k0, hpos0, hneg0⟩
+  rcases A.exists_pRows_matching_with_forced_of_one_lt_r
+      hdodd hd5 hmodd hr1 hi0 hpos0 with
+    ⟨f, hfInj, hfPos, hfForced⟩
+  let target : P → Fin (n - 1) :=
+    OrdinaryQeq1AuxMatrixData.pRowTargetMap hrlt hrpos
+  have htargetInj : Function.Injective target :=
+    OrdinaryQeq1AuxMatrixData.pRowTargetMap_injective hrlt hrpos
+  rcases Equiv.Perm.exists_extending_pair f target hfInj htargetInj with
+    ⟨σ, hσ⟩
+  let special : Fin (n - 1) :=
+    OrdinaryQeq1AuxMatrixData.pRowTargetZero hrlt hrpos
+  let A' : OrdinaryQeq1AuxMatrixData n r := A.relabelColumns σ
+  have htarget_i0 : target i0P = special := by
+    simp [target, i0P, i0, special,
+      OrdinaryQeq1AuxMatrixData.pRowTargetMap]
+  have hsymm_special : σ.symm special = k0 := by
+    rw [← htarget_i0, ← hσ i0P, σ.symm_apply_apply, hfForced]
+  refine ⟨{
+    aux := A'
+    specialCol := special
+    special_low := ?_
+    special_neg := ?_
+    target_hall := ?_
+  }⟩
+  · exact OrdinaryQeq1AuxMatrixData.pRowTargetZero_low hrlt hrpos
+  · intro i hi
+    have hrow : i = ⟨r - 1, by omega⟩ := by
+      ext
+      simpa using hi
+    change A.B i (σ.symm special) = (-1 : Int)
+    rw [hrow, hsymm_special]
+    exact hneg0
+  · intro X hX
+    let imageSet : Finset (Fin (n - 1)) :=
+      X.attach.image fun i : {i // i ∈ X} =>
+        target ⟨i.1, hX i.2⟩
+    have hcardImage : imageSet.card = X.card := by
+      dsimp [imageSet]
+      rw [Finset.card_image_of_injective]
+      · simp
+      · intro a b hab
+        have hsub :
+            (⟨a.1, hX a.2⟩ : P) = ⟨b.1, hX b.2⟩ :=
+          htargetInj hab
+        have hval : a.1 = b.1 := congrArg (fun x : P => x.1) hsub
+        exact Subtype.ext hval
+    have hsubset :
+        imageSet ⊆ A'.pRowTargetNeighbors special X := by
+      intro k hk
+      rcases Finset.mem_image.mp hk with ⟨i, _hiAttach, rfl⟩
+      let iP : P := ⟨i.1, hX i.2⟩
+      have hTarget :
+          target iP ∈
+            OrdinaryQeq1AuxMatrixData.pRowTargetCols n r special := by
+        simpa [target, special, iP] using
+          OrdinaryQeq1AuxMatrixData.pRowTargetMap_mem_target
+            hrlt hrpos iP
+      have hPos : A'.B i.1 (target iP) = 1 := by
+        change A.B i.1 (σ.symm (target iP)) = 1
+        rw [← hσ iP, σ.symm_apply_apply]
+        exact hfPos iP
+      exact Finset.mem_biUnion.mpr
+        ⟨i.1, i.2, by
+          exact Finset.mem_inter.mpr
+            ⟨by simpa [OrdinaryQeq1AuxMatrixData.posCols] using hPos,
+             hTarget⟩⟩
+    have hcardle := Finset.card_le_card hsubset
+    rwa [hcardImage] at hcardle
 
 noncomputable def toAuxPRowSpecialMatchingData {n r : Nat}
     (D : OrdinaryQeq1AuxTargetHallData n r) (hrlt : r < n) :
@@ -4397,6 +4563,20 @@ theorem ordinaryQeq1AuxDegreeMatrixGoal :
     (ordinaryQeq1AuxDegreeArithmeticGoal_of_total
       ordinaryQeq1AuxDegreeTotalGoal)
     uniformColumnDegreeMatrixGoal
+
+theorem ordinaryQeq1AuxTargetHallDataGoal :
+    OrdinaryQeq1AuxTargetHallDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases ordinaryQeq1AuxDegreeMatrixGoal
+      hdodd hd5 hmodd hrlt hrpos with
+    ⟨G⟩
+  let A : OrdinaryQeq1AuxMatrixData n r := G.toAuxMatrixData hdodd hmodd
+  by_cases hr : r = 1
+  · exact OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_r_eq_one
+      A hdodd hd5 hmodd hrlt hr
+  · have hr1 : 1 < r := by omega
+    exact OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_one_lt_r
+      A hdodd hd5 hmodd hrlt hr1
 
 theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_degreeSpecialMatching
     (hMatch : OrdinaryQeq1DegreeSpecialMatchingGoal) :

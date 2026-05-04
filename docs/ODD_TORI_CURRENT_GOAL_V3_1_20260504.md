@@ -119,12 +119,13 @@ The current preferred Lean packet that closes both branches is:
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PreferredBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
 Lean status: the endpoint from this packet to the final theorem is closed.
+The q=1 target-Hall field is no longer an assumption: Lean proves it as
+`PrefixCount.ordinaryQeq1AuxTargetHallDataGoal`.
 
 ```lean
 theorem RoundComposite.Concrete
@@ -158,74 +159,31 @@ Location: `RoundComposite/OddCore.lean`.
 
 ## Remaining Lean Work
 
-The active proof obligations are exactly the four fields of
+The active proof obligations are exactly the three fields of
 `OddModulusToriV4PreferredBlocksGoal`:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedClosureGoal`
-2. `PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal`
-3. `PrefixCountRootFlatCanonicalReturnGoal`
-4. `OddCoreSmallModulusSlackPacketLiftGoal`
+2. `PrefixCountRootFlatCanonicalReturnGoal`
+3. `OddCoreSmallModulusSlackPacketLiftGoal`
 
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
-`PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  However the universal theorem
-asking for a special matching for every such degree matrix is too strong:
-Lean records this as `PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal`.
-The corresponding four-field block packet is also Lean-proved impossible as
+`PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for
+a special matching for every such degree matrix is too strong; Lean records this
+as `PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal`, and the corresponding
+block packet is Lean-proved impossible as
 `RoundComposite.Concrete.not_oddModulusToriV4DegreeSpecialMatchingBlocksGoal`.
-Thus the preferred q=1 obligation is now the target-Hall data theorem, where
-the auxiliary matrix, special low column, distinguished negative entry, and
-target Hall condition are selected together.
-Lean now exposes the P-row set and local P-row degree inputs for that Hall
-argument as `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows`,
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card`,
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_posCols_card`, and
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_posCols_card_pos`; the column
-degree comparison and forced distinguished-negative edge are also exposed as
-`PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_le_pRow_posCols_card`,
-`PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card_lt_pRow_posCols_card_of_one_lt_r`,
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRow_exists_distinguished_neg_pos`,
-and the P-row Hall condition
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.  The resulting injective
-matching covering all P-rows is Lean-closed as
-`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching`.
-For the `r > 1` forced-edge branch, the strict Hall count
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall_strict_of_nonempty` is also
-Lean-closed: every nonempty P-row subfamily has strictly more full neighbors.
-Consequently Lean now proves the forced-edge matching form
-`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching_with_forced_of_one_lt_r`,
-which produces a P-row matching containing a prescribed positive edge when
-`1 < r`.
-The boundary `r = 1` branch is separately reduced: Lean proves that the target
-columns are all columns
-(`PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols_zero_eq_univ_of_r_eq_one`),
-the distinguished row is entirely negative
-(`PrefixCount.OrdinaryQeq1AuxMatrixData.distinguished_row_all_neg_of_r_eq_one`),
-and any auxiliary matrix yields target-Hall data through
-`PrefixCount.OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_r_eq_one`.
-The exact target set for the remaining matching is now also exposed:
-`PrefixCount.OrdinaryQeq1AuxMatrixData.highCols`,
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols`, and the cardinality
-bridges
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card_eq_highCols_card_succ` and
-`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_card_eq_pRowTargetCols_card`.
-Given the corresponding target Hall condition, Lean now derives an injective
-matching hitting every high column and the chosen special low column via
-`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_target_matching`.
-The subsequent bridge from such a target Hall condition plus the distinguished
-negative low column to the preferred P-row data packet is Lean-closed as
-`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.nonempty_of_targetHall`.
-The paper-facing P-row matching interface is now separated from the stronger
-all-row column-count interface as
-`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
-`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.toSpecialMatchingData` and
-`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingData.toAuxSpecialMatchingData`.
-The preferred q=1 field is therefore the target-Hall data goal
-`PrefixCount.OrdinaryQeq1AuxTargetHallDataGoal`; it is bridged to
-`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingDataGoal` by
-`PrefixCount.ordinaryQeq1AuxPRowSpecialMatchingDataGoal_of_targetHallData`,
-and then back to the older
-`PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal` by
-`PrefixCount.ordinaryQeq1AuxSpecialMatchingDataGoal_of_targetHallData`.
 
-When these four propositions are proved, the current conditional endpoint
+The repaired q=1 route is now Lean-closed.  For `r = 1`,
+`PrefixCount.OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_r_eq_one`
+turns any auxiliary matrix into target-Hall data.  For `1 < r`,
+`PrefixCount.OrdinaryQeq1AuxTargetHallData.nonempty_of_auxMatrix_one_lt_r`
+uses the forced P-row matching
+`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching_with_forced_of_one_lt_r`,
+then relabels columns via
+`PrefixCount.OrdinaryQeq1AuxMatrixData.relabelColumns` so the matching image is
+exactly the canonical high columns plus one low special column.  Combining these
+branches with the uniform degree matrix construction gives
+`PrefixCount.ordinaryQeq1AuxTargetHallDataGoal`.
+
+When these three propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.

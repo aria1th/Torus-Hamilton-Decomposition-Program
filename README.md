@@ -354,12 +354,11 @@ when `m` is odd and `m >= 3`.
   for the v4 all-dimensional odd-modulus theorem.  The active proof spine is
   D2/D3/D5/D7 seeds plus product closure plus successor closure
   `b -> 2*b + 1`; the dispatcher and conditional successor split are already
-  Lean-closed.  The remaining work is exactly the four-field preferred block
-  packet `OddModulusToriV4PreferredBlocksGoal`: q>=2 signed seed closure,
-  q=1 target-Hall auxiliary data, root-flat canonical return, and the
-  small-modulus slack-packet lift.  The q=1 auxiliary degree-matrix existence
-  theorem is Lean-closed separately, while the universal degree-matrix matching
-  variant is Lean-proved too strong.
+  Lean-closed.  The q=1 target-Hall auxiliary data theorem is now Lean-closed,
+  so the remaining preferred block packet `OddModulusToriV4PreferredBlocksGoal`
+  has three fields: q>=2 signed seed closure, root-flat canonical return, and
+  the small-modulus slack-packet lift.  The universal q=1 degree-matrix matching
+  variant remains Lean-proved too strong and is retained as a negative audit.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
