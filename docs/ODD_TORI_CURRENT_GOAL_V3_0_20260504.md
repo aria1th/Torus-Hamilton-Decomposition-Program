@@ -202,6 +202,11 @@ theorem RoundComposite.ActiveHall
     EraseLastHallCutsLinearChoiceGoal
 
 theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+    (hRealize : HallRealizationGoal) :
+    EraseLastHallCutsTokenLinearChoiceGoal
+
+theorem RoundComposite.ActiveHall
   .eraseLastHallCutsGoal_of_linearChoice
     (hLinear : EraseLastHallCutsLinearChoiceGoal) :
     EraseLastHallCutsGoal
@@ -235,6 +240,10 @@ theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
     HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
 
 theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_eraseLastHallCutsChoice
@@ -341,6 +350,12 @@ theorem RoundComposite.ActiveHall.Symboling.color_mem_active
 theorem RoundComposite.ActiveHall.Symboling.count_eq_choiceDegree
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
+theorem RoundComposite.ActiveHall.Symboling
+  .local_castSucc_cut_count_add_last_low_indicator_le_cap
+theorem RoundComposite.ActiveHall.Symboling
+  .cutMass_eq_sum_local_of_realizes
+theorem RoundComposite.ActiveHall.Symboling
+  .cutMass_image_castSucc_add_choiceLowHitCount_le_cutCap_of_realizes
 def RoundComposite.ActiveHall.Incidence.eraseChoice
 def RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix
 def RoundComposite.ActiveHall.CountMatrix.cutSlack

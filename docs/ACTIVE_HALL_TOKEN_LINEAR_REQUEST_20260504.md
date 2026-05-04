@@ -45,6 +45,10 @@ set contains `c`.  The inequality controls how many tokens from a color cut
 The following reductions and bridges are already present and build:
 
 ```lean
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+    (hRealize : HallRealizationGoal) :
+    EraseLastHallCutsTokenLinearChoiceGoal
+
 theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
     EraseLastHallCutsLinearChoiceGoal
@@ -61,6 +65,9 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
+    HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
 ```
 
 Also available:

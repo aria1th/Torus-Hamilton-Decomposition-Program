@@ -2099,6 +2099,81 @@ theorem local_cut_count_le_cap {T : Nat} {X C : Type*}
   exact le_min (Φ.symbolsIn_card_le_active_inter x U S)
     (Φ.symbolsIn_card_le_S x U S)
 
+theorem local_castSucc_cut_count_add_last_low_indicator_le_cap
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (Φ : Symboling I)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    (∑ c ∈ U,
+        ∑ σ ∈ S.image (Fin.castSucc : Fin T → Fin (T + 1)),
+          if Φ.color x σ = c then (1 : Nat) else 0)
+      + (if Φ.color x (Fin.last T) ∈ U ∧
+            (I.active x ∩ U).card ≤ S.card then 1 else 0)
+      ≤ min ((I.active x ∩ U).card) S.card := by
+  classical
+  let S' : Finset (Fin (T + 1)) :=
+    S.image (Fin.castSucc : Fin T → Fin (T + 1))
+  let lower := (Φ.symbolsIn x U S').card
+  let a := (I.active x ∩ U).card
+  let s := S.card
+  have hcount :
+      (∑ c ∈ U, ∑ σ ∈ S',
+          if Φ.color x σ = c then (1 : Nat) else 0) = lower := by
+    simpa [lower] using Φ.local_cut_count_eq_symbolsIn_card x U S'
+  have hlowerA : lower ≤ a := by
+    simpa [lower, a] using Φ.symbolsIn_card_le_active_inter x U S'
+  have hlowerS : lower ≤ s := by
+    have h := Φ.symbolsIn_card_le_S x U S'
+    have hS' : S'.card = s := by
+      simp [S', s, Incidence.card_image_castSucc]
+    simpa [lower, hS'] using h
+  have hlastNot : Fin.last T ∉ S' := by
+    simp [S', Incidence.last_notMem_image_castSucc S]
+  have hinsertA :
+      (Φ.symbolsIn x U (insert (Fin.last T) S')).card ≤ a := by
+    simpa [a] using
+      Φ.symbolsIn_card_le_active_inter x U (insert (Fin.last T) S')
+  have hlastInsert :
+      Φ.color x (Fin.last T) ∈ U →
+        lower + 1 ≤ a := by
+    intro hlastU
+    have hcard :
+        (Φ.symbolsIn x U (insert (Fin.last T) S')).card = lower + 1 := by
+      have hfilter :
+          (insert (Fin.last T) S').filter
+              (fun σ => Φ.color x σ ∈ U)
+            =
+          insert (Fin.last T)
+            (S'.filter (fun σ => Φ.color x σ ∈ U)) := by
+        ext σ
+        by_cases hσ : σ = Fin.last T <;> simp [hσ, hlastU]
+      rw [symbolsIn, hfilter]
+      rw [Finset.card_insert_of_notMem]
+      · simp [lower, symbolsIn]
+      · intro hmem
+        exact hlastNot (Finset.mem_filter.mp hmem).1
+    omega
+  rw [hcount]
+  by_cases hlastU : Φ.color x (Fin.last T) ∈ U
+  · by_cases hle : a ≤ s
+    · have hlow : lower + 1 ≤ a := hlastInsert hlastU
+      change lower +
+          (if Φ.color x (Fin.last T) ∈ U ∧ a ≤ s then 1 else 0)
+        ≤ min a s
+      rw [if_pos ⟨hlastU, hle⟩, min_eq_left hle]
+      exact hlow
+    · have hslea : s ≤ a := Nat.le_of_not_ge hle
+      change lower +
+          (if Φ.color x (Fin.last T) ∈ U ∧ a ≤ s then 1 else 0)
+        ≤ min a s
+      rw [if_neg (by intro h; exact hle h.2), min_eq_right hslea]
+      exact hlowerS
+  · change lower +
+        (if Φ.color x (Fin.last T) ∈ U ∧ a ≤ s then 1 else 0)
+      ≤ min a s
+    rw [if_neg (by intro h; exact hlastU h.1)]
+    exact le_min hlowerA hlowerS
+
 def toCountMatrix {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) : CountMatrix I where
@@ -2158,6 +2233,55 @@ theorem toCountMatrix_hallCuts {T : Nat} {X C : Type*}
             exact Φ.local_cut_count_le_cap x U S
     _ = I.cutCap U S := by
             rfl
+
+theorem cutMass_eq_sum_local_of_realizes {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) (M : CountMatrix I)
+    (hReal : Φ.Realizes M.val) (U : Finset C) (S : Finset (Fin T)) :
+    M.cutMass U S =
+      ∑ x : X, ∑ c ∈ U, ∑ σ ∈ S,
+        if Φ.color x σ = c then (1 : Nat) else 0 := by
+  classical
+  calc
+    M.cutMass U S
+        = ∑ c ∈ U, ∑ σ ∈ S, Φ.count c σ := by
+            unfold CountMatrix.cutMass
+            apply Finset.sum_congr rfl
+            intro c _hc
+            apply Finset.sum_congr rfl
+            intro σ _hσ
+            exact (hReal c σ).symm
+    _ = ∑ c ∈ U, ∑ σ ∈ S, ∑ x : X,
+          if Φ.color x σ = c then (1 : Nat) else 0 := by
+            simp [count]
+    _ = ∑ c ∈ U, ∑ x : X, ∑ σ ∈ S,
+          if Φ.color x σ = c then (1 : Nat) else 0 := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [Finset.sum_comm]
+    _ = ∑ x : X, ∑ c ∈ U, ∑ σ ∈ S,
+          if Φ.color x σ = c then (1 : Nat) else 0 := by
+            rw [Finset.sum_comm]
+
+theorem cutMass_image_castSucc_add_choiceLowHitCount_le_cutCap_of_realizes
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (Φ : Symboling I)
+    (M : CountMatrix I) (hReal : Φ.Realizes M.val)
+    (U : Finset C) (S : Finset (Fin T)) :
+    M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+        + Incidence.choiceLowHitCount I
+          (fun x : X => Φ.color x (Fin.last T)) U S
+      ≤ I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+  classical
+  rw [Φ.cutMass_eq_sum_local_of_realizes M hReal U
+    (S.image (Fin.castSucc : Fin T → Fin (T + 1)))]
+  unfold Incidence.choiceLowHitCount
+  rw [Finset.card_filter, ← Finset.sum_add_distrib,
+    Incidence.cutCap_image_castSucc]
+  apply Finset.sum_le_sum
+  intro x _hx
+  exact Φ.local_castSucc_cut_count_add_last_low_indicator_le_cap x U S
 
 noncomputable def extendLast {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
@@ -2396,6 +2520,55 @@ def EraseLastHallCutsTokenLinearChoiceGoal : Prop :=
               Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
                 ≤ M.cutSlack U
                     (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+    (hRealize : HallRealizationGoal.{uX, uC}) :
+    EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hRealize I M hHall with ⟨Φ, hReal⟩
+  let choice : X → C := fun x => Φ.color x (Fin.last T)
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    exact Φ.color_mem_active x (Fin.last T)
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T) := by
+    intro c
+    rw [← Φ.count_eq_choiceDegree c (Fin.last T), hReal c (Fin.last T)]
+  rcases Incidence.exists_choiceDegree_bijective_token_matching
+      choice (fun c : C => M.val c (Fin.last T)) hdegree with
+    ⟨f, hfChoice⟩
+  refine ⟨f, ?_, ?_⟩
+  · intro q
+    rw [hfChoice q]
+    exact hchoice (f q)
+  · have hchoiceEq : (fun x : X => (f.symm x).1) = choice := by
+      funext x
+      have h := hfChoice (f.symm x)
+      simpa using h
+    intro U S _hUne _hUuniv _hSne
+    have hHallUS :
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) ≤
+          I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+      hHall U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+    have hAdd :
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+            + Incidence.choiceLowHitCount I choice U S
+          ≤ I.cutCap U
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+      simpa [choice] using
+        Φ.cutMass_image_castSucc_add_choiceLowHitCount_le_cutCap_of_realizes
+          M hReal U S
+    have hLow :
+        Incidence.choiceLowHitCount I choice U S
+          ≤ M.cutSlack U
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+      ((M.cutMass_add_le_iff_le_cutSlack U
+        (S.image (Fin.castSucc : Fin T → Fin (T + 1))) hHallUS
+        (Incidence.choiceLowHitCount I choice U S)).1 hAdd)
+    rw [Incidence.tokenLoadOn_eq_choiceHitCountOn, hchoiceEq,
+      ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
+    exact hLow
 
 theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
@@ -2867,6 +3040,12 @@ theorem hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
     HallRealizationGoal.{uX, uC} :=
   hallRealizationGoal_of_eraseLastHallCutsLinearChoice
     (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear hToken)
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
+  ⟨eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization,
+    hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice⟩
 
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
