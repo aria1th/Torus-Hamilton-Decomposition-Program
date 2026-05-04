@@ -2807,6 +2807,28 @@ end OrdinaryQeq1SpecialMatchingData
 
 namespace OrdinaryQeq1PRowSpecialMatchingData
 
+theorem mate_col_sum_high {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
+    (M : OrdinaryQeq1PRowSpecialMatchingData A)
+    {k : Fin (n - 1)} (hk : r ≤ k.val) :
+    (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+      if M.mate i = k then (1 : Int) else 0) = 1 := by
+  have hnot : ¬ k.val < r := by omega
+  simpa [hnot] using M.mate_col_sum_pRows k
+
+theorem mate_col_sum_special {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
+    (M : OrdinaryQeq1PRowSpecialMatchingData A) :
+    (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+      if M.mate i = M.mate M.special then (1 : Int) else 0) = 1 := by
+  simpa [M.special_low] using M.mate_col_sum_pRows (M.mate M.special)
+
+theorem mate_col_sum_low_ne_special {n r : Nat}
+    {A : OrdinaryQeq1AuxMatrixData n r}
+    (M : OrdinaryQeq1PRowSpecialMatchingData A)
+    {k : Fin (n - 1)} (hk : k.val < r) (hne : k ≠ M.mate M.special) :
+    (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+      if M.mate i = k then (1 : Int) else 0) = 0 := by
+  simpa [hk, hne] using M.mate_col_sum_pRows k
+
 def toSpecialMatchingData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
     (M : OrdinaryQeq1PRowSpecialMatchingData A) :
     OrdinaryQeq1SpecialMatchingData A where
