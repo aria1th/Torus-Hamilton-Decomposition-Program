@@ -249,3 +249,32 @@ The likely fastest order is:
 If proving `ActiveHall.HallRealizationGoal` separately, use
 `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`; it is the current sharp
 abstract combinatorics request for that layer.
+
+## Mathlib Hall Survey
+
+A local mathlib check found the standard finite Hall theorem:
+
+```lean
+Finset.all_card_le_biUnion_card_iff_exists_injective
+```
+
+and the graph-facing wrappers:
+
+```lean
+SimpleGraph.exists_isMatching_of_forall_ncard_le
+SimpleGraph.exists_isPerfectMatching_of_forall_ncard_le
+```
+
+These are in:
+
+```text
+Mathlib/Combinatorics/Hall/Basic.lean
+Mathlib/Combinatorics/Hall/Finite.lean
+Mathlib/Combinatorics/SimpleGraph/Hall.lean
+```
+
+No direct Hoffman ordered-SDR or capacitated bipartite edge-coloring theorem was
+found in the local mathlib tree.  Ordinary Hall is already used inside
+`RoundComposite.ActiveHall` for one-symbol token matching and column filling.
+The remaining Active-Hall gap is precisely the strengthening from these
+column-wise matchings to a row-Latin ordered symboling.
