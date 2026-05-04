@@ -2400,6 +2400,34 @@ theorem exists_distinguished_low_neg {n r : Nat}
   simp [hnotLow, hmid] at hcardle
   omega
 
+theorem pRow_posCols_card {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
+    {i : Fin n} (hi : r ≤ i.val) :
+    (A.posCols i).card = (n + r - 3) / 2 := by
+  have h := A.posCols_card hdodd hmodd i
+  unfold ordinaryQeq1AuxDegree at h
+  have hlow : ¬ i.val < r - 1 := by omega
+  have hmid : ¬ i.val < r := by omega
+  simpa [hlow, hmid] using h
+
+theorem pRow_posCols_card_pos {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hrpos : 0 < r) {i : Fin n} (hi : r ≤ i.val) :
+    0 < (A.posCols i).card := by
+  rw [A.pRow_posCols_card hdodd hmodd hi]
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  rcases hdodd with ⟨a, ha⟩
+  rcases hrodd with ⟨s, hs⟩
+  have hn : n = 2 * a := by omega
+  have hr : r = 2 * s + 1 := by omega
+  subst n
+  subst r
+  omega
+
 end OrdinaryQeq1AuxMatrixData
 
 /--
