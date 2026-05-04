@@ -190,6 +190,14 @@ theorem prefixCountRootStep_apply_zero {d m : Nat} (hd2 : 2 ≤ d)
   · simp [prefixCountRootStep, hi]
   · simp [prefixCountRootStep, hi]
 
+theorem prefixCountRootStep_apply_coord {d m : Nat}
+    (i : Fin d) (w : PrefixCountRootState d m) (j : Fin (d - 1)) :
+    prefixCountRootStep d m i w j =
+      if i.val = j.val then w j + 1 else w j := by
+  by_cases hij : i.val = j.val
+  · simp [prefixCountRootStep, hij]
+  · simp [prefixCountRootStep, hij]
+
 theorem prefixCountRootStep_eq_succ_cast {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (w : PrefixCountRootState d m) :
     prefixCountRootStep d m i w =
@@ -1029,6 +1037,17 @@ theorem prefixCountFirstHitSymbolMap_apply_zero
         ((prefixCountLambdaRho_val_eq_zero_iff
           (prefixCountCanonicalRho d m hd2 t w) hrho).1 hzero)
     simp [hs0, hLambda]
+
+theorem prefixCountFirstHitSymbolMap_apply_coord
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (s : Fin d) (w : PrefixCountRootState d m)
+    (j : Fin (d - 1)) :
+    prefixCountFirstHitSymbolMap hd2 t s w j =
+      if (prefixCountLambdaRho d
+          (prefixCountCanonicalRho d m hd2 t w) s).val = j.val
+      then w j + 1 else w j := by
+  unfold prefixCountFirstHitSymbolMap
+  rw [prefixCountRootStep_apply_coord]
 
 theorem prefixCountFirstHitSymbolMap_bijective_of_val_zero
     {d m : Nat} (hd2 : 2 ≤ d)
