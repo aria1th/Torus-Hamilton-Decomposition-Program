@@ -340,12 +340,13 @@ prefixCountHasHitIndicatorSum
 prefixCountFirstHitReturnBaseStep_sum_fin_iterate
 prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
+prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
 ```
 
 So the open return-tail proof request should focus on the low-prefix
 reindexing across the actual nested `u,t,x` sum and the split by layer symbol.
 The raw no-hit/has-hit cardinalities modulo `m`, the base-orbit `u`-sum
-reindexing, and the generic projected-low-prefix bijection are now Lean-closed.
+reindexing, and the projected-low-prefix bijections are now Lean-closed.
 
 ### Already Lean-Closed
 

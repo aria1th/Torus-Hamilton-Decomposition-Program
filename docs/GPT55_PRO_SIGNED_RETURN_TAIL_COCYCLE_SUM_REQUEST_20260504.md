@@ -127,6 +127,16 @@ theorem Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTa
   Function.Bijective
     (fun x : Fin k -> ZMod m =>
       Shared.zmodVectorTake hk (F (Shared.zmodVectorExtendZero hk x)))
+
+theorem prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective :
+  Function.Bijective
+    (fun x : Fin k -> ZMod m =>
+      Shared.zmodVectorTake (Nat.le_of_lt hk)
+        (Shared.skewFiberIterate
+          (prefixCountFirstHitReturnBaseStep C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)
+          u 0
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))
 ```
 
 Lean has already closed row-Latin, layer bijectivity, root-flat schedule
@@ -139,6 +149,8 @@ It also closed the base-orbit sum reindexing lemmas listed above, using
 Finally, `Shared` now has the generic projected-low-prefix bijection lemma
 listed above: increment-dependency plus full bijectivity of `F` makes the
 `extendZero -> F -> take` map on `Fin k -> ZMod m` bijective.
+`RoundComposite.Concrete` also exposes the prefix-count specialization for the
+actual `skewFiberIterate`.
 
 ## Mathematical Source
 

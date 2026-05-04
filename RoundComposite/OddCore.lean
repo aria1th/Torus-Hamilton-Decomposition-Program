@@ -3410,6 +3410,48 @@ theorem prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
   rw [hsum]
   abel
 
+theorem prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d}
+    (hdodd : Odd d) (hd5 : 5 ≤ d) (hmodd : Odd m) (hdm : d ≤ m)
+    (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (u k : Nat) (hk : k < d - 2) :
+    Function.Bijective
+      (fun x : Fin k → ZMod m =>
+        Shared.zmodVectorTake (Nat.le_of_lt hk)
+          (Shared.skewFiberIterate
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c)
+            u (0 : ZMod m)
+            (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))) := by
+  let F : (Fin (d - 2) → ZMod m) → (Fin (d - 2) → ZMod m) :=
+    Shared.skewFiberIterate
+      (prefixCountFirstHitReturnBaseStep (m := m) C c)
+      (prefixCountFirstHitReturnFiberStep hd2 L c)
+      u (0 : ZMod m)
+  have hFiber :
+      PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal :=
+    prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
+      prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+  have hInc : Shared.ZModVectorIncrementDependsOnTake F := by
+    exact
+      Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        (fun z => hFiber hd2 hdodd hd5 hmodd hdm hC L c z)
+        u (0 : ZMod m)
+  have hBij : Function.Bijective F := by
+    exact
+      Shared.skewFiberIterate_bijective
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        (prefixCountFirstHitReturnFiberStep_bijective
+          hd2 hdodd hd5 hmodd hdm hC L c)
+        u (0 : ZMod m)
+  exact
+    Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
+      (Nat.le_of_lt hk) hInc hBij
+
 theorem prefixCountFirstHitReturnTailIncrementDependsOnTakeGoal_of_fiber
     (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal) :
     PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal := by
