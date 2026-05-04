@@ -365,7 +365,7 @@ theorem prefixCountRootStateHeadTailEquiv_symm_eq_of_take_le
       (prefixCountRootStateHeadTailEquiv d m hd2).symm (z, y) j := by
   by_cases hj0 : j.val = 0
   · have hidx : j = ⟨0, by omega⟩ := Fin.ext hj0
-    subst j
+    rw [hidx]
     simp
   · have hjpred : j.val - 1 < k := by omega
     have htail := congrFun hxy ⟨j.val - 1, hjpred⟩
@@ -480,17 +480,51 @@ theorem prefixCountLambdaRho_val_eq_pos_iff
       (s.val = 1 ∧ rho.val = l) ∨
         (s.val = l ∧ 1 < s.val ∧ rho.val < s.val) ∨
         (s.val = l + 1 ∧ ¬ rho.val < s.val) := by
-  unfold prefixCountLambdaRho
   by_cases hs0 : s.val = 0
-  · simp [hs0]
-    omega
+  · have hLambda : (prefixCountLambdaRho d rho s).val = 0 := by
+      rw [prefixCountLambdaRho_eq_self_of_val_zero rho hs0]
+      exact hs0
+    constructor
+    · intro h
+      omega
+    · intro hcase
+      rcases hcase with ⟨hs, _⟩ | ⟨hs, hspos, _⟩ | ⟨hs, _⟩ <;> omega
   · by_cases hs1 : s.val = 1
-    · simp [hs0, hs1]
+    · have hLambda : (prefixCountLambdaRho d rho s).val = rho.val := by
+        rw [prefixCountLambdaRho_eq_rho_of_val_one rho hs1]
+      constructor
+      · intro h
+        exact Or.inl ⟨hs1, by omega⟩
+      · intro hcase
+        rcases hcase with ⟨_hs, hrho⟩ | ⟨hs, hspos, _⟩ | ⟨hs, _⟩
+        · omega
+        · omega
+        · omega
     · by_cases hlt : rho.val < s.val
-      · simp [hs0, hs1, hlt]
-        omega
-      · simp [hs0, hs1, hlt]
-        omega
+      · have hLambda : (prefixCountLambdaRho d rho s).val = s.val := by
+          rw [prefixCountLambdaRho_eq_self_of_rho_lt rho hs0 hs1 hlt]
+        constructor
+        · intro h
+          rw [hLambda] at h
+          exact Or.inr (Or.inl ⟨by omega, by omega, hlt⟩)
+        · intro hcase
+          rw [hLambda]
+          rcases hcase with ⟨hs, _⟩ | ⟨hs, _hspos, _hrho⟩ | ⟨hs, _⟩
+          · omega
+          · exact hs
+          · omega
+      · have hLambda : (prefixCountLambdaRho d rho s).val = s.val - 1 :=
+          prefixCountLambdaRho_val_eq_pred rho hs0 hs1 hlt
+        constructor
+        · intro h
+          rw [hLambda] at h
+          exact Or.inr (Or.inr ⟨by omega, hlt⟩)
+        · intro hcase
+          rw [hLambda]
+          rcases hcase with ⟨hs, _⟩ | ⟨_hs, _hspos, hrho⟩ | ⟨hs, _hrho⟩
+          · omega
+          · exact False.elim (hlt hrho)
+          · omega
 
 def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
   if _hs0 : s.val = 0 then
@@ -573,6 +607,49 @@ theorem prefixCountLayerIndex_natCast_val {m : Nat} [NeZero m]
     (t : Fin m) :
     prefixCountLayerIndex ((t.val : Nat) : ZMod m) = t := by
   exact prefixCountLayerIndex_natCast_of_lt t.isLt
+
+theorem prefixCountLayerCount_range_eq_matrix
+    {d m : Nat} [NeZero m] {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c s : Fin d) :
+    (∑ t ∈ Finset.range m,
+        if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+        then (1 : Nat) else 0) = M c s := by
+  let fNat : Nat → Nat := fun t =>
+    if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+    then 1 else 0
+  calc
+    (∑ t ∈ Finset.range m,
+        if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+        then (1 : Nat) else 0)
+        = ∑ t ∈ Finset.range m, fNat t := rfl
+    _ = ∑ t : Fin m, fNat t.val := by
+          rw [Fin.sum_univ_eq_sum_range fNat m]
+    _ = ∑ t : Fin m, if L.layer t c = s then (1 : Nat) else 0 := by
+          apply Finset.sum_congr rfl
+          intro t _ht
+          simp [fNat, prefixCountLayerIndex_natCast_val]
+    _ = M c s := L.count_eq c s
+
+theorem prefixCountLayerCount_range_eq_matrix_zmod
+    {d m : Nat} [NeZero m] {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c s : Fin d) :
+    (∑ t ∈ Finset.range m,
+        if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+        then (1 : ZMod m) else 0) = (M c s : ZMod m) := by
+  let fNat : Nat → Nat := fun t =>
+    if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+    then 1 else 0
+  have hNat :
+      (∑ t ∈ Finset.range m, fNat t) = M c s := by
+    simpa [fNat] using
+      prefixCountLayerCount_range_eq_matrix (m := m) L c s
+  have hCast :
+      ((∑ t ∈ Finset.range m, fNat t : Nat) : ZMod m) =
+        ∑ t ∈ Finset.range m,
+          if L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c = s
+          then (1 : ZMod m) else 0 := by
+    simp [fNat]
+  rw [← hCast, hNat]
 
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
@@ -795,6 +872,29 @@ theorem prefixCountCanonicalRho_eq_last_of_no_hit
   unfold prefixCountCanonicalRho
   simp [h]
 
+theorem prefixCountCanonicalRho_pred_hitNat
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : (prefixCountCanonicalRho d m hd2 t w).val < d - 1) :
+    prefixCountCanonicalRhoHitNat t w
+      ((prefixCountCanonicalRho d m hd2 t w).val - 1) := by
+  classical
+  by_cases hhit : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j
+  · have hspec := prefixCountCanonicalRhoFirstNat_spec hhit
+    have hval := prefixCountCanonicalRho_val_eq_find_succ
+      (d := d) (m := m) hd2 (t := t) (w := w) hhit
+    have hidx :
+        prefixCountCanonicalRhoFirstNat t w hhit =
+          (prefixCountCanonicalRho d m hd2 t w).val - 1 := by
+      omega
+    simpa [hidx] using hspec
+  · have hlast := prefixCountCanonicalRho_eq_last_of_no_hit
+      (d := d) (m := m) hd2 (t := t) (w := w) hhit
+    have hval :
+        (prefixCountCanonicalRho d m hd2 t w).val = d - 1 :=
+      congrArg Fin.val hlast
+    omega
+
 theorem prefixCountCanonicalRho_no_hit_before
     {d m : Nat} (hd2 : 2 ≤ d)
     {t : ZMod m} {w : PrefixCountRootState d m}
@@ -1009,25 +1109,6 @@ theorem prefixCountCanonicalRho_not_lt_succ_succ_congr_of_agreeUpTo
       ((prefixCountCanonicalRho_val_lt_succ_congr_of_agreeUpTo
         (d := d) (m := m) hd2 (t := t) (w := w) (v := v)
         (K := k) (l := k + 1) h (by omega) (by omega)).1 hw)
-
-theorem prefixCountCanonicalRho_pred_hitNat
-    {d m : Nat} (hd2 : 2 ≤ d)
-    {t : ZMod m} {w : PrefixCountRootState d m}
-    (hrho : (prefixCountCanonicalRho d m hd2 t w).val < d - 1) :
-    prefixCountCanonicalRhoHitNat t w
-      ((prefixCountCanonicalRho d m hd2 t w).val - 1) := by
-  by_cases h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j
-  · have hval := prefixCountCanonicalRho_val_eq_find_succ hd2 h
-    have hpred :
-        (prefixCountCanonicalRho d m hd2 t w).val - 1 =
-          prefixCountCanonicalRhoFirstNat t w h := by
-      omega
-    simpa [hpred] using prefixCountCanonicalRhoFirstNat_spec h
-  · have hlast :
-        (prefixCountCanonicalRho d m hd2 t w).val = d - 1 := by
-      simpa using congrArg Fin.val
-        (prefixCountCanonicalRho_eq_last_of_no_hit hd2 h)
-    omega
 
 theorem prefixCountCanonicalRho_pred_hit
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -2092,6 +2173,7 @@ theorem prefixCountFirstHitReturnFiberStep_apply_cases
               (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
               (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
           then (1 : ZMod m) else 0 := by
+  classical
   rw [prefixCountFirstHitReturnFiberStep_apply]
   congr 1
   apply Finset.sum_congr rfl
@@ -2112,15 +2194,17 @@ theorem prefixCountFirstHitReturnFiberStep_apply_cases
         (d := d) rho s (l := j.val + 1) (Nat.succ_pos j.val))
   by_cases h :
       (prefixCountLambdaRho d rho s).val = j.val + 1
-  · have hcase := hiff.mp h
-    simp [rho, s, h, hcase]
-  · have hcase :
-      ¬ ((s.val = 1 ∧ rho.val = j.val + 1) ∨
-          (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
-          (s.val = j.val + 2 ∧ ¬ rho.val < s.val)) := by
-        intro hcase
-        exact h (hiff.mpr hcase)
-    simp [rho, s, h, hcase]
+  · rw [if_pos h]
+    rw [if_pos (by simpa [rho, s] using hiff.mp h)]
+  · rw [if_neg h]
+    rw [if_neg (by
+      intro hcase
+      have hcase' :
+          (s.val = 1 ∧ rho.val = j.val + 1) ∨
+            (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+            (s.val = j.val + 2 ∧ ¬ rho.val < s.val) := by
+        simpa [rho, s] using hcase
+      exact h (hiff.mpr hcase'))]
 
 def prefixCountFirstHitReturnFiberHitCondition
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
@@ -2137,6 +2221,17 @@ def prefixCountFirstHitReturnFiberHitCondition
   (s.val = 1 ∧ rho.val = j.val + 1) ∨
     (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
     (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
+
+noncomputable instance prefixCountFirstHitReturnFiberHitCondition_decidable
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m)
+    (j : Fin (d - 2)) (t : Nat) :
+    Decidable
+      (prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t) := by
+  unfold prefixCountFirstHitReturnFiberHitCondition
+  infer_instance
 
 def prefixCountFirstHitReturnFiberHitConditionAt
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
@@ -2365,6 +2460,7 @@ theorem prefixCountFirstHitReturnFiberStep_apply_hitCondition
         ∑ t ∈ Finset.range m,
           if prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t
           then (1 : ZMod m) else 0 := by
+  classical
   rw [prefixCountFirstHitReturnFiberStep_apply_cases]
   rfl
 
@@ -2730,8 +2826,9 @@ def PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
     C.Admissible m →
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
     ∀ c : Fin d,
-      Shared.CycleCoordinate (m ^ (d - 2))
-        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+      Nonempty
+        (Shared.CycleCoordinate (m ^ (d - 2))
+          (prefixCountFirstHitReturnTailMonodromy hd2 L c))
 
 noncomputable def prefixCountFirstHitReturnTailCocycle
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
@@ -2979,7 +3076,7 @@ theorem prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
     (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
     PrefixCountFirstHitReturnTailRankEquivGoal := by
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
-  let K := hCycle hd2 hdodd hd5 hmodd hdm hC L c
+  rcases hCycle hd2 hdodd hd5 hmodd hdm hC L c with ⟨K⟩
   exact ⟨K.equiv.symm, fun tail => Shared.CycleCoordinate.rank_step K tail⟩
 
 theorem prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
@@ -3008,12 +3105,14 @@ theorem prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
   exact
     prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
       (d := d) (m := m) hd2 L c
-      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wx)
-      ⟨k, hk⟩ t htAgree
+      (w := (prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wx)
+      (v := (prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wy)
+      (j := ⟨k, hk⟩) (t := t) htAgree
 
 theorem prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
     (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal) :
     PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal := by
+  classical
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c z x y k hk hxy
   rw [prefixCountFirstHitReturnFiberStep_apply_hitCondition
     (hd2 := hd2) (C := C) L c z x ⟨k, hk⟩]
@@ -3099,8 +3198,9 @@ theorem prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
     PrefixCountFirstHitReturnTailCocycleUnitGoal := by
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c k hk
   rw [hSum hd2 hdodd hd5 hmodd hdm hC L c k hk]
-  exact PrefixCount.isUnit_zmod_intCast_of_intCoprime
-    (hC.prim_step c ⟨k, hk⟩)
+  simpa [Int.cast_sub, Int.cast_natCast] using
+    PrefixCount.isUnit_zmod_intCast_of_intCoprime
+      (hC.prim_step c ⟨k, hk⟩)
 
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
@@ -3132,7 +3232,7 @@ theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit
       intro k hk
       exact hUnit hd2 hdodd hd5 hmodd hdm hC L c k hk)
     with ⟨e, hstep⟩
-  exact Shared.CycleCoordinate.ofRankEquiv e hstep
+  exact ⟨Shared.CycleCoordinate.ofRankEquiv e hstep⟩
 
 theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangularUnitBlocks
     (hBlocks : PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal) :
@@ -3245,7 +3345,7 @@ theorem prefixCountFirstHitReturnTailMonodromyGoal_of_cycleCoordinate
   prefixCountFirstHitReturnTailMonodromyGoal_of_rankEquiv
     (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hCycle)
 
-noncomputable theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
+theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
     PrefixCountFirstHitReturnTailCycleCoordinateGoal := by
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
@@ -3255,11 +3355,11 @@ noncomputable theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodr
   have hm1 : 1 < m := by omega
   have hexp : d - 2 ≠ 0 := by omega
   have hn : 1 < m ^ (d - 2) := one_lt_pow₀ hm1 hexp
-  exact
+  exact ⟨
     Shared.CycleCoordinate.ofFiniteSingleCycle
       (f := prefixCountFirstHitReturnTailMonodromy hd2 L c)
       hcard hn
-      (hTail hd2 hdodd hd5 hmodd hdm hC L c)
+      (hTail hd2 hdodd hd5 hmodd hdm hC L c)⟩
 
 theorem prefixCountFirstHitReturnTailRankEquivGoal_of_monodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
@@ -3563,28 +3663,28 @@ def OddSuccessorSmallModulusSlackPacketLiftAddGoal : Prop :=
     StandardCayleySolved (b + T) m
 
 def OddSuccessorSmallModulusBaseTailGeometryFromHallGoal : Prop :=
-  ActiveHall.HallRealizationGoal →
+  ActiveHall.HallRealizationGoal.{0, 0} →
     OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
 def OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal : Prop :=
-  ActiveHall.HoffmanOrderedSDRGoal →
+  ActiveHall.HoffmanOrderedSDRGoal.{0, 0} →
     OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hHall : ActiveHall.HallRealizationGoal) :
+    (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
   hGeom hHall
 
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal)
-    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal) :
+    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal.{0, 0}) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
   hGeom hHoffman
 
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall_and_hoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal) :
+    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal.{0, 0}) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
   hGeom (ActiveHall.hallRealizationGoal_of_hoffmanOrderedSDR hHoffman)
 
@@ -3754,7 +3854,7 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
 
 theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hHall : ActiveHall.HallRealizationGoal) :
+    (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
     OddSuccessorSmallModulusBaseTailGoal :=
   oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
     (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
@@ -3762,7 +3862,7 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
 
 theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal)
-    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal) :
+    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal.{0, 0}) :
     OddSuccessorSmallModulusBaseTailGoal :=
   oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
     (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHoffman
@@ -3770,7 +3870,7 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHoffman
 
 theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall_and_hoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal) :
+    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal.{0, 0}) :
     OddSuccessorSmallModulusBaseTailGoal :=
   oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
     (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall_and_hoffman

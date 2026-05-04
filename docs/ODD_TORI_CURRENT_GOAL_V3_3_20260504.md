@@ -202,15 +202,16 @@ def PrefixCountFirstHitReturnTailCycleCoordinateGoal : Prop :=
     C.Admissible m ->
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
     forall c : Fin d,
-      Shared.CycleCoordinate (m ^ (d - 2))
-        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+      Nonempty
+        (Shared.CycleCoordinate (m ^ (d - 2))
+          (prefixCountFirstHitReturnTailMonodromy hd2 L c))
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
     (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
     PrefixCountFirstHitReturnTailRankEquivGoal
 
-noncomputable theorem RoundComposite.Concrete
+theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
     (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
     PrefixCountFirstHitReturnTailCycleCoordinateGoal
