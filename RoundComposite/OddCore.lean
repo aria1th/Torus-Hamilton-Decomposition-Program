@@ -397,13 +397,60 @@ def prefixCountCanonicalRhoHit {d m : Nat}
     (j : Fin (d - 1)) : Prop :=
   j.val + 1 < d - 1 ∧ w j = t
 
+def prefixCountCanonicalRhoHitNat {d m : Nat}
+    (t : ZMod m) (w : PrefixCountRootState d m)
+    (j : Nat) : Prop :=
+  ∃ hj : j < d - 1,
+    j + 1 < d - 1 ∧ w ⟨j, hj⟩ = t
+
+theorem prefixCountCanonicalRhoHitNat_of_fin
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    {j : Fin (d - 1)}
+    (h : prefixCountCanonicalRhoHit t w j) :
+    prefixCountCanonicalRhoHitNat t w j.val :=
+  ⟨j.isLt, h⟩
+
+theorem prefixCountCanonicalRhoHit_of_nat
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    {j : Nat} (h : prefixCountCanonicalRhoHitNat t w j)
+    {hj : j < d - 1} :
+    prefixCountCanonicalRhoHit t w ⟨j, hj⟩ := by
+  rcases h with ⟨hj', hlt, hw⟩
+  constructor
+  · exact hlt
+  · convert hw
+
+noncomputable def prefixCountCanonicalRhoFirstNat
+    {d m : Nat} (t : ZMod m) (w : PrefixCountRootState d m)
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) : Nat := by
+  classical
+  exact Nat.find h
+
+theorem prefixCountCanonicalRhoFirstNat_spec
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) :
+    prefixCountCanonicalRhoHitNat t w
+      (prefixCountCanonicalRhoFirstNat t w h) := by
+  classical
+  unfold prefixCountCanonicalRhoFirstNat
+  exact Nat.find_spec h
+
+theorem prefixCountCanonicalRhoFirstNat_minimal
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j)
+    {j : Nat} (hj : prefixCountCanonicalRhoHitNat t w j) :
+    prefixCountCanonicalRhoFirstNat t w h ≤ j := by
+  classical
+  unfold prefixCountCanonicalRhoFirstNat
+  exact Nat.find_min' h hj
+
 noncomputable def prefixCountCanonicalRho (d m : Nat) (hd2 : 2 ≤ d)
     (t : ZMod m) (w : PrefixCountRootState d m) : Fin d := by
   classical
   exact
-    if h : ∃ j : Fin (d - 1), prefixCountCanonicalRhoHit t w j then
-      ⟨(Classical.choose h).val + 1, by
-        have hh := Classical.choose_spec h
+    if h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j then
+      ⟨prefixCountCanonicalRhoFirstNat t w h + 1, by
+        rcases prefixCountCanonicalRhoFirstNat_spec h with ⟨hj, hlt, hw⟩
         omega⟩
     else
       ⟨d - 1, by omega⟩
@@ -413,10 +460,96 @@ theorem prefixCountCanonicalRho_ne_zero {d m : Nat} (hd2 : 2 ≤ d)
     (prefixCountCanonicalRho d m hd2 t w).val ≠ 0 := by
   unfold prefixCountCanonicalRho
   classical
-  by_cases h : ∃ j : Fin (d - 1), prefixCountCanonicalRhoHit t w j
+  by_cases h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j
   · simp [h]
   · have hpos : d - 1 ≠ 0 := by omega
     simpa [h] using hpos
+
+theorem prefixCountCanonicalRho_find_hit
+    {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) :
+    prefixCountCanonicalRhoHitNat t w
+      (prefixCountCanonicalRhoFirstNat t w h) :=
+  prefixCountCanonicalRhoFirstNat_spec h
+
+theorem prefixCountCanonicalRho_val_eq_find_succ
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) :
+    (prefixCountCanonicalRho d m hd2 t w).val =
+      prefixCountCanonicalRhoFirstNat t w h + 1 := by
+  classical
+  unfold prefixCountCanonicalRho
+  simp [h]
+
+theorem prefixCountCanonicalRho_minimal
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j)
+    {j : Nat} (hj : prefixCountCanonicalRhoHitNat t w j) :
+    (prefixCountCanonicalRho d m hd2 t w).val ≤ j + 1 := by
+  classical
+  rw [prefixCountCanonicalRho_val_eq_find_succ hd2 h]
+  exact Nat.succ_le_succ (prefixCountCanonicalRhoFirstNat_minimal h hj)
+
+theorem prefixCountCanonicalRho_eq_last_of_no_hit
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (h : ¬ ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j) :
+    prefixCountCanonicalRho d m hd2 t w = ⟨d - 1, by omega⟩ := by
+  classical
+  unfold prefixCountCanonicalRho
+  simp [h]
+
+theorem prefixCountCanonicalRho_no_hit_before
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    {j : Nat}
+    (hj : j + 1 < (prefixCountCanonicalRho d m hd2 t w).val) :
+    ¬ prefixCountCanonicalRhoHitNat t w j := by
+  intro hhit
+  by_cases h : ∃ k : Nat, prefixCountCanonicalRhoHitNat t w k
+  · have hmin := prefixCountCanonicalRho_minimal hd2 h hhit
+    omega
+  · exact h ⟨j, hhit⟩
+
+theorem prefixCountCanonicalRho_no_fin_hit_before
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    {j : Fin (d - 1)}
+    (hj : j.val + 1 < (prefixCountCanonicalRho d m hd2 t w).val) :
+    ¬ prefixCountCanonicalRhoHit t w j := by
+  intro hhit
+  exact prefixCountCanonicalRho_no_hit_before hd2 hj
+    (prefixCountCanonicalRhoHitNat_of_fin hhit)
+
+theorem prefixCountCanonicalRho_pred_hitNat
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (hrho : (prefixCountCanonicalRho d m hd2 t w).val < d - 1) :
+    prefixCountCanonicalRhoHitNat t w
+      ((prefixCountCanonicalRho d m hd2 t w).val - 1) := by
+  by_cases h : ∃ j : Nat, prefixCountCanonicalRhoHitNat t w j
+  · have hval := prefixCountCanonicalRho_val_eq_find_succ hd2 h
+    have hpred :
+        (prefixCountCanonicalRho d m hd2 t w).val - 1 =
+          prefixCountCanonicalRhoFirstNat t w h := by
+      omega
+    simpa [hpred] using prefixCountCanonicalRhoFirstNat_spec h
+  · have hlast :
+        (prefixCountCanonicalRho d m hd2 t w).val = d - 1 := by
+      simpa using congrArg Fin.val
+        (prefixCountCanonicalRho_eq_last_of_no_hit hd2 h)
+    omega
+
+theorem prefixCountCanonicalRho_pred_hit
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    (hrho : (prefixCountCanonicalRho d m hd2 t w).val < d - 1) :
+    prefixCountCanonicalRhoHit t w
+      ⟨(prefixCountCanonicalRho d m hd2 t w).val - 1, by omega⟩ := by
+  exact prefixCountCanonicalRhoHit_of_nat
+    (prefixCountCanonicalRho_pred_hitNat hd2 hrho)
 
 noncomputable def prefixCountFirstHitCanonicalSchedule
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
