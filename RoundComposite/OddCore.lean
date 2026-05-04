@@ -583,6 +583,27 @@ noncomputable def prefixCountFirstHitSymbolMap
     prefixCountRootStep d m
       (prefixCountLambdaRho d (prefixCountCanonicalRho d m hd2 t w) s) w
 
+noncomputable def prefixCountFirstHitSymbolMapInv
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (s : Fin d) :
+    PrefixCountRootState d m → PrefixCountRootState d m :=
+  fun w =>
+    prefixCountRootStepInv d m
+      (prefixCountLambdaRho d (prefixCountCanonicalRho d m hd2 t w) s) w
+
+theorem prefixCountFirstHitSymbolMap_bijective_of_val_zero
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (hs : s.val = 0) :
+    Function.Bijective (prefixCountFirstHitSymbolMap hd2 t s) := by
+  have hfun :
+      prefixCountFirstHitSymbolMap hd2 t s =
+        prefixCountRootStep d m s := by
+    funext w
+    simp [prefixCountFirstHitSymbolMap,
+      prefixCountLambdaRho_eq_self_of_val_zero _ hs]
+  rw [hfun]
+  exact prefixCountRootStep_bijective s
+
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
@@ -597,6 +618,34 @@ def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
     Odd d → 5 ≤ d → Odd m → d ≤ m →
     ∀ t : ZMod m, ∀ s : Fin d,
       Function.Bijective (prefixCountFirstHitSymbolMap hd2 t s)
+
+def PrefixCountFirstHitSymbolMapInverseLawGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    ∀ t : ZMod m, ∀ s : Fin d,
+      Function.LeftInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) ∧
+      Function.RightInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s)
+
+theorem prefixCountFirstHitSymbolMapsBijectiveGoal_of_inverseLaw
+    (hInv : PrefixCountFirstHitSymbolMapInverseLawGoal) :
+    PrefixCountFirstHitSymbolMapsBijectiveGoal := by
+  intro d m _inst hd2 hdodd hd5 hmodd hdm t s
+  rcases hInv hd2 hdodd hd5 hmodd hdm t s with ⟨hLeft, hRight⟩
+  constructor
+  · intro x y hxy
+    have h := congrArg (prefixCountFirstHitSymbolMapInv hd2 t s) hxy
+    calc
+      x = prefixCountFirstHitSymbolMapInv hd2 t s
+            (prefixCountFirstHitSymbolMap hd2 t s x) := (hLeft x).symm
+      _ = prefixCountFirstHitSymbolMapInv hd2 t s
+            (prefixCountFirstHitSymbolMap hd2 t s y) := h
+      _ = y := hLeft y
+  · intro y
+    exact ⟨prefixCountFirstHitSymbolMapInv hd2 t s y, hRight y⟩
 
 def PrefixCountFirstHitCanonicalLayerBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
