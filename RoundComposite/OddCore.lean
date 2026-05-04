@@ -1038,6 +1038,96 @@ theorem prefixCountFirstHitSymbolMap_bijective_of_val_one
   · intro y
     exact ⟨prefixCountFirstHitSymbolMapInv hd2 t s y, hRight y⟩
 
+theorem prefixCountFirstHitSymbolMap_rho_eq_of_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : (prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountCanonicalRho d m hd2 t
+        (prefixCountFirstHitSymbolMap hd2 t s w)
+      =
+    prefixCountCanonicalRho d m hd2 t w := by
+  unfold prefixCountFirstHitSymbolMap
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+  exact prefixCountCanonicalRho_rootStep_after_first hd2 t w hlt
+
+theorem prefixCountFirstHitSymbolMapInv_rho_eq_of_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : (prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountCanonicalRho d m hd2 t
+        (prefixCountFirstHitSymbolMapInv hd2 t s w)
+      =
+    prefixCountCanonicalRho d m hd2 t w := by
+  unfold prefixCountFirstHitSymbolMapInv
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+  exact prefixCountCanonicalRho_rootStepInv_after_first hd2 t w hlt
+
+theorem prefixCountFirstHitSymbolMapInv_apply_symbolMap_of_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : (prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountFirstHitSymbolMapInv hd2 t s
+        (prefixCountFirstHitSymbolMap hd2 t s w) = w := by
+  have hrho :=
+    prefixCountFirstHitSymbolMap_rho_eq_of_rho_lt
+      hd2 t w hs0 hs1 hlt
+  unfold prefixCountFirstHitSymbolMapInv prefixCountFirstHitSymbolMap
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+  have hrho' :
+      prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStep d m s w)
+        =
+      prefixCountCanonicalRho d m hd2 t w := by
+    simpa [prefixCountFirstHitSymbolMap,
+      prefixCountLambdaRho_eq_self_of_rho_lt
+        (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+      using hrho
+  have hlt' :
+      (prefixCountCanonicalRho d m hd2 t
+        (prefixCountRootStep d m s w)).val < s.val := by
+    simpa [hrho'] using hlt
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t
+      (prefixCountRootStep d m s w)) hs0 hs1 hlt']
+  exact prefixCountRootStepInv_apply_step s w
+
+theorem prefixCountFirstHitSymbolMap_apply_inv_of_rho_lt
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (w : PrefixCountRootState d m)
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : (prefixCountCanonicalRho d m hd2 t w).val < s.val) :
+    prefixCountFirstHitSymbolMap hd2 t s
+        (prefixCountFirstHitSymbolMapInv hd2 t s w) = w := by
+  have hrho :=
+    prefixCountFirstHitSymbolMapInv_rho_eq_of_rho_lt
+      hd2 t w hs0 hs1 hlt
+  unfold prefixCountFirstHitSymbolMapInv prefixCountFirstHitSymbolMap
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+  have hrho' :
+      prefixCountCanonicalRho d m hd2 t
+          (prefixCountRootStepInv d m s w)
+        =
+      prefixCountCanonicalRho d m hd2 t w := by
+    simpa [prefixCountFirstHitSymbolMapInv,
+      prefixCountLambdaRho_eq_self_of_rho_lt
+        (prefixCountCanonicalRho d m hd2 t w) hs0 hs1 hlt]
+      using hrho
+  have hlt' :
+      (prefixCountCanonicalRho d m hd2 t
+        (prefixCountRootStepInv d m s w)).val < s.val := by
+    simpa [hrho'] using hlt
+  rw [prefixCountLambdaRho_eq_self_of_rho_lt
+    (prefixCountCanonicalRho d m hd2 t
+      (prefixCountRootStepInv d m s w)) hs0 hs1 hlt']
+  exact prefixCountRootStep_apply_inv s w
+
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
