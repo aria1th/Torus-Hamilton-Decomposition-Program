@@ -469,6 +469,19 @@ def toInt (v : SignedValInt) : Int :=
 theorem isSignedVal (v : SignedValInt) : IsSignedVal v.toInt := by
   fin_cases v <;> simp [toInt, IsSignedVal, signedVals]
 
+noncomputable def ofInt (z : Int) (_hz : IsSignedVal z) : SignedValInt :=
+  if z = -2 then 0
+  else if z = -1 then 1
+  else if z = 1 then 2
+  else 3
+
+theorem toInt_ofInt {z : Int} (hz : IsSignedVal z) :
+    SignedValInt.toInt (SignedValInt.ofInt z hz) = z := by
+  have hz' : z = -2 ∨ z = -1 ∨ z = 1 ∨ z = 2 := by
+    simpa [IsSignedVal, signedVals] using hz
+  rcases hz' with rfl | rfl | rfl | rfl <;>
+    simp [ofInt, toInt]
+
 end SignedValInt
 
 theorem signedVal_coprime_of_odd
@@ -1552,6 +1565,40 @@ theorem qge2SignedColumnSupport_ge_of_mem {n c : Nat}
       (∑ i : Fin n, w i * SignedValInt.toInt (x i)) ≤ z :=
     Finset.le_max_of_eq hmem hz
   simpa [qge2SignedColumnSupport, vals, hz] using hle
+
+theorem qge2SignedColumnSupport_ge_of_intColumn {n c : Nat}
+    (w : Fin n → Int) {v : Fin n → Int}
+    (hv : ∀ i : Fin n, IsSignedVal (v i))
+    (hsum : (∑ i : Fin n, v i) = - (c : Int)) :
+    (∑ i : Fin n, w i * v i)
+      ≤ qge2SignedColumnSupport n c w := by
+  classical
+  let x : Fin n → SignedValInt :=
+    fun i => SignedValInt.ofInt (v i) (hv i)
+  have hx : x ∈ qge2SignedColumnFinset n c := by
+    simp [qge2SignedColumnFinset, x, SignedValInt.toInt_ofInt, hsum]
+  have hle := qge2SignedColumnSupport_ge_of_mem (n := n) (c := c) w hx
+  simpa [x, SignedValInt.toInt_ofInt] using hle
+
+theorem qge2SignedMatrix_fullSupport_bound {n : Nat}
+    {c : Fin (n - 1) → Nat} {X : Fin (n - 1) → Fin n → Int}
+    (hSigned : ∀ k i, IsSignedVal (X k i))
+    (hCol : ∀ k : Fin (n - 1), (∑ i : Fin n, X k i) = - (c k : Int))
+    (w : Fin n → Int) :
+    (∑ i : Fin n, w i * (∑ k : Fin (n - 1), X k i))
+      ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w := by
+  classical
+  calc
+    (∑ i : Fin n, w i * (∑ k : Fin (n - 1), X k i))
+        = ∑ i : Fin n, ∑ k : Fin (n - 1), w i * X k i := by
+          simp [Finset.mul_sum]
+    _ = ∑ k : Fin (n - 1), ∑ i : Fin n, w i * X k i := by
+          rw [Finset.sum_comm]
+    _ ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w := by
+          apply Finset.sum_le_sum
+          intro k _hk
+          exact qge2SignedColumnSupport_ge_of_intColumn
+            (n := n) (c := c k) w (fun i => hSigned k i) (hCol k)
 
 theorem qge2ColumnCapacity_eq_left {n j c : Nat}
     (h : 2 * (j : Int) ≤ 2 * ((n - j : Nat) : Int) - (c : Int)) :
