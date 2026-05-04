@@ -2469,6 +2469,29 @@ def activeDegree {X C : Type*} [Fintype X] [DecidableEq X]
   ((Finset.univ : Finset X).filter (fun x => c ∈ active x)).card
 
 /--
+The most standard copied-edge colouring form: colour every copied edge by an
+`x`, respecting active left endpoints, with uniqueness over every `(x, sigma)`
+and every active `(x, c)`.
+-/
+def RawExactEdgeColoringGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC} {E : Type uC}
+    [Fintype X] [Fintype C] [Fintype E]
+    [DecidableEq X] [DecidableEq C] [DecidableEq E],
+    ∀ (left : E → C) (right : E → Fin T) (active : X → Finset C),
+      (∀ x : X, (active x).card = T) →
+      (∀ c : C, edgeLeftDegree left c = activeDegree active c) →
+      (∀ σ : Fin T, edgeRightDegree right σ = Fintype.card X) →
+      (∀ U : Finset C, ∀ S : Finset (Fin T),
+        edgeRectCount left right U S
+          ≤ ∑ x : X, min ((active x ∩ U).card) S.card) →
+      ∃ κ : E → X,
+        (∀ e : E, left e ∈ active (κ e)) ∧
+        (∀ x : X, ∀ σ : Fin T,
+          ∃! e : E, κ e = x ∧ right e = σ) ∧
+        (∀ x : X, ∀ c : C, c ∈ active x →
+          ∃! e : E, κ e = x ∧ left e = c)
+
+/--
 External finite Hoffman/de Werra edge-colouring theorem in copied-edge form.
 
 The copied edges `E` have endpoints `C` and `Fin T`.  A local ordering assigns,
@@ -2490,6 +2513,163 @@ def ExactEdgeColoringGoal : Prop :=
         ∀ c : C, ∀ σ : Fin T,
           Incidence.choiceDegree (fun x : X => ((e x) σ).1) c =
             edgePairCount left right c σ
+
+noncomputable def rightEdge {T : Nat} {X E : Type*}
+    (right : E → Fin T) (κ : E → X)
+    (hRight : ∀ x : X, ∀ σ : Fin T,
+      ∃! e : E, κ e = x ∧ right e = σ)
+    (x : X) (σ : Fin T) : E :=
+  Classical.choose ((hRight x σ).exists)
+
+theorem rightEdge_spec {T : Nat} {X E : Type*}
+    (right : E → Fin T) (κ : E → X)
+    (hRight : ∀ x : X, ∀ σ : Fin T,
+      ∃! e : E, κ e = x ∧ right e = σ)
+    (x : X) (σ : Fin T) :
+    κ (rightEdge right κ hRight x σ) = x ∧
+      right (rightEdge right κ hRight x σ) = σ :=
+  Classical.choose_spec ((hRight x σ).exists)
+
+noncomputable def leftEdge {X C E : Type*}
+    (left : E → C) (active : X → Finset C) (κ : E → X)
+    (hLeft : ∀ x : X, ∀ c : C, c ∈ active x →
+      ∃! e : E, κ e = x ∧ left e = c)
+    (x : X) (c : {c : C // c ∈ active x}) : E :=
+  Classical.choose ((hLeft x c.1 c.2).exists)
+
+theorem leftEdge_spec {X C E : Type*}
+    (left : E → C) (active : X → Finset C) (κ : E → X)
+    (hLeft : ∀ x : X, ∀ c : C, c ∈ active x →
+      ∃! e : E, κ e = x ∧ left e = c)
+    (x : X) (c : {c : C // c ∈ active x}) :
+    κ (leftEdge left active κ hLeft x c) = x ∧
+      left (leftEdge left active κ hLeft x c) = c.1 :=
+  Classical.choose_spec ((hLeft x c.1 c.2).exists)
+
+noncomputable def localEquivOfRawExactColoring {T : Nat} {X C E : Type*}
+    [DecidableEq C]
+    (left : E → C) (right : E → Fin T) (active : X → Finset C)
+    (κ : E → X)
+    (hAvail : ∀ e : E, left e ∈ active (κ e))
+    (hRight : ∀ x : X, ∀ σ : Fin T,
+      ∃! e : E, κ e = x ∧ right e = σ)
+    (hLeft : ∀ x : X, ∀ c : C, c ∈ active x →
+      ∃! e : E, κ e = x ∧ left e = c)
+    (x : X) :
+    Fin T ≃ {c : C // c ∈ active x} where
+  toFun := fun σ =>
+    let e := rightEdge right κ hRight x σ
+    ⟨left e, by
+      have he := rightEdge_spec right κ hRight x σ
+      have hmem := hAvail e
+      rw [he.1] at hmem
+      exact hmem⟩
+  invFun := fun c =>
+    right (leftEdge left active κ hLeft x c)
+  left_inv := by
+    intro σ
+    dsimp
+    let eR := rightEdge right κ hRight x σ
+    have hR := rightEdge_spec right κ hRight x σ
+    have hAct : left eR ∈ active x := by
+      have hmem := hAvail eR
+      rw [hR.1] at hmem
+      exact hmem
+    let csub : {c : C // c ∈ active x} := ⟨left eR, hAct⟩
+    let eL := leftEdge left active κ hLeft x csub
+    have hL := leftEdge_spec left active κ hLeft x csub
+    have heq : eL = eR := by
+      exact (hLeft x csub.1 csub.2).unique hL ⟨hR.1, rfl⟩
+    change right eL = σ
+    rw [heq]
+    exact hR.2
+  right_inv := by
+    intro csub
+    dsimp
+    let eL := leftEdge left active κ hLeft x csub
+    have hL := leftEdge_spec left active κ hLeft x csub
+    let σ := right eL
+    have hR := rightEdge_spec right κ hRight x σ
+    have heq : rightEdge right κ hRight x σ = eL := by
+      exact (hRight x σ).unique hR ⟨hL.1, rfl⟩
+    apply Subtype.ext
+    change left (rightEdge right κ hRight x σ) = csub.1
+    rw [heq]
+    exact hL.2
+
+theorem choiceDegree_localEquivOfRawExactColoring
+    {T : Nat} {X : Type uX} {C : Type uC} {E : Type uC}
+    [Fintype X] [Fintype E] [DecidableEq X] [DecidableEq C] [DecidableEq E]
+    (left : E → C) (right : E → Fin T) (active : X → Finset C)
+    (κ : E → X)
+    (hAvail : ∀ e : E, left e ∈ active (κ e))
+    (hRight : ∀ x : X, ∀ σ : Fin T,
+      ∃! e : E, κ e = x ∧ right e = σ)
+    (hLeft : ∀ x : X, ∀ c : C, c ∈ active x →
+      ∃! e : E, κ e = x ∧ left e = c)
+    (c : C) (σ : Fin T) :
+    Incidence.choiceDegree
+        (fun x : X =>
+          ((localEquivOfRawExactColoring
+            left right active κ hAvail hRight hLeft x) σ).1) c =
+      edgePairCount left right c σ := by
+  classical
+  rw [Incidence.choiceDegree, edgePairCount]
+  rw [← Fintype.card_subtype
+    (fun x : X =>
+      ((localEquivOfRawExactColoring
+        left right active κ hAvail hRight hLeft x) σ).1 = c)]
+  rw [← Fintype.card_subtype
+    (fun e : E => left e = c ∧ right e = σ)]
+  let f :
+      {x : X //
+        ((localEquivOfRawExactColoring
+          left right active κ hAvail hRight hLeft x) σ).1 = c} ≃
+        {e : E // left e = c ∧ right e = σ} :=
+    { toFun := fun x =>
+        ⟨rightEdge right κ hRight x.1 σ, by
+          have hx := x.2
+          have hR := rightEdge_spec right κ hRight x.1 σ
+          have hleft :
+              left (rightEdge right κ hRight x.1 σ) = c := by
+            simpa [localEquivOfRawExactColoring] using hx
+          exact ⟨hleft, hR.2⟩⟩
+      invFun := fun e =>
+        ⟨κ e.1, by
+          have hR := rightEdge_spec right κ hRight (κ e.1) σ
+          have heq :
+              rightEdge right κ hRight (κ e.1) σ = e.1 := by
+            exact (hRight (κ e.1) σ).unique hR ⟨rfl, e.2.2⟩
+          change
+            left (rightEdge right κ hRight (κ e.1) σ) = c
+          rw [heq]
+          exact e.2.1⟩
+      left_inv := by
+        intro x
+        apply Subtype.ext
+        have hR := rightEdge_spec right κ hRight x.1 σ
+        exact hR.1
+      right_inv := by
+        intro e
+        apply Subtype.ext
+        have hR := rightEdge_spec right κ hRight (κ e.1) σ
+        exact (hRight (κ e.1) σ).unique hR ⟨rfl, e.2.2⟩ }
+  exact Fintype.card_congr f
+
+theorem exactEdgeColoringGoal_of_raw
+    (hRaw : RawExactEdgeColoringGoal.{uX, uC}) :
+    ExactEdgeColoringGoal.{uX, uC} := by
+  classical
+  intro T X C E _instX _instC _instE _decX _decC _decE
+    left right active hAct hLeftDeg hRightDeg hRect
+  rcases hRaw left right active hAct hLeftDeg hRightDeg hRect with
+    ⟨κ, hAvail, hRight, hLeft⟩
+  refine ⟨fun x =>
+    localEquivOfRawExactColoring left right active κ hAvail hRight hLeft x,
+    ?_⟩
+  intro c σ
+  exact choiceDegree_localEquivOfRawExactColoring
+    left right active κ hAvail hRight hLeft c σ
 
 end FiniteHoffman
 

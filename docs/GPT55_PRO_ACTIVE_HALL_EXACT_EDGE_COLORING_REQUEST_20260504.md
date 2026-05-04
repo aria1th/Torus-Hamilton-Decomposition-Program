@@ -28,6 +28,19 @@ final_poll_date = pending
 response_doc = docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_RESPONSE_20260504.md
 ```
 
+Implementation note after submission: Lean now also exposes the more standard
+raw edge-colouring endpoint and an adapter into the target above:
+
+```lean
+def RoundComposite.ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
+
+theorem RoundComposite.ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
+    (hRaw : RawExactEdgeColoringGoal) :
+    ExactEdgeColoringGoal
+```
+
+Thus an answer proving `RawExactEdgeColoringGoal` is sufficient.
+
 ## Files To Read
 
 1. `RoundComposite/ActiveHall.lean`

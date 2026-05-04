@@ -51,6 +51,13 @@ theorem RoundComposite.Concrete
 Lean also exposes the fully split small-branch endpoint:
 
 ```lean
+def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
+def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
 def RoundComposite.Concrete
   .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
   OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
@@ -71,12 +78,14 @@ Remaining fields for the most split endpoint:
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
-ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 ```
 
 Equivalently, the first two fields can be replaced by the coarser field
 `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields can
-be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.
+be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.  The
+raw ActiveHall field can also be replaced by the slightly coarser field
+`ActiveHall.FiniteHoffman.ExactEdgeColoringGoal`.
 
 After the completed q>=2 GPT-5.5 Pro response, Lean now exposes a sharper
 standard finite-Hoffman split for the first field:
@@ -510,7 +519,12 @@ After this response, Lean now also exposes the copied-edge finite Hoffman
 interface and adapters:
 
 ```lean
+def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
 def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
 
 theorem ActiveHall.hoffmanOrderedSDRGoal_of_exactEdgeColoring
     (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :

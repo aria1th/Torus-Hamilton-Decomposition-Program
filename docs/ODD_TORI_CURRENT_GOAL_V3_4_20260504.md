@@ -384,6 +384,13 @@ The small branch can also be supplied through the copied-edge finite Hoffman
 interface:
 
 ```lean
+def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
+def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
 def RoundComposite.Concrete
   .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
   OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
@@ -407,13 +414,15 @@ hard fields are:
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
-ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 ```
 
 Equivalently, the first two fields may be replaced by the single coarser field
 `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields may
 be replaced by the single coarser field
-`OddSuccessorSmallModulusBaseTailGoal`.  Lean also exposes the separation endpoint
+`OddSuccessorSmallModulusBaseTailGoal`.  The raw ActiveHall field may also be
+replaced by `ActiveHall.FiniteHoffman.ExactEdgeColoringGoal`.  Lean also
+exposes the separation endpoint
 `PrefixCount.OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, which implies
 the indicator-to-full-support half.
 
