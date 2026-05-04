@@ -2111,6 +2111,12 @@ theorem ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
     S_col_sum := hCol
   }⟩
 
+theorem ordinaryQge2SignedMatrixGoal_of_properCutClosure
+    (hClosure : OrdinaryQge2SignedSeedProperCutClosureGoal) :
+    OrdinaryQge2SignedMatrixGoal :=
+  ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
+    (ordinaryQge2SignedSeedClosureGoal_of_properCutClosure hClosure)
+
 theorem ordinaryQge2SignedCoreGoal_of_plan_and_matrix
     (hPlan : OrdinaryQge2PlanGoal)
     (hMatrix : OrdinaryQge2SignedMatrixGoal) :
@@ -2119,6 +2125,18 @@ theorem ordinaryQge2SignedCoreGoal_of_plan_and_matrix
   rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with ⟨P⟩
   rcases hMatrix hdodd hd5 hmodd hmqr hrlt hrpos hq P with ⟨S⟩
   exact ⟨P.toCoreData S⟩
+
+theorem ordinaryQge2SignedCoreGoal_of_signedSeedClosure
+    (hClosure : OrdinaryQge2SignedSeedClosureGoal) :
+    OrdinaryQge2SignedCoreGoal :=
+  ordinaryQge2SignedCoreGoal_of_plan_and_matrix ordinaryQge2PlanGoal
+    (ordinaryQge2SignedMatrixGoal_of_signedSeedClosure hClosure)
+
+theorem ordinaryQge2SignedCoreGoal_of_properCutClosure
+    (hClosure : OrdinaryQge2SignedSeedProperCutClosureGoal) :
+    OrdinaryQge2SignedCoreGoal :=
+  ordinaryQge2SignedCoreGoal_of_signedSeedClosure
+    (ordinaryQge2SignedSeedClosureGoal_of_properCutClosure hClosure)
 
 /--
 The restricted `q = 1` signed-core data from the v4 prefix-count proof.

@@ -86,6 +86,14 @@ Lean proves that empty and full row cuts are automatic:
 ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure
 ```
 
+Lean also exposes direct wrappers from the proper-cut theorem to the q>=2
+matrix/core branch:
+
+```lean
+ordinaryQge2SignedMatrixGoal_of_properCutClosure
+ordinaryQge2SignedCoreGoal_of_properCutClosure
+```
+
 Lean also proves the single-column necessary capacity bound:
 
 ```lean

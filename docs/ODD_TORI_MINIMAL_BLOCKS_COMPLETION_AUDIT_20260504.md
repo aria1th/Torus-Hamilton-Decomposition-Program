@@ -102,6 +102,7 @@ theorem RoundComposite.Concrete
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
+| q>=2 proper-cut direct wrappers | `ordinaryQge2SignedMatrixGoal_of_properCutClosure`, `ordinaryQge2SignedCoreGoal_of_properCutClosure` | Lean-closed | Routes the first remaining field directly into the q>=2 matrix/core branch |
 | Root-flat certificate wrapper | `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` | Lean-closed | Schedule-facing field is enough |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
