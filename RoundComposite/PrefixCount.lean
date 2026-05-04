@@ -3232,6 +3232,68 @@ def OrdinaryQeq1AuxSpecialMatchingDataGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1AuxSpecialMatchingData n r)
 
+namespace OrdinaryQeq1SpecialMatchingCounterexample
+
+def B (i : Fin 8) (k : Fin 7) : Int :=
+  if (i.val = 0 ∧ k.val = 5) ∨
+     (i.val = 1 ∧ k.val = 6) ∨
+     (i.val = 2 ∧ k.val = 5) ∨
+     (i.val = 3 ∧ k.val = 5) ∨
+     (i.val = 4 ∧ (k.val = 1 ∨ k.val = 3)) ∨
+     (i.val = 5 ∧ k.val < 5) ∨
+     (i.val = 6 ∧
+       (k.val = 0 ∨ k.val = 2 ∨ k.val = 3 ∨ k.val = 4 ∨ k.val = 6)) ∨
+     (i.val = 7 ∧
+       (k.val = 0 ∨ k.val = 1 ∨ k.val = 2 ∨ k.val = 4 ∨ k.val = 6))
+  then 1 else -1
+
+def aux : OrdinaryQeq1AuxMatrixData 8 5 where
+  B := B
+  B_pm_one := by
+    intro i k
+    unfold B
+    split
+    · exact Or.inr rfl
+    · exact Or.inl rfl
+  B_row_sum := by
+    intro i
+    fin_cases i <;> decide
+  B_col_sum := by
+    intro k
+    fin_cases k <;> decide
+
+theorem no_specialMatching :
+    ¬ Nonempty (OrdinaryQeq1SpecialMatchingData aux) := by
+  rintro ⟨M⟩
+  let col5 : Fin 7 := ⟨5, by decide⟩
+  have hnot : ∀ i : Fin 8, ¬ (5 ≤ i.val ∧ M.mate i = col5) := by
+    intro i hi
+    have hp := M.mate_pos i hi.1
+    rw [hi.2] at hp
+    fin_cases i <;> simp at hi
+    all_goals norm_num [aux, B] at hp
+  have hcol := M.mate_col_sum col5
+  have hzero :
+      (∑ i : Fin 8,
+        if 5 ≤ i.val ∧ M.mate i = col5 then (1 : Int) else 0) = 0 := by
+    simp [hnot]
+  have hone :
+      (if col5.val < 5 then
+          if col5 = M.mate M.special then (1 : Int) else 0
+        else 1) = 1 := by
+    simp [col5]
+  rw [hzero, hone] at hcol
+  norm_num at hcol
+
+end OrdinaryQeq1SpecialMatchingCounterexample
+
+theorem not_ordinaryQeq1SpecialMatchingGoal :
+    ¬ OrdinaryQeq1SpecialMatchingGoal := by
+  intro h
+  exact OrdinaryQeq1SpecialMatchingCounterexample.no_specialMatching
+    (h OrdinaryQeq1SpecialMatchingCounterexample.aux
+      (by decide) (by decide) (by decide) (by decide) (by decide))
+
 theorem ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
     (hDegree : OrdinaryQeq1AuxDegreeMatrixGoal) :
     OrdinaryQeq1AuxMatrixGoal := by

@@ -173,6 +173,9 @@ PrefixCount.OrdinaryQeq1AuxSpecialMatchingData
 PrefixCount.OrdinaryQeq1AuxMatrixGoal
 PrefixCount.OrdinaryQeq1SpecialMatchingGoal
 PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal
+PrefixCount.OrdinaryQeq1SpecialMatchingCounterexample.aux
+PrefixCount.OrdinaryQeq1SpecialMatchingCounterexample.no_specialMatching
+PrefixCount.not_ordinaryQeq1SpecialMatchingGoal
 PrefixCount.OrdinaryQeq1CanonicalCorrectionData
 PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal
 PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
@@ -305,10 +308,12 @@ The stronger universal split would use
 `PrefixCount.OrdinaryQeq1SpecialMatchingGoal`; when both are available, their
 combination is Lean-closed through
 `PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching`.
-Finite checking at `(n,r)=(8,5)` shows that this universal arbitrary-auxiliary
-matching interface is stronger than the paper construction needs, so the current
-q=1 request should use the joint data interface unless the auxiliary matrix is
-canonically fixed.
+The finite `(n,r)=(8,5)` witness
+`PrefixCount.OrdinaryQeq1SpecialMatchingCounterexample.aux` proves
+`PrefixCount.not_ordinaryQeq1SpecialMatchingGoal`, so the universal
+arbitrary-auxiliary matching interface is stronger than the paper construction
+needs.  The current q=1 request should use the joint data interface unless the
+auxiliary matrix is canonically fixed.
 The auxiliary matrix side is split once more at the Gale-Ryser output level:
 `PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` asks only for the `0/1`
 degree matrix, and Lean closes the conversion to the signed `±1` matrix through
