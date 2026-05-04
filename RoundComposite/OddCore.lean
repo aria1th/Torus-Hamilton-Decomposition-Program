@@ -254,6 +254,69 @@ theorem prefixCountRootStep_bijective {d m : Nat}
     exact prefixCountRootStep_eq_succ_cast hd1 i w
   simpa [hfun] using prefixCountRootStepSucc_bijective (m := m) e
 
+def prefixCountRootStateHeadTailEquiv (d m : Nat) (hd2 : 2 ≤ d) :
+    PrefixCountRootState d m ≃ ZMod m × (Fin (d - 2) → ZMod m) where
+  toFun w := (w ⟨0, by omega⟩, fun j => w ⟨j.val + 1, by omega⟩)
+  invFun x := fun j =>
+    if hj0 : j.val = 0 then x.1 else x.2 ⟨j.val - 1, by omega⟩
+  left_inv := by
+    intro w
+    funext j
+    by_cases hj0 : j.val = 0
+    · have hj : j = ⟨0, by omega⟩ := by
+        apply Fin.ext
+        exact hj0
+      rw [hj]
+      simp
+    · have hidx :
+          (⟨(j.val - 1) + 1, by omega⟩ : Fin (d - 1)) = j := by
+        apply Fin.ext
+        simp
+        omega
+      simp [hj0, hidx]
+  right_inv := by
+    intro x
+    ext j
+    · simp
+    · have hne : ¬j.val + 1 = 0 := by omega
+      have hidx :
+          (⟨(j.val + 1) - 1, by omega⟩ : Fin (d - 2)) = j := by
+        apply Fin.ext
+        simp
+      simp [hne, hidx]
+
+@[simp] theorem prefixCountRootStateHeadTailEquiv_fst
+    {d m : Nat} (hd2 : 2 ≤ d) (w : PrefixCountRootState d m) :
+    (prefixCountRootStateHeadTailEquiv d m hd2 w).1 = w ⟨0, by omega⟩ :=
+  rfl
+
+@[simp] theorem prefixCountRootStateHeadTailEquiv_snd
+    {d m : Nat} (hd2 : 2 ≤ d) (w : PrefixCountRootState d m)
+    (j : Fin (d - 2)) :
+    (prefixCountRootStateHeadTailEquiv d m hd2 w).2 j =
+      w ⟨j.val + 1, by omega⟩ :=
+  rfl
+
+@[simp] theorem prefixCountRootStateHeadTailEquiv_symm_zero
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (x : ZMod m × (Fin (d - 2) → ZMod m)) :
+    (prefixCountRootStateHeadTailEquiv d m hd2).symm x ⟨0, by omega⟩ =
+      x.1 := by
+  simp [prefixCountRootStateHeadTailEquiv]
+
+@[simp] theorem prefixCountRootStateHeadTailEquiv_symm_succ
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (x : ZMod m × (Fin (d - 2) → ZMod m)) (j : Fin (d - 2)) :
+    (prefixCountRootStateHeadTailEquiv d m hd2).symm x
+        ⟨j.val + 1, by omega⟩ =
+      x.2 j := by
+  have hne : ¬j.val + 1 = 0 := by omega
+  have hidx :
+      (⟨(j.val + 1) - 1, by omega⟩ : Fin (d - 2)) = j := by
+    apply Fin.ext
+    simp
+  simp [prefixCountRootStateHeadTailEquiv, hne, hidx]
+
 /--
 The canonical prefix-count symbol permutation associated to a positive
 stop-rank `rho`.  It fixes `0`, sends `1` to `rho`, shifts `2,...,rho` down by
