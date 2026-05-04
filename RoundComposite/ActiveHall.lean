@@ -56,6 +56,15 @@ theorem sum_colorDegree {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     _ = T * Fintype.card X := by
             simp [Finset.sum_const, Nat.mul_comm]
 
+theorem eq_of_mem_of_active_card_one {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence 1 X C) {x : X} {a b : C}
+    (ha : a ∈ I.active x) (hb : b ∈ I.active x) :
+    a = b := by
+  have hcard : (I.active x).card ≤ 1 := by
+    rw [I.active_card x]
+  exact (Finset.card_le_one.mp hcard) a ha b hb
+
 theorem sum_colorDegree_on {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) :
