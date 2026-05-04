@@ -1176,6 +1176,112 @@ theorem toCountMatrix_hallCuts {T : Nat} {X C : Type*}
     _ = I.cutCap U S := by
             rfl
 
+noncomputable def extendLast {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (Φ : Symboling (I.eraseChoice choice hchoice)) :
+    Symboling I where
+  equiv := fun x => {
+    toFun := Fin.lastCases
+      ⟨choice x, hchoice x⟩
+      (fun σ =>
+        ⟨Φ.color x σ,
+          ((I.mem_eraseChoice_active choice hchoice).1
+            (Φ.equiv x σ).2).1⟩)
+    invFun := fun c =>
+      if h : c.1 = choice x then
+        Fin.last T
+      else
+        Fin.castSucc ((Φ.equiv x).symm
+          ⟨c.1, (I.mem_eraseChoice_active choice hchoice).2 ⟨c.2, h⟩⟩)
+    left_inv := by
+      intro σ
+      rcases Fin.eq_castSucc_or_eq_last σ with ⟨τ, rfl⟩ | rfl
+      · have hne : (Φ.color x τ) ≠ choice x := by
+          exact ((I.mem_eraseChoice_active choice hchoice).1
+            (Φ.equiv x τ).2).2
+        have hne' : ((Φ.equiv x τ).1) ≠ choice x := hne
+        simp only [Fin.lastCases_castSucc]
+        rw [dif_neg hne]
+        simpa [Symboling.color] using (Φ.equiv x).symm_apply_apply τ
+      · simp
+    right_inv := by
+      intro c
+      by_cases h : c.1 = choice x
+      · apply Subtype.ext
+        simp [h]
+      · apply Subtype.ext
+        have hmem :
+            c.1 ∈ (I.eraseChoice choice hchoice).active x :=
+          (I.mem_eraseChoice_active choice hchoice).2 ⟨c.2, h⟩
+        simp only [dif_neg h, Fin.lastCases_castSucc]
+        simpa [Symboling.color] using congrArg Subtype.val
+          ((Φ.equiv x).apply_symm_apply ⟨c.1, hmem⟩)
+  }
+
+@[simp] theorem extendLast_color_last {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (Φ : Symboling (I.eraseChoice choice hchoice)) (x : X) :
+    (Φ.extendLast choice hchoice).color x (Fin.last T) = choice x := by
+  simp [extendLast, Symboling.color]
+
+@[simp] theorem extendLast_color_castSucc {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (Φ : Symboling (I.eraseChoice choice hchoice))
+    (x : X) (σ : Fin T) :
+    (Φ.extendLast choice hchoice).color x σ.castSucc = Φ.color x σ := by
+  simp [extendLast, Symboling.color]
+
+theorem extendLast_count_last {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (Φ : Symboling (I.eraseChoice choice hchoice)) (c : C) :
+    (Φ.extendLast choice hchoice).count c (Fin.last T) =
+      Incidence.choiceDegree choice c := by
+  classical
+  unfold Symboling.count Incidence.choiceDegree
+  rw [Finset.card_filter]
+  apply Finset.sum_congr rfl
+  intro x _hx
+  simp
+
+theorem extendLast_count_castSucc {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (Φ : Symboling (I.eraseChoice choice hchoice))
+    (c : C) (σ : Fin T) :
+    (Φ.extendLast choice hchoice).count c σ.castSucc = Φ.count c σ := by
+  classical
+  unfold Symboling.count
+  apply Finset.sum_congr rfl
+  intro x _hx
+  simp
+
+theorem extendLast_realizes_eraseLastCountMatrix
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (Φ : Symboling (I.eraseChoice choice hchoice))
+    (hReal :
+      Φ.Realizes (M.eraseLastCountMatrix choice hchoice hdegree).val) :
+    (Φ.extendLast choice hchoice).Realizes M.val := by
+  intro c σ
+  rcases Fin.eq_castSucc_or_eq_last σ with ⟨τ, rfl⟩ | rfl
+  · rw [Φ.extendLast_count_castSucc choice hchoice c τ]
+    exact hReal c τ
+  · rw [Φ.extendLast_count_last choice hchoice c]
+    exact hdegree c
+
 end Symboling
 
 def SymbolingWithResidues {m T : Nat} {X C : Type*}
