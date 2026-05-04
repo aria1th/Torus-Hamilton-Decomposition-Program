@@ -125,6 +125,9 @@ PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
+PrefixCount.OrdinaryQeq1CanonicalCorrectionData
+PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal
+PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal
 PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
 PrefixCount.ordinaryQeq1PlanGoal
 PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
@@ -151,6 +154,8 @@ RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_rootFlatCanonical
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_and_rootFlatCanonical
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
@@ -204,6 +209,13 @@ signed-column/matching-correction matrix closure.  The `q = 1` plan data is
 Lean-closed as `PrefixCount.ordinaryQeq1PlanGoal`, so that branch now only needs
 the restricted canonical matching-correction theorem.
 
+The arithmetic lowering from the paper's auxiliary `±1` matrix plus corrected
+matching output is Lean-closed as
+`PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal`.  Consequently the
+remaining q=1 mathematical input can be stated as the data-level existence
+theorem `PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal`, whose content is
+the Gale-Ryser auxiliary matrix and special Hall matching construction.
+
 Small-modulus successor branch:
 
 ```lean
@@ -248,7 +260,7 @@ def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 canonical matching-correction theorem;
+2. prove the q=1 canonical correction data theorem;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 

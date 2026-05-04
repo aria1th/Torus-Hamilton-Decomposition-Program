@@ -2029,6 +2029,232 @@ structure OrdinaryQeq1CanonicalMatrixData (n m r : Nat) where
       (∑ i : Fin n, S i k) =
         if k.val < r then (-2 : Int) else (-1 : Int)
 
+/--
+Paper-facing output for the restricted `q = 1` matching correction before the
+final `+1` and `-1` edits are applied.  Rows with `r <= i.val` are the `P` rows, the
+row with `i.val = r - 1` is the distinguished row, and columns with
+`r <= k.val` are the non-special matched columns after relabelling.
+-/
+structure OrdinaryQeq1CanonicalCorrectionData (n r : Nat) where
+  B : Fin n → Fin (n - 1) → Int
+  mate : Fin n → Fin (n - 1)
+  special : Fin n
+  B_pm_one : ∀ i k, B i k = (-1 : Int) ∨ B i k = 1
+  B_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), B i k) =
+        if i.val < r - 1 then
+          (r : Int) - 2 - (n : Int)
+        else if i.val < r then
+          (r : Int) - (n : Int)
+        else
+          (r : Int) - 2
+  B_col_sum :
+    ∀ k : Fin (n - 1), (∑ i : Fin n, B i k) = (-2 : Int)
+  mate_pos : ∀ i : Fin n, r ≤ i.val → B i (mate i) = 1
+  mate_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n,
+        if r ≤ i.val ∧ mate i = k then (1 : Int) else 0)
+        = if k.val < r then
+            if k = mate special then (1 : Int) else 0
+          else
+            1
+  special_mem : r ≤ special.val
+  special_low : (mate special).val < r
+  special_neg :
+    ∀ i : Fin n, i.val = r - 1 → B i (mate special) = (-1 : Int)
+
+namespace OrdinaryQeq1CanonicalCorrectionData
+
+def S {n r : Nat} (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (i : Fin n) (k : Fin (n - 1)) : Int :=
+  D.B i k
+    + (if r ≤ i.val ∧ D.mate i = k then (1 : Int) else 0)
+    - (if i.val = r - 1 ∧ k = D.mate D.special then (1 : Int) else 0)
+
+theorem sum_fin_indicator_val_eq {n a : Nat} (ha : a < n) :
+    (∑ i : Fin n, if i.val = a then (1 : Int) else 0) = 1 := by
+  let x : Fin n := ⟨a, ha⟩
+  trans ∑ i : Fin n, if i = x then (1 : Int) else 0
+  · apply Finset.sum_congr rfl
+    intro i _hi
+    by_cases h : i.val = a
+    · have hix : i = x := by
+        ext
+        simpa [x] using h
+      simp [hix, x]
+    · have hix : i ≠ x := by
+        intro hix
+        exact h (by simpa [x] using congrArg Fin.val hix)
+      simp [h, hix]
+  · simp
+
+theorem inc_row_sum {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r) (i : Fin n) :
+    (∑ k : Fin (n - 1),
+      if r ≤ i.val ∧ D.mate i = k then (1 : Int) else 0)
+      = if r ≤ i.val then (1 : Int) else 0 := by
+  by_cases hi : r ≤ i.val
+  · simp [hi]
+  · have hnone :
+      ∀ k : Fin (n - 1), ¬ (r ≤ i.val ∧ D.mate i = k) := by
+      intro k h
+      exact hi h.1
+    simp [hi]
+
+theorem dec_row_sum {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r) (i : Fin n) :
+    (∑ k : Fin (n - 1),
+      if i.val = r - 1 ∧ k = D.mate D.special then (1 : Int) else 0)
+      = if i.val = r - 1 then (1 : Int) else 0 := by
+  by_cases hi : i.val = r - 1
+  · simp [hi]
+  · have hnone :
+      ∀ k : Fin (n - 1), ¬ (i.val = r - 1 ∧ k = D.mate D.special) := by
+      intro k h
+      exact hi h.1
+    simp [hi]
+
+theorem dec_col_sum {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrlt : r < n) (hrpos : 0 < r) (k : Fin (n - 1)) :
+    (∑ i : Fin n,
+      if i.val = r - 1 ∧ k = D.mate D.special then (1 : Int) else 0)
+      = if k = D.mate D.special then (1 : Int) else 0 := by
+  by_cases hk : k = D.mate D.special
+  · simp [hk, sum_fin_indicator_val_eq (n := n) (a := r - 1) (by omega)]
+  · have hnone :
+      ∀ i : Fin n, ¬ (i.val = r - 1 ∧ k = D.mate D.special) := by
+      intro i h
+      exact hk h.2
+    simp [hk]
+
+theorem S_signed {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrpos : 0 < r) (i : Fin n) (k : Fin (n - 1)) :
+    IsSignedVal (D.S i k) := by
+  by_cases hinc : r ≤ i.val ∧ D.mate i = k
+  · have hB : D.B i k = 1 := by
+      rw [← hinc.2]
+      exact D.mate_pos i hinc.1
+    have hdec : ¬ (i.val = r - 1 ∧ k = D.mate D.special) := by
+      intro h
+      have : r ≤ r - 1 := by simpa [h.1] using hinc.1
+      omega
+    simp [S, hinc, hdec, hB, IsSignedVal, signedVals]
+  · by_cases hdec : i.val = r - 1 ∧ k = D.mate D.special
+    · have hB : D.B i k = (-1 : Int) := by
+        rw [hdec.2]
+        exact D.special_neg i hdec.1
+      have hBspecial : D.B i (D.mate D.special) = (-1 : Int) := by
+        exact D.special_neg i hdec.1
+      have hnP : ¬ r ≤ i.val := by
+        rw [hdec.1]
+        omega
+      have hrle : ¬ r ≤ r - 1 := by omega
+      simp [S, hdec.1, hdec.2, hBspecial, hrle,
+        IsSignedVal, signedVals]
+    · rcases D.B_pm_one i k with hB | hB
+      · simp [S, hinc, hdec, hB, IsSignedVal, signedVals]
+      · simp [S, hinc, hdec, hB, IsSignedVal, signedVals]
+
+theorem S_ge_neg_one_of_P {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrpos : 0 < r) (i : Fin n) (k : Fin (n - 1))
+    (hi : r ≤ i.val) :
+    (-1 : Int) ≤ D.S i k := by
+  have hdec : ¬ (i.val = r - 1 ∧ k = D.mate D.special) := by
+    intro h
+    have : r ≤ r - 1 := by simpa [h.1] using hi
+    omega
+  by_cases hinc : r ≤ i.val ∧ D.mate i = k
+  · have hB : D.B i k = 1 := by
+      rw [← hinc.2]
+      exact D.mate_pos i hinc.1
+    simp [S, hinc, hdec, hB]
+  · rcases D.B_pm_one i k with hB | hB <;> simp [S, hinc, hdec, hB]
+
+theorem S_row_sum {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrpos : 0 < r) (i : Fin n) :
+    (∑ k : Fin (n - 1), D.S i k) =
+      if i.val < r - 1 then
+        (r : Int) - 2 - (n : Int)
+      else if i.val < r then
+        (r : Int) - 1 - (n : Int)
+      else
+        (r : Int) - 1 := by
+  have hsplit :
+      (∑ k : Fin (n - 1), D.S i k)
+        =
+        (∑ k : Fin (n - 1), D.B i k)
+          + (∑ k : Fin (n - 1),
+              if r ≤ i.val ∧ D.mate i = k then (1 : Int) else 0)
+          - (∑ k : Fin (n - 1),
+              if i.val = r - 1 ∧ k = D.mate D.special then (1 : Int) else 0) := by
+    simp [S, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  rw [hsplit, D.B_row_sum i, D.inc_row_sum i, D.dec_row_sum i]
+  by_cases hlow : i.val < r - 1
+  · have hnP : ¬ r ≤ i.val := by omega
+    have hnu : i.val ≠ r - 1 := by omega
+    simp [hlow, hnP, hnu]
+  · by_cases hmid : i.val < r
+    · have hnP : ¬ r ≤ i.val := by omega
+      have hnu : i.val = r - 1 := by omega
+      have hrle : ¬ r ≤ r - 1 := by omega
+      simp [hnu, hrpos, hrle]
+      ring_nf
+    · have hP : r ≤ i.val := by omega
+      have hnu : i.val ≠ r - 1 := by omega
+      simp [hlow, hmid, hP, hnu]
+      ring_nf
+
+theorem S_col_sum {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrlt : r < n) (hrpos : 0 < r) (k : Fin (n - 1)) :
+    (∑ i : Fin n, D.S i k) =
+      if k.val < r then (-2 : Int) else (-1 : Int) := by
+  have hsplit :
+      (∑ i : Fin n, D.S i k)
+        =
+        (∑ i : Fin n, D.B i k)
+          + (∑ i : Fin n,
+              if r ≤ i.val ∧ D.mate i = k then (1 : Int) else 0)
+          - (∑ i : Fin n,
+              if i.val = r - 1 ∧ k = D.mate D.special then (1 : Int) else 0) := by
+    simp [S, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  rw [hsplit, D.B_col_sum k, D.mate_col_sum k, D.dec_col_sum hrlt hrpos k]
+  by_cases hlow : k.val < r
+  · by_cases hspecial : k = D.mate D.special
+    · have hlow' : (D.mate D.special).val < r := D.special_low
+      simp [hspecial, hlow']
+    · simp [hlow, hspecial]
+  · have hspecial : k ≠ D.mate D.special := by
+      intro hk
+      have : (D.mate D.special).val < r := D.special_low
+      omega
+    simp [hlow, hspecial]
+
+def toCanonicalMatrixData {n r : Nat}
+    (D : OrdinaryQeq1CanonicalCorrectionData n r)
+    (hrlt : r < n) (hrpos : 0 < r) :
+    OrdinaryQeq1CanonicalMatrixData n (n + r) r where
+  S := D.S
+  S_signed := D.S_signed hrpos
+  S_ge_neg_one_of_P := D.S_ge_neg_one_of_P hrpos
+  S_row_sum := D.S_row_sum hrpos
+  S_col_sum := D.S_col_sum hrlt hrpos
+
+end OrdinaryQeq1CanonicalCorrectionData
+
+def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1CanonicalCorrectionData n r)
+
 def OrdinaryQeq1CanonicalMatrixGoal : Prop :=
   ∀ {n m r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →
@@ -2042,6 +2268,13 @@ def OrdinaryQeq1CanonicalCorrectionGoal : Prop :=
     Odd (n + r) →
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1CanonicalMatrixData n (n + r) r)
+
+theorem ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal
+    (hData : OrdinaryQeq1CanonicalCorrectionDataGoal) :
+    OrdinaryQeq1CanonicalCorrectionGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hData hdodd hd5 hmodd hrlt hrpos with ⟨D⟩
+  exact ⟨D.toCanonicalMatrixData hrlt hrpos⟩
 
 theorem ordinaryQeq1CanonicalMatrixGoal_of_correction
     (hCorrection : OrdinaryQeq1CanonicalCorrectionGoal) :

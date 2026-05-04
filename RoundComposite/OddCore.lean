@@ -745,6 +745,16 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_
     hQge2Closure hQeq1Correction
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
 
+theorem oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_and_rootFlatCanonical
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Data : PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1Correction_and_rootFlatCanonical
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal hQeq1Data)
+    hReturn
+
 theorem oddCoreHighModulusPrefixCountGoal_of_qge2Plan_qeq1Margin_and_geometry
     (hQge2 : PrefixCount.MarginTransportQge2PlanGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1Goal)
