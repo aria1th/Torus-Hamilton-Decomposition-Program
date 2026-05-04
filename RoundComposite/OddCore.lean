@@ -618,6 +618,19 @@ theorem oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometr
       hQge2Plan hQge2Matrix)
     hQeq1 hGeom
 
+theorem oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
+    (hQge2Plan : PrefixCount.OrdinaryQge2PlanGoal)
+    (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
+    (hQeq1Plan : PrefixCount.OrdinaryQeq1PlanGoal)
+    (hQeq1Matrix : PrefixCount.OrdinaryQeq1SignedMatrixGoal)
+    (hGeom : PrefixCountGeometricCriterionGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
+    hQge2Plan hQge2Matrix
+    (PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
+      hQeq1Plan hQeq1Matrix)
+    hGeom
+
 theorem oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_rootFlatCanonical
     (hQge2 : PrefixCount.OrdinaryQge2SignedCoreGoal)
     (hQeq1 : PrefixCount.OrdinaryQeq1SignedCoreGoal)

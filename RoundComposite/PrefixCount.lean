@@ -1531,6 +1531,77 @@ def OrdinaryQeq1SignedCoreGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1SignedCoreData n m r)
 
+structure OrdinaryQeq1PlanData (n m r : Nat) where
+  a : Fin n → Nat
+  epsBit : Fin n → Nat
+  c : Fin (n - 1) → Nat
+  a_sum : (∑ i : Fin n, a i) = m - 1
+  eps_sum : (∑ i : Fin n, epsBit i) = r
+  c_sum : (∑ k : Fin (n - 1), c k) = m - 1
+  a_one_two : ∀ i : Fin n, a i = 1 ∨ a i = 2
+  eps_zero_one : ∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1
+  c_one_two : ∀ k : Fin (n - 1), c k = 1 ∨ c k = 2
+
+namespace OrdinaryQeq1PlanData
+
+structure SignedMatrixData {n m r : Nat}
+    (P : OrdinaryQeq1PlanData n m r) where
+  S : Fin n → Fin (n - 1) → Int
+  S_signed : ∀ i k, IsSignedVal (S i k)
+  S_ge_neg_one_of_eps_zero :
+    ∀ i k, P.epsBit i = 0 → (-1 : Int) ≤ S i k
+  S_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), S i k)
+        = (r : Int) - (P.a i : Int) - (n : Int) * (P.epsBit i : Int)
+  S_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n, S i k) = - (P.c k : Int)
+
+def toCoreData {n m r : Nat} (P : OrdinaryQeq1PlanData n m r)
+    (S : P.SignedMatrixData) :
+    OrdinaryQeq1SignedCoreData n m r where
+  a := P.a
+  epsBit := P.epsBit
+  c := P.c
+  S := S.S
+  a_sum := P.a_sum
+  eps_sum := P.eps_sum
+  c_sum := P.c_sum
+  a_one_two := P.a_one_two
+  eps_zero_one := P.eps_zero_one
+  c_one_two := P.c_one_two
+  S_signed := S.S_signed
+  S_ge_neg_one_of_eps_zero := S.S_ge_neg_one_of_eps_zero
+  S_row_sum := S.S_row_sum
+  S_col_sum := S.S_col_sum
+
+end OrdinaryQeq1PlanData
+
+def OrdinaryQeq1PlanGoal : Prop :=
+  ∀ {n m r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n + r →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1PlanData n m r)
+
+def OrdinaryQeq1SignedMatrixGoal : Prop :=
+  ∀ {n m r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n + r →
+    r < n → 0 < r →
+    ∀ P : OrdinaryQeq1PlanData n m r,
+      Nonempty P.SignedMatrixData
+
+theorem ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
+    (hPlan : OrdinaryQeq1PlanGoal)
+    (hMatrix : OrdinaryQeq1SignedMatrixGoal) :
+    OrdinaryQeq1SignedCoreGoal := by
+  intro n m r hdodd hd5 hmodd hmnr hrlt hrpos
+  rcases hPlan hdodd hd5 hmodd hmnr hrlt hrpos with ⟨P⟩
+  rcases hMatrix hdodd hd5 hmodd hmnr hrlt hrpos P with ⟨S⟩
+  exact ⟨P.toCoreData S⟩
+
 /--
 A base matrix with only `±1` entries and column sums `-1`.  The q=1 branch can
 upgrade one explicit `+1` in each column to `+2`, producing signed column sums
