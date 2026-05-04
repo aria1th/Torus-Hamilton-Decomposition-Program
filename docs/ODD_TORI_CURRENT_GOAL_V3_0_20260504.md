@@ -110,8 +110,11 @@ The v4 ordinary signed-core data now has Lean bridges:
 ```lean
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
+PrefixCount.ordinaryQeq1PlanGoal
 PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
 PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Matrix_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
@@ -132,7 +135,9 @@ existing high-branch and all-dimensional adapters.  The `geometry` variants are
 available if the count-matrix/root-flat criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
-signed-column/matching-correction matrix closure.
+signed-column/matching-correction matrix closure.  The `q = 1` plan data is
+Lean-closed as `PrefixCount.ordinaryQeq1PlanGoal`, so that branch now only needs
+the restricted matching-correction matrix theorem.
 
 Small-modulus successor branch:
 

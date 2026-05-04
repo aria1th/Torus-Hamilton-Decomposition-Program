@@ -1531,6 +1531,35 @@ def OrdinaryQeq1SignedCoreGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1SignedCoreData n m r)
 
+theorem sum_fin_indicator_val_lt (n k : Nat) :
+    (∑ i : Fin n, if i.val < k then (1 : Nat) else 0) = min n k := by
+  rw [Fin.sum_univ_eq_sum_range
+    (fun j => if j < k then (1 : Nat) else 0) n]
+  rw [← Finset.card_filter]
+  have h :
+      (Finset.range n).filter (fun i => i < k) =
+        Finset.range (min n k) := by
+    ext i
+    simp
+  rw [h]
+  simp
+
+theorem sum_fin_two_one_val_lt (n k : Nat) :
+    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1) =
+      n + min n k := by
+  calc
+    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1)
+        = ∑ i : Fin n, (1 + if i.val < k then (1 : Nat) else 0) := by
+          apply Finset.sum_congr rfl
+          intro i _hi
+          by_cases h : i.val < k <;> simp [h]
+    _ = (∑ _i : Fin n, (1 : Nat))
+          + ∑ i : Fin n, (if i.val < k then (1 : Nat) else 0) := by
+          rw [Finset.sum_add_distrib]
+    _ = n + min n k := by
+          rw [sum_fin_indicator_val_lt]
+          simp
+
 structure OrdinaryQeq1PlanData (n m r : Nat) where
   a : Fin n → Nat
   epsBit : Fin n → Nat
@@ -1601,6 +1630,37 @@ theorem ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
   rcases hPlan hdodd hd5 hmodd hmnr hrlt hrpos with ⟨P⟩
   rcases hMatrix hdodd hd5 hmodd hmnr hrlt hrpos P with ⟨S⟩
   exact ⟨P.toCoreData S⟩
+
+theorem ordinaryQeq1PlanGoal : OrdinaryQeq1PlanGoal := by
+  intro n m r _hdodd _hd5 _hmodd hmnr hrlt hrpos
+  refine ⟨{
+    a := fun i : Fin n => if i.val < r - 1 then 2 else 1
+    epsBit := fun i : Fin n => if i.val < r then 1 else 0
+    c := fun k : Fin (n - 1) => if k.val < r then 2 else 1
+    a_sum := ?_
+    eps_sum := ?_
+    c_sum := ?_
+    a_one_two := ?_
+    eps_zero_one := ?_
+    c_one_two := ?_
+  }⟩
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min n (r - 1) = r - 1 := by omega
+    rw [hmin, hmnr]
+    omega
+  · rw [sum_fin_indicator_val_lt]
+    have hmin : min n r = r := by omega
+    exact hmin
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min (n - 1) r = r := by omega
+    rw [hmin, hmnr]
+    omega
+  · intro i
+    by_cases h : i.val < r - 1 <;> simp [h]
+  · intro i
+    by_cases h : i.val < r <;> simp [h]
+  · intro k
+    by_cases h : k.val < r <;> simp [h]
 
 /--
 A base matrix with only `±1` entries and column sums `-1`.  The q=1 branch can
