@@ -2,9 +2,9 @@
 
 Date: 2026-05-04.
 
-Purpose: ask for a Lean-friendly proof of the remaining fixed-`t` local
-first-hit count field.  Lean now reduces the full signed return-tail cocycle
-sum to this local target.
+Purpose: archived GPT-5.5 Pro request for the fixed-`t` local first-hit count
+field.  This request is complete, and Lean now closes the residual reindex,
+local count, signed return-tail cocycle sum, and unit-carry fields internally.
 
 Model settings requested by the user:
 
@@ -23,6 +23,8 @@ initial_status = queued
 initial_submit_date = 2026-05-04
 latest_poll_status = in_progress
 latest_poll_date = 2026-05-04
+final_status = completed
+final_poll_date = 2026-05-04
 response_doc = docs/GPT55_PRO_RETURN_TAIL_LOCAL_HIT_COUNT_RESPONSE_20260504.md
 ```
 
@@ -130,12 +132,10 @@ theorem RoundComposite.Concrete
     ...
 ```
 
-So the remaining constructive task is even narrower: prove the reindexing of
-the now-defined map
-`(x,u) ↦ prefixCountFirstHitReturnLowResidual hd2 L c hk t u x` onto
-`Fin (k + 1) -> ZMod m`.  The prefixMap projection and coordinatewise
-subtraction part is now closed; what remains is the base-orbit plus skew-fiber
-low-tail reindex and the final assembly.
+After this request completed, Lean also proved the remaining reindexing of the
+map `(x,u) ↦ prefixCountFirstHitReturnLowResidual hd2 L c hk t u x` onto
+`Fin (k + 1) -> ZMod m`.  The proof combines the base-orbit reindex, skew-fiber
+low-tail reindex, product-to-cons equivalence, and prefixMap low-residual sum.
 
 ## Exact Target Shape
 

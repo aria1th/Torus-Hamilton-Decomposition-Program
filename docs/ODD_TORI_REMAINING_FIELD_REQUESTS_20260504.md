@@ -11,9 +11,8 @@ Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailCocycleSumTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
@@ -24,15 +23,13 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailCocycleSumGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
-The hit-condition locality field is now Lean-closed as
-`prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal`.  The remaining
-exact cocycle sum field implies the unit field via `C.Admissible.prim_step`,
-and then implies the older orbit field through a Lean-closed skew-iterate
-preservation theorem, increment-to-triangular bridge, and generic
+The hit-condition locality field, residual reindex field, exact signed
+cocycle-sum field, and unit-carry field are now Lean-closed internally.  The
+closed unit field still implies the older orbit field through a Lean-closed
+skew-iterate preservation theorem, increment-to-triangular bridge, and generic
 lower-triangular odometer theorem:
 
 ```lean
@@ -46,7 +43,8 @@ theorem RoundComposite.Concrete
 ```
 
 Equivalently, one may still request
-`PrefixCountFirstHitReturnTailMonodromyOrbitGoal` directly.
+`PrefixCountFirstHitReturnTailMonodromyOrbitGoal` directly, but it is no
+longer needed for the current endpoint.
 
 ## Request 1: q>=2 Proper-Cut Signed Closure
 
@@ -196,352 +194,43 @@ Please provide either:
 The most useful output is a sequence of auxiliary Lean theorem statements with
 proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
-## Request 2: First-Hit Return-Tail Cocycle Sum
+## Closed Record: First-Hit Return-Tail Cocycle Sum
 
-### Files To Read
-
-1. `RoundComposite/OddCore.lean`
-2. `RoundComposite/PrefixCount.lean`
-3. `Shared/Monodromy.lean`
-4. `Shared/RankCycle.lean`
-5. `Shared/TorusCayley.lean`
-6. `Shared/RootFlat.lean`
-7. `docs/FIRST_HIT_RETURN_TAIL_MONODROMY_REQUEST_20260504.md`
-8. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
-9. `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`
-10. `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`
-11. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md`
-12. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md`
-    for the completed exact-sum proof route
-
-### Exact Lean Target
-
-The one-step hit-condition dependency is now Lean-closed:
+This branch is no longer a remaining proof request.  Lean now closes the full
+return-tail cocycle chain:
 
 ```lean
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
-    PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
-```
+  .prefixCountFirstHitReturnLowResidualReindexGoal :
+    PrefixCountFirstHitReturnLowResidualReindexGoal
 
-The unit-carry field is now Lean-reduced from the exact sum target:
-
-```lean
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
-    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
+  .prefixCountFirstHitReturnTailLocalHitConditionSumGoal :
+    PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleSumGoal :
+    PrefixCountFirstHitReturnTailCocycleSumGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleUnitGoal :
     PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
-The preferred remaining target for the first-hit return-tail monodromy is:
+The signed formula remains the correct mathematical statement:
 
 ```lean
-def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnTailCocycleSumGoal : Prop :=
-  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
-    Odd d -> 5 <= d -> Odd m -> d <= m ->
-    C.Admissible m ->
-    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
-    forall c : Fin d, forall k : Nat, forall hk : k < d - 2,
-      (∑ x : (Fin k -> ZMod m),
-        prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
-        =
-        ((-1 : ZMod m) ^ (k + 1)) *
-          (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
-    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+(∑ x : (Fin k -> ZMod m),
+  prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
+  =
+  ((-1 : ZMod m) ^ (k + 1)) *
+    (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
 ```
 
-Closed `Shared` helpers for this route:
-
-```lean
-Shared.zmod_add_single_cycle_of_unit
-Shared.CycleCoordinate.zmodAddConstOfUnit
-Shared.sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
-Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit
-Shared.single_cycle_of_skewProduct_zmod_additive_unit_carry
-Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
-Shared.zmodVectorSnocEquiv
-Shared.zmodVectorTake_snoc
-Shared.zmodVectorTake_snoc_self
-Shared.ZModVectorIncrementDependsOnTake
-Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
-Shared.zmod_rank_iterate_period
-Shared.zmod_rank_orbit_cover_lt
-Shared.skewFiberAdditiveCarry_eq_sum_range
-Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
-Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
-Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
-```
-
-The generic `Shared` proof is already closed as:
-
-```lean
-theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
-    Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
-```
-
-This route avoids proving orbit transitivity directly.  It asks for:
-
-```text
-every rank cocycle has the exact total carry `C.step c k - C.delta c`
-up to the canonical prefix sign `(-1)^(k+1)`.
-```
-
-The older GPT-5.5 Pro response established the triangular/unit route and led
-to the now-closed generic lower-triangular odometer theorem.  The narrower
-follow-up response is complete; after local Lean progress its useful target is
-the exact cocycle-sum calculation:
-
-```text
-docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md
-response id: resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37
-response doc: docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md
-```
-
-Important correction after local finite verification: the exact target has the
-canonical prefix sign `(-1)^(k+1)`.  A small direct evaluator of the Lean
-definitions found `d=5,m=5` admissible examples where the unsigned equality is
-false, while
-
-```lean
-sum = ((-1 : ZMod m) ^ (k + 1)) *
-  (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
-```
-
-matches the observed values.  The sign is harmless for the unit-carry wrapper,
-because `(-1)^(k+1)` is a unit.
-
-The older response identifies the unsigned row-entry difference
-
-```lean
-(((C.toMatrix hd2) c ⟨k + 2, _⟩ : Nat) : ZMod m) -
-(((C.toMatrix hd2) c ⟨1, _⟩ : Nat) : ZMod m)
-```
-
-as the primitive row quantity.  In the current Lean target this row quantity
-must be multiplied by the prefix sign above, and should only then be converted
-to the named `C.step c ⟨k, hk⟩ - C.delta c` expression after unfolding the
-local `Parts.toMatrix` definitions.
-
-Lean now has the cocycle expansion and matrix-projection endpoints for this
-route:
-
-```lean
-prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
-prefixCountLayerCount_range_eq_matrix_zmod
-prefixCount_toMatrix_rawStep_sub_delta_zmod
-prefixCountReturnTailSignedCoeff
-prefixCountReturnTailSignedCoeff_layer_sum_eq_matrix
-prefixCountNoHitSubtypeCard
-prefixCountNoHitIndicatorSum
-prefixCountHasHitIndicatorSum
-prefixCountPairFreeLastIndicatorSum_zero
-prefixCountPairFirstHitLastIndicatorSum
-prefixCountPcNoZero
-prefixCountPcSomeZero
-prefixCountPcExactLastZero
-prefixCountPcHitBeforeLastZero
-prefixCountPcNoZeroIndicatorSum
-prefixCountPcSomeZeroIndicatorSum
-prefixCountPcExactLastZeroIndicatorSum
-prefixCountPcHitBeforeLastZeroIndicatorSum
-prefixCountFirstHitReturnBaseStep_sum_fin_iterate
-prefixCountFirstHitReturnBaseStep_sum_range_iterate
-Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
-Shared.zmodVectorTake_extendZero_apply_bijective_of_take_preserving
-Shared.zmodVectorConsEquiv
-Shared.zmodVectorSubConst_bijective
-prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
-prefixCountFirstHitCanonicalSchedule_prefixMap_lowPrefix_bijective
-prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_bijective
-prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum
-PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
-prefixCountFirstHitReturnLowResidualState
-prefixCountFirstHitLowResidualFromHeadTail
-prefixCountFirstHitLowResidualFromHeadTail_eq_lowPrefix
-prefixCountFirstHitReturnLowResidual
-prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
-prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq
-prefixCountFirstHitReturnLowResidual_hitBeforeLastZero_iff_rho_lt
-prefixCountFirstHitReturnLowResidual_noZero_iff_rho_not_lt
-prefixCountFirstHitReturnFiberHitCondition_lowResidual_iff
-PrefixCountFirstHitReturnLowResidualReindexGoal
-prefixCountReturnTailLocalSymbolSplitIndicatorSum
-prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex
-prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
-prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
-```
-
-So the open return-tail proof request should focus on the low-prefix
-reindexing across the actual nested `u,t,x` sum and the split by layer symbol.
-The raw no-hit/has-hit cardinalities modulo `m`, the base-orbit `u`-sum
-reindexing, and the projected-low-prefix bijections are now Lean-closed.
-The pair-count lemmas also cover the local cases where the final coordinate is
-free, or is the first hit after a no-hit prefix.
-The named `pc...` predicates from the GPT response and their pure finite
-first-hit count lemmas are now Lean-closed.
-The full signed cocycle-sum goal is now Lean-reduced to the fixed-`t` local
-hit-condition sum target; Lean handles the remaining `x,u,t` sum commuting,
-signed layer-symbol coefficient sum, and `toMatrix` to `C.step - C.delta`
-conversion.
-It also closes the pure symbol split from the three residual events to
-`prefixCountReturnTailSignedCoeff`, and an abstract wrapper from a low-residual
-reindex theorem plus hit-condition iff to the fixed-`t` local sum.  The open
-return-tail proof is now even narrower: the residual map is defined, its zero
-coordinates are connected to `prefixCountCanonicalRhoHitNat`, the three
-residual events are connected to the rho cases, and the actual hit condition is
-rewritten to the residual event split.  The remaining field is precisely
-`PrefixCountFirstHitReturnLowResidualReindexGoal`.  Additional closed helpers
-now handle the prefixMap low-prefix projection and coordinatewise subtraction
-part of that reindexing; the remaining subproblem is the base-orbit plus
-skew-fiber low-tail reindex and its assembly with the prefixMap projection.
-
-### Already Lean-Closed
-
-Lean already builds the first-hit schedule, proves the row-Latin and
-layer-bijective parts, reduces the root-flat return to head-tail monodromy, and
-proves bijectivity of the tail map, preservation of this increment-dependency
-under `Shared.skewFiberIterate`, and the generic lower-triangular odometer
-theorem.  It now also proves the one-step first-hit hit-condition locality and
-the reduction from exact sum to unit carry.  The remaining request is the exact
-cocycle-sum calculation, with the `(-1)^(k+1)` factor included.
-
-Useful closed bridges:
-
-```lean
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromy_bijective :
-    Function.Bijective (prefixCountFirstHitReturnTailMonodromy hd2 L c)
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyGoal_of_orbit
-    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
-    PrefixCountFirstHitReturnTailMonodromyGoal
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank
-    (hRank : PrefixCountFirstHitReturnTailRankGoal) :
-    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
-    (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
-    PrefixCountFirstHitReturnTailRankGoal
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
-    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
-    PrefixCountFirstHitReturnTailRankEquivGoal
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal) :
-    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
-
-theorem Shared.single_cycle_of_zmod_rank
-    (f : alpha -> alpha) (rank : alpha -> ZMod N)
-    (hrank : Function.Bijective rank)
-    (hstep : forall x, rank (f x) = rank x + 1) :
-    Shared.IsSingleCycleMap f
-
-theorem Shared.single_cycle_of_zmod_rank_equiv
-    (f : alpha -> alpha) (rank : alpha ≃ ZMod N)
-    (hstep : forall x, rank (f x) = rank x + 1) :
-    Shared.IsSingleCycleMap f
-
-noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
-    (Fin n -> ZMod m) ≃ ZMod (m ^ n)
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromy_eq_fiberIterate :
-    prefixCountFirstHitReturnTailMonodromy hd2 L c =
-      Shared.skewFiberIterate
-        (prefixCountFirstHitReturnBaseStep C c)
-        (prefixCountFirstHitReturnFiberStep hd2 L c)
-        m (0 : ZMod m)
-
-theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnFiberStep_apply :
-    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
-      tail j +
-        ∑ t ∈ Finset.range m,
-          if (prefixCountLambdaRho d
-              (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
-                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
-                  ((prefixCountRootStateHeadTailEquiv d m hd2).symm
-                    (z, tail))))
-              (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val
-              = j.val + 1
-          then (1 : ZMod m) else 0
-```
-
-### Prompt
-
-Prove the high-modulus first-hit return-tail exact cocycle-sum field:
-
-```lean
-PrefixCountFirstHitReturnTailCocycleSumGoal
-```
-
-This is now preferred over proving
-`PrefixCountFirstHitReturnTailMonodromyOrbitGoal` directly.  It is still
-sufficient to prove the orbit field, either rank target, or the
-`CycleCoordinate` target.
-
-The proof should focus on the tail map
-
-```lean
-prefixCountFirstHitReturnTailMonodromy hd2 L c :
-  (Fin (d - 2) -> ZMod m) -> (Fin (d - 2) -> ZMod m)
-```
-
-for fixed color `c`.  The preferred proof should show that each one-step fiber
-map
-
-```lean
-prefixCountFirstHitReturnFiberStep hd2 L c z
-```
-
-has coordinate increments depending only on `Shared.zmodVectorTake ... tail`,
-and that the finite sum of each rank cocycle is a unit in `ZMod m`.  If one
-instead chooses a rank proof, construct an odometer coordinate
-
-```lean
-rank :
-  (Fin (d - 2) -> ZMod m) -> ZMod (m ^ (d - 2))
-```
-
-or equivalence
-
-```lean
-e : (Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))
-```
-
-such that the monodromy increments that coordinate by `1`.  Equivalently, a
-forward odometer proof may provide:
-
-```lean
-K : Shared.CycleCoordinate (m ^ (d - 2))
-      (prefixCountFirstHitReturnTailMonodromy hd2 L c)
-```
-
-The expected mathematical route is:
-
-1. choose a tail-coordinate order compatible with the first-hit rule;
-2. prove each next coordinate is a skew extension over the previous prefix;
-3. compute the total carry from the primitive row data in `C.Admissible`,
-   including the canonical `(-1)^(k+1)` prefix sign;
-4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks`.
-
-Do not spend effort on the generic lower-triangular odometer theorem, row-Latin,
-layer bijectivity, root-flat schedule construction, or the final torus lift.
-Those bridges are already Lean-closed.  The one-step hit-condition dependency
-and the reduction from exact sum to unit carry are also Lean-closed; the open
-return-tail field is now exactly the signed total cocycle-sum formula above.
+The sign is harmless for the unit-carry route because `(-1)^(k+1)` is a unit.
+The final residual-reindex proof uses the low-fiber bijection, the base-cycle
+reindex, `Shared.zmodVectorConsEquiv`, and the prefix-map low-residual sum
+theorem.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 

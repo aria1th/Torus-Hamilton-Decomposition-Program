@@ -103,11 +103,11 @@ def RoundComposite.Concrete.OddSuccessorHighModulusPrefixCountGoal : Prop :=
 
 This is weaker than the older all-high-dimension branch because it asks only
 for the successor output dimension.  Lean closes it from the currently
-preferred prefix-count fields:
+preferred prefix-count field plus the now-internal first-hit return-tail
+theorem:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
-PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 ```
 
 After the q>=2 proof-request response, Lean also exposes the smaller
@@ -122,11 +122,11 @@ theorem PrefixCount
     OrdinaryQge2SignedSeedProperCutClosureGoal
 ```
 
-Equivalent stronger routes are also available through return-tail rank,
-rank-equivalence, or cycle-coordinate goals.  Lean now closes the one-step
-hit-condition locality field internally and exposes the preferred unit-carry
-refinement of the triangular route, with the generic lower-triangular theorem
-already closed:
+Equivalent stronger routes are still available through return-tail rank,
+rank-equivalence, or cycle-coordinate goals.  They are no longer needed for the
+current endpoint: Lean now closes the one-step hit-condition locality field,
+the residual reindexing field, the exact signed cocycle-sum field, and the
+unit-carry refinement internally:
 
 ```lean
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
@@ -153,19 +153,20 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
-    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
-    PrefixCountFirstHitReturnTailCocycleUnitGoal
+  .prefixCountFirstHitReturnLowResidualReindexGoal :
+    PrefixCountFirstHitReturnLowResidualReindexGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
-    (hReindex : PrefixCountFirstHitReturnLowResidualReindexGoal) :
+  .prefixCountFirstHitReturnTailLocalHitConditionSumGoal :
     PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
-    (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :
+  .prefixCountFirstHitReturnTailCocycleSumGoal :
     PrefixCountFirstHitReturnTailCocycleSumGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleUnitGoal :
+    PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
@@ -301,17 +302,16 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
-The currently sharpest return-tail endpoint uses trellis for the q>=2 branch,
-the Lean-closed one-step hit-condition locality theorem, and an exact cocycle
-sum formula for the return-tail branch.  The exact formula is signed: the rank
-`k` total carry is `(-1)^(k+1) * (C.step c k - C.delta c)`, not the unsigned
-row difference.  The sign is a unit, so the unit-carry reduction is unchanged.
+The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
+and the Lean-closed return-tail cocycle chain.  The exact formula is signed:
+the rank `k` total carry is `(-1)^(k+1) * (C.step c k - C.delta c)`, not the
+unsigned row difference.  The sign is a unit, so the unit-carry reduction is
+unchanged.
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailCocycleSumTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
 ```
@@ -320,9 +320,8 @@ With the additive small branch:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitAdd
-    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
-    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
     OddModulusToriAllDimensionsGoal
 ```
@@ -333,7 +332,6 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailCocycleSumGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
@@ -341,15 +339,18 @@ The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
 form above.
 
-Equivalently, the one-step fiber field can be replaced by the stronger tail
-increment or triangular fields:
+The return-tail orbit, rank, rank-equivalence, cycle-coordinate, increment, and
+triangular fields remain valid sufficient alternatives, but they are no longer
+remaining fields for the preferred endpoint.  In older endpoint variants, the
+one-step fiber field can be replaced by the stronger tail increment or
+triangular fields:
 
 ```lean
 PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailTriangularGoal
 ```
 
-or the middle two fields can be replaced by the older orbit field:
+or by the older orbit field:
 
 ```lean
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal

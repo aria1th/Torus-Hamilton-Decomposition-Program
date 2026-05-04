@@ -4388,6 +4388,118 @@ theorem prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum
             exact Fintype.sum_equiv e (fun y => F (e y)) F
               (by intro y; rfl)
 
+theorem prefixCountFirstHitReturnLowResidualReindexGoal :
+    PrefixCountFirstHitReturnLowResidualReindexGoal := by
+  classical
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c k hk t _ht F
+  let hle : k + 1 ≤ d - 1 := by omega
+  let baseStep := prefixCountFirstHitReturnBaseStep (m := m) C c
+  let fiberStep := prefixCountFirstHitReturnFiberStep hd2 L c
+  let P : (Fin (k + 1) → ZMod m) → (Fin (k + 1) → ZMod m) := fun y =>
+    fun r =>
+      Shared.zmodVectorTake hle
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+          (Shared.zmodVectorExtendZero hle y)) r -
+        ((t : Nat) : ZMod m)
+  calc
+    (∑ x : (Fin k → ZMod m),
+        ∑ u ∈ Finset.range m,
+          F (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x))
+        =
+        ∑ u ∈ Finset.range m,
+          ∑ x : (Fin k → ZMod m),
+            F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m))
+              (Shared.zmodVectorTake (Nat.le_of_lt hk)
+                (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                  (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))))) := by
+          rw [Finset.sum_comm]
+          apply Finset.sum_congr rfl
+          intro u _hu
+          apply Finset.sum_congr rfl
+          intro x _hx
+          change
+            F (prefixCountFirstHitLowResidualFromHeadTail hd2 L c hk t
+              ((baseStep^[u]) (0 : ZMod m))
+              (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))) =
+            F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m))
+              (Shared.zmodVectorTake (Nat.le_of_lt hk)
+                (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                  (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))))
+          rw [prefixCountFirstHitLowResidualFromHeadTail_eq_lowPrefix
+            (hd2 := hd2) (C := C) L c hk t
+            ((baseStep^[u]) (0 : ZMod m))
+            (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+            (Shared.zmodVectorTake (Nat.le_of_lt hk)
+              (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))
+            rfl]
+    _ =
+        ∑ u ∈ Finset.range m,
+          ∑ y : (Fin k → ZMod m),
+            F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m)) y)) := by
+          apply Finset.sum_congr rfl
+          intro u _hu
+          let G : (Fin k → ZMod m) → (Fin k → ZMod m) := fun x =>
+            Shared.zmodVectorTake (Nat.le_of_lt hk)
+              (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+          have hG : Function.Bijective G := by
+            simpa [G, baseStep, fiberStep] using
+              prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
+                (hd2 := hd2) (C := C)
+                hdodd hd5 hmodd hdm hC L c u k hk
+          let e : (Fin k → ZMod m) ≃ (Fin k → ZMod m) :=
+            Equiv.ofBijective G hG
+          calc
+            (∑ x : (Fin k → ZMod m),
+              F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m))
+                (Shared.zmodVectorTake (Nat.le_of_lt hk)
+                  (Shared.skewFiberIterate baseStep fiberStep u (0 : ZMod m)
+                    (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))))))
+                =
+                ∑ x : (Fin k → ZMod m),
+                  F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m)) (e x))) := by
+                  rfl
+            _ =
+                ∑ y : (Fin k → ZMod m),
+                  F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m)) y)) := by
+                  exact Fintype.sum_equiv e
+                    (fun x => F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m)) (e x))))
+                    (fun y => F (P (Fin.cons ((baseStep^[u]) (0 : ZMod m)) y)))
+                    (by intro x; rfl)
+    _ =
+        ∑ z : ZMod m,
+          ∑ y : (Fin k → ZMod m),
+            F (P (Fin.cons z y)) := by
+          simpa [baseStep] using
+            prefixCountFirstHitReturnBaseStep_sum_range_iterate
+              (m := m) hC c
+              (fun z : ZMod m =>
+                ∑ y : (Fin k → ZMod m), F (P (Fin.cons z y)))
+    _ =
+        ∑ p : ZMod m × (Fin k → ZMod m),
+          F (P (Fin.cons p.1 p.2)) := by
+          rw [Fintype.sum_prod_type]
+    _ =
+        ∑ y : Fin (k + 1) → ZMod m, F (P y) := by
+          let e : ZMod m × (Fin k → ZMod m) ≃
+              (Fin (k + 1) → ZMod m) :=
+            (Shared.zmodVectorConsEquiv k m).symm
+          exact Fintype.sum_equiv e
+            (fun p : ZMod m × (Fin k → ZMod m) =>
+              F (P (Fin.cons p.1 p.2)))
+            (fun y : Fin (k + 1) → ZMod m => F (P y))
+            (by
+              intro p
+              rcases p with ⟨z, y⟩
+              simp [e])
+    _ = ∑ y : Fin (k + 1) → ZMod m, F y := by
+          simpa [P, hle] using
+            prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum
+              (hd2 := hd2) (C := C) hdodd hd5 hmodd hdm hC L c t k hk F
+
 theorem prefixCountFirstHitReturnTailIncrementDependsOnTakeGoal_of_fiber
     (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal) :
     PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal := by
@@ -4659,6 +4771,21 @@ theorem prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
         simpa [Int.cast_sub, Int.cast_natCast] using
           PrefixCount.isUnit_zmod_intCast_of_intCoprime
             (hC.prim_step c ⟨k, hk⟩))
+
+theorem prefixCountFirstHitReturnTailLocalHitConditionSumGoal :
+    PrefixCountFirstHitReturnTailLocalHitConditionSumGoal :=
+  prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
+    prefixCountFirstHitReturnLowResidualReindexGoal
+
+theorem prefixCountFirstHitReturnTailCocycleSumGoal :
+    PrefixCountFirstHitReturnTailCocycleSumGoal :=
+  prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
+    prefixCountFirstHitReturnTailLocalHitConditionSumGoal
+
+theorem prefixCountFirstHitReturnTailCocycleUnitGoal :
+    PrefixCountFirstHitReturnTailCocycleUnitGoal :=
+  prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
+    prefixCountFirstHitReturnTailCocycleSumGoal
 
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
@@ -7477,6 +7604,23 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailCocycleSumTrellisAdd
     hQge2Trellis hSum
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
 
+theorem oddSuccessorClosureGoal_of_v4_returnTailClosedTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailUnitTrellis
+    hQge2Trellis
+    prefixCountFirstHitReturnTailCocycleUnitGoal
+    hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailClosedTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailClosedTrellis
+    hQge2Trellis
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+
 theorem oddSuccessorClosureGoal_of_v4_returnTailRank
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
     (hRank : PrefixCountFirstHitReturnTailRankGoal)
@@ -8037,6 +8181,28 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailCocycleSumTrellisAdd
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
+    hQge2Trellis
+    prefixCountFirstHitReturnTailCocycleUnitGoal
+    hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
+    hQge2Trellis
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -8350,6 +8516,22 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailCocycleSumTrellisAdd
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailCocycleSumTrellisAdd
     hQge2Trellis hSum hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
+    hQge2Trellis hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
+    hQge2Trellis hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :
