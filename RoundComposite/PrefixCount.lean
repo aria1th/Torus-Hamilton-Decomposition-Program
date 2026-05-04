@@ -518,6 +518,22 @@ theorem quotient_remainder_count_branch
     quotient_one_or_ge_two_of_le hd2 hmd
   ⟩
 
+theorem exists_power_two_ge_self_lt_two_mul {L : Nat} (hL : 1 ≤ L) :
+    ∃ e : Nat, L ≤ 2 ^ e ∧ 2 ^ e < 2 * L := by
+  refine ⟨Nat.clog 2 L, Nat.le_pow_clog (by decide : 1 < 2) L, ?_⟩
+  by_cases hL1 : L = 1
+  · subst L
+    norm_num
+  · have hLgt : 1 < L := by omega
+    have hpred := Nat.pow_pred_clog_lt_self (by decide : 1 < 2) hLgt
+    have hpos : 0 < Nat.clog 2 L := Nat.clog_pos (by decide : 1 < 2) hLgt
+    have hpow : 2 ^ Nat.clog 2 L = 2 * 2 ^ (Nat.clog 2 L).pred := by
+      conv_lhs => rw [← Nat.succ_pred_eq_of_pos hpos]
+      rw [pow_succ]
+      ring
+    rw [hpow]
+    exact Nat.mul_lt_mul_of_pos_left hpred (by decide)
+
 theorem eq_pred_add_mod_of_div_eq_one
     {d m : Nat} (hq : m / (d - 1) = 1) :
     m = (d - 1) + m % (d - 1) := by

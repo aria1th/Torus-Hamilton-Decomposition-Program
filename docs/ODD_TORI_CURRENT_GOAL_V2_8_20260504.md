@@ -137,6 +137,14 @@ PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
 
+Closed q>=2 arithmetic support:
+
+```lean
+theorem RoundComposite.PrefixCount.exists_power_two_ge_self_lt_two_mul
+    {L : Nat} (hL : 1 <= L) :
+    exists e : Nat, L <= 2 ^ e /\ 2 ^ e < 2 * L
+```
+
 Together with the successor-small branch, these now feed the final theorem via:
 
 ```lean
