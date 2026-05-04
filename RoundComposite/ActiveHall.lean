@@ -1087,6 +1087,63 @@ theorem hallRealization_zero {X : Type uX} {C : Type uC}
   · intro c σ
     exact Fin.elim0 σ
 
+theorem hallRealization_one {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (0 : Fin 1) with
+    ⟨f, hfActive⟩
+  let chosen : X → C := fun x => (f.symm x).1
+  have hChosenActive : ∀ x : X, chosen x ∈ I.active x := by
+    intro x
+    simpa [chosen] using hfActive (f.symm x)
+  let Φ : Symboling I := {
+    equiv := fun x => {
+      toFun := fun _σ => ⟨chosen x, hChosenActive x⟩
+      invFun := fun _c => 0
+      left_inv := by
+        intro σ
+        fin_cases σ
+        rfl
+      right_inv := by
+        intro c
+        apply Subtype.ext
+        exact I.eq_of_mem_of_active_card_one (hChosenActive x) c.2
+    }
+  }
+  refine ⟨Φ, ?_⟩
+  intro c σ
+  fin_cases σ
+  calc
+    Φ.count c 0
+        = ∑ x : X, if chosen x = c then 1 else 0 := by
+            unfold Symboling.count
+            apply Finset.sum_congr rfl
+            intro x _hx
+            simp [Symboling.color, Φ, chosen]
+    _ = ∑ q : Sigma fun c : C => Fin (M.val c (0 : Fin 1)),
+          if q.1 = c then 1 else 0 := by
+            exact Fintype.sum_equiv f.symm
+              (fun x : X => if chosen x = c then (1 : Nat) else 0)
+              (fun q : Sigma fun c : C => Fin (M.val c (0 : Fin 1)) =>
+                if q.1 = c then (1 : Nat) else 0)
+              (by
+                intro x
+                simp [chosen])
+    _ = M.val c 0 := by
+            rw [Fintype.sum_sigma]
+            calc
+              (∑ x : C, ∑ q : Fin (M.val x (0 : Fin 1)),
+                  if x = c then (1 : Nat) else 0)
+                  = ∑ x : C, if x = c then M.val x 0 else 0 := by
+                      apply Finset.sum_congr rfl
+                      intro x _hx
+                      by_cases hxc : x = c <;> simp [hxc]
+              _ = M.val c 0 := by
+                      simp
+
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
