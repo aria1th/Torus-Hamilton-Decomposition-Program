@@ -1748,6 +1748,92 @@ theorem ordinaryQeq1PlanGoal : OrdinaryQeq1PlanGoal := by
     by_cases h : k.val < r <;> simp [h]
 
 /--
+Canonical signed matrix output for the manuscript's restricted `q = 1`
+matching correction.  This is weaker than asking for signed matrices for every
+possible `OrdinaryQeq1PlanData`; it targets the canonical plan used in v4.
+-/
+structure OrdinaryQeq1CanonicalMatrixData (n m r : Nat) where
+  S : Fin n → Fin (n - 1) → Int
+  S_signed : ∀ i k, IsSignedVal (S i k)
+  S_ge_neg_one_of_P :
+    ∀ i k, r ≤ i.val → (-1 : Int) ≤ S i k
+  S_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), S i k)
+        =
+        if i.val < r - 1 then
+          (r : Int) - 2 - (n : Int)
+        else if i.val < r then
+          (r : Int) - 1 - (n : Int)
+        else
+          (r : Int) - 1
+  S_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n, S i k) =
+        if k.val < r then (-2 : Int) else (-1 : Int)
+
+def OrdinaryQeq1CanonicalMatrixGoal : Prop :=
+  ∀ {n m r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n + r →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1CanonicalMatrixData n m r)
+
+theorem ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
+    (hMatrix : OrdinaryQeq1CanonicalMatrixGoal) :
+    OrdinaryQeq1SignedCoreGoal := by
+  intro n m r hdodd hd5 hmodd hmnr hrlt hrpos
+  rcases hMatrix hdodd hd5 hmodd hmnr hrlt hrpos with ⟨M⟩
+  refine ⟨{
+    a := fun i : Fin n => if i.val < r - 1 then 2 else 1
+    epsBit := fun i : Fin n => if i.val < r then 1 else 0
+    c := fun k : Fin (n - 1) => if k.val < r then 2 else 1
+    S := M.S
+    a_sum := ?_
+    eps_sum := ?_
+    c_sum := ?_
+    a_one_two := ?_
+    eps_zero_one := ?_
+    c_one_two := ?_
+    S_signed := M.S_signed
+    S_ge_neg_one_of_eps_zero := ?_
+    S_row_sum := ?_
+    S_col_sum := ?_
+  }⟩
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min n (r - 1) = r - 1 := by omega
+    rw [hmin, hmnr]
+    omega
+  · rw [sum_fin_indicator_val_lt]
+    have hmin : min n r = r := by omega
+    exact hmin
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min (n - 1) r = r := by omega
+    rw [hmin, hmnr]
+    omega
+  · intro i
+    by_cases h : i.val < r - 1 <;> simp [h]
+  · intro i
+    by_cases h : i.val < r <;> simp [h]
+  · intro k
+    by_cases h : k.val < r <;> simp [h]
+  · intro i k heps
+    by_cases hlt : i.val < r
+    · simp [hlt] at heps
+    · exact M.S_ge_neg_one_of_P i k (by omega)
+  · intro i
+    rw [M.S_row_sum i]
+    by_cases hlow : i.val < r - 1
+    · have hmid : i.val < r := by omega
+      simp [hlow, hmid]
+    · by_cases hmid : i.val < r
+      · simp [hlow, hmid]
+      · simp [hlow, hmid]
+  · intro k
+    rw [M.S_col_sum k]
+    by_cases h : k.val < r <;> simp [h]
+
+/--
 A base matrix with only `±1` entries and column sums `-1`.  The q=1 branch can
 upgrade one explicit `+1` in each column to `+2`, producing signed column sums
 zero without using an abstract matching theorem at this layer.
