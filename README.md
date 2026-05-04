@@ -414,6 +414,11 @@ when `m` is odd and `m >= 3`.
 - `scripts/verify_targetA_23_32.py`: concise verifier for the post-update
   Target-A `23/32` theorem candidate, checking section cycles, `sum ell =
   m^4`, the `Sigma0` return law, and the bad-class five-cycle formulas.
+- `scripts/verify_qge2_proper_cut_small.py`: audit-only q>=2 signed-column
+  sanity checker.  It verifies the Lean-recorded arbitrary-row
+  column-packing counterexample and exhaustively checks the active
+  ordinary-row/proper-cut target for small even `n` (`n=4` by default;
+  `--max-n 6` is a slower pass).
 - `scripts/analyze_targetA_23_32_seams.py`: seam-decomposition reporter for
   the same `23/32` target, separating the `Sigma0` component from off-`Sigma0`
   bad-class cycles and checking the good-class connectivity/bad-class

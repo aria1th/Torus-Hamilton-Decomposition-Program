@@ -72,6 +72,12 @@ Do not target the broader arbitrary-row theorem
 The cut upper bounds alone do not characterize arbitrary row targets; the
 ordinary row shape above is still the active field.
 
+The audit script
+`scripts/verify_qge2_proper_cut_small.py` reproduces this counterexample and
+checks the active ordinary-row/proper-cut target over small even `n`.  Its
+default run checks `n=4`; `--max-n 6` performs a slower exhaustive pass through
+`n=6`.
+
 ### Already Lean-Closed
 
 Lean proves that empty and full row cuts are automatic:
