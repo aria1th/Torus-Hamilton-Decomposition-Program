@@ -166,6 +166,13 @@ The active proof obligations are exactly the three fields of
 2. `PrefixCountRootFlatCanonicalReturnGoal`
 3. `OddCoreSmallModulusSlackPacketLiftGoal`
 
+For the first item, Lean now exposes the equivalent nontrivial-cut formulation
+`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`.  The endpoint cuts
+`J = empty` and `J = univ` are no longer external obligations:
+`PrefixCount.ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` proves that
+they are forced by the row/column sum hypotheses and the `qge2ColumnCapacity`
+endpoint arithmetic.
+
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for
 a special matching for every such degree matrix is too strong; Lean records this

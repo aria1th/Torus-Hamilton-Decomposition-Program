@@ -357,8 +357,11 @@ when `m` is odd and `m >= 3`.
   Lean-closed.  The q=1 target-Hall auxiliary data theorem is now Lean-closed,
   so the remaining preferred block packet `OddModulusToriV4PreferredBlocksGoal`
   has three fields: q>=2 signed seed closure, root-flat canonical return, and
-  the small-modulus slack-packet lift.  The universal q=1 degree-matrix matching
-  variant remains Lean-proved too strong and is retained as a negative audit.
+  the small-modulus slack-packet lift.  The q>=2 signed seed closure now has an
+  equivalent proper-cut formulation,
+  `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`, so empty/full cuts
+  are Lean-dispatched.  The universal q=1 degree-matrix matching variant remains
+  Lean-proved too strong and is retained as a negative audit.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining
