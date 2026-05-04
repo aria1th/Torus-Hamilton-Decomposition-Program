@@ -380,6 +380,11 @@ when `m` is odd and `m >= 3`.
   are Lean-closed, which are conditional skeletons, and the remaining
   high-modulus prefix-count and Hall-slack packet-lift proof blocks needed to
   remove all assumptions.
+- `docs/ODD_TORI_MINIMAL_BLOCKS_COMPLETION_AUDIT_20260504.md`: current
+  prompt-to-artifact audit after the v4 minimal-block refactor.  It records the
+  exact conditional endpoint
+  `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks`, the Lean evidence for
+  the seed/product/dispatcher layers, and the three remaining explicit fields.
 - `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`: exhaustive finite
   boundary audit table for the global odd-modulus goal, covering all `169`
   pairs with `2 <= d < 29`, odd `m`, and `3 <= m < d` by seed-semigroup
