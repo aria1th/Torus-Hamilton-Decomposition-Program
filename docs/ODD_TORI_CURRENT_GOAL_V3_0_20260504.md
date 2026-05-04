@@ -199,9 +199,15 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxMatching_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
+RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4DegreeMatchingBlocksGoal
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
@@ -282,10 +288,28 @@ def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
+The paper-facing endpoint with the `q = 1` auxiliary degree matrix split is:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
+    (hBlocks : OddModulusToriV4DegreeMatchingBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 canonical correction data theorem;
+2. prove the q=1 auxiliary degree matrix and special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
