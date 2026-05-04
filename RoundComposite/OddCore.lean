@@ -1648,6 +1648,39 @@ theorem prefixCountFirstHitCanonicalSchedule_zeroCoordinateCycle
       (fun z : ZMod m => z + (C.zero c : ZMod m)) :=
   Shared.zmod_add_single_cycle_of_coprime (hC.prim_zero c)
 
+def prefixCountFirstHitReturnBaseStep {d m : Nat}
+    (C : PrefixCount.Parts d) (c : Fin d) : ZMod m → ZMod m :=
+  fun z => z + (C.zero c : ZMod m)
+
+noncomputable def prefixCountFirstHitReturnFiberStep
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d) :
+    ZMod m → (Fin (d - 2) → ZMod m) → (Fin (d - 2) → ZMod m) :=
+  fun z tail =>
+    (prefixCountRootStateHeadTailEquiv d m hd2
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c
+        ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail)))).2
+
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (x : ZMod m × (Fin (d - 2) → ZMod m)) :
+    prefixCountRootStateHeadTailEquiv d m hd2
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm x))
+      =
+    Shared.skewProductMap
+      (prefixCountFirstHitReturnBaseStep C c)
+      (prefixCountFirstHitReturnFiberStep hd2 L c) x := by
+  rcases x with ⟨z, tail⟩
+  ext j
+  · simp [Shared.skewProductMap, prefixCountFirstHitReturnBaseStep,
+      prefixCountFirstHitReturnFiberStep,
+      prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero_parts]
+  · rfl
+
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
     Odd d → 5 ≤ d → Odd m → d ≤ m →
