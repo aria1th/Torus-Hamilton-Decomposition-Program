@@ -2287,6 +2287,28 @@ theorem prefixCountFirstHitReturnTailMonodromyGoal_of_cycleCoordinate
   prefixCountFirstHitReturnTailMonodromyGoal_of_rankEquiv
     (prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate hCycle)
 
+noncomputable theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
+  have hcard :
+      Fintype.card (Fin (d - 2) → ZMod m) = m ^ (d - 2) := by
+    exact Shared.card_zmodVector (d - 2) m
+  have hm1 : 1 < m := by omega
+  have hexp : d - 2 ≠ 0 := by omega
+  have hn : 1 < m ^ (d - 2) := one_lt_pow₀ hm1 hexp
+  exact
+    Shared.CycleCoordinate.ofFiniteSingleCycle
+      (f := prefixCountFirstHitReturnTailMonodromy hd2 L c)
+      hcard hn
+      (hTail hd2 hdodd hd5 hmodd hdm hC L c)
+
+theorem prefixCountFirstHitReturnTailRankEquivGoal_of_monodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitReturnTailRankEquivGoal :=
+  prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
+    (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy hTail)
+
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailOrbit
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
     PrefixCountFirstHitHeadTailSectionMonodromyGoal :=

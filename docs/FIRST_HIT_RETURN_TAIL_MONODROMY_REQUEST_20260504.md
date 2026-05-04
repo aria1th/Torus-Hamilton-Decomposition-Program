@@ -142,6 +142,11 @@ theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
     (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal) :
     PrefixCountFirstHitReturnTailRankEquivGoal
+
+noncomputable theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCycleCoordinateGoal_of_monodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal
 ```
 
 The generic cardinality/equivalence facts for the tail space are already
