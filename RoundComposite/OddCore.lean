@@ -3985,6 +3985,14 @@ theorem oddSuccessorClosureGoal_of_v4_minimal_blocks
   oddSuccessorClosureGoal_of_v4_successorSchedule_blocks
     (oddModulusToriV4SuccessorScheduleBlocksGoal_of_minimalBlocks hBlocks)
 
+theorem oddSuccessorClosureGoal_of_v4_sectionMonodromy_blocks
+    (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy_blocks
+      hBlocks.1)
+    hBlocks.2
+
 theorem oddSuccessorClosureGoal_of_v4_minimalAdd_blocks
     (hBlocks : OddModulusToriV4MinimalAddBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -4000,6 +4008,16 @@ theorem oddSuccessorClosureGoal_of_v4_successorSchedule
   oddSuccessorClosureGoal_of_high_and_successorSmall
     (oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule
       hQge2Proper hSchedule)
+    hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_sectionMonodromy
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highSectionMonodromy
+      hQge2Proper hSection)
     hSmall
 
 theorem oddSuccessorClosureGoal_of_v4_successorScheduleAdd
@@ -4196,12 +4214,32 @@ theorem odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy_blocks
     hBlocks.2
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy_blocks
+    ⟨⟨hQge2Proper, hSection⟩, hSmall⟩
+    hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_sectionMonodromy_blocks
     (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal) :
     OddModulusToriAllDimensionsGoal := by
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy_blocks
     hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_sectionMonodromy
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSection : PrefixCountFirstHitHeadTailSectionMonodromyGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_sectionMonodromy
+    hQge2Proper hSection hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
     (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
