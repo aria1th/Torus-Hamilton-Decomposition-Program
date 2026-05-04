@@ -70,6 +70,18 @@ theorem RoundComposite.Concrete
 The q>=2 field can also be supplied through the pure packing theorem:
 
 ```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
+  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+
 theorem RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
@@ -92,39 +104,42 @@ theorem RoundComposite.Concrete
 | Dispatcher from seeds + successor | `odd_modulus_tori_all_dimensions_of_357_and_successor` | Lean-closed | `RoundComposite/ConcreteEndpoints.lean` |
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
 | Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_successorSchedule` | Lean-closed conditional | Directly consumes the three remaining fields |
-| q>=2 column-packing adapter | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule` | Lean-closed conditional | Replaces the q>=2 proper-cut field by `PrefixCount.Qge2SignedColumnPackingGoal` |
+| q>=2 column-packing packet | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Replaces the q>=2 proper-cut field by `PrefixCount.Qge2SignedColumnPackingGoal` |
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
 | Root-flat certificate wrapper | `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` | Lean-closed | Schedule-facing field is enough |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
-| Current all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
+| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
 
 ## Remaining External Fields
 
-The goal is not complete.  The remaining proof obligations are exactly:
+The goal is not complete.  In the current column-packing packet, the remaining
+proof obligations are exactly:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.Qge2SignedColumnPackingGoal
 PrefixCountRootFlatCanonicalScheduleCriterionGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
 These are not assumptions hidden behind `sorry`; they are explicit fields in
-the minimal theorem statement.
+the conditional theorem statement.  The older minimal packet may instead use
+`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` as the first field.
 
-## Field 1: q>=2 Proper-Cut Signed Closure
+## Field 1: q>=2 Column Packing
 
-Lean already proves that empty and full row cuts are automatic.  The remaining
-statement is the nonempty proper-cut integral decomposition theorem:
+The newest first field is the pure signed-column packing theorem:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.Qge2SignedColumnPackingGoal
 ```
 
 Mathematically this is a finite signed-column Hoffman/Rado-Edmonds style
 decomposition with entries in `{±1, ±2}`.  It is isolated from the torus
-geometry.
+geometry.  Lean proves that this field implies the older
+`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`, whose empty and full
+row cuts are automatic.
 
 ## Field 2: Root-Flat Canonical Schedule Criterion
 

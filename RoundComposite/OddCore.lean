@@ -1654,12 +1654,24 @@ def OddCoreHighModulusScheduleBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal
 
+def OddCoreHighModulusColumnPackingScheduleBlocksGoal : Prop :=
+  PrefixCount.Qge2SignedColumnPackingGoal ∧
+  PrefixCountRootFlatCanonicalScheduleCriterionGoal
+
 def OddModulusToriV4MinimalBlocksGoal : Prop :=
   OddCoreHighModulusScheduleBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
 
 def OddModulusToriV4MinimalAddBlocksGoal : Prop :=
   OddCoreHighModulusScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
+def OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
+  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+def OddModulusToriV4ColumnPackingScheduleAddBlocksGoal : Prop :=
+  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
   OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
 def OddModulusToriV4SuccessorScheduleBlocksGoal : Prop :=
@@ -2031,6 +2043,12 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
         hPacking))
     hSchedule
 
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddCoreHighModulusColumnPackingScheduleBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
+    hBlocks.1 hBlocks.2
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_successorSchedule_blocks
     (hBlocks : OddModulusToriV4SuccessorScheduleBlocksGoal) :
     OddCoreHighModulusPrefixCountGoal :=
@@ -2110,6 +2128,18 @@ theorem oddSuccessorClosureGoal_of_v4_columnPackingScheduleAdd
     (oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
       hPacking hSchedule)
     hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_columnPackingSchedule
+    hBlocks.1.1 hBlocks.1.2 hBlocks.2
+
+theorem oddSuccessorClosureGoal_of_v4_columnPackingScheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleAddBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_columnPackingScheduleAdd
+    hBlocks.1.1 hBlocks.1.2 hBlocks.2
 
 theorem odd_successor_closure_of_v4_successorSchedule_blocks
     (hBlocks : OddModulusToriV4SuccessorScheduleBlocksGoal)
@@ -2203,6 +2233,26 @@ theorem odd_successor_closure_of_v4_columnPackingScheduleAdd
     hPacking hSchedule hSmall)
     hb5 hmodd hm3 hb
 
+theorem odd_successor_closure_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_v4_columnPackingSchedule_blocks hBlocks)
+    hb5 hmodd hm3 hb
+
+theorem odd_successor_closure_of_v4_columnPackingScheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleAddBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_v4_columnPackingScheduleAdd_blocks hBlocks)
+    hb5 hmodd hm3 hb
+
 theorem odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks
     (hBlocks : OddModulusToriV4SuccessorScheduleBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -2289,6 +2339,22 @@ theorem odd_modulus_tori_all_dimensions_of_v4_columnPackingScheduleAdd
       (PrefixCount.ordinaryQge2SignedSeedClosureGoal_of_columnPacking
         hPacking))
     hSchedule hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
+    hBlocks.1.1 hBlocks.1.2 hBlocks.2 hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_columnPackingScheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleAddBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_columnPackingScheduleAdd
+    hBlocks.1.1 hBlocks.1.2 hBlocks.2 hd2 hmodd hm3
 
 theorem odd_successor_small_modulus_base_tail_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal)

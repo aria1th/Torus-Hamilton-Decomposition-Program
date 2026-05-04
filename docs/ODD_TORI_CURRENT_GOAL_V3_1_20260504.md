@@ -214,6 +214,18 @@ After the q>=2 refactor, proof scripts may replace the first field by the pure
 packing theorem `PrefixCount.Qge2SignedColumnPackingGoal` and use:
 
 ```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
+  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+
 theorem RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
@@ -224,15 +236,16 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-The active proof obligations are exactly the three fields of this packet:
+The current column-packing packet has exactly three external fields:
 
-1. `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`
+1. `PrefixCount.Qge2SignedColumnPackingGoal`
 2. `PrefixCountRootFlatCanonicalScheduleCriterionGoal`
 3. `OddSuccessorSmallModulusBaseTailGoal`
 
-For the first item, Lean now exposes the equivalent nontrivial-cut formulation
-`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`.  The endpoint cuts
-`J = empty` and `J = univ` are no longer external obligations:
+The older minimal packet can still use
+`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` as its first field.
+Lean now exposes this equivalent nontrivial-cut formulation, and the endpoint
+cuts `J = empty` and `J = univ` are no longer external obligations:
 `PrefixCount.ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` proves that
 they are forced by the row/column sum hypotheses and the `qge2ColumnCapacity`
 endpoint arithmetic.  The direct final-theorem endpoint from this formulation is

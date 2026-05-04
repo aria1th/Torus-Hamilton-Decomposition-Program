@@ -90,6 +90,13 @@ theorem RoundComposite.Concrete
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
+    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
 ```
 
 The torus-shaped target is:
