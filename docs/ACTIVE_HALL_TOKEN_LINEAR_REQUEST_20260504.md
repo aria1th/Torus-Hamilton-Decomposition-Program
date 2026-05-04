@@ -73,6 +73,11 @@ def ColumnFillingUpgradeGoal : Prop
 
 theorem hallRealizationGoal_iff_columnFillingUpgradeGoal :
     HallRealizationGoal <-> ColumnFillingUpgradeGoal
+
+theorem symbolingWithResidues_of_feasible_and_columnFillingUpgrade
+    (hUpgrade : ColumnFillingUpgradeGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
 ```
 
 Also available:
