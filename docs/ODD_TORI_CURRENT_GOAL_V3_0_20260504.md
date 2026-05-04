@@ -183,6 +183,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Correction_rootFlatCanonical_and_slackPacketLift
 RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
@@ -200,8 +202,8 @@ The gate still carries the needed odd-modulus hypothesis as `Odd (n + r)`,
 matching the manuscript's `r`-odd restricted branch when `n + 1` is odd.
 Lean then derives the more general compatibility-facing matrix interface through
 `PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction`.  Thus
-`OddModulusToriV4ConstructionBlocksGoal` consumes the narrow correction theorem,
-not the broader arbitrary-`m` matrix gate.  The `geometry` variants are available
+`OddModulusToriV4ConstructionBlocksGoal` consumes the data-level correction
+theorem, not the broader arbitrary-`m` matrix gate.  The `geometry` variants are available
 if the count-matrix/root-flat criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
@@ -252,7 +254,7 @@ where
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal ∧
+  PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
