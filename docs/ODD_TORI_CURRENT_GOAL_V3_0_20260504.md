@@ -132,6 +132,7 @@ PrefixCount.UniformColumnDegreeMatrixData
 PrefixCount.UniformColumnDegreeMatrixGoal
 PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
 PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal
+PrefixCount.ordinaryQeq1AuxDegreeTotalGoal
 PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
 PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total
 PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
@@ -270,6 +271,8 @@ generic uniform-column `0/1` matrix realization:
 The bounds and positivity part of that arithmetic is Lean-closed from the single
 total-degree identity `PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal` through
 `PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total`.
+The total-degree identity itself is Lean-closed as
+`PrefixCount.ordinaryQeq1AuxDegreeTotalGoal`.
 
 Small-modulus successor branch:
 
@@ -372,8 +375,7 @@ theorem RoundComposite.Concrete
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 auxiliary total-degree identity, uniform-column matrix, and
-   special matching theorems;
+2. prove the q=1 uniform-column matrix and special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 

@@ -2474,6 +2474,158 @@ def OrdinaryQeq1AuxDegreeTotalGoal : Prop :=
     (∑ i : Fin n, ordinaryQeq1AuxDegree n r i) =
       ((n - 2) / 2) * (n - 1)
 
+theorem ordinaryQeq1AuxDegreeTotalGoal :
+    OrdinaryQeq1AuxDegreeTotalGoal := by
+  intro n r hdodd _hd5 hmodd hrlt hrpos
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  have hsumRNat :
+      (∑ i : Fin n, if i.val < r then (1 : Nat) else 0) = r := by
+    rw [sum_fin_indicator_val_lt]
+    omega
+  have hsumRPredNat :
+      (∑ i : Fin n, if i.val < r - 1 then (1 : Nat) else 0) = r - 1 := by
+    rw [sum_fin_indicator_val_lt]
+    omega
+  have hsumR :
+      (∑ i : Fin n, if i.val < r then (1 : Int) else 0) = (r : Int) := by
+    exact_mod_cast hsumRNat
+  have hsumRPred :
+      (∑ i : Fin n, if i.val < r - 1 then (1 : Int) else 0) =
+        (r - 1 : Nat) := by
+    exact_mod_cast hsumRPredNat
+  have hInt :
+      (∑ i : Fin n, (ordinaryQeq1AuxDegree n r i : Int)) =
+        (((n - 2) / 2) * (n - 1) : Nat) := by
+    let A : Int := ((r - 3) / 2 : Nat)
+    let B : Int := ((r - 1) / 2 : Nat)
+    let C : Int := ((n + r - 3) / 2 : Nat)
+    have hpoint : ∀ i : Fin n,
+        (ordinaryQeq1AuxDegree n r i : Int) =
+          C
+            + (B - C) * (if i.val < r then (1 : Int) else 0)
+            + (A - B) * (if i.val < r - 1 then (1 : Int) else 0) := by
+      intro i
+      unfold ordinaryQeq1AuxDegree
+      by_cases hlow : i.val < r - 1
+      · have hmid : i.val < r := by omega
+        simp only [hlow, hmid, ↓reduceIte, A, B, C]
+        ring
+      · by_cases hmid : i.val < r
+        · simp only [hlow, hmid, ↓reduceIte, A, B, C]
+          ring
+        · simp only [hlow, hmid, ↓reduceIte, A, B, C]
+          ring
+    have hsumRBC :
+        (∑ x : Fin n, if x.val < r then B - C else 0) =
+          (B - C) * (r : Int) := by
+      calc
+        (∑ x : Fin n, if x.val < r then B - C else 0)
+            = (B - C) *
+                (∑ x : Fin n, if x.val < r then (1 : Int) else 0) := by
+                rw [Finset.mul_sum]
+                apply Finset.sum_congr rfl
+                intro x _hx
+                by_cases hxlt : x.val < r <;> simp [hxlt]
+        _ = (B - C) * (r : Int) := by rw [hsumR]
+    have hsumRPredAB :
+        (∑ x : Fin n, if x.val < r - 1 then A - B else 0) =
+          (A - B) * ((r - 1 : Nat) : Int) := by
+      calc
+        (∑ x : Fin n, if x.val < r - 1 then A - B else 0)
+            = (A - B) *
+                (∑ x : Fin n, if x.val < r - 1 then (1 : Int) else 0) := by
+                rw [Finset.mul_sum]
+                apply Finset.sum_congr rfl
+                intro x _hx
+                by_cases hxlt : x.val < r - 1 <;> simp [hxlt]
+        _ = (A - B) * ((r - 1 : Nat) : Int) := by rw [hsumRPred]
+    calc
+      (∑ i : Fin n, (ordinaryQeq1AuxDegree n r i : Int))
+          = ∑ i : Fin n,
+              (C
+                + (B - C) * (if i.val < r then (1 : Int) else 0)
+                + (A - B) * (if i.val < r - 1 then (1 : Int) else 0)) := by
+              apply Finset.sum_congr rfl
+              intro i _hi
+              exact hpoint i
+      _ =
+          (n : Int) * C + (B - C) * (r : Int)
+            + (A - B) * ((r - 1 : Nat) : Int) := by
+              simp [Finset.sum_add_distrib, hsumRBC, hsumRPredAB,
+                Fintype.card_fin]
+      _ = (((n - 2) / 2) * (n - 1) : Nat) := by
+              rcases hdodd with ⟨a, ha⟩
+              rcases hrodd with ⟨s, hs⟩
+              have hn : n = 2 * a := by omega
+              have hr : r = 2 * s + 1 := by omega
+              subst n
+              subst r
+              by_cases hs0 : s = 0
+              · subst s
+                have hC : ((2 * a + 1 - 3) / 2 : Nat) = a - 1 := by omega
+                have hR : ((2 * a - 2) / 2 : Nat) = a - 1 := by omega
+                have hAint : A = 0 := by simp [A]
+                have hBint : B = 0 := by simp [B]
+                have hCint : C = ((a - 1 : Nat) : Int) := by
+                  change (((2 * a + 1 - 3) / 2 : Nat) : Int) =
+                    ((a - 1 : Nat) : Int)
+                  exact_mod_cast hC
+                rw [hAint, hBint, hCint, hR]
+                have ha2 : 2 ≤ a := by omega
+                have hcastPred : ((a - 1 : Nat) : Int) = (a : Int) - 1 := by
+                  omega
+                have hcastTop :
+                    ((2 * a - 1 : Nat) : Int) = (2 : Int) * a - 1 := by
+                  omega
+                simp only [Nat.cast_mul, Nat.cast_ofNat, zero_sub, mul_zero,
+                  zero_add, Nat.cast_one, mul_one, sub_self, tsub_self,
+                  CharP.cast_eq_zero, add_zero, hcastPred]
+                rw [hcastTop]
+                ring
+              · have hspos : 1 ≤ s := by omega
+                have hA : ((2 * s + 1 - 3) / 2 : Nat) = s - 1 := by omega
+                have hB : ((2 * s + 1 - 1) / 2 : Nat) = s := by omega
+                have hC :
+                    ((2 * a + (2 * s + 1) - 3) / 2 : Nat) =
+                      a + s - 1 := by omega
+                have hR : ((2 * a - 2) / 2 : Nat) = a - 1 := by omega
+                have hAint : A = ((s - 1 : Nat) : Int) := by
+                  change (((2 * s + 1 - 3) / 2 : Nat) : Int) =
+                    ((s - 1 : Nat) : Int)
+                  exact_mod_cast hA
+                have hBint : B = (s : Int) := by
+                  change (((2 * s + 1 - 1) / 2 : Nat) : Int) = (s : Int)
+                  exact_mod_cast hB
+                have hCint : C = ((a + s - 1 : Nat) : Int) := by
+                  change (((2 * a + (2 * s + 1) - 3) / 2 : Nat) : Int) =
+                    ((a + s - 1 : Nat) : Int)
+                  exact_mod_cast hC
+                rw [hAint, hBint, hCint, hR]
+                have ha1 : 1 ≤ a := by omega
+                have hcastSPred :
+                    ((s - 1 : Nat) : Int) = (s : Int) - 1 := by
+                  omega
+                have hcastASPred :
+                    ((a + s - 1 : Nat) : Int) = (a : Int) + (s : Int) - 1 := by
+                  omega
+                have hcastAPred :
+                    ((a - 1 : Nat) : Int) = (a : Int) - 1 := by
+                  omega
+                have hcastTop :
+                    ((2 * a - 1 : Nat) : Int) = (2 : Int) * a - 1 := by
+                  omega
+                have hcastDoubleA : ((2 * a : Nat) : Int) = (2 : Int) * a := by
+                  omega
+                have hcastDoubleSPlus :
+                    ((2 * s + 1 : Nat) : Int) = (2 : Int) * s + 1 := by
+                  omega
+                simp [Nat.cast_mul, hcastSPred, hcastASPred, hcastAPred,
+                  hcastTop, hcastDoubleA, hcastDoubleSPlus]
+                ring
+  exact_mod_cast hInt
+
 def OrdinaryQeq1AuxMatrixGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
