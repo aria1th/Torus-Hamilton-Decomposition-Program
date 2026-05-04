@@ -1305,6 +1305,25 @@ def HallRealizationGoal : Prop :=
       M.HallCuts →
       ∃ Φ : Symboling I, Φ.Realizes M.val
 
+def EraseLastHallCutsGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            simpa [choice] using hfActive (f.symm x)
+          let hdegree :
+              ∀ c : C,
+                Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+            fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
+          (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+
 theorem hallRealization_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 0 X C) (M : CountMatrix I) :
@@ -1390,6 +1409,32 @@ theorem hallRealization_one {X : Type uX} {C : Type uC}
                       by_cases hxc : x = c <;> simp [hxc]
               _ = M.val c 0 := by
                       simp
+
+theorem hallRealizationGoal_of_eraseLastHallCuts
+    (hErase : EraseLastHallCutsGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} := by
+  intro T
+  induction T with
+  | zero =>
+      intro X C _instX _instC _decX _decC I M _hHall
+      exact hallRealization_zero I M
+  | succ T ih =>
+      intro X C _instX _instC _decX _decC I M hHall
+      rcases hErase I M hHall with ⟨f, hfActive, hReducedHall⟩
+      let choice : X → C := fun x => (f.symm x).1
+      have hchoice : ∀ x : X, choice x ∈ I.active x := by
+        intro x
+        simpa [choice] using hfActive (f.symm x)
+      have hdegree :
+          ∀ c : C,
+            Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+        fun c => M.choiceDegree_of_bijective_token_matching
+          (Fin.last T) f c
+      rcases ih (I.eraseChoice choice hchoice)
+          (M.eraseLastCountMatrix choice hchoice hdegree)
+          hReducedHall with ⟨Φ, hReal⟩
+      exact ⟨Φ.extendLast choice hchoice,
+        Φ.extendLast_realizes_eraseLastCountMatrix M choice hchoice hdegree hReal⟩
 
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
