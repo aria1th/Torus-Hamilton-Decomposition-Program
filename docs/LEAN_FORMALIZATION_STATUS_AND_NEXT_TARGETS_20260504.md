@@ -500,6 +500,25 @@ PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal
 
 is provided.
 
+The immediate subgoal can now be stated more sharply:
+
+```lean
+theorem PrefixCount.qge2SignedSupportHalfPenaltyGoal :
+    PrefixCount.Qge2SignedSupportHalfPenaltyGoal
+```
+
+The new file already contains the closed-form prefix-pattern bounds:
+
+```lean
+PrefixCount.qge2SignedPatternPrefixOne_capacity
+PrefixCount.qge2SignedPatternPrefixTwo_capacity_sub_half
+```
+
+so the remaining Lean work is the permutation/sorting layer: use `Tuple.sort`
+to arrange `u : Fin n -> Nat` in descending order, construct the corresponding
+signed column pattern, prove that every upper level set is a sorted prefix, and
+feed that explicit column to `qge2SignedColumnSupport_ge_of_intColumn`.
+
 ## Verification Gate
 
 For any future Lean proof change, run:

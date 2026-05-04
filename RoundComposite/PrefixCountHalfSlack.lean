@@ -143,6 +143,43 @@ def Qge2SignedSupportHalfPenaltyGoal : Prop :=
                 - (((n - 1 : Nat) : Int) * qge2HalfLevelPenalty n u t))
           ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w
 
+def qge2SignedPatternOne (m : Nat) (j : Fin (m + m)) : Int :=
+  if j.val < m - 1 then 2 else if j.val = m - 1 then 1 else -2
+
+def qge2SignedPatternTwo (m : Nat) (j : Fin (m + m)) : Int :=
+  if j.val < m - 1 then 2 else if j.val < m + 1 then -1 else -2
+
+def qge2SignedPatternPrefixOne (m q : Nat) : Int :=
+  if q ≤ m - 1 then 2 * (q : Int)
+  else 4 * (m : Int) - 2 * (q : Int) - 1
+
+def qge2SignedPatternPrefixTwo (m q : Nat) : Int :=
+  if q ≤ m - 1 then 2 * (q : Int)
+  else if q = m then 2 * (m : Int) - 3
+  else 4 * (m : Int) - 2 * (q : Int) - 2
+
+theorem qge2SignedPatternPrefixOne_capacity
+    {m q : Nat} (_hm2 : 2 ≤ m) (hq : q ≤ m + m) :
+    qge2ColumnCapacity (m + m) q 1
+      ≤ qge2SignedPatternPrefixOne m q := by
+  unfold qge2SignedPatternPrefixOne qge2ColumnCapacity
+  by_cases h : q ≤ m - 1
+  · simp [h]
+  · simp [h]
+    omega
+
+theorem qge2SignedPatternPrefixTwo_capacity_sub_half
+    {m q : Nat} (_hm2 : 2 ≤ m) (hq : q ≤ m + m) :
+    qge2ColumnCapacity (m + m) q 2
+        - (if q = m then 1 else 0 : Int)
+      ≤ qge2SignedPatternPrefixTwo m q := by
+  unfold qge2SignedPatternPrefixTwo qge2ColumnCapacity
+  by_cases h : q ≤ m - 1
+  · simp [h]
+    omega
+  · simp [h]
+    by_cases hqeq : q = m <;> simp [hqeq] <;> omega
+
 theorem qge2IndicatorCutsHalfSlackToSupportGoal_of_signedSupportHalfPenalty
     (hSupport : Qge2SignedSupportHalfPenaltyGoal) :
     Qge2IndicatorCutsHalfSlackToSupportGoal := by
