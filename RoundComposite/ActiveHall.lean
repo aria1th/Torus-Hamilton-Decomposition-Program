@@ -3134,6 +3134,12 @@ theorem hallRealizationGoal_of_eraseLastHallCuts
       exact ⟨Φ.extendLast choice hchoice,
         Φ.extendLast_realizes_eraseLastCountMatrix M choice hchoice hdegree hReal⟩
 
+theorem hallRealizationGoal_of_eraseLastHallCutsSelection
+    (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCuts
+    (eraseLastHallCutsGoal_of_selection hSelect)
+
 theorem hallRealizationGoal_of_eraseLastHallCutsChoice
     (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC}) :
     HallRealizationGoal.{uX, uC} :=
@@ -3177,6 +3183,19 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
       eraseLastHallCutsGoal_of_tokenLinearChoice
         (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization hRealize),
     hallRealizationGoal_of_eraseLastHallCuts⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsSelectionGoal.{uX, uC} :=
+  ⟨fun hRealize =>
+      eraseLastHallCutsSelectionGoal_of_choice
+        (eraseLastHallCutsChoiceGoal_of_slackChoice
+          (eraseLastHallCutsSlackChoiceGoal_of_nontrivial
+            (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+              (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
+                (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+                  hRealize))))),
+    hallRealizationGoal_of_eraseLastHallCutsSelection⟩
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
     HallRealizationGoal.{uX, uC} ↔

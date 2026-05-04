@@ -96,6 +96,9 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
 theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
     HallRealizationGoal <-> EraseLastHallCutsGoal
 
+theorem hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal :
+    HallRealizationGoal <-> EraseLastHallCutsSelectionGoal
+
 theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsChoiceGoal
 

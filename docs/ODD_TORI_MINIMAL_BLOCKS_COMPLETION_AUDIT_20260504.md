@@ -227,6 +227,7 @@ Lean already records equivalent or sufficient formulations:
 HoffmanOrderedSDRGoal
 ColumnFillingUpgradeGoal
 EraseLastHallCutsGoal
+EraseLastHallCutsSelectionGoal
 EraseLastHallCutsChoiceGoal
 EraseLastHallCutsSlackChoiceGoal
 EraseLastHallCutsNontrivialSlackChoiceGoal
@@ -235,8 +236,9 @@ EraseLastHallCutsTokenLinearChoiceGoal
 ```
 
 and the bridges from these goals to `SymbolingWithResidues` are Lean-closed.
-The named `iff` wrappers make any one of the erase-last formulations enough to
-recover `HallRealizationGoal`.
+The named `iff` wrappers, including
+`hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal`, make any one of the
+erase-last formulations enough to recover `HallRealizationGoal`.
 This does not yet prove `OddSuccessorSmallModulusBaseTailGoal`; it is the
 abstract combinatorial realization layer expected to be used inside that branch.
 
