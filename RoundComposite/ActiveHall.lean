@@ -1324,6 +1324,46 @@ def EraseLastHallCutsGoal : Prop :=
             fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
           (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
 
+theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 0))) ≃ X,
+      ∃ hfActive :
+        ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 0)),
+          q.1 ∈ I.active (f q),
+        let choice : X → C := fun x => (f.symm x).1
+        let hchoice : ∀ x : X, choice x ∈ I.active x := by
+          intro x
+          have h := hfActive (f.symm x)
+          rw [f.apply_symm_apply] at h
+          simpa [choice] using h
+        let hdegree :
+            ∀ c : C,
+              Incidence.choiceDegree choice c = M.val c (Fin.last 0) :=
+          fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 0) f c
+        (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 0) with
+    ⟨f, hfActive⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 0) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 0) f c
+  refine ⟨f, hfActive, ?_⟩
+  change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+  intro U S
+  have hS : S = ∅ := by
+    ext σ
+    exact Fin.elim0 σ
+  subst S
+  rw [CountMatrix.cutMass_symbols_empty_eq_cutCap]
+
 theorem hallRealization_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 0 X C) (M : CountMatrix I) :
