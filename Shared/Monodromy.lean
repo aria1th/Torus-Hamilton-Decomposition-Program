@@ -202,6 +202,64 @@ def skewFiberAdditiveCarry {Base : Type*} {m : Nat}
   | n + 1, base =>
       carry base + skewFiberAdditiveCarry baseStep carry n (baseStep base)
 
+theorem skewFiberAdditiveCarry_eq_sum_range {Base : Type*} {m : Nat}
+    (baseStep : Base → Base) (carry : Base → ZMod m) :
+    ∀ n : Nat, ∀ base : Base,
+      skewFiberAdditiveCarry baseStep carry n base =
+        ∑ i ∈ Finset.range n, carry ((baseStep^[i]) base)
+  | 0, base => by simp [skewFiberAdditiveCarry]
+  | n + 1, base => by
+      rw [skewFiberAdditiveCarry]
+      rw [skewFiberAdditiveCarry_eq_sum_range baseStep carry n (baseStep base)]
+      have hsum :
+          (∑ i ∈ Finset.range n, carry ((baseStep^[i]) (baseStep base))) =
+            ∑ i ∈ Finset.range n, carry ((baseStep^[i + 1]) base) := by
+        apply Finset.sum_congr rfl
+        intro i _hi
+        congr 1
+      rw [hsum]
+      rw [Finset.sum_range_succ']
+      simp [add_comm]
+
+theorem skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+    {Base : Type*} [Fintype Base]
+    {N m : Nat} [NeZero N]
+    (baseStep : Base → Base) (rank : Base ≃ ZMod N)
+    (carry : Base → ZMod m) (base : Base)
+    (hstep : ∀ x : Base, rank (baseStep x) = rank x + 1) :
+    skewFiberAdditiveCarry baseStep carry N base =
+      ∑ x : Base, carry x := by
+  classical
+  calc
+    skewFiberAdditiveCarry baseStep carry N base =
+        ∑ i ∈ Finset.range N, carry ((baseStep^[i]) base) :=
+      skewFiberAdditiveCarry_eq_sum_range baseStep carry N base
+    _ = ∑ x ∈ (Finset.univ : Finset Base), carry x := by
+      refine Finset.sum_bij
+        (fun i _hi => (baseStep^[i]) base)
+        (by intro i hi; simp)
+        ?inj ?surj ?compat
+      · intro i hi j hj hij
+        have hiN : i < N := Finset.mem_range.mp hi
+        have hjN : j < N := Finset.mem_range.mp hj
+        have hrank : rank ((baseStep^[i]) base) =
+            rank ((baseStep^[j]) base) := congrArg rank hij
+        rw [iterate_rank_add_one baseStep rank hstep i base] at hrank
+        rw [iterate_rank_add_one baseStep rank hstep j base] at hrank
+        have hcast : (i : ZMod N) = (j : ZMod N) :=
+          add_left_cancel hrank
+        have hmod : i ≡ j [MOD N] :=
+          (ZMod.natCast_eq_natCast_iff i j N).mp hcast
+        unfold Nat.ModEq at hmod
+        rwa [Nat.mod_eq_of_lt hiN, Nat.mod_eq_of_lt hjN] at hmod
+      · intro x _hx
+        rcases zmod_rank_orbit_cover_lt baseStep rank hstep base x with
+          ⟨k, hk, hkx⟩
+        exact ⟨k, Finset.mem_range.mpr hk, hkx⟩
+      · intro i _hi
+        rfl
+    _ = ∑ x : Base, carry x := by simp
+
 theorem skewFiberIterate_zmod_add {Base : Type*} {m : Nat}
     (baseStep : Base → Base) (carry : Base → ZMod m) :
     ∀ n : Nat, ∀ base : Base, ∀ fiber : ZMod m,
@@ -426,6 +484,24 @@ theorem single_cycle_of_skewProduct_zmod_additive_unit_carry
     (sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
       baseStep carry base period a ha hcarry)
 
+theorem single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+    {Base : Type*} [Fintype Base]
+    {N m : Nat} [NeZero N] [NeZero m]
+    (baseStep : Base → Base) (rank : Base ≃ ZMod N)
+    (carry : Base → ZMod m) (base : Base)
+    (hstep : ∀ x : Base, rank (baseStep x) = rank x + 1)
+    (hunit : IsUnit (∑ x : Base, carry x)) :
+    IsSingleCycleMap
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  single_cycle_of_skewProduct_zmod_additive_unit_carry
+    baseStep carry base N (∑ x : Base, carry x)
+    (single_cycle_of_zmod_rank_equiv baseStep rank hstep).1
+    (zmod_rank_iterate_period baseStep rank hstep base)
+    (zmod_rank_orbit_cover_lt baseStep rank hstep base)
+    hunit
+    (skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+      baseStep rank carry base hstep)
+
 noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry
     {Base : Type*} [Fintype Base] [DecidableEq Base]
     {m n : Nat} [NeZero m] [NeZero n]
@@ -475,5 +551,26 @@ noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
     hreturnBase hbaseCover
     (sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
       baseStep carry base period a ha hcarry)
+
+noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+    {Base : Type*} [Fintype Base] [DecidableEq Base]
+    {N m n : Nat} [NeZero N] [NeZero m] [NeZero n]
+    (baseStep : Base → Base) (rank : Base ≃ ZMod N)
+    (carry : Base → ZMod m) (base : Base)
+    (hcard : Fintype.card (Base × ZMod m) = n)
+    (hn : 1 < n)
+    (hstep : ∀ x : Base, rank (baseStep x) = rank x + 1)
+    (hunit : IsUnit (∑ x : Base, carry x)) :
+    CycleCoordinate n
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
+    baseStep carry base N (∑ x : Base, carry x)
+    hcard hn
+    (single_cycle_of_zmod_rank_equiv baseStep rank hstep).1
+    (zmod_rank_iterate_period baseStep rank hstep base)
+    (zmod_rank_orbit_cover_lt baseStep rank hstep base)
+    hunit
+    (skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+      baseStep rank carry base hstep)
 
 end Shared

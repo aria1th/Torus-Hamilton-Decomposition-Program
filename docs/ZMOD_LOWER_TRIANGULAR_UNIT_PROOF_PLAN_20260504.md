@@ -73,7 +73,23 @@ theorem Shared.zmod_rank_iterate_period
 theorem Shared.zmod_rank_orbit_cover_lt
 ```
 
-## Remaining Helper Lemmas
+The finite carry-sum and ranked-base skew-product wrappers are now Lean-closed:
+
+```lean
+theorem Shared.skewFiberAdditiveCarry_eq_sum_range
+theorem Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+
+theorem
+  Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+
+noncomputable def
+  Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+```
+
+These say that a ranked base odometer together with a unit total carry gives a
+single cycle, or a `CycleCoordinate`, for the additive skew product.
+
+## Remaining Proof Assembly
 
 The full proof should live in `Shared/Monodromy.lean`, not
 `Shared/TorusCayley.lean`, because the target is defined in `TorusCayley` while
@@ -102,18 +118,8 @@ using `Shared.zmodVectorSnocEquiv`.  Define the base map by taking the lower
 last-coordinate carry as `gamma n`.
 
 The induction hypothesis gives a rank equivalence for the base map.  The
-current unit-carry skew-product lemmas then close the last-coordinate extension
-once the section-return carry is identified with the finite sum over all base
-states.
-
-Still needed:
-
-```lean
-theorem Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
-```
-
-showing that one full ranked base cycle accumulates exactly the finite sum of
-the carry over all base states.
+current ranked-base unit-carry skew-product lemmas then close the
+last-coordinate extension.
 
 With these helpers, the remaining induction should be a conjugation of `F` to
 

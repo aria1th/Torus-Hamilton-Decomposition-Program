@@ -159,6 +159,9 @@ Shared.zmodVectorTake_snoc
 Shared.zmodVectorTake_snoc_self
 Shared.zmod_rank_iterate_period
 Shared.zmod_rank_orbit_cover_lt
+Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
 ```
 
 The remaining generic lower-triangular proof plan is recorded in

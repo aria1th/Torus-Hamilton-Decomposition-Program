@@ -306,10 +306,15 @@ Shared.zmodVectorTake_snoc
 Shared.zmodVectorTake_snoc_self
 Shared.zmod_rank_iterate_period
 Shared.zmod_rank_orbit_cover_lt
+Shared.skewFiberAdditiveCarry_eq_sum_range
+Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+Shared.single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
 ```
 
-The remaining generic `Shared` proof should now focus on the finite carry-sum
-identity recorded in
+The remaining generic `Shared` proof should now focus on the induction
+assembly and the conjugation of a triangular map to the additive skew product,
+as recorded in
 `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`.
 
 This route avoids proving orbit transitivity directly.  It asks for:
