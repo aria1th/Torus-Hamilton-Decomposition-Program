@@ -94,6 +94,26 @@ def RoundComposite.Concrete
 Lean proves `PrefixCountFirstHitReturnTailMonodromyOrbitGoal` from this rank
 goal using `Shared.single_cycle_of_zmod_rank`.
 
+If the odometer coordinate is naturally an equivalence, use this still smaller
+variant:
+
+```lean
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailRankEquivGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      exists e :
+          ((Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))),
+        forall tail : Fin (d - 2) -> ZMod m,
+          e (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
+            e tail + 1
+```
+
+Lean proves the plain rank goal from this using `Equiv.bijective`.
+
 The full tail-monodromy target is enough for the previous section-monodromy
 target:
 

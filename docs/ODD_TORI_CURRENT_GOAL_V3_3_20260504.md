@@ -129,6 +129,27 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
+If the rank is naturally constructed as an equivalence, Lean also exposes:
+
+```lean
+def PrefixCountFirstHitReturnTailRankEquivGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      exists e :
+          ((Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))),
+        forall tail : Fin (d - 2) -> ZMod m,
+          e (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
+            e tail + 1
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
+    (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
+    PrefixCountFirstHitReturnTailRankGoal
+```
+
 ## Remaining External Fields
 
 The goal is not complete.  The current preferred packet leaves exactly:
