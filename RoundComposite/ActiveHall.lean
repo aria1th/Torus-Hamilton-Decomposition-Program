@@ -2604,6 +2604,27 @@ theorem eraseLastHallCutsLinearChoice_zero
   rcases hSne with ⟨σ, _hσ⟩
   exact Fin.elim0 σ
 
+theorem eraseLastHallCutsTokenLinearChoice_zero
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 0))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 0)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin 0),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
+            Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+              ≤ M.cutSlack U
+                  (S.image (Fin.castSucc : Fin 0 → Fin (0 + 1))) := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 0) with
+    ⟨f, hfActive⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S _hUne _hUuniv hSne
+  rcases hSne with ⟨σ, _hσ⟩
+  exact Fin.elim0 σ
+
 theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 1 X C) (M : CountMatrix I)
