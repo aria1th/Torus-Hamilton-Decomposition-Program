@@ -316,6 +316,21 @@ theorem singleCycle {n : Nat} [NeZero n] {α : Type*} {f : α → α}
     _ = C.equiv.symm (C.equiv (z + 1)) := by rw [C.step z]
     _ = C.equiv.symm x + 1 := by simp [z]
 
+noncomputable def zmodAddConstOfCoprime {m a : Nat} [NeZero m]
+    (ha : Nat.Coprime a m) :
+    CycleCoordinate m (fun x : ZMod m => x + (a : ZMod m)) := by
+  let u : (ZMod m)ˣ := ZMod.unitOfCoprime a ha
+  refine ofRank (fun x : ZMod m => (u⁻¹ : ZMod m) * x)
+    (Equiv.bijective (Units.mulLeft u⁻¹)) ?_
+  intro x
+  have hu : (u : ZMod m) = (a : ZMod m) :=
+    ZMod.coe_unitOfCoprime a ha
+  calc
+    (u⁻¹ : ZMod m) * (x + (a : ZMod m)) =
+        (u⁻¹ : ZMod m) * x + (u⁻¹ : ZMod m) * (a : ZMod m) := by ring
+    _ = (u⁻¹ : ZMod m) * x + (u⁻¹ : ZMod m) * (u : ZMod m) := by rw [hu]
+    _ = (u⁻¹ : ZMod m) * x + 1 := by simp
+
 end CycleCoordinate
 
 def cayleyColorStep {d m : Nat}

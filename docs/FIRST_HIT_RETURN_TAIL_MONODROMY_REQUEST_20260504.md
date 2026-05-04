@@ -153,6 +153,10 @@ theorem Shared.card_zmodVector (n m : Nat) [NeZero m] :
 
 noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
     (Fin n -> ZMod m) ≃ ZMod (m ^ n)
+
+noncomputable def Shared.CycleCoordinate.zmodAddConstOfCoprime
+    {m a : Nat} [NeZero m] (ha : Nat.Coprime a m) :
+    Shared.CycleCoordinate m (fun x : ZMod m => x + (a : ZMod m))
 ```
 
 The full tail-monodromy target is enough for the previous section-monodromy
