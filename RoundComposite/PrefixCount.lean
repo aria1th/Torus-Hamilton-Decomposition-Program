@@ -1767,6 +1767,78 @@ def OrdinaryQge2SignedSeedClosureGoal : Prop :=
             = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) ∧
         (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
 
+/--
+The same signed-column closure, but only the nonempty proper row cuts are
+assumed.  The empty and full cuts are forced by the row/column sum hypotheses.
+-/
+def OrdinaryQge2SignedSeedProperCutClosureGoal : Prop :=
+  ∀ {n C r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, a i) = C →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ k : Fin (n - 1), c k) = C →
+      (∀ J : Finset (Fin n), J.Nonempty →
+        J ≠ (Finset.univ : Finset (Fin n)) →
+        (∑ i ∈ J, ((r : Int) - (a i : Int)
+            - (n : Int) * (epsBit i : Int)))
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+      ∃ S : Fin n → Fin (n - 1) → Int,
+        (∀ i k, IsSignedVal (S i k)) ∧
+        (∀ i : Fin n,
+          (∑ k : Fin (n - 1), S i k)
+            = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) ∧
+        (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
+
+theorem ordinaryQge2SignedSeedProperCutClosureGoal_of_signedSeedClosure
+    (hClosure : OrdinaryQge2SignedSeedClosureGoal) :
+    OrdinaryQge2SignedSeedProperCutClosureGoal := by
+  classical
+  intro n C r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc ha_sum heps_sum hc_sum hProper
+  apply hClosure hnEven hn4 hrOdd hrlt hrpos
+    a epsBit c ha heps hc ha_sum heps_sum hc_sum
+  intro J
+  by_cases hJempty : J = ∅
+  · subst J
+    have hcap :
+        (∑ k : Fin (n - 1), qge2ColumnCapacity n 0 (c k)) = 0 := by
+      calc
+        (∑ k : Fin (n - 1), qge2ColumnCapacity n 0 (c k))
+            = ∑ _k : Fin (n - 1), (0 : Int) := by
+                apply Finset.sum_congr rfl
+                intro k _hk
+                rw [qge2ColumnCapacity_empty_of_one_two (by omega) (hc k)]
+        _ = 0 := by simp
+    simp [hcap]
+  · by_cases hJuniv : J = (Finset.univ : Finset (Fin n))
+    · subst J
+      have hrow := sum_qge2RowTarget_of_sums
+        (n := n) (C := C) (r := r) (a := a) (epsBit := epsBit)
+        ha_sum heps_sum
+      have hcap := sum_qge2ColumnCapacity_univ_of_sum
+        (n := n) (C := C) (c := c) hc_sum
+      simp [hrow, hcap]
+    · exact hProper J (Finset.nonempty_iff_ne_empty.mpr hJempty) hJuniv
+
+theorem ordinaryQge2SignedSeedClosureGoal_of_properCutClosure
+    (hClosure : OrdinaryQge2SignedSeedProperCutClosureGoal) :
+    OrdinaryQge2SignedSeedClosureGoal := by
+  intro n C r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc ha_sum heps_sum hc_sum hCuts
+  exact hClosure hnEven hn4 hrOdd hrlt hrpos
+    a epsBit c ha heps hc ha_sum heps_sum hc_sum
+    (fun J _hne _hproper => hCuts J)
+
+theorem ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure :
+    OrdinaryQge2SignedSeedClosureGoal ↔
+      OrdinaryQge2SignedSeedProperCutClosureGoal :=
+  ⟨ordinaryQge2SignedSeedProperCutClosureGoal_of_signedSeedClosure,
+    ordinaryQge2SignedSeedClosureGoal_of_properCutClosure⟩
+
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →
