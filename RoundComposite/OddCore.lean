@@ -1490,6 +1490,26 @@ theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero
     simp [fNat]
   rw [← hCast, hRangeNat]
 
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero_parts
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (w : PrefixCountRootState d m) :
+    ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c w)
+        ⟨0, by omega⟩ =
+      w ⟨0, by omega⟩ + (C.zero c : ZMod m) := by
+  simpa using
+    prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero
+      (hd2 := hd2) (L := L) c w
+
+theorem prefixCountFirstHitCanonicalSchedule_zeroCoordinateCycle
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d} (hC : C.Admissible m)
+    (c : Fin d) :
+    Shared.IsSingleCycleMap
+      (fun z : ZMod m => z + (C.zero c : ZMod m)) :=
+  Shared.zmod_add_single_cycle_of_coprime (hC.prim_zero c)
+
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
     Odd d → 5 ≤ d → Odd m → d ≤ m →
