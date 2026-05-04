@@ -1681,6 +1681,56 @@ theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
       prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero_parts]
   · rfl
 
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_headTailMonodromy
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d} (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (base : ZMod m) (period : Nat)
+    (hfiber :
+      ∀ z : ZMod m,
+        Function.Bijective (prefixCountFirstHitReturnFiberStep hd2 L c z))
+    (hreturnBase :
+      ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[period]) base = base)
+    (hbaseCover :
+      ∀ z : ZMod m, ∃ k : Nat,
+        k < period ∧
+          ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[k]) base = z)
+    (hmonodromy :
+      Shared.IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c))
+          base period)) :
+    Shared.IsSingleCycleMap
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c) := by
+  have hbase :
+      Function.Bijective
+        (prefixCountFirstHitReturnBaseStep (m := m) C c) := by
+    have hcycle :=
+      prefixCountFirstHitCanonicalSchedule_zeroCoordinateCycle
+        (hd2 := hd2) (hC := hC) c
+    simpa [prefixCountFirstHitReturnBaseStep] using hcycle.1
+  have hskew :
+      Shared.IsSingleCycleMap
+          (Shared.skewProductMap
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)) :=
+    Shared.single_cycle_of_skewProduct_base_orbit_monodromy
+      (prefixCountFirstHitReturnBaseStep (m := m) C c)
+      (prefixCountFirstHitReturnFiberStep hd2 L c)
+      base period hbase hfiber hreturnBase hbaseCover hmonodromy
+  exact
+    Shared.single_cycle_of_equiv_conj
+      (prefixCountRootStateHeadTailEquiv d m hd2).symm
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c)
+      (Shared.skewProductMap
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c))
+      hskew
+      (prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
+        hd2 L c)
+
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
     Odd d → 5 ≤ d → Odd m → d ≤ m →
