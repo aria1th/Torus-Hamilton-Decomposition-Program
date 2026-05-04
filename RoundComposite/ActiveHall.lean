@@ -2088,6 +2088,33 @@ def EraseLastHallCutsNontrivialSlackChoiceGoal : Prop :=
                   ≤ M.cutSlack U
                       (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
 
+def EraseLastHallCutsLinearChoiceGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ choice : X → C,
+        ∃ _hchoice : ∀ x : X, choice x ∈ I.active x,
+          (∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T)) ∧
+            ∀ U : Finset C, ∀ S : Finset (Fin T),
+              U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
+                (∑ c ∈ U,
+                  Incidence.choiceDegreeOn (Incidence.lowCutSet I U S)
+                    choice c)
+                  ≤ M.cutSlack U
+                      (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+theorem eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear
+    (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsNontrivialSlackChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hLinear I M hHall with ⟨choice, hchoice, hdegree, hSlack⟩
+  refine ⟨choice, hchoice, hdegree, ?_⟩
+  intro U S hUne hUuniv hSne
+  rw [Incidence.choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet]
+  exact hSlack U S hUne hUuniv hSne
+
 theorem eraseLastHallCutsSlackChoiceGoal_of_nontrivial
     (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal.{uX, uC}) :
     EraseLastHallCutsSlackChoiceGoal.{uX, uC} := by
@@ -2186,6 +2213,12 @@ theorem eraseLastHallCutsGoal_of_nontrivialSlackChoice
   eraseLastHallCutsGoal_of_slackChoice
     (eraseLastHallCutsSlackChoiceGoal_of_nontrivial hNontriv)
 
+theorem eraseLastHallCutsGoal_of_linearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsGoal.{uX, uC} :=
+  eraseLastHallCutsGoal_of_nontrivialSlackChoice
+    (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear hLinear)
+
 theorem eraseLastHallCutsChoice_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 1 X C) (M : CountMatrix I)
@@ -2262,6 +2295,38 @@ theorem eraseLastHallCutsNontrivialSlackChoice_zero
           ∀ U : Finset C, ∀ S : Finset (Fin 0),
             U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
               Incidence.choiceLowHitCount I choice U S
+                ≤ M.cutSlack U
+                    (S.image (Fin.castSucc : Fin 0 → Fin (0 + 1))) := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 0) with
+    ⟨f, hfActive⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 0) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 0) f c
+  refine ⟨choice, hchoice, hdegree, ?_⟩
+  intro U S _hUne _hUuniv hSne
+  rcases hSne with ⟨σ, _hσ⟩
+  exact Fin.elim0 σ
+
+theorem eraseLastHallCutsLinearChoice_zero
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ choice : X → C,
+      ∃ _hchoice : ∀ x : X, choice x ∈ I.active x,
+        (∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 0)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin 0),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
+              (∑ c ∈ U,
+                Incidence.choiceDegreeOn (Incidence.lowCutSet I U S)
+                  choice c)
                 ≤ M.cutSlack U
                     (S.image (Fin.castSucc : Fin 0 → Fin (0 + 1))) := by
   classical
@@ -2451,6 +2516,12 @@ theorem hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice
   hallRealizationGoal_of_eraseLastHallCutsSlackChoice
     (eraseLastHallCutsSlackChoiceGoal_of_nontrivial hNontriv)
 
+theorem hallRealizationGoal_of_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice
+    (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear hLinear)
+
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
@@ -2502,6 +2573,17 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsNontrivialSlackCh
     SymbolingWithResidues I R :=
   symbolingWithResidues_of_feasible_and_realization
     (hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice hNontriv)
+    hFeasible
+
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsLinearChoice
+    (hLinear : EraseLastHallCutsLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCutsLinearChoice hLinear)
     hFeasible
 
 theorem feasibleWithResidues_of_symbolingWithResidues
