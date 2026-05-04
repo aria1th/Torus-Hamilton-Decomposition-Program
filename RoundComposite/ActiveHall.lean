@@ -556,6 +556,96 @@ theorem exists_injective_token_matching_of_hall
   rw [hfilter]
   exact hHall A
 
+set_option linter.unusedFintypeInType false in
+theorem exists_choiceDegree_bijective_token_matching
+    {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (choice : X → C) (n : C → Nat)
+    (hdegree : ∀ c : C, choiceDegree choice c = n c) :
+    ∃ f : (Sigma fun c : C => Fin (n c)) ≃ X,
+      ∀ q : Sigma fun c : C => Fin (n c), q.1 = choice (f q) := by
+  classical
+  have hInjective :
+      ∃ f : (Sigma fun c : C => Fin (n c)) → X,
+        Function.Injective f ∧
+          ∀ q : Sigma fun c : C => Fin (n c), q.1 = choice (f q) := by
+    rw [← Fintype.all_card_le_filter_rel_iff_exists_injective
+      (r := fun (q : Sigma fun c : C => Fin (n c)) (x : X) =>
+        q.1 = choice x)]
+    intro A
+    let U : Finset C :=
+      A.image (fun q : Sigma fun c : C => Fin (n c) => q.1)
+    have hsubset :
+        A ⊆ U.sigma
+          (fun c : C => (Finset.univ : Finset (Fin (n c)))) := by
+      intro q hq
+      exact Finset.mem_sigma.mpr
+        ⟨Finset.mem_image_of_mem
+          (fun q : Sigma fun c : C => Fin (n c) => q.1) hq,
+          Finset.mem_univ q.2⟩
+    have hcardA :
+        A.card ≤
+          (U.sigma
+            (fun c : C => (Finset.univ : Finset (Fin (n c))))).card :=
+      Finset.card_le_card hsubset
+    have hcardSigma :
+        (U.sigma
+            (fun c : C => (Finset.univ : Finset (Fin (n c))))).card =
+          ∑ c ∈ U, n c := by
+      rw [Finset.card_sigma]
+      simp
+    have hsum :
+        (∑ c ∈ U, n c) = choiceHitCount choice U := by
+      calc
+        (∑ c ∈ U, n c)
+            = ∑ c ∈ U, choiceDegree choice c := by
+                apply Finset.sum_congr rfl
+                intro c _hc
+                rw [hdegree c]
+        _ = choiceHitCount choice U :=
+                sum_choiceDegree_on choice U
+    have hfilter :
+        ({x : X | ∃ q ∈ A, q.1 = choice x} : Finset X)
+          =
+        (Finset.univ.filter (fun x : X => choice x ∈ U)) := by
+      ext x
+      constructor
+      · intro hx
+        rcases Finset.mem_filter.mp hx with ⟨_hxuniv, q, hqA, hq⟩
+        exact Finset.mem_filter.mpr
+          ⟨Finset.mem_univ x, by
+            rw [← hq]
+            exact Finset.mem_image_of_mem
+              (fun q : Sigma fun c : C => Fin (n c) => q.1) hqA⟩
+      · intro hx
+        have hU : choice x ∈ U := (Finset.mem_filter.mp hx).2
+        rcases Finset.mem_image.mp hU with ⟨q, hqA, hq⟩
+        exact Finset.mem_filter.mpr
+          ⟨Finset.mem_univ x, q, hqA, by rw [hq]⟩
+    rw [hfilter]
+    exact hcardA.trans (by rw [hcardSigma, hsum, choiceHitCount])
+  rcases hInjective with ⟨f, hfInj, hfRel⟩
+  have hcard :
+      Fintype.card (Sigma fun c : C => Fin (n c)) = Fintype.card X := by
+    rw [Fintype.card_sigma]
+    calc
+      (∑ c : C, Fintype.card (Fin (n c)))
+          = ∑ c : C, n c := by simp
+      _ = ∑ c : C, choiceDegree choice c := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [hdegree c]
+      _ = ∑ c ∈ (Finset.univ : Finset C), choiceDegree choice c := by
+            simp
+      _ = choiceHitCount choice (Finset.univ : Finset C) :=
+            sum_choiceDegree_on choice (Finset.univ : Finset C)
+      _ = Fintype.card X := by
+            unfold choiceHitCount
+            simp
+  have hfBij : Function.Bijective f :=
+    (Fintype.bijective_iff_injective_and_card f).2 ⟨hfInj, hcard⟩
+  exact ⟨Equiv.ofBijective f hfBij, hfRel⟩
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/
@@ -1785,6 +1875,41 @@ def EraseLastHallCutsSelectionGoal : Prop :=
               ≤ I.cutCap U
                   (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
 
+def EraseLastHallCutsChoiceGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ choice : X → C,
+        ∃ _hchoice : ∀ x : X, choice x ∈ I.active x,
+          (∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T)) ∧
+            ∀ U : Finset C, ∀ S : Finset (Fin T),
+              M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+                  + Incidence.choiceLowHitCount I choice U S
+                ≤ I.cutCap U
+                    (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+theorem eraseLastHallCutsSelectionGoal_of_choice
+    (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsSelectionGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hChoice I M hHall with ⟨choice, hchoice, hdegree, hSlack⟩
+  rcases Incidence.exists_choiceDegree_bijective_token_matching
+      choice (fun c : C => M.val c (Fin.last T)) hdegree with
+    ⟨f, hfChoice⟩
+  refine ⟨f, ?_, ?_⟩
+  · intro q
+    rw [hfChoice q]
+    exact hchoice (f q)
+  · dsimp only
+    have hchoiceEq : (fun x : X => (f.symm x).1) = choice := by
+      funext x
+      have h := hfChoice (f.symm x)
+      simpa using h
+    intro U S
+    simpa [hchoiceEq] using hSlack U S
+
 theorem eraseLastHallCutsGoal_of_selection
     (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
     EraseLastHallCutsGoal.{uX, uC} := by
@@ -1803,6 +1928,12 @@ theorem eraseLastHallCutsGoal_of_selection
   change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
   exact M.eraseLastCountMatrix_hallCuts_of_cutCap_slack
     choice hchoice hdegree hCover
+
+theorem eraseLastHallCutsGoal_of_choice
+    (hChoice : EraseLastHallCutsChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsGoal.{uX, uC} :=
+  eraseLastHallCutsGoal_of_selection
+    (eraseLastHallCutsSelectionGoal_of_choice hChoice)
 
 theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
