@@ -2449,6 +2449,11 @@ def pRowNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
     (X : Finset (Fin n)) : Finset (Fin (n - 1)) :=
   X.biUnion fun i => A.posCols i
 
+def pRowTargetNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
+    (special : Fin (n - 1)) (X : Finset (Fin n)) :
+    Finset (Fin (n - 1)) :=
+  X.biUnion fun i => A.posCols i ∩ pRowTargetCols n r special
+
 theorem exists_distinguished_low_neg {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
     (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
@@ -2685,6 +2690,85 @@ theorem exists_pRows_matching {n r : Nat}
   refine ⟨f, hfInj, ?_⟩
   intro i
   simpa [neigh, posCols] using hfMem i
+
+theorem exists_pRows_target_matching {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hrlt : r < n) {special : Fin (n - 1)} (hspecial : special.val < r)
+    (hHall :
+      ∀ X : Finset (Fin n), X ⊆ pRows n r →
+        X.card ≤ (A.pRowTargetNeighbors special X).card) :
+    ∃ f : {i : Fin n // i ∈ pRows n r} → Fin (n - 1),
+      Function.Injective f ∧
+      (∀ i, f i ∈ pRowTargetCols n r special) ∧
+      (∀ i, A.B i.1 (f i) = 1) ∧
+      (∀ k, k ∈ pRowTargetCols n r special → ∃ i, f i = k) := by
+  classical
+  let P := {i : Fin n // i ∈ pRows n r}
+  let target := pRowTargetCols n r special
+  let neigh : P → Finset (Fin (n - 1)) :=
+    fun i => A.posCols i.1 ∩ target
+  have hHallSubtype :
+      ∀ S : Finset P, S.card ≤ (S.biUnion neigh).card := by
+    intro S
+    let X : Finset (Fin n) := S.image fun i : P => i.1
+    have hcardX : X.card = S.card := by
+      dsimp [X]
+      exact Finset.card_image_of_injective
+        S (fun a b h => Subtype.ext h)
+    have hX : X ⊆ pRows n r := by
+      intro i hi
+      rcases Finset.mem_image.mp hi with ⟨x, hx, rfl⟩
+      exact x.2
+    have hneigh :
+        (S.biUnion neigh).card =
+          (A.pRowTargetNeighbors special X).card := by
+      congr 1
+      ext k
+      constructor
+      · intro hk
+        rcases Finset.mem_biUnion.mp hk with ⟨i, hiS, hik⟩
+        exact Finset.mem_biUnion.mpr
+          ⟨i.1, Finset.mem_image.mpr ⟨i, hiS, rfl⟩, hik⟩
+      · intro hk
+        rcases Finset.mem_biUnion.mp hk with ⟨i, hiX, hik⟩
+        rcases Finset.mem_image.mp hiX with ⟨j, hjS, hji⟩
+        subst i
+        exact Finset.mem_biUnion.mpr ⟨j, hjS, hik⟩
+    rw [← hcardX, hneigh]
+    exact hHall X hX
+  rcases (Finset.all_card_le_biUnion_card_iff_existsInjective' neigh).mp
+      hHallSubtype with ⟨f, hfInj, hfMem⟩
+  have hfTarget : ∀ i, f i ∈ target := by
+    intro i
+    exact (Finset.mem_inter.mp (hfMem i)).2
+  have hfPos : ∀ i, A.B i.1 (f i) = 1 := by
+    intro i
+    simpa [posCols] using (Finset.mem_inter.mp (hfMem i)).1
+  let imageSet : Finset (Fin (n - 1)) :=
+    (Finset.univ : Finset P).image f
+  have himageSubset : imageSet ⊆ target := by
+    intro k hk
+    rcases Finset.mem_image.mp hk with ⟨i, _hi, rfl⟩
+    exact hfTarget i
+  have hcardP : Fintype.card P = (pRows n r).card := by
+    simp [P]
+  have hcardImage : imageSet.card = target.card := by
+    dsimp [imageSet, target]
+    rw [Finset.card_image_of_injective]
+    · rw [Finset.card_univ, hcardP,
+        pRows_card_eq_pRowTargetCols_card hrlt hspecial]
+    · intro a b h
+      exact hfInj h
+  have himage_eq_target : imageSet = target :=
+    Finset.eq_of_subset_of_card_le himageSubset (by rw [hcardImage])
+  have htargetSubset : target ⊆ imageSet := by
+    intro k hk
+    rwa [himage_eq_target]
+  refine ⟨f, hfInj, hfTarget, hfPos, ?_⟩
+  intro k hk
+  have hkImage : k ∈ imageSet := htargetSubset hk
+  rcases Finset.mem_image.mp hkImage with ⟨i, _hi, hfi⟩
+  exact ⟨i, hfi⟩
 
 theorem pRow_exists_distinguished_neg_pos {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
