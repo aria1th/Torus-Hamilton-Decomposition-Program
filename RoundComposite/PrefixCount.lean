@@ -2638,15 +2638,124 @@ theorem pRows_hall {n r : Nat}
   have hedge_le : X.card * degP ≤ N.card * degC := by
     rw [← hrowSum, hedge_eq]
     calc
+        (∑ k ∈ N, ∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0)
+            ≤ ∑ _k ∈ N, degC := by
+                apply Finset.sum_le_sum
+                intro k hk
+                exact hcolBound k hk
+        _ = N.card * degC := by simp [Nat.mul_comm]
+  have hmul : X.card * degP ≤ N.card * degP :=
+    le_trans hedge_le (Nat.mul_le_mul_left N.card hdegC_le)
+  exact Nat.le_of_mul_le_mul_right hmul hdegP_pos
+
+theorem pRows_hall_strict_of_nonempty {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hr1 : 1 < r) (X : Finset (Fin n)) (hX : X ⊆ pRows n r)
+    (hXne : X.Nonempty) :
+    X.card < (A.pRowNeighbors X).card := by
+  classical
+  let N := A.pRowNeighbors X
+  let degP : Nat := (n + r - 3) / 2
+  let degC : Nat := (n - 2) / 2
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  have hdegP_pos : 0 < degP := by
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    have hn : n = 2 * a := by omega
+    have hr : r = 2 * s + 1 := by omega
+    subst n
+    subst r
+    omega
+  have hdegC_lt : degC < degP := by
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    have hn : n = 2 * a := by omega
+    have hr : r = 2 * s + 1 := by omega
+    subst n
+    subst r
+    omega
+  have hrow :
+      ∀ i ∈ X, (A.posCols i).card = degP := by
+    intro i hi
+    have hip : r ≤ i.val := by
+      have hmem := hX hi
+      simpa [pRows] using hmem
+    exact A.pRow_posCols_card hdodd hmodd hip
+  have hrowSum :
+      (∑ i ∈ X, (A.posCols i).card) = X.card * degP := by
+    calc
+      (∑ i ∈ X, (A.posCols i).card)
+          = ∑ _i ∈ X, degP := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              exact hrow i hi
+      _ = X.card * degP := by simp
+  have hrowRestrict :
+      ∀ i ∈ X,
+        (∑ k ∈ N, if A.B i k = 1 then (1 : Nat) else 0) =
+          (A.posCols i).card := by
+    intro i hi
+    rw [← Finset.card_filter]
+    have hfilter :
+        N.filter (fun k : Fin (n - 1) => A.B i k = 1) = A.posCols i := by
+      ext k
+      constructor
+      · intro hk
+        have hkB : A.B i k = 1 := by
+          exact (Finset.mem_filter.mp hk).2
+        simp [posCols, hkB]
+      · intro hk
+        have hkB : A.B i k = 1 := by simpa [posCols] using hk
+        have hkN : k ∈ N := by
+          exact Finset.mem_biUnion.mpr ⟨i, hi, hk⟩
+        simp [hkN, hkB]
+    rw [hfilter]
+  have hcolBound :
+      ∀ k ∈ N, (∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0) ≤ degC := by
+    intro k _hk
+    rw [← Finset.card_filter]
+    have hsubset :
+        X.filter (fun i : Fin n => A.B i k = 1) ⊆ A.posRows k := by
+      intro i hi
+      have hB : A.B i k = 1 := by
+        exact (Finset.mem_filter.mp hi).2
+      simp [posRows, hB]
+    have hcardle := Finset.card_le_card hsubset
+    rw [A.posRows_card k] at hcardle
+    exact hcardle
+  have hedge_eq :
+      (∑ i ∈ X, (A.posCols i).card) =
+        ∑ k ∈ N, ∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0 := by
+    calc
+      (∑ i ∈ X, (A.posCols i).card)
+          = ∑ i ∈ X, ∑ k ∈ N,
+              if A.B i k = 1 then (1 : Nat) else 0 := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              exact (hrowRestrict i hi).symm
+      _ = ∑ k ∈ N, ∑ i ∈ X,
+              if A.B i k = 1 then (1 : Nat) else 0 := by
+              rw [Finset.sum_comm]
+  have hedge_le : X.card * degP ≤ N.card * degC := by
+    rw [← hrowSum, hedge_eq]
+    calc
       (∑ k ∈ N, ∑ i ∈ X, if A.B i k = 1 then (1 : Nat) else 0)
           ≤ ∑ _k ∈ N, degC := by
               apply Finset.sum_le_sum
               intro k hk
               exact hcolBound k hk
       _ = N.card * degC := by simp [Nat.mul_comm]
-  have hmul : X.card * degP ≤ N.card * degP :=
-    le_trans hedge_le (Nat.mul_le_mul_left N.card hdegC_le)
-  exact Nat.le_of_mul_le_mul_right hmul hdegP_pos
+  by_contra hnot
+  have hNle : N.card ≤ X.card := Nat.le_of_not_gt hnot
+  have hmul_le : X.card * degP ≤ X.card * degC :=
+    le_trans hedge_le (Nat.mul_le_mul_right degC hNle)
+  have hXpos : 0 < X.card := Finset.card_pos.mpr hXne
+  have hmul_lt : X.card * degC < X.card * degP :=
+    Nat.mul_lt_mul_of_pos_left hdegC_lt hXpos
+  omega
 
 theorem exists_pRows_matching {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)

@@ -188,6 +188,9 @@ and the P-row Hall condition
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.  The resulting injective
 matching covering all P-rows is Lean-closed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching`.
+For the `r > 1` forced-edge branch, the strict Hall count
+`PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall_strict_of_nonempty` is also
+Lean-closed: every nonempty P-row subfamily has strictly more full neighbors.
 The exact target set for the remaining matching is now also exposed:
 `PrefixCount.OrdinaryQeq1AuxMatrixData.highCols`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols`, and the cardinality
