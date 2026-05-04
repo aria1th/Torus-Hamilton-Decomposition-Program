@@ -2693,6 +2693,36 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
       ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
     exact hLow
 
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_selection
+    (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hSelect I M hHall with ⟨f, hfActive, hCover⟩
+  let choice : X → C := fun x : X => (f.symm x).1
+  refine ⟨f, hfActive, ?_⟩
+  intro U S _hUne _hUuniv _hSne
+  have hHallUS :
+      M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) ≤
+        I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+    hHall U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+  have hLow :
+      Incidence.choiceLowHitCount I choice U S
+        ≤ M.cutSlack U
+            (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+    ((M.cutMass_add_le_iff_le_cutSlack U
+      (S.image (Fin.castSucc : Fin T → Fin (T + 1))) hHallUS
+      (Incidence.choiceLowHitCount I choice U S)).1 (by
+        simpa [choice] using hCover U S))
+  rw [Incidence.tokenLoadOn_eq_choiceHitCountOn]
+  change
+    Incidence.choiceHitCountOn (Incidence.lowCutSet I U S)
+        (fun x : X => (f.symm x).1) U
+      ≤ M.cutSlack U
+          (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+  rw [← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
+  exact hLow
+
 theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
     EraseLastHallCutsLinearChoiceGoal.{uX, uC} := by
@@ -3196,6 +3226,14 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal :
                 (eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
                   hRealize))))),
     hallRealizationGoal_of_eraseLastHallCutsSelection⟩
+
+theorem eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal :
+    EraseLastHallCutsSelectionGoal.{uX, uC} ↔
+      EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
+  ⟨eraseLastHallCutsTokenLinearChoiceGoal_of_selection,
+    fun hToken =>
+      (hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal).1
+        (hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice hToken)⟩
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
     HallRealizationGoal.{uX, uC} ↔

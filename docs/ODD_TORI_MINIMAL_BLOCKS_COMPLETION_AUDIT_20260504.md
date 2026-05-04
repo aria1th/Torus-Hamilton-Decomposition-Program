@@ -125,6 +125,7 @@ theorem RoundComposite.Concrete
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
+| Active-Hall selection-token equivalence | `eraseLastHallCutsTokenLinearChoiceGoal_of_selection`, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` | Lean-closed conditional | A selection-form erase-last proof now directly satisfies the token-linear request |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
@@ -244,7 +245,9 @@ The named `iff` wrappers, including
 erase-last formulations enough to recover `HallRealizationGoal`.  The residue
 level iff wrappers
 `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts*` also let any
-erase-last formulation consume `FeasibleWithResidues` data directly.
+erase-last formulation consume `FeasibleWithResidues` data directly.  In
+particular, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` records
+that the selection form and token-linear form are equivalent.
 This does not yet prove `OddSuccessorSmallModulusBaseTailGoal`; it is the
 abstract combinatorial realization layer expected to be used inside that branch.
 

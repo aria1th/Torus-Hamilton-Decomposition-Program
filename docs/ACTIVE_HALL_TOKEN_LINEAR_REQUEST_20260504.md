@@ -73,6 +73,10 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
     (hRealize : HallRealizationGoal) :
     EraseLastHallCutsTokenLinearChoiceGoal
 
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_selection
+    (hSelect : EraseLastHallCutsSelectionGoal) :
+    EraseLastHallCutsTokenLinearChoiceGoal
+
 theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
     EraseLastHallCutsLinearChoiceGoal
@@ -103,6 +107,10 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsSelectionGoal :
     HallRealizationGoal <-> EraseLastHallCutsSelectionGoal
+
+theorem eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal :
+    EraseLastHallCutsSelectionGoal <->
+      EraseLastHallCutsTokenLinearChoiceGoal
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsChoiceGoal
