@@ -1708,6 +1708,30 @@ noncomputable def prefixCountFirstHitReturnFiberStep
       ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c
         ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail)))).2
 
+theorem prefixCountFirstHitReturnFiberStep_apply
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m) (j : Fin (d - 2)) :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j +
+        ∑ t ∈ Finset.range m,
+          if (prefixCountLambdaRho d
+              (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+                  ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+                    (z, tail))))
+              (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val
+              = j.val + 1
+          then (1 : ZMod m) else 0 := by
+  unfold prefixCountFirstHitReturnFiberStep
+  rw [prefixCountRootStateHeadTailEquiv_snd]
+  rw [prefixCountFirstHitCanonicalSchedule_returnMap_apply_coord
+    (hd2 := hd2) (L := L) c
+    ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail))
+    ⟨j.val + 1, by omega⟩]
+  simp
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
@@ -1794,6 +1818,31 @@ theorem prefixCountFirstHitSectionReturn_eq_returnTailMonodromy
   funext tail
   exact prefixCountFirstHitSectionReturn_eq_tail_of_returnMap_iterate
     hd2 L c tail
+
+theorem prefixCountFirstHitReturnTailMonodromy_eq_fiberIterate
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d) :
+    prefixCountFirstHitReturnTailMonodromy hd2 L c =
+      Shared.skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        m (0 : ZMod m) := by
+  rw [← prefixCountFirstHitSectionReturn_eq_returnTailMonodromy
+    (hd2 := hd2) (C := C) L c]
+  rw [Shared.sectionReturn_skewProductMap_eq_fiberIterate]
+
+theorem prefixCountFirstHitReturnTailMonodromy_apply_eq_fiberIterate
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (tail : Fin (d - 2) → ZMod m) :
+    prefixCountFirstHitReturnTailMonodromy hd2 L c tail =
+      Shared.skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep (m := m) C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        m (0 : ZMod m) tail := by
+  rw [prefixCountFirstHitReturnTailMonodromy_eq_fiberIterate]
 
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_headTailMonodromy
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)

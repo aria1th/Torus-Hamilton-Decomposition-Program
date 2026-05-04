@@ -7,6 +7,34 @@ def skewProductMap {Base Fiber : Type*}
     Base × Fiber → Base × Fiber :=
   fun x => (baseStep x.1, fiberStep x.1 x.2)
 
+def skewFiberIterate {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber) :
+    Nat → Base → Fiber → Fiber
+  | 0, _base, fiber => fiber
+  | n + 1, base, fiber =>
+      skewFiberIterate baseStep fiberStep n
+        (baseStep base) (fiberStep base fiber)
+
+theorem skewProductMap_iterate_eq_base_fiber {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber) :
+    ∀ n : Nat, ∀ x : Base × Fiber,
+      (skewProductMap baseStep fiberStep)^[n] x =
+        ((baseStep^[n]) x.1,
+          skewFiberIterate baseStep fiberStep n x.1 x.2)
+  | 0, x => by simp [skewFiberIterate]
+  | n + 1, x => by
+      rw [Function.iterate_succ_apply]
+      rw [skewProductMap_iterate_eq_base_fiber baseStep fiberStep n
+        (skewProductMap baseStep fiberStep x)]
+      simp [skewProductMap, skewFiberIterate, Function.iterate_succ_apply]
+
+theorem skewProductMap_snd_iterate {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (n : Nat) (x : Base × Fiber) :
+    ((skewProductMap baseStep fiberStep)^[n] x).2 =
+      skewFiberIterate baseStep fiberStep n x.1 x.2 := by
+  rw [skewProductMap_iterate_eq_base_fiber]
+
 theorem skewProductMap_fst_iterate {Base Fiber : Type*}
     (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber) :
     ∀ n : Nat, ∀ x : Base × Fiber,
@@ -122,6 +150,15 @@ def sectionReturn {Base Fiber : Type*}
     (S : Base × Fiber → Base × Fiber) (base : Base) (period : Nat) :
     Fiber → Fiber :=
   fun v => (S^[period] (base, v)).2
+
+theorem sectionReturn_skewProductMap_eq_fiberIterate {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (base : Base) (period : Nat) :
+    sectionReturn (skewProductMap baseStep fiberStep) base period =
+      skewFiberIterate baseStep fiberStep period base := by
+  funext fiber
+  unfold sectionReturn
+  rw [skewProductMap_snd_iterate]
 
 theorem single_cycle_of_skewProduct_monodromy
     {Base Fiber : Type*} (S : Base × Fiber → Base × Fiber)
