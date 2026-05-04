@@ -455,6 +455,22 @@ def signedVals : Finset Int :=
 def IsSignedVal (a : Int) : Prop :=
   a ∈ signedVals
 
+abbrev SignedValInt : Type :=
+  Fin 4
+
+namespace SignedValInt
+
+def toInt (v : SignedValInt) : Int :=
+  if v.val = 0 then -2
+  else if v.val = 1 then -1
+  else if v.val = 2 then 1
+  else 2
+
+theorem isSignedVal (v : SignedValInt) : IsSignedVal v.toInt := by
+  fin_cases v <;> simp [toInt, IsSignedVal, signedVals]
+
+end SignedValInt
+
 theorem signedVal_coprime_of_odd
     {a : Int} {m : Nat} (ha : IsSignedVal a) (hm : Odd m) :
     IntCoprime a m := by
@@ -1495,6 +1511,23 @@ theorem ordinaryQge2PlanGoal : OrdinaryQge2PlanGoal :=
 def qge2ColumnCapacity (n j c : Nat) : Int :=
   min (2 * (j : Int)) (2 * ((n - j : Nat) : Int) - (c : Int))
 
+def qge2OrdinaryRowTarget (n r : Nat)
+    (a epsBit : Fin n → Nat) (i : Fin n) : Int :=
+  (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)
+
+def qge2SignedColumnFinset (n c : Nat) :
+    Finset (Fin n → SignedValInt) :=
+  Finset.univ.filter
+    (fun x : Fin n → SignedValInt =>
+      (∑ i : Fin n, SignedValInt.toInt (x i)) = - (c : Int))
+
+noncomputable def qge2SignedColumnSupport (n c : Nat) (w : Fin n → Int) : Int :=
+  match ((qge2SignedColumnFinset n c).image
+      (fun x : Fin n → SignedValInt =>
+        ∑ i : Fin n, w i * SignedValInt.toInt (x i))).max with
+  | ⊥ => 0
+  | (z : Int) => z
+
 theorem qge2ColumnCapacity_eq_left {n j c : Nat}
     (h : 2 * (j : Int) ≤ 2 * ((n - j : Nat) : Int) - (c : Int)) :
     qge2ColumnCapacity n j c = 2 * (j : Int) := by
@@ -1998,6 +2031,104 @@ def OrdinaryQge2SignedTrellisHoffmanGoal : Prop :=
         (∀ i : Fin n,
           (∑ k : Fin (n - 1), X k i)
             = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int))
+
+/--
+Full-support Hoffman form for the ordinary `q >= 2` trellis.  Instead of only
+testing indicator row cuts, it tests every integral linear functional against
+the support function of the signed columns with the prescribed column sum.
+-/
+def OrdinaryQge2SignedFullSupportTrellisGoal : Prop :=
+  ∀ {n r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k) →
+      (∀ w : Fin n → Int,
+        (∑ i : Fin n, w i * qge2OrdinaryRowTarget n r a epsBit i)
+          ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w) →
+      ∃ X : Fin (n - 1) → Fin n → Int,
+        (∀ k i, IsSignedVal (X k i)) ∧
+        (∀ k : Fin (n - 1), (∑ i : Fin n, X k i) = - (c k : Int)) ∧
+        (∀ i : Fin n,
+          (∑ k : Fin (n - 1), X k i)
+            = qge2OrdinaryRowTarget n r a epsBit i)
+
+/--
+Bridge theorem still needed externally: for the ordinary-row trellis instances,
+the indicator cut bounds imply all full-support Hoffman inequalities.
+-/
+def OrdinaryQge2IndicatorToFullSupportGoal : Prop :=
+  ∀ {n r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k) →
+      (∀ J : Finset (Fin n),
+        (∑ i ∈ J, qge2OrdinaryRowTarget n r a epsBit i)
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+      ∀ w : Fin n → Int,
+        (∑ i : Fin n, w i * qge2OrdinaryRowTarget n r a epsBit i)
+          ≤ ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w
+
+/--
+Equivalent separation-style endpoint for proving
+`OrdinaryQge2IndicatorToFullSupportGoal`: every violated full-support
+inequality exposes a violated indicator cut.
+-/
+def OrdinaryQge2SupportViolationGivesIndicatorCutGoal : Prop :=
+  ∀ {n r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k) →
+      ∀ w : Fin n → Int,
+        (∑ i : Fin n, w i * qge2OrdinaryRowTarget n r a epsBit i)
+          > ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w →
+      ∃ J : Finset (Fin n),
+        (∑ i ∈ J, qge2OrdinaryRowTarget n r a epsBit i)
+          > ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)
+
+theorem ordinaryQge2IndicatorToFullSupportGoal_of_separation
+    (hSep : OrdinaryQge2SupportViolationGivesIndicatorCutGoal) :
+    OrdinaryQge2IndicatorToFullSupportGoal := by
+  classical
+  intro n r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc heps_sum ha_eq_c hCuts w
+  by_contra hle
+  have hbad :
+      (∑ i : Fin n, w i * qge2OrdinaryRowTarget n r a epsBit i)
+        > ∑ k : Fin (n - 1), qge2SignedColumnSupport n (c k) w :=
+    lt_of_not_ge hle
+  rcases hSep hnEven hn4 hrOdd hrlt hrpos a epsBit c
+      ha heps hc heps_sum ha_eq_c w hbad with ⟨J, hJ⟩
+  exact (not_lt_of_ge (hCuts J)) hJ
+
+theorem ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+    (hFull : OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : OrdinaryQge2IndicatorToFullSupportGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal := by
+  classical
+  intro n r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc heps_sum ha_eq_c hCuts
+  rcases hFull hnEven hn4 hrOdd hrlt hrpos a epsBit c
+      ha heps hc heps_sum ha_eq_c
+      (hLift hnEven hn4 hrOdd hrlt hrpos a epsBit c
+        ha heps hc heps_sum ha_eq_c
+        (fun J => by
+          simpa [qge2OrdinaryRowTarget] using hCuts J)) with
+    ⟨X, hXval, hXcol, hXrow⟩
+  refine ⟨X, hXval, hXcol, ?_⟩
+  intro i
+  simpa [qge2OrdinaryRowTarget] using hXrow i
 
 theorem ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman
     (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :

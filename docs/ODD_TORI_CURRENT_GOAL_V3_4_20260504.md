@@ -111,10 +111,19 @@ PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 ```
 
 After the q>=2 proof-request response, Lean also exposes the smaller
-ordinary-trellis interface:
+full-support finite-Hoffman interface behind the ordinary trellis field:
 
 ```lean
 def PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal : Prop := ...
+
+def PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal : Prop := ...
+def PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal : Prop := ...
+
+theorem PrefixCount
+  .ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+    (hFull : OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : OrdinaryQge2IndicatorToFullSupportGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal
 
 theorem PrefixCount
   .ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
@@ -259,6 +268,22 @@ theorem RoundComposite.Concrete
 There is an analogous `...FromHoffmanGoal` wrapper using
 `ActiveHall.HoffmanOrderedSDRGoal`.
 
+After the ActiveHall ordered-SDR proof response, Lean also exposes a more
+standard copied-edge finite Hoffman interface:
+
+```lean
+def RoundComposite.ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_exactEdgeColoring
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    ActiveHall.HallRealizationGoal
+```
+
+So the ActiveHall subproblem may now be supplied either as
+`HoffmanOrderedSDRGoal` or as the copied-edge
+`FiniteHoffman.ExactEdgeColoringGoal`.
+
 ## Active Packets
 
 The older orbit packet for completing the final theorem is still available:
@@ -346,6 +371,13 @@ The goal is not complete.  The remaining hard fields are:
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
+
+The q>=2 trellis field can now be supplied by the stronger pair
+`PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal` and
+`PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal`.  Lean also exposes the
+separation endpoint
+`PrefixCount.OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, which implies
+the indicator-to-full-support half.
 
 The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman

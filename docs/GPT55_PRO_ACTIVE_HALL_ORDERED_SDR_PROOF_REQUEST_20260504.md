@@ -23,6 +23,8 @@ initial_status = queued
 initial_submit_date = 2026-05-04
 latest_poll_status = in_progress
 latest_poll_date = 2026-05-04
+final_status = completed
+final_poll_date = 2026-05-04
 response_doc = docs/GPT55_PRO_ACTIVE_HALL_ORDERED_SDR_PROOF_RESPONSE_20260504.md
 ```
 

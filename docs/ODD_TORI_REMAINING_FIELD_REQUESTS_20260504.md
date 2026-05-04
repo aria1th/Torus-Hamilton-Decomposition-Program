@@ -38,6 +38,23 @@ PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
+After the completed q>=2 GPT-5.5 Pro response, Lean now exposes a sharper
+standard finite-Hoffman split for the first field:
+
+```lean
+def PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal : Prop := ...
+def PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal : Prop := ...
+
+theorem PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+    (hFull : OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : OrdinaryQge2IndicatorToFullSupportGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal
+```
+
+The preferred q>=2 proof route is now: prove the full-support signed trellis
+Hoffman theorem, then prove that the ordinary indicator cuts imply the
+full-support inequalities.
+
 The hit-condition locality field, residual reindex field, exact signed
 cocycle-sum field, and unit-carry field are now Lean-closed internally.  The
 closed unit field still implies the older orbit field through a Lean-closed
@@ -58,18 +75,18 @@ Equivalently, one may still request
 `PrefixCountFirstHitReturnTailMonodromyOrbitGoal` directly, but it is no
 longer needed for the current endpoint.
 
-## Request 1: q>=2 Proper-Cut Signed Closure
+## Request 1: q>=2 Full-Support Signed Trellis
 
 ### Files To Read
 
 1. `RoundComposite/PrefixCount.lean`
 2. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 3. `docs/GPT55_PRO_SIGNED_TRANSPORT_COUNT_BRANCH_RESPONSE_20260503.md`
+4. `docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_RESPONSE_20260504.md`
 
 ### Exact Lean Target
 
-The preferred target is now the smaller ordinary signed-trellis Hoffman field,
-which Lean wraps into the torus-shaped proper-cut closure:
+The endpoint still consumes the ordinary signed-trellis Hoffman field:
 
 ```lean
 def RoundComposite.PrefixCount
@@ -79,6 +96,47 @@ theorem RoundComposite.PrefixCount
   .ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
     (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :
     OrdinaryQge2SignedSeedProperCutClosureGoal
+```
+
+The preferred proof split for this field is now:
+
+```lean
+def RoundComposite.PrefixCount
+  .OrdinaryQge2SignedFullSupportTrellisGoal : Prop := ...
+
+def RoundComposite.PrefixCount
+  .OrdinaryQge2IndicatorToFullSupportGoal : Prop := ...
+
+theorem RoundComposite.PrefixCount
+  .ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+    (hFull : OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : OrdinaryQge2IndicatorToFullSupportGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal
+```
+
+The full-support interface uses these Lean definitions:
+
+```lean
+def RoundComposite.PrefixCount.qge2OrdinaryRowTarget
+    (n r : Nat) (a epsBit : Fin n -> Nat) (i : Fin n) : Int := ...
+
+def RoundComposite.PrefixCount.qge2SignedColumnFinset
+    (n c : Nat) : Finset (Fin n -> SignedValInt) := ...
+
+noncomputable def RoundComposite.PrefixCount.qge2SignedColumnSupport
+    (n c : Nat) (w : Fin n -> Int) : Int := ...
+```
+
+For the lifting half, Lean also exposes the separation formulation:
+
+```lean
+def RoundComposite.PrefixCount
+  .OrdinaryQge2SupportViolationGivesIndicatorCutGoal : Prop := ...
+
+theorem RoundComposite.PrefixCount
+  .ordinaryQge2IndicatorToFullSupportGoal_of_separation
+    (hSep : OrdinaryQge2SupportViolationGivesIndicatorCutGoal) :
+    OrdinaryQge2IndicatorToFullSupportGoal
 ```
 
 The older sufficient target is the torus-shaped ordinary q>=2 signed closure:
@@ -178,14 +236,17 @@ theorem PrefixCount.qge2SignedMatrix_row_cut_bound
 
 Thus the remaining q>=2 field is the sufficiency direction: given exactly these
 cut inequalities and the row/column sum data, construct the signed matrix.  The
-preferred active target is the trellis-Hoffman form
-`OrdinaryQge2SignedTrellisHoffmanGoal`; Lean then wraps it into the older
-proper-cut closure field.
+preferred external proof can now target the pair
+`OrdinaryQge2SignedFullSupportTrellisGoal` and
+`OrdinaryQge2IndicatorToFullSupportGoal`; Lean wraps those into
+`OrdinaryQge2SignedTrellisHoffmanGoal`, and then into the older proper-cut
+closure field.
 
 ### Prompt
 
-Prove the finite signed-column decomposition theorem
-`OrdinaryQge2SignedTrellisHoffmanGoal`.  Treat it as the ordinary trellis
+Prove the finite signed-column decomposition theorem through the new
+full-support split.  The main target is
+`OrdinaryQge2SignedFullSupportTrellisGoal`, treated as the ordinary trellis
 instance of integral Hoffman/Rado-Edmonds style transportation.  The rows have
 prescribed integer sums
 
@@ -195,6 +256,10 @@ prescribed integer sums
 
 and the columns have prescribed negative sums `-(c k)`.  Every entry must lie
 in `{ -2, -1, 1, 2 }`, represented by `IsSignedVal`.
+
+Then prove `OrdinaryQge2IndicatorToFullSupportGoal`, preferably through
+`OrdinaryQge2SupportViolationGivesIndicatorCutGoal`: any violated full-support
+inequality should expose a violated ordinary indicator cut.
 
 Please provide either:
 
@@ -213,7 +278,7 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 request doc: docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_REQUEST_20260504.md
 response id: resp_0078009c9235b49c0069f8dc9d25548194b2b94fd491d49cd7
 response doc: docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_RESPONSE_20260504.md
-latest status: in_progress on 2026-05-04
+latest status: completed on 2026-05-04
 ```
 
 ## Closed Record: First-Hit Return-Tail Cocycle Sum
@@ -389,8 +454,31 @@ ActiveHall ordered-SDR proof request:
   request doc: docs/GPT55_PRO_ACTIVE_HALL_ORDERED_SDR_PROOF_REQUEST_20260504.md
   response id: resp_050d642997a6ebc00069f8dceccb388192ae6b3842da834279
   response doc: docs/GPT55_PRO_ACTIVE_HALL_ORDERED_SDR_PROOF_RESPONSE_20260504.md
-  latest status: in_progress on 2026-05-04
+  latest status: completed on 2026-05-04
 ```
+
+After this response, Lean now also exposes the copied-edge finite Hoffman
+interface and adapters:
+
+```lean
+def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+
+theorem ActiveHall.hoffmanOrderedSDRGoal_of_exactEdgeColoring
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    ActiveHall.HoffmanOrderedSDRGoal
+
+theorem ActiveHall.hallRealizationGoal_of_exactEdgeColoring
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    ActiveHall.HallRealizationGoal
+
+theorem ActiveHall.eraseLastHallCutsTokenLinearChoiceGoal_of_exactEdgeColoring
+    (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal
+```
+
+Thus the abstract ActiveHall part can now be supplied by the more standard
+copied-edge prescribed colouring theorem instead of directly proving the
+`Symboling` formulation.
 
 ## Mathlib Hall Survey
 

@@ -2442,6 +2442,186 @@ def SymbolingWithResidues {m T : Nat} {X C : Type*}
 
 universe uX uC
 
+namespace FiniteHoffman
+
+def edgeLeftDegree {C E : Type*} [Fintype E] [DecidableEq E]
+    [DecidableEq C] (left : E → C) (c : C) : Nat :=
+  ((Finset.univ : Finset E).filter (fun e => left e = c)).card
+
+def edgeRightDegree {T : Nat} {E : Type*} [Fintype E] [DecidableEq E]
+    (right : E → Fin T) (σ : Fin T) : Nat :=
+  ((Finset.univ : Finset E).filter (fun e => right e = σ)).card
+
+def edgeRectCount {T : Nat} {C E : Type*} [Fintype E] [DecidableEq E]
+    [DecidableEq C] (left : E → C) (right : E → Fin T)
+    (U : Finset C) (S : Finset (Fin T)) : Nat :=
+  ((Finset.univ : Finset E).filter
+    (fun e => left e ∈ U ∧ right e ∈ S)).card
+
+def edgePairCount {T : Nat} {C E : Type*} [Fintype E] [DecidableEq E]
+    [DecidableEq C] (left : E → C) (right : E → Fin T)
+    (c : C) (σ : Fin T) : Nat :=
+  ((Finset.univ : Finset E).filter
+    (fun e => left e = c ∧ right e = σ)).card
+
+def activeDegree {X C : Type*} [Fintype X] [DecidableEq X]
+    [DecidableEq C] (active : X → Finset C) (c : C) : Nat :=
+  ((Finset.univ : Finset X).filter (fun x => c ∈ active x)).card
+
+/--
+External finite Hoffman/de Werra edge-colouring theorem in copied-edge form.
+
+The copied edges `E` have endpoints `C` and `Fin T`.  A local ordering assigns,
+for each colour-copy `x`, the symbols `Fin T` bijectively to the active left
+endpoints.  The rectangle condition is the Hoffman cut condition.
+-/
+def ExactEdgeColoringGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC} {E : Type uC}
+    [Fintype X] [Fintype C] [Fintype E]
+    [DecidableEq X] [DecidableEq C] [DecidableEq E],
+    ∀ (left : E → C) (right : E → Fin T) (active : X → Finset C),
+      (∀ x : X, (active x).card = T) →
+      (∀ c : C, edgeLeftDegree left c = activeDegree active c) →
+      (∀ σ : Fin T, edgeRightDegree right σ = Fintype.card X) →
+      (∀ U : Finset C, ∀ S : Finset (Fin T),
+        edgeRectCount left right U S
+          ≤ ∑ x : X, min ((active x ∩ U).card) S.card) →
+      ∃ e : (∀ x : X, Fin T ≃ {c : C // c ∈ active x}),
+        ∀ c : C, ∀ σ : Fin T,
+          Incidence.choiceDegree (fun x : X => ((e x) σ).1) c =
+            edgePairCount left right c σ
+
+end FiniteHoffman
+
+abbrev DemandToken {T : Nat} {C : Type uC}
+    (m : C → Fin T → Nat) : Type uC :=
+  Sigma fun c : C => Sigma fun σ : Fin T => Fin (m c σ)
+
+namespace DemandToken
+
+def color {T : Nat} {C : Type uC} {m : C → Fin T → Nat}
+    (q : DemandToken m) : C :=
+  q.1
+
+def sym {T : Nat} {C : Type uC} {m : C → Fin T → Nat}
+    (q : DemandToken m) : Fin T :=
+  q.2.1
+
+theorem edgeLeftDegree_color {T : Nat} {C : Type uC}
+    [Fintype C] [DecidableEq C] (m : C → Fin T → Nat) (c : C) :
+    FiniteHoffman.edgeLeftDegree
+        (fun q : DemandToken m => color q) c =
+      ∑ σ : Fin T, m c σ := by
+  classical
+  rw [FiniteHoffman.edgeLeftDegree, Finset.card_filter]
+  change
+    (∑ q : DemandToken m, if q.1 = c then 1 else 0) =
+      ∑ σ : Fin T, m c σ
+  rw [Fintype.sum_sigma]
+  rw [Finset.sum_eq_single c]
+  · simp
+  · intro b _hb hbc
+    simp [hbc]
+  · intro hc
+    exact False.elim (hc (Finset.mem_univ c))
+
+theorem edgeRightDegree_sym {T : Nat} {C : Type uC}
+    [Fintype C] [DecidableEq C] (m : C → Fin T → Nat) (σ : Fin T) :
+    FiniteHoffman.edgeRightDegree
+        (fun q : DemandToken m => sym q) σ =
+      ∑ c : C, m c σ := by
+  classical
+  rw [FiniteHoffman.edgeRightDegree, Finset.card_filter]
+  change
+    (∑ q : DemandToken m, if q.2.1 = σ then 1 else 0) =
+      ∑ c : C, m c σ
+  rw [Fintype.sum_sigma]
+  apply Finset.sum_congr rfl
+  intro c _hc
+  rw [Fintype.sum_sigma]
+  rw [Finset.sum_eq_single σ]
+  · simp
+  · intro τ _hτ hτσ
+    simp [hτσ]
+  · intro hσ
+    exact False.elim (hσ (Finset.mem_univ σ))
+
+theorem edgeRectCount_color_sym {T : Nat} {C : Type uC}
+    [Fintype C] [DecidableEq C] (m : C → Fin T → Nat)
+    (U : Finset C) (S : Finset (Fin T)) :
+    FiniteHoffman.edgeRectCount
+        (fun q : DemandToken m => color q)
+        (fun q : DemandToken m => sym q) U S =
+      ∑ c ∈ U, ∑ σ ∈ S, m c σ := by
+  classical
+  rw [FiniteHoffman.edgeRectCount]
+  rw [← Fintype.card_subtype
+    (fun q : DemandToken m => color q ∈ U ∧ sym q ∈ S)]
+  let e :
+      {q : DemandToken m // color q ∈ U ∧ sym q ∈ S} ≃
+        Sigma fun c : {c : C // c ∈ U} =>
+          Sigma fun σ : {σ : Fin T // σ ∈ S} => Fin (m c.1 σ.1) :=
+    { toFun := fun q =>
+        ⟨⟨q.1.1, q.2.1⟩, ⟨⟨q.1.2.1, q.2.2⟩, q.1.2.2⟩⟩
+      invFun := fun q =>
+        ⟨⟨q.1.1, ⟨q.2.1.1, q.2.2⟩⟩, ⟨q.1.2, q.2.1.2⟩⟩
+      left_inv := by
+        intro q
+        rcases q with ⟨⟨c, σ, j⟩, hU, hS⟩
+        rfl
+      right_inv := by
+        intro q
+        rcases q with ⟨⟨c, hU⟩, ⟨⟨σ, hS⟩, j⟩⟩
+        rfl }
+  calc
+    Fintype.card {q : DemandToken m // color q ∈ U ∧ sym q ∈ S}
+        =
+        Fintype.card
+          (Sigma fun c : {c : C // c ∈ U} =>
+            Sigma fun σ : {σ : Fin T // σ ∈ S} => Fin (m c.1 σ.1)) :=
+          Fintype.card_congr e
+    _ = ∑ c : {c : C // c ∈ U},
+          ∑ σ : {σ : Fin T // σ ∈ S}, m c.1 σ.1 := by
+          simp [Fintype.card_sigma]
+    _ = ∑ c ∈ U, ∑ σ ∈ S, m c σ := by
+          change
+            (∑ c ∈ U.attach, ∑ σ ∈ S.attach, m c.1 σ.1) =
+              ∑ c ∈ U, ∑ σ ∈ S, m c σ
+          rw [Finset.sum_attach U
+            (fun c : C => ∑ σ ∈ S.attach, m c σ.1)]
+          apply Finset.sum_congr rfl
+          intro c _hc
+          rw [Finset.sum_attach S (fun σ : Fin T => m c σ)]
+
+theorem edgePairCount_color_sym {T : Nat} {C : Type uC}
+    [Fintype C] [DecidableEq C] (m : C → Fin T → Nat)
+    (c : C) (σ : Fin T) :
+    FiniteHoffman.edgePairCount
+        (fun q : DemandToken m => color q)
+        (fun q : DemandToken m => sym q) c σ =
+      m c σ := by
+  classical
+  rw [FiniteHoffman.edgePairCount, Finset.card_filter]
+  change
+    (∑ q : DemandToken m,
+      if q.1 = c ∧ q.2.1 = σ then 1 else 0) =
+      m c σ
+  rw [Fintype.sum_sigma]
+  rw [Finset.sum_eq_single c]
+  · rw [Fintype.sum_sigma]
+    rw [Finset.sum_eq_single σ]
+    · simp
+    · intro τ _hτ hτσ
+      simp [hτσ]
+    · intro hσ
+      exact False.elim (hσ (Finset.mem_univ σ))
+  · intro b _hb hbc
+    simp [hbc]
+  · intro hc
+    exact False.elim (hc (Finset.mem_univ c))
+
+end DemandToken
+
 /--
 The Hoffman/Hall realization theorem needed by the active branch.
 
@@ -2468,6 +2648,47 @@ def HoffmanOrderedSDRGoal : Prop :=
         ∀ c : C, ∀ σ : Fin T,
           Incidence.choiceDegree (fun x : X => ((e x) σ).1) c = m c σ
 
+theorem hoffmanOrderedSDRGoal_of_exactEdgeColoring
+    (hEdge : FiniteHoffman.ExactEdgeColoringGoal.{uX, uC}) :
+    HoffmanOrderedSDRGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I m hrow hcol hcut
+  let E : Type uC := DemandToken m
+  let left : E → C := fun q => DemandToken.color q
+  let right : E → Fin T := fun q => DemandToken.sym q
+  have hAct : ∀ x : X, (I.active x).card = T := by
+    intro x
+    exact I.active_card x
+  have hLeft :
+      ∀ c : C,
+        FiniteHoffman.edgeLeftDegree left c =
+          FiniteHoffman.activeDegree I.active c := by
+    intro c
+    rw [DemandToken.edgeLeftDegree_color]
+    simpa [left, FiniteHoffman.activeDegree, Incidence.colorDegree]
+      using hrow c
+  have hRight :
+      ∀ σ : Fin T,
+        FiniteHoffman.edgeRightDegree right σ = Fintype.card X := by
+    intro σ
+    rw [DemandToken.edgeRightDegree_sym]
+    simpa [right] using hcol σ
+  have hRect :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        FiniteHoffman.edgeRectCount left right U S
+          ≤ ∑ x : X, min ((I.active x ∩ U).card) S.card := by
+    intro U S
+    rw [DemandToken.edgeRectCount_color_sym]
+    simpa [left, right, Incidence.cutCap] using hcut U S
+  rcases hEdge left right I.active hAct hLeft hRight hRect with ⟨e, he⟩
+  refine ⟨e, ?_⟩
+  intro c σ
+  calc
+    Incidence.choiceDegree (fun x : X => ((e x) σ).1) c
+        = FiniteHoffman.edgePairCount left right c σ := he c σ
+    _ = m c σ := by
+        rw [DemandToken.edgePairCount_color_sym]
+
 theorem hallRealizationGoal_of_hoffmanOrderedSDR
     (hHoffman : HoffmanOrderedSDRGoal.{uX, uC}) :
     HallRealizationGoal.{uX, uC} := by
@@ -2482,6 +2703,12 @@ theorem hallRealizationGoal_of_hoffmanOrderedSDR
   intro c σ
   rw [Φ.count_eq_choiceDegree c σ]
   exact he c σ
+
+theorem hallRealizationGoal_of_exactEdgeColoring
+    (hEdge : FiniteHoffman.ExactEdgeColoringGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_hoffmanOrderedSDR
+    (hoffmanOrderedSDRGoal_of_exactEdgeColoring hEdge)
 
 theorem hoffmanOrderedSDRGoal_of_hallRealization
     (hRealize : HallRealizationGoal.{uX, uC}) :
@@ -2692,6 +2919,12 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
     rw [Incidence.tokenLoadOn_eq_choiceHitCountOn, hchoiceEq,
       ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
     exact hLow
+
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_exactEdgeColoring
+    (hEdge : FiniteHoffman.ExactEdgeColoringGoal.{uX, uC}) :
+    EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
+  eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+    (hallRealizationGoal_of_exactEdgeColoring hEdge)
 
 theorem eraseLastHallCutsTokenLinearChoiceGoal_of_selection
     (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :

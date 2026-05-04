@@ -20,10 +20,20 @@ Response id:
 response_id = resp_0078009c9235b49c0069f8dc9d25548194b2b94fd491d49cd7
 initial_status = queued
 initial_submit_date = 2026-05-04
-latest_poll_status = in_progress
+latest_poll_status = completed
 latest_poll_date = 2026-05-04
+final_status = completed
+final_poll_date = 2026-05-04
 response_doc = docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_RESPONSE_20260504.md
 ```
+
+Implementation note: the response has been absorbed into
+`RoundComposite/PrefixCount.lean`.  Lean now exposes
+`OrdinaryQge2SignedFullSupportTrellisGoal`,
+`OrdinaryQge2IndicatorToFullSupportGoal`,
+`OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, and the wrappers
+`ordinaryQge2IndicatorToFullSupportGoal_of_separation` and
+`ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport`.
 
 ## Files To Read
 
