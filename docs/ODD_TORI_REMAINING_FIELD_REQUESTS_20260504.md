@@ -525,6 +525,15 @@ theorem ActiveHall.eraseLastHallCutsTokenLinearChoiceGoal_of_exactEdgeColoring
     ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal
 ```
 
+Follow-up exact edge-colouring proof request:
+
+```text
+request doc: docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_REQUEST_20260504.md
+response id: resp_0cd087a6b2f8d1cf0069f8e8faaf4881a0beb65e653ae30d4c
+response doc: docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_RESPONSE_20260504.md
+latest status: in_progress on 2026-05-04
+```
+
 Thus the abstract ActiveHall part can now be supplied by the more standard
 copied-edge prescribed colouring theorem instead of directly proving the
 `Symboling` formulation.
