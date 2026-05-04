@@ -131,9 +131,13 @@ PrefixCount.ordinaryQeq1AuxDegree
 PrefixCount.UniformColumnDegreeMatrixData
 PrefixCount.UniformColumnDegreeMatrixGoal
 PrefixCount.UniformColumnDegreeResidueCountGoal
+PrefixCount.UniformColumnDegreeIntervalPartitionGoal
 PrefixCount.uniformColumnDegreeCellMap_injective
 PrefixCount.uniformColumnDegreeMatrix_row_sum
 PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount
+PrefixCount.uniformColumnDegreeBlockResidueSum
+PrefixCount.uniformColumnDegreeRangeResidueSum_mul
+PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition
 PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
 PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal
 PrefixCount.ordinaryQeq1AuxDegreeTotalGoal
@@ -282,6 +286,11 @@ cyclic-interval residue count theorem
 `PrefixCount.UniformColumnDegreeResidueCountGoal`; Lean closes the row side and
 the bridge to `PrefixCount.UniformColumnDegreeMatrixGoal` through
 `PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount`.
+The residue count has then been lowered once more to the interval-partition
+identity `PrefixCount.UniformColumnDegreeIntervalPartitionGoal`.  Lean closes
+the pure range-count arithmetic through
+`PrefixCount.uniformColumnDegreeRangeResidueSum_mul` and the bridge
+`PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition`.
 
 Small-modulus successor branch:
 
@@ -420,10 +429,29 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+The latest endpoint leaves only the interval-partition identity for this
+uniform-column component:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4IntervalBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.UniformColumnDegreeIntervalPartitionGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_interval_blocks
+    (hBlocks : OddModulusToriV4IntervalBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 cyclic-interval residue count and special matching theorems;
+2. prove the q=1 cyclic-interval partition and special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 

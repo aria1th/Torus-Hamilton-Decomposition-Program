@@ -2491,6 +2491,72 @@ def UniformColumnDegreeResidueCountGoal : Prop :=
       (∑ i : Fin rows,
         if k ∈ uniformColumnDegreeCellSet hcols rowDegree i then 1 else 0) = h
 
+def UniformColumnDegreeIntervalPartitionGoal : Prop :=
+  ∀ {rows cols : Nat} (rowDegree : Fin rows → Nat),
+    (hcols : 0 < cols) →
+    (∀ i : Fin rows, rowDegree i ≤ cols) →
+    ∀ k : Fin cols,
+      (∑ i : Fin rows,
+        if k ∈ uniformColumnDegreeCellSet hcols rowDegree i then 1 else 0) =
+      (∑ n ∈ Finset.range (∑ i : Fin rows, rowDegree i),
+        if n % cols = k.val then 1 else 0)
+
+theorem uniformColumnDegreeBlockResidueSum
+    (cols h : Nat) (k : Fin cols) :
+    (∑ n ∈ Finset.Ico (h * cols) (h * cols + cols),
+      if n % cols = k.val then (1 : Nat) else 0) = 1 := by
+  have hfilter :
+      (Finset.Ico (h * cols) (h * cols + cols)).filter
+        (fun n => n % cols = k.val) = {h * cols + k.val} := by
+    ext n
+    simp only [Finset.mem_filter, Finset.mem_Ico, Finset.mem_singleton]
+    constructor
+    · intro hn
+      rcases hn with ⟨⟨hle, hlt⟩, hmod⟩
+      have htlt : n - h * cols < cols := by omega
+      have hn' : n = h * cols + (n - h * cols) := by omega
+      have hmodt : n % cols = n - h * cols := by
+        calc
+          n % cols = (h * cols + (n - h * cols)) % cols := by
+            conv_lhs => rw [hn']
+          _ = (n - h * cols) % cols := by rw [Nat.mul_add_mod_self_right]
+          _ = n - h * cols := Nat.mod_eq_of_lt htlt
+      omega
+    · intro hn
+      subst n
+      constructor
+      · constructor <;> omega
+      · rw [Nat.mul_add_mod_self_right, Nat.mod_eq_of_lt k.is_lt]
+  rw [← Finset.card_filter, hfilter]
+  simp
+
+theorem uniformColumnDegreeRangeResidueSum_mul
+    (cols h : Nat) (hcols : 0 < cols) (k : Fin cols) :
+    (∑ n ∈ Finset.range (h * cols),
+      if n % cols = k.val then (1 : Nat) else 0) = h := by
+  induction h with
+  | zero => simp
+  | succ h ih =>
+      let f : Nat → Nat := fun n => if n % cols = k.val then 1 else 0
+      have hle : h * cols ≤ (h + 1) * cols := by nlinarith [hcols]
+      have hsplit := Finset.sum_range_add_sum_Ico (f := f) hle
+      have hblock :
+          (∑ n ∈ Finset.Ico (h * cols) ((h + 1) * cols), f n) = 1 := by
+        have htop : (h + 1) * cols = h * cols + cols := by ring
+        rw [htop]
+        exact uniformColumnDegreeBlockResidueSum cols h k
+      have hgoal : (∑ n ∈ Finset.range ((h + 1) * cols), f n) = h + 1 := by
+        rw [← hsplit]
+        rw [ih, hblock]
+      simpa [f] using hgoal
+
+theorem uniformColumnDegreeResidueCountGoal_of_intervalPartition
+    (hPartition : UniformColumnDegreeIntervalPartitionGoal) :
+    UniformColumnDegreeResidueCountGoal := by
+  intro rows cols h rowDegree hcols hrowLe htotal k
+  rw [hPartition rowDegree hcols hrowLe k, htotal]
+  exact uniformColumnDegreeRangeResidueSum_mul cols h hcols k
+
 theorem uniformColumnDegreeCellMap_injective {rows cols : Nat}
     (hcols : 0 < cols) (rowDegree : Fin rows → Nat)
     (hrowLe : ∀ i : Fin rows, rowDegree i ≤ cols) (i : Fin rows) :

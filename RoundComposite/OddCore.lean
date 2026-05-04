@@ -1355,6 +1355,13 @@ def OddModulusToriV4ResidueBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4IntervalBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.UniformColumnDegreeIntervalPartitionGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
 theorem odd_modulus_tori_all_dimensions_of_v4_construction_blocks
     (hBlocks : OddModulusToriV4ConstructionBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1441,6 +1448,21 @@ theorem odd_modulus_tori_all_dimensions_of_qeq1ResidueCount
     (PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount hQeq1Residue)
     hQeq1Match hReturn hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qeq1IntervalPartition
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Partition : PrefixCount.UniformColumnDegreeIntervalPartitionGoal)
+    (hQeq1Match : PrefixCount.OrdinaryQeq1SpecialMatchingGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qeq1ResidueCount
+    hQge2Closure
+    (PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition
+      hQeq1Partition)
+    hQeq1Match hReturn hSmallPacket hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
     (hBlocks : OddModulusToriV4DegreeMatchingBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1500,6 +1522,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_residue_blocks
   exact
     odd_modulus_tori_all_dimensions_of_qeq1ResidueCount
       hQge2Closure hQeq1Residue hQeq1Match
+      hReturn hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_interval_blocks
+    (hBlocks : OddModulusToriV4IntervalBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m := by
+  rcases hBlocks with
+    ⟨hQge2Closure, hQeq1Partition, hQeq1Match, hReturn, hSmallPacket⟩
+  exact
+    odd_modulus_tori_all_dimensions_of_qeq1IntervalPartition
+      hQge2Closure hQeq1Partition hQeq1Match
       hReturn hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
