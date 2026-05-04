@@ -1552,6 +1552,36 @@ theorem qge2ColumnCapacity_upper_bound {n c : Nat} {v : Fin n → Int}
     have hsumA : (∑ i : Fin n, A i) = - (c : Int) := hsum
     nlinarith
 
+theorem qge2SignedMatrix_row_cut_bound {n r : Nat}
+    {a epsBit : Fin n → Nat} {c : Fin (n - 1) → Nat}
+    {S : Fin n → Fin (n - 1) → Int}
+    (hSigned : ∀ i k, IsSignedVal (S i k))
+    (hRow :
+      ∀ i : Fin n,
+        (∑ k : Fin (n - 1), S i k)
+          = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int))
+    (hCol :
+      ∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
+    (J : Finset (Fin n)) :
+    (∑ i ∈ J, ((r : Int) - (a i : Int)
+        - (n : Int) * (epsBit i : Int)))
+      ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k) := by
+  classical
+  calc
+    (∑ i ∈ J, ((r : Int) - (a i : Int)
+        - (n : Int) * (epsBit i : Int)))
+        = ∑ i ∈ J, ∑ k : Fin (n - 1), S i k := by
+            apply Finset.sum_congr rfl
+            intro i _hi
+            exact (hRow i).symm
+    _ = ∑ k : Fin (n - 1), ∑ i ∈ J, S i k := by
+            rw [Finset.sum_comm]
+    _ ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k) := by
+            apply Finset.sum_le_sum
+            intro k _hk
+            exact qge2ColumnCapacity_upper_bound
+              (fun i => hSigned i k) (hCol k) J
+
 theorem sum_qge2ColumnCapacity_univ {n : Nat}
     (c : Fin (n - 1) → Nat) :
     (∑ k : Fin (n - 1), qge2ColumnCapacity n n (c k))

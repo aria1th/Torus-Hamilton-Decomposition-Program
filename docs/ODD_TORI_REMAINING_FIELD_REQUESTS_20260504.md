@@ -86,6 +86,32 @@ theorem PrefixCount.qge2ColumnCapacity_upper_bound
 This records that `qge2ColumnCapacity` is the correct upper envelope for a
 single signed column with total sum `-c`.
 
+Summing those single-column bounds gives the matrix-level necessary cut
+condition:
+
+```lean
+theorem PrefixCount.qge2SignedMatrix_row_cut_bound
+    {n r : Nat}
+    {a epsBit : Fin n -> Nat} {c : Fin (n - 1) -> Nat}
+    {S : Fin n -> Fin (n - 1) -> Int}
+    (hSigned : forall i k, IsSignedVal (S i k))
+    (hRow :
+      forall i : Fin n,
+        (sum k : Fin (n - 1), S i k)
+          = (r : Int) - (a i : Int)
+              - (n : Int) * (epsBit i : Int))
+    (hCol :
+      forall k : Fin (n - 1),
+        (sum i : Fin n, S i k) = - (c k : Int))
+    (J : Finset (Fin n)) :
+    (sum i in J, ((r : Int) - (a i : Int)
+        - (n : Int) * (epsBit i : Int)))
+      <= sum k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)
+```
+
+Thus the remaining q>=2 field is the sufficiency direction: given exactly these
+cut inequalities and the row/column sum data, construct the signed matrix.
+
 The target can therefore focus only on nonempty proper cuts.
 
 ### Prompt
