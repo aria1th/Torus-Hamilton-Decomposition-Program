@@ -212,7 +212,7 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 10. `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`
 11. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md`
 12. `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md`
-    once available
+    for the completed exact-sum proof route
 
 ### Exact Lean Target
 
@@ -290,14 +290,26 @@ every rank cocycle has the exact total carry `C.step c k - C.delta c`
 ```
 
 The older GPT-5.5 Pro response established the triangular/unit route and led
-to the now-closed generic lower-triangular odometer theorem.  A narrower
-follow-up request is now in progress; after local Lean progress its remaining
-useful target is the exact cocycle-sum calculation:
+to the now-closed generic lower-triangular odometer theorem.  The narrower
+follow-up response is complete; after local Lean progress its useful target is
+the exact cocycle-sum calculation:
 
 ```text
 docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md
 response id: resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37
+response doc: docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md
 ```
+
+The response identifies the total carry as the row-entry difference
+
+```lean
+(((C.toMatrix hd2) c ⟨k + 2, _⟩ : Nat) : ZMod m) -
+(((C.toMatrix hd2) c ⟨1, _⟩ : Nat) : ZMod m)
+```
+
+and warns that this value should only be converted to the named
+`C.step c ⟨k, hk⟩ - C.delta c` expression after unfolding the local
+`Parts.toMatrix` definitions.
 
 ### Already Lean-Closed
 
@@ -437,8 +449,9 @@ The expected mathematical route is:
 
 Do not spend effort on the generic lower-triangular odometer theorem, row-Latin,
 layer bijectivity, root-flat schedule construction, or the final torus lift.
-Those bridges are already Lean-closed; the open field is exactly the first-hit
-one-step hit-condition dependency and unit carry calculation.
+Those bridges are already Lean-closed.  The one-step hit-condition dependency
+and the reduction from exact sum to unit carry are also Lean-closed; the open
+return-tail field is now exactly the total cocycle-sum formula above.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 

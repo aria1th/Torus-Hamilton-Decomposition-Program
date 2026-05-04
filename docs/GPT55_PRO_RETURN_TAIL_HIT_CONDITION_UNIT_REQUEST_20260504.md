@@ -23,6 +23,8 @@ initial_status = queued
 latest_poll_status = in_progress
 latest_poll_date = 2026-05-04
 response_doc = docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md
+final_status = completed
+final_poll_date = 2026-05-04
 ```
 
 Retrieve with:
@@ -62,9 +64,19 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
-Thus the useful remaining part of the response is expected to be the exact
-cocycle-sum calculation for
+Thus the useful remaining part of the response is the exact cocycle-sum
+calculation for
 `PrefixCountFirstHitReturnTailCocycleSumGoal`.
+
+The completed response records the intended arithmetic value as
+
+```lean
+((C.toMatrix hd2) c ⟨k + 2, _⟩ : ZMod m) -
+((C.toMatrix hd2) c ⟨1, _⟩ : ZMod m)
+```
+
+which should then be identified with the target-side expression
+`((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int) : ZMod m)`.
 
 It explicitly asks not to reprove the generic lower-triangular odometer theorem.
 That theorem is already closed in `Shared` and is consumed by:

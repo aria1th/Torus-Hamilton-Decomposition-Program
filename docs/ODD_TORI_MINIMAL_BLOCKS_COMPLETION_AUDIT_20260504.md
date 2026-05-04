@@ -192,17 +192,32 @@ PrefixCountFirstHitReturnTailCocycleSumGoal
 ```
 
 For every admissible prefix-count certificate, layer-permutation count
-decomposition, and color, these ask that the first-hit return-tail monodromy on
+decomposition, and color, this asks that the first-hit return-tail monodromy on
 
 ```lean
 Fin (d - 2) -> ZMod m
 ```
 
-has one-step fiber hit condition depending only on the lower prefix and
-that every rank cocycle has unit total carry.  Lean already proves that this
-one-step dependency is preserved by `Shared.skewFiberIterate`, then implies
-lower-triangular form and closes the tail orbit through the generic odometer
-theorem.  Therefore the older orbit field can now be closed from:
+has exact rank-cocycle total carry
+
+```lean
+((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int) : ZMod m)
+```
+
+The completed GPT-5.5 Pro follow-up gives the Lean-friendly intermediate value
+
+```lean
+(((C.toMatrix hd2) c ⟨k + 2, _⟩ : Nat) : ZMod m) -
+(((C.toMatrix hd2) c ⟨1, _⟩ : Nat) : ZMod m)
+```
+
+and the remaining local work is to prove the cocycle expansion, the low-prefix
+finite count, and the `toMatrix` projection to `C.step - C.delta`.
+
+Lean already proves that the one-step dependency is preserved by
+`Shared.skewFiberIterate`, then implies lower-triangular form and closes the
+tail orbit through the generic odometer theorem.  Therefore the older orbit
+field can now be closed from:
 
 ```lean
 PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal
@@ -324,7 +339,7 @@ The GPT-5.5 Pro background requests for the remaining hard fields are:
 | Field | Request Doc | Response Id | Latest Status |
 |---|---|---|---|
 | q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md`, `docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `completed` |
-| first-hit return-tail cocycle sum | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33`, `resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37` | first response completed; hit-condition locality and sum-to-unit reduction now Lean-closed; second response in progress for exact-sum guidance |
+| first-hit return-tail cocycle sum | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md`, `docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33`, `resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37` | both responses completed; hit-condition locality and sum-to-unit reduction Lean-closed; remaining exact-sum route recorded |
 | successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md`, `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `completed` |
 
 ## Verdict
