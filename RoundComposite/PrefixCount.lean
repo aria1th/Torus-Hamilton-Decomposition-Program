@@ -2935,6 +2935,149 @@ theorem mate_col_sum_low_ne_special {n r : Nat}
       if M.mate i = k then (1 : Int) else 0) = 0 := by
   simpa [hk, hne] using M.mate_col_sum_pRows k
 
+theorem nonempty_of_targetHall {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hrlt : r < n) {specialCol : Fin (n - 1)}
+    (hspecialLow : specialCol.val < r)
+    (hSpecialNeg :
+      ∀ i : Fin n, i.val = r - 1 → A.B i specialCol = (-1 : Int))
+    (hHall :
+      ∀ X : Finset (Fin n), X ⊆ OrdinaryQeq1AuxMatrixData.pRows n r →
+        X.card ≤ (A.pRowTargetNeighbors specialCol X).card) :
+    Nonempty (OrdinaryQeq1PRowSpecialMatchingData A) := by
+  classical
+  rcases A.exists_pRows_target_matching hrlt hspecialLow hHall with
+    ⟨f, hfInj, hfTarget, hfPos, hfSurj⟩
+  have hspecialTarget :
+      specialCol ∈ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol := by
+    simp [OrdinaryQeq1AuxMatrixData.pRowTargetCols]
+  rcases hfSurj specialCol hspecialTarget with ⟨specialRow, hspecialRowMap⟩
+  let mate : Fin n → Fin (n - 1) := fun i =>
+    if hi : i ∈ OrdinaryQeq1AuxMatrixData.pRows n r then
+      f ⟨i, hi⟩
+    else
+      specialCol
+  have hmate_of_mem :
+      ∀ {i : Fin n} (hi : i ∈ OrdinaryQeq1AuxMatrixData.pRows n r),
+        mate i = f ⟨i, hi⟩ := by
+    intro i hi
+    simp [mate, hi]
+  have hmate_special : mate specialRow.1 = specialCol := by
+    simpa [hmate_of_mem specialRow.2] using hspecialRowMap
+  have hsum_card :
+      ∀ k : Fin (n - 1),
+        (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+          if mate i = k then (1 : Int) else 0)
+          =
+        (((OrdinaryQeq1AuxMatrixData.pRows n r).filter
+          (fun i => mate i = k)).card : Int) := by
+    intro k
+    have hnat :
+        ((OrdinaryQeq1AuxMatrixData.pRows n r).filter
+          (fun i => mate i = k)).card =
+        (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+          if mate i = k then (1 : Nat) else 0) := by
+      rw [Finset.card_filter]
+    exact_mod_cast hnat.symm
+  have hfilter_card_one :
+      ∀ {k : Fin (n - 1)},
+        k ∈ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol →
+        ((OrdinaryQeq1AuxMatrixData.pRows n r).filter
+          (fun i => mate i = k)).card = 1 := by
+    intro k hkTarget
+    rcases hfSurj k hkTarget with ⟨j, hfj⟩
+    rw [Finset.card_eq_one]
+    refine ⟨j.1, ?_⟩
+    ext i
+    constructor
+    · intro hi
+      have hip : i ∈ OrdinaryQeq1AuxMatrixData.pRows n r :=
+        (Finset.mem_filter.mp hi).1
+      have hmi : mate i = k := (Finset.mem_filter.mp hi).2
+      have hfi : f ⟨i, hip⟩ = k := by
+        simpa [hmate_of_mem hip] using hmi
+      have hij : (⟨i, hip⟩ :
+          {i : Fin n // i ∈ OrdinaryQeq1AuxMatrixData.pRows n r}) = j :=
+        hfInj (hfi.trans hfj.symm)
+      have hval : i = j.1 := congrArg Subtype.val hij
+      simp [hval]
+    · intro hi
+      have hval : i = j.1 := by simpa using hi
+      subst i
+      have hmj : mate j.1 = k := by
+        simpa [hmate_of_mem j.2] using hfj
+      simp [j.2, hmj]
+  have hfilter_card_zero :
+      ∀ {k : Fin (n - 1)},
+        k ∉ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol →
+        ((OrdinaryQeq1AuxMatrixData.pRows n r).filter
+          (fun i => mate i = k)).card = 0 := by
+    intro k hkTarget
+    rw [Finset.card_eq_zero]
+    ext i
+    constructor
+    · intro hi
+      have hip : i ∈ OrdinaryQeq1AuxMatrixData.pRows n r :=
+        (Finset.mem_filter.mp hi).1
+      have hmi : mate i = k := (Finset.mem_filter.mp hi).2
+      have hfi : f ⟨i, hip⟩ = k := by
+        simpa [hmate_of_mem hip] using hmi
+      exact False.elim (hkTarget (by simpa [← hfi] using hfTarget ⟨i, hip⟩))
+    · intro hi
+      simp at hi
+  refine ⟨{
+    mate := mate
+    special := specialRow.1
+    mate_pos := ?_
+    mate_col_sum_pRows := ?_
+    special_mem := ?_
+    special_low := ?_
+    special_neg := ?_
+  }⟩
+  · intro i hi
+    have hip : i ∈ OrdinaryQeq1AuxMatrixData.pRows n r := by
+      simpa [OrdinaryQeq1AuxMatrixData.pRows] using hi
+    simpa [hmate_of_mem hip] using hfPos ⟨i, hip⟩
+  · intro k
+    by_cases hkLow : k.val < r
+    · by_cases hks : k = specialCol
+      · have hkTarget :
+            k ∈ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol := by
+          simp [OrdinaryQeq1AuxMatrixData.pRowTargetCols, hks]
+        have hcard := hfilter_card_one hkTarget
+        have hksMate : k = mate specialRow.1 := by
+          rw [hmate_special]
+          exact hks
+        rw [hsum_card k, hcard]
+        simp [hksMate]
+      · have hkNotTarget :
+            k ∉ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol := by
+          have hkNotHigh :
+              k ∉ OrdinaryQeq1AuxMatrixData.highCols n r :=
+            OrdinaryQeq1AuxMatrixData.notMem_highCols_of_lt hkLow
+          simp [OrdinaryQeq1AuxMatrixData.pRowTargetCols, hks, hkNotHigh]
+        have hcard := hfilter_card_zero hkNotTarget
+        have hksMate : k ≠ mate specialRow.1 := by
+          rw [hmate_special]
+          exact hks
+        rw [hsum_card k, hcard]
+        simp [hkLow, hksMate]
+    · have hkHigh : r ≤ k.val := by omega
+      have hkTarget :
+          k ∈ OrdinaryQeq1AuxMatrixData.pRowTargetCols n r specialCol := by
+        simp [OrdinaryQeq1AuxMatrixData.pRowTargetCols,
+          OrdinaryQeq1AuxMatrixData.highCols, hkHigh]
+      have hcard := hfilter_card_one hkTarget
+      rw [hsum_card k, hcard]
+      simp [hkLow]
+  · have hmem := specialRow.2
+    change specialRow.1 ∈
+      Finset.univ.filter (fun i : Fin n => r ≤ i.val) at hmem
+    exact (Finset.mem_filter.mp hmem).2
+  · simpa [hmate_special] using hspecialLow
+  · intro i hi
+    simpa [hmate_special] using hSpecialNeg i hi
+
 def toSpecialMatchingData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
     (M : OrdinaryQeq1PRowSpecialMatchingData A) :
     OrdinaryQeq1SpecialMatchingData A where
