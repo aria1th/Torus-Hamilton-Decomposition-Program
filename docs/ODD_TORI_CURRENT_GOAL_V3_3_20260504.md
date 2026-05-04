@@ -51,6 +51,27 @@ def RoundComposite.Concrete.OddModulusToriV4ReturnTailOrbitBlocksGoal :
   OddSuccessorSmallModulusBaseTailGoal
 ```
 
+Equivalently for the successor-small branch, Lean now exposes direct additive
+packet endpoints:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
 It closes the final target conditionally:
 
 ```lean

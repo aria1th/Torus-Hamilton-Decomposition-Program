@@ -4600,6 +4600,14 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailOrbit
       hQge2Proper hOrbit)
     hSmall
 
+theorem oddSuccessorClosureGoal_of_v4_returnTailOrbitAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailOrbit hQge2Proper hOrbit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+
 theorem oddSuccessorClosureGoal_of_v4_returnTailRank
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
     (hRank : PrefixCountFirstHitReturnTailRankGoal)
@@ -4629,6 +4637,14 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailCycleCoordinate
     (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailCycleCoordinate
       hQge2Proper hCycle)
     hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailCycleCoordinateAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailCycleCoordinate hQge2Proper hCycle
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
 
 theorem oddSuccessorClosureGoal_of_v4_successorScheduleAdd
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
@@ -4879,6 +4895,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
     ⟨⟨hQge2Proper, hOrbit⟩, hSmall⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
+    hQge2Proper hOrbit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -4945,6 +4973,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
     ⟨⟨hQge2Proper, hCycle⟩, hSmall⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
+    hQge2Proper hCycle
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_sectionMonodromy_blocks
     (hBlocks : OddModulusToriV4SectionMonodromyBlocksGoal) :
     OddModulusToriAllDimensionsGoal := by
@@ -4993,6 +5033,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
     hQge2Proper hOrbit hSmall hd2 hmodd hm3
 
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd
+    hQge2Proper hOrbit hSmall hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :
     OddModulusToriAllDimensionsGoal := by
@@ -5039,6 +5088,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailCycleCoordinate
     OddModulusToriAllDimensionsGoal := by
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinate
+    hQge2Proper hCycle hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailCycleCoordinateAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCycle : PrefixCountFirstHitReturnTailCycleCoordinateGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd
     hQge2Proper hCycle hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
