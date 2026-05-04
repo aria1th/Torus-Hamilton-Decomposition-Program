@@ -26,9 +26,24 @@ def choiceDegree {X C : Type*} [Fintype X] [DecidableEq X] [DecidableEq C]
     (choice : X → C) (c : C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => choice x = c)).card
 
+def choiceDegreeOn {X C : Type*} [DecidableEq X] [DecidableEq C]
+    (E : Finset X) (choice : X → C) (c : C) : Nat :=
+  (E.filter (fun x => choice x = c)).card
+
 def choiceHitCount {X C : Type*} [Fintype X] [DecidableEq X]
     [DecidableEq C] (choice : X → C) (U : Finset C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => choice x ∈ U)).card
+
+def choiceHitCountOn {X C : Type*} [DecidableEq X] [DecidableEq C]
+    (E : Finset X) (choice : X → C) (U : Finset C) : Nat :=
+  (E.filter (fun x => choice x ∈ U)).card
+
+def lowCutSet {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    (S : Finset (Fin T)) : Finset X :=
+  (Finset.univ : Finset X).filter
+    (fun x => (I.active x ∩ U).card ≤ S.card)
 
 def choiceLowHitCount {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -94,6 +109,66 @@ theorem choiceLowHitCount_le_choiceHitCount {T : Nat} {X C : Type*}
     intro x hx
     exact Finset.mem_filter.mpr
       ⟨(Finset.mem_filter.mp hx).1, (Finset.mem_filter.mp hx).2.1⟩)
+
+theorem choiceLowHitCount_eq_choiceHitCountOn_lowCutSet
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (U : Finset C) (S : Finset (Fin T)) :
+    choiceLowHitCount I choice U S =
+      choiceHitCountOn (lowCutSet I U S) choice U := by
+  unfold choiceLowHitCount choiceHitCountOn lowCutSet
+  congr 1
+  ext x
+  simp [and_comm]
+
+theorem sum_choiceDegreeOn_on {X C : Type*}
+    [DecidableEq X] [DecidableEq C]
+    (E : Finset X) (choice : X → C) (U : Finset C) :
+    (∑ c ∈ U, choiceDegreeOn E choice c) =
+      choiceHitCountOn E choice U := by
+  classical
+  unfold choiceDegreeOn choiceHitCountOn
+  calc
+    (∑ c ∈ U, (E.filter (fun x => choice x = c)).card)
+        = ∑ c ∈ U, ∑ x ∈ E, if choice x = c then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro c _hc
+            rw [Finset.card_filter]
+    _ = ∑ x ∈ E, ∑ c ∈ U, if choice x = c then 1 else 0 := by
+            rw [Finset.sum_comm]
+    _ = ∑ x ∈ E, if choice x ∈ U then 1 else 0 := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            by_cases hx : choice x ∈ U
+            · rw [Finset.sum_eq_single (choice x)]
+              · simp [hx]
+              · intro c _hc hne
+                have hneq : choice x ≠ c := by
+                  intro h
+                  exact hne h.symm
+                simp [hneq]
+              · intro hnot
+                exact False.elim (hnot hx)
+            · have hneq : ∀ c ∈ U, choice x ≠ c := by
+                intro c hc h
+                exact hx (by rw [h]; exact hc)
+              rw [if_neg hx]
+              apply Finset.sum_eq_zero
+              intro c hc
+              simp [hneq c hc]
+    _ = (E.filter (fun x => choice x ∈ U)).card := by
+            rw [Finset.card_filter]
+
+theorem choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (U : Finset C) (S : Finset (Fin T)) :
+    choiceLowHitCount I choice U S =
+      ∑ c ∈ U, choiceDegreeOn (lowCutSet I U S) choice c := by
+  rw [choiceLowHitCount_eq_choiceHitCountOn_lowCutSet,
+    sum_choiceDegreeOn_on]
 
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
