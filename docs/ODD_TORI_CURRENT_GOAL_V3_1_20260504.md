@@ -174,6 +174,15 @@ they are forced by the row/column sum hypotheses and the `qge2ColumnCapacity`
 endpoint arithmetic.  The direct final-theorem endpoint from this formulation is
 `RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_v4_properCut_blocks`.
 
+For the second item, Lean now exposes the equivalent schedule-facing formulation
+`RoundComposite.Concrete.PrefixCountRootFlatCanonicalScheduleCriterionGoal`.
+Instead of constructing the `RootFlatCertificate` record directly, it is enough
+to construct a canonical schedule `S` with
+`S.step = prefixCountRootStep d m`, then prove `S.rowLatin`,
+`S.layerBijective`, and `S.returnsSingleCycle`.
+`prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` closes the
+conversion back to the original certificate-facing goal.
+
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for
 a special matching for every such degree matrix is too strong; Lean records this

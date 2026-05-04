@@ -224,6 +224,43 @@ def PrefixCountRootFlatCanonicalReturnGoal : Prop :=
       (Fin d) (Fin d) (PrefixCountRootState d m) m,
       cert.schedule.step = prefixCountRootStep d m
 
+def PrefixCountRootFlatCanonicalScheduleCriterionGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
+    ∃ S : Shared.RootFlatSchedule
+        (Fin d) (Fin d) (PrefixCountRootState d m) m,
+      S.step = prefixCountRootStep d m ∧
+      S.rowLatin ∧ S.layerBijective ∧ S.returnsSingleCycle
+
+theorem prefixCountRootFlatCanonicalReturnGoal_of_scheduleCriterion
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
+    PrefixCountRootFlatCanonicalReturnGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L
+  rcases hSchedule hd2 hdodd hd5 hmodd hdm hC L with
+    ⟨S, hStep, hRow, hLayer, hReturn⟩
+  exact ⟨{
+    schedule := S
+    rowLatin := hRow
+    layerBijective := hLayer
+    returnsSingleCycle := hReturn
+  }, hStep⟩
+
+theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_return
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal) :
+    PrefixCountRootFlatCanonicalScheduleCriterionGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L
+  rcases hReturn hd2 hdodd hd5 hmodd hdm hC L with ⟨cert, hStep⟩
+  exact ⟨cert.schedule, hStep, cert.rowLatin, cert.layerBijective,
+    cert.returnsSingleCycle⟩
+
+theorem prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion :
+    PrefixCountRootFlatCanonicalReturnGoal ↔
+      PrefixCountRootFlatCanonicalScheduleCriterionGoal :=
+  ⟨prefixCountRootFlatCanonicalScheduleCriterionGoal_of_return,
+    prefixCountRootFlatCanonicalReturnGoal_of_scheduleCriterion⟩
+
 def PrefixCountRootFlatCayleyLiftGoal : Prop :=
   ∀ {d m : Nat} [NeZero m],
     2 ≤ d → Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -1656,6 +1693,24 @@ theorem odd_modulus_tori_all_dimensions_of_v4_properCut_blocks
   odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
     (oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks hBlocks)
     hd2 hmodd hm3
+
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_properCut_blocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
+    (oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks hBlocks)
+
+theorem odd_successor_small_modulus_base_tail_of_v4_properCut_blocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_v4_preferred_blocks
+    (oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks hBlocks)
+    hb5 hmodd hm3 hmSmall hb
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
     (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
