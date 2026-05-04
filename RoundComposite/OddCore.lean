@@ -1547,6 +1547,24 @@ theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero
     simp [fNat]
   rw [← hCast, hRangeNat]
 
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_coord
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c : Fin d)
+    (w : PrefixCountRootState d m) (j : Fin (d - 1)) :
+    ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c w) j =
+      w j +
+        ∑ t ∈ Finset.range m,
+          if (prefixCountLambdaRho d
+              (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t w))
+              (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val
+              = j.val
+          then (1 : ZMod m) else 0 := by
+  rw [Shared.RootFlatSchedule.returnMap_eq_prefixMap]
+  exact prefixCountFirstHitCanonicalSchedule_prefixMap_apply_coord
+    hd2 L c m w j
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero_parts
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
