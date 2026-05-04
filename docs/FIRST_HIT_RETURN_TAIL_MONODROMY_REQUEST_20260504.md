@@ -76,6 +76,36 @@ theorem RoundComposite.Concrete
       prefixCountFirstHitReturnTailMonodromy hd2 L c
 ```
 
+The tail monodromy is also identified with the generic fiber iterate:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromy_eq_fiberIterate :
+    prefixCountFirstHitReturnTailMonodromy hd2 L c =
+      Shared.skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        m (0 : ZMod m)
+```
+
+For one-coordinate skew extensions over `ZMod m`, the reusable carry lemmas
+are already in `Shared/Monodromy.lean`:
+
+```lean
+theorem Shared.sectionReturn_skewProductMap_zmod_add :
+    Shared.sectionReturn
+        (Shared.skewProductMap baseStep (fun b z => z + carry b))
+        base period =
+      fun fiber : ZMod m =>
+        fiber + Shared.skewFiberAdditiveCarry baseStep carry period base
+
+theorem Shared.single_cycle_of_skewProduct_zmod_additive_carry :
+    Nat.Coprime a m ->
+    Shared.skewFiberAdditiveCarry baseStep carry period base = (a : ZMod m) ->
+    Shared.IsSingleCycleMap
+      (Shared.skewProductMap baseStep (fun b z => z + carry b))
+```
+
 and the final high-branch/final-theorem adapters:
 
 ```lean
@@ -149,4 +179,3 @@ auxiliary theorem list.  If code is attempted, prioritize the following:
 
 Avoid reproving row-Latin, layer bijectivity, or the final torus lift; Lean
 already routes those once the tail monodromy target is proved.
-
