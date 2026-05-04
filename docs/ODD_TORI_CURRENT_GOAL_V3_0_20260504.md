@@ -191,6 +191,8 @@ so the `q >= 2` ordinary plan is reduced to the signed-column closure theorem
 alone.  The restricted `q = 1` construction is now exposed in its paper-facing
 form as `PrefixCount.OrdinaryQeq1CanonicalCorrectionGoal`: it constructs the
 canonical matching-correction matrix only in the relevant case `m = n + r`.
+The gate still carries the needed odd-modulus hypothesis as `Odd (n + r)`,
+matching the manuscript's `r`-odd restricted branch when `n + 1` is odd.
 Lean then derives the more general compatibility-facing matrix interface through
 `PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction`.  Thus
 `OddModulusToriV4ConstructionBlocksGoal` consumes the narrow correction theorem,

@@ -2039,15 +2039,16 @@ def OrdinaryQeq1CanonicalMatrixGoal : Prop :=
 def OrdinaryQeq1CanonicalCorrectionGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1CanonicalMatrixData n (n + r) r)
 
 theorem ordinaryQeq1CanonicalMatrixGoal_of_correction
     (hCorrection : OrdinaryQeq1CanonicalCorrectionGoal) :
     OrdinaryQeq1CanonicalMatrixGoal := by
-  intro n m r hdodd hd5 _hmodd hmnr hrlt hrpos
-  rcases hCorrection hdodd hd5 hrlt hrpos with ⟨M⟩
+  intro n m r hdodd hd5 hmodd hmnr hrlt hrpos
   subst m
+  rcases hCorrection hdodd hd5 hmodd hrlt hrpos with ⟨M⟩
   exact ⟨M⟩
 
 theorem ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
