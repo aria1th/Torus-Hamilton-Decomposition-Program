@@ -52,6 +52,38 @@ def PrefixCountGeometricCriterionGoal : Prop :=
 abbrev PrefixCountRootState (d m : Nat) :=
   Fin (d - 1) → ZMod m
 
+def prefixCountRootAgreeUpTo {d m : Nat} (k : Nat)
+    (w v : PrefixCountRootState d m) : Prop :=
+  ∀ j : Fin (d - 1), j.val ≤ k → w j = v j
+
+theorem prefixCountRootAgreeUpTo_refl {d m : Nat} (k : Nat)
+    (w : PrefixCountRootState d m) :
+    prefixCountRootAgreeUpTo k w w := by
+  intro _j _hj
+  rfl
+
+theorem prefixCountRootAgreeUpTo_symm {d m : Nat} {k : Nat}
+    {w v : PrefixCountRootState d m}
+    (h : prefixCountRootAgreeUpTo k w v) :
+    prefixCountRootAgreeUpTo k v w := by
+  intro j hj
+  exact (h j hj).symm
+
+theorem prefixCountRootAgreeUpTo_trans {d m : Nat} {k : Nat}
+    {u v w : PrefixCountRootState d m}
+    (huv : prefixCountRootAgreeUpTo k u v)
+    (hvw : prefixCountRootAgreeUpTo k v w) :
+    prefixCountRootAgreeUpTo k u w := by
+  intro j hj
+  exact (huv j hj).trans (hvw j hj)
+
+theorem prefixCountRootAgreeUpTo_mono {d m : Nat} {k l : Nat}
+    {w v : PrefixCountRootState d m}
+    (hkl : k ≤ l) (h : prefixCountRootAgreeUpTo l w v) :
+    prefixCountRootAgreeUpTo k w v := by
+  intro j hj
+  exact h j (hj.trans hkl)
+
 def prefixCountRootLayerEquivSucc (n m : Nat) :
     ZMod m × (Fin n → ZMod m) ≃ Shared.TorusVertex (n + 1) m where
   toFun tw := Fin.snoc tw.2 (tw.1 - ∑ j : Fin n, tw.2 j)
@@ -353,6 +385,19 @@ theorem prefixCountRootStateHeadTailEquiv_symm_eq_of_take_le
     simpa [prefixCountRootStateHeadTailEquiv, hj0, hxidx,
       Shared.zmodVectorTake] using htail
 
+theorem prefixCountRootAgreeUpTo_headTail_symm_of_take
+    {d m : Nat} (hd2 : 2 ≤ d) {z : ZMod m}
+    {x y : Fin (d - 2) → ZMod m} {k : Nat} (hk : k < d - 2)
+    (hxy :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) x =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) y) :
+    prefixCountRootAgreeUpTo k
+      ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, x))
+      ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, y)) := by
+  intro j hj
+  exact prefixCountRootStateHeadTailEquiv_symm_eq_of_take_le
+    hd2 hk hxy hj
+
 /--
 The canonical prefix-count symbol permutation associated to a positive
 stop-rank `rho`.  It fixes `0`, sends `1` to `rho`, shifts `2,...,rho` down by
@@ -606,6 +651,22 @@ theorem prefixCountCanonicalRhoHitNat_congr
     rcases hj with ⟨hjlt, hnext, hv⟩
     exact ⟨hjlt, hnext, by simpa [h hjlt] using hv⟩
 
+theorem prefixCountCanonicalRhoHit_congr_of_agreeUpTo
+    {d m : Nat} {t : ZMod m} {w v : PrefixCountRootState d m}
+    {k : Nat} (h : prefixCountRootAgreeUpTo k w v)
+    {j : Fin (d - 1)} (hj : j.val ≤ k) :
+    prefixCountCanonicalRhoHit t w j ↔
+      prefixCountCanonicalRhoHit t v j :=
+  prefixCountCanonicalRhoHit_congr (h j hj)
+
+theorem prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+    {d m : Nat} {t : ZMod m} {w v : PrefixCountRootState d m}
+    {k j : Nat} (h : prefixCountRootAgreeUpTo k w v) (hj : j ≤ k) :
+    prefixCountCanonicalRhoHitNat t w j ↔
+      prefixCountCanonicalRhoHitNat t v j :=
+  prefixCountCanonicalRhoHitNat_congr
+    (fun hjlt => h ⟨j, hjlt⟩ hj)
+
 theorem prefixCountCanonicalRhoHitNat_of_fin
     {d m : Nat} {t : ZMod m} {w : PrefixCountRootState d m}
     {j : Fin (d - 1)}
@@ -755,6 +816,199 @@ theorem prefixCountCanonicalRho_no_fin_hit_before
   intro hhit
   exact prefixCountCanonicalRho_no_hit_before hd2 hj
     (prefixCountCanonicalRhoHitNat_of_fin hhit)
+
+theorem prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    {l : Nat} (hl : l < d - 1) :
+    (prefixCountCanonicalRho d m hd2 t w).val < l + 1 ↔
+      ∃ j : Nat, j < l ∧ prefixCountCanonicalRhoHitNat t w j := by
+  constructor
+  · intro hrho_lt
+    have hrho_tail :
+        (prefixCountCanonicalRho d m hd2 t w).val < d - 1 := by
+      omega
+    have hhit :=
+      prefixCountCanonicalRho_pred_hitNat
+        (d := d) (m := m) hd2 (t := t) (w := w) hrho_tail
+    refine ⟨(prefixCountCanonicalRho d m hd2 t w).val - 1, ?_, hhit⟩
+    have hnonzero :
+        (prefixCountCanonicalRho d m hd2 t w).val ≠ 0 :=
+      prefixCountCanonicalRho_ne_zero hd2 t w
+    omega
+  · intro hex
+    rcases hex with ⟨j, hjlt, hhit⟩
+    by_cases h : ∃ q : Nat, prefixCountCanonicalRhoHitNat t w q
+    · have hmin := prefixCountCanonicalRho_minimal hd2 h hhit
+      omega
+    · exact False.elim (h ⟨j, hhit⟩)
+
+theorem prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    {k : Nat} (hk : k < d - 2) :
+    (prefixCountCanonicalRho d m hd2 t w).val = k + 1 ↔
+      prefixCountCanonicalRhoHitNat t w k ∧
+        ∀ j : Nat, j < k → ¬ prefixCountCanonicalRhoHitNat t w j := by
+  constructor
+  · intro hrho
+    have htail :
+        (prefixCountCanonicalRho d m hd2 t w).val < d - 1 := by
+      omega
+    have hhit :
+        prefixCountCanonicalRhoHitNat t w k := by
+      have hpred :=
+        prefixCountCanonicalRho_pred_hitNat
+          (d := d) (m := m) hd2 (t := t) (w := w) htail
+      have hidx :
+          (prefixCountCanonicalRho d m hd2 t w).val - 1 = k := by
+        omega
+      simpa [hidx] using hpred
+    refine ⟨hhit, ?_⟩
+    intro j hjlt hhitj
+    have hmin :
+        (prefixCountCanonicalRho d m hd2 t w).val ≤ j + 1 := by
+      exact prefixCountCanonicalRho_minimal
+        (d := d) (m := m) hd2
+        (t := t) (w := w) ⟨k, hhit⟩ hhitj
+    omega
+  · intro hdata
+    rcases hdata with ⟨hhit, hno⟩
+    have hle :
+        (prefixCountCanonicalRho d m hd2 t w).val ≤ k + 1 := by
+      exact prefixCountCanonicalRho_minimal
+        (d := d) (m := m) hd2
+        (t := t) (w := w) ⟨k, hhit⟩ hhit
+    have hnotlt :
+        ¬ (prefixCountCanonicalRho d m hd2 t w).val < k + 1 := by
+      intro hlt
+      rcases
+        (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+          (d := d) (m := m) hd2 (t := t) (w := w)
+          (l := k) (by omega)).1 hlt with
+        ⟨j, hjlt, hhitj⟩
+      exact hno j hjlt hhitj
+    omega
+
+theorem prefixCountCanonicalRho_not_lt_succ_succ_iff_no_hit_upto
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w : PrefixCountRootState d m}
+    {k : Nat} (hk : k < d - 2) :
+    ¬ (prefixCountCanonicalRho d m hd2 t w).val < k + 2 ↔
+      ∀ j : Nat, j ≤ k → ¬ prefixCountCanonicalRhoHitNat t w j := by
+  constructor
+  · intro hnot j hj hhit
+    apply hnot
+    have hle :
+        (prefixCountCanonicalRho d m hd2 t w).val ≤ j + 1 := by
+      exact prefixCountCanonicalRho_minimal
+        (d := d) (m := m) hd2
+        (t := t) (w := w) ⟨j, hhit⟩ hhit
+    omega
+  · intro hno hlt
+    rcases
+      (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := w)
+        (l := k + 1) (by omega)).1 hlt with
+      ⟨j, hjlt, hhitj⟩
+    exact hno j (by omega) hhitj
+
+theorem prefixCountCanonicalRho_val_lt_succ_congr_of_agreeUpTo
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w v : PrefixCountRootState d m}
+    {K l : Nat} (h : prefixCountRootAgreeUpTo K w v)
+    (hKl : l ≤ K + 1) (hl : l < d - 1) :
+    (prefixCountCanonicalRho d m hd2 t w).val < l + 1 ↔
+      (prefixCountCanonicalRho d m hd2 t v).val < l + 1 := by
+  constructor
+  · intro hw
+    rcases
+      (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := w) (l := l) hl).1 hw with
+      ⟨j, hjlt, hhit⟩
+    have hjK : j ≤ K := by omega
+    exact
+      (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := v) (l := l) hl).2
+        ⟨j, hjlt,
+          (prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+            (d := d) (m := m) (t := t) (w := w) (v := v)
+            h hjK).1 hhit⟩
+  · intro hv
+    rcases
+      (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := v) (l := l) hl).1 hv with
+      ⟨j, hjlt, hhit⟩
+    have hjK : j ≤ K := by omega
+    exact
+      (prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := w) (l := l) hl).2
+        ⟨j, hjlt,
+          (prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+            (d := d) (m := m) (t := t) (w := w) (v := v)
+            h hjK).2 hhit⟩
+
+theorem prefixCountCanonicalRho_val_eq_succ_congr_of_agreeUpTo
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w v : PrefixCountRootState d m}
+    {k : Nat} (hk : k < d - 2)
+    (h : prefixCountRootAgreeUpTo k w v) :
+    (prefixCountCanonicalRho d m hd2 t w).val = k + 1 ↔
+      (prefixCountCanonicalRho d m hd2 t v).val = k + 1 := by
+  constructor
+  · intro hw
+    rcases
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := w) (k := k) hk).1 hw with
+      ⟨hhit, hno⟩
+    exact
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := v) (k := k) hk).2
+        ⟨(prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+            (d := d) (m := m) (t := t) (w := w) (v := v)
+            h (Nat.le_refl k)).1 hhit,
+          by
+            intro j hj hhitv
+            exact hno j hj
+              ((prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+                (d := d) (m := m) (t := t) (w := w) (v := v)
+                h (by omega)).2 hhitv)⟩
+  · intro hv
+    rcases
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := v) (k := k) hk).1 hv with
+      ⟨hhit, hno⟩
+    exact
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2 (t := t) (w := w) (k := k) hk).2
+        ⟨(prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+            (d := d) (m := m) (t := t) (w := w) (v := v)
+            h (Nat.le_refl k)).2 hhit,
+          by
+            intro j hj hhitw
+            exact hno j hj
+              ((prefixCountCanonicalRhoHitNat_congr_of_agreeUpTo
+                (d := d) (m := m) (t := t) (w := w) (v := v)
+                h (by omega)).1 hhitw)⟩
+
+theorem prefixCountCanonicalRho_not_lt_succ_succ_congr_of_agreeUpTo
+    {d m : Nat} (hd2 : 2 ≤ d)
+    {t : ZMod m} {w v : PrefixCountRootState d m}
+    {k : Nat} (hk : k < d - 2)
+    (h : prefixCountRootAgreeUpTo k w v) :
+    (¬ (prefixCountCanonicalRho d m hd2 t w).val < k + 2) ↔
+      ¬ (prefixCountCanonicalRho d m hd2 t v).val < k + 2 := by
+  constructor
+  · intro hw hv
+    exact hw
+      ((prefixCountCanonicalRho_val_lt_succ_congr_of_agreeUpTo
+        (d := d) (m := m) hd2 (t := t) (w := w) (v := v)
+        (K := k) (l := k + 1) h (by omega) (by omega)).2 hv)
+  · intro hv hw
+    exact hv
+      ((prefixCountCanonicalRho_val_lt_succ_congr_of_agreeUpTo
+        (d := d) (m := m) hd2 (t := t) (w := w) (v := v)
+        (K := k) (l := k + 1) h (by omega) (by omega)).1 hw)
 
 theorem prefixCountCanonicalRho_pred_hitNat
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1883,6 +2137,98 @@ def prefixCountFirstHitReturnFiberHitCondition
   (s.val = 1 ∧ rho.val = j.val + 1) ∨
     (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
     (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
+
+def prefixCountFirstHitReturnFiberHitConditionAt
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (w : PrefixCountRootState d m) (j : Fin (d - 2)) (t : Nat) : Prop :=
+  let rho := prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  (s.val = 1 ∧ rho.val = j.val + 1) ∨
+    (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+    (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
+
+theorem prefixCountFirstHitReturnFiberHitCondition_eq_at
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m)
+    (j : Fin (d - 2)) (t : Nat) :
+    prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t =
+      prefixCountFirstHitReturnFiberHitConditionAt hd2 L c
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+          ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+            (z, tail)))
+        j t := rfl
+
+theorem prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    {w v : PrefixCountRootState d m} (j : Fin (d - 2)) (t : Nat)
+    (h : prefixCountRootAgreeUpTo j.val w v) :
+    prefixCountFirstHitReturnFiberHitConditionAt hd2 L c w j t ↔
+      prefixCountFirstHitReturnFiberHitConditionAt hd2 L c v j t := by
+  let rhoW := prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w
+  let rhoV := prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) v
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  have heq :
+      rhoW.val = j.val + 1 ↔ rhoV.val = j.val + 1 := by
+    simpa [rhoW, rhoV] using
+      (prefixCountCanonicalRho_val_eq_succ_congr_of_agreeUpTo
+        (d := d) (m := m) hd2
+        (t := ((t : Nat) : ZMod m)) (w := w) (v := v)
+        (k := j.val) j.isLt h)
+  have hlt :
+      rhoW.val < j.val + 1 ↔ rhoV.val < j.val + 1 := by
+    simpa [rhoW, rhoV] using
+      (prefixCountCanonicalRho_val_lt_succ_congr_of_agreeUpTo
+        (d := d) (m := m) hd2
+        (t := ((t : Nat) : ZMod m)) (w := w) (v := v)
+        (K := j.val) (l := j.val) h (by omega) (by omega))
+  have hnlt :
+      (¬ rhoW.val < j.val + 2) ↔ ¬ rhoV.val < j.val + 2 := by
+    simpa [rhoW, rhoV] using
+      (prefixCountCanonicalRho_not_lt_succ_succ_congr_of_agreeUpTo
+        (d := d) (m := m) hd2
+        (t := ((t : Nat) : ZMod m)) (w := w) (v := v)
+        (k := j.val) j.isLt h)
+  constructor
+  · intro hcase
+    change
+      (s.val = 1 ∧ rhoV.val = j.val + 1) ∨
+        (s.val = j.val + 1 ∧ 1 < s.val ∧ rhoV.val < s.val) ∨
+        (s.val = j.val + 2 ∧ ¬ rhoV.val < s.val)
+    change
+      (s.val = 1 ∧ rhoW.val = j.val + 1) ∨
+        (s.val = j.val + 1 ∧ 1 < s.val ∧ rhoW.val < s.val) ∨
+        (s.val = j.val + 2 ∧ ¬ rhoW.val < s.val) at hcase
+    rcases hcase with ⟨hs, hrho⟩ | ⟨hs, hspos, hrho⟩ | ⟨hs, hrho⟩
+    · exact Or.inl ⟨hs, heq.mp hrho⟩
+    · exact Or.inr (Or.inl ⟨hs, hspos, by
+        rw [hs]
+        exact hlt.mp (by simpa [hs] using hrho)⟩)
+    · exact Or.inr (Or.inr ⟨hs, by
+        rw [hs]
+        exact hnlt.mp (by simpa [hs] using hrho)⟩)
+  · intro hcase
+    change
+      (s.val = 1 ∧ rhoW.val = j.val + 1) ∨
+        (s.val = j.val + 1 ∧ 1 < s.val ∧ rhoW.val < s.val) ∨
+        (s.val = j.val + 2 ∧ ¬ rhoW.val < s.val)
+    change
+      (s.val = 1 ∧ rhoV.val = j.val + 1) ∨
+        (s.val = j.val + 1 ∧ 1 < s.val ∧ rhoV.val < s.val) ∨
+        (s.val = j.val + 2 ∧ ¬ rhoV.val < s.val) at hcase
+    rcases hcase with ⟨hs, hrho⟩ | ⟨hs, hspos, hrho⟩ | ⟨hs, hrho⟩
+    · exact Or.inl ⟨hs, heq.mpr hrho⟩
+    · exact Or.inr (Or.inl ⟨hs, hspos, by
+        rw [hs]
+        exact hlt.mpr (by simpa [hs] using hrho)⟩)
+    · exact Or.inr (Or.inr ⟨hs, by
+        rw [hs]
+        exact hnlt.mpr (by simpa [hs] using hrho)⟩)
 
 theorem prefixCountFirstHitReturnFiberStep_apply_hitCondition
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
