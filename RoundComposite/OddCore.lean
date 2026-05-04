@@ -1441,6 +1441,11 @@ def PrefixCountFirstHitCanonicalScheduleAuxGoal : Prop :=
   PrefixCountFirstHitCanonicalLayerBijectiveGoal ∧
   PrefixCountFirstHitCanonicalReturnsSingleCycleGoal
 
+theorem prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns
+    (hReturn : PrefixCountFirstHitCanonicalReturnsSingleCycleGoal) :
+    PrefixCountFirstHitCanonicalScheduleAuxGoal :=
+  ⟨prefixCountFirstHitCanonicalLayerBijectiveGoal, hReturn⟩
+
 theorem prefixCountFirstHitCanonicalLayerBijectiveGoal_of_symbolMaps
     (hSym : PrefixCountFirstHitSymbolMapsBijectiveGoal) :
     PrefixCountFirstHitCanonicalLayerBijectiveGoal := by
@@ -1502,6 +1507,12 @@ theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_aux
     prefixCountFirstHitCanonicalSchedule_rowLatin hd2 L,
     hAux.1 hd2 hdodd hd5 hmodd hdm hC L,
     hAux.2 hd2 hdodd hd5 hmodd hdm hC L⟩
+
+theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_returns
+    (hReturn : PrefixCountFirstHitCanonicalReturnsSingleCycleGoal) :
+    PrefixCountRootFlatCanonicalScheduleCriterionGoal :=
+  prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_aux
+    (prefixCountFirstHitCanonicalScheduleAuxGoal_of_returns hReturn)
 
 theorem prefixCountRootFlatCanonicalReturnGoal_of_scheduleCriterion
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
