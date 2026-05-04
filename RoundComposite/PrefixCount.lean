@@ -2033,6 +2033,21 @@ structure OrdinaryQeq1CanonicalMatrixData (n m r : Nat) where
 Auxiliary `±1` matrix in the restricted `q = 1` construction, before the
 special matching correction.
 -/
+def ordinaryQeq1AuxDegree (n r : Nat) (i : Fin n) : Nat :=
+  if i.val < r - 1 then
+    (r - 3) / 2
+  else if i.val < r then
+    (r - 1) / 2
+  else
+    (n + r - 3) / 2
+
+structure UniformColumnDegreeMatrixData
+    (rows cols h : Nat) (rowDegree : Fin rows → Nat) where
+  G : Fin rows → Fin cols → Nat
+  G_zero_one : ∀ i k, G i k = 0 ∨ G i k = 1
+  G_row_sum : ∀ i : Fin rows, (∑ k : Fin cols, G i k) = rowDegree i
+  G_col_sum : ∀ k : Fin cols, (∑ i : Fin rows, G i k) = h
+
 structure OrdinaryQeq1AuxDegreeMatrixData (n r : Nat) where
   G : Fin n → Fin (n - 1) → Nat
   G_zero_one : ∀ i k, G i k = 0 ∨ G i k = 1
@@ -2047,6 +2062,21 @@ structure OrdinaryQeq1AuxDegreeMatrixData (n r : Nat) where
           (n + r - 3) / 2
   G_col_sum :
     ∀ k : Fin (n - 1), (∑ i : Fin n, G i k) = (n - 2) / 2
+
+namespace UniformColumnDegreeMatrixData
+
+def toOrdinaryQeq1AuxDegreeMatrixData {n r : Nat}
+    (M : UniformColumnDegreeMatrixData
+      n (n - 1) ((n - 2) / 2) (ordinaryQeq1AuxDegree n r)) :
+    OrdinaryQeq1AuxDegreeMatrixData n r where
+  G := M.G
+  G_zero_one := M.G_zero_one
+  G_row_sum := by
+    intro i
+    simpa [ordinaryQeq1AuxDegree] using M.G_row_sum i
+  G_col_sum := M.G_col_sum
+
+end UniformColumnDegreeMatrixData
 
 structure OrdinaryQeq1AuxMatrixData (n r : Nat) where
   B : Fin n → Fin (n - 1) → Int
@@ -2419,6 +2449,23 @@ def OrdinaryQeq1AuxDegreeMatrixGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1AuxDegreeMatrixData n r)
 
+def UniformColumnDegreeMatrixGoal : Prop :=
+  ∀ {rows cols h : Nat} (rowDegree : Fin rows → Nat),
+    0 < cols →
+    (∀ i : Fin rows, rowDegree i ≤ cols) →
+    (∑ i : Fin rows, rowDegree i) = h * cols →
+    Nonempty (UniformColumnDegreeMatrixData rows cols h rowDegree)
+
+def OrdinaryQeq1AuxDegreeArithmeticGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    0 < n - 1 ∧
+    (∀ i : Fin n, ordinaryQeq1AuxDegree n r i ≤ n - 1) ∧
+    (∑ i : Fin n, ordinaryQeq1AuxDegree n r i) =
+      ((n - 2) / 2) * (n - 1)
+
 def OrdinaryQeq1AuxMatrixGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
@@ -2439,6 +2486,19 @@ theorem ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
   intro n r hdodd hd5 hmodd hrlt hrpos
   rcases hDegree hdodd hd5 hmodd hrlt hrpos with ⟨G⟩
   exact ⟨G.toAuxMatrixData hdodd hmodd⟩
+
+theorem ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
+    (hArith : OrdinaryQeq1AuxDegreeArithmeticGoal)
+    (hUniform : UniformColumnDegreeMatrixGoal) :
+    OrdinaryQeq1AuxDegreeMatrixGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hArith hdodd hd5 hmodd hrlt hrpos with
+    ⟨hcols, hrowLe, htotal⟩
+  rcases hUniform
+      (ordinaryQeq1AuxDegree n r)
+      hcols hrowLe htotal with
+    ⟨M⟩
+  exact ⟨M.toOrdinaryQeq1AuxDegreeMatrixData⟩
 
 def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
   ∀ {n r : Nat},

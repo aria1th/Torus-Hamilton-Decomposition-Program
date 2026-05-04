@@ -127,6 +127,11 @@ PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
 PrefixCount.OrdinaryQeq1AuxDegreeMatrixData
 PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal
+PrefixCount.ordinaryQeq1AuxDegree
+PrefixCount.UniformColumnDegreeMatrixData
+PrefixCount.UniformColumnDegreeMatrixGoal
+PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
+PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
 PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
 PrefixCount.OrdinaryQeq1AuxMatrixData
 PrefixCount.OrdinaryQeq1SpecialMatchingData
@@ -205,9 +210,13 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .OddModulusToriV4DegreeMatchingBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4UniformDegreeBlocksGoal
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_uniform_degree_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
@@ -246,6 +255,12 @@ The auxiliary matrix side is split once more at the Gale-Ryser output level:
 `PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` asks only for the `0/1`
 degree matrix, and Lean closes the conversion to the signed `±1` matrix through
 `PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix`.
+That degree-matrix side is now split into the row-degree arithmetic and the
+generic uniform-column `0/1` matrix realization:
+`PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal` plus
+`PrefixCount.UniformColumnDegreeMatrixGoal` imply
+`PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` through
+`PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree`.
 
 Small-modulus successor branch:
 
@@ -306,10 +321,31 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+The endpoint with the auxiliary degree matrix split into arithmetic plus generic
+uniform-column realization is:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4UniformDegreeBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal ∧
+  PrefixCount.UniformColumnDegreeMatrixGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_uniform_degree_blocks
+    (hBlocks : OddModulusToriV4UniformDegreeBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 auxiliary degree matrix and special matching theorems;
+2. prove the q=1 auxiliary degree arithmetic, uniform-column matrix, and
+   special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
