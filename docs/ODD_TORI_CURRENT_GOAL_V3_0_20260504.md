@@ -380,6 +380,18 @@ theorem RoundComposite.ActiveHall.Incidence
 theorem RoundComposite.ActiveHall.Incidence
   .tokenLoadOn_eq_sum_choiceDegreeOn
 theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_le_card
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_mono_set
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_mono_colors
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_set_empty
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_colors_empty
+theorem RoundComposite.ActiveHall.Incidence
+  .tokenLoadOn_colors_univ
+theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_symbols_empty

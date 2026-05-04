@@ -378,6 +378,52 @@ theorem tokenLoadOn_eq_sum_choiceDegreeOn {X C : Type*}
       ∑ c ∈ U, choiceDegreeOn E (fun x : X => (f.symm x).1) c := by
   rw [tokenLoadOn_eq_choiceHitCountOn, ← sum_choiceDegreeOn_on]
 
+theorem tokenLoadOn_le_card {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) (U : Finset C) :
+    tokenLoadOn f E U ≤ E.card := by
+  rw [tokenLoadOn_eq_choiceHitCountOn]
+  exact choiceHitCountOn_le_card E (fun x : X => (f.symm x).1) U
+
+theorem tokenLoadOn_mono_set {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    {E₁ E₂ : Finset X} (hE : E₁ ⊆ E₂) (U : Finset C) :
+    tokenLoadOn f E₁ U ≤ tokenLoadOn f E₂ U := by
+  rw [tokenLoadOn_eq_choiceHitCountOn, tokenLoadOn_eq_choiceHitCountOn]
+  exact choiceHitCountOn_mono_set hE (fun x : X => (f.symm x).1) U
+
+theorem tokenLoadOn_mono_colors {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) {U₁ U₂ : Finset C} (hU : U₁ ⊆ U₂) :
+    tokenLoadOn f E U₁ ≤ tokenLoadOn f E U₂ := by
+  rw [tokenLoadOn_eq_choiceHitCountOn, tokenLoadOn_eq_choiceHitCountOn]
+  exact choiceHitCountOn_mono_colors E (fun x : X => (f.symm x).1) hU
+
+theorem tokenLoadOn_set_empty {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (U : Finset C) :
+    tokenLoadOn f (∅ : Finset X) U = 0 := by
+  simp [tokenLoadOn]
+
+theorem tokenLoadOn_colors_empty {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) :
+    tokenLoadOn f E (∅ : Finset C) = 0 := by
+  simp [tokenLoadOn]
+
+theorem tokenLoadOn_colors_univ {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {n : C → Nat} (f : (Sigma fun c : C => Fin (n c)) ≃ X)
+    (E : Finset X) :
+    tokenLoadOn f E (Finset.univ : Finset C) = E.card := by
+  rw [tokenLoadOn_eq_choiceHitCountOn]
+  simp [choiceHitCountOn]
+
 theorem choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
     {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
