@@ -1658,6 +1658,11 @@ def OddCoreHighModulusColumnPackingScheduleBlocksGoal : Prop :=
   PrefixCount.Qge2SignedColumnPackingGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal
 
+theorem not_oddCoreHighModulusColumnPackingScheduleBlocksGoal :
+    ¬ OddCoreHighModulusColumnPackingScheduleBlocksGoal := by
+  intro hBlocks
+  exact PrefixCount.not_qge2SignedColumnPackingGoal hBlocks.1
+
 def OddModulusToriV4MinimalBlocksGoal : Prop :=
   OddCoreHighModulusScheduleBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
@@ -1673,6 +1678,16 @@ def OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
 def OddModulusToriV4ColumnPackingScheduleAddBlocksGoal : Prop :=
   OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
   OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
+theorem not_oddModulusToriV4ColumnPackingScheduleBlocksGoal :
+    ¬ OddModulusToriV4ColumnPackingScheduleBlocksGoal := by
+  intro hBlocks
+  exact not_oddCoreHighModulusColumnPackingScheduleBlocksGoal hBlocks.1
+
+theorem not_oddModulusToriV4ColumnPackingScheduleAddBlocksGoal :
+    ¬ OddModulusToriV4ColumnPackingScheduleAddBlocksGoal := by
+  intro hBlocks
+  exact not_oddCoreHighModulusColumnPackingScheduleBlocksGoal hBlocks.1
 
 def OddModulusToriV4SuccessorScheduleBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧

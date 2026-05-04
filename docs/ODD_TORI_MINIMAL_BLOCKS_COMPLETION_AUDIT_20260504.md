@@ -97,6 +97,7 @@ theorem RoundComposite.Concrete
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
 | Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_successorSchedule` | Lean-closed conditional | Directly consumes the three remaining fields |
 | q>=2 pure column-packing overreach | `PrefixCount.not_qge2SignedColumnPackingGoal` | Lean-closed negative | Shows the attempted arbitrary-row packing replacement is false |
+| q>=2 column-packing block packet | `not_oddModulusToriV4ColumnPackingScheduleBlocksGoal` | Lean-closed negative | Prevents treating the false packet as an active endpoint |
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
