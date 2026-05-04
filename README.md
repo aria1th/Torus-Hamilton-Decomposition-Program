@@ -350,20 +350,14 @@ when `m` is odd and `m >= 3`.
   proof for every dimension `d >= 2` and odd modulus `m >= 3`, with even
   dimensions handled by the D2/product wrapper and the main construction
   concentrated in the odd-dimensional core.
-- `docs/ODD_TORI_CURRENT_GOAL_V2_3_20260503.md`: current concise goal reset
-  after the `d < 29` boundary review, the q=1 plus-family split, the
-  root-flat geometry split, and the first Active-Hall residue-symboling
-  interface.  It records that the finite boundary table is audit/regression
-  evidence only, that `(13,3)` is absorbed by the uniform small-modulus
-  packet-lift pattern, and that the current lowest-level Lean endpoint has six
-  remaining assumptions: q>=2 row margin plans, q>=2 signed matrix
-  realization, q=1 plus-set margins, root-flat return construction,
-  root-flat equivalence step compatibility, and the small-modulus Hall-slack
-  packet-lift theorem.  It also records the small-branch internal split through
-  Active-Hall feasible residues and Hall realization, and the successor-indexed
-  and `d`-indexed canonical root-step Cayley lift now closed in Lean.  The
-  preferred current endpoint uses `PrefixCountRootFlatCanonicalReturnGoal`
-  instead of the older separate root-flat return/equivalence pair.
+- `docs/ODD_TORI_CURRENT_GOAL_V3_1_20260504.md`: current concise goal reset
+  for the v4 all-dimensional odd-modulus theorem.  The active proof spine is
+  D2/D3/D5/D7 seeds plus product closure plus successor closure
+  `b -> 2*b + 1`; the dispatcher and conditional successor split are already
+  Lean-closed.  The remaining work is exactly the four-field preferred block
+  packet `OddModulusToriV4PreferredBlocksGoal`: q>=2 signed seed closure,
+  q=1 auxiliary special-matching data, root-flat canonical return, and the
+  small-modulus slack-packet lift.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

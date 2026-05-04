@@ -1459,6 +1459,18 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_preferred_blocks
     oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxSpecialMatchingData_and_rootFlatCanonical
       hQge2Closure hQeq1Data hReturn
 
+theorem odd_successor_small_modulus_base_tail_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m := by
+  rcases hBlocks with ⟨_hQge2Closure, _hQeq1Data, _hReturn, hSmallPacket⟩
+  exact odd_successor_small_modulus_base_tail_of_slackPacketLift
+    hSmallPacket hb5 hmodd hm3 hmSmall hb
+
 theorem oddSuccessorClosureGoal_of_v4_preferred_blocks
     (hBlocks : OddModulusToriV4PreferredBlocksGoal) :
     OddSuccessorClosureGoal := by
