@@ -108,6 +108,7 @@ theorem RoundComposite.Concrete
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
 | q>=2 proper-cut direct wrappers | `ordinaryQge2SignedMatrixGoal_of_properCutClosure`, `ordinaryQge2SignedCoreGoal_of_properCutClosure` | Lean-closed | Routes the first remaining field directly into the q>=2 matrix/core branch |
 | First-hit schedule construction | first-hit schedule, row-Latin, layer-bijective, and head-tail return bridges | Lean-closed | `RoundComposite/OddCore.lean` |
+| First-hit head cycle coordinate | `prefixCountFirstHitReturnBaseStep_cycleCoordinate` | Lean-closed | `C.prim_zero` gives a coordinate for the head map |
 | Tail monodromy bijectivity | `prefixCountFirstHitReturnTailMonodromy_bijective` | Lean-closed | Leaves only orbit/transitivity for the tail map |
 | Tail orbit from rank | `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank` | Lean-closed conditional | A bijective odometer rank is enough |
 | Tail rank from equivalence | `prefixCountFirstHitReturnTailRankGoal_of_rankEquiv` | Lean-closed conditional | An explicit equivalence odometer is enough |

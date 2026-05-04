@@ -1652,6 +1652,14 @@ def prefixCountFirstHitReturnBaseStep {d m : Nat}
     (C : PrefixCount.Parts d) (c : Fin d) : ZMod m → ZMod m :=
   fun z => z + (C.zero c : ZMod m)
 
+noncomputable def prefixCountFirstHitReturnBaseStep_cycleCoordinate
+    {d m : Nat} [NeZero m]
+    {C : PrefixCount.Parts d} (hC : C.Admissible m) (c : Fin d) :
+    Shared.CycleCoordinate m
+      (prefixCountFirstHitReturnBaseStep (m := m) C c) := by
+  unfold prefixCountFirstHitReturnBaseStep
+  exact Shared.CycleCoordinate.zmodAddConstOfCoprime (hC.prim_zero c)
+
 theorem prefixCountFirstHitReturnBaseStep_iterate
     {d m : Nat} (C : PrefixCount.Parts d) (c : Fin d) :
     ∀ n : Nat, ∀ z : ZMod m,

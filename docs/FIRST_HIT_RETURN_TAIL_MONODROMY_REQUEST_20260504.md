@@ -275,10 +275,21 @@ form:
 (head, tail) |-> (head + C.zero c, fiberStep head tail)
 ```
 
-The head map is already Lean-closed as a single cycle from:
+The head map is already Lean-closed as a single cycle and as a cycle
+coordinate from:
 
 ```lean
 C.Admissible m
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitCanonicalSchedule_zeroCoordinateCycle :
+    Shared.IsSingleCycleMap
+      (fun z : ZMod m => z + (C.zero c : ZMod m))
+
+noncomputable def RoundComposite.Concrete
+  .prefixCountFirstHitReturnBaseStep_cycleCoordinate :
+    Shared.CycleCoordinate m
+      (prefixCountFirstHitReturnBaseStep C c)
 ```
 
 and specifically `Nat.Coprime (C.zero c) m`.
