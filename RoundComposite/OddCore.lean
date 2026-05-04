@@ -6640,6 +6640,10 @@ def OddCoreHighModulusReturnTailOrbitTrellisBlocksGoal : Prop :=
 def OddCoreHighModulusReturnTailClosedTrellisBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 
+def OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal ∧
+  PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+
 def OddCoreHighModulusReturnTailTriangularBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal
@@ -6693,6 +6697,10 @@ def OddModulusToriV4ReturnTailClosedTrellisBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailClosedTrellisBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
 
+def OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
 def OddModulusToriV4ReturnTailTriangularBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailTriangularBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
@@ -6723,6 +6731,10 @@ def OddModulusToriV4ReturnTailOrbitTrellisAddBlocksGoal : Prop :=
 
 def OddModulusToriV4ReturnTailClosedTrellisAddBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailClosedTrellisBlocksGoal ∧
+  OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
+def OddModulusToriV4ReturnTailClosedFullSupportTrellisAddBlocksGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
   OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
 def OddModulusToriV4ReturnTailTriangularTrellisAddBlocksGoal : Prop :=
@@ -7171,6 +7183,18 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailClosedTrellis_bloc
       (oddCoreHighModulusReturnTailOrbitTrellisBlocksGoal_of_closedTrellis
         hBlocks))
 
+theorem oddCoreHighModulusReturnTailClosedTrellisBlocksGoal_of_fullSupport
+    (hBlocks : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddCoreHighModulusReturnTailClosedTrellisBlocksGoal :=
+  PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+    hBlocks.1 hBlocks.2
+
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailClosedFullSupportTrellis_blocks
+    (hBlocks : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailClosedTrellis_blocks
+    (oddCoreHighModulusReturnTailClosedTrellisBlocksGoal_of_fullSupport hBlocks)
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailOrbitTrellis_blocks
     (hBlocks : OddCoreHighModulusReturnTailOrbitTrellisBlocksGoal) :
     OddCoreHighModulusPrefixCountGoal :=
@@ -7403,6 +7427,14 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailClosedTrellis_blocks
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_high_and_successorSmall
     (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailClosedTrellis_blocks
+      hBlocks.1)
+    hBlocks.2
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall
+    (oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailClosedFullSupportTrellis_blocks
       hBlocks.1)
     hBlocks.2
 
@@ -7990,6 +8022,17 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis_blocks
     hBlocks.2
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis_blocks
+    ⟨oddCoreHighModulusReturnTailClosedTrellisBlocksGoal_of_fullSupport
+        hBlocks.1,
+      hBlocks.2⟩
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
@@ -8255,6 +8298,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
     prefixCountFirstHitReturnTailCocycleUnitGoal
     hSmall hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
+    (PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_of_fullSupport
+      hFull hLift)
+    hSmall hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
@@ -8263,6 +8318,18 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
     Shared.CayleyHamiltonDecomposition d m :=
   odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
     hQge2Trellis
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisAdd
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
+    hFull hLift
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
     hd2 hmodd hm3
 
@@ -8395,6 +8462,13 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis_blocks
     OddModulusToriAllDimensionsGoal := by
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis_blocks
+    hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis_blocks
     hBlocks hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis
@@ -8595,6 +8669,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
     hQge2Trellis hSmall hd2 hmodd hm3
 
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
+    hFull hLift hSmall hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellisAdd
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
@@ -8602,6 +8685,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellisAdd
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellisAdd
     hQge2Trellis hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisAdd
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisAdd
+    hFull hLift hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :

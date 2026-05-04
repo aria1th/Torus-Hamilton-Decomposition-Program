@@ -31,12 +31,33 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-Remaining fields:
+Lean now also exposes the fully split endpoint:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal : Prop :=
+  (PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal ∧
+   PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal) ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+Remaining fields for the split endpoint:
+
+```lean
+PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
+PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
+
+Equivalently, the first two fields can be replaced by the coarser field
+`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.
 
 After the completed q>=2 GPT-5.5 Pro response, Lean now exposes a sharper
 standard finite-Hoffman split for the first field:

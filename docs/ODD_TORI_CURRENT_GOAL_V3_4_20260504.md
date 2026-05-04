@@ -363,18 +363,36 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
-## Remaining Fields
-
-The goal is not complete.  The remaining hard fields are:
+After the full-support q>=2 split, Lean also exposes the direct endpoint:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailClosedFullSupportTrellisBlocksGoal : Prop :=
+  (PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal ∧
+   PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal) ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
+    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
+    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+## Remaining Fields
+
+The goal is not complete.  For the sharpest Lean-exposed split, the remaining
+hard fields are:
+
+```lean
+PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
+PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
-The q>=2 trellis field can now be supplied by the stronger pair
-`PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal` and
-`PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal`.  Lean also exposes the
+Equivalently, the first two fields may be replaced by the single coarser field
+`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`.  Lean also exposes the
 separation endpoint
 `PrefixCount.OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, which implies
 the indicator-to-full-support half.
