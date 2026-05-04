@@ -2466,6 +2466,14 @@ def OrdinaryQeq1AuxDegreeArithmeticGoal : Prop :=
     (∑ i : Fin n, ordinaryQeq1AuxDegree n r i) =
       ((n - 2) / 2) * (n - 1)
 
+def OrdinaryQeq1AuxDegreeTotalGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    (∑ i : Fin n, ordinaryQeq1AuxDegree n r i) =
+      ((n - 2) / 2) * (n - 1)
+
 def OrdinaryQeq1AuxMatrixGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
@@ -2499,6 +2507,25 @@ theorem ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
       hcols hrowLe htotal with
     ⟨M⟩
   exact ⟨M.toOrdinaryQeq1AuxDegreeMatrixData⟩
+
+theorem ordinaryQeq1AuxDegreeArithmeticGoal_of_total
+    (hTotal : OrdinaryQeq1AuxDegreeTotalGoal) :
+    OrdinaryQeq1AuxDegreeArithmeticGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  refine ⟨by omega, ?_, hTotal hdodd hd5 hmodd hrlt hrpos⟩
+  intro i
+  unfold ordinaryQeq1AuxDegree
+  by_cases hlow : i.val < r - 1
+  · simp only [hlow, ↓reduceIte]
+    rw [Nat.div_le_iff_le_mul_add_pred (by decide : 0 < 2)]
+    omega
+  · by_cases hmid : i.val < r
+    · simp only [hlow, hmid, ↓reduceIte]
+      rw [Nat.div_le_iff_le_mul_add_pred (by decide : 0 < 2)]
+      omega
+    · simp only [hlow, hmid, ↓reduceIte]
+      rw [Nat.div_le_iff_le_mul_add_pred (by decide : 0 < 2)]
+      omega
 
 def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
   ∀ {n r : Nat},

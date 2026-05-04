@@ -131,7 +131,9 @@ PrefixCount.ordinaryQeq1AuxDegree
 PrefixCount.UniformColumnDegreeMatrixData
 PrefixCount.UniformColumnDegreeMatrixGoal
 PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
+PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal
 PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
+PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total
 PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
 PrefixCount.OrdinaryQeq1AuxMatrixData
 PrefixCount.OrdinaryQeq1SpecialMatchingData
@@ -212,11 +214,15 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .OddModulusToriV4UniformDegreeBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4UniformTotalBlocksGoal
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_uniform_degree_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_uniform_total_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
@@ -261,6 +267,9 @@ generic uniform-column `0/1` matrix realization:
 `PrefixCount.UniformColumnDegreeMatrixGoal` imply
 `PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` through
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree`.
+The bounds and positivity part of that arithmetic is Lean-closed from the single
+total-degree identity `PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal` through
+`PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total`.
 
 Small-modulus successor branch:
 
@@ -341,10 +350,29 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+The endpoint where the arithmetic side is lowered to the total-degree identity is:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4UniformTotalBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal ∧
+  PrefixCount.UniformColumnDegreeMatrixGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_uniform_total_blocks
+    (hBlocks : OddModulusToriV4UniformTotalBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 auxiliary degree arithmetic, uniform-column matrix, and
+2. prove the q=1 auxiliary total-degree identity, uniform-column matrix, and
    special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
