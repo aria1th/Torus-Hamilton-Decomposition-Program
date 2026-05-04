@@ -142,6 +142,28 @@ def prefixCountRootStepInv (d m : Nat) :
     Fin d → PrefixCountRootState d m → PrefixCountRootState d m :=
   fun i w j => if (i : Nat) = j then w j - 1 else w j
 
+theorem prefixCountRootStep_eq_self_of_last {d m : Nat}
+    (i : Fin d) (hi : i.val = d - 1)
+    (w : PrefixCountRootState d m) :
+    prefixCountRootStep d m i w = w := by
+  funext j
+  have hij : ¬(i : Nat) = j := by
+    intro h
+    have hj : j.val < d - 1 := j.isLt
+    omega
+  simp [prefixCountRootStep, hij]
+
+theorem prefixCountRootStepInv_eq_self_of_last {d m : Nat}
+    (i : Fin d) (hi : i.val = d - 1)
+    (w : PrefixCountRootState d m) :
+    prefixCountRootStepInv d m i w = w := by
+  funext j
+  have hij : ¬(i : Nat) = j := by
+    intro h
+    have hj : j.val < d - 1 := j.isLt
+    omega
+  simp [prefixCountRootStepInv, hij]
+
 theorem prefixCountRootStepInv_apply_step {d m : Nat}
     (i : Fin d) (w : PrefixCountRootState d m) :
     prefixCountRootStepInv d m i (prefixCountRootStep d m i w) = w := by
@@ -230,6 +252,33 @@ def prefixCountLambdaRho (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
     s
   else
     ⟨s.val - 1, by omega⟩
+
+theorem prefixCountLambdaRho_eq_self_of_val_zero
+    {d : Nat} (rho : Fin d) {s : Fin d} (hs : s.val = 0) :
+    prefixCountLambdaRho d rho s = s := by
+  ext
+  simp [prefixCountLambdaRho, hs]
+
+theorem prefixCountLambdaRho_eq_rho_of_val_one
+    {d : Nat} (rho : Fin d) {s : Fin d} (hs : s.val = 1) :
+    prefixCountLambdaRho d rho s = rho := by
+  ext
+  simp [prefixCountLambdaRho, hs]
+
+theorem prefixCountLambdaRho_eq_self_of_rho_lt
+    {d : Nat} (rho : Fin d) {s : Fin d}
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : rho.val < s.val) :
+    prefixCountLambdaRho d rho s = s := by
+  ext
+  simp [prefixCountLambdaRho, hs0, hs1, hlt]
+
+theorem prefixCountLambdaRho_val_eq_pred
+    {d : Nat} (rho : Fin d) {s : Fin d}
+    (hs0 : s.val ≠ 0) (hs1 : s.val ≠ 1)
+    (hlt : ¬rho.val < s.val) :
+    (prefixCountLambdaRho d rho s).val = s.val - 1 := by
+  simp [prefixCountLambdaRho, hs0, hs1, hlt]
 
 def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
   if _hs0 : s.val = 0 then
