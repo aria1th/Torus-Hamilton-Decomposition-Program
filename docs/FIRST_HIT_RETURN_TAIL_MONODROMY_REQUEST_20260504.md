@@ -1,0 +1,152 @@
+# First-Hit Return-Tail Monodromy Request
+
+Date: 2026-05-04.
+
+## Purpose
+
+This is the current high-modulus cyclicity request for the all-dimensional
+odd-modulus Lean goal.  It supersedes the older schedule-wide request as the
+preferred target for the first-hit canonical high branch.
+
+The point is to prove only the monodromy that remains after Lean has already
+constructed the first-hit schedule, proved row-Latin/layer-bijective facts, and
+reduced the root-flat return to a head-tail skew product.
+
+## Files To Read
+
+1. `RoundComposite/OddCore.lean`
+2. `RoundComposite/PrefixCount.lean`
+3. `Shared/Monodromy.lean`
+4. `Shared/RootFlat.lean`
+5. `docs/ODD_TORI_CURRENT_GOAL_V3_2_20260504.md`
+6. Optional legacy context: `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`
+7. Optional older request: `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`
+
+## Exact Lean Target
+
+```lean
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailMonodromyGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d)
+      {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      Shared.IsSingleCycleMap
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+```
+
+where:
+
+```lean
+noncomputable def RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromy
+    {d m : Nat} [NeZero m] (hd2 : 2 <= d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d) :
+    (Fin (d - 2) -> ZMod m) -> (Fin (d - 2) -> ZMod m)
+```
+
+is the tail projection of the `m`-fold root-flat return, started at head
+coordinate `0`.
+
+## Already Lean-Closed Bridges
+
+Lean proves that this target is enough for the previous section-monodromy
+target:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailMonodromy
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    PrefixCountFirstHitHeadTailSectionMonodromyGoal
+```
+
+It also proves the definitional bridge:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitSectionReturn_eq_returnTailMonodromy :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (prefixCountFirstHitReturnBaseStep C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c))
+        (0 : ZMod m) m =
+      prefixCountFirstHitReturnTailMonodromy hd2 L c
+```
+
+and the final high-branch/final-theorem adapters:
+
+```lean
+theorem RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailMonodromy
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal) :
+    OddCoreHighModulusPrefixCountGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailMonodromy
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hTail : PrefixCountFirstHitReturnTailMonodromyGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+## Mathematical Shape Expected
+
+For fixed color `c`, the first return on the head-tail coordinates has the
+form:
+
+```text
+(head, tail) |-> (head + C.zero c, fiberStep head tail)
+```
+
+The head map is already Lean-closed as a single cycle from:
+
+```lean
+C.Admissible m
+```
+
+and specifically `Nat.Coprime (C.zero c) m`.
+
+The requested theorem should prove that the full-round tail monodromy over one
+head cycle is a single cycle on:
+
+```lean
+Fin (d - 2) -> ZMod m
+```
+
+The expected route is triangular/skew:
+
+1. Choose a tail-coordinate order compatible with the first-hit rule.
+2. Prove the induced return on each next coordinate is a skew extension over
+   the previously proved prefix.
+3. Compute the total carry for each extension from `C.Admissible`.
+4. Use `Shared.single_cycle_of_skewProduct_base_orbit_monodromy` or the
+   lower-level skew-cycle lemma already available in `Shared/Monodromy.lean`.
+
+The carry should ultimately be controlled by the primitive row data in
+`PrefixCount.Parts.Admissible`, especially the signed primitive differences
+that enter through `C.toMatrix hd2`.
+
+## Desired Output
+
+The most useful response is a Lean-oriented proof plan plus the smallest
+auxiliary theorem list.  If code is attempted, prioritize the following:
+
+1. A named coordinate formula for
+   `prefixCountFirstHitReturnTailMonodromy hd2 L c tail j`.
+2. A triangular/skew decomposition theorem for that map.
+3. A total-carry theorem reducing the `j`th carry to the corresponding
+   primitive field in `C.Admissible`.
+4. A reusable induction theorem that turns those carries into
+   `Shared.IsSingleCycleMap`.
+
+Avoid reproving row-Latin, layer bijectivity, or the final torus lift; Lean
+already routes those once the tail monodromy target is proved.
+
