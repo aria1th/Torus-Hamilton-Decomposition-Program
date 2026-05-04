@@ -37,6 +37,26 @@ def choiceLowHitCount {T : Nat} {X C : Type*}
   ((Finset.univ : Finset X).filter
     (fun x => choice x ∈ U ∧ (I.active x ∩ U).card ≤ S.card)).card
 
+theorem choiceLowHitCount_symbols_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x) (U : Finset C) :
+    choiceLowHitCount I choice U (∅ : Finset (Fin T)) = 0 := by
+  classical
+  rw [choiceLowHitCount, Finset.card_eq_zero]
+  ext x
+  constructor
+  · intro hx
+    rcases Finset.mem_filter.mp hx with ⟨_hxuniv, hU, hle⟩
+    have hmem : choice x ∈ I.active x ∩ U := by
+      simp [hchoice x, hU]
+    have hpos : 0 < (I.active x ∩ U).card :=
+      Finset.card_pos.mpr ⟨choice x, hmem⟩
+    have hle0 : (I.active x ∩ U).card ≤ 0 := by
+      simpa using hle
+    omega
+  · simp
+
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
@@ -1934,6 +1954,39 @@ theorem eraseLastHallCutsGoal_of_choice
     EraseLastHallCutsGoal.{uX, uC} :=
   eraseLastHallCutsGoal_of_selection
     (eraseLastHallCutsSelectionGoal_of_choice hChoice)
+
+theorem eraseLastHallCutsChoice_zero {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ choice : X → C,
+      ∃ _hchoice : ∀ x : X, choice x ∈ I.active x,
+        (∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 0)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin 0),
+            M.cutMass U (S.image (Fin.castSucc : Fin 0 → Fin (0 + 1)))
+                + Incidence.choiceLowHitCount I choice U S
+              ≤ I.cutCap U
+                  (S.image (Fin.castSucc : Fin 0 → Fin (0 + 1))) := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 0) with
+    ⟨f, hfActive⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 0) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 0) f c
+  refine ⟨choice, hchoice, hdegree, ?_⟩
+  intro U S
+  have hS : S = ∅ := by
+    ext σ
+    exact Fin.elim0 σ
+  subst S
+  rw [Incidence.choiceLowHitCount_symbols_empty I choice hchoice U]
+  simp [M.cutMass_symbols_empty_eq_cutCap U]
 
 theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
