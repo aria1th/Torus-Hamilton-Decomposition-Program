@@ -785,6 +785,39 @@ theorem exists_singleSymbol_bijective_token_matching
     (Fintype.bijective_iff_injective_and_card f).2 ⟨hfInj, hcard⟩
   exact ⟨Equiv.ofBijective f hfBij, hfActive⟩
 
+theorem choiceDegree_of_bijective_token_matching
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (σ : Fin T)
+    (f : (Sigma fun c : C => Fin (M.val c σ)) ≃ X) (c : C) :
+    Incidence.choiceDegree (fun x : X => (f.symm x).1) c =
+      M.val c σ := by
+  classical
+  unfold Incidence.choiceDegree
+  calc
+    ((Finset.univ : Finset X).filter
+        (fun x => (f.symm x).1 = c)).card
+        = ∑ x : X, if (f.symm x).1 = c then 1 else 0 := by
+            rw [Finset.card_filter]
+    _ = ∑ q : Sigma fun c : C => Fin (M.val c σ),
+          if q.1 = c then 1 else 0 := by
+            exact Fintype.sum_equiv f.symm
+              (fun x : X => if (f.symm x).1 = c then (1 : Nat) else 0)
+              (fun q : Sigma fun c : C => Fin (M.val c σ) =>
+                if q.1 = c then (1 : Nat) else 0)
+              (by intro x; simp)
+    _ = M.val c σ := by
+            rw [Fintype.sum_sigma]
+            calc
+              (∑ x : C, ∑ q : Fin (M.val x σ),
+                  if x = c then (1 : Nat) else 0)
+                  = ∑ x : C, if x = c then M.val x σ else 0 := by
+                      apply Finset.sum_congr rfl
+                      intro x _hx
+                      by_cases hxc : x = c <;> simp [hxc]
+              _ = M.val c σ := by
+                      simp
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
