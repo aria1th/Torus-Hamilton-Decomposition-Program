@@ -246,7 +246,8 @@ def RoundComposite.Concrete
       (∑ x : (Fin k -> ZMod m),
         prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
         =
-        (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
+        ((-1 : ZMod m) ^ (k + 1)) *
+          (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
@@ -287,6 +288,7 @@ This route avoids proving orbit transitivity directly.  It asks for:
 
 ```text
 every rank cocycle has the exact total carry `C.step c k - C.delta c`
+up to the canonical prefix sign `(-1)^(k+1)`.
 ```
 
 The older GPT-5.5 Pro response established the triangular/unit route and led
@@ -300,16 +302,30 @@ response id: resp_0db37919e35976200069f8bc2d05408192981ff22f53fe7f37
 response doc: docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_RESPONSE_20260504.md
 ```
 
-The response identifies the total carry as the row-entry difference
+Important correction after local finite verification: the exact target has the
+canonical prefix sign `(-1)^(k+1)`.  A small direct evaluator of the Lean
+definitions found `d=5,m=5` admissible examples where the unsigned equality is
+false, while
+
+```lean
+sum = ((-1 : ZMod m) ^ (k + 1)) *
+  (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
+```
+
+matches the observed values.  The sign is harmless for the unit-carry wrapper,
+because `(-1)^(k+1)` is a unit.
+
+The older response identifies the unsigned row-entry difference
 
 ```lean
 (((C.toMatrix hd2) c ⟨k + 2, _⟩ : Nat) : ZMod m) -
 (((C.toMatrix hd2) c ⟨1, _⟩ : Nat) : ZMod m)
 ```
 
-and warns that this value should only be converted to the named
-`C.step c ⟨k, hk⟩ - C.delta c` expression after unfolding the local
-`Parts.toMatrix` definitions.
+as the primitive row quantity.  In the current Lean target this row quantity
+must be multiplied by the prefix sign above, and should only then be converted
+to the named `C.step c ⟨k, hk⟩ - C.delta c` expression after unfolding the
+local `Parts.toMatrix` definitions.
 
 Lean now has the cocycle expansion and matrix-projection endpoints for this
 route:
@@ -332,7 +348,7 @@ proves bijectivity of the tail map, preservation of this increment-dependency
 under `Shared.skewFiberIterate`, and the generic lower-triangular odometer
 theorem.  It now also proves the one-step first-hit hit-condition locality and
 the reduction from exact sum to unit carry.  The remaining request is the exact
-cocycle-sum calculation.
+cocycle-sum calculation, with the `(-1)^(k+1)` factor included.
 
 Useful closed bridges:
 
@@ -457,14 +473,15 @@ The expected mathematical route is:
 
 1. choose a tail-coordinate order compatible with the first-hit rule;
 2. prove each next coordinate is a skew extension over the previous prefix;
-3. compute the total carry from the primitive row data in `C.Admissible`;
+3. compute the total carry from the primitive row data in `C.Admissible`,
+   including the canonical `(-1)^(k+1)` prefix sign;
 4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks`.
 
 Do not spend effort on the generic lower-triangular odometer theorem, row-Latin,
 layer bijectivity, root-flat schedule construction, or the final torus lift.
 Those bridges are already Lean-closed.  The one-step hit-condition dependency
 and the reduction from exact sum to unit carry are also Lean-closed; the open
-return-tail field is now exactly the total cocycle-sum formula above.
+return-tail field is now exactly the signed total cocycle-sum formula above.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 

@@ -76,7 +76,13 @@ The completed response records the intended arithmetic value as
 ```
 
 which should then be identified with the target-side expression
-`((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int) : ZMod m)`.
+`((-1 : ZMod m) ^ (k + 1)) *
+  ((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int) : ZMod m)`.
+
+Correction recorded after local finite verification: the unsigned
+`C.step - C.delta` target is false for admissible small examples.  The
+canonical prefix-count carry has the sign `(-1)^(k+1)`, which is still a unit
+and therefore preserves the unit-carry reduction.
 
 It explicitly asks not to reprove the generic lower-triangular odometer theorem.
 That theorem is already closed in `Shared` and is consumed by:

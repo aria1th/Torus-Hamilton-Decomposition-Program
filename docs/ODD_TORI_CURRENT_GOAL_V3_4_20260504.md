@@ -292,7 +292,9 @@ theorem RoundComposite.Concrete
 
 The currently sharpest return-tail endpoint uses trellis for the q>=2 branch,
 the Lean-closed one-step hit-condition locality theorem, and an exact cocycle
-sum formula for the return-tail branch:
+sum formula for the return-tail branch.  The exact formula is signed: the rank
+`k` total carry is `(-1)^(k+1) * (C.step c k - C.delta c)`, not the unsigned
+row difference.  The sign is a unit, so the unit-carry reduction is unchanged.
 
 ```lean
 theorem RoundComposite.Concrete

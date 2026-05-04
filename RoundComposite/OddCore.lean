@@ -3027,7 +3027,8 @@ def PrefixCountFirstHitReturnTailCocycleSumGoal : Prop :=
     ∀ c : Fin d, ∀ k : Nat, ∀ hk : k < d - 2,
       (∑ x : (Fin k → ZMod m),
         prefixCountFirstHitReturnTailCocycle hd2 L c k hk x) =
-        (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
+        ((-1 : ZMod m) ^ (k + 1)) *
+          (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
 
 def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
   Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
@@ -3321,9 +3322,13 @@ theorem prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
     PrefixCountFirstHitReturnTailCocycleUnitGoal := by
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c k hk
   rw [hSum hd2 hdodd hd5 hmodd hdm hC L c k hk]
-  simpa [Int.cast_sub, Int.cast_natCast] using
-    PrefixCount.isUnit_zmod_intCast_of_intCoprime
-      (hC.prim_step c ⟨k, hk⟩)
+  exact
+    IsUnit.mul
+      (IsUnit.pow (k + 1) (IsUnit.neg isUnit_one))
+      (by
+        simpa [Int.cast_sub, Int.cast_natCast] using
+          PrefixCount.isUnit_zmod_intCast_of_intCoprime
+            (hC.prim_step c ⟨k, hk⟩))
 
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
