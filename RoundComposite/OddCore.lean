@@ -2898,6 +2898,71 @@ theorem prefixCountFirstHitReturnTailCocycle_eq_fiberIterate
   unfold prefixCountFirstHitReturnTailCocycle
   rw [prefixCountFirstHitReturnTailMonodromy_apply_eq_fiberIterate]
 
+theorem prefixCountFirstHitReturnTailCocycle_eq_sum_fiberStep_increment
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) (k : Nat) (hk : k < d - 2)
+    (x : Fin k → ZMod m) :
+    prefixCountFirstHitReturnTailCocycle hd2 L c k hk x =
+      ∑ u ∈ Finset.range m,
+        (prefixCountFirstHitReturnFiberStep hd2 L c
+            (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+              (0 : ZMod m))
+            (Shared.skewFiberIterate
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+            ⟨k, hk⟩ -
+          Shared.skewFiberIterate
+              (prefixCountFirstHitReturnBaseStep (m := m) C c)
+              (prefixCountFirstHitReturnFiberStep hd2 L c)
+              u (0 : ZMod m)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩) := by
+  let baseStep := prefixCountFirstHitReturnBaseStep (m := m) C c
+  let fiberStep := prefixCountFirstHitReturnFiberStep hd2 L c
+  let tail0 := Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x
+  let j : Fin (d - 2) := ⟨k, hk⟩
+  rw [prefixCountFirstHitReturnTailCocycle_eq_fiberIterate
+    (hd2 := hd2) (C := C) L c k hk x]
+  have hgen :=
+    Shared.skewFiberIterate_coord_eq_add_sum_range
+      baseStep fiberStep
+      (fun z tail => fiberStep z tail j - tail j) j
+      (by
+        intro z tail
+        simp [sub_eq_add_neg, add_assoc, add_comm, add_left_comm])
+      m (0 : ZMod m) tail0
+  have hzero : tail0 j = 0 := by
+    simp [tail0, j]
+  rw [hgen, hzero, zero_add]
+
+theorem prefixCountFirstHitReturnTailCocycle_eq_sum_hitCondition
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) (k : Nat) (hk : k < d - 2)
+    (x : Fin k → ZMod m) :
+    prefixCountFirstHitReturnTailCocycle hd2 L c k hk x =
+      ∑ u ∈ Finset.range m,
+        ∑ t ∈ Finset.range m,
+          if prefixCountFirstHitReturnFiberHitCondition hd2 L c
+              (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+                (0 : ZMod m))
+              (Shared.skewFiberIterate
+                (prefixCountFirstHitReturnBaseStep (m := m) C c)
+                (prefixCountFirstHitReturnFiberStep hd2 L c)
+                u (0 : ZMod m)
+                (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+              ⟨k, hk⟩ t
+          then (1 : ZMod m) else 0 := by
+  rw [prefixCountFirstHitReturnTailCocycle_eq_sum_fiberStep_increment
+    (hd2 := hd2) (C := C) L c k hk x]
+  apply Finset.sum_congr rfl
+  intro u _hu
+  rw [prefixCountFirstHitReturnFiberStep_increment_eq_hitCondition_sum]
+
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
