@@ -2031,6 +2031,28 @@ theorem odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks
       hBlocks)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_successorSchedule
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks
+    ⟨hQge2Proper, hSchedule, hSmall⟩
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks
+    ⟨hQge2Proper, hSchedule, hSmall⟩
+    hd2 hmodd hm3
+
 theorem odd_successor_small_modulus_base_tail_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
     {b m : Nat}

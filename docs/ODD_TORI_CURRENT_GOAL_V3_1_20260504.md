@@ -179,6 +179,21 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+For proof scripts that prefer avoiding the tuple packet, Lean also exposes the
+direct three-argument alias:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_successorSchedule
+    (hQge2Proper :
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 The active proof obligations are exactly the three fields of this packet:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`
