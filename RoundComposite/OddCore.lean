@@ -1467,6 +1467,11 @@ def OddModulusToriV4PreferredBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4ProperCutBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
 def OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal ∧
@@ -1619,6 +1624,38 @@ theorem odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
       hBlocks.2.1, hBlocks.2.2⟩
   odd_modulus_tori_all_dimensions_of_v4_targetHall_blocks
     targetHallBlocks hd2 hmodd hm3
+
+theorem oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal) :
+    OddModulusToriV4PreferredBlocksGoal :=
+  ⟨PrefixCount.ordinaryQge2SignedSeedClosureGoal_of_properCutClosure
+      hBlocks.1,
+    hBlocks.2.1, hBlocks.2.2⟩
+
+theorem oddSuccessorClosureGoal_of_v4_properCut_blocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_preferred_blocks
+    (oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks hBlocks)
+
+theorem odd_successor_closure_of_v4_properCut_blocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_v4_properCut_blocks hBlocks)
+    hb5 hmodd hm3 hb
+
+theorem odd_modulus_tori_all_dimensions_of_v4_properCut_blocks
+    (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
+    (oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks hBlocks)
+    hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
     (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)

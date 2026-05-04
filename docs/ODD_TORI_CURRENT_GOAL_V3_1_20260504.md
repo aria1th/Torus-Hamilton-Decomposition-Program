@@ -171,7 +171,8 @@ For the first item, Lean now exposes the equivalent nontrivial-cut formulation
 `J = empty` and `J = univ` are no longer external obligations:
 `PrefixCount.ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` proves that
 they are forced by the row/column sum hypotheses and the `qge2ColumnCapacity`
-endpoint arithmetic.
+endpoint arithmetic.  The direct final-theorem endpoint from this formulation is
+`RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_v4_properCut_blocks`.
 
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for
