@@ -53,10 +53,15 @@ Lean also exposes the fully split small-branch endpoint:
 ```lean
 def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
 def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+def ActiveHall.FiniteHoffman.CompatibleDeWerraGoal : Prop := ...
 
 theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
     (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
     ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 
 def RoundComposite.Concrete
   .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
@@ -78,14 +83,15 @@ Remaining fields for the most split endpoint:
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
-ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
 ```
 
 Equivalently, the first two fields can be replaced by the coarser field
 `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields can
 be replaced by the coarser field `OddSuccessorSmallModulusBaseTailGoal`.  The
-raw ActiveHall field can also be replaced by the slightly coarser field
-`ActiveHall.FiniteHoffman.ExactEdgeColoringGoal`.
+raw ActiveHall field can be used instead of
+`ActiveHall.FiniteHoffman.CompatibleDeWerraGoal`; the slightly coarser field
+`ActiveHall.FiniteHoffman.ExactEdgeColoringGoal` is also sufficient.
 
 After the completed q>=2 GPT-5.5 Pro response, Lean now exposes a sharper
 standard finite-Hoffman split for the first field:
@@ -530,6 +536,11 @@ interface and adapters:
 ```lean
 def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
 def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+def ActiveHall.FiniteHoffman.CompatibleDeWerraGoal : Prop := ...
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 
 theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
     (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
@@ -554,7 +565,7 @@ Follow-up exact edge-colouring proof request:
 request doc: docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_REQUEST_20260504.md
 response id: resp_0cd087a6b2f8d1cf0069f8e8faaf4881a0beb65e653ae30d4c
 response doc: docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_RESPONSE_20260504.md
-latest status: in_progress on 2026-05-04
+latest status: completed on 2026-05-04
 ```
 
 Follow-up successor-small geometry request:

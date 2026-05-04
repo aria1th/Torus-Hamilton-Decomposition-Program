@@ -386,10 +386,15 @@ interface:
 ```lean
 def ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal : Prop := ...
 def ActiveHall.FiniteHoffman.ExactEdgeColoringGoal : Prop := ...
+def ActiveHall.FiniteHoffman.CompatibleDeWerraGoal : Prop := ...
 
 theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
     (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
     ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 
 def RoundComposite.Concrete
   .OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal : Prop :=
@@ -414,15 +419,16 @@ hard fields are:
 PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
 PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
 OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
-ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
 ```
 
 Equivalently, the first two fields may be replaced by the single coarser field
 `PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal`, and the last two fields may
 be replaced by the single coarser field
 `OddSuccessorSmallModulusBaseTailGoal`.  The raw ActiveHall field may also be
-replaced by `ActiveHall.FiniteHoffman.ExactEdgeColoringGoal`.  Lean also
-exposes the separation endpoint
+used in place of `ActiveHall.FiniteHoffman.CompatibleDeWerraGoal`, and
+`ActiveHall.FiniteHoffman.ExactEdgeColoringGoal` is an even coarser sufficient
+field.  Lean also exposes the separation endpoint
 `PrefixCount.OrdinaryQge2SupportViolationGivesIndicatorCutGoal`, which implies
 the indicator-to-full-support half.
 

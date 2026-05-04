@@ -21,10 +21,10 @@ Response id:
 response_id = resp_0cd087a6b2f8d1cf0069f8e8faaf4881a0beb65e653ae30d4c
 initial_status = queued
 initial_submit_date = 2026-05-04
-latest_poll_status = in_progress
+latest_poll_status = completed
 latest_poll_date = 2026-05-04
-final_status = pending
-final_poll_date = pending
+final_status = completed
+final_poll_date = 2026-05-04
 response_doc = docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_RESPONSE_20260504.md
 ```
 
@@ -40,6 +40,21 @@ theorem RoundComposite.ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
 ```
 
 Thus an answer proving `RawExactEdgeColoringGoal` is sufficient.
+
+Second implementation note after receiving the response: Lean now also exposes
+the still more standard compatible de Werra endpoint and adapters:
+
+```lean
+def RoundComposite.ActiveHall.FiniteHoffman.CompatibleDeWerraGoal : Prop := ...
+
+theorem RoundComposite.ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : CompatibleDeWerraGoal) :
+    RawExactEdgeColoringGoal
+
+theorem RoundComposite.ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : CompatibleDeWerraGoal) :
+    ExactEdgeColoringGoal
+```
 
 ## Files To Read
 

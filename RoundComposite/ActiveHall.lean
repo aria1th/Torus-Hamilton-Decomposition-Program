@@ -2469,6 +2469,37 @@ def activeDegree {X C : Type*} [Fintype X] [DecidableEq X]
   ((Finset.univ : Finset X).filter (fun x => c ∈ active x)).card
 
 /--
+Finite Hoffman/de Werra compatible edge-colouring theorem.
+
+`A k` and `B k` are the left and right vertices where colour `k` is allowed.
+The conclusion colours each copied edge by a colour compatible with both
+endpoints, using every colour exactly once at each of its allowed vertices.
+-/
+def CompatibleDeWerraGoal : Prop :=
+  ∀ {L : Type uC} {R : Type} {K : Type uX} {E : Type uC}
+    [Fintype L] [Fintype R] [Fintype K] [Fintype E]
+    [DecidableEq L] [DecidableEq R] [DecidableEq K] [DecidableEq E],
+    ∀ (left : E → L) (right : E → R)
+      (A : K → Finset L) (B : K → Finset R),
+      (∀ k : K, (A k).card = (B k).card) →
+      (∀ l : L,
+        ((Finset.univ : Finset E).filter (fun e => left e = l)).card =
+          ((Finset.univ : Finset K).filter (fun k => l ∈ A k)).card) →
+      (∀ r : R,
+        ((Finset.univ : Finset E).filter (fun e => right e = r)).card =
+          ((Finset.univ : Finset K).filter (fun k => r ∈ B k)).card) →
+      (∀ U : Finset L, ∀ V : Finset R,
+        ((Finset.univ : Finset E).filter
+          (fun e => left e ∈ U ∧ right e ∈ V)).card
+          ≤ ∑ k : K, min ((A k ∩ U).card) ((B k ∩ V).card)) →
+      ∃ κ : E → K,
+        (∀ e : E, left e ∈ A (κ e) ∧ right e ∈ B (κ e)) ∧
+        (∀ l : L, ∀ k : K, l ∈ A k →
+          ∃! e : E, left e = l ∧ κ e = k) ∧
+        (∀ r : R, ∀ k : K, r ∈ B k →
+          ∃! e : E, right e = r ∧ κ e = k)
+
+/--
 The most standard copied-edge colouring form: colour every copied edge by an
 `x`, respecting active left endpoints, with uniqueness over every `(x, sigma)`
 and every active `(x, c)`.
@@ -2490,6 +2521,53 @@ def RawExactEdgeColoringGoal : Prop :=
           ∃! e : E, κ e = x ∧ right e = σ) ∧
         (∀ x : X, ∀ c : C, c ∈ active x →
           ∃! e : E, κ e = x ∧ left e = c)
+
+theorem rawExactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : CompatibleDeWerraGoal.{uX, uC}) :
+    RawExactEdgeColoringGoal.{uX, uC} := by
+  classical
+  intro T X C E _instX _instC _instE _decX _decC _decE
+    left right active hActive hLeft hRight hRect
+  let B : X → Finset (Fin T) := fun _ => Finset.univ
+  have hcardDW : ∀ x : X, (active x).card = (B x).card := by
+    intro x
+    simpa [B] using hActive x
+  have hleftDW :
+      ∀ c : C,
+        ((Finset.univ : Finset E).filter (fun e => left e = c)).card =
+          ((Finset.univ : Finset X).filter (fun x => c ∈ active x)).card := by
+    intro c
+    simpa [edgeLeftDegree, activeDegree] using hLeft c
+  have hrightDW :
+      ∀ σ : Fin T,
+        ((Finset.univ : Finset E).filter (fun e => right e = σ)).card =
+          ((Finset.univ : Finset X).filter (fun x => σ ∈ B x)).card := by
+    intro σ
+    simpa [edgeRightDegree, B] using hRight σ
+  have hrectDW :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        ((Finset.univ : Finset E).filter
+          (fun e => left e ∈ U ∧ right e ∈ S)).card
+          ≤ ∑ x : X, min ((active x ∩ U).card) ((B x ∩ S).card) := by
+    intro U S
+    simpa [edgeRectCount, B] using hRect U S
+  rcases hDW (left := left) (right := right)
+      (A := active) (B := B)
+      hcardDW hleftDW hrightDW hrectDW with
+    ⟨κ, hκ, hL, hR⟩
+  refine ⟨κ, ?_, ?_, ?_⟩
+  · intro e
+    exact (hκ e).1
+  · intro x σ
+    rcases hR σ x (by simp [B]) with ⟨e, he, huniq⟩
+    refine ⟨e, ⟨he.2, he.1⟩, ?_⟩
+    intro y hy
+    exact huniq y ⟨hy.2, hy.1⟩
+  · intro x c hc
+    rcases hL c x hc with ⟨e, he, huniq⟩
+    refine ⟨e, ⟨he.2, he.1⟩, ?_⟩
+    intro y hy
+    exact huniq y ⟨hy.2, hy.1⟩
 
 /--
 External finite Hoffman/de Werra edge-colouring theorem in copied-edge form.
@@ -2670,6 +2748,12 @@ theorem exactEdgeColoringGoal_of_raw
   intro c σ
   exact choiceDegree_localEquivOfRawExactColoring
     left right active κ hAvail hRight hLeft c σ
+
+theorem exactEdgeColoringGoal_of_compatibleDeWerra
+    (hDW : CompatibleDeWerraGoal.{uX, uC}) :
+    ExactEdgeColoringGoal.{uX, uC} :=
+  exactEdgeColoringGoal_of_raw
+    (rawExactEdgeColoringGoal_of_compatibleDeWerra hDW)
 
 end FiniteHoffman
 
