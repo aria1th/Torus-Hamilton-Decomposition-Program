@@ -309,6 +309,18 @@ unsigned row difference.  The sign is a unit, so the unit-carry reduction is
 unchanged.
 
 ```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailClosedTrellisBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailClosedTrellisBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+```lean
 theorem RoundComposite.Concrete
   .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)

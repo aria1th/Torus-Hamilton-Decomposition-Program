@@ -10,6 +10,18 @@ asking a separate mathematical proof attempt.
 Current endpoint:
 
 ```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailClosedTrellisBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailClosedTrellisBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+```lean
 theorem RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_returnTailClosedTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
@@ -165,15 +177,16 @@ theorem PrefixCount.qge2SignedMatrix_row_cut_bound
 ```
 
 Thus the remaining q>=2 field is the sufficiency direction: given exactly these
-cut inequalities and the row/column sum data, construct the signed matrix.
-
-The target can therefore focus only on nonempty proper cuts.
+cut inequalities and the row/column sum data, construct the signed matrix.  The
+preferred active target is the trellis-Hoffman form
+`OrdinaryQge2SignedTrellisHoffmanGoal`; Lean then wraps it into the older
+proper-cut closure field.
 
 ### Prompt
 
 Prove the finite signed-column decomposition theorem
-`OrdinaryQge2SignedSeedProperCutClosureGoal`.  Treat it as a standalone
-integral Hoffman/Rado-Edmonds style transportation theorem.  The rows have
+`OrdinaryQge2SignedTrellisHoffmanGoal`.  Treat it as the ordinary trellis
+instance of integral Hoffman/Rado-Edmonds style transportation.  The rows have
 prescribed integer sums
 
 ```lean
@@ -193,6 +206,15 @@ Please provide either:
 
 The most useful output is a sequence of auxiliary Lean theorem statements with
 proof outlines and exact points where existing `PrefixCount` lemmas apply.
+
+### Active GPT-5.5 Pro Request
+
+```text
+request doc: docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_REQUEST_20260504.md
+response id: resp_0078009c9235b49c0069f8dc9d25548194b2b94fd491d49cd7
+response doc: docs/GPT55_PRO_QGE2_TRELLIS_HOFFMAN_PROOF_RESPONSE_20260504.md
+latest status: in_progress on 2026-05-04
+```
 
 ## Closed Record: First-Hit Return-Tail Cocycle Sum
 
@@ -356,6 +378,19 @@ and token-linear formulations.  It also exposes residue-level iff wrappers from
 each erase-last formulation to
 `ActiveHall.SymbolingWithResidues I R <-> ActiveHall.FeasibleWithResidues I R`,
 so an external proof can target whichever equivalent statement is most natural.
+
+Active GPT-5.5 Pro requests:
+
+```text
+successor small geometry response:
+  docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_RESPONSE_20260504.md
+
+ActiveHall ordered-SDR proof request:
+  request doc: docs/GPT55_PRO_ACTIVE_HALL_ORDERED_SDR_PROOF_REQUEST_20260504.md
+  response id: resp_050d642997a6ebc00069f8dceccb388192ae6b3842da834279
+  response doc: docs/GPT55_PRO_ACTIVE_HALL_ORDERED_SDR_PROOF_RESPONSE_20260504.md
+  latest status: in_progress on 2026-05-04
+```
 
 ## Mathlib Hall Survey
 
