@@ -22,6 +22,8 @@ resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b
 initial_status = queued
 latest_poll_status = in_progress
 latest_poll_date = 2026-05-04
+final_status = completed
+response_doc = docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md
 ```
 
 Retrieve with:
@@ -44,3 +46,7 @@ The q>=2 appendix identifies the desired closure theorem with an ordinary
 signed-seed transportation theorem: columns are paths in a finite signed
 trellis, the one-column row-subset envelope is `qge2ColumnCapacity`, and
 Hoffman/Edmonds-Giles integrality should produce an integral path packing.
+
+The response recommended adding the smaller Lean interface
+`PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal` and wrappers from it to
+`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`.

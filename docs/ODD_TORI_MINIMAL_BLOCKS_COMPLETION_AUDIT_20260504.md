@@ -108,6 +108,7 @@ theorem RoundComposite.Concrete
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
 | q>=2 proper-cut direct wrappers | `ordinaryQge2SignedMatrixGoal_of_properCutClosure`, `ordinaryQge2SignedCoreGoal_of_properCutClosure` | Lean-closed | Routes the first remaining field directly into the q>=2 matrix/core branch |
+| q>=2 trellis-Hoffman wrapper | `OrdinaryQge2SignedTrellisHoffmanGoal`, `ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman` | Lean-closed conditional | Shrinks the q>=2 external field to the ordinary signed-trellis HEG theorem suggested by GPT-5.5 Pro |
 | First-hit schedule construction | first-hit schedule, row-Latin, layer-bijective, and head-tail return bridges | Lean-closed | `RoundComposite/OddCore.lean` |
 | First-hit head cycle coordinate | `prefixCountFirstHitReturnBaseStep_cycleCoordinate` | Lean-closed | `C.prim_zero` gives a coordinate for the head map |
 | First-hit positive hit case split | `prefixCountLambdaRho_val_eq_pos_iff`, `prefixCountFirstHitReturnFiberStep_apply_cases` | Lean-closed | Rewrites a tail-coordinate fiber carry into the three explicit positive-hit cases |
@@ -127,7 +128,8 @@ theorem RoundComposite.Concrete
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
 | Active-Hall selection-token equivalence | `eraseLastHallCutsTokenLinearChoiceGoal_of_selection`, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` | Lean-closed conditional | A selection-form erase-last proof now directly satisfies the token-linear request |
-| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
+| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends on proper-cut q>=2, tail orbit, and successor-small fields |
+| Trellis compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis_blocks`, `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis_blocks` | Lean-closed conditional | Depends on the smaller trellis-Hoffman q>=2 field, tail orbit, and successor-small fields |
 | Successor-high compact final theorem | `oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks`, `...Add_blocks` | Lean-closed conditional | Allows a direct successor-high theorem plus small branch to close the final target |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
@@ -137,7 +139,7 @@ The goal is not complete.  In the current preferred packet, the remaining proof
 obligations are exactly:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -145,18 +147,26 @@ OddSuccessorSmallModulusBaseTailGoal
 These are not assumptions hidden behind `sorry`; they are explicit fields in
 the conditional theorem statement.
 
-## Field 1: q>=2 Proper-Cut Signed Closure
+The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
+valid sufficient field, but Lean now reduces it from the trellis-Hoffman field.
 
-The current first field is the nonempty proper-cut integral decomposition
-theorem:
+## Field 1: q>=2 Ordinary Signed-Trellis Hoffman Closure
+
+The current first preferred field is the ordinary signed-trellis HEG theorem:
+
+```lean
+PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
+```
+
+Mathematically this is a finite signed-column Hoffman/Rado-Edmonds style
+decomposition with entries in `{±1, ±2}`.  It is isolated from the torus
+geometry and implies the nonempty proper-cut integral decomposition theorem:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
 ```
 
-Mathematically this is a finite signed-column Hoffman/Rado-Edmonds style
-decomposition with entries in `{±1, ±2}`.  It is isolated from the torus
-geometry.  The overly broad arbitrary-row packing theorem
+The overly broad arbitrary-row packing theorem
 `PrefixCount.Qge2SignedColumnPackingGoal` is false; Lean records this as
 `PrefixCount.not_qge2SignedColumnPackingGoal`.
 
@@ -273,7 +283,7 @@ Three GPT-5.5 Pro background requests are active for the remaining hard fields:
 
 | Field | Request Doc | Response Id | Latest Status |
 |---|---|---|---|
-| q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `in_progress` |
+| q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md`, `docs/GPT55_PRO_QGE2_PROPER_CUT_RESPONSE_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `completed` |
 | first-hit return-tail orbit/rank | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `in_progress` |
 | successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `in_progress` |
 

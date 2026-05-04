@@ -110,6 +110,18 @@ PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
+After the q>=2 proof-request response, Lean also exposes the smaller
+ordinary-trellis interface:
+
+```lean
+def PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal : Prop := ...
+
+theorem PrefixCount
+  .ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
+    (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :
+    OrdinaryQge2SignedSeedProperCutClosureGoal
+```
+
 Equivalent stronger routes are also available through return-tail rank,
 rank-equivalence, or cycle-coordinate goals.
 
@@ -158,6 +170,21 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+The sharper q>=2 trellis packet endpoint is:
+
+```lean
+def RoundComposite.Concrete
+  .OddModulusToriV4ReturnTailOrbitTrellisBlocksGoal : Prop :=
+  (PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
+   PrefixCountFirstHitReturnTailMonodromyOrbitGoal) ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis_blocks
+    (hBlocks : OddModulusToriV4ReturnTailOrbitTrellisBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
 With the additive small branch:
 
 ```lean
@@ -174,10 +201,14 @@ theorem RoundComposite.Concrete
 The goal is not complete.  The remaining hard fields are:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
+
+The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
+valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
+form above.
 
 or, replacing the third line by the sufficient additive form:
 

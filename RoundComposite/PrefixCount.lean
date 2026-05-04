@@ -1965,6 +1965,51 @@ def OrdinaryQge2SignedSeedClosureGoal : Prop :=
             = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)) ∧
         (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
 
+/--
+External finite HEG/submodular-flow theorem for exactly the ordinary q>=2
+signed trellis instance.  This deliberately does not quantify over arbitrary
+row targets; the row demands keep the torus ordinary-branch shape.
+-/
+def OrdinaryQge2SignedTrellisHoffmanGoal : Prop :=
+  ∀ {n r : Nat},
+    Even n → 4 ≤ n → Odd r → r < n → 0 < r →
+    ∀ (a : Fin n → Nat) (epsBit : Fin n → Nat) (c : Fin (n - 1) → Nat),
+      (∀ i : Fin n, a i = 1 ∨ a i = 2) →
+      (∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1) →
+      (∀ k : Fin (n - 1), c k = 1 ∨ c k = 2) →
+      (∑ i : Fin n, epsBit i) = r →
+      (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k) →
+      (∀ J : Finset (Fin n),
+        (∑ i ∈ J, ((r : Int) - (a i : Int)
+            - (n : Int) * (epsBit i : Int)))
+          ≤ ∑ k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) →
+      ∃ X : Fin (n - 1) → Fin n → Int,
+        (∀ k i, IsSignedVal (X k i)) ∧
+        (∀ k : Fin (n - 1), (∑ i : Fin n, X k i) = - (c k : Int)) ∧
+        (∀ i : Fin n,
+          (∑ k : Fin (n - 1), X k i)
+            = (r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int))
+
+theorem ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman
+    (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :
+    OrdinaryQge2SignedSeedClosureGoal := by
+  classical
+  intro n C r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc ha_sum heps_sum hc_sum hCuts
+  have hsum_ac :
+      (∑ i : Fin n, a i) = (∑ k : Fin (n - 1), c k) :=
+    ha_sum.trans hc_sum.symm
+  rcases hHoffman (n := n) (r := r) hnEven hn4 hrOdd hrlt hrpos
+      a epsBit c ha heps hc heps_sum hsum_ac hCuts with
+    ⟨X, hXval, hXcol, hXrow⟩
+  refine ⟨fun i k => X k i, ?_, ?_, ?_⟩
+  · intro i k
+    exact hXval k i
+  · intro i
+    simpa using hXrow i
+  · intro k
+    simpa using hXcol k
+
 theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
     (hPacking : Qge2SignedColumnPackingGoal) :
     OrdinaryQge2SignedSeedClosureGoal := by
@@ -2068,6 +2113,12 @@ theorem ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure :
       OrdinaryQge2SignedSeedProperCutClosureGoal :=
   ⟨ordinaryQge2SignedSeedProperCutClosureGoal_of_signedSeedClosure,
     ordinaryQge2SignedSeedClosureGoal_of_properCutClosure⟩
+
+theorem ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
+    (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :
+    OrdinaryQge2SignedSeedProperCutClosureGoal :=
+  ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure.mp
+    (ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman hHoffman)
 
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},

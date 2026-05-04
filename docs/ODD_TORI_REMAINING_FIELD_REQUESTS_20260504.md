@@ -21,7 +21,7 @@ theorem RoundComposite.Concrete
 Remaining fields:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -36,7 +36,20 @@ OddSuccessorSmallModulusBaseTailGoal
 
 ### Exact Lean Target
 
-The active target is the torus-shaped ordinary q>=2 signed closure:
+The preferred target is now the smaller ordinary signed-trellis Hoffman field,
+which Lean wraps into the torus-shaped proper-cut closure:
+
+```lean
+def RoundComposite.PrefixCount
+  .OrdinaryQge2SignedTrellisHoffmanGoal : Prop := ...
+
+theorem RoundComposite.PrefixCount
+  .ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
+    (hHoffman : OrdinaryQge2SignedTrellisHoffmanGoal) :
+    OrdinaryQge2SignedSeedProperCutClosureGoal
+```
+
+The older sufficient target is the torus-shaped ordinary q>=2 signed closure:
 
 ```lean
 def RoundComposite.PrefixCount
