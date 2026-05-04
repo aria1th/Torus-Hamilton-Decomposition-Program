@@ -146,6 +146,19 @@ Here the shared lower-triangular theorem is stated as a rank-equivalence
 witness, so it remains a `Prop`; Lean converts the witness to
 `Shared.CycleCoordinate` inside the wrapper.
 
+The one-coordinate and skew-product unit-carry pieces for this route are now
+closed in `Shared`:
+
+```lean
+Shared.zmod_add_single_cycle_of_unit
+Shared.CycleCoordinate.zmodAddConstOfUnit
+Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit
+Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
+```
+
+The remaining generic lower-triangular proof plan is recorded in
+`docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`.
+
 ### 3.2 Small Modulus
 
 ```lean

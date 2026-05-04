@@ -359,6 +359,21 @@ noncomputable def zmodAddConstOfCoprime {m a : Nat} [NeZero m]
     _ = (u⁻¹ : ZMod m) * x + (u⁻¹ : ZMod m) * (u : ZMod m) := by rw [hu]
     _ = (u⁻¹ : ZMod m) * x + 1 := by simp
 
+noncomputable def zmodAddConstOfUnit {m : Nat} [NeZero m]
+    {a : ZMod m} (ha : IsUnit a) :
+    CycleCoordinate m (fun x : ZMod m => x + a) := by
+  let u : (ZMod m)ˣ := ha.unit
+  refine ofRankEquiv (Units.mulLeft u⁻¹) ?_
+  intro x
+  have hu : (u : ZMod m) = a := ha.unit_spec
+  change (↑(u⁻¹) : ZMod m) * (x + a) =
+    (↑(u⁻¹) : ZMod m) * x + 1
+  calc
+    (↑(u⁻¹) : ZMod m) * (x + a) =
+        (↑(u⁻¹) : ZMod m) * x + (↑(u⁻¹) : ZMod m) * a := by ring
+    _ = (↑(u⁻¹) : ZMod m) * x + (↑(u⁻¹) : ZMod m) * (u : ZMod m) := by rw [hu]
+    _ = (↑(u⁻¹) : ZMod m) * x + 1 := by simp
+
 end CycleCoordinate
 
 def cayleyColorStep {d m : Nat}

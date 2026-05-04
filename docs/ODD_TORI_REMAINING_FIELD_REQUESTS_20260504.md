@@ -198,6 +198,7 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 7. `docs/FIRST_HIT_RETURN_TAIL_MONODROMY_REQUEST_20260504.md`
 8. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 9. `docs/GPT55_PRO_RETURN_TAIL_ORBIT_RESPONSE_20260504.md`
+10. `docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`
 
 ### Exact Lean Target
 
@@ -290,6 +291,21 @@ theorem RoundComposite.Concrete
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
+
+Closed `Shared` helpers for this route:
+
+```lean
+Shared.zmod_add_single_cycle_of_unit
+Shared.CycleCoordinate.zmodAddConstOfUnit
+Shared.sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
+Shared.sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit
+Shared.single_cycle_of_skewProduct_zmod_additive_unit_carry
+Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
+```
+
+The remaining generic `Shared` proof should now focus on vector splitting,
+ranked base orbit enumeration, and the finite carry-sum identity recorded in
+`docs/ZMOD_LOWER_TRIANGULAR_UNIT_PROOF_PLAN_20260504.md`.
 
 This route avoids proving orbit transitivity directly.  It asks for:
 

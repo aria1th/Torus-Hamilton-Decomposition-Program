@@ -240,6 +240,21 @@ theorem sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
   rw [hcarry]
   exact zmod_add_single_cycle_of_coprime ha
 
+theorem sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) (a : ZMod m)
+    (ha : IsUnit a)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = a) :
+    IsSingleCycleMap
+      (sectionReturn
+        (skewProductMap baseStep (fun b z => z + carry b))
+        base period) := by
+  rw [sectionReturn_skewProductMap_zmod_add]
+  rw [hcarry]
+  exact zmod_add_single_cycle_of_unit ha
+
 noncomputable def sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime
     {Base : Type*} {m : Nat} [NeZero m]
     (baseStep : Base → Base) (carry : Base → ZMod m)
@@ -254,6 +269,21 @@ noncomputable def sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_copri
   rw [sectionReturn_skewProductMap_zmod_add]
   rw [hcarry]
   exact CycleCoordinate.zmodAddConstOfCoprime ha
+
+noncomputable def sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_unit
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) (a : ZMod m)
+    (ha : IsUnit a)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = a) :
+    CycleCoordinate m
+      (sectionReturn
+        (skewProductMap baseStep (fun b z => z + carry b))
+        base period) := by
+  rw [sectionReturn_skewProductMap_zmod_add]
+  rw [hcarry]
+  exact CycleCoordinate.zmodAddConstOfUnit ha
 
 theorem zmod_add_const_bijective {m : Nat} (a : ZMod m) :
     Function.Bijective (fun z : ZMod m => z + a) := by
@@ -375,6 +405,27 @@ theorem single_cycle_of_skewProduct_zmod_additive_carry
     (sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
       baseStep carry base period a ha hcarry)
 
+theorem single_cycle_of_skewProduct_zmod_additive_unit_carry
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) (a : ZMod m)
+    (hbase : Function.Bijective baseStep)
+    (hreturnBase : (baseStep^[period]) base = base)
+    (hbaseCover : ∀ b : Base, ∃ k : Nat,
+      k < period ∧ (baseStep^[k]) base = b)
+    (ha : IsUnit a)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = a) :
+    IsSingleCycleMap
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  single_cycle_of_skewProduct_base_orbit_monodromy
+    baseStep (fun b z => z + carry b) base period
+    hbase
+    (fun b => zmod_add_const_bijective (carry b))
+    hreturnBase hbaseCover
+    (sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
+      baseStep carry base period a ha hcarry)
+
 noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry
     {Base : Type*} [Fintype Base] [DecidableEq Base]
     {m n : Nat} [NeZero m] [NeZero n]
@@ -398,6 +449,31 @@ noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry
     (fun b => zmod_add_const_bijective (carry b))
     hreturnBase hbaseCover
     (sectionReturn_skewProductMap_zmod_add_single_cycle_of_coprime
+      baseStep carry base period a ha hcarry)
+
+noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
+    {Base : Type*} [Fintype Base] [DecidableEq Base]
+    {m n : Nat} [NeZero m] [NeZero n]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) (a : ZMod m)
+    (hcard : Fintype.card (Base × ZMod m) = n)
+    (hn : 1 < n)
+    (hbase : Function.Bijective baseStep)
+    (hreturnBase : (baseStep^[period]) base = base)
+    (hbaseCover : ∀ b : Base, ∃ k : Nat,
+      k < period ∧ (baseStep^[k]) base = b)
+    (ha : IsUnit a)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = a) :
+    CycleCoordinate n
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  cycleCoordinate_of_skewProduct_base_orbit_monodromy
+    baseStep (fun b z => z + carry b) base period
+    hcard hn
+    hbase
+    (fun b => zmod_add_const_bijective (carry b))
+    hreturnBase hbaseCover
+    (sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
       baseStep carry base period a ha hcarry)
 
 end Shared

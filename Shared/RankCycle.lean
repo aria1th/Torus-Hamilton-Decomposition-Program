@@ -76,4 +76,23 @@ theorem zmod_add_single_cycle_of_coprime
       _ = (u⁻¹ : ZMod m) * x + (u⁻¹ : ZMod m) * (u : ZMod m) := by rw [hu]
       _ = (u⁻¹ : ZMod m) * x + 1 := by simp
 
+theorem zmod_add_single_cycle_of_unit
+    {m : Nat} [NeZero m] {a : ZMod m} (ha : IsUnit a) :
+    IsSingleCycleMap (fun x : ZMod m => x + a) := by
+  let u : (ZMod m)ˣ := ha.unit
+  refine single_cycle_of_zmod_rank
+    (f := fun x : ZMod m => x + a)
+    (rank := Units.mulLeft u⁻¹)
+    ?_ ?_
+  · exact Equiv.bijective (Units.mulLeft u⁻¹)
+  · intro x
+    have hu : (u : ZMod m) = a := ha.unit_spec
+    change (↑(u⁻¹) : ZMod m) * (x + a) =
+      (↑(u⁻¹) : ZMod m) * x + 1
+    calc
+      (↑(u⁻¹) : ZMod m) * (x + a) =
+          (↑(u⁻¹) : ZMod m) * x + (↑(u⁻¹) : ZMod m) * a := by ring
+      _ = (↑(u⁻¹) : ZMod m) * x + (↑(u⁻¹) : ZMod m) * (u : ZMod m) := by rw [hu]
+      _ = (↑(u⁻¹) : ZMod m) * x + 1 := by simp
+
 end Shared
