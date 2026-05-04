@@ -366,10 +366,15 @@ when `m` is odd and `m >= 3`.
   `PrefixCountRootFlatCanonicalScheduleCriterionGoal`, requiring only a
   canonical schedule with row-Latin, layer-bijective, and return-single-cycle
   proofs.  The universal q=1 degree-matrix matching variant remains Lean-proved
-  too strong and is retained as a negative audit.  The current most convenient
-  endpoint is `odd_modulus_tori_all_dimensions_of_v4_scheduleAdd_blocks`, from
-  `OddModulusToriV4ScheduleAddBlocksGoal`; its small-branch field uses the
-  additive tail-length form `OddCoreSmallModulusSlackPacketLiftAddGoal`.
+  too strong and is retained as a negative audit.  The current minimal endpoint
+  is `odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks`, from
+  `OddModulusToriV4SuccessorScheduleBlocksGoal`; its small-branch field is the
+  successor-only theorem `OddSuccessorSmallModulusBaseTailGoal`.  The
+  certificate-facing additive variant is
+  `odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks`, from
+  `OddModulusToriV4SuccessorScheduleAddBlocksGoal`, where the small branch uses
+  the explicit `T = b + 1` form
+  `OddSuccessorSmallModulusSlackPacketLiftAddGoal`.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

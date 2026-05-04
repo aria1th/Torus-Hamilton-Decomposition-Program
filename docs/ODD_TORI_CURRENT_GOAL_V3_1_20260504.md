@@ -159,32 +159,31 @@ Location: `RoundComposite/OddCore.lean`.
 
 ## Remaining Lean Work
 
-The active proof obligations are exactly the three fields of
-`OddModulusToriV4PreferredBlocksGoal`:
-
-1. `PrefixCount.OrdinaryQge2SignedSeedClosureGoal`
-2. `PrefixCountRootFlatCanonicalReturnGoal`
-3. `OddCoreSmallModulusSlackPacketLiftGoal`
-
-The current most convenient Lean-facing packet is now:
+The current minimal Lean-facing packet is now:
 
 ```lean
-def RoundComposite.Concrete.OddModulusToriV4ScheduleAddBlocksGoal : Prop :=
+def RoundComposite.Concrete.OddModulusToriV4SuccessorScheduleBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
-  OddCoreSmallModulusSlackPacketLiftAddGoal
+  OddSuccessorSmallModulusBaseTailGoal
 ```
 
 Its endpoint is:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_scheduleAdd_blocks
-    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_successorSchedule_blocks
+    (hBlocks : OddModulusToriV4SuccessorScheduleBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
 ```
+
+The active proof obligations are exactly the three fields of this packet:
+
+1. `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`
+2. `PrefixCountRootFlatCanonicalScheduleCriterionGoal`
+3. `OddSuccessorSmallModulusBaseTailGoal`
 
 For the first item, Lean now exposes the equivalent nontrivial-cut formulation
 `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`.  The endpoint cuts
@@ -203,11 +202,51 @@ to construct a canonical schedule `S` with
 `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` closes the
 conversion back to the original certificate-facing goal.
 
-For the third item, Lean now exposes the equivalent additive-tail formulation
-`RoundComposite.Concrete.OddCoreSmallModulusSlackPacketLiftAddGoal`.  This uses
-an explicit tail length `T` with `d = b + T`, `T > b`, and
-`m^b > m*d*T`.  The theorem `oddCoreSmallModulusSlackPacketLiftGoal_iff_add`
-closes the conversion to the original `d - b` formulation.
+For the third item, the minimal endpoint only asks for the successor branch
+itself:
+
+```lean
+def RoundComposite.Concrete.OddSuccessorSmallModulusBaseTailGoal : Prop :=
+  ∀ {b m : Nat},
+    5 <= b ->
+    Odd m -> 3 <= m ->
+    m < 2*b + 1 ->
+    StandardCayleySolved b m ->
+    StandardCayleySolved (2*b + 1) m
+```
+
+Lean also exposes the certificate-facing additive-tail variant:
+
+```lean
+def RoundComposite.Concrete.OddSuccessorSmallModulusSlackPacketLiftAddGoal :
+    Prop :=
+  ∀ {b m T : Nat},
+    5 <= b ->
+    Odd m -> 3 <= m -> m < b + T ->
+    StandardCayleySolved b m ->
+    (packets : List (List Nat)) ->
+    packets.length = b ->
+    (packets.map List.length).sum = b + T ->
+    (∀ packet, packet ∈ packets -> packet.sum = m) ->
+    (∀ packet, packet ∈ packets ->
+      ∀ a, a ∈ packet -> 0 < a ∧ a < m ∧ Nat.Coprime a m) ->
+    T = b + 1 ->
+    m^b > m*(b + T)*T ->
+    StandardCayleySolved (b + T) m
+```
+
+The theorem
+`oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` instantiates the
+unit-carry packets and the Lean-proved successor Hall slack inequality to close
+`OddSuccessorSmallModulusBaseTailGoal`.  The endpoint
+`odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks` packages
+this additive form with the two high-modulus schedule obligations.
+
+The older universal small-lift field
+`OddCoreSmallModulusSlackPacketLiftAddGoal` remains available as a stronger
+route, with
+`oddModulusToriV4SuccessorScheduleAddBlocksGoal_of_scheduleAddBlocks`
+converting it to the successor-only packet.
 
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for
