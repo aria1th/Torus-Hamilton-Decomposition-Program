@@ -68,6 +68,11 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
+
+def ColumnFillingUpgradeGoal : Prop
+
+theorem hallRealizationGoal_iff_columnFillingUpgradeGoal :
+    HallRealizationGoal <-> ColumnFillingUpgradeGoal
 ```
 
 Also available:
@@ -94,6 +99,10 @@ with active colors and the prescribed column counts.  This relaxation does not
 force the colors chosen at a fixed vertex to be distinct, so it is not yet a
 `Symboling`.  The remaining theorem is the capacitated/Hoffman strengthening
 that upgrades column-wise fillings to row-Latin symbolings.
+
+Equivalently, one may prove `ColumnFillingUpgradeGoal`: given `M.HallCuts` and
+a column-wise filling, upgrade it to a genuine `Symboling` realizing the same
+matrix.  This is Lean-equivalent to `HallRealizationGoal`.
 
 ## Mathematical Request
 

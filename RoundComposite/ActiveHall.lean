@@ -2456,6 +2456,32 @@ def HallRealizationGoal : Prop :=
       M.HallCuts →
       ∃ Φ : Symboling I, Φ.Realizes M.val
 
+def ColumnFillingUpgradeGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence T X C) (M : CountMatrix I),
+      M.HallCuts →
+      M.ColumnFilling →
+      ∃ Φ : Symboling I, Φ.Realizes M.val
+
+theorem hallRealizationGoal_of_columnFillingUpgrade
+    (hUpgrade : ColumnFillingUpgradeGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} := by
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases M.exists_columnFilling_of_hallCuts hHall with ⟨F⟩
+  exact hUpgrade I M hHall F
+
+theorem columnFillingUpgradeGoal_of_hallRealization
+    (hRealize : HallRealizationGoal.{uX, uC}) :
+    ColumnFillingUpgradeGoal.{uX, uC} := by
+  intro T X C _instX _instC _decX _decC I M hHall _F
+  exact hRealize I M hHall
+
+theorem hallRealizationGoal_iff_columnFillingUpgradeGoal :
+    HallRealizationGoal.{uX, uC} ↔ ColumnFillingUpgradeGoal.{uX, uC} :=
+  ⟨columnFillingUpgradeGoal_of_hallRealization,
+    hallRealizationGoal_of_columnFillingUpgrade⟩
+
 def EraseLastHallCutsGoal : Prop :=
   ∀ {T : Nat} {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],

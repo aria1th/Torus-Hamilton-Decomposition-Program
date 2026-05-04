@@ -154,6 +154,21 @@ def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsNontrivialSlackChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsLinearChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal : Prop
+def RoundComposite.ActiveHall.ColumnFillingUpgradeGoal : Prop
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_columnFillingUpgrade
+    (hUpgrade : ColumnFillingUpgradeGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .columnFillingUpgradeGoal_of_hallRealization
+    (hRealize : HallRealizationGoal) :
+    ColumnFillingUpgradeGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_iff_columnFillingUpgradeGoal :
+    HallRealizationGoal <-> ColumnFillingUpgradeGoal
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -460,6 +475,13 @@ for every nonempty proper color cut `U` and nonempty lower-symbol cut `S`.
 Plain Hall matching now gives the weaker `CountMatrix.ColumnFilling`: each
 symbol column can be filled with active colors and the prescribed column
 counts.  This does not enforce the row-Latin condition that, at each vertex,
-the `T` chosen colors are all distinct.  The remaining theorem is exactly the
-Hoffman/capacitated strengthening that upgrades this column-wise relaxation to
-a genuine `Symboling`.
+the `T` chosen colors are all distinct.  This remaining strengthening is
+isolated as:
+
+```lean
+ColumnFillingUpgradeGoal
+```
+
+It is Lean-equivalent to `HallRealizationGoal`, so the true abstract finite
+combinatorics blocker is the Hoffman/capacitated upgrade from column-wise
+fillings to genuine `Symboling`s.
