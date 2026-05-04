@@ -385,6 +385,10 @@ when `m` is odd and `m >= 3`.
   exact conditional endpoint
   `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks`, the Lean evidence for
   the seed/product/dispatcher layers, and the three remaining explicit fields.
+- `docs/ODD_TORI_REMAINING_FIELD_REQUESTS_20260504.md`: proof-request packet
+  for those three fields, listing the files to read, exact Lean targets, and
+  requested outputs for the q>=2 signed closure, root-flat canonical schedule,
+  and successor small-modulus branch.
 - `docs/ODD_TORI_D_LT_29_BOUNDARY_WITNESSES_20260503.md`: exhaustive finite
   boundary audit table for the global odd-modulus goal, covering all `169`
   pairs with `2 <= d < 29`, odd `m`, and `3 <= m < d` by seed-semigroup
