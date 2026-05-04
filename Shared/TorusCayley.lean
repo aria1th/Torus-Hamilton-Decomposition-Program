@@ -70,6 +70,24 @@ def zmodVectorExtendZero {m k r : Nat} (_hk : k ≤ r)
     (x : Fin k → ZMod m) : Fin r → ZMod m :=
   fun i => if h : i.val < k then x ⟨i.val, h⟩ else 0
 
+@[simp] theorem zmodVectorTake_extendZero {m k r : Nat} (hk : k ≤ r)
+    (x : Fin k → ZMod m) :
+    zmodVectorTake hk (zmodVectorExtendZero hk x) = x := by
+  funext i
+  simp [zmodVectorTake, zmodVectorExtendZero]
+
+@[simp] theorem zmodVectorExtendZero_apply_of_not_lt {m k r : Nat}
+    (hk : k ≤ r) (x : Fin k → ZMod m) (i : Fin r)
+    (hi : ¬ i.val < k) :
+    zmodVectorExtendZero hk x i = 0 := by
+  simp [zmodVectorExtendZero, hi]
+
+@[simp] theorem zmodVectorExtendZero_apply_self {m k r : Nat}
+    (hk : k ≤ r) (hkr : k < r) (x : Fin k → ZMod m) :
+    zmodVectorExtendZero hk x ⟨k, hkr⟩ = 0 := by
+  exact zmodVectorExtendZero_apply_of_not_lt hk x ⟨k, hkr⟩
+    (show ¬ k < k from Nat.lt_irrefl k)
+
 def zmodVectorSnocEquiv (n m : Nat) :
     (Fin (n + 1) → ZMod m) ≃ (Fin n → ZMod m) × ZMod m :=
   (Fin.snocEquiv (fun _ : Fin (n + 1) => ZMod m)).symm.trans

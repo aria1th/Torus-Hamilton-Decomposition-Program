@@ -11,9 +11,9 @@ Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailFiberIncrementTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -25,21 +25,22 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
 The middle two fields imply the older orbit field through a Lean-closed
-increment-to-triangular bridge and generic lower-triangular odometer theorem:
+skew-iterate preservation theorem, increment-to-triangular bridge, and generic
+lower-triangular odometer theorem:
 
 ```lean
 theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
     Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -211,22 +212,19 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
 ### Exact Lean Target
 
-The preferred target is now the increment/unit split for the first-hit
+The preferred target is now the one-step fiber increment/unit split for the first-hit
 return-tail monodromy:
 
 ```lean
 def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop :=
+  .PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal : Prop :=
   forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
     Odd d -> 5 <= d -> Odd m -> d <= m ->
     C.Admissible m ->
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
-    forall c : Fin d, forall tail : Fin (d - 2) -> ZMod m,
-      forall k : Nat, forall hk : k < d - 2,
-        prefixCountFirstHitReturnTailMonodromy hd2 L c tail ⟨k, hk⟩ -
-            tail ⟨k, hk⟩ =
-          prefixCountFirstHitReturnTailCocycle hd2 L c k hk
-            (Shared.zmodVectorTake (Nat.le_of_lt hk) tail)
+    forall c : Fin d, forall z : ZMod m,
+      Shared.ZModVectorIncrementDependsOnTake
+        (prefixCountFirstHitReturnFiberStep hd2 L c z)
 
 def RoundComposite.Concrete
   .PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop :=
@@ -240,8 +238,8 @@ def RoundComposite.Concrete
           prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -257,6 +255,8 @@ Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
 Shared.zmodVectorSnocEquiv
 Shared.zmodVectorTake_snoc
 Shared.zmodVectorTake_snoc_self
+Shared.ZModVectorIncrementDependsOnTake
+Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
 Shared.zmod_rank_iterate_period
 Shared.zmod_rank_orbit_cover_lt
 Shared.skewFiberAdditiveCarry_eq_sum_range
@@ -275,7 +275,7 @@ theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
 This route avoids proving orbit transitivity directly.  It asks for:
 
 ```text
-each coordinate increment depends only on the lower prefix
+each one-step fiber coordinate increment depends only on the lower prefix
 + every rank cocycle has unit total carry
 ```
 
@@ -283,9 +283,10 @@ each coordinate increment depends only on the lower prefix
 
 Lean already builds the first-hit schedule, proves the row-Latin and
 layer-bijective parts, reduces the root-flat return to head-tail monodromy, and
-proves bijectivity of the tail map and the generic lower-triangular odometer
-theorem.  The remaining request is only the first-hit increment-dependency and
-unit carry calculation.
+proves bijectivity of the tail map, preservation of this increment-dependency
+under `Shared.skewFiberIterate`, and the generic lower-triangular odometer
+theorem.  The remaining request is only the one-step first-hit fiber
+increment-dependency and unit carry calculation.
 
 Useful closed bridges:
 
@@ -315,8 +316,8 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailRankEquivGoal
 
 theorem RoundComposite.Concrete
-  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
-    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 
 theorem Shared.single_cycle_of_zmod_rank
@@ -358,10 +359,10 @@ theorem RoundComposite.Concrete
 
 ### Prompt
 
-Prove the high-modulus first-hit return-tail increment/unit split:
+Prove the high-modulus first-hit return-fiber increment/unit split:
 
 ```lean
-PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
@@ -377,10 +378,16 @@ prefixCountFirstHitReturnTailMonodromy hd2 L c :
   (Fin (d - 2) -> ZMod m) -> (Fin (d - 2) -> ZMod m)
 ```
 
-for fixed color `c`.  The preferred proof should show that the increment in
-coordinate `k` depends only on `Shared.zmodVectorTake ... tail`, and that the
-finite sum of each rank cocycle is a unit in `ZMod m`.  If one instead chooses
-a rank proof, construct an odometer coordinate
+for fixed color `c`.  The preferred proof should show that each one-step fiber
+map
+
+```lean
+prefixCountFirstHitReturnFiberStep hd2 L c z
+```
+
+has coordinate increments depending only on `Shared.zmodVectorTake ... tail`,
+and that the finite sum of each rank cocycle is a unit in `ZMod m`.  If one
+instead chooses a rank proof, construct an odometer coordinate
 
 ```lean
 rank :
@@ -406,12 +413,12 @@ The expected mathematical route is:
 1. choose a tail-coordinate order compatible with the first-hit rule;
 2. prove each next coordinate is a skew extension over the previous prefix;
 3. compute the total carry from the primitive row data in `C.Admissible`;
-4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks`.
+4. invoke `prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks`.
 
 Do not spend effort on the generic lower-triangular odometer theorem, row-Latin,
 layer bijectivity, root-flat schedule construction, or the final torus lift.
 Those bridges are already Lean-closed; the open field is exactly the first-hit
-increment-dependency and unit carry calculation.
+one-step fiber increment-dependency and unit carry calculation.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 

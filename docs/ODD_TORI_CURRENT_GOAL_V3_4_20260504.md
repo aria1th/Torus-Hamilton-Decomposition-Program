@@ -124,11 +124,13 @@ theorem PrefixCount
 
 Equivalent stronger routes are also available through return-tail rank,
 rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
-request response, Lean now exposes the preferred increment/unit refinement of
-the triangular route, with the generic lower-triangular theorem already closed:
+request response, Lean now exposes the preferred one-step fiber increment/unit
+refinement of the triangular route, with the generic lower-triangular theorem
+already closed:
 
 ```lean
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
+def PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
 
@@ -140,6 +142,10 @@ def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
+def PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
     (hBlocks : PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) :
@@ -148,6 +154,11 @@ theorem RoundComposite.Concrete
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
     (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_fiberIncrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnFiberIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -172,6 +183,8 @@ Shared.cycleCoordinate_of_skewProduct_zmod_additive_unit_carry
 Shared.zmodVectorSnocEquiv
 Shared.zmodVectorTake_snoc
 Shared.zmodVectorTake_snoc_self
+Shared.ZModVectorIncrementDependsOnTake
+Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
 Shared.zmod_rank_iterate_period
 Shared.zmod_rank_orbit_cover_lt
 Shared.skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
@@ -268,13 +281,13 @@ theorem RoundComposite.Concrete
 ```
 
 The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
-and increment-dependency/unit-carry fields for the return-tail branch:
+and one-step fiber-increment/unit-carry fields for the return-tail branch:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailIncrementTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailFiberIncrementTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
@@ -297,7 +310,7 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
+PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -306,10 +319,11 @@ The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
 form above.
 
-Equivalently, the increment-dependency field can be replaced by the stronger
-triangular field:
+Equivalently, the one-step fiber field can be replaced by the stronger tail
+increment or triangular fields:
 
 ```lean
+PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailTriangularGoal
 ```
 

@@ -116,6 +116,100 @@ theorem skewProductMap_fiber_bijective_of_bijective {Base Fiber : Type*}
     subst u'
     exact ⟨x, congrArg Prod.snd hux⟩
 
+def ZModVectorIncrementDependsOnTake {m r : Nat}
+    (F : (Fin r → ZMod m) → (Fin r → ZMod m)) : Prop :=
+  ∀ x y : Fin r → ZMod m, ∀ k : Nat, ∀ hk : k < r,
+    zmodVectorTake (Nat.le_of_lt hk) x =
+      zmodVectorTake (Nat.le_of_lt hk) y →
+    F x ⟨k, hk⟩ - x ⟨k, hk⟩ =
+      F y ⟨k, hk⟩ - y ⟨k, hk⟩
+
+theorem zmodVectorIncrementDependsOnTake_id {m r : Nat} :
+    ZModVectorIncrementDependsOnTake
+      (fun x : Fin r → ZMod m => x) := by
+  intro x y k hk _hxy
+  simp
+
+theorem zmodVectorTake_apply_eq_of_incrementDependsOnTake
+    {m r k : Nat} {F : (Fin r → ZMod m) → (Fin r → ZMod m)}
+    (hF : ZModVectorIncrementDependsOnTake F)
+    (hk : k ≤ r) {x y : Fin r → ZMod m}
+    (hxy : zmodVectorTake hk x = zmodVectorTake hk y) :
+    zmodVectorTake hk (F x) = zmodVectorTake hk (F y) := by
+  funext i
+  have hir : i.val < r := lt_of_lt_of_le i.isLt hk
+  have hpre :
+      zmodVectorTake (Nat.le_of_lt hir) x =
+        zmodVectorTake (Nat.le_of_lt hir) y := by
+    funext j
+    have hjk : j.val < k := lt_trans j.isLt i.isLt
+    exact congrFun hxy ⟨j.val, hjk⟩
+  have hcoord :
+      x ⟨i.val, hir⟩ = y ⟨i.val, hir⟩ := by
+    exact congrFun hxy i
+  have hinc := hF x y i.val hir hpre
+  change F x ⟨i.val, hir⟩ = F y ⟨i.val, hir⟩
+  have hcalc :
+      F x ⟨i.val, hir⟩ - x ⟨i.val, hir⟩ =
+        F y ⟨i.val, hir⟩ - y ⟨i.val, hir⟩ := hinc
+  rw [hcoord] at hcalc
+  calc
+    F x ⟨i.val, hir⟩
+        = (F x ⟨i.val, hir⟩ - y ⟨i.val, hir⟩) +
+            y ⟨i.val, hir⟩ := by
+            abel
+    _ = (F y ⟨i.val, hir⟩ - y ⟨i.val, hir⟩) +
+            y ⟨i.val, hir⟩ := by
+            rw [hcalc]
+    _ = F y ⟨i.val, hir⟩ := by
+            abel
+
+theorem zmodVectorIncrementDependsOnTake_comp
+    {m r : Nat} {F G : (Fin r → ZMod m) → (Fin r → ZMod m)}
+    (hF : ZModVectorIncrementDependsOnTake F)
+    (hG : ZModVectorIncrementDependsOnTake G) :
+    ZModVectorIncrementDependsOnTake (fun x => G (F x)) := by
+  intro x y k hk hxy
+  have hFinc := hF x y k hk hxy
+  have htakeF :
+      zmodVectorTake (Nat.le_of_lt hk) (F x) =
+        zmodVectorTake (Nat.le_of_lt hk) (F y) :=
+    zmodVectorTake_apply_eq_of_incrementDependsOnTake hF
+      (Nat.le_of_lt hk) hxy
+  have hGinc := hG (F x) (F y) k hk htakeF
+  calc
+    G (F x) ⟨k, hk⟩ - x ⟨k, hk⟩
+        =
+        (G (F x) ⟨k, hk⟩ - F x ⟨k, hk⟩) +
+          (F x ⟨k, hk⟩ - x ⟨k, hk⟩) := by
+          abel
+    _ =
+        (G (F y) ⟨k, hk⟩ - F y ⟨k, hk⟩) +
+          (F y ⟨k, hk⟩ - y ⟨k, hk⟩) := by
+          rw [hGinc, hFinc]
+    _ =
+        G (F y) ⟨k, hk⟩ - y ⟨k, hk⟩ := by
+          abel
+
+theorem zmodVectorIncrementDependsOnTake_skewFiberIterate
+    {Base : Type*} {m r : Nat}
+    (baseStep : Base → Base)
+    (fiberStep : Base → (Fin r → ZMod m) → (Fin r → ZMod m))
+    (hfiber : ∀ base : Base,
+      ZModVectorIncrementDependsOnTake (fiberStep base)) :
+    ∀ n : Nat, ∀ base : Base,
+      ZModVectorIncrementDependsOnTake
+        (skewFiberIterate baseStep fiberStep n base)
+  | 0, _base => zmodVectorIncrementDependsOnTake_id
+  | n + 1, base => by
+      change ZModVectorIncrementDependsOnTake
+        (fun x => skewFiberIterate baseStep fiberStep n
+          (baseStep base) (fiberStep base x))
+      exact zmodVectorIncrementDependsOnTake_comp
+        (hfiber base)
+        (zmodVectorIncrementDependsOnTake_skewFiberIterate
+          baseStep fiberStep hfiber n (baseStep base))
+
 theorem bijective_of_equiv_conj {α β : Type*} (e : α ≃ β)
     (f : β → β) (g : α → α)
     (hg : Function.Bijective g)
