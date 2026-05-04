@@ -1296,6 +1296,59 @@ theorem marginTransportQge2Compatible_of_ordinaryData
 
 end OrdinaryQge2SignedCoreData
 
+/-- The easy row/column seed choices for the ordinary `q >= 2` branch, before
+the signed-column closure produces the actual signed matrix. -/
+structure OrdinaryQge2PlanData (n m q r : Nat) where
+  C : Nat
+  a : Fin n → Nat
+  epsBit : Fin n → Nat
+  c : Fin (n - 1) → Nat
+  C_le_m : C ≤ m
+  a_sum : (∑ i : Fin n, a i) = C
+  eps_sum : (∑ i : Fin n, epsBit i) = r
+  c_sum : (∑ k : Fin (n - 1), c k) = C
+  a_one_two : ∀ i : Fin n, a i = 1 ∨ a i = 2
+  eps_zero_one : ∀ i : Fin n, epsBit i = 0 ∨ epsBit i = 1
+  c_one_two : ∀ k : Fin (n - 1), c k = 1 ∨ c k = 2
+  final_zero_coprime : Nat.Coprime (m - C) m
+
+namespace OrdinaryQge2PlanData
+
+/-- The hard signed-column output for a fixed ordinary `q >= 2` plan. -/
+structure SignedMatrixData {n m q r : Nat}
+    (P : OrdinaryQge2PlanData n m q r) where
+  S : Fin n → Fin (n - 1) → Int
+  S_signed : ∀ i k, IsSignedVal (S i k)
+  S_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), S i k)
+        = (r : Int) - (P.a i : Int) - (n : Int) * (P.epsBit i : Int)
+  S_col_sum :
+    ∀ k : Fin (n - 1),
+      (∑ i : Fin n, S i k) = - (P.c k : Int)
+
+def toCoreData {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
+    (S : P.SignedMatrixData) :
+    OrdinaryQge2SignedCoreData n m q r where
+  C := P.C
+  a := P.a
+  epsBit := P.epsBit
+  c := P.c
+  S := S.S
+  C_le_m := P.C_le_m
+  a_sum := P.a_sum
+  eps_sum := P.eps_sum
+  c_sum := P.c_sum
+  a_one_two := P.a_one_two
+  eps_zero_one := P.eps_zero_one
+  c_one_two := P.c_one_two
+  final_zero_coprime := P.final_zero_coprime
+  S_signed := S.S_signed
+  S_row_sum := S.S_row_sum
+  S_col_sum := S.S_col_sum
+
+end OrdinaryQge2PlanData
+
 /--
 Paper-facing ordinary signed-core theorem for the `q >= 2` branch.
 
@@ -1308,6 +1361,30 @@ def OrdinaryQge2SignedCoreGoal : Prop :=
     m = n * q + r →
     r < n → 0 < r → 2 ≤ q →
     Nonempty (OrdinaryQge2SignedCoreData n m q r)
+
+def OrdinaryQge2PlanGoal : Prop :=
+  ∀ {n m q r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n * q + r →
+    r < n → 0 < r → 2 ≤ q →
+    Nonempty (OrdinaryQge2PlanData n m q r)
+
+def OrdinaryQge2SignedMatrixGoal : Prop :=
+  ∀ {n m q r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n * q + r →
+    r < n → 0 < r → 2 ≤ q →
+    ∀ P : OrdinaryQge2PlanData n m q r,
+      Nonempty P.SignedMatrixData
+
+theorem ordinaryQge2SignedCoreGoal_of_plan_and_matrix
+    (hPlan : OrdinaryQge2PlanGoal)
+    (hMatrix : OrdinaryQge2SignedMatrixGoal) :
+    OrdinaryQge2SignedCoreGoal := by
+  intro n m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hPlan hdodd hd5 hmodd hmqr hrlt hrpos hq with ⟨P⟩
+  rcases hMatrix hdodd hd5 hmodd hmqr hrlt hrpos hq P with ⟨S⟩
+  exact ⟨P.toCoreData S⟩
 
 /--
 The restricted `q = 1` signed-core data from the v4 prefix-count proof.

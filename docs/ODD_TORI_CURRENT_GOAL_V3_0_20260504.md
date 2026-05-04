@@ -94,6 +94,8 @@ def RoundComposite.Concrete.OddCoreHighModulusPrefixCountGoal : Prop :=
 Preferred Lean inputs for this branch:
 
 ```lean
+PrefixCount.OrdinaryQge2PlanGoal
+PrefixCount.OrdinaryQge2SignedMatrixGoal
 PrefixCount.OrdinaryQge2SignedCoreGoal
 PrefixCount.OrdinaryQeq1SignedCoreGoal
 PrefixCount.MarginTransportQge2CompatibleGoal
@@ -104,8 +106,11 @@ PrefixCountRootFlatCanonicalReturnGoal
 The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
+PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
 PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_geometry
 RoundComposite.Concrete
@@ -121,6 +126,8 @@ correction can be supplied in paper-facing forms and then consumed by the
 existing high-branch and all-dimensional adapters.  The `geometry` variants are
 available if the count-matrix/root-flat criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
+The `q >= 2` ordinary branch is now further split into easy plan data and the
+hard signed-column matrix closure.
 
 Small-modulus successor branch:
 
