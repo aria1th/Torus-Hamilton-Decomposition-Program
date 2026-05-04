@@ -204,6 +204,16 @@ base-tail lift
 
 Status: open as construction formalization.
 
+Closed supporting residue helper:
+
+```lean
+theorem RoundComposite.ActiveHall.exists_balanced_unit_residues_fin
+    {d m : Nat} (hdodd : Odd d) (hd3 : 3 <= d) (hmodd : Odd m) :
+    exists u : Fin d -> ZMod m,
+      (Finset.univ.sum (fun i : Fin d => u i)) = 0 /\
+        forall i : Fin d, IsUnit (u i)
+```
+
 Closed support added for the successor arithmetic:
 
 ```lean

@@ -227,6 +227,129 @@ def ColCompatible {m T : Nat} {X C : Type*}
 
 end ResidueSpec
 
+def balancedUnitResidueLength : Nat → Nat
+  | 0 => 3
+  | k + 1 => balancedUnitResidueLength k + 2
+
+theorem balancedUnitResidueLength_eq :
+    ∀ k : Nat, balancedUnitResidueLength k = 2 * k + 3
+  | 0 => by simp [balancedUnitResidueLength]
+  | k + 1 => by
+      rw [balancedUnitResidueLength]
+      rw [balancedUnitResidueLength_eq k]
+      omega
+
+noncomputable def balancedUnitResiduesAux (m : Nat) :
+    (k : Nat) → Fin (balancedUnitResidueLength k) → ZMod m
+  | 0 => fun i => if i.val = 0 then 1 else if i.val = 1 then 1 else -2
+  | k + 1 => fun i =>
+      if h : i.val < balancedUnitResidueLength k then
+        balancedUnitResiduesAux m k ⟨i.val, h⟩
+      else if i.val = balancedUnitResidueLength k then
+        1
+      else
+        -1
+
+theorem balancedUnitResiduesAux_sum_zero {m : Nat} :
+    ∀ k : Nat,
+      (∑ i : Fin (balancedUnitResidueLength k),
+        balancedUnitResiduesAux m k i) = 0
+  | 0 => by
+      change (∑ i : Fin 3, balancedUnitResiduesAux m 0 i) = 0
+      rw [Fin.sum_univ_three]
+      simp [balancedUnitResiduesAux, balancedUnitResidueLength]
+      ring
+  | k + 1 => by
+      change (∑ i : Fin (balancedUnitResidueLength k + 2),
+        balancedUnitResiduesAux m (k + 1) i) = 0
+      rw [Fin.sum_univ_castSucc]
+      have hcast :
+          (∑ i : Fin (balancedUnitResidueLength k + 1),
+              balancedUnitResiduesAux m (k + 1) i.castSucc)
+            =
+          (∑ i : Fin (balancedUnitResidueLength k),
+              balancedUnitResiduesAux m k i) + 1 := by
+        rw [Fin.sum_univ_castSucc]
+        congr 1
+        · apply Finset.sum_congr rfl
+          intro i _hi
+          simp [balancedUnitResiduesAux, i.isLt]
+        · simp [balancedUnitResiduesAux]
+      have hlast :
+          balancedUnitResiduesAux m (k + 1)
+              (Fin.last (balancedUnitResidueLength k + 1)) = -1 := by
+        simp [balancedUnitResiduesAux]
+      rw [hcast, hlast, balancedUnitResiduesAux_sum_zero k]
+      ring
+
+theorem balancedUnitResiduesAux_isUnit {m : Nat} (hmodd : Odd m) :
+    ∀ k : Nat, ∀ i : Fin (balancedUnitResidueLength k),
+      IsUnit (balancedUnitResiduesAux m k i)
+  | 0, i => by
+      fin_cases i <;> simp [balancedUnitResiduesAux]
+      simpa using
+        (IsUnit.neg (ZMod.isUnit_iff_coprime 2 m |>.2 hmodd.coprime_two_left))
+  | k + 1, i => by
+      by_cases h : i.val < balancedUnitResidueLength k
+      · simpa [balancedUnitResiduesAux, h] using
+          balancedUnitResiduesAux_isUnit hmodd k ⟨i.val, h⟩
+      · by_cases hi : i.val = balancedUnitResidueLength k
+        · simp [balancedUnitResiduesAux, hi]
+        · simp [balancedUnitResiduesAux, h, hi]
+
+noncomputable def balancedUnitResidues (m k : Nat) :
+    Fin (2 * k + 3) → ZMod m :=
+  fun i =>
+    balancedUnitResiduesAux m k
+      (Fin.cast (balancedUnitResidueLength_eq k).symm i)
+
+theorem balancedUnitResidues_sum_zero {m k : Nat} :
+    (∑ i : Fin (2 * k + 3), balancedUnitResidues m k i) = 0 := by
+  unfold balancedUnitResidues
+  let e : Fin (2 * k + 3) ≃ Fin (balancedUnitResidueLength k) :=
+    finCongr (balancedUnitResidueLength_eq k).symm
+  calc
+    (∑ i : Fin (2 * k + 3), balancedUnitResiduesAux m k (e i))
+        = ∑ j : Fin (balancedUnitResidueLength k),
+            balancedUnitResiduesAux m k j := by
+            exact Fintype.sum_equiv e
+              (fun i : Fin (2 * k + 3) =>
+                balancedUnitResiduesAux m k (e i))
+              (fun j : Fin (balancedUnitResidueLength k) =>
+                balancedUnitResiduesAux m k j)
+              (by intro i; rfl)
+    _ = 0 := balancedUnitResiduesAux_sum_zero k
+
+theorem balancedUnitResidues_isUnit {m k : Nat} (hmodd : Odd m)
+    (i : Fin (2 * k + 3)) :
+    IsUnit (balancedUnitResidues m k i) := by
+  unfold balancedUnitResidues
+  exact balancedUnitResiduesAux_isUnit hmodd k
+    (Fin.cast (balancedUnitResidueLength_eq k).symm i)
+
+theorem exists_balanced_unit_residues_fin {d m : Nat}
+    (hdodd : Odd d) (hd3 : 3 ≤ d) (hmodd : Odd m) :
+    ∃ u : Fin d → ZMod m,
+      (∑ i : Fin d, u i) = 0 ∧ ∀ i : Fin d, IsUnit (u i) := by
+  rcases hdodd with ⟨a, rfl⟩
+  have ha1 : 1 ≤ a := by omega
+  let k := a - 1
+  have hdim : 2 * k + 3 = 2 * a + 1 := by
+    simp [k]
+    omega
+  let e : Fin (2 * a + 1) ≃ Fin (2 * k + 3) := finCongr hdim.symm
+  refine ⟨fun i => balancedUnitResidues m k (e i), ?_, ?_⟩
+  · calc
+      (∑ i : Fin (2 * a + 1), balancedUnitResidues m k (e i))
+          = ∑ j : Fin (2 * k + 3), balancedUnitResidues m k j := by
+              exact Fintype.sum_equiv e
+                (fun i : Fin (2 * a + 1) => balancedUnitResidues m k (e i))
+                (fun j : Fin (2 * k + 3) => balancedUnitResidues m k j)
+                (by intro i; rfl)
+      _ = 0 := balancedUnitResidues_sum_zero
+  · intro i
+    exact balancedUnitResidues_isUnit hmodd (e i)
+
 namespace CountMatrix
 
 def cutMass {T : Nat} {X C : Type*}
