@@ -396,10 +396,13 @@ This proof is arithmetic-heavy but local.  It should remain inside
 as:
 
 ```text
-RoundComposite/PrefixCount/HalfSlack.lean
+RoundComposite/PrefixCountHalfSlack.lean
 ```
 
-if `PrefixCount.lean` becomes too large.
+if `PrefixCount.lean` becomes too large.  Do not use
+`RoundComposite/PrefixCount/HalfSlack.lean` unless `PrefixCount.lean` is first
+refactored into a directory module, because the current repository already has
+`RoundComposite/PrefixCount.lean` as a file.
 
 ## 8. Out Of Scope For This Goal
 
