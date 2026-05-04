@@ -686,6 +686,26 @@ theorem exists_singleSymbol_token_matching {T : Nat} {X C : Type*}
   rw [hcardSigma] at hcardA
   exact hcardA.trans (M.singleSymbol_hall hHall U σ)
 
+theorem exists_singleSymbol_bijective_token_matching
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) (σ : Fin T) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c σ)) ≃ X,
+      ∀ q : Sigma fun c : C => Fin (M.val c σ),
+        q.1 ∈ I.active (f q) := by
+  classical
+  rcases M.exists_singleSymbol_token_matching hHall σ with
+    ⟨f, hfInj, hfActive⟩
+  have hcard :
+      Fintype.card (Sigma fun c : C => Fin (M.val c σ))
+        = Fintype.card X := by
+    rw [Fintype.card_sigma]
+    simpa using M.col_sum σ
+  have hfBij : Function.Bijective f :=
+    (Fintype.bijective_iff_injective_and_card f).2 ⟨hfInj, hcard⟩
+  exact ⟨Equiv.ofBijective f hfBij, hfActive⟩
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
