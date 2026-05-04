@@ -371,6 +371,24 @@ theorem prefixCountFirstHitCanonicalSchedule_step
     (prefixCountFirstHitCanonicalSchedule hd2 L).step =
       prefixCountRootStep d m := rfl
 
+def PrefixCountFirstHitCanonicalLayerBijectiveGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    (prefixCountFirstHitCanonicalSchedule hd2 L).layerBijective
+
+def PrefixCountFirstHitCanonicalReturnsSingleCycleGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    (prefixCountFirstHitCanonicalSchedule hd2 L).returnsSingleCycle
+
+def PrefixCountFirstHitCanonicalScheduleAuxGoal : Prop :=
+  PrefixCountFirstHitCanonicalLayerBijectiveGoal ∧
+  PrefixCountFirstHitCanonicalReturnsSingleCycleGoal
+
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
     prefixCountRootLayerEquiv d m hd1
@@ -410,6 +428,16 @@ def PrefixCountRootFlatCanonicalScheduleCriterionGoal : Prop :=
         (Fin d) (Fin d) (PrefixCountRootState d m) m,
       S.step = prefixCountRootStep d m ∧
       S.rowLatin ∧ S.layerBijective ∧ S.returnsSingleCycle
+
+theorem prefixCountRootFlatCanonicalScheduleCriterionGoal_of_firstHit_aux
+    (hAux : PrefixCountFirstHitCanonicalScheduleAuxGoal) :
+    PrefixCountRootFlatCanonicalScheduleCriterionGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L
+  refine ⟨prefixCountFirstHitCanonicalSchedule hd2 L,
+    prefixCountFirstHitCanonicalSchedule_step hd2 L,
+    prefixCountFirstHitCanonicalSchedule_rowLatin hd2 L,
+    hAux.1 hd2 hdodd hd5 hmodd hdm hC L,
+    hAux.2 hd2 hdodd hd5 hmodd hdm hC L⟩
 
 theorem prefixCountRootFlatCanonicalReturnGoal_of_scheduleCriterion
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
