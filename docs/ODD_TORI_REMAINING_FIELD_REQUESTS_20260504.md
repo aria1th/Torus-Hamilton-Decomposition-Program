@@ -354,8 +354,17 @@ prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
 prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
 PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+prefixCountFirstHitReturnLowResidualState
+prefixCountFirstHitReturnLowResidual
+prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq
+prefixCountFirstHitReturnLowResidual_hitBeforeLastZero_iff_rho_lt
+prefixCountFirstHitReturnLowResidual_noZero_iff_rho_not_lt
+prefixCountFirstHitReturnFiberHitCondition_lowResidual_iff
+PrefixCountFirstHitReturnLowResidualReindexGoal
 prefixCountReturnTailLocalSymbolSplitIndicatorSum
 prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex
+prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
 prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
 ```
 
@@ -374,8 +383,11 @@ conversion.
 It also closes the pure symbol split from the three residual events to
 `prefixCountReturnTailSignedCoeff`, and an abstract wrapper from a low-residual
 reindex theorem plus hit-condition iff to the fixed-`t` local sum.  The open
-return-tail proof is therefore precisely the construction of that residual map
-and the two facts about it.
+return-tail proof is now even narrower: the residual map is defined, its zero
+coordinates are connected to `prefixCountCanonicalRhoHitNat`, the three
+residual events are connected to the rho cases, and the actual hit condition is
+rewritten to the residual event split.  The remaining field is precisely
+`PrefixCountFirstHitReturnLowResidualReindexGoal`.
 
 ### Already Lean-Closed
 

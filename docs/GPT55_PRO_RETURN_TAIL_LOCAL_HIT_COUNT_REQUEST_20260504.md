@@ -71,19 +71,53 @@ After this request was submitted, Lean also closed the pure symbol split and
 the abstract reindex/iff wrapper:
 
 ```lean
+noncomputable def RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidualState
+
+noncomputable def RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidual
+
 theorem RoundComposite.Concrete
   .prefixCountReturnTailLocalSymbolSplitIndicatorSum :
     ...
 
 theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidual_hitBeforeLastZero_iff_rho_lt :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnLowResidual_noZero_iff_rho_not_lt :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberHitCondition_lowResidual_iff :
+    ...
+
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnLowResidualReindexGoal : Prop := ...
+
+theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex :
     ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
+    (hReindex : PrefixCountFirstHitReturnLowResidualReindexGoal) :
+    PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
 ```
 
-So the remaining constructive task is even narrower: define the low-residual
-map `R`, prove `(x,u) ↦ R u x` reindexes the `x,u` sum onto
-`Fin (k + 1) -> ZMod m`, and prove the actual hit-condition iff against the
-three residual events.
+So the remaining constructive task is even narrower: prove the reindexing of
+the now-defined map
+`(x,u) ↦ prefixCountFirstHitReturnLowResidual hd2 L c hk t u x` onto
+`Fin (k + 1) -> ZMod m`.
 
 ## Exact Target Shape
 
@@ -141,14 +175,11 @@ prefixCountPcHitBeforeLastZeroIndicatorSum
 Please give a Lean-friendly proof plan and theorem interface for the fixed-`t`
 local hit count.  The most useful answer would include:
 
-1. a definition of the low residual vector
-   `prefixCountFirstHitReturnLowResidual : Fin (k + 1) -> ZMod m`;
-2. a theorem that the map `(x,u) ↦ lowResidual` reindexes the nested
+1. a theorem that the map `(x,u) ↦ lowResidual` reindexes the nested
    `x,u` sum onto all `Fin (k + 1) -> ZMod m`;
-3. a theorem rewriting the hit condition as the three symbol cases:
-   delta column, step column, and zero contribution columns;
-4. exact Lean statement sketches showing how the closed `pc...` counting
-   lemmas give `prefixCountReturnTailSignedCoeff`.
+2. exact Lean statement sketches showing how to prove that reindex theorem,
+   preferably by triangular coordinates or by composing the closed base-orbit
+   and projected-low-prefix bijections.
 
 Please do not reprove the generic lower-triangular odometer theorem, row-Latin
 property, layer-symbol matrix count, or final torus lift.  Those are already

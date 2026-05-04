@@ -3649,6 +3649,291 @@ def PrefixCountFirstHitReturnTailLocalHitConditionSumGoal : Prop :=
           prefixCountReturnTailSignedCoeff hd2 hk
             (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
 
+noncomputable def prefixCountFirstHitReturnLowResidualState
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    PrefixCountRootState d m :=
+  (prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+    ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+      ((((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+          (0 : ZMod m)),
+        Shared.skewFiberIterate
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)
+          u (0 : ZMod m)
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))
+
+noncomputable def prefixCountFirstHitReturnLowResidual
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    Fin (k + 1) → ZMod m :=
+  fun r =>
+    prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x
+      ⟨r.val, by omega⟩ - ((t : Nat) : ZMod m)
+
+theorem prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) (r : Fin (k + 1)) :
+    prefixCountFirstHitReturnLowResidual hd2 L c hk t u x r = 0 ↔
+      prefixCountCanonicalRhoHitNat ((t : Nat) : ZMod m)
+        (prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+        r.val := by
+  constructor
+  · intro hzero
+    refine ⟨by omega, by omega, ?_⟩
+    have hsub :
+        prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x
+          ⟨r.val, by omega⟩ -
+            ((t : Nat) : ZMod m) = 0 := by
+      simpa [prefixCountFirstHitReturnLowResidual] using hzero
+    exact sub_eq_zero.mp hsub
+  · intro hhit
+    rcases hhit with ⟨_hr, _hnext, hcoord⟩
+    simp [prefixCountFirstHitReturnLowResidual, hcoord]
+
+theorem prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    prefixCountPcExactLastZero
+        (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+      (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+        (prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)).val =
+        k + 1 := by
+  constructor
+  · intro h
+    apply
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2
+        (t := ((t : Nat) : ZMod m))
+        (w := prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+        (k := k) hk).2
+    constructor
+    · have hz := h.2
+      have hhit :=
+        (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+          (hd2 := hd2) (C := C) L c hk t u x (Fin.last k)).1 hz
+      simpa using hhit
+    · intro j hj hhit
+      have hz :
+          prefixCountFirstHitReturnLowResidual hd2 L c hk t u x
+            (Fin.castSucc ⟨j, hj⟩) = 0 := by
+        exact
+          (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+            (hd2 := hd2) (C := C) L c hk t u x
+            (Fin.castSucc ⟨j, hj⟩)).2 (by simpa using hhit)
+      exact h.1 ⟨j, hj⟩ hz
+  · intro hrho
+    have hdata :=
+      (prefixCountCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+        (d := d) (m := m) hd2
+        (t := ((t : Nat) : ZMod m))
+        (w := prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+        (k := k) hk).1 hrho
+    constructor
+    · intro i
+      intro hz
+      have hhit :=
+        (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+          (hd2 := hd2) (C := C) L c hk t u x i.castSucc).1 hz
+      exact hdata.2 i.val i.isLt (by simpa using hhit)
+    · exact
+        (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+          (hd2 := hd2) (C := C) L c hk t u x (Fin.last k)).2
+          (by simpa using hdata.1)
+
+theorem prefixCountFirstHitReturnLowResidual_hitBeforeLastZero_iff_rho_lt
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    prefixCountPcHitBeforeLastZero
+        (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+      (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+        (prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)).val <
+        k + 1 := by
+  rw [prefixCountCanonicalRho_val_lt_succ_iff_exists_hit_before
+    (d := d) (m := m) hd2
+    (t := ((t : Nat) : ZMod m))
+    (w := prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+    (l := k) (by omega)]
+  constructor
+  · intro h
+    rcases h with ⟨i, hi⟩
+    refine ⟨i.val, i.isLt, ?_⟩
+    exact
+      (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+        (hd2 := hd2) (C := C) L c hk t u x i.castSucc).1 hi
+  · intro h
+    rcases h with ⟨j, hj, hhit⟩
+    refine ⟨⟨j, hj⟩, ?_⟩
+    exact
+      (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+        (hd2 := hd2) (C := C) L c hk t u x
+        (Fin.castSucc ⟨j, hj⟩)).2 (by simpa using hhit)
+
+theorem prefixCountFirstHitReturnLowResidual_noZero_iff_rho_not_lt
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    prefixCountPcNoZero
+        (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+      ¬ (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+          (prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)).val <
+        k + 2 := by
+  rw [prefixCountCanonicalRho_not_lt_succ_succ_iff_no_hit_upto
+    (d := d) (m := m) hd2
+    (t := ((t : Nat) : ZMod m))
+    (w := prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+    (k := k) hk]
+  constructor
+  · intro h j hj hhit
+    have hj' : j < k + 1 := by omega
+    have hz :
+        prefixCountFirstHitReturnLowResidual hd2 L c hk t u x
+          ⟨j, hj'⟩ = 0 :=
+      (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+        (hd2 := hd2) (C := C) L c hk t u x ⟨j, hj'⟩).2 hhit
+    exact h ⟨j, hj'⟩ hz
+  · intro h r hz
+    have hhit :=
+      (prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
+        (hd2 := hd2) (C := C) L c hk t u x r).1 hz
+    exact h r.val (by omega) (by simpa using hhit)
+
+theorem prefixCountFirstHitReturnFiberHitCondition_lowResidual_iff
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t u : Nat) (x : Fin k → ZMod m) :
+    prefixCountFirstHitReturnFiberHitCondition hd2 L c
+        (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+          (0 : ZMod m))
+        (Shared.skewFiberIterate
+          (prefixCountFirstHitReturnBaseStep (m := m) C c)
+          (prefixCountFirstHitReturnFiberStep hd2 L c)
+          u (0 : ZMod m)
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+        ⟨k, hk⟩ t ↔
+      (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+          prefixCountReturnTailDeltaCol hd2 ∧
+            prefixCountPcExactLastZero
+              (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) ∨
+        ((L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val =
+            k + 1 ∧
+          1 < (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val ∧
+            prefixCountPcHitBeforeLastZero
+              (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) ∨
+        (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c =
+          prefixCountReturnTailStepCol hd2 hk ∧
+            prefixCountPcNoZero
+              (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) := by
+  classical
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  let rho :=
+    prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+      (prefixCountFirstHitReturnLowResidualState hd2 L c hk t u x)
+  have hDeltaVal : s.val = 1 ↔ s = prefixCountReturnTailDeltaCol hd2 := by
+    constructor
+    · intro h
+      apply Fin.ext
+      simpa [prefixCountReturnTailDeltaCol, PrefixCount.Parts.colDelta] using h
+    · intro h
+      simpa [s, h, prefixCountReturnTailDeltaCol,
+        PrefixCount.Parts.colDelta]
+  have hStepVal : s.val = k + 2 ↔
+      s = prefixCountReturnTailStepCol hd2 hk := by
+    constructor
+    · intro h
+      apply Fin.ext
+      simpa [prefixCountReturnTailStepCol, PrefixCount.Parts.colStep] using h
+    · intro h
+      simpa [s, h, prefixCountReturnTailStepCol,
+        PrefixCount.Parts.colStep]
+  have hExact :
+      prefixCountPcExactLastZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+        rho.val = k + 1 := by
+    simpa [rho] using
+      prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq
+        (hd2 := hd2) (C := C) L c hk t u x
+  have hBefore :
+      prefixCountPcHitBeforeLastZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+        rho.val < k + 1 := by
+    simpa [rho] using
+      prefixCountFirstHitReturnLowResidual_hitBeforeLastZero_iff_rho_lt
+        (hd2 := hd2) (C := C) L c hk t u x
+  have hNo :
+      prefixCountPcNoZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x) ↔
+        ¬ rho.val < k + 2 := by
+    simpa [rho] using
+      prefixCountFirstHitReturnLowResidual_noZero_iff_rho_not_lt
+        (hd2 := hd2) (C := C) L c hk t u x
+  change
+    ((s.val = 1 ∧ rho.val = k + 1) ∨
+      (s.val = k + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+      (s.val = k + 2 ∧ ¬ rho.val < s.val)) ↔
+    ((s = prefixCountReturnTailDeltaCol hd2 ∧
+        prefixCountPcExactLastZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) ∨
+      (s.val = k + 1 ∧ 1 < s.val ∧
+        prefixCountPcHitBeforeLastZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) ∨
+      (s = prefixCountReturnTailStepCol hd2 hk ∧
+        prefixCountPcNoZero
+          (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)))
+  constructor
+  · intro h
+    rcases h with h | h | h
+    · exact Or.inl ⟨hDeltaVal.mp h.1, hExact.mpr h.2⟩
+    · have hlt : rho.val < k + 1 := by
+        simpa [h.1] using h.2.2
+      exact Or.inr (Or.inl ⟨h.1, h.2.1, hBefore.mpr hlt⟩)
+    · have hnlt : ¬ rho.val < k + 2 := by
+        simpa [h.1] using h.2
+      exact Or.inr (Or.inr ⟨hStepVal.mp h.1, hNo.mpr hnlt⟩)
+  · intro h
+    rcases h with h | h | h
+    · exact Or.inl ⟨hDeltaVal.mpr h.1, hExact.mp h.2⟩
+    · have hlt : rho.val < s.val := by
+        have := hBefore.mp h.2.2
+        simpa [h.1] using this
+      exact Or.inr (Or.inl ⟨h.1, h.2.1, hlt⟩)
+    · have hnlt : ¬ rho.val < s.val := by
+        have := hNo.mp h.2
+        simpa [hStepVal.mpr h.1] using this
+      exact Or.inr (Or.inr ⟨hStepVal.mpr h.1, hnlt⟩)
+
+def PrefixCountFirstHitReturnLowResidualReindexGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ k : Nat, ∀ hk : k < d - 2,
+      ∀ t ∈ Finset.range m,
+        ∀ F : (Fin (k + 1) → ZMod m) → ZMod m,
+          (∑ x : (Fin k → ZMod m),
+            ∑ u ∈ Finset.range m,
+              F (prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)) =
+            ∑ y : (Fin (k + 1) → ZMod m), F y
+
 def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
   Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal ∧
   PrefixCountFirstHitReturnTailTriangularGoal ∧
@@ -4090,6 +4375,23 @@ theorem prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_rein
             prefixCountReturnTailLocalSymbolSplitIndicatorSum
               (m := m) hd2 hk
               (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+
+theorem prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
+    (hReindex : PrefixCountFirstHitReturnLowResidualReindexGoal) :
+    PrefixCountFirstHitReturnTailLocalHitConditionSumGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c k hk t ht
+  exact
+    prefixCountFirstHitReturnTailLocalHitConditionSum_eq_signedCoeff_of_reindex
+      (hd2 := hd2) (C := C) L c hk ht
+      (fun u x => prefixCountFirstHitReturnLowResidual hd2 L c hk t u x)
+      (by
+        intro F
+        exact hReindex hd2 hdodd hd5 hmodd hdm hC L c k hk t ht F)
+      (by
+        intro x u _hu
+        exact
+          prefixCountFirstHitReturnFiberHitCondition_lowResidual_iff
+            (hd2 := hd2) (C := C) L c hk t u x)
 
 theorem prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
     (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :

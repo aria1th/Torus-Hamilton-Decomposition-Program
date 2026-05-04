@@ -134,6 +134,7 @@ def PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleSumGoal : Prop := ...
+def PrefixCountFirstHitReturnLowResidualReindexGoal : Prop := ...
 
 def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailTriangularGoal ∧
@@ -155,6 +156,16 @@ theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
     (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
     PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
+    (hReindex : PrefixCountFirstHitReturnLowResidualReindexGoal) :
+    PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleSumGoal_of_localHitConditionSum
+    (hLocal : PrefixCountFirstHitReturnTailLocalHitConditionSumGoal) :
+    PrefixCountFirstHitReturnTailCocycleSumGoal
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
