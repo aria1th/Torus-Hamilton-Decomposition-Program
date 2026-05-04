@@ -2212,6 +2212,196 @@ def toAuxMatrixData {n r : Nat}
 
 end OrdinaryQeq1AuxDegreeMatrixData
 
+namespace OrdinaryQeq1AuxMatrixData
+
+def posCols {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
+    (i : Fin n) : Finset (Fin (n - 1)) :=
+  Finset.univ.filter fun k => A.B i k = 1
+
+def posRows {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
+    (k : Fin (n - 1)) : Finset (Fin n) :=
+  Finset.univ.filter fun i => A.B i k = 1
+
+theorem sum_row_eq_two_posCols_card_sub {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r) (i : Fin n) :
+    (∑ k : Fin (n - 1), A.B i k) =
+      2 * ((A.posCols i).card : Int) - (n - 1 : Nat) := by
+  have hpoint : ∀ k : Fin (n - 1),
+      A.B i k = 2 * (if A.B i k = 1 then (1 : Int) else 0) - 1 := by
+    intro k
+    rcases A.B_pm_one i k with h | h <;> simp [h]
+  have hcountNat :
+      (∑ k : Fin (n - 1), if A.B i k = 1 then (1 : Nat) else 0) =
+        (A.posCols i).card := by
+    rw [← Finset.card_filter]
+    rfl
+  have hcountInt :
+      (∑ k : Fin (n - 1), if A.B i k = 1 then (1 : Int) else 0) =
+        ((A.posCols i).card : Int) := by
+    exact_mod_cast hcountNat
+  calc
+    (∑ k : Fin (n - 1), A.B i k)
+        = ∑ k : Fin (n - 1),
+            (2 * (if A.B i k = 1 then (1 : Int) else 0) - 1) := by
+            apply Finset.sum_congr rfl
+            intro k _hk
+            exact hpoint k
+    _ = 2 * (∑ k : Fin (n - 1),
+            if A.B i k = 1 then (1 : Int) else 0) -
+          (Fintype.card (Fin (n - 1)) : Int) := by
+            rw [Finset.sum_sub_distrib]
+            congr 1
+            · rw [← Finset.mul_sum]
+            · simp [Finset.sum_const]
+    _ = 2 * ((A.posCols i).card : Int) - (n - 1 : Nat) := by
+            rw [hcountInt]
+            simp [Fintype.card_fin]
+
+theorem sum_col_eq_two_posRows_card_sub {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r) (k : Fin (n - 1)) :
+    (∑ i : Fin n, A.B i k) =
+      2 * ((A.posRows k).card : Int) - (n : Int) := by
+  have hpoint : ∀ i : Fin n,
+      A.B i k = 2 * (if A.B i k = 1 then (1 : Int) else 0) - 1 := by
+    intro i
+    rcases A.B_pm_one i k with h | h <;> simp [h]
+  have hcountNat :
+      (∑ i : Fin n, if A.B i k = 1 then (1 : Nat) else 0) =
+        (A.posRows k).card := by
+    rw [← Finset.card_filter]
+    rfl
+  have hcountInt :
+      (∑ i : Fin n, if A.B i k = 1 then (1 : Int) else 0) =
+        ((A.posRows k).card : Int) := by
+    exact_mod_cast hcountNat
+  calc
+    (∑ i : Fin n, A.B i k)
+        = ∑ i : Fin n,
+            (2 * (if A.B i k = 1 then (1 : Int) else 0) - 1) := by
+            apply Finset.sum_congr rfl
+            intro i _hi
+            exact hpoint i
+    _ = 2 * (∑ i : Fin n,
+            if A.B i k = 1 then (1 : Int) else 0) -
+          (Fintype.card (Fin n) : Int) := by
+            rw [Finset.sum_sub_distrib]
+            congr 1
+            · rw [← Finset.mul_sum]
+            · simp [Finset.sum_const]
+    _ = 2 * ((A.posRows k).card : Int) - (n : Int) := by
+            rw [hcountInt]
+            simp [Fintype.card_fin]
+
+theorem posRows_card {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r) (k : Fin (n - 1)) :
+    (A.posRows k).card = (n - 2) / 2 := by
+  have hsum := A.sum_col_eq_two_posRows_card_sub k
+  rw [A.B_col_sum k] at hsum
+  have htwo : 2 * ((A.posRows k).card : Int) = (n : Int) - 2 := by
+    omega
+  by_cases hn : n = 0
+  · subst n
+    exact Fin.elim0 k
+  · by_cases hn1 : n = 1
+    · subst n
+      exact Fin.elim0 k
+    · rcases Nat.even_or_odd n with hnEven | hnOdd
+      · rcases hnEven with ⟨a, ha⟩
+        subst n
+        have hcard : (A.posRows k).card = a - 1 := by omega
+        have hdiv : (2 * a - 2) / 2 = a - 1 := by omega
+        omega
+      · rcases hnOdd with ⟨a, ha⟩
+        subst n
+        omega
+
+theorem posCols_card {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r)) (i : Fin n) :
+    (A.posCols i).card = ordinaryQeq1AuxDegree n r i := by
+  have hsum := A.sum_row_eq_two_posCols_card_sub i
+  rw [A.B_row_sum i] at hsum
+  have htwo :
+      2 * ((A.posCols i).card : Int) =
+        (if i.val < r - 1 then
+          (r : Int) - 2 - (n : Int)
+        else if i.val < r then
+          (r : Int) - (n : Int)
+        else
+          (r : Int) - 2) + (n - 1 : Nat) := by
+    omega
+  have hrodd : Odd r :=
+    OrdinaryQeq1AuxDegreeMatrixData.odd_r_of_odd_n_add_one_and_odd_n_add_r
+      hdodd hmodd
+  unfold ordinaryQeq1AuxDegree
+  by_cases hlow : i.val < r - 1
+  · simp only [hlow, ↓reduceIte]
+    rcases hrodd with ⟨s, hs⟩
+    subst r
+    have hcard : (A.posCols i).card = s - 1 := by omega
+    have hdiv : (2 * s + 1 - 3) / 2 = s - 1 := by omega
+    omega
+  · by_cases hmid : i.val < r
+    · simp only [hlow, hmid, ↓reduceIte]
+      rcases hrodd with ⟨s, hs⟩
+      subst r
+      have hcard : (A.posCols i).card = s := by omega
+      have hdiv : (2 * s + 1 - 1) / 2 = s := by omega
+      omega
+    · simp only [hlow, hmid, ↓reduceIte]
+      rcases hdodd with ⟨a, ha⟩
+      rcases hrodd with ⟨s, hs⟩
+      have hn : n = 2 * a := by omega
+      have hr : r = 2 * s + 1 := by omega
+      subst n
+      subst r
+      have hcard : (A.posCols i).card = a + s - 1 := by omega
+      have hdiv :
+          (2 * a + (2 * s + 1) - 3) / 2 = a + s - 1 := by
+        omega
+      omega
+
+def lowCols (n r : Nat) : Finset (Fin (n - 1)) :=
+  Finset.univ.filter fun k => k.val < r
+
+theorem lowCols_card {n r : Nat} (hrlt : r < n) :
+    (lowCols n r).card = r := by
+  dsimp [lowCols]
+  rw [Finset.card_filter]
+  rw [sum_fin_indicator_val_lt]
+  omega
+
+theorem exists_distinguished_low_neg {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r))
+    (hrlt : r < n) (hrpos : 0 < r) :
+    ∃ k : Fin (n - 1), k.val < r ∧
+      A.B ⟨r - 1, by omega⟩ k = (-1 : Int) := by
+  let row : Fin n := ⟨r - 1, by omega⟩
+  by_contra hnone
+  have hsubset : lowCols n r ⊆ A.posCols row := by
+    intro k hk
+    have hklt : k.val < r := by simpa [lowCols] using hk
+    rcases A.B_pm_one row k with hB | hB
+    · exfalso
+      apply hnone
+      exact ⟨k, hklt, hB⟩
+    · simp [posCols, hB]
+  have hcardle := Finset.card_le_card hsubset
+  have hposCard := A.posCols_card hdodd hmodd row
+  have hlowCard := lowCols_card (n := n) (r := r) hrlt
+  rw [hlowCard, hposCard] at hcardle
+  unfold ordinaryQeq1AuxDegree at hcardle
+  have hnotLow : ¬ row.val < r - 1 := by
+    simp [row]
+  have hmid : row.val < r := by
+    simp [row]
+    omega
+  simp [hnotLow, hmid] at hcardle
+  omega
+
+end OrdinaryQeq1AuxMatrixData
+
 /--
 Paper-facing output for the restricted `q = 1` matching correction before the
 final `+1` and `-1` edits are applied.  Rows with `r <= i.val` are the `P` rows, the

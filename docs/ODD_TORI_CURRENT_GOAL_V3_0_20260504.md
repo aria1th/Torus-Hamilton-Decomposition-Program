@@ -154,6 +154,15 @@ PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total
 PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
 PrefixCount.OrdinaryQeq1AuxMatrixData
 PrefixCount.OrdinaryQeq1SpecialMatchingData
+PrefixCount.OrdinaryQeq1AuxMatrixData.posCols
+PrefixCount.OrdinaryQeq1AuxMatrixData.posRows
+PrefixCount.OrdinaryQeq1AuxMatrixData.sum_row_eq_two_posCols_card_sub
+PrefixCount.OrdinaryQeq1AuxMatrixData.sum_col_eq_two_posRows_card_sub
+PrefixCount.OrdinaryQeq1AuxMatrixData.posRows_card
+PrefixCount.OrdinaryQeq1AuxMatrixData.posCols_card
+PrefixCount.OrdinaryQeq1AuxMatrixData.lowCols
+PrefixCount.OrdinaryQeq1AuxMatrixData.lowCols_card
+PrefixCount.OrdinaryQeq1AuxMatrixData.exists_distinguished_low_neg
 PrefixCount.OrdinaryQeq1AuxMatrixGoal
 PrefixCount.OrdinaryQeq1SpecialMatchingGoal
 PrefixCount.OrdinaryQeq1CanonicalCorrectionData
@@ -282,6 +291,13 @@ The auxiliary matrix side is split once more at the Gale-Ryser output level:
 `PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` asks only for the `0/1`
 degree matrix, and Lean closes the conversion to the signed `±1` matrix through
 `PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix`.
+For the remaining q=1 special matching theorem, Lean now exposes the matching
+incidence carried by an arbitrary auxiliary `±1` matrix: `posCols` and `posRows`
+count the `+1` entries, `posCols_card` recovers the paper row degrees,
+`posRows_card` proves every column has `(n - 2) / 2` positive entries, and
+`exists_distinguished_low_neg` isolates the required negative low column in the
+distinguished row.  Thus the remaining q=1 matching work is now the Hall
+selection of the `P` rows against the high columns plus one such low column.
 That degree-matrix side is now split into the row-degree arithmetic and the
 generic uniform-column `0/1` matrix realization:
 `PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal` plus
