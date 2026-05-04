@@ -1480,6 +1480,9 @@ theorem ordinaryQge2SeedGoal : OrdinaryQge2SeedGoal := by
     exact Nat.coprime_two_left.mpr hmodd
   exact (Nat.coprime_self_sub_left hCle).2 hCcop
 
+theorem ordinaryQge2PlanGoal : OrdinaryQge2PlanGoal :=
+  ordinaryQge2PlanGoal_of_seed ordinaryQge2SeedGoal
+
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →

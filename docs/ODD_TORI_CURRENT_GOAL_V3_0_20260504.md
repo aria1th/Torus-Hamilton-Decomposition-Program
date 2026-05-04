@@ -110,10 +110,12 @@ The `q >= 2` seed choice is now closed in Lean:
 
 ```lean
 PrefixCount.ordinaryQge2SeedGoal
+PrefixCount.ordinaryQge2PlanGoal
 ```
 
 It chooses a power of two in `[n, 2*n - 2]`; since `m` is odd, that choice is
-coprime to `m`.  The v4 ordinary signed-core data now has Lean bridges:
+coprime to `m`, then packages the `1/2` row and column plan.  The v4 ordinary
+signed-core data now has Lean bridges:
 
 ```lean
 PrefixCount.ordinaryQge2PlanGoal_of_seed
