@@ -112,7 +112,15 @@ def RoundComposite.Concrete
             e tail + 1
 ```
 
-Lean proves the plain rank goal from this using `Equiv.bijective`.
+Lean proves the plain rank goal from this using `Equiv.bijective`; the shared
+direct criterion is:
+
+```lean
+theorem Shared.single_cycle_of_zmod_rank_equiv
+    (f : alpha -> alpha) (rank : alpha ≃ ZMod N)
+    (hstep : forall x, rank (f x) = rank x + 1) :
+    Shared.IsSingleCycleMap f
+```
 
 The generic cardinality/equivalence facts for the tail space are already
 available in `Shared/TorusCayley.lean`:
