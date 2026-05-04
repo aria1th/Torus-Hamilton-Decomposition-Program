@@ -11,9 +11,9 @@ Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailCocycleSumTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
@@ -24,13 +24,14 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailCocycleUnitGoal
+PrefixCountFirstHitReturnTailCocycleSumGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
 The hit-condition locality field is now Lean-closed as
 `prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal`.  The remaining
-unit field implies the older orbit field through a Lean-closed skew-iterate
+exact cocycle sum field implies the unit field via `C.Admissible.prim_step`,
+and then implies the older orbit field through a Lean-closed skew-iterate
 preservation theorem, increment-to-triangular bridge, and generic
 lower-triangular odometer theorem:
 
@@ -195,7 +196,7 @@ Please provide either:
 The most useful output is a sequence of auxiliary Lean theorem statements with
 proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
-## Request 2: First-Hit Return-Tail Unit Carry
+## Request 2: First-Hit Return-Tail Cocycle Sum
 
 ### Files To Read
 
@@ -223,19 +224,29 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 ```
 
+The unit-carry field is now Lean-reduced from the exact sum target:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
+    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
+    PrefixCountFirstHitReturnTailCocycleUnitGoal
+```
+
 The preferred remaining target for the first-hit return-tail monodromy is:
 
 ```lean
 def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop :=
+  .PrefixCountFirstHitReturnTailCocycleSumGoal : Prop :=
   forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
     Odd d -> 5 <= d -> Odd m -> d <= m ->
     C.Admissible m ->
     (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
     forall c : Fin d, forall k : Nat, forall hk : k < d - 2,
-      IsUnit
-        (∑ x : (Fin k -> ZMod m),
-          prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
+      (∑ x : (Fin k -> ZMod m),
+        prefixCountFirstHitReturnTailCocycle hd2 L c k hk x)
+        =
+        (((C.step c ⟨k, hk⟩ : Int) - (C.delta c : Int)) : ZMod m)
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_hitConditionUnitBlocks
@@ -275,13 +286,13 @@ theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
 This route avoids proving orbit transitivity directly.  It asks for:
 
 ```text
-every rank cocycle has unit total carry
+every rank cocycle has the exact total carry `C.step c k - C.delta c`
 ```
 
 The older GPT-5.5 Pro response established the triangular/unit route and led
 to the now-closed generic lower-triangular odometer theorem.  A narrower
 follow-up request is now in progress; after local Lean progress its remaining
-useful target is the unit-carry calculation:
+useful target is the exact cocycle-sum calculation:
 
 ```text
 docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md
@@ -294,8 +305,9 @@ Lean already builds the first-hit schedule, proves the row-Latin and
 layer-bijective parts, reduces the root-flat return to head-tail monodromy, and
 proves bijectivity of the tail map, preservation of this increment-dependency
 under `Shared.skewFiberIterate`, and the generic lower-triangular odometer
-theorem.  It now also proves the one-step first-hit hit-condition locality.  The
-remaining request is the unit carry calculation.
+theorem.  It now also proves the one-step first-hit hit-condition locality and
+the reduction from exact sum to unit carry.  The remaining request is the exact
+cocycle-sum calculation.
 
 Useful closed bridges:
 
@@ -368,10 +380,10 @@ theorem RoundComposite.Concrete
 
 ### Prompt
 
-Prove the high-modulus first-hit return-tail unit carry field:
+Prove the high-modulus first-hit return-tail exact cocycle-sum field:
 
 ```lean
-PrefixCountFirstHitReturnTailCocycleUnitGoal
+PrefixCountFirstHitReturnTailCocycleSumGoal
 ```
 
 This is now preferred over proving

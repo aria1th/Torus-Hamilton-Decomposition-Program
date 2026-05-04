@@ -133,6 +133,7 @@ def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
 def PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
+def PrefixCountFirstHitReturnTailCocycleSumGoal : Prop := ...
 
 def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailTriangularGoal ∧
@@ -149,6 +150,11 @@ def PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal : Prop :=
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
     PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
+    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
+    PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
@@ -285,14 +291,14 @@ theorem RoundComposite.Concrete
 ```
 
 The currently sharpest return-tail endpoint uses trellis for the q>=2 branch,
-the Lean-closed one-step hit-condition locality theorem, and only the unit-carry
-field for the return-tail branch:
+the Lean-closed one-step hit-condition locality theorem, and an exact cocycle
+sum formula for the return-tail branch:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailUnitTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailCocycleSumTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
 ```
@@ -314,7 +320,7 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailCocycleUnitGoal
+PrefixCountFirstHitReturnTailCocycleSumGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 

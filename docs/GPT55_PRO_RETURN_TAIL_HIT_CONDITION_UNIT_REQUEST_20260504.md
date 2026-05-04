@@ -53,8 +53,18 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 ```
 
-Thus the useful remaining part of the response is expected to be the unit-carry
-calculation for `PrefixCountFirstHitReturnTailCocycleUnitGoal`.
+Lean also now reduces the unit-carry field from the exact sum target:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailCocycleUnitGoal_of_sum
+    (hSum : PrefixCountFirstHitReturnTailCocycleSumGoal) :
+    PrefixCountFirstHitReturnTailCocycleUnitGoal
+```
+
+Thus the useful remaining part of the response is expected to be the exact
+cocycle-sum calculation for
+`PrefixCountFirstHitReturnTailCocycleSumGoal`.
 
 It explicitly asks not to reprove the generic lower-triangular odometer theorem.
 That theorem is already closed in `Shared` and is consumed by:

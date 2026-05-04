@@ -9,6 +9,15 @@ open scoped BigOperators
 def IntCoprime (a : Int) (m : Nat) : Prop :=
   Nat.Coprime a.natAbs m
 
+theorem isUnit_zmod_intCast_of_intCoprime {a : Int} {m : Nat}
+    (h : IntCoprime a m) :
+    IsUnit ((a : ZMod m)) := by
+  cases a with
+  | ofNat n =>
+      simpa using (ZMod.isUnit_iff_coprime n m).2 h
+  | negSucc n =>
+      simpa using IsUnit.neg ((ZMod.isUnit_iff_coprime (n + 1) m).2 h)
+
 /-- Counts for symbols `0`, `Delta`, and the numeric prefix symbols. -/
 structure Parts (d : Nat) where
   zero : Fin d → Nat
