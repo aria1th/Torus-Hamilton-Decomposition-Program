@@ -36,6 +36,15 @@ theorem choiceDegreeOn_le_card {X C : Type*} [DecidableEq X] [DecidableEq C]
   unfold choiceDegreeOn
   exact Finset.card_filter_le E (fun x => choice x = c)
 
+theorem choiceDegreeOn_mono_set {X C : Type*} [DecidableEq X] [DecidableEq C]
+    {E₁ E₂ : Finset X} (hE : E₁ ⊆ E₂) (choice : X → C) (c : C) :
+    choiceDegreeOn E₁ choice c ≤ choiceDegreeOn E₂ choice c := by
+  unfold choiceDegreeOn
+  exact Finset.card_le_card (by
+    intro x hx
+    exact Finset.mem_filter.mpr
+      ⟨hE (Finset.mem_filter.mp hx).1, (Finset.mem_filter.mp hx).2⟩)
+
 theorem choiceDegreeOn_le_choiceDegree {X C : Type*}
     [Fintype X] [DecidableEq X] [DecidableEq C]
     (E : Finset X) (choice : X → C) (c : C) :
@@ -68,6 +77,28 @@ theorem choiceHitCountOn_le_card {X C : Type*}
   unfold choiceHitCountOn
   exact Finset.card_filter_le E (fun x => choice x ∈ U)
 
+theorem choiceHitCountOn_mono_set {X C : Type*}
+    [DecidableEq X] [DecidableEq C]
+    {E₁ E₂ : Finset X} (hE : E₁ ⊆ E₂) (choice : X → C)
+    (U : Finset C) :
+    choiceHitCountOn E₁ choice U ≤ choiceHitCountOn E₂ choice U := by
+  unfold choiceHitCountOn
+  exact Finset.card_le_card (by
+    intro x hx
+    exact Finset.mem_filter.mpr
+      ⟨hE (Finset.mem_filter.mp hx).1, (Finset.mem_filter.mp hx).2⟩)
+
+theorem choiceHitCountOn_mono_colors {X C : Type*}
+    [DecidableEq X] [DecidableEq C]
+    (E : Finset X) (choice : X → C) {U₁ U₂ : Finset C}
+    (hU : U₁ ⊆ U₂) :
+    choiceHitCountOn E choice U₁ ≤ choiceHitCountOn E choice U₂ := by
+  unfold choiceHitCountOn
+  exact Finset.card_le_card (by
+    intro x hx
+    exact Finset.mem_filter.mpr
+      ⟨(Finset.mem_filter.mp hx).1, hU (Finset.mem_filter.mp hx).2⟩)
+
 theorem choiceHitCountOn_le_choiceHitCount {X C : Type*}
     [Fintype X] [DecidableEq X] [DecidableEq C]
     (E : Finset X) (choice : X → C) (U : Finset C) :
@@ -91,6 +122,48 @@ def lowCutSet {T : Nat} {X C : Type*}
     (S : Finset (Fin T)) : Finset X :=
   (Finset.univ : Finset X).filter
     (fun x => (I.active x ∩ U).card ≤ S.card)
+
+theorem lowCutSet_mono_symbols {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    {S₁ S₂ : Finset (Fin T)} (hS : S₁.card ≤ S₂.card) :
+    lowCutSet I U S₁ ⊆ lowCutSet I U S₂ := by
+  intro x hx
+  exact Finset.mem_filter.mpr
+    ⟨Finset.mem_univ x, (Finset.mem_filter.mp hx).2.trans hS⟩
+
+theorem lowCutSet_mono_symbols_of_subset {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    {S₁ S₂ : Finset (Fin T)} (hS : S₁ ⊆ S₂) :
+    lowCutSet I U S₁ ⊆ lowCutSet I U S₂ :=
+  lowCutSet_mono_symbols I U (Finset.card_le_card hS)
+
+theorem lowCutSet_colors_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (S : Finset (Fin T)) :
+    lowCutSet I (∅ : Finset C) S = Finset.univ := by
+  ext x
+  simp [lowCutSet]
+
+theorem lowCutSet_colors_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (S : Finset (Fin T)) :
+    lowCutSet I (Finset.univ : Finset C) S = ∅ := by
+  classical
+  ext x
+  constructor
+  · intro hx
+    have hactive :
+        (I.active x ∩ (Finset.univ : Finset C)).card = T + 1 := by
+      simp [I.active_card x]
+    have hS : S.card ≤ T := by
+      simpa using Finset.card_le_univ S
+    have hle : (I.active x ∩ (Finset.univ : Finset C)).card ≤ S.card :=
+      (Finset.mem_filter.mp hx).2
+    rw [hactive] at hle
+    omega
+  · simp
 
 def choiceLowHitCount {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -229,6 +302,24 @@ theorem sum_choiceDegreeOn_on_le_sum_choiceDegree {X C : Type*}
   exact Finset.sum_le_sum (by
     intro c _hc
     exact choiceDegreeOn_le_choiceDegree E choice c)
+
+theorem sum_choiceDegreeOn_on_mono_set {X C : Type*}
+    [DecidableEq X] [DecidableEq C]
+    {E₁ E₂ : Finset X} (hE : E₁ ⊆ E₂) (choice : X → C)
+    (U : Finset C) :
+    (∑ c ∈ U, choiceDegreeOn E₁ choice c)
+      ≤ ∑ c ∈ U, choiceDegreeOn E₂ choice c := by
+  exact Finset.sum_le_sum (by
+    intro c _hc
+    exact choiceDegreeOn_mono_set hE choice c)
+
+theorem sum_choiceDegreeOn_on_mono_colors {X C : Type*}
+    [DecidableEq X] [DecidableEq C]
+    (E : Finset X) (choice : X → C) {U₁ U₂ : Finset C}
+    (hU : U₁ ⊆ U₂) :
+    (∑ c ∈ U₁, choiceDegreeOn E choice c)
+      ≤ ∑ c ∈ U₂, choiceDegreeOn E choice c := by
+  exact Finset.sum_le_sum_of_subset hU
 
 theorem choiceLowHitCount_eq_sum_choiceDegreeOn_lowCutSet
     {T : Nat} {X C : Type*}
