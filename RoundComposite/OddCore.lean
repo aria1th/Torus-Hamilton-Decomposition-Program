@@ -1217,6 +1217,22 @@ theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFla
     (prefixCountGeometricCriterionGoal_of_rootFlatCanonical hReturn)
     hSmallPacket hd2 hmodd hm3
 
+def OddModulusToriV4ConstructionBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1CanonicalMatrixGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem odd_modulus_tori_all_dimensions_of_v4_construction_blocks
+    (hBlocks : OddModulusToriV4ConstructionBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m := by
+  rcases hBlocks with ⟨hQge2Closure, hQeq1Matrix, hReturn, hSmallPacket⟩
+  exact
+    odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1Canonical_rootFlatCanonical_and_slackPacketLift
+      hQge2Closure hQeq1Matrix hReturn hSmallPacket hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
     (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
     (hQeq1Matrix : PrefixCount.OrdinaryQeq1SignedMatrixGoal)
