@@ -67,6 +67,19 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+The q>=2 field can also be supplied through the pure packing theorem:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
+    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 ## Prompt-To-Artifact Checklist
 
 | Requirement | Artifact | Status | Evidence |
@@ -79,6 +92,7 @@ theorem RoundComposite.Concrete
 | Dispatcher from seeds + successor | `odd_modulus_tori_all_dimensions_of_357_and_successor` | Lean-closed | `RoundComposite/ConcreteEndpoints.lean` |
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
 | Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_successorSchedule` | Lean-closed conditional | Directly consumes the three remaining fields |
+| q>=2 column-packing adapter | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule` | Lean-closed conditional | Replaces the q>=2 proper-cut field by `PrefixCount.Qge2SignedColumnPackingGoal` |
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |

@@ -210,6 +210,20 @@ The older tuple shape
 workflow purposes; Lean records this as
 `oddModulusToriV4MinimalBlocksGoal_iff_successorScheduleBlocks`.
 
+After the q>=2 refactor, proof scripts may replace the first field by the pure
+packing theorem `PrefixCount.Qge2SignedColumnPackingGoal` and use:
+
+```lean
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
+    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 The active proof obligations are exactly the three fields of this packet:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`

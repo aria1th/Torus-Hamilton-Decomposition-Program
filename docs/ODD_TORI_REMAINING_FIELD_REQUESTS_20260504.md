@@ -72,6 +72,26 @@ Together with
 `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure`, this is sufficient
 for the q>=2 field in the minimal odd-tori endpoint.
 
+Lean also exposes direct odd-tori endpoints consuming this packing theorem:
+
+```lean
+theorem RoundComposite.Concrete
+  .oddSuccessorClosureGoal_of_v4_columnPackingSchedule
+    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
+    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 The torus-shaped target is:
 
 ```lean
