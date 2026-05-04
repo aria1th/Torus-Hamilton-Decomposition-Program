@@ -1341,9 +1341,29 @@ theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxMatching_rootF
       hQeq1Aux hQeq1Match)
     hReturn hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxSpecialMatchingData_rootFlatCanonical_and_slackPacketLift
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Data : PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_rootFlatCanonical_and_slackPacketLift
+    hQge2Closure
+    (PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxSpecialMatchingData
+      hQeq1Data)
+    hReturn hSmallPacket hd2 hmodd hm3
+
 def OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+def OddModulusToriV4JointMatchingBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
@@ -1405,6 +1425,16 @@ theorem odd_modulus_tori_all_dimensions_of_v4_construction_blocks
   rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, hSmallPacket⟩
   exact
     odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1CorrectionData_rootFlatCanonical_and_slackPacketLift
+      hQge2Closure hQeq1Data hReturn hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
+    (hBlocks : OddModulusToriV4JointMatchingBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m := by
+  rcases hBlocks with ⟨hQge2Closure, hQeq1Data, hReturn, hSmallPacket⟩
+  exact
+    odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxSpecialMatchingData_rootFlatCanonical_and_slackPacketLift
       hQge2Closure hQeq1Data hReturn hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching

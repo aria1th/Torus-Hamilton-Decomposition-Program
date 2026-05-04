@@ -169,11 +169,14 @@ PrefixCount.OrdinaryQeq1AuxMatrixData.posCols_card
 PrefixCount.OrdinaryQeq1AuxMatrixData.lowCols
 PrefixCount.OrdinaryQeq1AuxMatrixData.lowCols_card
 PrefixCount.OrdinaryQeq1AuxMatrixData.exists_distinguished_low_neg
+PrefixCount.OrdinaryQeq1AuxSpecialMatchingData
 PrefixCount.OrdinaryQeq1AuxMatrixGoal
 PrefixCount.OrdinaryQeq1SpecialMatchingGoal
+PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal
 PrefixCount.OrdinaryQeq1CanonicalCorrectionData
 PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal
 PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
+PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxSpecialMatchingData
 PrefixCount.ordinaryQeq1CanonicalCorrectionGoal_of_dataGoal
 PrefixCount.ordinaryQeq1CanonicalMatrixGoal_of_correction
 PrefixCount.ordinaryQeq1PlanGoal
@@ -242,6 +245,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .OddModulusToriV4ConstructionBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4JointMatchingBlocksGoal
+RoundComposite.Concrete
   .OddModulusToriV4DegreeMatchingBlocksGoal
 RoundComposite.Concrete
   .OddModulusToriV4UniformDegreeBlocksGoal
@@ -251,6 +256,8 @@ RoundComposite.Concrete
   .OddModulusToriV4PostUniformBlocksGoal
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
 RoundComposite.Concrete
@@ -288,11 +295,20 @@ matching output is Lean-closed as
 remaining q=1 mathematical input can be stated as the data-level existence
 theorem `PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal`, whose content is
 the Gale-Ryser auxiliary matrix and special Hall matching construction.
-This has also been split into the two paper-facing subgoals
+This has a joint paper-facing interface
+`PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal`, which packages the
+auxiliary `±1` matrix and its special matching together and Lean-lowers to
+correction data through
+`PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxSpecialMatchingData`.
+The stronger universal split would use
 `PrefixCount.OrdinaryQeq1AuxMatrixGoal` and
-`PrefixCount.OrdinaryQeq1SpecialMatchingGoal`; their combination is Lean-closed
-through
+`PrefixCount.OrdinaryQeq1SpecialMatchingGoal`; when both are available, their
+combination is Lean-closed through
 `PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching`.
+Finite checking at `(n,r)=(8,5)` shows that this universal arbitrary-auxiliary
+matching interface is stronger than the paper construction needs, so the current
+q=1 request should use the joint data interface unless the auxiliary matrix is
+canonically fixed.
 The auxiliary matrix side is split once more at the Gale-Ryser output level:
 `PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` asks only for the `0/1`
 degree matrix, and Lean closes the conversion to the signed `±1` matrix through
@@ -370,6 +386,24 @@ def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
+```
+
+The preferred q=1 matching-facing endpoint keeps the auxiliary matrix and its
+special matching in one joint data block:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4JointMatchingBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
+    (hBlocks : OddModulusToriV4JointMatchingBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
 ```
 
 The paper-facing endpoint with the `q = 1` auxiliary degree matrix split is:

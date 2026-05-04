@@ -2456,6 +2456,10 @@ structure OrdinaryQeq1SpecialMatchingData {n r : Nat}
   special_neg :
     ∀ i : Fin n, i.val = r - 1 → A.B i (mate special) = (-1 : Int)
 
+structure OrdinaryQeq1AuxSpecialMatchingData (n r : Nat) where
+  aux : OrdinaryQeq1AuxMatrixData n r
+  matching : OrdinaryQeq1SpecialMatchingData aux
+
 namespace OrdinaryQeq1SpecialMatchingData
 
 def toCorrectionData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
@@ -2474,6 +2478,15 @@ def toCorrectionData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
   special_neg := M.special_neg
 
 end OrdinaryQeq1SpecialMatchingData
+
+namespace OrdinaryQeq1AuxSpecialMatchingData
+
+def toCorrectionData {n r : Nat}
+    (D : OrdinaryQeq1AuxSpecialMatchingData n r) :
+    OrdinaryQeq1CanonicalCorrectionData n r :=
+  D.matching.toCorrectionData
+
+end OrdinaryQeq1AuxSpecialMatchingData
 
 namespace OrdinaryQeq1CanonicalCorrectionData
 
@@ -3212,6 +3225,13 @@ def OrdinaryQeq1SpecialMatchingGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1SpecialMatchingData A)
 
+def OrdinaryQeq1AuxSpecialMatchingDataGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1AuxSpecialMatchingData n r)
+
 theorem ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
     (hDegree : OrdinaryQeq1AuxDegreeMatrixGoal) :
     OrdinaryQeq1AuxMatrixGoal := by
@@ -3266,6 +3286,13 @@ theorem ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching
   rcases hAux hdodd hd5 hmodd hrlt hrpos with ⟨A⟩
   rcases hMatch A hdodd hd5 hmodd hrlt hrpos with ⟨M⟩
   exact ⟨M.toCorrectionData⟩
+
+theorem ordinaryQeq1CanonicalCorrectionDataGoal_of_auxSpecialMatchingData
+    (hData : OrdinaryQeq1AuxSpecialMatchingDataGoal) :
+    OrdinaryQeq1CanonicalCorrectionDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hData hdodd hd5 hmodd hrlt hrpos with ⟨D⟩
+  exact ⟨D.toCorrectionData⟩
 
 def OrdinaryQeq1CanonicalMatrixGoal : Prop :=
   ∀ {n m r : Nat},
