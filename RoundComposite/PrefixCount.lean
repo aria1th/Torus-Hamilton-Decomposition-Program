@@ -534,6 +534,25 @@ theorem exists_power_two_ge_self_lt_two_mul {L : Nat} (hL : 1 ≤ L) :
     rw [hpow]
     exact Nat.mul_lt_mul_of_pos_left hpred (by decide)
 
+def oneTwoList (L C : Nat) : List Nat :=
+  List.replicate (2 * L - C) 1 ++ List.replicate (C - L) 2
+
+theorem oneTwoList_spec {L C : Nat} (hLC : L ≤ C) (hC2 : C ≤ 2 * L) :
+    (oneTwoList L C).length = L ∧
+    (oneTwoList L C).sum = C ∧
+    ∀ a, a ∈ oneTwoList L C → a = 1 ∨ a = 2 := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [oneTwoList]
+    omega
+  · simp [oneTwoList, List.sum_replicate]
+    omega
+  · intro a ha
+    rw [oneTwoList, List.mem_append] at ha
+    simp only [List.mem_replicate] at ha
+    rcases ha with ha | ha
+    · exact Or.inl ha.2
+    · exact Or.inr ha.2
+
 theorem eq_pred_add_mod_of_div_eq_one
     {d m : Nat} (hq : m / (d - 1) = 1) :
     m = (d - 1) + m % (d - 1) := by
