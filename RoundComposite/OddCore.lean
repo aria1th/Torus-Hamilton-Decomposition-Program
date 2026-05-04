@@ -1652,6 +1652,52 @@ def prefixCountFirstHitReturnBaseStep {d m : Nat}
     (C : PrefixCount.Parts d) (c : Fin d) : ZMod m → ZMod m :=
   fun z => z + (C.zero c : ZMod m)
 
+theorem prefixCountFirstHitReturnBaseStep_iterate
+    {d m : Nat} (C : PrefixCount.Parts d) (c : Fin d) :
+    ∀ n : Nat, ∀ z : ZMod m,
+      ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[n]) z =
+        z + (n : ZMod m) * (C.zero c : ZMod m)
+  | 0, z => by simp
+  | n + 1, z => by
+      rw [Function.iterate_succ_apply']
+      rw [prefixCountFirstHitReturnBaseStep_iterate C c n]
+      simp [prefixCountFirstHitReturnBaseStep, Nat.cast_add]
+      ring
+
+theorem prefixCountFirstHitReturnBaseStep_iterate_modulus
+    {d m : Nat} [NeZero m] (C : PrefixCount.Parts d) (c : Fin d)
+    (z : ZMod m) :
+    ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[m]) z = z := by
+  rw [prefixCountFirstHitReturnBaseStep_iterate]
+  simp
+
+theorem prefixCountFirstHitReturnBaseStep_cover
+    {d m : Nat} [NeZero m] {C : PrefixCount.Parts d}
+    (hC : C.Admissible m) (c : Fin d) (base z : ZMod m) :
+    ∃ k : Nat, k < m ∧
+      ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[k]) base = z := by
+  let u : (ZMod m)ˣ := ZMod.unitOfCoprime (C.zero c) (hC.prim_zero c)
+  let target : ZMod m := (u⁻¹ : ZMod m) * (z - base)
+  refine ⟨target.val, ZMod.val_lt target, ?_⟩
+  rw [prefixCountFirstHitReturnBaseStep_iterate]
+  have htarget : (target.val : ZMod m) = target :=
+    ZMod.natCast_zmod_val target
+  have hu : (u : ZMod m) = (C.zero c : ZMod m) :=
+    ZMod.coe_unitOfCoprime (C.zero c) (hC.prim_zero c)
+  calc
+    base + (target.val : ZMod m) * (C.zero c : ZMod m)
+        = base + target * (u : ZMod m) := by rw [htarget, hu]
+    _ = z := by
+        have huinv : (u⁻¹ : ZMod m) * (u : ZMod m) = 1 := by simp
+        change base + ((u⁻¹ : ZMod m) * (z - base)) * (u : ZMod m) = z
+        calc
+          base + ((u⁻¹ : ZMod m) * (z - base)) * (u : ZMod m)
+              = base + ((u⁻¹ : ZMod m) * (u : ZMod m)) * (z - base) := by
+                  ring
+          _ = z := by
+              rw [huinv]
+              ring
+
 noncomputable def prefixCountFirstHitReturnFiberStep
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
@@ -1730,6 +1776,29 @@ theorem prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_headTailMo
       hskew
       (prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
         hd2 L c)
+
+theorem prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_unitBaseHeadTailMonodromy
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d} (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (hfiber :
+      ∀ z : ZMod m,
+        Function.Bijective (prefixCountFirstHitReturnFiberStep hd2 L c z))
+    (hmonodromy :
+      Shared.IsSingleCycleMap
+        (Shared.sectionReturn
+          (Shared.skewProductMap
+            (prefixCountFirstHitReturnBaseStep (m := m) C c)
+            (prefixCountFirstHitReturnFiberStep hd2 L c))
+          (0 : ZMod m) m)) :
+    Shared.IsSingleCycleMap
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).returnMap c) :=
+  prefixCountFirstHitCanonicalSchedule_returnMap_singleCycle_of_headTailMonodromy
+    (hd2 := hd2) hC L c (0 : ZMod m) m
+    hfiber
+    (prefixCountFirstHitReturnBaseStep_iterate_modulus C c (0 : ZMod m))
+    (prefixCountFirstHitReturnBaseStep_cover hC c (0 : ZMod m))
+    hmonodromy
 
 def PrefixCountFirstHitSymbolMapsBijectiveGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
