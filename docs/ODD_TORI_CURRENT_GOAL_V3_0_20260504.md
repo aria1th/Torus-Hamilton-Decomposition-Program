@@ -151,6 +151,7 @@ def RoundComposite.ActiveHall.EraseLastHallCutsGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsSelectionGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsChoiceGoal : Prop
 def RoundComposite.ActiveHall.EraseLastHallCutsSlackChoiceGoal : Prop
+def RoundComposite.ActiveHall.EraseLastHallCutsNontrivialSlackChoiceGoal : Prop
 
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCuts
@@ -179,6 +180,16 @@ theorem RoundComposite.ActiveHall
     EraseLastHallCutsGoal
 
 theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsSlackChoiceGoal_of_nontrivial
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal) :
+    EraseLastHallCutsSlackChoiceGoal
+
+theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsGoal_of_nontrivialSlackChoice
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal) :
+    EraseLastHallCutsGoal
+
+theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsChoice
     (hChoice : EraseLastHallCutsChoiceGoal) :
     HallRealizationGoal
@@ -186,6 +197,11 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsSlackChoice
     (hSlackChoice : EraseLastHallCutsSlackChoiceGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal) :
     HallRealizationGoal
 
 theorem RoundComposite.ActiveHall
@@ -197,6 +213,12 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_eraseLastHallCutsSlackChoice
     (hSlackChoice : EraseLastHallCutsSlackChoiceGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCutsNontrivialSlackChoice
+    (hNontriv : EraseLastHallCutsNontrivialSlackChoiceGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
 ```
@@ -212,6 +234,11 @@ Incidence.choiceLowHitCount I choice U S
   <= M.cutSlack U (S.image Fin.castSucc)
 ```
 
+The nontrivial-cut form is even narrower: the above inequality only has to be
+checked for `U.Nonempty`, `U != Finset.univ`, and `S.Nonempty`.  The cases
+`U = empty`, `U = univ`, and `S = empty` are Lean-closed because their
+low-hit count is zero.
+
 Closed support includes:
 
 ```lean
@@ -220,6 +247,7 @@ theorem RoundComposite.ActiveHall.hallRealization_one
 theorem RoundComposite.ActiveHall.eraseLastHallCuts_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsChoice_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsSlackChoice_zero
+theorem RoundComposite.ActiveHall.eraseLastHallCutsNontrivialSlackChoice_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
@@ -230,6 +258,12 @@ theorem RoundComposite.ActiveHall.CountMatrix.cutMass_add_le_iff_le_cutSlack
 def RoundComposite.ActiveHall.Incidence.choiceLowHitCount
 theorem RoundComposite.ActiveHall.Incidence
   .choiceLowHitCount_symbols_empty
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_colors_empty
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_colors_univ
+theorem RoundComposite.ActiveHall.Incidence
+  .choiceLowHitCount_le_choiceHitCount
 theorem RoundComposite.ActiveHall.CountMatrix.eraseLastCountMatrix_cutMass
 theorem RoundComposite.ActiveHall.CountMatrix.cutMass_last_eq_choiceHitCount
 theorem RoundComposite.ActiveHall.CountMatrix
@@ -252,7 +286,7 @@ theorem RoundComposite.ActiveHall.Incidence
 Remaining Active Hall proof obligation:
 
 ```lean
-EraseLastHallCutsSlackChoiceGoal
+EraseLastHallCutsNontrivialSlackChoiceGoal
 ```
 
 Equivalently, the remaining theorem is a degree-constrained active choice
@@ -263,4 +297,4 @@ Incidence.choiceLowHitCount I choice U S
   <= M.cutSlack U (S.image Fin.castSucc)
 ```
 
-for every color cut `U` and lower-symbol cut `S`.
+for every nonempty proper color cut `U` and nonempty lower-symbol cut `S`.
