@@ -149,6 +149,24 @@ theorem RoundComposite.Concrete
     OddSuccessorSmallModulusBaseTailGoal
 ```
 
+Lean also exposes a geometry/combinatorics split for this small branch:
+
+```lean
+def RoundComposite.Concrete
+  .OddSuccessorSmallModulusBaseTailGeometryFromHallGoal : Prop :=
+  ActiveHall.HallRealizationGoal ->
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
+theorem RoundComposite.Concrete
+  .oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hHall : ActiveHall.HallRealizationGoal) :
+    OddSuccessorSmallModulusBaseTailGoal
+```
+
+There is an analogous `...FromHoffmanGoal` wrapper using
+`ActiveHall.HoffmanOrderedSDRGoal`.
+
 ## Minimal Active Packet
 
 The current minimal packet for completing the final theorem is:

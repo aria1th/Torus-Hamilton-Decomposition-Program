@@ -124,6 +124,7 @@ theorem RoundComposite.Concrete
 | Full skew-product cycle coordinate | `Shared.cycleCoordinate_of_skewProduct_base_orbit_monodromy`, `Shared.cycleCoordinate_of_skewProduct_zmod_additive_carry` | Lean-closed conditional | Turns the base-cover plus section-monodromy/carry proof into a coordinate for the full skew product |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Return-tail additive endpoints | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd`, `odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd` | Lean-closed conditional | Final theorem wrappers that consume `OddSuccessorSmallModulusSlackPacketLiftAddGoal` directly |
+| Successor-small Hall/geometry split | `OddSuccessorSmallModulusBaseTailGeometryFromHallGoal`, `OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal` | Lean-closed conditional | Lets the small branch be supplied as base-tail geometry assuming `ActiveHall.HallRealizationGoal` or `HoffmanOrderedSDRGoal` |
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
 | Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
@@ -228,6 +229,17 @@ oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
 so a proof of the additive packet-lift theorem for `T = b + 1` is sufficient.
 The arithmetic side, including `m^b > m*(2*b+1)*((2*b+1)-b)`, is already
 Lean-closed as `successor_hall_slack`.
+
+Lean also exposes a split form:
+
+```lean
+OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal
+```
+
+The first asks for the base-tail/cylinder geometry assuming
+`ActiveHall.HallRealizationGoal`; the second asks for the same assuming
+`ActiveHall.HoffmanOrderedSDRGoal`.
 
 ## Active-Hall Status
 

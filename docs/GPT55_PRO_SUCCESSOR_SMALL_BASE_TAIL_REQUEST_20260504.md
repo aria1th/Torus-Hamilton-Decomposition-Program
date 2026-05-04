@@ -44,3 +44,14 @@ final wrapper to StandardCayleySolved (b + T) m
 It explicitly told the model not to spend effort on the successor arithmetic
 slack inequality or packet existence, since Lean already proves those through
 `successor_hall_slack` and `unitCarryPackets_spec`.
+
+After sending this request, Lean also exposed split interfaces:
+
+```lean
+OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal
+```
+
+These allow the base-tail/cylinder geometry proof to assume either
+`ActiveHall.HallRealizationGoal` or `ActiveHall.HoffmanOrderedSDRGoal` and then
+produce `OddSuccessorSmallModulusSlackPacketLiftAddGoal`.

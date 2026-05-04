@@ -417,6 +417,8 @@ Lean already proves:
 
 ```lean
 oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
+oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHoffman
 successor_hall_slack
 unitCarryPackets_spec
 ActiveHall.symbolingWithResidues_iff_feasible_of_eraseLastHallCuts
@@ -431,6 +433,10 @@ ActiveHall.eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal
 ```
 
 So it is enough to prove the additive packet-lift theorem.
+Alternatively, prove `OddSuccessorSmallModulusBaseTailGeometryFromHallGoal`
+and supply `ActiveHall.HallRealizationGoal`, or prove
+`OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal` and supply
+`ActiveHall.HoffmanOrderedSDRGoal`.
 
 ### Prompt
 
