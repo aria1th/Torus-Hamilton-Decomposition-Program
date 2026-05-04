@@ -194,6 +194,89 @@ theorem prefixCountRootStep_bijective {d m : Nat}
     exact prefixCountRootStep_eq_succ_cast hd1 i w
   simpa [hfun] using prefixCountRootStepSucc_bijective (m := m) e
 
+/--
+The canonical prefix-count symbol permutation associated to a positive
+stop-rank `rho`.  It fixes `0`, sends `1` to `rho`, shifts `2,...,rho` down by
+one, and fixes all symbols above `rho`.
+-/
+def prefixCountLambdaRho (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
+  if _hs0 : s.val = 0 then
+    ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
+  else if _hs1 : s.val = 1 then
+    rho
+  else if _hlt : rho.val < s.val then
+    s
+  else
+    ⟨s.val - 1, by omega⟩
+
+def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
+  if _hs0 : s.val = 0 then
+    ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
+  else if _hlt : s.val < rho.val then
+    ⟨s.val + 1, by omega⟩
+  else if _heq : s.val = rho.val then
+    ⟨1, by omega⟩
+  else
+    s
+
+theorem prefixCountLambdaRhoInv_apply_lambda
+    {d : Nat} (rho : Fin d) (hrho : rho.val ≠ 0) :
+    ∀ s : Fin d,
+      prefixCountLambdaRhoInv d rho
+          (prefixCountLambdaRho d rho s) = s := by
+  intro s
+  unfold prefixCountLambdaRho prefixCountLambdaRhoInv
+  by_cases hs0 : s.val = 0
+  · ext
+    simp [hs0]
+  · by_cases hs1 : s.val = 1
+    · ext
+      simp [hs1, hrho]
+    · by_cases hlt : rho.val < s.val
+      · ext
+        have hnot_lt : ¬s.val < rho.val := by omega
+        have hne : s.val ≠ rho.val := by omega
+        simp [hs0, hs1, hlt, hnot_lt, hne]
+      · ext
+        have hs_ge_two : 2 ≤ s.val := by omega
+        have hpred_ne_zero : s.val - 1 ≠ 0 := by omega
+        have hpred_lt : s.val - 1 < rho.val := by omega
+        simp [hs0, hs1, hlt, hpred_ne_zero, hpred_lt]
+        omega
+
+theorem prefixCountLambdaRho_apply_inv
+    {d : Nat} (rho : Fin d) (hrho : rho.val ≠ 0) :
+    ∀ s : Fin d,
+      prefixCountLambdaRho d rho
+          (prefixCountLambdaRhoInv d rho s) = s := by
+  intro s
+  unfold prefixCountLambdaRho prefixCountLambdaRhoInv
+  by_cases hs0 : s.val = 0
+  · ext
+    simp [hs0]
+  · by_cases hlt : s.val < rho.val
+    · ext
+      have hnot_rho_lt_succ : ¬rho.val < s.val + 1 := by omega
+      simp [hs0, hlt, hnot_rho_lt_succ]
+    · by_cases heq : s.val = rho.val
+      · ext
+        simp [heq, hrho]
+      · ext
+        have hrho_lt : rho.val < s.val := by omega
+        have hs_ne_one : s.val ≠ 1 := by omega
+        simp [hs0, hlt, heq, hrho_lt, hs_ne_one]
+
+theorem prefixCountLambdaRho_bijective
+    {d : Nat} (rho : Fin d) (hrho : rho.val ≠ 0) :
+    Function.Bijective (prefixCountLambdaRho d rho) := by
+  constructor
+  · intro a b hab
+    have h := congrArg (prefixCountLambdaRhoInv d rho) hab
+    simpa [prefixCountLambdaRhoInv_apply_lambda rho hrho] using h
+  · intro s
+    refine ⟨prefixCountLambdaRhoInv d rho s, ?_⟩
+    exact prefixCountLambdaRho_apply_inv rho hrho s
+
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
     prefixCountRootLayerEquiv d m hd1
