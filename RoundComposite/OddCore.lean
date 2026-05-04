@@ -321,6 +321,56 @@ theorem prefixCountCanonicalSchedule_step {d m : Nat} [NeZero m]
     (L : PrefixCount.LayerPermCounts d m M) :
     (prefixCountCanonicalSchedule rho L).step = prefixCountRootStep d m := rfl
 
+def prefixCountCanonicalRhoHit {d m : Nat}
+    (t : ZMod m) (w : PrefixCountRootState d m)
+    (j : Fin (d - 1)) : Prop :=
+  j.val + 1 < d - 1 ∧ w j = t
+
+noncomputable def prefixCountCanonicalRho (d m : Nat) (hd2 : 2 ≤ d)
+    (t : ZMod m) (w : PrefixCountRootState d m) : Fin d := by
+  classical
+  exact
+    if h : ∃ j : Fin (d - 1), prefixCountCanonicalRhoHit t w j then
+      ⟨(Classical.choose h).val + 1, by
+        have hh := Classical.choose_spec h
+        omega⟩
+    else
+      ⟨d - 1, by omega⟩
+
+theorem prefixCountCanonicalRho_ne_zero {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) (w : PrefixCountRootState d m) :
+    (prefixCountCanonicalRho d m hd2 t w).val ≠ 0 := by
+  unfold prefixCountCanonicalRho
+  classical
+  by_cases h : ∃ j : Fin (d - 1), prefixCountCanonicalRhoHit t w j
+  · simp [h]
+  · have hpos : d - 1 ≠ 0 := by omega
+    simpa [h] using hpos
+
+noncomputable def prefixCountFirstHitCanonicalSchedule
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) :
+    Shared.RootFlatSchedule (Fin d) (Fin d) (PrefixCountRootState d m) m :=
+  prefixCountCanonicalSchedule (prefixCountCanonicalRho d m hd2) L
+
+theorem prefixCountFirstHitCanonicalSchedule_rowLatin
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) :
+    (prefixCountFirstHitCanonicalSchedule hd2 L).rowLatin := by
+  refine prefixCountCanonicalSchedule_rowLatin
+    (prefixCountCanonicalRho d m hd2) ?_ L
+  intro t w
+  exact prefixCountCanonicalRho_ne_zero hd2 t w
+
+theorem prefixCountFirstHitCanonicalSchedule_step
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) :
+    (prefixCountFirstHitCanonicalSchedule hd2 L).step =
+      prefixCountRootStep d m := rfl
+
 theorem prefixCountRootLayerEquiv_step {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (tw : ZMod m × PrefixCountRootState d m) :
     prefixCountRootLayerEquiv d m hd1
