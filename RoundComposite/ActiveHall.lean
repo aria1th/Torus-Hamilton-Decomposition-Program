@@ -818,6 +818,24 @@ theorem choiceDegree_of_bijective_token_matching
               _ = M.val c σ := by
                       simp
 
+theorem eraseChoice_colorDegree_add_val_of_bijective_token_matching
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I) (σ : Fin (T + 1))
+    (f : (Sigma fun c : C => Fin (M.val c σ)) ≃ X)
+    (hfActive :
+      ∀ q : Sigma fun c : C => Fin (M.val c σ), q.1 ∈ I.active (f q))
+    (c : C) :
+    let choice : X → C := fun x => (f.symm x).1
+    let hchoice : ∀ x : X, choice x ∈ I.active x := by
+      intro x
+      simpa [choice] using hfActive (f.symm x)
+    (I.eraseChoice choice hchoice).colorDegree c + M.val c σ =
+      I.colorDegree c := by
+  intro choice hchoice
+  rw [← M.choiceDegree_of_bijective_token_matching σ f c]
+  exact I.eraseChoice_colorDegree_add_choiceDegree choice hchoice c
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
