@@ -322,6 +322,37 @@ def prefixCountRootStateHeadTailEquiv (d m : Nat) (hd2 : 2 ≤ d) :
     simp
   simp [prefixCountRootStateHeadTailEquiv, hne, hidx]
 
+theorem prefixCountRootStateHeadTailEquiv_symm_eq_of_take_le
+    {d m : Nat} (hd2 : 2 ≤ d) {z : ZMod m}
+    {x y : Fin (d - 2) → ZMod m} {k : Nat} (hk : k < d - 2)
+    (hxy :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) x =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) y)
+    {j : Fin (d - 1)} (hj : j.val ≤ k) :
+    (prefixCountRootStateHeadTailEquiv d m hd2).symm (z, x) j =
+      (prefixCountRootStateHeadTailEquiv d m hd2).symm (z, y) j := by
+  by_cases hj0 : j.val = 0
+  · have hidx : j = ⟨0, by omega⟩ := Fin.ext hj0
+    subst j
+    simp
+  · have hjpred : j.val - 1 < k := by omega
+    have htail := congrFun hxy ⟨j.val - 1, hjpred⟩
+    have hidx :
+        (⟨(j.val - 1) + 1, by omega⟩ : Fin (d - 1)) = j := by
+      apply Fin.ext
+      simp
+      omega
+    have hxidx :
+        (⟨j.val - 1, lt_of_lt_of_le hjpred (Nat.le_of_lt hk)⟩ :
+            Fin (d - 2)) =
+          ⟨(⟨(j.val - 1) + 1, by omega⟩ : Fin (d - 1)).val - 1,
+            by omega⟩ := by
+      apply Fin.ext
+      simp
+    rw [← hidx]
+    simpa [prefixCountRootStateHeadTailEquiv, hj0, hxidx,
+      Shared.zmodVectorTake] using htail
+
 /--
 The canonical prefix-count symbol permutation associated to a positive
 stop-rank `rho`.  It fixes `0`, sends `1` to `rho`, shifts `2,...,rho` down by
