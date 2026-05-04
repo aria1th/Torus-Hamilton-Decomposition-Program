@@ -1876,6 +1876,18 @@ theorem transportQeq1Goal_of_margin
     ⟨P, E, hstep⟩
   exact ⟨P.toTransport E hstep⟩
 
+theorem transportQge2Goal_of_compatible
+    (hCompat : MarginTransportQge2CompatibleGoal) :
+    TransportQge2Goal :=
+  transportQge2Goal_of_margin
+    (marginTransportQge2Goal_of_compatible hCompat)
+
+theorem transportQeq1Goal_of_compatible
+    (hCompat : MarginTransportQeq1CompatibleGoal) :
+    TransportQeq1Goal :=
+  transportQeq1Goal_of_margin
+    (marginTransportQeq1Goal_of_compatible hCompat)
+
 theorem admissiblePartsCountBranchGoal_of_margin
     (hQge2 : MarginTransportQge2Goal)
     (hQeq1 : MarginTransportQeq1Goal) :
@@ -1883,6 +1895,14 @@ theorem admissiblePartsCountBranchGoal_of_margin
   admissiblePartsCountBranchGoal_of_transports
     (transportQge2Goal_of_margin hQge2)
     (transportQeq1Goal_of_margin hQeq1)
+
+theorem admissiblePartsCountBranchGoal_of_compatible
+    (hQge2 : MarginTransportQge2CompatibleGoal)
+    (hQeq1 : MarginTransportQeq1CompatibleGoal) :
+    AdmissiblePartsCountBranchGoal :=
+  admissiblePartsCountBranchGoal_of_transports
+    (transportQge2Goal_of_compatible hQge2)
+    (transportQeq1Goal_of_compatible hQeq1)
 
 end PrefixCount
 end RoundComposite
