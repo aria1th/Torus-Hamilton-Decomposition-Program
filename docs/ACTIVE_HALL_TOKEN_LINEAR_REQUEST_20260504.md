@@ -95,8 +95,34 @@ The most useful answer would provide:
 3. A proof outline for deriving `EraseLastHallCutsTokenLinearChoiceGoal`.
 4. Any counterexample risk if the theorem is too strong as stated.
 
+## Small Sanity Search
+
+An ad hoc brute-force search was run on 2026-05-04 for small abstract
+instances.  It exhaustively checked the following blocks:
+
+```text
+C = 2, active size K = 2, |X| <= 7
+C = 3, active size K = 2, |X| <= 7
+C = 3, active size K = 3, |X| <= 6
+C = 4, active size K = 2, |X| <= 5
+```
+
+For each block, the search enumerated:
+
+1. all active-set assignments `X -> Finset C` with constant active size `K`;
+2. all nonnegative count matrices with the forced row sums and column sums;
+3. the full `M.HallCuts` condition;
+4. all last-column active token placements, checking the token-linear
+   lower-cut inequalities.
+
+No counterexample was found.  The largest checked block was
+`C = 4, K = 2, |X| <= 5`, with `192666` row/column-compatible matrices
+examined and `162930` Hall matrices passing the Hall filter.
+
+This is only a finite sanity check.  It is not a proof and should not be used
+as a Lean dependency.
+
 ## Important Boundary
 
 Do not solve the torus construction here.  The target is only the abstract
 finite token-placement theorem in `RoundComposite.ActiveHall`.
-
