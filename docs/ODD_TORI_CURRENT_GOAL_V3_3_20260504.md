@@ -150,6 +150,13 @@ theorem RoundComposite.Concrete
     PrefixCountFirstHitReturnTailRankGoal
 ```
 
+The generic tail-space equivalence is available as:
+
+```lean
+noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
+    (Fin n -> ZMod m) ≃ ZMod (m ^ n)
+```
+
 ## Remaining External Fields
 
 The goal is not complete.  The current preferred packet leaves exactly:

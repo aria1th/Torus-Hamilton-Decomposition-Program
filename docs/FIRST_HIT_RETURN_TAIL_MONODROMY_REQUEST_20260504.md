@@ -114,6 +114,17 @@ def RoundComposite.Concrete
 
 Lean proves the plain rank goal from this using `Equiv.bijective`.
 
+The generic cardinality/equivalence facts for the tail space are already
+available in `Shared/TorusCayley.lean`:
+
+```lean
+theorem Shared.card_zmodVector (n m : Nat) [NeZero m] :
+    Fintype.card (Fin n -> ZMod m) = m ^ n
+
+noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
+    (Fin n -> ZMod m) ≃ ZMod (m ^ n)
+```
+
 The full tail-monodromy target is enough for the previous section-monodromy
 target:
 
