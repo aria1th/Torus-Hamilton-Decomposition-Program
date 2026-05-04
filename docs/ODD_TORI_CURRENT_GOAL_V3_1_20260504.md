@@ -119,7 +119,7 @@ The current preferred Lean packet that closes both branches is:
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PreferredBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1DegreeSpecialMatchingGoal ∧
+  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
@@ -162,14 +162,16 @@ The active proof obligations are exactly the four fields of
 `OddModulusToriV4PreferredBlocksGoal`:
 
 1. `PrefixCount.OrdinaryQge2SignedSeedClosureGoal`
-2. `PrefixCount.OrdinaryQeq1DegreeSpecialMatchingGoal`
+2. `PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal`
 3. `PrefixCountRootFlatCanonicalReturnGoal`
 4. `OddCoreSmallModulusSlackPacketLiftGoal`
 
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
-`PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  Thus the preferred q=1
-remaining obligation is only the special matching theorem for such degree
-matrices, not the auxiliary degree-matrix construction itself.
+`PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  However the universal theorem
+asking for a special matching for every such degree matrix is too strong:
+Lean records this as `PrefixCount.not_ordinaryQeq1DegreeSpecialMatchingGoal`.
+Thus the preferred q=1 obligation remains the joint data theorem, where the
+auxiliary degree matrix and its special matching are selected together.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.

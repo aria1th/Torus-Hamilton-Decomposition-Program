@@ -3276,6 +3276,18 @@ def aux : OrdinaryQeq1AuxMatrixData 8 5 where
     intro k
     fin_cases k <;> decide
 
+def degree : OrdinaryQeq1AuxDegreeMatrixData 8 5 where
+  G := fun i k => if B i k = 1 then 1 else 0
+  G_zero_one := by
+    intro i k
+    by_cases h : B i k = 1 <;> simp [h]
+  G_row_sum := by
+    intro i
+    fin_cases i <;> decide
+  G_col_sum := by
+    intro k
+    fin_cases k <;> decide
+
 theorem no_specialMatching :
     ¬ Nonempty (OrdinaryQeq1SpecialMatchingData aux) := by
   rintro ⟨M⟩
@@ -3299,6 +3311,35 @@ theorem no_specialMatching :
   rw [hzero, hone] at hcol
   norm_num at hcol
 
+theorem no_degreeSpecialMatching :
+    ¬ Nonempty (OrdinaryQeq1SpecialMatchingData
+      (degree.toAuxMatrixData (by decide) (by decide))) := by
+  rintro ⟨M⟩
+  let col5 : Fin 7 := ⟨5, by decide⟩
+  have hnot : ∀ i : Fin 8, ¬ (5 ≤ i.val ∧ M.mate i = col5) := by
+    intro i hi
+    have hp := M.mate_pos i hi.1
+    rw [hi.2] at hp
+    fin_cases i <;> simp at hi
+    all_goals
+      norm_num [degree, B, OrdinaryQeq1AuxDegreeMatrixData.toAuxMatrixData]
+        at hp
+    all_goals
+      have hpval := congrArg Fin.val hp
+      norm_num [col5] at hpval
+  have hcol := M.mate_col_sum col5
+  have hzero :
+      (∑ i : Fin 8,
+        if 5 ≤ i.val ∧ M.mate i = col5 then (1 : Int) else 0) = 0 := by
+    simp [hnot]
+  have hone :
+      (if col5.val < 5 then
+          if col5 = M.mate M.special then (1 : Int) else 0
+        else 1) = 1 := by
+    simp [col5]
+  rw [hzero, hone] at hcol
+  norm_num at hcol
+
 end OrdinaryQeq1SpecialMatchingCounterexample
 
 theorem not_ordinaryQeq1SpecialMatchingGoal :
@@ -3307,6 +3348,13 @@ theorem not_ordinaryQeq1SpecialMatchingGoal :
   exact OrdinaryQeq1SpecialMatchingCounterexample.no_specialMatching
     (h OrdinaryQeq1SpecialMatchingCounterexample.aux
       (by decide) (by decide) (by decide) (by decide) (by decide))
+
+theorem not_ordinaryQeq1DegreeSpecialMatchingGoal :
+    ¬ OrdinaryQeq1DegreeSpecialMatchingGoal := by
+  intro h
+  exact OrdinaryQeq1SpecialMatchingCounterexample.no_degreeSpecialMatching
+    (h (by decide) (by decide) (by decide) (by decide) (by decide)
+      OrdinaryQeq1SpecialMatchingCounterexample.degree)
 
 theorem ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
     (hDegree : OrdinaryQeq1AuxDegreeMatrixGoal) :
