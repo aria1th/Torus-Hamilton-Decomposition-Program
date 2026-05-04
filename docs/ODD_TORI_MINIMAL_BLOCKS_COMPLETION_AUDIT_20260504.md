@@ -99,6 +99,7 @@ theorem RoundComposite.Concrete
 | Even/composite dimensions | product wrappers | Lean-closed | `odd_uniform_cayley_mul_of_standard`, `standard_cayley_odd_uniform_all_dimensions_of_odd_core` |
 | Dispatcher from seeds + successor | `odd_modulus_tori_all_dimensions_of_357_and_successor` | Lean-closed | `RoundComposite/ConcreteEndpoints.lean` |
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
+| Successor-only high split | `OddSuccessorHighModulusPrefixCountGoal`, `oddSuccessorClosureGoal_of_successorHigh_and_successorSmall` | Lean-closed conditional | Final closure only needs high-modulus construction for outputs `2*b+1 >= 11` |
 | Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_returnTailOrbit` | Lean-closed conditional | Directly consumes the three remaining fields |
 | q>=2 pure column-packing overreach | `PrefixCount.not_qge2SignedColumnPackingGoal` | Lean-closed negative | Shows the attempted arbitrary-row packing replacement is false |
 | q>=2 column-packing block packet | `not_oddModulusToriV4ColumnPackingScheduleBlocksGoal` | Lean-closed negative | Prevents treating the false packet as an active endpoint |
@@ -127,6 +128,7 @@ theorem RoundComposite.Concrete
 | Active-Hall erase-last residue iff family | `symbolingWithResidues_iff_feasible_of_eraseLastHallCuts`, `...Choice`, `...SlackChoice`, `...NontrivialSlackChoice`, `...LinearChoice`, `...TokenLinearChoice` | Lean-closed conditional | Any erase-last formulation equivalent to `HallRealizationGoal` can now consume feasible residue data directly |
 | Active-Hall selection-token equivalence | `eraseLastHallCutsTokenLinearChoiceGoal_of_selection`, `eraseLastHallCutsSelectionGoal_iff_tokenLinearChoiceGoal` | Lean-closed conditional | A selection-form erase-last proof now directly satisfies the token-linear request |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
+| Successor-high compact final theorem | `oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks`, `...Add_blocks` | Lean-closed conditional | Allows a direct successor-high theorem plus small branch to close the final target |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
 ## Remaining External Fields

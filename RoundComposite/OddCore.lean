@@ -32,6 +32,11 @@ def OddCoreHighModulusPrefixCountGoal : Prop :=
   ∀ {d m : Nat}, Odd d → 5 ≤ d → Odd m → d ≤ m →
     StandardCayleySolved d m
 
+def OddSuccessorHighModulusPrefixCountGoal : Prop :=
+  ∀ {b m : Nat},
+    5 ≤ b → Odd m → 2 * b + 1 ≤ m →
+      StandardCayleySolved (2 * b + 1) m
+
 def PrefixCountLayerRealizationGoal : Prop :=
   ∀ {d m : Nat} (hd2 : 2 ≤ d) (C : PrefixCount.Parts d),
     C.Admissible m →
@@ -2728,6 +2733,12 @@ theorem oddCoreHighModulusPrefixCount_of_goal
   intro d m hdodd hd5 _hm3 hmodd hdm
   exact hHigh hdodd hd5 hmodd hdm
 
+theorem oddSuccessorHighModulusPrefixCountGoal_of_high
+    (hHigh : OddCoreHighModulusPrefixCountGoal) :
+    OddSuccessorHighModulusPrefixCountGoal := by
+  intro b m hb5 hmodd hdm
+  exact hHigh ⟨b, rfl⟩ (by omega) hmodd hdm
+
 theorem oddSuccessorClosureGoal_of_high_and_successorSmall
     (hHigh : OddCoreHighModulusPrefixCountGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
@@ -2735,6 +2746,15 @@ theorem oddSuccessorClosureGoal_of_high_and_successorSmall
   intro b m hb5 hmodd hm3 hbSolved
   by_cases hmd : 2 * b + 1 ≤ m
   · exact hHigh ⟨b, rfl⟩ (by omega) hmodd hmd
+  · exact hSmall hb5 hmodd hm3 (lt_of_not_ge hmd) hbSolved
+
+theorem oddSuccessorClosureGoal_of_successorHigh_and_successorSmall
+    (hHigh : OddSuccessorHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal := by
+  intro b m hb5 hmodd hm3 hbSolved
+  by_cases hmd : 2 * b + 1 ≤ m
+  · exact hHigh hb5 hmodd hmd
   · exact hSmall hb5 hmodd hm3 (lt_of_not_ge hmd) hbSolved
 
 theorem odd_successor_closure_of_high_and_successorSmall
@@ -2746,6 +2766,17 @@ theorem odd_successor_closure_of_high_and_successorSmall
     (hb : StandardCayleySolved b m) :
     StandardCayleySolved (2 * b + 1) m :=
   (oddSuccessorClosureGoal_of_high_and_successorSmall hHigh hSmall)
+    hb5 hmodd hm3 hb
+
+theorem odd_successor_closure_of_successorHigh_and_successorSmall
+    (hHigh : OddSuccessorHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_successorHigh_and_successorSmall hHigh hSmall)
     hb5 hmodd hm3 hb
 
 theorem oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLift
@@ -3653,6 +3684,27 @@ theorem odd_modulus_tori_all_dimensions_of_high_and_successor_small
     (oddSuccessorClosureGoal_of_high_and_successorSmall hHigh hSmall)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_successor_high_and_successor_small
+    (hHigh : OddSuccessorHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_357_and_successor
+    (oddSuccessorClosureGoal_of_successorHigh_and_successorSmall
+      hHigh hSmall)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_high_and_successor_small_via_successorHigh
+    (hHigh : OddCoreHighModulusPrefixCountGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_successor_high_and_successor_small
+    (oddSuccessorHighModulusPrefixCountGoal_of_high hHigh)
+    hSmall hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_qge2Compat_qeq1Compat_rootFlatCanonical
     (hQge2 : PrefixCount.MarginTransportQge2CompatibleGoal)
     (hQeq1 : PrefixCount.MarginTransportQeq1CompatibleGoal)
@@ -3991,6 +4043,14 @@ def OddModulusToriV4ReturnTailCycleCoordinateBlocksGoal : Prop :=
 
 def OddModulusToriV4MinimalAddBlocksGoal : Prop :=
   OddCoreHighModulusScheduleBlocksGoal ∧
+  OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
+def OddModulusToriV4SuccessorHighSmallBlocksGoal : Prop :=
+  OddSuccessorHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+def OddModulusToriV4SuccessorHighSmallAddBlocksGoal : Prop :=
+  OddSuccessorHighModulusPrefixCountGoal ∧
   OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
 def OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
@@ -4499,6 +4559,20 @@ theorem oddSuccessorClosureGoal_of_v4_successorScheduleAdd_blocks
     (oddModulusToriV4SuccessorScheduleBlocksGoal_of_successorScheduleAddBlocks
       hBlocks)
 
+theorem oddSuccessorClosureGoal_of_successorHighSmall_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_successorHigh_and_successorSmall
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorClosureGoal_of_successorHighSmallAdd_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallAddBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_successorHighSmall_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+        hBlocks.2⟩
+
 theorem oddSuccessorClosureGoal_of_v4_minimal_blocks
     (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -4820,6 +4894,25 @@ theorem odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks
       hBlocks)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_successorHighSmall_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_successor_high_and_successor_small
+    hBlocks.1 hBlocks.2 hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_successorHighSmallAdd_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallAddBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_successorHighSmall_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+        hBlocks.2⟩
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
     (hBlocks : OddModulusToriV4MinimalBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -5121,6 +5214,20 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_minimalAdd_blocks
     OddModulusToriAllDimensionsGoal := by
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks
+    hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_successorHighSmall_blocks
+    hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_successorHighSmallAdd_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallAddBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_successorHighSmallAdd_blocks
     hBlocks hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_v4_successorSchedule

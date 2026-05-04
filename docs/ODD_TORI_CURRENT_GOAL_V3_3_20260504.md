@@ -88,6 +88,27 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
+There is also a sharper top-level closure packet for proofs that construct only
+the high-modulus successor output.  This avoids asking for a high branch at
+`d = 5,7`, which are already seed dimensions:
+
+```lean
+def RoundComposite.Concrete.OddSuccessorHighModulusPrefixCountGoal : Prop :=
+  forall {b m : Nat},
+    5 <= b -> Odd m -> 2 * b + 1 <= m ->
+      StandardCayleySolved (2 * b + 1) m
+
+def RoundComposite.Concrete.OddModulusToriV4SuccessorHighSmallBlocksGoal :
+    Prop :=
+  OddSuccessorHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusBaseTailGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_successorHighSmall_blocks
+    (hBlocks : OddModulusToriV4SuccessorHighSmallBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
 ## Why This Is Smaller Than v3.2
 
 The v3.2 packet used:
