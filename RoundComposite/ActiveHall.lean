@@ -1905,10 +1905,25 @@ def color {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     (x : X) (σ : Fin T) : C :=
   (Φ.equiv x σ).1
 
+theorem color_mem_active {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x : X) (σ : Fin T) :
+    Φ.color x σ ∈ I.active x :=
+  (Φ.equiv x σ).2
+
 def count {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] {I : Incidence T X C}
     (Φ : Symboling I) (c : C) (σ : Fin T) : Nat :=
   ∑ x : X, if Φ.color x σ = c then 1 else 0
+
+theorem count_eq_choiceDegree {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) (c : C) (σ : Fin T) :
+    Φ.count c σ = Incidence.choiceDegree (fun x : X => Φ.color x σ) c := by
+  classical
+  unfold count Incidence.choiceDegree
+  rw [Finset.card_filter]
 
 def symbolsIn {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq C] {I : Incidence T X C}

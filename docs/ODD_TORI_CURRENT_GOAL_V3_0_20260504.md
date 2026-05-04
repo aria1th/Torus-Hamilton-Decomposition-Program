@@ -337,6 +337,8 @@ theorem RoundComposite.ActiveHall.eraseLastHallCutsNontrivialSlackChoice_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsLinearChoice_zero
 theorem RoundComposite.ActiveHall.eraseLastHallCutsTokenLinearChoice_zero
 noncomputable def RoundComposite.ActiveHall.Symboling.extendLast
+theorem RoundComposite.ActiveHall.Symboling.color_mem_active
+theorem RoundComposite.ActiveHall.Symboling.count_eq_choiceDegree
 theorem RoundComposite.ActiveHall.Symboling
   .extendLast_realizes_eraseLastCountMatrix
 def RoundComposite.ActiveHall.Incidence.eraseChoice
