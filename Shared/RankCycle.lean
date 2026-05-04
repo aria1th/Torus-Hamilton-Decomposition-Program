@@ -51,6 +51,13 @@ theorem single_cycle_of_zmod_rank
     _ = rank x + (rank y - rank x) := by rw [hn]
     _ = rank y := by ring
 
+theorem single_cycle_of_zmod_rank_equiv
+    {α : Type*} {N : Nat} [NeZero N] (f : α → α)
+    (rank : α ≃ ZMod N)
+    (hstep : ∀ x : α, rank (f x) = rank x + 1) :
+    IsSingleCycleMap f :=
+  single_cycle_of_zmod_rank f rank (Equiv.bijective rank) hstep
+
 theorem zmod_add_single_cycle_of_coprime
     {m a : Nat} [NeZero m] (ha : Nat.Coprime a m) :
     IsSingleCycleMap (fun x : ZMod m => x + (a : ZMod m)) := by
