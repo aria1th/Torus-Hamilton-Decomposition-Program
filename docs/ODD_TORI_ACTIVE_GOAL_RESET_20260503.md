@@ -6,10 +6,10 @@ This note records the current target after the D2 review and the
 `prefix_count_odd_tori_overhauled_v2_submission_bundle (1).zip` absorption.
 It supersedes the older finite-boundary framing.
 
-Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_5_20260503.md`.
-That note is the preferred short reference after the `d < 29` boundary review,
-the D2/product wrapper correction, the q=1 plus-family split, the canonical
-root-flat lift, and the first Active-Hall residue-symboling interface.
+Concise current-goal reset: `docs/ODD_TORI_CURRENT_GOAL_V2_8_20260504.md`.
+That note is the preferred short reference after the v4 manuscript absorption
+and the Lean closure-dispatcher update: the top-level proof spine now runs
+through product closure and the successor closure `b -> 2*b+1`.
 
 Correction after the first reset: the manuscript-facing small branch must
 explicitly expose the Hall-slack hypotheses `d - b > b` and

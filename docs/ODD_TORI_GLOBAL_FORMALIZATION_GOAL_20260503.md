@@ -10,11 +10,13 @@ primary target is now the Lean formalization of the all-dimensional,
 odd-modulus theorem.
 
 The most recent compressed active-goal statement is recorded in
-`docs/ODD_TORI_ACTIVE_GOAL_RESET_20260503.md`.  The key refinement is that the
-D11 small branch and the general `d >= 13, m < d` branch should both be viewed
-through one Hall-slack unit-packet base-tail lift theorem.  The general small
-branch uses a uniform arithmetic witness for the Hall-slack inequality, now
-Lean-closed as `seed_semigroup_base_available_with_hall_slack`.
+`docs/ODD_TORI_CURRENT_GOAL_V2_8_20260504.md`, with
+`docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V4_ABSORPTION_20260504.md` recording the
+v4 manuscript absorption.  The key refinement is that the final proof spine is
+now product closure plus successor closure `b -> 2*b+1` from the base
+dimensions `2,3,5,7`.  The closure dispatcher is Lean-closed in
+`RoundComposite/ConcreteEndpoints.lean`; successor closure is the next main
+construction theorem.
 
 ## New Primary Goal
 

@@ -123,6 +123,53 @@ theorem pow_three_four_mul_pred_gt_ninety_six_sq :
           Nat.mul_lt_mul_of_pos_left ih (by decide)
         _ = 3 ^ (4 * (p + 1) - 1) := hpow
 
+theorem successor_quadratic_lt_three_pow_pred :
+    ∀ {b : Nat}, 5 ≤ b → (2 * b + 1) * (b + 1) < 3 ^ (b - 1) := by
+  intro b hb
+  induction b, hb using Nat.le_induction with
+  | base => norm_num
+  | succ b hb ih =>
+      have hquad :
+          (2 * (b + 1) + 1) * ((b + 1) + 1) ≤
+            3 * ((2 * b + 1) * (b + 1)) := by
+        nlinarith
+      have hpow :
+          3 * 3 ^ (b - 1) = 3 ^ ((b + 1) - 1) := by
+        rw [show (b + 1) - 1 = (b - 1) + 1 by omega]
+        rw [pow_succ]
+        ring
+      calc
+        (2 * (b + 1) + 1) * ((b + 1) + 1)
+            ≤ 3 * ((2 * b + 1) * (b + 1)) := hquad
+        _ < 3 * 3 ^ (b - 1) :=
+            Nat.mul_lt_mul_of_pos_left ih (by decide)
+        _ = 3 ^ ((b + 1) - 1) := hpow
+
+theorem successor_hall_slack {b m : Nat}
+    (hb5 : 5 ≤ b) (hm3 : 3 ≤ m) :
+    m ^ b > m * (2 * b + 1) * ((2 * b + 1) - b) := by
+  have htail : (2 * b + 1) - b = b + 1 := by omega
+  rw [htail]
+  have hbase := successor_quadratic_lt_three_pow_pred hb5
+  have hpow_le : 3 ^ (b - 1) ≤ m ^ (b - 1) :=
+    Nat.pow_le_pow_left hm3 (b - 1)
+  have hquad_lt : (2 * b + 1) * (b + 1) < m ^ (b - 1) :=
+    lt_of_lt_of_le hbase hpow_le
+  have hmpos : 0 < m := by omega
+  have hmul :
+      m * ((2 * b + 1) * (b + 1)) < m * m ^ (b - 1) :=
+    Nat.mul_lt_mul_of_pos_left hquad_lt hmpos
+  have hpoweq : m * m ^ (b - 1) = m ^ b := by
+    calc
+      m * m ^ (b - 1) = m ^ (b - 1) * m := by ring
+      _ = m ^ ((b - 1) + 1) := by rw [pow_succ]
+      _ = m ^ b := by rw [show (b - 1) + 1 = b by omega]
+  calc
+    m * (2 * b + 1) * (b + 1)
+        = m * ((2 * b + 1) * (b + 1)) := by ring
+    _ < m * m ^ (b - 1) := hmul
+    _ = m ^ b := hpoweq
+
 def unitCarryPacket (m k : Nat) : List Nat :=
   if k = 2 then
     [1, m - 1]

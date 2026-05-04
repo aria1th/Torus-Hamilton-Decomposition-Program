@@ -185,8 +185,8 @@ the global q=1 theorem family.
   cap/mass and equality reductions, empty/full cut reductions, nontrivial
   Hall-cut reduction, cut cap/mass monotonicity, residue compatibility from
   feasible matrices and symbolings, one-symbol Hall extraction, ordinary Hall
-  token matching, and the sanity converse from symbolings back to feasible
-  residue count matrices.
+  token matching, one-symbol quota token matching, and the sanity converse from
+  symbolings back to feasible residue count matrices.
 
 ## Non-Goals
 

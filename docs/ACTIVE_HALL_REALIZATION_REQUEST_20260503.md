@@ -11,9 +11,10 @@ mathematical proof or Lean formalization attempt.
 Read these files first:
 
 1. `RoundComposite/ActiveHall.lean`
-2. `docs/ODD_TORI_CURRENT_GOAL_V2_5_20260503.md`
+2. `docs/ODD_TORI_CURRENT_GOAL_V2_8_20260504.md`
 3. `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`
 4. `docs/GPT55_PRO_ACTIVE_HALL_SLACK_RESPONSE_20260503.md`
+5. `docs/PREFIX_COUNT_ODD_TORI_OVERHAULED_V4_ABSORPTION_20260504.md`
 
 The theorem below is not a torus theorem.  It is a finite combinatorial
 realization theorem for active symbolings.
@@ -87,7 +88,8 @@ condition for this realization problem.
   `Incidence.cutCap_mono`, `CountMatrix.cutMass_mono`;
 - one-symbol Hall extraction:
   `Incidence.hitCount`, `Incidence.cutCap_symbol_singleton`,
-  `CountMatrix.cutMass_symbol_singleton`, `CountMatrix.singleSymbol_hall`;
+  `CountMatrix.cutMass_symbol_singleton`, `CountMatrix.singleSymbol_hall`,
+  `CountMatrix.exists_singleSymbol_token_matching`;
 - ordinary Hall token matching:
   `Incidence.exists_injective_token_matching_of_hall`;
 - residue compatibility adapters for feasible matrices and symbolings.

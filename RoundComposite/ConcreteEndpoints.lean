@@ -43,6 +43,13 @@ theorem standard_torus_odd_uniform_7 :
     OddUniformSolved StandardTorusSolved 7 := by
   exact standard_cayley_odd_uniform_7
 
+def OddSuccessorClosureGoal : Prop :=
+  ∀ {b m : Nat},
+    5 ≤ b →
+    Odd m → 3 ≤ m →
+    StandardCayleySolved b m →
+    StandardCayleySolved (2 * b + 1) m
+
 theorem standard_cayley_odd_uniform_all_dimensions_of_odd_core
     (hOddCore :
       ∀ {d : Nat}, Odd d → 3 ≤ d →
@@ -90,6 +97,59 @@ theorem odd_modulus_tori_all_dimensions_of_odd_core
     Shared.CayleyHamiltonDecomposition d m :=
   odd_modulus_tori_all_dimensions_uniform_of_odd_core
     hOddCore hd2 hm3 hmodd
+
+theorem odd_modulus_tori_all_dimensions_uniform_of_357_and_successor
+    (hSucc : OddSuccessorClosureGoal)
+    {d : Nat} (hd2 : 2 ≤ d) :
+    OddUniformSolved StandardCayleySolved d := by
+  induction d using Nat.strong_induction_on with
+  | h d ih =>
+      intro hd2
+      by_cases hdodd : Odd d
+      · rcases hdodd with ⟨b, rfl⟩
+        by_cases h3 : 2 * b + 1 = 3
+        · have hb : b = 1 := by omega
+          subst b
+          simpa using standard_cayley_odd_uniform_3
+        by_cases h5 : 2 * b + 1 = 5
+        · have hb : b = 2 := by omega
+          subst b
+          simpa using standard_cayley_odd_uniform_5
+        by_cases h7 : 2 * b + 1 = 7
+        · have hb : b = 3 := by omega
+          subst b
+          simpa using standard_cayley_odd_uniform_7
+        by_cases h9 : 2 * b + 1 = 9
+        · have hb : b = 4 := by omega
+          subst b
+          simpa using
+            (odd_uniform_cayley_mul_of_standard
+              (a := 3) (b := 3) (by decide) (by decide)
+              standard_cayley_odd_uniform_3 standard_cayley_odd_uniform_3)
+        have hb5 : 5 ≤ b := by omega
+        have hb2 : 2 ≤ b := by omega
+        have hblt : b < 2 * b + 1 := by omega
+        intro hm3 hmodd
+        exact hSucc hb5 hmodd hm3 ((ih b hblt hb2) hm3 hmodd)
+      · have hdeven : Even d := Nat.not_odd_iff_even.mp hdodd
+        rcases even_iff_exists_two_mul.mp hdeven with ⟨b, rfl⟩
+        by_cases hb1 : b = 1
+        · subst b
+          simpa using standard_cayley_odd_uniform_2
+        have hbpos : 0 < b := by omega
+        have hb2 : 2 ≤ b := by omega
+        have hblt : b < 2 * b := by omega
+        exact odd_uniform_cayley_mul_of_standard
+          (a := 2) (b := b) (by decide) hbpos
+          standard_cayley_odd_uniform_2 (ih b hblt hb2)
+
+theorem odd_modulus_tori_all_dimensions_of_357_and_successor
+    (hSucc : OddSuccessorClosureGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_uniform_of_357_and_successor
+    hSucc hd2 hm3 hmodd
 
 theorem standard_cayley_odd_uniform_35_of_pointwise
     (hExp : OddPointwiseCompositeExpansion StandardCayleySolved) :

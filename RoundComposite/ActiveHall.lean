@@ -405,6 +405,42 @@ theorem singleSymbol_hall {T : Nat} {X C : Type*}
   rw [← M.cutMass_symbol_singleton U σ, ← I.cutCap_symbol_singleton U σ]
   exact hHall U ({σ} : Finset (Fin T))
 
+theorem exists_singleSymbol_token_matching {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) (σ : Fin T) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c σ)) → X,
+      Function.Injective f ∧
+      ∀ q : Sigma fun c : C => Fin (M.val c σ),
+        q.1 ∈ I.active (f q) := by
+  classical
+  apply I.exists_injective_token_matching_of_hall
+    (colorOf := fun q : Sigma fun c : C => Fin (M.val c σ) => q.1)
+  intro A
+  let U : Finset C :=
+    A.image (fun q : Sigma fun c : C => Fin (M.val c σ) => q.1)
+  have hsubset :
+      A ⊆ U.sigma
+        (fun c : C => (Finset.univ : Finset (Fin (M.val c σ)))) := by
+    intro q hq
+    exact Finset.mem_sigma.mpr
+      ⟨Finset.mem_image_of_mem
+        (fun q : Sigma fun c : C => Fin (M.val c σ) => q.1) hq,
+        Finset.mem_univ q.2⟩
+  have hcardA :
+      A.card ≤
+        (U.sigma
+          (fun c : C => (Finset.univ : Finset (Fin (M.val c σ))))).card :=
+    Finset.card_le_card hsubset
+  have hcardSigma :
+      (U.sigma
+          (fun c : C => (Finset.univ : Finset (Fin (M.val c σ))))).card
+        = ∑ c ∈ U, M.val c σ := by
+    rw [Finset.card_sigma]
+    simp
+  rw [hcardSigma] at hcardA
+  exact hcardA.trans (M.singleSymbol_hall hHall U σ)
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
