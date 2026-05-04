@@ -20,7 +20,7 @@ reduced the root-flat return to a head-tail skew product.
 4. `Shared/RankCycle.lean`
 5. `Shared/TorusCayley.lean`
 6. `Shared/RootFlat.lean`
-7. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
+7. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 8. Optional legacy context: `docs/D11_ODD_WORKING_CERTIFICATE_NOTE_20260502.md`
 9. Optional older request: `docs/ROOT_FLAT_CANONICAL_SCHEDULE_REQUEST_20260504.md`
 
