@@ -65,6 +65,34 @@ theorem eq_of_mem_of_active_card_one {X C : Type*}
     rw [I.active_card x]
   exact (Finset.card_le_one.mp hcard) a ha b hb
 
+def eraseChoice {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x) :
+    Incidence T X C where
+  active := fun x => (I.active x).erase (choice x)
+  active_card := by
+    intro x
+    rw [Finset.card_erase_of_mem (hchoice x), I.active_card x]
+    omega
+
+@[simp] theorem eraseChoice_active {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x) (x : X) :
+    (I.eraseChoice choice hchoice).active x =
+      (I.active x).erase (choice x) :=
+  rfl
+
+theorem mem_eraseChoice_active {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    {x : X} {c : C} :
+    c ∈ (I.eraseChoice choice hchoice).active x ↔
+      c ∈ I.active x ∧ c ≠ choice x := by
+  simp [eraseChoice, and_comm]
+
 theorem sum_colorDegree_on {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) :
