@@ -604,6 +604,35 @@ theorem prefixCountFirstHitSymbolMap_bijective_of_val_zero
   rw [hfun]
   exact prefixCountRootStep_bijective s
 
+theorem prefixCountFirstHitSymbolMap_inverseLaw_of_val_zero
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (hs : s.val = 0) :
+    Function.LeftInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) ∧
+      Function.RightInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) := by
+  have hfun :
+      prefixCountFirstHitSymbolMap hd2 t s =
+        prefixCountRootStep d m s := by
+    funext w
+    simp [prefixCountFirstHitSymbolMap,
+      prefixCountLambdaRho_eq_self_of_val_zero _ hs]
+  have hinv :
+      prefixCountFirstHitSymbolMapInv hd2 t s =
+        prefixCountRootStepInv d m s := by
+    funext w
+    simp [prefixCountFirstHitSymbolMapInv,
+      prefixCountLambdaRho_eq_self_of_val_zero _ hs]
+  constructor
+  · intro w
+    rw [hfun, hinv]
+    exact prefixCountRootStepInv_apply_step s w
+  · intro w
+    rw [hfun, hinv]
+    exact prefixCountRootStep_apply_inv s w
+
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
