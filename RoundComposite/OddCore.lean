@@ -138,6 +138,28 @@ def prefixCountRootStep (d m : Nat) :
     Fin d → PrefixCountRootState d m → PrefixCountRootState d m :=
   fun i w j => if (i : Nat) = j then w j + 1 else w j
 
+def prefixCountRootStepInv (d m : Nat) :
+    Fin d → PrefixCountRootState d m → PrefixCountRootState d m :=
+  fun i w j => if (i : Nat) = j then w j - 1 else w j
+
+theorem prefixCountRootStepInv_apply_step {d m : Nat}
+    (i : Fin d) (w : PrefixCountRootState d m) :
+    prefixCountRootStepInv d m i (prefixCountRootStep d m i w) = w := by
+  funext j
+  by_cases hij : (i : Nat) = j
+  · simp [prefixCountRootStepInv, prefixCountRootStep, hij,
+      sub_eq_add_neg, add_assoc]
+  · simp [prefixCountRootStepInv, prefixCountRootStep, hij]
+
+theorem prefixCountRootStep_apply_inv {d m : Nat}
+    (i : Fin d) (w : PrefixCountRootState d m) :
+    prefixCountRootStep d m i (prefixCountRootStepInv d m i w) = w := by
+  funext j
+  by_cases hij : (i : Nat) = j
+  · simp [prefixCountRootStepInv, prefixCountRootStep, hij,
+      sub_eq_add_neg, add_assoc]
+  · simp [prefixCountRootStepInv, prefixCountRootStep, hij]
+
 theorem prefixCountRootStep_eq_succ_cast {d m : Nat} (hd1 : 1 ≤ d)
     (i : Fin d) (w : PrefixCountRootState d m) :
     prefixCountRootStep d m i w =
