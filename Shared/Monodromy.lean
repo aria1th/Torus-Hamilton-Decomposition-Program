@@ -197,6 +197,42 @@ theorem zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
     (Fintype.bijective_iff_surjective_and_card G).2 ⟨hsurj, hcard⟩
   simpa [G] using hbijG
 
+theorem zmodVectorTake_extendZero_apply_bijective_of_take_preserving
+    {m r k : Nat} [NeZero m] (hk : k ≤ r)
+    {F : (Fin r → ZMod m) → (Fin r → ZMod m)}
+    (hPres :
+      ∀ x y : Fin r → ZMod m,
+        zmodVectorTake hk x = zmodVectorTake hk y →
+          zmodVectorTake hk (F x) = zmodVectorTake hk (F y))
+    (hBij : Function.Bijective F) :
+    Function.Bijective
+      (fun x : Fin k → ZMod m =>
+        zmodVectorTake hk (F (zmodVectorExtendZero hk x))) := by
+  classical
+  let G : (Fin k → ZMod m) → (Fin k → ZMod m) :=
+    fun x => zmodVectorTake hk (F (zmodVectorExtendZero hk x))
+  have hsurj : Function.Surjective G := by
+    intro y
+    rcases hBij.2 (zmodVectorExtendZero hk y) with ⟨xFull, hxFull⟩
+    refine ⟨zmodVectorTake hk xFull, ?_⟩
+    have htake :
+        zmodVectorTake hk xFull =
+          zmodVectorTake hk
+            (zmodVectorExtendZero hk (zmodVectorTake hk xFull)) := by
+      simp
+    have hFtake := hPres xFull
+      (zmodVectorExtendZero hk (zmodVectorTake hk xFull)) htake
+    dsimp [G]
+    rw [← hFtake]
+    rw [hxFull]
+    simp
+  have hcard :
+      Fintype.card (Fin k → ZMod m) =
+        Fintype.card (Fin k → ZMod m) := rfl
+  have hbijG : Function.Bijective G :=
+    (Fintype.bijective_iff_surjective_and_card G).2 ⟨hsurj, hcard⟩
+  simpa [G] using hbijG
+
 theorem zmodVectorIncrementDependsOnTake_comp
     {m r : Nat} {F G : (Fin r → ZMod m) → (Fin r → ZMod m)}
     (hF : ZModVectorIncrementDependsOnTake F)

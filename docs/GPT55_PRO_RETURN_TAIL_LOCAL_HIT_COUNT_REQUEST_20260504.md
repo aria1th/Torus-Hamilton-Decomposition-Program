@@ -112,12 +112,30 @@ theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailLocalHitConditionSumGoal_of_lowResidualReindex
     (hReindex : PrefixCountFirstHitReturnLowResidualReindexGoal) :
     PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
+
+theorem Shared
+  .zmodVectorTake_extendZero_apply_bijective_of_take_preserving :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitCanonicalSchedule_prefixMap_lowPrefix_bijective :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_bijective :
+    ...
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum :
+    ...
 ```
 
 So the remaining constructive task is even narrower: prove the reindexing of
 the now-defined map
 `(x,u) ↦ prefixCountFirstHitReturnLowResidual hd2 L c hk t u x` onto
-`Fin (k + 1) -> ZMod m`.
+`Fin (k + 1) -> ZMod m`.  The prefixMap projection and coordinatewise
+subtraction part is now closed; what remains is the base-orbit plus skew-fiber
+low-tail reindex and the final assembly.
 
 ## Exact Target Shape
 

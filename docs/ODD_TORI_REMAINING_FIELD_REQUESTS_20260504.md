@@ -352,9 +352,17 @@ prefixCountPcHitBeforeLastZeroIndicatorSum
 prefixCountFirstHitReturnBaseStep_sum_fin_iterate
 prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
+Shared.zmodVectorTake_extendZero_apply_bijective_of_take_preserving
+Shared.zmodVectorConsEquiv
+Shared.zmodVectorSubConst_bijective
 prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
+prefixCountFirstHitCanonicalSchedule_prefixMap_lowPrefix_bijective
+prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_bijective
+prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum
 PrefixCountFirstHitReturnTailLocalHitConditionSumGoal
 prefixCountFirstHitReturnLowResidualState
+prefixCountFirstHitLowResidualFromHeadTail
+prefixCountFirstHitLowResidualFromHeadTail_eq_lowPrefix
 prefixCountFirstHitReturnLowResidual
 prefixCountFirstHitReturnLowResidual_eq_zero_iff_hitNat
 prefixCountFirstHitReturnLowResidual_exactLastZero_iff_rho_eq
@@ -387,7 +395,10 @@ return-tail proof is now even narrower: the residual map is defined, its zero
 coordinates are connected to `prefixCountCanonicalRhoHitNat`, the three
 residual events are connected to the rho cases, and the actual hit condition is
 rewritten to the residual event split.  The remaining field is precisely
-`PrefixCountFirstHitReturnLowResidualReindexGoal`.
+`PrefixCountFirstHitReturnLowResidualReindexGoal`.  Additional closed helpers
+now handle the prefixMap low-prefix projection and coordinatewise subtraction
+part of that reindexing; the remaining subproblem is the base-orbit plus
+skew-fiber low-tail reindex and its assembly with the prefixMap projection.
 
 ### Already Lean-Closed
 

@@ -93,6 +93,10 @@ def zmodVectorSnocEquiv (n m : Nat) :
   (Fin.snocEquiv (fun _ : Fin (n + 1) => ZMod m)).symm.trans
     (Equiv.prodComm _ _)
 
+def zmodVectorConsEquiv (n m : Nat) :
+    (Fin (n + 1) → ZMod m) ≃ ZMod m × (Fin n → ZMod m) :=
+  (Fin.consEquiv (fun _ : Fin (n + 1) => ZMod m)).symm
+
 @[simp] theorem zmodVectorSnocEquiv_apply {n m : Nat}
     (x : Fin (n + 1) → ZMod m) :
     zmodVectorSnocEquiv n m x = (Fin.init x, x (Fin.last n)) := by
@@ -102,6 +106,30 @@ def zmodVectorSnocEquiv (n m : Nat) :
     (x : Fin n → ZMod m) (a : ZMod m) :
     (zmodVectorSnocEquiv n m).symm (x, a) = Fin.snoc x a := by
   rfl
+
+@[simp] theorem zmodVectorConsEquiv_apply {n m : Nat}
+    (x : Fin (n + 1) → ZMod m) :
+    zmodVectorConsEquiv n m x = (x 0, Fin.tail x) := by
+  rfl
+
+@[simp] theorem zmodVectorConsEquiv_symm_apply {n m : Nat}
+    (a : ZMod m) (x : Fin n → ZMod m) :
+    (zmodVectorConsEquiv n m).symm (a, x) = Fin.cons a x := by
+  rfl
+
+theorem zmodVectorSubConst_bijective {n m : Nat} (a : ZMod m) :
+    Function.Bijective
+      (fun x : Fin n → ZMod m => fun i => x i - a) := by
+  constructor
+  · intro x y hxy
+    funext i
+    have hi := congrFun hxy i
+    have h := congrArg (fun z : ZMod m => z + a) hi
+    simpa [sub_eq_add_neg, add_assoc, add_comm] using h
+  · intro y
+    refine ⟨fun i => y i + a, ?_⟩
+    funext i
+    simp [sub_eq_add_neg, add_assoc, add_comm]
 
 @[simp] theorem zmodVectorTake_snoc_self {m n : Nat}
     (x : Fin n → ZMod m) (a : ZMod m) :

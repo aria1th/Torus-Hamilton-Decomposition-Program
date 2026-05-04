@@ -3666,6 +3666,84 @@ noncomputable def prefixCountFirstHitReturnLowResidualState
           u (0 : ZMod m)
           (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)))
 
+noncomputable def prefixCountFirstHitLowResidualFromHeadTail
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t : Nat) (z : ZMod m) (tail : Fin (d - 2) → ZMod m) :
+    Fin (k + 1) → ZMod m :=
+  fun r =>
+    ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+      ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail)))
+      ⟨r.val, by omega⟩ - ((t : Nat) : ZMod m)
+
+theorem prefixCountFirstHitLowResidualFromHeadTail_eq_lowPrefix
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2))
+    (c : Fin d) {k : Nat} (hk : k < d - 2)
+    (t : Nat) (z : ZMod m) (tail : Fin (d - 2) → ZMod m)
+    (y : Fin k → ZMod m)
+    (hTake : Shared.zmodVectorTake (Nat.le_of_lt hk) tail = y) :
+    prefixCountFirstHitLowResidualFromHeadTail hd2 L c hk t z tail =
+      fun r =>
+        Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+            (Shared.zmodVectorExtendZero
+              (show k + 1 ≤ d - 1 by omega)
+              (Fin.cons z y))) r -
+          ((t : Nat) : ZMod m) := by
+  funext r
+  have hAgree :
+      prefixCountRootAgreeUpTo k
+        ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail))
+        (Shared.zmodVectorExtendZero
+          (show k + 1 ≤ d - 1 by omega) (Fin.cons z y)) := by
+    intro j hj
+    by_cases hj0 : j.val = 0
+    · have hj' : j = ⟨0, by omega⟩ := Fin.ext hj0
+      rw [hj']
+      simp [Shared.zmodVectorExtendZero]
+    · have hjpred : j.val - 1 < k := by omega
+      have htail := congrFun hTake ⟨j.val - 1, hjpred⟩
+      have htail' :
+          tail ⟨j.val - 1, by omega⟩ =
+            y ⟨j.val - 1, hjpred⟩ := by
+        simpa [Shared.zmodVectorTake] using htail
+      have hidx :
+          (⟨(j.val - 1) + 1, by omega⟩ : Fin (d - 1)) = j := by
+        apply Fin.ext
+        simp
+        omega
+      rw [← hidx]
+      change tail ⟨j.val - 1, by omega⟩ =
+        Shared.zmodVectorExtendZero
+          (show k + 1 ≤ d - 1 by omega) (Fin.cons z y)
+          ⟨(j.val - 1) + 1, by omega⟩
+      have hlt :
+          (⟨(j.val - 1) + 1, by omega⟩ : Fin (d - 1)).val < k + 1 := by
+        simp
+        omega
+      unfold Shared.zmodVectorExtendZero
+      rw [dif_pos hlt]
+      have hfin :
+          (⟨(j.val - 1) + 1, hlt⟩ : Fin (k + 1)) =
+            (⟨j.val - 1, hjpred⟩ : Fin k).succ := by
+        apply Fin.ext
+        simp
+      rw [hfin]
+      exact htail'
+  have hOut :=
+    prefixCountFirstHitCanonicalSchedule_prefixMap_agreeUpTo
+      (d := d) (m := m) hd2 L c hk t hAgree
+  have hle : k + 1 ≤ d - 1 := by omega
+  have hcoord :=
+    hOut ⟨r.val, lt_of_lt_of_le r.isLt hle⟩
+      (Nat.le_of_lt_succ r.isLt)
+  simp [prefixCountFirstHitLowResidualFromHeadTail,
+    Shared.zmodVectorTake, hcoord]
+
 noncomputable def prefixCountFirstHitReturnLowResidual
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}
@@ -4210,6 +4288,105 @@ theorem prefixCountFirstHitSkewFiberIterate_lowPrefix_bijective
   exact
     Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
       (Nat.le_of_lt hk) hInc hBij
+
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_lowPrefix_bijective
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d}
+    (hdodd : Odd d) (hd5 : 5 ≤ d) (hmodd : Odd m) (hdm : d ≤ m)
+    (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (t k : Nat) (hk : k < d - 2) :
+    Function.Bijective
+      (fun y : Fin (k + 1) → ZMod m =>
+        Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+            (Shared.zmodVectorExtendZero
+              (show k + 1 ≤ d - 1 by omega) y))) := by
+  let hle : k + 1 ≤ d - 1 := by omega
+  refine
+    Shared.zmodVectorTake_extendZero_apply_bijective_of_take_preserving
+      (m := m) hle ?_ ?_
+  · intro x y hxy
+    funext i
+    have hle : k + 1 ≤ d - 1 := by omega
+    have hAgree : prefixCountRootAgreeUpTo k x y := by
+      intro j hj
+      have hji : j.val < k + 1 := by omega
+      have hcoord := congrFun hxy ⟨j.val, hji⟩
+      simpa [Shared.zmodVectorTake] using hcoord
+    have hOut :=
+      prefixCountFirstHitCanonicalSchedule_prefixMap_agreeUpTo
+        (d := d) (m := m) hd2 L c hk t hAgree
+    exact hOut ⟨i.val, lt_of_lt_of_le i.isLt hle⟩
+      (Nat.le_of_lt_succ i.isLt)
+  · have hLayer :
+        (prefixCountFirstHitCanonicalSchedule hd2 L).layerBijective :=
+      prefixCountFirstHitCanonicalLayerBijectiveGoal
+        hd2 hdodd hd5 hmodd hdm hC L
+    exact Shared.RootFlatSchedule.prefixMap_bijective
+      (prefixCountFirstHitCanonicalSchedule hd2 L) hLayer c t
+
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_bijective
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d}
+    (hdodd : Odd d) (hd5 : 5 ≤ d) (hmodd : Odd m) (hdm : d ≤ m)
+    (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (t k : Nat) (hk : k < d - 2) :
+    Function.Bijective
+      (fun y : Fin (k + 1) → ZMod m =>
+        fun r =>
+          Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+            ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+              (Shared.zmodVectorExtendZero
+                (show k + 1 ≤ d - 1 by omega) y)) r -
+            ((t : Nat) : ZMod m)) := by
+  exact
+    (Shared.zmodVectorSubConst_bijective
+      (n := k + 1) (m := m) ((t : Nat) : ZMod m)).comp
+      (prefixCountFirstHitCanonicalSchedule_prefixMap_lowPrefix_bijective
+        (hd2 := hd2) (C := C) hdodd hd5 hmodd hdm hC L c t k hk)
+
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_sum
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d}
+    (hdodd : Odd d) (hd5 : 5 ≤ d) (hmodd : Odd m) (hdm : d ≤ m)
+    (hC : C.Admissible m)
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (t k : Nat) (hk : k < d - 2)
+    {α : Type*} [AddCommMonoid α] (F : (Fin (k + 1) → ZMod m) → α) :
+    (∑ y : Fin (k + 1) → ZMod m,
+        F (fun r =>
+          Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+            ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+              (Shared.zmodVectorExtendZero
+                (show k + 1 ≤ d - 1 by omega) y)) r -
+            ((t : Nat) : ZMod m))) =
+      ∑ z : Fin (k + 1) → ZMod m, F z := by
+  classical
+  let G : (Fin (k + 1) → ZMod m) → (Fin (k + 1) → ZMod m) := fun y =>
+    fun r =>
+      Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+          (Shared.zmodVectorExtendZero
+            (show k + 1 ≤ d - 1 by omega) y)) r -
+        ((t : Nat) : ZMod m)
+  have hG : Function.Bijective G := by
+    simpa [G] using
+      prefixCountFirstHitCanonicalSchedule_prefixMap_lowResidual_bijective
+        (hd2 := hd2) (C := C) hdodd hd5 hmodd hdm hC L c t k hk
+  let e : (Fin (k + 1) → ZMod m) ≃ (Fin (k + 1) → ZMod m) :=
+    Equiv.ofBijective G hG
+  calc
+    (∑ y : Fin (k + 1) → ZMod m,
+        F (fun r =>
+          Shared.zmodVectorTake (show k + 1 ≤ d - 1 by omega)
+            ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+              (Shared.zmodVectorExtendZero
+                (show k + 1 ≤ d - 1 by omega) y)) r -
+            ((t : Nat) : ZMod m)))
+        = ∑ y : Fin (k + 1) → ZMod m, F (e y) := by
+            rfl
+    _ = ∑ z : Fin (k + 1) → ZMod m, F z := by
+            exact Fintype.sum_equiv e (fun y => F (e y)) F
+              (by intro y; rfl)
 
 theorem prefixCountFirstHitReturnTailIncrementDependsOnTakeGoal_of_fiber
     (hFiber : PrefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal) :
