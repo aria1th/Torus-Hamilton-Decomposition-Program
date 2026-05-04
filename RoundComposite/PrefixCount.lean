@@ -2048,6 +2048,32 @@ structure UniformColumnDegreeMatrixData
   G_row_sum : ∀ i : Fin rows, (∑ k : Fin cols, G i k) = rowDegree i
   G_col_sum : ∀ k : Fin cols, (∑ i : Fin rows, G i k) = h
 
+/--
+Starting offset for the cyclic-interval realization of a `0/1` matrix with
+prescribed row degrees and uniform column degree.
+-/
+def uniformColumnDegreePrefix {rows : Nat}
+    (rowDegree : Fin rows → Nat) (i : Fin rows) : Nat :=
+  ∑ j : Fin rows, if j.val < i.val then rowDegree j else 0
+
+def uniformColumnDegreeCellMap {rows cols : Nat}
+    (hcols : 0 < cols) (rowDegree : Fin rows → Nat) (i : Fin rows)
+    (t : Fin (rowDegree i)) : Fin cols :=
+  ⟨(uniformColumnDegreePrefix rowDegree i + t.val) % cols,
+    Nat.mod_lt _ hcols⟩
+
+def uniformColumnDegreeCellSet {rows cols : Nat}
+    (hcols : 0 < cols) (rowDegree : Fin rows → Nat) (i : Fin rows) :
+    Finset (Fin cols) :=
+  (Finset.univ : Finset (Fin (rowDegree i))).image
+    (uniformColumnDegreeCellMap hcols rowDegree i)
+
+def uniformColumnDegreeMatrix {rows cols : Nat}
+    (hcols : 0 < cols) (rowDegree : Fin rows → Nat) :
+    Fin rows → Fin cols → Nat :=
+  fun i k =>
+    if k ∈ uniformColumnDegreeCellSet hcols rowDegree i then 1 else 0
+
 structure OrdinaryQeq1AuxDegreeMatrixData (n r : Nat) where
   G : Fin n → Fin (n - 1) → Nat
   G_zero_one : ∀ i k, G i k = 0 ∨ G i k = 1
@@ -2455,6 +2481,84 @@ def UniformColumnDegreeMatrixGoal : Prop :=
     (∀ i : Fin rows, rowDegree i ≤ cols) →
     (∑ i : Fin rows, rowDegree i) = h * cols →
     Nonempty (UniformColumnDegreeMatrixData rows cols h rowDegree)
+
+def UniformColumnDegreeResidueCountGoal : Prop :=
+  ∀ {rows cols h : Nat} (rowDegree : Fin rows → Nat),
+    (hcols : 0 < cols) →
+    (∀ i : Fin rows, rowDegree i ≤ cols) →
+    (∑ i : Fin rows, rowDegree i) = h * cols →
+    ∀ k : Fin cols,
+      (∑ i : Fin rows,
+        if k ∈ uniformColumnDegreeCellSet hcols rowDegree i then 1 else 0) = h
+
+theorem uniformColumnDegreeCellMap_injective {rows cols : Nat}
+    (hcols : 0 < cols) (rowDegree : Fin rows → Nat)
+    (hrowLe : ∀ i : Fin rows, rowDegree i ≤ cols) (i : Fin rows) :
+    Function.Injective (uniformColumnDegreeCellMap hcols rowDegree i) := by
+  intro a b hab
+  apply Fin.ext
+  have hval :
+      (uniformColumnDegreePrefix rowDegree i + a.val) % cols =
+        (uniformColumnDegreePrefix rowDegree i + b.val) % cols := by
+    exact congrArg Fin.val hab
+  have hmod :
+      uniformColumnDegreePrefix rowDegree i + a.val ≡
+        uniformColumnDegreePrefix rowDegree i + b.val [MOD cols] := hval
+  have habmod : a.val ≡ b.val [MOD cols] :=
+    Nat.ModEq.add_left_cancel'
+      (uniformColumnDegreePrefix rowDegree i) hmod
+  exact Nat.ModEq.eq_of_lt_of_lt habmod
+    (lt_of_lt_of_le a.is_lt (hrowLe i))
+    (lt_of_lt_of_le b.is_lt (hrowLe i))
+
+theorem uniformColumnDegreeMatrix_row_sum {rows cols : Nat}
+    (hcols : 0 < cols) (rowDegree : Fin rows → Nat)
+    (hrowLe : ∀ i : Fin rows, rowDegree i ≤ cols) (i : Fin rows) :
+    (∑ k : Fin cols, uniformColumnDegreeMatrix hcols rowDegree i k) =
+      rowDegree i := by
+  let S : Finset (Fin cols) := uniformColumnDegreeCellSet hcols rowDegree i
+  have hsum :
+      (∑ k : Fin cols, uniformColumnDegreeMatrix hcols rowDegree i k) =
+        (Finset.univ.filter (fun k : Fin cols => k ∈ S)).card := by
+    rw [Finset.card_filter]
+    apply Finset.sum_congr rfl
+    intro k _hk
+    simp [uniformColumnDegreeMatrix, S]
+  have hfilter :
+      (Finset.univ.filter (fun k : Fin cols => k ∈ S)) = S := by
+    ext k
+    simp [S]
+  have hcardS :
+      S.card = Fintype.card (Fin (rowDegree i)) := by
+    dsimp [S, uniformColumnDegreeCellSet]
+    exact Finset.card_image_of_injective
+      (Finset.univ : Finset (Fin (rowDegree i)))
+      (uniformColumnDegreeCellMap_injective hcols rowDegree hrowLe i)
+  calc
+    (∑ k : Fin cols, uniformColumnDegreeMatrix hcols rowDegree i k)
+        = (Finset.univ.filter (fun k : Fin cols => k ∈ S)).card := hsum
+    _ = S.card := by rw [hfilter]
+    _ = rowDegree i := by
+      rw [hcardS]
+      exact Fintype.card_fin (rowDegree i)
+
+theorem uniformColumnDegreeMatrixGoal_of_residueCount
+    (hResidue : UniformColumnDegreeResidueCountGoal) :
+    UniformColumnDegreeMatrixGoal := by
+  intro rows cols h rowDegree hcols hrowLe htotal
+  exact ⟨{
+    G := uniformColumnDegreeMatrix hcols rowDegree
+    G_zero_one := by
+      intro i k
+      unfold uniformColumnDegreeMatrix
+      by_cases hk : k ∈ uniformColumnDegreeCellSet hcols rowDegree i
+      · simp [hk]
+      · simp [hk]
+    G_row_sum := uniformColumnDegreeMatrix_row_sum hcols rowDegree hrowLe
+    G_col_sum := by
+      intro k
+      exact hResidue rowDegree hcols hrowLe htotal k
+  }⟩
 
 def OrdinaryQeq1AuxDegreeArithmeticGoal : Prop :=
   ∀ {n r : Nat},

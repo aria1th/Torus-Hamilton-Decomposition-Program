@@ -130,6 +130,10 @@ PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal
 PrefixCount.ordinaryQeq1AuxDegree
 PrefixCount.UniformColumnDegreeMatrixData
 PrefixCount.UniformColumnDegreeMatrixGoal
+PrefixCount.UniformColumnDegreeResidueCountGoal
+PrefixCount.uniformColumnDegreeCellMap_injective
+PrefixCount.uniformColumnDegreeMatrix_row_sum
+PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount
 PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
 PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal
 PrefixCount.ordinaryQeq1AuxDegreeTotalGoal
@@ -273,6 +277,11 @@ total-degree identity `PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal` through
 `PrefixCount.ordinaryQeq1AuxDegreeArithmeticGoal_of_total`.
 The total-degree identity itself is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeTotalGoal`.
+The generic uniform-column matrix realization has also been lowered to the
+cyclic-interval residue count theorem
+`PrefixCount.UniformColumnDegreeResidueCountGoal`; Lean closes the row side and
+the bridge to `PrefixCount.UniformColumnDegreeMatrixGoal` through
+`PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount`.
 
 Small-modulus successor branch:
 
@@ -392,10 +401,29 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+The current minimal endpoint further replaces the generic uniform-column matrix
+realization by its cyclic-interval residue-count form:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4ResidueBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.UniformColumnDegreeResidueCountGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_residue_blocks
+    (hBlocks : OddModulusToriV4ResidueBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 uniform-column matrix and special matching theorems;
+2. prove the q=1 cyclic-interval residue count and special matching theorems;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
