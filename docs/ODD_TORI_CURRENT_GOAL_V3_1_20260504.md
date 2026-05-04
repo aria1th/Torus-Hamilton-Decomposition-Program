@@ -191,6 +191,10 @@ matching covering all P-rows is Lean-closed as
 For the `r > 1` forced-edge branch, the strict Hall count
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall_strict_of_nonempty` is also
 Lean-closed: every nonempty P-row subfamily has strictly more full neighbors.
+Consequently Lean now proves the forced-edge matching form
+`PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching_with_forced_of_one_lt_r`,
+which produces a P-row matching containing a prescribed positive edge when
+`1 < r`.
 The exact target set for the remaining matching is now also exposed:
 `PrefixCount.OrdinaryQeq1AuxMatrixData.highCols`,
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRowTargetCols`, and the cardinality

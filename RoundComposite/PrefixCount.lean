@@ -2800,6 +2800,113 @@ theorem exists_pRows_matching {n r : Nat}
   intro i
   simpa [neigh, posCols] using hfMem i
 
+theorem exists_pRows_matching_with_forced_of_one_lt_r {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r)
+    (hdodd : Odd (n + 1)) (hd5 : 5 ≤ n + 1) (hmodd : Odd (n + r))
+    (hr1 : 1 < r)
+    {i0 : Fin n} (hi0 : r ≤ i0.val)
+    {k0 : Fin (n - 1)} (hpos0 : A.B i0 k0 = 1) :
+    ∃ f : {i : Fin n // i ∈ pRows n r} → Fin (n - 1),
+      Function.Injective f ∧
+      (∀ i, A.B i.1 (f i) = 1) ∧
+      f ⟨i0, by simpa [pRows] using hi0⟩ = k0 := by
+  classical
+  let P := {i : Fin n // i ∈ pRows n r}
+  let i0P : P := ⟨i0, by simpa [pRows] using hi0⟩
+  let Pm := {i : P // i ≠ i0P}
+  let neigh : Pm → Finset (Fin (n - 1)) :=
+    fun i => (A.posCols i.1.1).erase k0
+  have hHall :
+      ∀ S : Finset Pm, S.card ≤ (S.biUnion neigh).card := by
+    intro S
+    by_cases hSempty : S = ∅
+    · simp [hSempty, neigh]
+    · have hSne : S.Nonempty := Finset.nonempty_iff_ne_empty.mpr hSempty
+      let X : Finset (Fin n) := S.image fun i : Pm => i.1.1
+      have hcardX : X.card = S.card := by
+        dsimp [X]
+        exact Finset.card_image_of_injective S (by
+          intro a b h
+          apply Subtype.ext
+          apply Subtype.ext
+          exact h)
+      have hX : X ⊆ pRows n r := by
+        intro i hi
+        rcases Finset.mem_image.mp hi with ⟨x, _hx, rfl⟩
+        exact x.1.2
+      have hXne : X.Nonempty := by
+        rcases hSne with ⟨x, hx⟩
+        exact ⟨x.1.1, Finset.mem_image.mpr ⟨x, hx, rfl⟩⟩
+      let N := A.pRowNeighbors X
+      have hneigh :
+          S.biUnion neigh = N.erase k0 := by
+        ext k
+        constructor
+        · intro hk
+          rcases Finset.mem_biUnion.mp hk with ⟨i, hiS, hik⟩
+          have hkne : k ≠ k0 := (Finset.mem_erase.mp hik).1
+          have hkpos : k ∈ A.posCols i.1.1 := (Finset.mem_erase.mp hik).2
+          exact Finset.mem_erase.mpr
+            ⟨hkne, Finset.mem_biUnion.mpr
+              ⟨i.1.1, Finset.mem_image.mpr ⟨i, hiS, rfl⟩, hkpos⟩⟩
+        · intro hk
+          have hkne : k ≠ k0 := (Finset.mem_erase.mp hk).1
+          have hkN : k ∈ N := (Finset.mem_erase.mp hk).2
+          rcases Finset.mem_biUnion.mp hkN with ⟨i, hiX, hik⟩
+          rcases Finset.mem_image.mp hiX with ⟨j, hjS, hji⟩
+          subst i
+          exact Finset.mem_biUnion.mpr
+            ⟨j, hjS, Finset.mem_erase.mpr ⟨hkne, hik⟩⟩
+      have hstrict := A.pRows_hall_strict_of_nonempty
+        hdodd hd5 hmodd hr1 X hX hXne
+      have herase : X.card ≤ (N.erase k0).card := by
+        by_cases hk0 : k0 ∈ N
+        · rw [Finset.card_erase_of_mem hk0]
+          have hsucc : X.card + 1 ≤ N.card := Nat.succ_le_of_lt hstrict
+          omega
+        · rw [Finset.erase_eq_of_notMem hk0]
+          exact le_of_lt hstrict
+      rw [← hcardX, hneigh]
+      exact herase
+  rcases (Finset.all_card_le_biUnion_card_iff_existsInjective' neigh).mp
+      hHall with ⟨g, hgInj, hgMem⟩
+  let f : P → Fin (n - 1) := fun i =>
+    if h : i = i0P then k0 else g ⟨i, h⟩
+  have hf_forced : f i0P = k0 := by
+    simp [f]
+  have hg_ne_k0 : ∀ i : Pm, g i ≠ k0 := by
+    intro i
+    exact (Finset.mem_erase.mp (hgMem i)).1
+  have hf_pos : ∀ i : P, A.B i.1 (f i) = 1 := by
+    intro i
+    by_cases hi : i = i0P
+    · subst i
+      simpa [f] using hpos0
+    · have hmem := hgMem ⟨i, hi⟩
+      have hpos : g ⟨i, hi⟩ ∈ A.posCols i.1 :=
+        (Finset.mem_erase.mp hmem).2
+      simpa [f, hi, posCols] using hpos
+  have hfInj : Function.Injective f := by
+    intro a b hab
+    by_cases ha : a = i0P
+    · subst a
+      by_cases hb : b = i0P
+      · exact hb.symm
+      · have hbval : f b = g ⟨b, hb⟩ := by simp [f, hb]
+        have hgb : g ⟨b, hb⟩ = k0 := by
+          rw [← hbval, ← hab, hf_forced]
+        exact False.elim ((hg_ne_k0 ⟨b, hb⟩) hgb)
+    · by_cases hb : b = i0P
+      · subst b
+        have haval : f a = g ⟨a, ha⟩ := by simp [f, ha]
+        have hga : g ⟨a, ha⟩ = k0 := by
+          rw [← haval, hab, hf_forced]
+        exact False.elim ((hg_ne_k0 ⟨a, ha⟩) hga)
+      · have hga : f a = g ⟨a, ha⟩ := by simp [f, ha]
+        have hgb : f b = g ⟨b, hb⟩ := by simp [f, hb]
+        exact congrArg Subtype.val (hgInj (by simpa [hga, hgb] using hab))
+  exact ⟨f, hfInj, hf_pos, hf_forced⟩
+
 theorem exists_pRows_target_matching {n r : Nat}
     (A : OrdinaryQeq1AuxMatrixData n r)
     (hrlt : r < n) {special : Fin (n - 1)} (hspecial : special.val < r)
