@@ -3041,6 +3041,12 @@ theorem uniformColumnDegreeMatrixGoal_of_residueCount
       exact hResidue rowDegree hcols hrowLe htotal k
   }⟩
 
+theorem uniformColumnDegreeMatrixGoal :
+    UniformColumnDegreeMatrixGoal :=
+  uniformColumnDegreeMatrixGoal_of_residueCount
+    (uniformColumnDegreeResidueCountGoal_of_intervalPartition
+      uniformColumnDegreeIntervalPartitionGoal)
+
 def OrdinaryQeq1AuxDegreeArithmeticGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
@@ -3232,6 +3238,14 @@ def OrdinaryQeq1AuxSpecialMatchingDataGoal : Prop :=
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1AuxSpecialMatchingData n r)
 
+def OrdinaryQeq1DegreeSpecialMatchingGoal : Prop :=
+  ∀ {n r : Nat}
+    (hdodd : Odd (n + 1)) (_hd5 : 5 ≤ n + 1)
+    (hmodd : Odd (n + r)) (_hrlt : r < n) (_hrpos : 0 < r)
+    (G : OrdinaryQeq1AuxDegreeMatrixData n r),
+    Nonempty (OrdinaryQeq1SpecialMatchingData
+      (G.toAuxMatrixData hdodd hmodd))
+
 namespace OrdinaryQeq1SpecialMatchingCounterexample
 
 def B (i : Fin 8) (k : Fin 7) : Int :=
@@ -3314,6 +3328,18 @@ theorem ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
     ⟨M⟩
   exact ⟨M.toOrdinaryQeq1AuxDegreeMatrixData⟩
 
+theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_degreeMatrix_and_degreeSpecialMatching
+    (hDegree : OrdinaryQeq1AuxDegreeMatrixGoal)
+    (hMatch : OrdinaryQeq1DegreeSpecialMatchingGoal) :
+    OrdinaryQeq1AuxSpecialMatchingDataGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hDegree hdodd hd5 hmodd hrlt hrpos with ⟨G⟩
+  rcases hMatch hdodd hd5 hmodd hrlt hrpos G with ⟨M⟩
+  exact ⟨{
+    aux := G.toAuxMatrixData hdodd hmodd
+    matching := M
+  }⟩
+
 theorem ordinaryQeq1AuxDegreeArithmeticGoal_of_total
     (hTotal : OrdinaryQeq1AuxDegreeTotalGoal) :
     OrdinaryQeq1AuxDegreeArithmeticGoal := by
@@ -3332,6 +3358,19 @@ theorem ordinaryQeq1AuxDegreeArithmeticGoal_of_total
     · simp only [hlow, hmid, ↓reduceIte]
       rw [Nat.div_le_iff_le_mul_add_pred (by decide : 0 < 2)]
       omega
+
+theorem ordinaryQeq1AuxDegreeMatrixGoal :
+    OrdinaryQeq1AuxDegreeMatrixGoal :=
+  ordinaryQeq1AuxDegreeMatrixGoal_of_uniformColumnDegree
+    (ordinaryQeq1AuxDegreeArithmeticGoal_of_total
+      ordinaryQeq1AuxDegreeTotalGoal)
+    uniformColumnDegreeMatrixGoal
+
+theorem ordinaryQeq1AuxSpecialMatchingDataGoal_of_degreeSpecialMatching
+    (hMatch : OrdinaryQeq1DegreeSpecialMatchingGoal) :
+    OrdinaryQeq1AuxSpecialMatchingDataGoal :=
+  ordinaryQeq1AuxSpecialMatchingDataGoal_of_degreeMatrix_and_degreeSpecialMatching
+    ordinaryQeq1AuxDegreeMatrixGoal hMatch
 
 def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
   ∀ {n r : Nat},
