@@ -201,6 +201,13 @@ theorem RoundComposite.Concrete
   .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis_blocks
     (hBlocks : OddModulusToriV4ReturnTailOrbitTrellisBlocksGoal) :
     OddModulusToriAllDimensionsGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal
 ```
 
 With the additive small branch:
