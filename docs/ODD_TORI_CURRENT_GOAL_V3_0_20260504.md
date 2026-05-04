@@ -94,6 +94,7 @@ def RoundComposite.Concrete.OddCoreHighModulusPrefixCountGoal : Prop :=
 Preferred Lean inputs for this branch:
 
 ```lean
+PrefixCount.OrdinaryQge2SeedGoal
 PrefixCount.OrdinaryQge2PlanGoal
 PrefixCount.OrdinaryQge2SignedMatrixGoal
 PrefixCount.OrdinaryQge2SignedCoreGoal
@@ -108,6 +109,7 @@ PrefixCountRootFlatCanonicalReturnGoal
 The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
+PrefixCount.ordinaryQge2PlanGoal_of_seed
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1PlanGoal
@@ -115,6 +117,8 @@ PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
 PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Matrix_and_geometry
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedMatrix_qeq1Matrix_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
@@ -129,10 +133,11 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_ordinarySignedCores_rootFlatCanonical_and_slackPacketLift
 ```
 
-so the ordinary signed-column theorem and the restricted `q = 1` matching
-correction can be supplied in paper-facing forms and then consumed by the
-existing high-branch and all-dimensional adapters.  The `geometry` variants are
-available if the count-matrix/root-flat criterion is proved directly, while the
+so the `q >= 2` ordinary plan is reduced to the seed choice `C` plus the
+signed-column theorem, and the restricted `q = 1` matching correction can be
+supplied in paper-facing forms and then consumed by the existing high-branch
+and all-dimensional adapters.  The `geometry` variants are available if the
+count-matrix/root-flat criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
 signed-column/matching-correction matrix closure.  The `q = 1` plan data is

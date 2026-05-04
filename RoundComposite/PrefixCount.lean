@@ -1362,12 +1362,88 @@ def OrdinaryQge2SignedCoreGoal : Prop :=
     r < n → 0 < r → 2 ≤ q →
     Nonempty (OrdinaryQge2SignedCoreData n m q r)
 
+theorem sum_fin_indicator_val_lt (n k : Nat) :
+    (∑ i : Fin n, if i.val < k then (1 : Nat) else 0) = min n k := by
+  rw [Fin.sum_univ_eq_sum_range
+    (fun j => if j < k then (1 : Nat) else 0) n]
+  rw [← Finset.card_filter]
+  have h :
+      (Finset.range n).filter (fun i => i < k) =
+        Finset.range (min n k) := by
+    ext i
+    simp
+  rw [h]
+  simp
+
+theorem sum_fin_two_one_val_lt (n k : Nat) :
+    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1) =
+      n + min n k := by
+  calc
+    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1)
+        = ∑ i : Fin n, (1 + if i.val < k then (1 : Nat) else 0) := by
+          apply Finset.sum_congr rfl
+          intro i _hi
+          by_cases h : i.val < k <;> simp [h]
+    _ = (∑ _i : Fin n, (1 : Nat))
+          + ∑ i : Fin n, (if i.val < k then (1 : Nat) else 0) := by
+          rw [Finset.sum_add_distrib]
+    _ = n + min n k := by
+          rw [sum_fin_indicator_val_lt]
+          simp
+
 def OrdinaryQge2PlanGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →
     m = n * q + r →
     r < n → 0 < r → 2 ≤ q →
     Nonempty (OrdinaryQge2PlanData n m q r)
+
+def OrdinaryQge2SeedGoal : Prop :=
+  ∀ {n m q r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 → Odd m →
+    m = n * q + r →
+    r < n → 0 < r → 2 ≤ q →
+    ∃ C : Nat,
+      n ≤ C ∧ C ≤ 2 * (n - 1) ∧ C ≤ m ∧ Nat.Coprime (m - C) m
+
+theorem ordinaryQge2PlanGoal_of_seed
+    (hSeed : OrdinaryQge2SeedGoal) :
+    OrdinaryQge2PlanGoal := by
+  intro n m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  rcases hSeed hdodd hd5 hmodd hmqr hrlt hrpos hq with
+    ⟨C, hCn, hC2, hCm, hCcop⟩
+  refine ⟨{
+    C := C
+    a := fun i : Fin n => if i.val < C - n then 2 else 1
+    epsBit := fun i : Fin n => if i.val < r then 1 else 0
+    c := fun k : Fin (n - 1) => if k.val < C - (n - 1) then 2 else 1
+    C_le_m := hCm
+    a_sum := ?_
+    eps_sum := ?_
+    c_sum := ?_
+    a_one_two := ?_
+    eps_zero_one := ?_
+    c_one_two := ?_
+    final_zero_coprime := hCcop
+  }⟩
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min n (C - n) = C - n := by omega
+    rw [hmin]
+    omega
+  · rw [sum_fin_indicator_val_lt]
+    have hmin : min n r = r := by omega
+    exact hmin
+  · rw [sum_fin_two_one_val_lt]
+    have hmin : min (n - 1) (C - (n - 1)) = C - (n - 1) := by
+      omega
+    rw [hmin]
+    omega
+  · intro i
+    by_cases h : i.val < C - n <;> simp [h]
+  · intro i
+    by_cases h : i.val < r <;> simp [h]
+  · intro k
+    by_cases h : k.val < C - (n - 1) <;> simp [h]
 
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
@@ -1530,35 +1606,6 @@ def OrdinaryQeq1SignedCoreGoal : Prop :=
     m = n + r →
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1SignedCoreData n m r)
-
-theorem sum_fin_indicator_val_lt (n k : Nat) :
-    (∑ i : Fin n, if i.val < k then (1 : Nat) else 0) = min n k := by
-  rw [Fin.sum_univ_eq_sum_range
-    (fun j => if j < k then (1 : Nat) else 0) n]
-  rw [← Finset.card_filter]
-  have h :
-      (Finset.range n).filter (fun i => i < k) =
-        Finset.range (min n k) := by
-    ext i
-    simp
-  rw [h]
-  simp
-
-theorem sum_fin_two_one_val_lt (n k : Nat) :
-    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1) =
-      n + min n k := by
-  calc
-    (∑ i : Fin n, if i.val < k then (2 : Nat) else 1)
-        = ∑ i : Fin n, (1 + if i.val < k then (1 : Nat) else 0) := by
-          apply Finset.sum_congr rfl
-          intro i _hi
-          by_cases h : i.val < k <;> simp [h]
-    _ = (∑ _i : Fin n, (1 : Nat))
-          + ∑ i : Fin n, (if i.val < k then (1 : Nat) else 0) := by
-          rw [Finset.sum_add_distrib]
-    _ = n + min n k := by
-          rw [sum_fin_indicator_val_lt]
-          simp
 
 structure OrdinaryQeq1PlanData (n m r : Nat) where
   a : Fin n → Nat
