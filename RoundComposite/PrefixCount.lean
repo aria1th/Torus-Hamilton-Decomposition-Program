@@ -1496,6 +1496,67 @@ theorem qge2ColumnCapacity_eq_right {n j c : Nat}
     qge2ColumnCapacity n j c = 2 * ((n - j : Nat) : Int) - (c : Int) := by
   simp [qge2ColumnCapacity, min_eq_right h]
 
+theorem qge2ColumnCapacity_empty_of_one_two {n c : Nat}
+    (hn : 1 ≤ n) (hc : c = 1 ∨ c = 2) :
+    qge2ColumnCapacity n 0 c = 0 := by
+  apply qge2ColumnCapacity_eq_left
+  rcases hc with rfl | rfl <;> omega
+
+theorem qge2ColumnCapacity_univ (n c : Nat) :
+    qge2ColumnCapacity n n c = - (c : Int) := by
+  rw [qge2ColumnCapacity_eq_right]
+  · simp
+  · omega
+
+theorem sum_qge2ColumnCapacity_univ {n : Nat}
+    (c : Fin (n - 1) → Nat) :
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n n (c k))
+      = - (∑ k : Fin (n - 1), (c k : Int)) := by
+  classical
+  calc
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n n (c k))
+        = ∑ k : Fin (n - 1), - (c k : Int) := by
+            apply Finset.sum_congr rfl
+            intro k _hk
+            rw [qge2ColumnCapacity_univ]
+    _ = - (∑ k : Fin (n - 1), (c k : Int)) := by simp
+
+theorem sum_qge2ColumnCapacity_univ_of_sum {n C : Nat}
+    {c : Fin (n - 1) → Nat}
+    (hc_sum : (∑ k : Fin (n - 1), c k) = C) :
+    (∑ k : Fin (n - 1), qge2ColumnCapacity n n (c k))
+      = - (C : Int) := by
+  rw [sum_qge2ColumnCapacity_univ]
+  have hc : (∑ k : Fin (n - 1), (c k : Int)) = (C : Int) := by
+    exact_mod_cast hc_sum
+  rw [hc]
+
+theorem sum_qge2RowTarget_of_sums {n C r : Nat}
+    {a epsBit : Fin n → Nat}
+    (ha_sum : (∑ i : Fin n, a i) = C)
+    (heps_sum : (∑ i : Fin n, epsBit i) = r) :
+    (∑ i : Fin n,
+        ((r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)))
+      = - (C : Int) := by
+  calc
+    (∑ i : Fin n,
+        ((r : Int) - (a i : Int) - (n : Int) * (epsBit i : Int)))
+        = (∑ _i : Fin n, (r : Int))
+            - (∑ i : Fin n, (a i : Int))
+            - (n : Int) * (∑ i : Fin n, (epsBit i : Int)) := by
+              simp [Finset.sum_sub_distrib, Finset.mul_sum,
+                Finset.sum_const]
+    _ = (n : Int) * (r : Int) - (C : Int)
+          - (n : Int) * (r : Int) := by
+            have ha : (∑ i : Fin n, (a i : Int)) = (C : Int) := by
+              exact_mod_cast ha_sum
+            have heps :
+                (∑ i : Fin n, (epsBit i : Int)) = (r : Int) := by
+              exact_mod_cast heps_sum
+            rw [ha, heps]
+            simp [Finset.sum_const]
+    _ = - (C : Int) := by ring
+
 theorem ordinaryQge2PlanData_row_cut_first_bound
     {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
     (J : Finset (Fin n)) :
