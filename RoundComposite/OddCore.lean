@@ -1367,6 +1367,9 @@ def OddModulusToriV4JointMatchingBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4PreferredBlocksGoal : Prop :=
+  OddModulusToriV4JointMatchingBlocksGoal
+
 def OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal ∧
@@ -1436,6 +1439,14 @@ theorem odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
   exact
     odd_modulus_tori_all_dimensions_of_qge2SeedClosure_qeq1AuxSpecialMatchingData_rootFlatCanonical_and_slackPacketLift
       hQge2Closure hQeq1Data hReturn hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
+    hBlocks hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
     (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)

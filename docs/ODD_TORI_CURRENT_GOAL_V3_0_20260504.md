@@ -250,6 +250,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .OddModulusToriV4JointMatchingBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4PreferredBlocksGoal
+RoundComposite.Concrete
   .OddModulusToriV4DegreeMatchingBlocksGoal
 RoundComposite.Concrete
   .OddModulusToriV4UniformDegreeBlocksGoal
@@ -261,6 +263,8 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
 RoundComposite.Concrete
@@ -372,7 +376,29 @@ def RoundComposite.Concrete.OddCoreSmallModulusSlackPacketLiftGoal : Prop
 
 ## Current Working Endpoint
 
-The current all-dimensional endpoint is the v4 construction-block packet:
+The current preferred all-dimensional endpoint is the v4 preferred block packet:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4PreferredBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_preferred_blocks
+    (hBlocks : OddModulusToriV4PreferredBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
+Here the q=1 matching-facing block keeps the auxiliary matrix and its special
+matching in one joint data theorem.  This avoids the false universal
+arbitrary-auxiliary matching interface.
+
+The older v4 construction-block packet is still available as a lower endpoint
+from canonical correction data:
 
 ```lean
 theorem RoundComposite.Concrete
@@ -381,11 +407,7 @@ theorem RoundComposite.Concrete
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
-```
 
-where
-
-```lean
 def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1CanonicalCorrectionDataGoal ∧
@@ -393,25 +415,12 @@ def RoundComposite.Concrete.OddModulusToriV4ConstructionBlocksGoal : Prop :=
   OddCoreSmallModulusSlackPacketLiftGoal
 ```
 
-The preferred q=1 matching-facing endpoint keeps the auxiliary matrix and its
-special matching in one joint data block:
+The following historical endpoints use the stronger universal q=1 matching
+split.  They remain valid conditional reductions, but their matching premise is
+known false as a global theorem by
+`PrefixCount.not_ordinaryQeq1SpecialMatchingGoal`.
 
-```lean
-def RoundComposite.Concrete.OddModulusToriV4JointMatchingBlocksGoal : Prop :=
-  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
-  PrefixCount.OrdinaryQeq1AuxSpecialMatchingDataGoal ∧
-  PrefixCountRootFlatCanonicalReturnGoal ∧
-  OddCoreSmallModulusSlackPacketLiftGoal
-
-theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_joint_matching_blocks
-    (hBlocks : OddModulusToriV4JointMatchingBlocksGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
-```
-
-The paper-facing endpoint with the `q = 1` auxiliary degree matrix split is:
+The endpoint with the `q = 1` auxiliary degree matrix split is:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
@@ -469,8 +478,8 @@ theorem RoundComposite.Concrete
 ```
 
 Since `PrefixCount.ordinaryQeq1AuxDegreeTotalGoal` is now Lean-closed, the
-current minimal endpoint removes the total-degree identity from the requested
-block packet:
+historical universal-split endpoint removes the total-degree identity from that
+conditional block packet:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PostTotalBlocksGoal : Prop :=
@@ -488,8 +497,8 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-The current minimal endpoint further replaces the generic uniform-column matrix
-realization by its cyclic-interval residue-count form:
+The historical universal-split endpoint further replaces the generic
+uniform-column matrix realization by its cyclic-interval residue-count form:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4ResidueBlocksGoal : Prop :=
@@ -526,8 +535,8 @@ theorem RoundComposite.Concrete
 ```
 
 Since `PrefixCount.uniformColumnDegreeIntervalPartitionGoal` is now Lean-closed,
-the current minimal endpoint removes the entire uniform-column component from
-the requested block packet:
+the historical universal-split endpoint removes the entire uniform-column
+component from that conditional block packet:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4PostUniformBlocksGoal : Prop :=
@@ -547,7 +556,7 @@ theorem RoundComposite.Concrete
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 special matching theorem;
+2. prove the q=1 joint auxiliary-special-matching data theorem;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 
