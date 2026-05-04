@@ -3,9 +3,9 @@
 Date: 2026-05-04.
 
 This audit records the current Lean state for the all-dimensional odd-modulus
-goal after the v3.3 return-tail refactor.  The file name is historical; the
+goal after the v3.4 closure-goal reset.  The file name is historical; the
 current endpoint is the return-tail orbit packet recorded in
-`docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`.
+`docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`.
 
 ## Objective
 
@@ -261,11 +261,21 @@ The current checked gate is:
 lake build RoundComposite
 git diff --check
 grep -R -n -E '\b(sorry|admit|axiom|constant)\b' \
-  RoundComposite Shared D5Odd D7Odd --include='*.lean'
+  RoundComposite Shared TorusD3Odd D5Odd D7Odd --include='*.lean'
 ```
 
-It completed successfully after the v3.3 return-tail refactor.  The grep is
+It completed successfully after the v3.4 goal reset.  The grep is
 expected to exit with status 1 and no output when no forbidden token is found.
+
+## Active External Requests
+
+Three GPT-5.5 Pro background requests are active for the remaining hard fields:
+
+| Field | Request Doc | Response Id | Latest Status |
+|---|---|---|---|
+| q>=2 proper-cut signed closure | `docs/GPT55_PRO_QGE2_PROPER_CUT_REQUEST_20260504.md` | `resp_0ef429ec8c8f7dbf0069f8a065ffe081a18ca122b1ee9e4a7b` | `in_progress` |
+| first-hit return-tail orbit/rank | `docs/GPT55_PRO_RETURN_TAIL_ORBIT_REQUEST_20260504.md` | `resp_027f823c07feb7000069f8a28fa85481a188b9e57ef6926c33` | `in_progress` |
+| successor-small base-tail branch | `docs/GPT55_PRO_SUCCESSOR_SMALL_BASE_TAIL_REQUEST_20260504.md` | `resp_06781d5a17f099250069f8a2de229081919ddf1d65046d89c9` | `in_progress` |
 
 ## Verdict
 
