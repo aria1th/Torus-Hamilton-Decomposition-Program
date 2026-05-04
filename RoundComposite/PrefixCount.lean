@@ -1445,6 +1445,41 @@ theorem ordinaryQge2PlanGoal_of_seed
   · intro k
     by_cases h : k.val < C - (n - 1) <;> simp [h]
 
+theorem ordinaryQge2SeedGoal : OrdinaryQge2SeedGoal := by
+  intro n m q r hdodd hd5 hmodd hmqr hrlt hrpos hq
+  have hn1 : 1 ≤ n := by omega
+  have hn4 : 4 ≤ n := by omega
+  rcases exists_power_two_ge_self_lt_two_mul (L := n) hn1 with
+    ⟨e, hCn, hClt⟩
+  have hC2 : 2 ^ e ≤ 2 * (n - 1) := by
+    have hEvenC : ∃ k, 2 ^ e = 2 * k := by
+      cases e with
+      | zero =>
+          simp at hCn
+          omega
+      | succ e =>
+          refine ⟨2 ^ e, ?_⟩
+          rw [pow_succ]
+          ring
+    rcases hEvenC with ⟨k, hk⟩
+    omega
+  have hCle : 2 ^ e ≤ m := by
+    have hnq : n * 2 ≤ n * q := Nat.mul_le_mul_left n hq
+    have htwonm1 : 2 * (n - 1) ≤ m := by
+      omega
+    exact le_trans hC2 htwonm1
+  refine ⟨2 ^ e, hCn, hC2, hCle, ?_⟩
+  have hepos : 0 < e := by
+    cases e with
+    | zero =>
+        simp at hCn
+        omega
+    | succ e => exact Nat.succ_pos e
+  have hCcop : Nat.Coprime (2 ^ e) m := by
+    rw [Nat.coprime_pow_left_iff hepos]
+    exact Nat.coprime_two_left.mpr hmodd
+  exact (Nat.coprime_self_sub_left hCle).2 hCcop
+
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 → Odd m →

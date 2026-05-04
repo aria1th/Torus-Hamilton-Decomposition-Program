@@ -106,7 +106,14 @@ PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
 
-The v4 ordinary signed-core data now has Lean bridges:
+The `q >= 2` seed choice is now closed in Lean:
+
+```lean
+PrefixCount.ordinaryQge2SeedGoal
+```
+
+It chooses a power of two in `[n, 2*n - 2]`; since `m` is odd, that choice is
+coprime to `m`.  The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
 PrefixCount.ordinaryQge2PlanGoal_of_seed
@@ -120,6 +127,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedMatrix_qeq1Matrix_and_geometry
 RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2Matrix_qeq1Matrix_and_geometry
+RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2PlanMatrix_qeq1Core_and_geometry
@@ -131,13 +140,17 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_ordinarySignedCores_geometry_and_slackPacketLift
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_ordinarySignedCores_rootFlatCanonical_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_rootFlatCanonical_and_slackPacketLift
 ```
 
-so the `q >= 2` ordinary plan is reduced to the seed choice `C` plus the
-signed-column theorem, and the restricted `q = 1` matching correction can be
-supplied in paper-facing forms and then consumed by the existing high-branch
-and all-dimensional adapters.  The `geometry` variants are available if the
-count-matrix/root-flat criterion is proved directly, while the
+so the `q >= 2` ordinary plan is reduced to the signed-column theorem alone,
+and the restricted `q = 1` matching correction can be supplied in paper-facing
+forms and then consumed by the existing high-branch and all-dimensional
+adapters.  The `geometry` variants are available if the count-matrix/root-flat
+criterion is proved directly, while the
 `rootFlatCanonical` variants consume the current canonical-return interface.
 Both ordinary branches are now further split into easy plan data and the hard
 signed-column/matching-correction matrix closure.  The `q = 1` plan data is
