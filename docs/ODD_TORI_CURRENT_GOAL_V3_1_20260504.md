@@ -169,18 +169,18 @@ The active proof obligations are exactly the three fields of
 The current most convenient Lean-facing packet is now:
 
 ```lean
-def RoundComposite.Concrete.OddModulusToriV4ScheduleBlocksGoal : Prop :=
+def RoundComposite.Concrete.OddModulusToriV4ScheduleAddBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
-  OddCoreSmallModulusSlackPacketLiftGoal
+  OddCoreSmallModulusSlackPacketLiftAddGoal
 ```
 
 Its endpoint is:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_schedule_blocks
-    (hBlocks : OddModulusToriV4ScheduleBlocksGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
@@ -202,6 +202,12 @@ to construct a canonical schedule `S` with
 `S.layerBijective`, and `S.returnsSingleCycle`.
 `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` closes the
 conversion back to the original certificate-facing goal.
+
+For the third item, Lean now exposes the equivalent additive-tail formulation
+`RoundComposite.Concrete.OddCoreSmallModulusSlackPacketLiftAddGoal`.  This uses
+an explicit tail length `T` with `d = b + T`, `T > b`, and
+`m^b > m*d*T`.  The theorem `oddCoreSmallModulusSlackPacketLiftGoal_iff_add`
+closes the conversion to the original `d - b` formulation.
 
 The q=1 auxiliary `0/1` degree matrix existence is Lean-closed as
 `PrefixCount.ordinaryQeq1AuxDegreeMatrixGoal`.  The universal theorem asking for

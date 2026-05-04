@@ -339,6 +339,49 @@ def OddCoreSmallModulusSlackPacketLiftGoal : Prop :=
     m ^ b > m * d * (d - b) →
     StandardCayleySolved d m
 
+def OddCoreSmallModulusSlackPacketLiftAddGoal : Prop :=
+  ∀ {d m b T : Nat},
+    Odd d → 11 ≤ d →
+    Odd m → 3 ≤ m → m < d →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = d →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    d = b + T →
+    T > b →
+    m ^ b > m * d * T →
+    StandardCayleySolved d m
+
+theorem oddCoreSmallModulusSlackPacketLiftAddGoal_of_slackPacketLift
+    (hLift : OddCoreSmallModulusSlackPacketLiftGoal) :
+    OddCoreSmallModulusSlackPacketLiftAddGoal := by
+  intro d m b T hdodd hd11 hmodd hm3 hmd hbSolved packets
+    hlen hsum hpacketSum hpacketUnits hdEq hT hSlack
+  have hTail : d - b > b := by omega
+  have hSlack' : m ^ b > m * d * (d - b) := by
+    have hTsub : T = d - b := by omega
+    simpa [hTsub] using hSlack
+  exact hLift hdodd hd11 hmodd hm3 hmd hbSolved packets
+    hlen hsum hpacketSum hpacketUnits hTail hSlack'
+
+theorem oddCoreSmallModulusSlackPacketLiftGoal_of_add
+    (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
+    OddCoreSmallModulusSlackPacketLiftGoal := by
+  intro d m b hdodd hd11 hmodd hm3 hmd hbSolved packets
+    hlen hsum hpacketSum hpacketUnits hTail hSlack
+  have hdEq : d = b + (d - b) := by omega
+  exact hLift hdodd hd11 hmodd hm3 hmd hbSolved packets
+    hlen hsum hpacketSum hpacketUnits hdEq hTail hSlack
+
+theorem oddCoreSmallModulusSlackPacketLiftGoal_iff_add :
+    OddCoreSmallModulusSlackPacketLiftGoal ↔
+      OddCoreSmallModulusSlackPacketLiftAddGoal :=
+  ⟨oddCoreSmallModulusSlackPacketLiftAddGoal_of_slackPacketLift,
+    oddCoreSmallModulusSlackPacketLiftGoal_of_add⟩
+
 def OddSuccessorSmallModulusBaseTailGoal : Prop :=
   ∀ {b m : Nat},
     5 ≤ b →
@@ -1514,6 +1557,11 @@ def OddModulusToriV4ScheduleBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4ScheduleAddBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  PrefixCountRootFlatCanonicalScheduleCriterionGoal ∧
+  OddCoreSmallModulusSlackPacketLiftAddGoal
+
 def OddModulusToriV4DegreeMatchingBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
   PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal ∧
@@ -1687,6 +1735,24 @@ theorem oddModulusToriV4PreferredBlocksGoal_of_scheduleBlocks
   oddModulusToriV4PreferredBlocksGoal_of_properCutBlocks
     (oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks hBlocks)
 
+theorem oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal) :
+    OddModulusToriV4ScheduleBlocksGoal :=
+  ⟨hBlocks.1, hBlocks.2.1,
+    oddCoreSmallModulusSlackPacketLiftGoal_of_add hBlocks.2.2⟩
+
+theorem oddModulusToriV4ProperCutBlocksGoal_of_scheduleAddBlocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal) :
+    OddModulusToriV4ProperCutBlocksGoal :=
+  oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
+
+theorem oddModulusToriV4PreferredBlocksGoal_of_scheduleAddBlocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal) :
+    OddModulusToriV4PreferredBlocksGoal :=
+  oddModulusToriV4PreferredBlocksGoal_of_scheduleBlocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
+
 theorem oddSuccessorClosureGoal_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -1698,6 +1764,12 @@ theorem oddSuccessorClosureGoal_of_v4_schedule_blocks
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v4_properCut_blocks
     (oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_schedule_blocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
 
 theorem odd_successor_closure_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
@@ -1719,6 +1791,16 @@ theorem odd_successor_closure_of_v4_schedule_blocks
   (oddSuccessorClosureGoal_of_v4_schedule_blocks hBlocks)
     hb5 hmodd hm3 hb
 
+theorem odd_successor_closure_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  (oddSuccessorClosureGoal_of_v4_scheduleAdd_blocks hBlocks)
+    hb5 hmodd hm3 hb
+
 theorem odd_modulus_tori_all_dimensions_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1737,6 +1819,15 @@ theorem odd_modulus_tori_all_dimensions_of_v4_schedule_blocks
     (oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks hBlocks)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_schedule_blocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
+    hd2 hmodd hm3
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal) :
     OddCoreHighModulusPrefixCountGoal :=
@@ -1748,6 +1839,12 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_schedule_blocks
     OddCoreHighModulusPrefixCountGoal :=
   oddCoreHighModulusPrefixCountGoal_of_v4_properCut_blocks
     (oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks hBlocks)
+
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_schedule_blocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
 
 theorem odd_successor_small_modulus_base_tail_of_v4_properCut_blocks
     (hBlocks : OddModulusToriV4ProperCutBlocksGoal)
@@ -1771,6 +1868,18 @@ theorem odd_successor_small_modulus_base_tail_of_v4_schedule_blocks
     StandardCayleySolved (2 * b + 1) m :=
   odd_successor_small_modulus_base_tail_of_v4_properCut_blocks
     (oddModulusToriV4ProperCutBlocksGoal_of_scheduleBlocks hBlocks)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_v4_scheduleAdd_blocks
+    (hBlocks : OddModulusToriV4ScheduleAddBlocksGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_v4_schedule_blocks
+    (oddModulusToriV4ScheduleBlocksGoal_of_scheduleAddBlocks hBlocks)
     hb5 hmodd hm3 hmSmall hb
 
 theorem odd_modulus_tori_all_dimensions_of_qeq1DegreeMatching
