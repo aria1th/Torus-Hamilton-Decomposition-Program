@@ -22,6 +22,10 @@ def colorDegree {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C) (c : C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => c ∈ I.active x)).card
 
+def choiceDegree {X C : Type*} [Fintype X] [DecidableEq X] [DecidableEq C]
+    (choice : X → C) (c : C) : Nat :=
+  ((Finset.univ : Finset X).filter (fun x => choice x = c)).card
+
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
@@ -92,6 +96,44 @@ theorem mem_eraseChoice_active {T : Nat} {X C : Type*}
     c ∈ (I.eraseChoice choice hchoice).active x ↔
       c ∈ I.active x ∧ c ≠ choice x := by
   simp [eraseChoice, and_comm]
+
+theorem eraseChoice_colorDegree_add_choiceDegree
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x) (c : C) :
+    (I.eraseChoice choice hchoice).colorDegree c
+      + choiceDegree choice c = I.colorDegree c := by
+  classical
+  let B : Finset X := (Finset.univ : Finset X).filter
+    (fun x => c ∈ (I.eraseChoice choice hchoice).active x)
+  let D : Finset X := (Finset.univ : Finset X).filter
+    (fun x => choice x = c)
+  let A : Finset X := (Finset.univ : Finset X).filter
+    (fun x => c ∈ I.active x)
+  have hdisj : Disjoint B D := by
+    rw [Finset.disjoint_left]
+    intro x hxB hxD
+    have hxB' : c ≠ choice x ∧ c ∈ I.active x := by
+      simpa [B] using hxB
+    have hxD' : choice x = c := by
+      simpa [D] using hxD
+    exact hxB'.1 hxD'.symm
+  have hUnion : B ∪ D = A := by
+    ext x
+    by_cases hxD : choice x = c
+    · have hcx : c ∈ I.active x := by
+        rw [← hxD]
+        exact hchoice x
+      simp [A, B, D, hxD, hcx]
+    · by_cases hcx : c ∈ I.active x
+      · have hxne : c ≠ choice x := by
+          intro h
+          exact hxD h.symm
+        simp [A, B, D, hcx, hxD, hxne]
+      · simp [A, B, D, hcx, hxD]
+  change B.card + D.card = A.card
+  rw [← hUnion, Finset.card_union_of_disjoint hdisj]
 
 theorem sum_colorDegree_on {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
