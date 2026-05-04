@@ -1508,6 +1508,50 @@ theorem qge2ColumnCapacity_univ (n c : Nat) :
   · simp
   · omega
 
+theorem qge2ColumnCapacity_upper_bound {n c : Nat} {v : Fin n → Int}
+    (hv : ∀ i : Fin n, IsSignedVal (v i))
+    (hsum : (∑ i : Fin n, v i) = - (c : Int))
+    (J : Finset (Fin n)) :
+    (∑ i ∈ J, v i) ≤ qge2ColumnCapacity n J.card c := by
+  classical
+  apply le_min
+  · calc
+      (∑ i ∈ J, v i) ≤ ∑ _i ∈ J, (2 : Int) := by
+          apply Finset.sum_le_sum
+          intro i _hi
+          exact signedVal_le_two (hv i)
+      _ = 2 * (J.card : Int) := by
+          simp [Finset.sum_const, mul_comm]
+  · let A : Fin n → Int := v
+    have hcompl_lower :
+        (∑ _i ∈ Jᶜ, (-2 : Int)) ≤ ∑ i ∈ Jᶜ, A i := by
+      apply Finset.sum_le_sum
+      intro i _hi
+      exact signedVal_ge_neg_two (hv i)
+    have hcompl_card :
+        ((Jᶜ).card : Int) = ((n - J.card : Nat) : Int) := by
+      have hcard : Jᶜ.card = n - J.card := by
+        simpa [Fintype.card_fin] using Finset.card_compl J
+      exact_mod_cast hcard
+    have hsplit :
+        (∑ i : Fin n, A i) = (∑ i ∈ J, A i) + ∑ i ∈ Jᶜ, A i := by
+      rw [← Finset.sum_union]
+      · simp [A]
+      · exact disjoint_compl_right
+    have hcompl_lower' :
+        -2 * ((n - J.card : Nat) : Int) ≤ ∑ i ∈ Jᶜ, A i := by
+      calc
+        -2 * ((n - J.card : Nat) : Int)
+            = ∑ _i ∈ Jᶜ, (-2 : Int) := by
+                rw [← hcompl_card]
+                simp [Finset.sum_const]
+                ring
+        _ ≤ ∑ i ∈ Jᶜ, A i := hcompl_lower
+    change (∑ i ∈ J, A i) ≤
+      2 * ((n - J.card : Nat) : Int) - (c : Int)
+    have hsumA : (∑ i : Fin n, A i) = - (c : Int) := hsum
+    nlinarith
+
 theorem sum_qge2ColumnCapacity_univ {n : Nat}
     (c : Fin (n - 1) → Nat) :
     (∑ k : Fin (n - 1), qge2ColumnCapacity n n (c k))

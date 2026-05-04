@@ -72,6 +72,20 @@ Lean proves that empty and full row cuts are automatic:
 ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure
 ```
 
+Lean also proves the single-column necessary capacity bound:
+
+```lean
+theorem PrefixCount.qge2ColumnCapacity_upper_bound
+    {n c : Nat} {v : Fin n -> Int}
+    (hv : forall i : Fin n, IsSignedVal (v i))
+    (hsum : (sum i : Fin n, v i) = - (c : Int))
+    (J : Finset (Fin n)) :
+    (sum i in J, v i) <= qge2ColumnCapacity n J.card c
+```
+
+This records that `qge2ColumnCapacity` is the correct upper envelope for a
+single signed column with total sum `-c`.
+
 The target can therefore focus only on nonempty proper cuts.
 
 ### Prompt
