@@ -123,6 +123,7 @@ theorem RoundComposite.Concrete
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
 | Return-tail additive endpoints | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd`, `odd_modulus_tori_all_dimensions_of_v4_returnTailCycleCoordinateAdd` | Lean-closed conditional | Final theorem wrappers that consume `OddSuccessorSmallModulusSlackPacketLiftAddGoal` directly |
 | Active-Hall feasible-symboling bridge | `symbolingWithResidues_iff_feasible_of_realization` | Lean-closed conditional | Under `HallRealizationGoal`, residue-feasible count matrices are equivalent to actual symbolings |
+| Active-Hall selection symboling bridge | `symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection`, `symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection` | Lean-closed conditional | Lets a selection-form erase-last theorem consume feasible residue data directly |
 | Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
 | Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbit_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 

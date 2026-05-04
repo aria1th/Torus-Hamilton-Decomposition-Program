@@ -3264,6 +3264,17 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCuts
   symbolingWithResidues_of_feasible_and_realization
     (hallRealizationGoal_of_eraseLastHallCuts hErase) hFeasible
 
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection
+    (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCutsSelection hSelect)
+    hFeasible
+
 theorem symbolingWithResidues_of_feasible_and_hoffmanOrderedSDR
     (hHoffman : HoffmanOrderedSDRGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
@@ -3373,6 +3384,15 @@ theorem symbolingWithResidues_iff_feasible_of_columnFillingUpgrade
     SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
   symbolingWithResidues_iff_feasible_of_realization
     (hallRealizationGoal_of_columnFillingUpgrade hUpgrade)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection
+    (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsSelection hSelect)
 
 namespace SymbolingWithResidues
 

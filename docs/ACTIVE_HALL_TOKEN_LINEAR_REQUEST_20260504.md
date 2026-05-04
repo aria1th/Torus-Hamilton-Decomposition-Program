@@ -90,6 +90,11 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
 
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsSelection
+    (hSelect : EraseLastHallCutsSelectionGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
 theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
     HallRealizationGoal <-> EraseLastHallCutsTokenLinearChoiceGoal
 
@@ -145,6 +150,10 @@ theorem symbolingWithResidues_iff_feasible_of_hoffmanOrderedSDR
 
 theorem symbolingWithResidues_iff_feasible_of_columnFillingUpgrade
     (hUpgrade : ColumnFillingUpgradeGoal) :
+    SymbolingWithResidues I R <-> FeasibleWithResidues I R
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsSelection
+    (hSelect : EraseLastHallCutsSelectionGoal) :
     SymbolingWithResidues I R <-> FeasibleWithResidues I R
 ```
 
