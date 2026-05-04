@@ -223,6 +223,8 @@ noncomputable def RoundComposite.ActiveHall.universalUnitResidueSpec
 
 theorem RoundComposite.ActiveHall.universalUnitResidueSpec_rowCompatible
 theorem RoundComposite.ActiveHall.universalUnitResidueSpec_colCompatible
+theorem RoundComposite.ActiveHall
+  .exists_universalUnitResidueSpec_compatible_primitive
 ```
 
 Closed support added for the successor arithmetic:

@@ -419,6 +419,45 @@ theorem universalUnitResidueSpec_colCompatible
   intro σ
   rw [hX, universalUnitResidueSpec_col_sum hu σ]
 
+theorem universalUnitResidueSpec_zero_isUnit {m d n : Nat}
+    {u : Fin d → ZMod m} (huUnit : ∀ c : Fin d, IsUnit (u c))
+    (c : Fin d) :
+    IsUnit ((universalUnitResidueSpec m d n u).target c 0) := by
+  simpa [universalUnitResidueSpec] using huUnit c
+
+theorem universalUnitResidueSpec_numeric_sub_delta_isUnit {m d n : Nat}
+    {u : Fin d → ZMod m} (huUnit : ∀ c : Fin d, IsUnit (u c))
+    (c : Fin d) {σ : Fin (n + 2)} (hσ : 2 ≤ σ.val) :
+    IsUnit ((universalUnitResidueSpec m d n u).target c σ -
+      (universalUnitResidueSpec m d n u).target c 1) := by
+  have hs0 : σ ≠ 0 := by
+    intro h
+    have hval : σ.val = 0 := by
+      simpa using congrArg Fin.val h
+    omega
+  have h1 : σ.val ≠ 1 := by omega
+  simpa [universalUnitResidueSpec, hs0, h1] using huUnit c
+
+theorem exists_universalUnitResidueSpec_compatible_primitive
+    {m d n : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (I : Incidence (n + 2) X (Fin d))
+    (hdodd : Odd d) (hd3 : 3 ≤ d) (hmodd : Odd m)
+    (hColor : ∀ c : Fin d, (I.colorDegree c : ZMod m) = 0)
+    (hX : (Fintype.card X : ZMod m) = 0) :
+    ∃ R : ResidueSpec m (n + 2) (Fin d),
+      R.RowCompatible I ∧ R.ColCompatible I ∧
+      (∀ c : Fin d, IsUnit (R.target c 0)) ∧
+      (∀ c : Fin d, ∀ σ : Fin (n + 2), 2 ≤ σ.val →
+        IsUnit (R.target c σ - R.target c 1)) := by
+  rcases exists_balanced_unit_residues_fin hdodd hd3 hmodd with
+    ⟨u, huSum, huUnit⟩
+  refine ⟨universalUnitResidueSpec m d n u, ?_, ?_, ?_, ?_⟩
+  · exact universalUnitResidueSpec_rowCompatible I u hColor
+  · exact universalUnitResidueSpec_colCompatible I huSum hX
+  · exact universalUnitResidueSpec_zero_isUnit huUnit
+  · intro c σ hσ
+    exact universalUnitResidueSpec_numeric_sub_delta_isUnit huUnit c hσ
+
 namespace CountMatrix
 
 def cutMass {T : Nat} {X C : Type*}
