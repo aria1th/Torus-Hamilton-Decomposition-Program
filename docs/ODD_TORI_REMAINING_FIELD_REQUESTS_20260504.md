@@ -3,7 +3,7 @@
 Date: 2026-05-04.
 
 This note is a proof-request companion to
-`docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`.  It gives the three exact
+`docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`.  It gives the three exact
 remaining Lean fields for the current preferred endpoint and the recommended
 prompt for asking a separate mathematical proof attempt.
 
@@ -31,7 +31,7 @@ OddSuccessorSmallModulusBaseTailGoal
 ### Files To Read
 
 1. `RoundComposite/PrefixCount.lean`
-2. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
+2. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 3. `docs/GPT55_PRO_SIGNED_TRANSPORT_COUNT_BRANCH_RESPONSE_20260503.md`
 
 ### Exact Lean Target
@@ -172,7 +172,7 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 5. `Shared/TorusCayley.lean`
 6. `Shared/RootFlat.lean`
 7. `docs/FIRST_HIT_RETURN_TAIL_MONODROMY_REQUEST_20260504.md`
-8. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
+8. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 
 ### Exact Lean Target
 
@@ -364,7 +364,7 @@ the open field is exactly the tail orbit/rank argument.
 4. `Shared/RootFlat.lean`
 5. `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`
 6. `docs/GPT55_PRO_ACTIVE_HALL_TOKEN_LINEAR_RESPONSE_20260504.md`
-7. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
+7. `docs/ODD_TORI_CURRENT_GOAL_V3_4_20260504.md`
 
 ### Exact Lean Target
 
