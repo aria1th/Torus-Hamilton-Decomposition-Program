@@ -95,20 +95,24 @@ Preferred Lean inputs for this branch:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedCoreGoal
+PrefixCount.OrdinaryQeq1SignedCoreGoal
 PrefixCount.MarginTransportQge2CompatibleGoal
 PrefixCount.MarginTransportQeq1CompatibleGoal
 PrefixCountRootFlatCanonicalReturnGoal
 ```
 
-The v4 ordinary `q >= 2` signed-core data now has a Lean bridge:
+The v4 ordinary signed-core data now has Lean bridges:
 
 ```lean
 PrefixCount.marginTransportQge2CompatibleGoal_of_ordinaryQge2SignedCore
+PrefixCount.marginTransportQeq1CompatibleGoal_of_ordinaryQeq1SignedCore
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_ordinarySignedCores_and_rootFlatCanonical
 ```
 
-so the ordinary signed-column theorem can be supplied in the paper-facing
-`OrdinaryQge2SignedCoreGoal` form and then consumed by the existing high-branch
-adapters.
+so the ordinary signed-column theorem and the restricted `q = 1` matching
+correction can be supplied in paper-facing forms and then consumed by the
+existing high-branch adapters.
 
 Small-modulus successor branch:
 
