@@ -2238,6 +2238,52 @@ theorem prefixCountFirstHitReturnBaseStep_cover
               rw [huinv]
               ring
 
+theorem prefixCountFirstHitReturnBaseStep_sum_fin_iterate
+    {d m : Nat} [NeZero m] {C : PrefixCount.Parts d}
+    (hC : C.Admissible m) (c : Fin d)
+    {α : Type*} [AddCommMonoid α] (F : ZMod m → α) :
+    (∑ u : Fin m,
+      F (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u.val])
+        (0 : ZMod m))) =
+      ∑ z : ZMod m, F z := by
+  classical
+  let orbit : Fin m → ZMod m := fun u =>
+    ((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u.val])
+      (0 : ZMod m)
+  have hsurj : Function.Surjective orbit := by
+    intro z
+    rcases prefixCountFirstHitReturnBaseStep_cover
+        (m := m) hC c (0 : ZMod m) z with
+      ⟨k, hk, hz⟩
+    exact ⟨⟨k, hk⟩, by simpa [orbit] using hz⟩
+  have hbij : Function.Bijective orbit := by
+    have hcard : Fintype.card (Fin m) = Fintype.card (ZMod m) := by
+      simp [ZMod.card]
+    exact
+      (Fintype.bijective_iff_surjective_and_card orbit).2
+        ⟨hsurj, hcard⟩
+  let e : Fin m ≃ ZMod m := Equiv.ofBijective orbit hbij
+  calc
+    (∑ u : Fin m,
+      F (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u.val])
+        (0 : ZMod m)))
+        = ∑ u : Fin m, F (e u) := by
+          rfl
+    _ = ∑ z : ZMod m, F z := by
+          exact Fintype.sum_equiv e (fun u => F (e u)) F (by intro u; rfl)
+
+theorem prefixCountFirstHitReturnBaseStep_sum_range_iterate
+    {d m : Nat} [NeZero m] {C : PrefixCount.Parts d}
+    (hC : C.Admissible m) (c : Fin d)
+    {α : Type*} [AddCommMonoid α] (F : ZMod m → α) :
+    (∑ u ∈ Finset.range m,
+      F (((prefixCountFirstHitReturnBaseStep (m := m) C c)^[u])
+        (0 : ZMod m))) =
+      ∑ z : ZMod m, F z := by
+  rw [Finset.sum_range]
+  exact prefixCountFirstHitReturnBaseStep_sum_fin_iterate
+    (m := m) hC c F
+
 noncomputable def prefixCountFirstHitReturnFiberStep
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {C : PrefixCount.Parts d}

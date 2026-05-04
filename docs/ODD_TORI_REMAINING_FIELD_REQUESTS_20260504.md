@@ -337,11 +337,14 @@ prefixCount_toMatrix_rawStep_sub_delta_zmod
 prefixCountNoHitSubtypeCard
 prefixCountNoHitIndicatorSum
 prefixCountHasHitIndicatorSum
+prefixCountFirstHitReturnBaseStep_sum_fin_iterate
+prefixCountFirstHitReturnBaseStep_sum_range_iterate
 ```
 
 So the open return-tail proof request should focus on the low-prefix
 reindexing/bijection and the split by layer symbol.  The raw no-hit/has-hit
-cardinalities modulo `m` are now Lean-closed.
+cardinalities modulo `m` and the base-orbit `u`-sum reindexing are now
+Lean-closed.
 
 ### Already Lean-Closed
 

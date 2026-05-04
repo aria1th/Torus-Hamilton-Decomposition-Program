@@ -112,6 +112,16 @@ theorem prefixCountHasHitIndicatorSum :
   (sum x : (Fin n -> ZMod m),
     if (exists i : Fin n, x i = t) then (1 : ZMod m) else 0) =
     -((-1 : ZMod m) ^ n)
+
+theorem prefixCountFirstHitReturnBaseStep_sum_fin_iterate :
+  (sum u : Fin m,
+    F (((prefixCountFirstHitReturnBaseStep C c)^[u.val]) (0 : ZMod m))) =
+    sum z : ZMod m, F z
+
+theorem prefixCountFirstHitReturnBaseStep_sum_range_iterate :
+  (sum u in Finset.range m,
+    F (((prefixCountFirstHitReturnBaseStep C c)^[u]) (0 : ZMod m))) =
+    sum z : ZMod m, F z
 ```
 
 Lean has already closed row-Latin, layer bijectivity, root-flat schedule
@@ -119,6 +129,8 @@ construction, the head-tail skew-product reduction, preservation of
 increment-dependency under `Shared.skewFiberIterate`, and the generic
 lower-triangular odometer theorem.  After submitting this request, Lean also
 closed the no-hit and has-hit modular counting atoms listed above.
+It also closed the base-orbit sum reindexing lemmas listed above, using
+`C.Admissible.prim_zero`.
 
 ## Mathematical Source
 
