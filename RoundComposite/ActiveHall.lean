@@ -57,6 +57,44 @@ theorem choiceLowHitCount_symbols_empty {T : Nat} {X C : Type*}
     omega
   · simp
 
+theorem choiceLowHitCount_colors_empty {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (S : Finset (Fin T)) :
+    choiceLowHitCount I choice (∅ : Finset C) S = 0 := by
+  simp [choiceLowHitCount]
+
+theorem choiceLowHitCount_colors_univ {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (S : Finset (Fin T)) :
+    choiceLowHitCount I choice (Finset.univ : Finset C) S = 0 := by
+  classical
+  rw [choiceLowHitCount, Finset.card_eq_zero]
+  ext x
+  constructor
+  · intro hx
+    rcases Finset.mem_filter.mp hx with ⟨_hxuniv, _hchoiceU, hle⟩
+    have hactive :
+        (I.active x ∩ (Finset.univ : Finset C)).card = T + 1 := by
+      simp [I.active_card x]
+    have hS : S.card ≤ T := by
+      simpa using Finset.card_le_univ S
+    rw [hactive] at hle
+    omega
+  · simp
+
+theorem choiceLowHitCount_le_choiceHitCount {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (U : Finset C) (S : Finset (Fin T)) :
+    choiceLowHitCount I choice U S ≤ choiceHitCount choice U := by
+  unfold choiceLowHitCount choiceHitCount
+  exact Finset.card_le_card (by
+    intro x hx
+    exact Finset.mem_filter.mpr
+      ⟨(Finset.mem_filter.mp hx).1, (Finset.mem_filter.mp hx).2.1⟩)
+
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
