@@ -548,6 +548,15 @@ response doc: docs/GPT55_PRO_ACTIVE_HALL_EXACT_EDGE_COLORING_RESPONSE_20260504.m
 latest status: in_progress on 2026-05-04
 ```
 
+Follow-up successor-small geometry request:
+
+```text
+request doc: docs/GPT55_PRO_SUCCESSOR_SMALL_GEOMETRY_FROM_HALL_REQUEST_20260504.md
+response id: resp_01731cacc08aae120069f8eb3bbeec819d8a723b1647b82643
+response doc: docs/GPT55_PRO_SUCCESSOR_SMALL_GEOMETRY_FROM_HALL_RESPONSE_20260504.md
+latest status: in_progress on 2026-05-04
+```
+
 Thus the abstract ActiveHall part can now be supplied by the more standard
 copied-edge prescribed colouring theorem instead of directly proving the
 `Symboling` formulation.
