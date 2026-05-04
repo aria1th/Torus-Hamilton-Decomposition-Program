@@ -125,6 +125,9 @@ PrefixCount.ordinaryQge2SignedMatrixGoal_of_signedSeedClosure
 PrefixCount.ordinaryQge2SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_plan_and_matrix
 PrefixCount.ordinaryQeq1SignedCoreGoal_of_canonicalMatrix
+PrefixCount.OrdinaryQeq1AuxDegreeMatrixData
+PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal
+PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
 PrefixCount.OrdinaryQeq1AuxMatrixData
 PrefixCount.OrdinaryQeq1SpecialMatchingData
 PrefixCount.OrdinaryQeq1AuxMatrixGoal
@@ -163,6 +166,8 @@ RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1CorrectionData_and_rootFlatCanonical
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1AuxMatching_and_rootFlatCanonical
+RoundComposite.Concrete
+  .oddCoreHighModulusPrefixCountGoal_of_qge2SeedClosure_qeq1DegreeMatching_and_rootFlatCanonical
 RoundComposite.Concrete
   .oddCoreHighModulusPrefixCountGoal_of_planMatrixSignedCores_and_geometry
 RoundComposite.Concrete
@@ -231,6 +236,10 @@ This has also been split into the two paper-facing subgoals
 `PrefixCount.OrdinaryQeq1SpecialMatchingGoal`; their combination is Lean-closed
 through
 `PrefixCount.ordinaryQeq1CanonicalCorrectionDataGoal_of_auxMatrix_and_specialMatching`.
+The auxiliary matrix side is split once more at the Gale-Ryser output level:
+`PrefixCount.OrdinaryQeq1AuxDegreeMatrixGoal` asks only for the `0/1`
+degree matrix, and Lean closes the conversion to the signed `±1` matrix through
+`PrefixCount.ordinaryQeq1AuxMatrixGoal_of_degreeMatrix`.
 
 Small-modulus successor branch:
 

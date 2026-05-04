@@ -2033,6 +2033,21 @@ structure OrdinaryQeq1CanonicalMatrixData (n m r : Nat) where
 Auxiliary `±1` matrix in the restricted `q = 1` construction, before the
 special matching correction.
 -/
+structure OrdinaryQeq1AuxDegreeMatrixData (n r : Nat) where
+  G : Fin n → Fin (n - 1) → Nat
+  G_zero_one : ∀ i k, G i k = 0 ∨ G i k = 1
+  G_row_sum :
+    ∀ i : Fin n,
+      (∑ k : Fin (n - 1), G i k) =
+        if i.val < r - 1 then
+          (r - 3) / 2
+        else if i.val < r then
+          (r - 1) / 2
+        else
+          (n + r - 3) / 2
+  G_col_sum :
+    ∀ k : Fin (n - 1), (∑ i : Fin n, G i k) = (n - 2) / 2
+
 structure OrdinaryQeq1AuxMatrixData (n r : Nat) where
   B : Fin n → Fin (n - 1) → Int
   B_pm_one : ∀ i k, B i k = (-1 : Int) ∨ B i k = 1
@@ -2047,6 +2062,99 @@ structure OrdinaryQeq1AuxMatrixData (n r : Nat) where
           (r : Int) - 2
   B_col_sum :
     ∀ k : Fin (n - 1), (∑ i : Fin n, B i k) = (-2 : Int)
+
+namespace OrdinaryQeq1AuxDegreeMatrixData
+
+theorem odd_r_of_odd_n_add_one_and_odd_n_add_r
+    {n r : Nat} (hdodd : Odd (n + 1)) (hmodd : Odd (n + r)) :
+    Odd r := by
+  rcases hdodd with ⟨a, ha⟩
+  rcases hmodd with ⟨b, hb⟩
+  refine ⟨b - a, ?_⟩
+  omega
+
+theorem sum_signed_zero_one {ι : Type*} [Fintype ι]
+    (g : ι → Nat) (h01 : ∀ x, g x = 0 ∨ g x = 1) :
+    (∑ x : ι, if g x = 1 then (1 : Int) else (-1 : Int))
+      = 2 * (∑ x : ι, (g x : Int)) - (Fintype.card ι : Int) := by
+  calc
+    (∑ x : ι, if g x = 1 then (1 : Int) else (-1 : Int))
+        = ∑ x : ι, (2 * (g x : Int) - 1) := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            rcases h01 x with h | h <;> simp [h]
+    _ = 2 * (∑ x : ι, (g x : Int)) - (Fintype.card ι : Int) := by
+            rw [Finset.sum_sub_distrib]
+            simp [Finset.mul_sum]
+
+def toAuxMatrixData {n r : Nat}
+    (G : OrdinaryQeq1AuxDegreeMatrixData n r)
+    (hdodd : Odd (n + 1)) (hmodd : Odd (n + r)) :
+    OrdinaryQeq1AuxMatrixData n r where
+  B := fun i k => if G.G i k = 1 then (1 : Int) else (-1 : Int)
+  B_pm_one := by
+    intro i k
+    by_cases h : G.G i k = 1 <;> simp [h]
+  B_row_sum := by
+    intro i
+    have hsum :=
+      sum_signed_zero_one (fun k : Fin (n - 1) => G.G i k)
+        (fun k => G.G_zero_one i k)
+    change
+      (∑ k : Fin (n - 1),
+        if G.G i k = 1 then (1 : Int) else (-1 : Int)) =
+        if i.val < r - 1 then
+          (r : Int) - 2 - (n : Int)
+        else if i.val < r then
+          (r : Int) - (n : Int)
+        else
+          (r : Int) - 2
+    rw [hsum]
+    have hrowEq :
+        (∑ x : Fin (n - 1),
+          ((fun k : Fin (n - 1) => G.G i k) x : Int))
+          =
+          ((if i.val < r - 1 then
+              (r - 3) / 2
+            else if i.val < r then
+              (r - 1) / 2
+            else
+              (n + r - 3) / 2 : Nat) : Int) := by
+      simpa using congrArg (fun z : Nat => (z : Int)) (G.G_row_sum i)
+    have hrodd : Odd r :=
+      odd_r_of_odd_n_add_one_and_odd_n_add_r hdodd hmodd
+    rcases hdodd with ⟨a, ha⟩
+    rcases hrodd with ⟨s, hs⟩
+    rw [hrowEq]
+    by_cases hlow : i.val < r - 1
+    · simp [hlow]
+      omega
+    · by_cases hmid : i.val < r
+      · simp [hlow, hmid]
+        omega
+      · simp [hlow, hmid]
+        omega
+  B_col_sum := by
+    intro k
+    have hsum :=
+      sum_signed_zero_one (fun i : Fin n => G.G i k)
+        (fun i => G.G_zero_one i k)
+    change
+      (∑ i : Fin n,
+        if G.G i k = 1 then (1 : Int) else (-1 : Int)) =
+        (-2 : Int)
+    rw [hsum]
+    have hcolEq :
+        (∑ x : Fin n, ((fun i : Fin n => G.G i k) x : Int))
+          = (((n - 2) / 2 : Nat) : Int) := by
+      simpa using congrArg (fun z : Nat => (z : Int)) (G.G_col_sum k)
+    rw [hcolEq]
+    rcases hdodd with ⟨a, ha⟩
+    have hkpos : 0 < n - 1 := Nat.lt_of_le_of_lt (Nat.zero_le k.val) k.isLt
+    simp [Fintype.card_fin]
+    omega
+
+end OrdinaryQeq1AuxDegreeMatrixData
 
 /--
 Paper-facing output for the restricted `q = 1` matching correction before the
@@ -2304,6 +2412,13 @@ def toCanonicalMatrixData {n r : Nat}
 
 end OrdinaryQeq1CanonicalCorrectionData
 
+def OrdinaryQeq1AuxDegreeMatrixGoal : Prop :=
+  ∀ {n r : Nat},
+    Odd (n + 1) → 5 ≤ n + 1 →
+    Odd (n + r) →
+    r < n → 0 < r →
+    Nonempty (OrdinaryQeq1AuxDegreeMatrixData n r)
+
 def OrdinaryQeq1AuxMatrixGoal : Prop :=
   ∀ {n r : Nat},
     Odd (n + 1) → 5 ≤ n + 1 →
@@ -2317,6 +2432,13 @@ def OrdinaryQeq1SpecialMatchingGoal : Prop :=
     Odd (n + r) →
     r < n → 0 < r →
     Nonempty (OrdinaryQeq1SpecialMatchingData A)
+
+theorem ordinaryQeq1AuxMatrixGoal_of_degreeMatrix
+    (hDegree : OrdinaryQeq1AuxDegreeMatrixGoal) :
+    OrdinaryQeq1AuxMatrixGoal := by
+  intro n r hdodd hd5 hmodd hrlt hrpos
+  rcases hDegree hdodd hd5 hmodd hrlt hrpos with ⟨G⟩
+  exact ⟨G.toAuxMatrixData hdodd hmodd⟩
 
 def OrdinaryQeq1CanonicalCorrectionDataGoal : Prop :=
   ∀ {n r : Nat},
