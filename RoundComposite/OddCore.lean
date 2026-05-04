@@ -393,6 +393,24 @@ theorem prefixCountLambdaRho_val_eq_zero_iff
     simpa [hs] using
       congrArg Fin.val (prefixCountLambdaRho_eq_self_of_val_zero rho hs)
 
+theorem prefixCountLambdaRho_val_eq_pos_iff
+    {d : Nat} (rho s : Fin d) {l : Nat} (hl : 0 < l) :
+    (prefixCountLambdaRho d rho s).val = l ↔
+      (s.val = 1 ∧ rho.val = l) ∨
+        (s.val = l ∧ 1 < s.val ∧ rho.val < s.val) ∨
+        (s.val = l + 1 ∧ ¬ rho.val < s.val) := by
+  unfold prefixCountLambdaRho
+  by_cases hs0 : s.val = 0
+  · simp [hs0]
+    omega
+  · by_cases hs1 : s.val = 1
+    · simp [hs0, hs1]
+    · by_cases hlt : rho.val < s.val
+      · simp [hs0, hs1, hlt]
+        omega
+      · simp [hs0, hs1, hlt]
+        omega
+
 def prefixCountLambdaRhoInv (d : Nat) (rho : Fin d) (s : Fin d) : Fin d :=
   if _hs0 : s.val = 0 then
     ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
@@ -1739,6 +1757,55 @@ theorem prefixCountFirstHitReturnFiberStep_apply
     ((prefixCountRootStateHeadTailEquiv d m hd2).symm (z, tail))
     ⟨j.val + 1, by omega⟩]
   simp
+
+theorem prefixCountFirstHitReturnFiberStep_apply_cases
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (z : ZMod m) (tail : Fin (d - 2) → ZMod m) (j : Fin (d - 2)) :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j +
+        ∑ t ∈ Finset.range m,
+          if
+            let rho :=
+              prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+                  ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+                    (z, tail)))
+            let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+            (s.val = 1 ∧ rho.val = j.val + 1) ∨
+              (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+              (s.val = j.val + 2 ∧ ¬ rho.val < s.val)
+          then (1 : ZMod m) else 0 := by
+  rw [prefixCountFirstHitReturnFiberStep_apply]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro t _ht
+  let rho :=
+    prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+        ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+          (z, tail)))
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  have hiff :
+      (prefixCountLambdaRho d rho s).val = j.val + 1 ↔
+        (s.val = 1 ∧ rho.val = j.val + 1) ∨
+          (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+          (s.val = j.val + 2 ∧ ¬ rho.val < s.val) := by
+    simpa [Nat.add_assoc] using
+      (prefixCountLambdaRho_val_eq_pos_iff
+        (d := d) rho s (l := j.val + 1) (Nat.succ_pos j.val))
+  by_cases h :
+      (prefixCountLambdaRho d rho s).val = j.val + 1
+  · have hcase := hiff.mp h
+    simp [rho, s, h, hcase]
+  · have hcase :
+      ¬ ((s.val = 1 ∧ rho.val = j.val + 1) ∨
+          (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+          (s.val = j.val + 2 ∧ ¬ rho.val < s.val)) := by
+        intro hcase
+        exact h (hiff.mpr hcase)
+    simp [rho, s, h, hcase]
 
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_headTail_conj
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)

@@ -229,6 +229,22 @@ The right side is written in Lean as a `Finset.range m` sum using
 `prefixCountLambdaRho`, `prefixCountCanonicalRho`, and `L.layer`.  This is the
 first lemma to rewrite when extracting the coordinate carry.
 
+Lean also exposes the first case expansion of this formula:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountLambdaRho_val_eq_pos_iff :
+    (prefixCountLambdaRho d rho s).val = l <->
+      (s.val = 1 /\ rho.val = l) \/
+      (s.val = l /\ 1 < s.val /\ rho.val < s.val) \/
+      (s.val = l + 1 /\ not (rho.val < s.val))
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberStep_apply_cases :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j + sum_over_layers_of_the_three_positive_hit_cases
+```
+
 For one-coordinate skew extensions over `ZMod m`, the reusable carry lemmas
 are already in `Shared/Monodromy.lean`:
 
