@@ -35,6 +35,32 @@ theorem skewProductMap_snd_iterate {Base Fiber : Type*}
       skewFiberIterate baseStep fiberStep n x.1 x.2 := by
   rw [skewProductMap_iterate_eq_base_fiber]
 
+theorem skewFiberIterate_bijective {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (hfiber : ∀ base : Base, Function.Bijective (fiberStep base)) :
+    ∀ n : Nat, ∀ base : Base,
+      Function.Bijective (skewFiberIterate baseStep fiberStep n base)
+  | 0, _base => by
+      constructor
+      · intro x y hxy
+        exact hxy
+      · intro y
+        exact ⟨y, rfl⟩
+  | n + 1, base => by
+      have htail :=
+        skewFiberIterate_bijective baseStep fiberStep hfiber n
+          (baseStep base)
+      constructor
+      · intro x y hxy
+        apply (hfiber base).1
+        apply htail.1
+        simpa [skewFiberIterate] using hxy
+      · intro y
+        rcases htail.2 y with ⟨u, hu⟩
+        rcases (hfiber base).2 u with ⟨x, hx⟩
+        refine ⟨x, ?_⟩
+        simp [skewFiberIterate, hx, hu]
+
 theorem skewProductMap_fst_iterate {Base Fiber : Type*}
     (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber) :
     ∀ n : Nat, ∀ x : Base × Fiber,
@@ -159,6 +185,15 @@ theorem sectionReturn_skewProductMap_eq_fiberIterate {Base Fiber : Type*}
   funext fiber
   unfold sectionReturn
   rw [skewProductMap_snd_iterate]
+
+theorem sectionReturn_skewProductMap_bijective {Base Fiber : Type*}
+    (baseStep : Base → Base) (fiberStep : Base → Fiber → Fiber)
+    (base : Base) (period : Nat)
+    (hfiber : ∀ base : Base, Function.Bijective (fiberStep base)) :
+    Function.Bijective
+      (sectionReturn (skewProductMap baseStep fiberStep) base period) := by
+  rw [sectionReturn_skewProductMap_eq_fiberIterate]
+  exact skewFiberIterate_bijective baseStep fiberStep hfiber period base
 
 def skewFiberAdditiveCarry {Base : Type*} {m : Nat}
     (baseStep : Base → Base) (carry : Base → ZMod m) :
