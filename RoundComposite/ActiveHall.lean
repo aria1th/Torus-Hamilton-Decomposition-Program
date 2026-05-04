@@ -101,6 +101,33 @@ theorem mem_eraseChoice_active {T : Nat} {X C : Type*}
       c ∈ I.active x ∧ c ≠ choice x := by
   simp [eraseChoice, and_comm]
 
+theorem eraseChoice_active_inter_card_add_indicator
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (x : X) (U : Finset C) :
+    ((I.eraseChoice choice hchoice).active x ∩ U).card
+        + (if choice x ∈ U then 1 else 0)
+      = (I.active x ∩ U).card := by
+  classical
+  have hEq :
+      (I.active x).erase (choice x) ∩ U =
+        (I.active x ∩ U).erase (choice x) := by
+    ext c
+    by_cases hc : c = choice x <;> simp [hc]
+  by_cases hU : choice x ∈ U
+  · have hmem : choice x ∈ I.active x ∩ U := by
+      simp [hchoice x, hU]
+    have hpos : 0 < (I.active x ∩ U).card :=
+      Finset.card_pos.mpr ⟨choice x, hmem⟩
+    rw [eraseChoice_active, hEq, Finset.card_erase_of_mem hmem]
+    simp [hU]
+    omega
+  · have hnotmem : choice x ∉ I.active x ∩ U := by
+      simp [hU]
+    rw [eraseChoice_active, hEq, Finset.erase_eq_of_notMem hnotmem]
+    simp [hU]
+
 theorem eraseChoice_colorDegree_add_choiceDegree
     {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C]
