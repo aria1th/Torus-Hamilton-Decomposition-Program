@@ -141,21 +141,22 @@ Lean proof shape.
 ## Remaining Return-Tail Fields
 
 The generic vector theorem is no longer an external field.  For the first-hit
-return-tail route, the remaining Lean obligations are now only:
+return-tail route, the currently preferred remaining Lean obligations are:
 
 ```lean
-PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
-Lean packages those two fields as:
+Lean proves the increment-dependency field implies the triangular field, then
+packages the two preferred fields as:
 
 ```lean
-def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
-  PrefixCountFirstHitReturnTailTriangularGoal ∧
+def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
-theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
-    (hBlocks : PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) :
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```

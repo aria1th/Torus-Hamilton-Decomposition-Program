@@ -2187,6 +2187,18 @@ noncomputable def prefixCountFirstHitReturnTailCocycle
     prefixCountFirstHitReturnTailMonodromy hd2 L c
       (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x) ⟨k, hk⟩
 
+def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    C.Admissible m →
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) →
+    ∀ c : Fin d, ∀ tail : Fin (d - 2) → ZMod m,
+      ∀ k : Nat, ∀ hk : k < d - 2,
+        prefixCountFirstHitReturnTailMonodromy hd2 L c tail ⟨k, hk⟩ -
+            tail ⟨k, hk⟩ =
+          prefixCountFirstHitReturnTailCocycle hd2 L c k hk
+            (Shared.zmodVectorTake (Nat.le_of_lt hk) tail)
+
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop :=
   ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d) {C : PrefixCount.Parts d},
     Odd d → 5 ≤ d → Odd m → d ≤ m →
@@ -2216,6 +2228,10 @@ def PrefixCountFirstHitReturnTailTriangularUnitBlocksGoal : Prop :=
 
 def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailTriangularGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
 theorem prefixCountFirstHitHeadTailSectionMonodromyGoal_of_returnTailMonodromy
@@ -2370,6 +2386,25 @@ theorem prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
   let K := hCycle hd2 hdodd hd5 hmodd hdm hC L c
   exact ⟨K.equiv.symm, fun tail => Shared.CycleCoordinate.rank_step K tail⟩
 
+theorem prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal) :
+    PrefixCountFirstHitReturnTailTriangularGoal := by
+  intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c tail k hk
+  have h :=
+    hInc hd2 hdodd hd5 hmodd hdm hC L c tail k hk
+  calc
+    prefixCountFirstHitReturnTailMonodromy hd2 L c tail ⟨k, hk⟩
+        =
+        tail ⟨k, hk⟩ +
+          (prefixCountFirstHitReturnTailMonodromy hd2 L c tail ⟨k, hk⟩ -
+            tail ⟨k, hk⟩) := by
+          abel
+    _ =
+        tail ⟨k, hk⟩ +
+          prefixCountFirstHitReturnTailCocycle hd2 L c k hk
+            (Shared.zmodVectorTake (Nat.le_of_lt hk) tail) := by
+          rw [h]
+
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rankEquiv
     (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
@@ -2421,6 +2456,14 @@ theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangularCocycleBlo
   prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit_closed
     hBlocks.1 hBlocks.2
 
+theorem prefixCountFirstHitReturnTailCycleCoordinateGoal_of_incrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailCycleCoordinateGoal :=
+  prefixCountFirstHitReturnTailCycleCoordinateGoal_of_triangular_unit_closed
+    (prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
+      hBlocks.1)
+    hBlocks.2
+
 theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit
     (hLower : Shared.ZModVectorLowerTriangularUnitCycleCoordinateGoal)
     (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
@@ -2449,6 +2492,13 @@ theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBloc
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
   prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangular_unit_closed
     hBlocks.1 hBlocks.2
+
+theorem prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal :=
+  prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_cycleCoordinate
+    (prefixCountFirstHitReturnTailCycleCoordinateGoal_of_incrementUnitBlocks
+      hBlocks)
 
 theorem prefixCountFirstHitReturnTailMonodromyGoal_of_rank
     (hRank : PrefixCountFirstHitReturnTailRankGoal) :
@@ -4764,6 +4814,17 @@ theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailTriangularTrellis
   oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailTriangularTrellis_blocks
     ⟨hQge2Trellis, ⟨hTri, hUnit⟩⟩
 
+theorem oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailIncrementTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal) :
+    OddCoreHighModulusPrefixCountGoal :=
+  oddCoreHighModulusPrefixCountGoal_of_v4_highReturnTailTriangularTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
+      hInc)
+    hUnit
+
 theorem oddCoreHighModulusPrefixCountGoal_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal) :
@@ -5003,6 +5064,28 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailTriangularTrellisAdd
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v4_returnTailTriangularTrellis
     hQge2Trellis hTri hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailIncrementTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailTriangularTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
+      hInc)
+    hUnit hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailIncrementTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailIncrementTrellis
+    hQge2Trellis hInc hUnit
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
 
 theorem oddSuccessorClosureGoal_of_v4_returnTailRank
@@ -5436,6 +5519,33 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellisAdd_blo
       oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hBlocks.2⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellis
+    hQge2Trellis
+    (prefixCountFirstHitReturnTailTriangularGoal_of_incrementDependsOnTake
+      hInc)
+    hUnit hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellis
+    hQge2Trellis hInc hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -5653,6 +5763,26 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellisAdd_blo
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailTriangularTrellisAdd_blocks
     hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailIncrementTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellis
+    hQge2Trellis hInc hUnit hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailIncrementTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailIncrementTrellisAdd
+    hQge2Trellis hInc hUnit hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :

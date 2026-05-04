@@ -124,20 +124,30 @@ theorem PrefixCount
 
 Equivalent stronger routes are also available through return-tail rank,
 rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
-request response, Lean now exposes the preferred triangular/unit split with the
-generic lower-triangular theorem already closed:
+request response, Lean now exposes the preferred increment/unit refinement of
+the triangular route, with the generic lower-triangular theorem already closed:
 
 ```lean
 def PrefixCountFirstHitReturnTailTriangularGoal : Prop := ...
+def PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal : Prop := ...
 def PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop := ...
 
 def PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal : Prop :=
   PrefixCountFirstHitReturnTailTriangularGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
 
+def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
+  PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal ∧
+  PrefixCountFirstHitReturnTailCocycleUnitGoal
+
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
     (hBlocks : PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_incrementUnitBlocks
+    (hBlocks : PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal) :
     PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 ```
 
@@ -258,19 +268,13 @@ theorem RoundComposite.Concrete
 ```
 
 The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
-and triangular/cocycle-unit fields for the return-tail branch:
+and increment-dependency/unit-carry fields for the return-tail branch:
 
 ```lean
-def RoundComposite.Concrete
-  .OddModulusToriV4ReturnTailTriangularTrellisBlocksGoal : Prop :=
-  (PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ∧
-   PrefixCountFirstHitReturnTailTriangularCocycleBlocksGoal) ∧
-  OddSuccessorSmallModulusBaseTailGoal
-
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailTriangularTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailIncrementTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hTri : PrefixCountFirstHitReturnTailTriangularGoal)
+    (hInc : PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
@@ -293,7 +297,7 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnTailTriangularGoal
+PrefixCountFirstHitReturnTailIncrementDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
@@ -302,7 +306,14 @@ The older `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` remains a
 valid sufficient field, but it is now Lean-reduced from the trellis-Hoffman
 form above.
 
-Equivalently, the middle two fields can be replaced by the older orbit field:
+Equivalently, the increment-dependency field can be replaced by the stronger
+triangular field:
+
+```lean
+PrefixCountFirstHitReturnTailTriangularGoal
+```
+
+or the middle two fields can be replaced by the older orbit field:
 
 ```lean
 PrefixCountFirstHitReturnTailMonodromyOrbitGoal
