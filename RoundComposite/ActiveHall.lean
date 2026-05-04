@@ -30,6 +30,13 @@ def choiceHitCount {X C : Type*} [Fintype X] [DecidableEq X]
     [DecidableEq C] (choice : X → C) (U : Finset C) : Nat :=
   ((Finset.univ : Finset X).filter (fun x => choice x ∈ U)).card
 
+def choiceLowHitCount {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (U : Finset C) (S : Finset (Fin T)) : Nat :=
+  ((Finset.univ : Finset X).filter
+    (fun x => choice x ∈ U ∧ (I.active x ∩ U).card ≤ S.card)).card
+
 def cutCap {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] (I : Incidence T X C)
     (U : Finset C) (S : Finset (Fin T)) : Nat :=
@@ -471,6 +478,62 @@ theorem cutCap_image_castSucc_le_eraseChoice_cutCap_add_choiceHitCount
   apply Finset.sum_le_sum
   intro x _hx
   exact I.min_card_le_eraseChoice_min_card_add_indicator choice hchoice x U S
+
+theorem min_card_eq_eraseChoice_min_card_add_lowHitIndicator
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    min ((I.active x ∩ U).card) S.card =
+      min (((I.eraseChoice choice hchoice).active x ∩ U).card) S.card
+        + (if choice x ∈ U ∧ (I.active x ∩ U).card ≤ S.card then 1 else 0) := by
+  classical
+  have hEq :=
+    I.eraseChoice_active_inter_card_add_indicator choice hchoice x U
+  by_cases hU : choice x ∈ U
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a + 1 = A := by
+      simpa [a, A, hU] using hEq
+    change min A S.card =
+      min a S.card + (if choice x ∈ U ∧ A ≤ S.card then 1 else 0)
+    rw [← hEq']
+    by_cases hle : a + 1 ≤ S.card
+    · have ha : a ≤ S.card := (Nat.le_succ a).trans hle
+      rw [min_eq_left hle, min_eq_left ha]
+      simp [hU, hle]
+    · have hs_lt : S.card < a + 1 := Nat.lt_of_not_ge hle
+      have hs : S.card ≤ a := Nat.lt_succ_iff.mp hs_lt
+      have hs' : S.card ≤ a + 1 := Nat.le_of_lt hs_lt
+      rw [min_eq_right hs', min_eq_right hs]
+      simp [hU, hle]
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a = A := by
+      simp [a, A, hU]
+    change min A S.card =
+      min a S.card + (if choice x ∈ U ∧ A ≤ S.card then 1 else 0)
+    rw [← hEq']
+    simp [hU]
+
+theorem cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (U : Finset C) (S : Finset (Fin T)) :
+    I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+      (I.eraseChoice choice hchoice).cutCap U S
+        + choiceLowHitCount I choice U S := by
+  classical
+  rw [cutCap_image_castSucc]
+  unfold cutCap choiceLowHitCount
+  rw [Finset.card_filter, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro x _hx
+  exact I.min_card_eq_eraseChoice_min_card_add_lowHitIndicator
+    choice hchoice x U S
 
 theorem exists_injective_token_matching_of_hall
     {T : Nat} {X C Q : Type*} [Fintype X] [Fintype C]
@@ -1199,6 +1262,42 @@ theorem eraseLastCountMatrix_hallCuts_of_cutCap_insert_le
   change M'.cutMass U S ≤ (I.eraseChoice choice hchoice).cutCap U S
   omega
 
+theorem eraseLastCountMatrix_hallCuts_of_cutCap_slack
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (hSlack :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+            + Incidence.choiceLowHitCount I choice U S
+          ≤ I.cutCap U
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1)))) :
+    (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  intro U S
+  let M' := M.eraseLastCountMatrix choice hchoice hdegree
+  let low := Incidence.choiceLowHitCount I choice U S
+  have hMass :
+      M'.cutMass U S =
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+    simpa [M'] using M.eraseLastCountMatrix_cutMass choice hchoice hdegree U S
+  have hCap :
+      I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+        (I.eraseChoice choice hchoice).cutCap U S + low := by
+    simpa [low] using
+      I.cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
+        choice hchoice U S
+  have hStep :
+      M'.cutMass U S + low
+        ≤ (I.eraseChoice choice hchoice).cutCap U S + low := by
+    rw [hMass, ← hCap]
+    exact hSlack U S
+  change M'.cutMass U S ≤ (I.eraseChoice choice hchoice).cutCap U S
+  omega
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
@@ -1681,11 +1780,10 @@ def EraseLastHallCutsSelectionGoal : Prop :=
             intro x
             simpa [choice] using hfActive (f.symm x)
           ∀ U : Finset C, ∀ S : Finset (Fin T),
-            I.cutCap U
-                (insert (Fin.last T)
-                  (S.image (Fin.castSucc : Fin T → Fin (T + 1))))
-              ≤ (I.eraseChoice choice hchoice).cutCap U S
-                  + Incidence.choiceHitCount choice U
+            M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+                + Incidence.choiceLowHitCount I choice U S
+              ≤ I.cutCap U
+                  (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
 
 theorem eraseLastHallCutsGoal_of_selection
     (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
@@ -1703,8 +1801,8 @@ theorem eraseLastHallCutsGoal_of_selection
     fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
   refine ⟨f, hfActive, ?_⟩
   change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
-  exact M.eraseLastCountMatrix_hallCuts_of_cutCap_insert_le
-    choice hchoice hdegree hHall hCover
+  exact M.eraseLastCountMatrix_hallCuts_of_cutCap_slack
+    choice hchoice hdegree hCover
 
 theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
