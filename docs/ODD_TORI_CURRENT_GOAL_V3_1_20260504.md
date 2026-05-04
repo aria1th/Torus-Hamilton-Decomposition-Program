@@ -187,6 +187,11 @@ and the P-row Hall condition
 `PrefixCount.OrdinaryQeq1AuxMatrixData.pRows_hall`.  The resulting injective
 matching covering all P-rows is Lean-closed as
 `PrefixCount.OrdinaryQeq1AuxMatrixData.exists_pRows_matching`.
+The paper-facing P-row matching interface is now separated from the stronger
+all-row column-count interface as
+`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData`, with Lean-closed bridges
+`PrefixCount.OrdinaryQeq1PRowSpecialMatchingData.toSpecialMatchingData` and
+`PrefixCount.OrdinaryQeq1AuxPRowSpecialMatchingData.toAuxSpecialMatchingData`.
 
 When these four propositions are proved, the current conditional endpoint
 immediately yields the final all-dimensional theorem.

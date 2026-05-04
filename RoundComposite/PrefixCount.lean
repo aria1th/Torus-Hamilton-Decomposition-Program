@@ -2738,9 +2738,31 @@ structure OrdinaryQeq1SpecialMatchingData {n r : Nat}
   special_neg :
     ∀ i : Fin n, i.val = r - 1 → A.B i (mate special) = (-1 : Int)
 
+structure OrdinaryQeq1PRowSpecialMatchingData {n r : Nat}
+    (A : OrdinaryQeq1AuxMatrixData n r) where
+  mate : Fin n → Fin (n - 1)
+  special : Fin n
+  mate_pos : ∀ i : Fin n, r ≤ i.val → A.B i (mate i) = 1
+  mate_col_sum_pRows :
+    ∀ k : Fin (n - 1),
+      (∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+        if mate i = k then (1 : Int) else 0)
+        = if k.val < r then
+            if k = mate special then (1 : Int) else 0
+          else
+            1
+  special_mem : r ≤ special.val
+  special_low : (mate special).val < r
+  special_neg :
+    ∀ i : Fin n, i.val = r - 1 → A.B i (mate special) = (-1 : Int)
+
 structure OrdinaryQeq1AuxSpecialMatchingData (n r : Nat) where
   aux : OrdinaryQeq1AuxMatrixData n r
   matching : OrdinaryQeq1SpecialMatchingData aux
+
+structure OrdinaryQeq1AuxPRowSpecialMatchingData (n r : Nat) where
+  aux : OrdinaryQeq1AuxMatrixData n r
+  matching : OrdinaryQeq1PRowSpecialMatchingData aux
 
 namespace OrdinaryQeq1SpecialMatchingData
 
@@ -2761,6 +2783,42 @@ def toCorrectionData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
 
 end OrdinaryQeq1SpecialMatchingData
 
+namespace OrdinaryQeq1PRowSpecialMatchingData
+
+def toSpecialMatchingData {n r : Nat} {A : OrdinaryQeq1AuxMatrixData n r}
+    (M : OrdinaryQeq1PRowSpecialMatchingData A) :
+    OrdinaryQeq1SpecialMatchingData A where
+  mate := M.mate
+  special := M.special
+  mate_pos := M.mate_pos
+  mate_col_sum := by
+    intro k
+    calc
+      (∑ i : Fin n,
+        if r ≤ i.val ∧ M.mate i = k then (1 : Int) else 0)
+          = ∑ i : Fin n,
+              if r ≤ i.val then
+                if M.mate i = k then (1 : Int) else 0
+              else
+                0 := by
+              apply Finset.sum_congr rfl
+              intro i _hi
+              by_cases hr : r ≤ i.val
+              · by_cases hm : M.mate i = k <;> simp [hr, hm]
+              · simp [hr]
+      _ = ∑ i ∈ OrdinaryQeq1AuxMatrixData.pRows n r,
+              if M.mate i = k then (1 : Int) else 0 := by
+              rw [OrdinaryQeq1AuxMatrixData.pRows, Finset.sum_filter]
+      _ = if k.val < r then
+            if k = M.mate M.special then (1 : Int) else 0
+          else
+            1 := M.mate_col_sum_pRows k
+  special_mem := M.special_mem
+  special_low := M.special_low
+  special_neg := M.special_neg
+
+end OrdinaryQeq1PRowSpecialMatchingData
+
 namespace OrdinaryQeq1AuxSpecialMatchingData
 
 def toCorrectionData {n r : Nat}
@@ -2769,6 +2827,16 @@ def toCorrectionData {n r : Nat}
   D.matching.toCorrectionData
 
 end OrdinaryQeq1AuxSpecialMatchingData
+
+namespace OrdinaryQeq1AuxPRowSpecialMatchingData
+
+def toAuxSpecialMatchingData {n r : Nat}
+    (D : OrdinaryQeq1AuxPRowSpecialMatchingData n r) :
+    OrdinaryQeq1AuxSpecialMatchingData n r where
+  aux := D.aux
+  matching := D.matching.toSpecialMatchingData
+
+end OrdinaryQeq1AuxPRowSpecialMatchingData
 
 namespace OrdinaryQeq1CanonicalCorrectionData
 
