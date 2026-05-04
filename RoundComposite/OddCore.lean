@@ -2158,9 +2158,31 @@ theorem prefixCountFirstHitReturnFiberHitCondition_eq_at
     prefixCountFirstHitReturnFiberHitCondition hd2 L c z tail j t =
       prefixCountFirstHitReturnFiberHitConditionAt hd2 L c
         ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
-          ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+        ((prefixCountRootStateHeadTailEquiv d m hd2).symm
             (z, tail)))
         j t := rfl
+
+theorem prefixCountFirstHitReturnFiberHitConditionAt_iff_lambda
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    (w : PrefixCountRootState d m) (j : Fin (d - 2)) (t : Nat) :
+    prefixCountFirstHitReturnFiberHitConditionAt hd2 L c w j t ↔
+      (prefixCountLambdaRho d
+        (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w)
+        (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val =
+          j.val + 1 := by
+  let rho := prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w
+  let s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c
+  have hiff :
+      (prefixCountLambdaRho d rho s).val = j.val + 1 ↔
+        (s.val = 1 ∧ rho.val = j.val + 1) ∨
+          (s.val = j.val + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+          (s.val = j.val + 2 ∧ ¬ rho.val < s.val) := by
+    simpa [Nat.add_assoc] using
+      (prefixCountLambdaRho_val_eq_pos_iff
+        (d := d) rho s (l := j.val + 1) (Nat.succ_pos j.val))
+  simpa [prefixCountFirstHitReturnFiberHitConditionAt, rho, s] using hiff.symm
 
 theorem prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
@@ -2229,6 +2251,109 @@ theorem prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
     · exact Or.inr (Or.inr ⟨hs, by
         rw [hs]
         exact hnlt.mpr (by simpa [hs] using hrho)⟩)
+
+theorem prefixCountFirstHitCanonicalSchedule_layerMap_nat_agreeUpTo
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    {K : Nat} (hK : K < d - 2) (t : Nat)
+    {w v : PrefixCountRootState d m}
+    (h : prefixCountRootAgreeUpTo K w v) :
+    prefixCountRootAgreeUpTo K
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).layerMap
+        ((t : Nat) : ZMod m) c w)
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).layerMap
+        ((t : Nat) : ZMod m) c v) := by
+  intro p hp
+  let dirW :=
+    prefixCountLambdaRho d
+      (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w)
+      (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+  let dirV :=
+    prefixCountLambdaRho d
+      (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) v)
+      (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+  have hbase : w p = v p := h p hp
+  have hdir :
+      (dirW.val = p.val) ↔ (dirV.val = p.val) := by
+    by_cases hp0 : p.val = 0
+    · have hW0 :
+          dirW.val = 0 ↔
+            (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val = 0 := by
+        simpa [dirW] using
+          (prefixCountLambdaRho_val_eq_zero_iff
+            (d := d)
+            (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) w)
+            (s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+            (prefixCountCanonicalRho_ne_zero hd2 ((t : Nat) : ZMod m) w))
+      have hV0 :
+          dirV.val = 0 ↔
+            (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c).val = 0 := by
+        simpa [dirV] using
+          (prefixCountLambdaRho_val_eq_zero_iff
+            (d := d)
+            (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m) v)
+            (s := L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)
+            (prefixCountCanonicalRho_ne_zero hd2 ((t : Nat) : ZMod m) v))
+      simpa [hp0] using hW0.trans hV0.symm
+    · let q : Fin (d - 2) := ⟨p.val - 1, by omega⟩
+      have hpq : p.val = q.val + 1 := by
+        simp [q]
+        omega
+      have hqK : q.val ≤ K := by
+        simp [q]
+        omega
+      have hq :
+          prefixCountRootAgreeUpTo q.val w v :=
+        prefixCountRootAgreeUpTo_mono hqK h
+      have hhit :=
+        prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
+          (d := d) (m := m) hd2 L c q t hq
+      have hiffW :=
+        prefixCountFirstHitReturnFiberHitConditionAt_iff_lambda
+          (d := d) (m := m) hd2 L c w q t
+      have hiffV :=
+        prefixCountFirstHitReturnFiberHitConditionAt_iff_lambda
+          (d := d) (m := m) hd2 L c v q t
+      calc
+        dirW.val = p.val
+            ↔ dirW.val = q.val + 1 := by rw [hpq]
+        _ ↔ prefixCountFirstHitReturnFiberHitConditionAt hd2 L c w q t :=
+            hiffW.symm
+        _ ↔ prefixCountFirstHitReturnFiberHitConditionAt hd2 L c v q t :=
+            hhit
+        _ ↔ dirV.val = q.val + 1 :=
+            hiffV
+        _ ↔ dirV.val = p.val := by rw [hpq]
+  unfold Shared.RootFlatSchedule.layerMap prefixCountFirstHitCanonicalSchedule
+    prefixCountCanonicalSchedule prefixCountCanonicalDir
+  simp only
+  rw [prefixCountRootStep_apply_coord, prefixCountRootStep_apply_coord]
+  by_cases hW : dirW.val = p.val
+  · have hV : dirV.val = p.val := hdir.mp hW
+    simp [dirW, dirV, hW, hV, hbase]
+  · have hV : ¬ dirV.val = p.val := by
+      intro hV
+      exact hW (hdir.mpr hV)
+    simp [dirW, dirV, hW, hV, hbase]
+
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_agreeUpTo
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {C : PrefixCount.Parts d}
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) (c : Fin d)
+    {K : Nat} (hK : K < d - 2) :
+    ∀ n : Nat, ∀ {w v : PrefixCountRootState d m},
+      prefixCountRootAgreeUpTo K w v →
+        prefixCountRootAgreeUpTo K
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c n w)
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c n v)
+  | 0, w, v, h => h
+  | n + 1, w, v, h => by
+      rw [Shared.RootFlatSchedule.prefixMap]
+      exact prefixCountFirstHitCanonicalSchedule_layerMap_nat_agreeUpTo
+        (d := d) (m := m) hd2 L c hK n
+        (prefixCountFirstHitCanonicalSchedule_prefixMap_agreeUpTo
+          (d := d) (m := m) hd2 L c hK n h)
 
 theorem prefixCountFirstHitReturnFiberStep_apply_hitCondition
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
@@ -2846,6 +2971,35 @@ theorem prefixCountFirstHitReturnTailRankEquivGoal_of_cycleCoordinate
   intro d m _inst hd2 C hdodd hd5 hmodd hdm hC L c
   let K := hCycle hd2 hdodd hd5 hmodd hdm hC L c
   exact ⟨K.equiv.symm, fun tail => Shared.CycleCoordinate.rank_step K tail⟩
+
+theorem prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
+    PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal := by
+  intro d m _inst hd2 C _hdodd _hd5 _hmodd _hdm _hC L c z x y k hk hxy t _ht
+  let wx : PrefixCountRootState d m :=
+    (prefixCountRootStateHeadTailEquiv d m hd2).symm (z, x)
+  let wy : PrefixCountRootState d m :=
+    (prefixCountRootStateHeadTailEquiv d m hd2).symm (z, y)
+  have h0 : prefixCountRootAgreeUpTo k wx wy := by
+    simpa [wx, wy] using
+      prefixCountRootAgreeUpTo_headTail_symm_of_take
+        (d := d) (m := m) hd2 (z := z) (x := x) (y := y) hk hxy
+  have htAgree :
+      prefixCountRootAgreeUpTo k
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wx)
+        ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wy) :=
+    prefixCountFirstHitCanonicalSchedule_prefixMap_agreeUpTo
+      (d := d) (m := m) hd2 L c hk t h0
+  rw [prefixCountFirstHitReturnFiberHitCondition_eq_at
+    (hd2 := hd2) (L := L) (c := c) (z := z) (tail := x)
+    (j := ⟨k, hk⟩) (t := t)]
+  rw [prefixCountFirstHitReturnFiberHitCondition_eq_at
+    (hd2 := hd2) (L := L) (c := c) (z := z) (tail := y)
+    (j := ⟨k, hk⟩) (t := t)]
+  exact
+    prefixCountFirstHitReturnFiberHitConditionAt_congr_of_agreeUpTo
+      (d := d) (m := m) hd2 L c
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t wx)
+      ⟨k, hk⟩ t htAgree
 
 theorem prefixCountFirstHitReturnFiberIncrementDependsOnTakeGoal_of_hitCondition
     (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal) :
@@ -5709,6 +5863,25 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellisAdd
     hQge2Trellis hHit hUnit
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
 
+theorem oddSuccessorClosureGoal_of_v4_returnTailUnitTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailHitConditionTrellis
+    hQge2Trellis
+    prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+    hUnit hSmall
+
+theorem oddSuccessorClosureGoal_of_v4_returnTailUnitTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailUnitTrellis
+    hQge2Trellis hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+
 theorem oddSuccessorClosureGoal_of_v4_returnTailRank
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
     (hRank : PrefixCountFirstHitReturnTailRankGoal)
@@ -6221,6 +6394,30 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellisAdd
     (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
+    hQge2Trellis
+    prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+    hUnit hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
+    hQge2Trellis hUnit
+    (oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd hSmall)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -6498,6 +6695,24 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellisAdd
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellisAdd
     hQge2Trellis hHit hUnit hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailUnitTrellis
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
+    hQge2Trellis hUnit hSmall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailUnitTrellisAdd
+    (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
+    (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellisAdd
+    hQge2Trellis hUnit hSmall hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailRank_blocks
     (hBlocks : OddModulusToriV4ReturnTailRankBlocksGoal) :

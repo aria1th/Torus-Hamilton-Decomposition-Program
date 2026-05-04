@@ -123,8 +123,8 @@ theorem PrefixCount
 ```
 
 Equivalent stronger routes are also available through return-tail rank,
-rank-equivalence, or cycle-coordinate goals.  After the return-tail proof
-request response, Lean now exposes the preferred one-step hit-condition/unit
+rank-equivalence, or cycle-coordinate goals.  Lean now closes the one-step
+hit-condition locality field internally and exposes the preferred unit-carry
 refinement of the triangular route, with the generic lower-triangular theorem
 already closed:
 
@@ -145,6 +145,10 @@ def PrefixCountFirstHitReturnTailIncrementUnitBlocksGoal : Prop :=
 def PrefixCountFirstHitReturnFiberHitConditionUnitBlocksGoal : Prop :=
   PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal ∧
   PrefixCountFirstHitReturnTailCocycleUnitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
+    PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 
 theorem RoundComposite.Concrete
   .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_triangularCocycleBlocks
@@ -280,14 +284,14 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
-The currently sharpest return-tail endpoint uses trellis for the q>=2 branch
-and one-step hit-condition/unit-carry fields for the return-tail branch:
+The currently sharpest return-tail endpoint uses trellis for the q>=2 branch,
+the Lean-closed one-step hit-condition locality theorem, and only the unit-carry
+field for the return-tail branch:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailHitConditionTrellis
+  .oddModulusToriAllDimensionsGoal_of_v4_returnTailUnitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
     OddModulusToriAllDimensionsGoal
@@ -310,7 +314,6 @@ The goal is not complete.  The remaining hard fields are:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```

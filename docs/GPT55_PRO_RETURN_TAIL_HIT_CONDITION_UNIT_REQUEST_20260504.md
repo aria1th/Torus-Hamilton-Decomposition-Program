@@ -45,6 +45,17 @@ RoundComposite.Concrete
   .PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
+Local progress after this request was sent:
+
+```lean
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
+    PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+```
+
+Thus the useful remaining part of the response is expected to be the unit-carry
+calculation for `PrefixCountFirstHitReturnTailCocycleUnitGoal`.
+
 It explicitly asks not to reprove the generic lower-triangular odometer theorem.
 That theorem is already closed in `Shared` and is consumed by:
 

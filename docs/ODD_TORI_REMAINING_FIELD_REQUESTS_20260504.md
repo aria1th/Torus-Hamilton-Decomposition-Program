@@ -11,9 +11,8 @@ Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_returnTailHitConditionTrellis
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailUnitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
-    (hHit : PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal)
     (hUnit : PrefixCountFirstHitReturnTailCocycleUnitGoal)
     (hSmall : OddSuccessorSmallModulusBaseTailGoal)
     {d m : Nat} (hd2 : 2 <= d)
@@ -25,13 +24,14 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
-PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
-The middle two fields imply the older orbit field through a Lean-closed
-skew-iterate preservation theorem, increment-to-triangular bridge, and generic
+The hit-condition locality field is now Lean-closed as
+`prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal`.  The remaining
+unit field implies the older orbit field through a Lean-closed skew-iterate
+preservation theorem, increment-to-triangular bridge, and generic
 lower-triangular odometer theorem:
 
 ```lean
@@ -195,7 +195,7 @@ Please provide either:
 The most useful output is a sequence of auxiliary Lean theorem statements with
 proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
-## Request 2: First-Hit Return-Tail Triangular / Unit Route
+## Request 2: First-Hit Return-Tail Unit Carry
 
 ### Files To Read
 
@@ -215,25 +215,17 @@ proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
 ### Exact Lean Target
 
-The preferred target is now the one-step hit-condition/unit split for the first-hit
-return-tail monodromy:
+The one-step hit-condition dependency is now Lean-closed:
 
 ```lean
-def RoundComposite.Concrete
-  .PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal : Prop :=
-  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
-    Odd d -> 5 <= d -> Odd m -> d <= m ->
-    C.Admissible m ->
-    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
-    forall c : Fin d, forall z : ZMod m,
-      forall x y : Fin (d - 2) -> ZMod m, forall k : Nat,
-        forall hk : k < d - 2,
-          Shared.zmodVectorTake (Nat.le_of_lt hk) x =
-            Shared.zmodVectorTake (Nat.le_of_lt hk) y ->
-          forall t, t ∈ Finset.range m ->
-            prefixCountFirstHitReturnFiberHitCondition hd2 L c z x ⟨k, hk⟩ t <->
-              prefixCountFirstHitReturnFiberHitCondition hd2 L c z y ⟨k, hk⟩ t
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal :
+    PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
+```
 
+The preferred remaining target for the first-hit return-tail monodromy is:
+
+```lean
 def RoundComposite.Concrete
   .PrefixCountFirstHitReturnTailCocycleUnitGoal : Prop :=
   forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
@@ -283,14 +275,13 @@ theorem Shared.zmodVectorLowerTriangularUnitCycleCoordinate :
 This route avoids proving orbit transitivity directly.  It asks for:
 
 ```text
-each one-step fiber hit condition depends only on the lower prefix
-+ every rank cocycle has unit total carry
+every rank cocycle has unit total carry
 ```
 
 The older GPT-5.5 Pro response established the triangular/unit route and led
 to the now-closed generic lower-triangular odometer theorem.  A narrower
-follow-up request is now in progress for the actual remaining first-hit
-one-step locality and unit-carry calculation:
+follow-up request is now in progress; after local Lean progress its remaining
+useful target is the unit-carry calculation:
 
 ```text
 docs/GPT55_PRO_RETURN_TAIL_HIT_CONDITION_UNIT_REQUEST_20260504.md
@@ -303,8 +294,8 @@ Lean already builds the first-hit schedule, proves the row-Latin and
 layer-bijective parts, reduces the root-flat return to head-tail monodromy, and
 proves bijectivity of the tail map, preservation of this increment-dependency
 under `Shared.skewFiberIterate`, and the generic lower-triangular odometer
-theorem.  The remaining request is only the one-step first-hit fiber
-increment-dependency and unit carry calculation.
+theorem.  It now also proves the one-step first-hit hit-condition locality.  The
+remaining request is the unit carry calculation.
 
 Useful closed bridges:
 
@@ -377,10 +368,9 @@ theorem RoundComposite.Concrete
 
 ### Prompt
 
-Prove the high-modulus first-hit return-fiber hit-condition/unit split:
+Prove the high-modulus first-hit return-tail unit carry field:
 
 ```lean
-PrefixCountFirstHitReturnFiberHitConditionDependsOnTakeGoal
 PrefixCountFirstHitReturnTailCocycleUnitGoal
 ```
 
