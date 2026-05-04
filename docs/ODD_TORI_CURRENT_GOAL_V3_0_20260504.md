@@ -207,6 +207,11 @@ theorem RoundComposite.ActiveHall
     EraseLastHallCutsGoal
 
 theorem RoundComposite.ActiveHall
+  .eraseLastHallCutsGoal_of_tokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
+    EraseLastHallCutsGoal
+
+theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsChoice
     (hChoice : EraseLastHallCutsChoiceGoal) :
     HallRealizationGoal
@@ -224,6 +229,11 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .hallRealizationGoal_of_eraseLastHallCutsLinearChoice
     (hLinear : EraseLastHallCutsLinearChoiceGoal) :
+    HallRealizationGoal
+
+theorem RoundComposite.ActiveHall
+  .hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal) :
     HallRealizationGoal
 
 theorem RoundComposite.ActiveHall
@@ -247,6 +257,12 @@ theorem RoundComposite.ActiveHall
 theorem RoundComposite.ActiveHall
   .symbolingWithResidues_of_feasible_and_eraseLastHallCutsLinearChoice
     (hLinear : EraseLastHallCutsLinearChoiceGoal)
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R
+
+theorem RoundComposite.ActiveHall
+  .symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal)
     (hFeasible : FeasibleWithResidues I R) :
     SymbolingWithResidues I R
 ```

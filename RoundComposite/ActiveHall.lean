@@ -2471,6 +2471,12 @@ theorem eraseLastHallCutsGoal_of_linearChoice
   eraseLastHallCutsGoal_of_nontrivialSlackChoice
     (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear hLinear)
 
+theorem eraseLastHallCutsGoal_of_tokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsGoal.{uX, uC} :=
+  eraseLastHallCutsGoal_of_linearChoice
+    (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear hToken)
+
 theorem eraseLastHallCutsChoice_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 1 X C) (M : CountMatrix I)
@@ -2774,6 +2780,12 @@ theorem hallRealizationGoal_of_eraseLastHallCutsLinearChoice
   hallRealizationGoal_of_eraseLastHallCutsNontrivialSlackChoice
     (eraseLastHallCutsNontrivialSlackChoiceGoal_of_linear hLinear)
 
+theorem hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCutsLinearChoice
+    (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear hToken)
+
 theorem symbolingWithResidues_of_feasible_and_realization
     (hRealize : HallRealizationGoal.{uX, uC})
     {m T : Nat} {X : Type uX} {C : Type uC}
@@ -2836,6 +2848,17 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsLinearChoice
     SymbolingWithResidues I R :=
   symbolingWithResidues_of_feasible_and_realization
     (hallRealizationGoal_of_eraseLastHallCutsLinearChoice hLinear)
+    hFeasible
+
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
+    (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice hToken)
     hFeasible
 
 theorem feasibleWithResidues_of_symbolingWithResidues
