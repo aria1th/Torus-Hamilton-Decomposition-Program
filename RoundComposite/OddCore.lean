@@ -862,6 +862,24 @@ theorem prefixCountFirstHitSymbolMap_inverseLaw_of_val_one
         prefixCountRootStep_apply_inv
           (prefixCountCanonicalRho d m hd2 t w) w
 
+theorem prefixCountFirstHitSymbolMap_bijective_of_val_one
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (t : ZMod m) {s : Fin d} (hs : s.val = 1) :
+    Function.Bijective (prefixCountFirstHitSymbolMap hd2 t s) := by
+  rcases prefixCountFirstHitSymbolMap_inverseLaw_of_val_one hd2 t hs with
+    ⟨hLeft, hRight⟩
+  constructor
+  · intro x y hxy
+    have h := congrArg (prefixCountFirstHitSymbolMapInv hd2 t s) hxy
+    calc
+      x = prefixCountFirstHitSymbolMapInv hd2 t s
+            (prefixCountFirstHitSymbolMap hd2 t s x) := (hLeft x).symm
+      _ = prefixCountFirstHitSymbolMapInv hd2 t s
+            (prefixCountFirstHitSymbolMap hd2 t s y) := h
+      _ = y := hLeft y
+  · intro y
+    exact ⟨prefixCountFirstHitSymbolMapInv hd2 t s y, hRight y⟩
+
 theorem prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
@@ -887,6 +905,28 @@ def PrefixCountFirstHitSymbolMapInverseLawGoal : Prop :=
       Function.RightInverse
         (prefixCountFirstHitSymbolMapInv hd2 t s)
         (prefixCountFirstHitSymbolMap hd2 t s)
+
+def PrefixCountFirstHitTailSymbolMapInverseLawGoal : Prop :=
+  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d),
+    Odd d → 5 ≤ d → Odd m → d ≤ m →
+    ∀ t : ZMod m, ∀ s : Fin d,
+      s.val ≠ 0 → s.val ≠ 1 →
+      Function.LeftInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s) ∧
+      Function.RightInverse
+        (prefixCountFirstHitSymbolMapInv hd2 t s)
+        (prefixCountFirstHitSymbolMap hd2 t s)
+
+theorem prefixCountFirstHitSymbolMapInverseLawGoal_of_tail
+    (hTail : PrefixCountFirstHitTailSymbolMapInverseLawGoal) :
+    PrefixCountFirstHitSymbolMapInverseLawGoal := by
+  intro d m _inst hd2 hdodd hd5 hmodd hdm t s
+  by_cases hs0 : s.val = 0
+  · exact prefixCountFirstHitSymbolMap_inverseLaw_of_val_zero hd2 t hs0
+  · by_cases hs1 : s.val = 1
+    · exact prefixCountFirstHitSymbolMap_inverseLaw_of_val_one hd2 t hs1
+    · exact hTail hd2 hdodd hd5 hmodd hdm t s hs0 hs1
 
 theorem prefixCountFirstHitSymbolMapsBijectiveGoal_of_inverseLaw
     (hInv : PrefixCountFirstHitSymbolMapInverseLawGoal) :
