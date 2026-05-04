@@ -138,6 +138,14 @@ PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount
 PrefixCount.uniformColumnDegreeBlockResidueSum
 PrefixCount.uniformColumnDegreeRangeResidueSum_mul
 PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition
+PrefixCount.uniformColumnDegreeIntervalCellMap
+PrefixCount.uniformColumnDegreeIntervalCellSet
+PrefixCount.uniformColumnDegreeShiftedCellSet
+PrefixCount.uniformColumnDegreeIntervalCellMap_injective
+PrefixCount.uniformColumnDegreeIntervalCellResidueSum
+PrefixCount.uniformColumnDegreePrefix_succ
+PrefixCount.uniformColumnDegreeShiftedIntervalPartition
+PrefixCount.uniformColumnDegreeIntervalPartitionGoal
 PrefixCount.OrdinaryQeq1AuxDegreeArithmeticGoal
 PrefixCount.OrdinaryQeq1AuxDegreeTotalGoal
 PrefixCount.ordinaryQeq1AuxDegreeTotalGoal
@@ -225,6 +233,8 @@ RoundComposite.Concrete
 RoundComposite.Concrete
   .OddModulusToriV4UniformTotalBlocksGoal
 RoundComposite.Concrete
+  .OddModulusToriV4PostUniformBlocksGoal
+RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_construction_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
@@ -232,6 +242,8 @@ RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_uniform_degree_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_v4_uniform_total_blocks
+RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_post_uniform_blocks
 RoundComposite.Concrete
   .odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
 RoundComposite.Concrete
@@ -287,10 +299,15 @@ cyclic-interval residue count theorem
 the bridge to `PrefixCount.UniformColumnDegreeMatrixGoal` through
 `PrefixCount.uniformColumnDegreeMatrixGoal_of_residueCount`.
 The residue count has then been lowered once more to the interval-partition
-identity `PrefixCount.UniformColumnDegreeIntervalPartitionGoal`.  Lean closes
-the pure range-count arithmetic through
-`PrefixCount.uniformColumnDegreeRangeResidueSum_mul` and the bridge
-`PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition`.
+identity `PrefixCount.UniformColumnDegreeIntervalPartitionGoal`.  This identity
+is now Lean-closed as `PrefixCount.uniformColumnDegreeIntervalPartitionGoal`.
+The proof uses shifted cyclic intervals
+`PrefixCount.uniformColumnDegreeShiftedCellSet`, the injectivity and residue
+sum lemmas for each interval cell, and
+`PrefixCount.uniformColumnDegreeShiftedIntervalPartition`; combined with
+`PrefixCount.uniformColumnDegreeRangeResidueSum_mul` and
+`PrefixCount.uniformColumnDegreeResidueCountGoal_of_intervalPartition`, the
+uniform-column component is no longer an external block.
 
 Small-modulus successor branch:
 
@@ -429,8 +446,7 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-The latest endpoint leaves only the interval-partition identity for this
-uniform-column component:
+The interval-partition endpoint was:
 
 ```lean
 def RoundComposite.Concrete.OddModulusToriV4IntervalBlocksGoal : Prop :=
@@ -448,10 +464,29 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
+Since `PrefixCount.uniformColumnDegreeIntervalPartitionGoal` is now Lean-closed,
+the current minimal endpoint removes the entire uniform-column component from
+the requested block packet:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4PostUniformBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
+theorem RoundComposite.Concrete
+  .odd_modulus_tori_all_dimensions_of_v4_post_uniform_blocks
+    (hBlocks : OddModulusToriV4PostUniformBlocksGoal)
+    {d m : Nat} (hd2 : 2 <= d)
+    (hmodd : Odd m) (hm3 : 3 <= m) :
+    Shared.CayleyHamiltonDecomposition d m
+```
+
 Thus the concrete Lean work is exactly:
 
 1. prove the q>=2 signed-column closure theorem;
-2. prove the q=1 cyclic-interval partition and special matching theorems;
+2. prove the q=1 special matching theorem;
 3. prove the prefix-count root-flat canonical return certificate;
 4. prove the base-tail Hall-slack packet lift.
 

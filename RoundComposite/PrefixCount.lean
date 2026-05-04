@@ -2501,6 +2501,218 @@ def UniformColumnDegreeIntervalPartitionGoal : Prop :=
       (∑ n ∈ Finset.range (∑ i : Fin rows, rowDegree i),
         if n % cols = k.val then 1 else 0)
 
+def uniformColumnDegreeIntervalCellMap {cols : Nat}
+    (hcols : 0 < cols) (start d : Nat) (t : Fin d) : Fin cols :=
+  ⟨(start + t.val) % cols, Nat.mod_lt _ hcols⟩
+
+def uniformColumnDegreeIntervalCellSet {cols : Nat}
+    (hcols : 0 < cols) (start d : Nat) : Finset (Fin cols) :=
+  (Finset.univ : Finset (Fin d)).image
+    (uniformColumnDegreeIntervalCellMap hcols start d)
+
+def uniformColumnDegreeShiftedCellSet {rows cols : Nat}
+    (hcols : 0 < cols) (offset : Nat)
+    (rowDegree : Fin rows → Nat) (i : Fin rows) : Finset (Fin cols) :=
+  uniformColumnDegreeIntervalCellSet hcols
+    (offset + uniformColumnDegreePrefix rowDegree i) (rowDegree i)
+
+theorem uniformColumnDegreeIntervalCellMap_injective {cols : Nat}
+    (hcols : 0 < cols) {start d : Nat} (hdle : d ≤ cols) :
+    Function.Injective (uniformColumnDegreeIntervalCellMap hcols start d) := by
+  intro a b hab
+  apply Fin.ext
+  have hval :
+      (start + a.val) % cols = (start + b.val) % cols :=
+    congrArg Fin.val hab
+  have hmod : start + a.val ≡ start + b.val [MOD cols] := hval
+  have habmod : a.val ≡ b.val [MOD cols] :=
+    Nat.ModEq.add_left_cancel' start hmod
+  exact Nat.ModEq.eq_of_lt_of_lt habmod
+    (lt_of_lt_of_le a.is_lt hdle)
+    (lt_of_lt_of_le b.is_lt hdle)
+
+theorem uniformColumnDegreeIntervalCellResidueSum {cols : Nat}
+    (hcols : 0 < cols) {start d : Nat} (hdle : d ≤ cols)
+    (k : Fin cols) :
+    (if k ∈ uniformColumnDegreeIntervalCellSet hcols start d then 1 else 0) =
+      (∑ n ∈ Finset.Ico start (start + d),
+        if n % cols = k.val then (1 : Nat) else 0) := by
+  let fiber : Finset (Fin d) :=
+    (Finset.univ : Finset (Fin d)).filter
+      (fun t => uniformColumnDegreeIntervalCellMap hcols start d t = k)
+  have hfilter :
+      (Finset.Ico start (start + d)).filter (fun n => n % cols = k.val) =
+        fiber.image (fun t => start + t.val) := by
+    ext n
+    simp only [Finset.mem_filter, Finset.mem_Ico, Finset.mem_image]
+    constructor
+    · intro hn
+      rcases hn with ⟨⟨hlo, hhi⟩, hmod⟩
+      have hnd : n - start < d := by omega
+      refine ⟨⟨n - start, hnd⟩, ?_, ?_⟩
+      · simp only [fiber, Finset.mem_filter, Finset.mem_univ, true_and]
+        apply Fin.ext
+        change (start + (n - start)) % cols = k.val
+        have hn' : n = start + (n - start) := by omega
+        calc
+          (start + (n - start)) % cols = n % cols := by rw [← hn']
+          _ = k.val := hmod
+      · change start + (n - start) = n
+        omega
+    · intro hn
+      rcases hn with ⟨t, ht, rfl⟩
+      have htmap : uniformColumnDegreeIntervalCellMap hcols start d t = k := by
+        simpa [fiber] using ht
+      constructor
+      · constructor <;> omega
+      · simpa [uniformColumnDegreeIntervalCellMap] using congrArg Fin.val htmap
+  have hsumIco :
+      (∑ n ∈ Finset.Ico start (start + d),
+        if n % cols = k.val then (1 : Nat) else 0) =
+      ((Finset.Ico start (start + d)).filter
+        (fun n => n % cols = k.val)).card := by
+    rw [Finset.card_filter]
+  rw [hsumIco, hfilter]
+  by_cases hk : k ∈ uniformColumnDegreeIntervalCellSet hcols start d
+  · rcases Finset.mem_image.mp hk with ⟨t, _htuniv, ht⟩
+    have hcard : fiber.card = 1 := by
+      rw [Finset.card_eq_one]
+      refine ⟨t, ?_⟩
+      ext u
+      simp only [fiber, Finset.mem_filter, Finset.mem_univ, true_and,
+        Finset.mem_singleton]
+      constructor
+      · intro hu
+        exact uniformColumnDegreeIntervalCellMap_injective hcols hdle
+          (hu.trans ht.symm)
+      · intro hu
+        subst u
+        exact ht
+    rw [if_pos hk]
+    rw [Finset.card_image_of_injective]
+    · exact hcard.symm
+    · intro a b hab
+      apply Fin.ext
+      exact Nat.add_left_cancel hab
+  · have hempty : fiber = ∅ := by
+      rw [Finset.eq_empty_iff_forall_notMem]
+      intro t ht
+      apply hk
+      exact Finset.mem_image.mpr ⟨t, by simp, by simpa [fiber] using ht⟩
+    rw [if_neg hk, hempty]
+    simp
+
+theorem uniformColumnDegreePrefix_succ {n : Nat}
+    (rowDegree : Fin (n + 1) → Nat) (i : Fin n) :
+    uniformColumnDegreePrefix rowDegree i.succ =
+      rowDegree 0 +
+        uniformColumnDegreePrefix (fun j : Fin n => rowDegree j.succ) i := by
+  unfold uniformColumnDegreePrefix
+  rw [Fin.sum_univ_succ]
+  simp [Fin.val_succ]
+
+theorem uniformColumnDegreeShiftedIntervalPartition {rows cols : Nat}
+    (rowDegree : Fin rows → Nat) (hcols : 0 < cols)
+    (hrowLe : ∀ i : Fin rows, rowDegree i ≤ cols)
+    (offset : Nat) (k : Fin cols) :
+    (∑ i : Fin rows,
+      if k ∈ uniformColumnDegreeShiftedCellSet hcols offset rowDegree i
+      then 1 else 0) =
+    (∑ n ∈ Finset.Ico offset
+        (offset + ∑ i : Fin rows, rowDegree i),
+      if n % cols = k.val then (1 : Nat) else 0) := by
+  induction rows generalizing offset k with
+  | zero =>
+      simp
+  | succ n ih =>
+      let tail : Fin n → Nat := fun i => rowDegree i.succ
+      let f : Nat → Nat := fun n => if n % cols = k.val then (1 : Nat) else 0
+      have htailLe : ∀ i : Fin n, tail i ≤ cols := by
+        intro i
+        exact hrowLe i.succ
+      have hfirst :=
+        uniformColumnDegreeIntervalCellResidueSum
+          hcols (hrowLe 0) (start := offset) (k := k)
+      have htail := ih tail htailLe (offset + rowDegree 0) k
+      have htailSet :
+          (∑ i : Fin n,
+            if k ∈ uniformColumnDegreeShiftedCellSet hcols offset
+              rowDegree i.succ then 1 else 0) =
+          (∑ i : Fin n,
+            if k ∈ uniformColumnDegreeShiftedCellSet hcols
+              (offset + rowDegree 0) tail i then 1 else 0) := by
+        apply Finset.sum_congr rfl
+        intro i _hi
+        have hstart :
+            offset + uniformColumnDegreePrefix rowDegree i.succ =
+              (offset + rowDegree 0) +
+                uniformColumnDegreePrefix tail i := by
+          dsimp [tail]
+          rw [uniformColumnDegreePrefix_succ rowDegree i]
+          omega
+        simp [uniformColumnDegreeShiftedCellSet,
+          uniformColumnDegreeIntervalCellSet,
+          uniformColumnDegreeIntervalCellMap, tail, hstart]
+      have hsumRows :
+          (∑ i : Fin (n + 1), rowDegree i) =
+            rowDegree 0 + ∑ i : Fin n, tail i := by
+        rw [Fin.sum_univ_succ]
+      have hcombine :
+          (∑ n_1 ∈ Finset.Ico offset (offset + rowDegree 0), f n_1) +
+            (∑ n_1 ∈ Finset.Ico (offset + rowDegree 0)
+              ((offset + rowDegree 0) + ∑ i : Fin n, tail i), f n_1) =
+          (∑ n_1 ∈ Finset.Ico offset
+            (offset + (rowDegree 0 + ∑ i : Fin n, tail i)), f n_1) := by
+        have hmn : offset ≤ offset + rowDegree 0 := by omega
+        have hnk :
+            offset + rowDegree 0 ≤
+              (offset + rowDegree 0) + ∑ i : Fin n, tail i := by omega
+        have h := Finset.sum_Ico_consecutive f hmn hnk
+        simpa [Nat.add_assoc] using h
+      calc
+        (∑ i : Fin (n + 1),
+          if k ∈ uniformColumnDegreeShiftedCellSet hcols offset
+            rowDegree i then 1 else 0)
+            = (if k ∈ uniformColumnDegreeShiftedCellSet hcols offset
+                  rowDegree 0 then 1 else 0) +
+                (∑ i : Fin n,
+                  if k ∈ uniformColumnDegreeShiftedCellSet hcols offset
+                    rowDegree i.succ then 1 else 0) := by
+                rw [Fin.sum_univ_succ]
+        _ = (if k ∈ uniformColumnDegreeIntervalCellSet hcols offset
+                  (rowDegree 0) then 1 else 0) +
+                (∑ i : Fin n,
+                  if k ∈ uniformColumnDegreeShiftedCellSet hcols
+                    (offset + rowDegree 0) tail i then 1 else 0) := by
+                rw [htailSet]
+                have hprefix0 : uniformColumnDegreePrefix rowDegree 0 = 0 := by
+                  unfold uniformColumnDegreePrefix
+                  simp
+                simp [uniformColumnDegreeShiftedCellSet,
+                  uniformColumnDegreeIntervalCellSet,
+                  uniformColumnDegreeIntervalCellMap, hprefix0]
+        _ = (∑ n_1 ∈ Finset.Ico offset (offset + rowDegree 0), f n_1) +
+                (∑ n_1 ∈ Finset.Ico (offset + rowDegree 0)
+                  ((offset + rowDegree 0) + ∑ i : Fin n, tail i), f n_1) := by
+                rw [hfirst]
+                rw [htail]
+        _ = (∑ n_1 ∈ Finset.Ico offset
+              (offset + (rowDegree 0 + ∑ i : Fin n, tail i)), f n_1) :=
+                hcombine
+        _ = (∑ n_1 ∈ Finset.Ico offset
+              (offset + ∑ i : Fin (n + 1), rowDegree i), f n_1) := by
+                rw [hsumRows]
+
+theorem uniformColumnDegreeIntervalPartitionGoal :
+    UniformColumnDegreeIntervalPartitionGoal := by
+  intro rows cols rowDegree hcols hrowLe k
+  have h := uniformColumnDegreeShiftedIntervalPartition
+    rowDegree hcols hrowLe 0 k
+  simpa [uniformColumnDegreeShiftedCellSet,
+    uniformColumnDegreeIntervalCellSet,
+    uniformColumnDegreeIntervalCellMap,
+    uniformColumnDegreeCellSet, uniformColumnDegreeCellMap] using h
+
 theorem uniformColumnDegreeBlockResidueSum
     (cols h : Nat) (k : Fin cols) :
     (∑ n ∈ Finset.Ico (h * cols) (h * cols + cols),

@@ -1362,6 +1362,12 @@ def OddModulusToriV4IntervalBlocksGoal : Prop :=
   PrefixCountRootFlatCanonicalReturnGoal ∧
   OddCoreSmallModulusSlackPacketLiftGoal
 
+def OddModulusToriV4PostUniformBlocksGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedClosureGoal ∧
+  PrefixCount.OrdinaryQeq1SpecialMatchingGoal ∧
+  PrefixCountRootFlatCanonicalReturnGoal ∧
+  OddCoreSmallModulusSlackPacketLiftGoal
+
 theorem odd_modulus_tori_all_dimensions_of_v4_construction_blocks
     (hBlocks : OddModulusToriV4ConstructionBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1463,6 +1469,18 @@ theorem odd_modulus_tori_all_dimensions_of_qeq1IntervalPartition
       hQeq1Partition)
     hQeq1Match hReturn hSmallPacket hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_qeq1PostUniform
+    (hQge2Closure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal)
+    (hQeq1Match : PrefixCount.OrdinaryQeq1SpecialMatchingGoal)
+    (hReturn : PrefixCountRootFlatCanonicalReturnGoal)
+    (hSmallPacket : OddCoreSmallModulusSlackPacketLiftGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_qeq1IntervalPartition
+    hQge2Closure PrefixCount.uniformColumnDegreeIntervalPartitionGoal
+    hQeq1Match hReturn hSmallPacket hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_degree_matching_blocks
     (hBlocks : OddModulusToriV4DegreeMatchingBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -1535,6 +1553,17 @@ theorem odd_modulus_tori_all_dimensions_of_v4_interval_blocks
     odd_modulus_tori_all_dimensions_of_qeq1IntervalPartition
       hQge2Closure hQeq1Partition hQeq1Match
       hReturn hSmallPacket hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_post_uniform_blocks
+    (hBlocks : OddModulusToriV4PostUniformBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m := by
+  rcases hBlocks with
+    ⟨hQge2Closure, hQeq1Match, hReturn, hSmallPacket⟩
+  exact
+    odd_modulus_tori_all_dimensions_of_qeq1PostUniform
+      hQge2Closure hQeq1Match hReturn hSmallPacket hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_qge2Matrix_qeq1Matrix_geometry_and_slackPacketLift
     (hQge2Matrix : PrefixCount.OrdinaryQge2SignedMatrixGoal)
