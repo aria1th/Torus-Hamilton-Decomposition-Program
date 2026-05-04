@@ -137,6 +137,32 @@ theorem prefixCountPairFirstHitLastIndicatorSum :
     then (1 : ZMod m) else 0) =
     (-1 : ZMod m) ^ n
 
+abbrev prefixCountPcNoZero
+abbrev prefixCountPcSomeZero
+abbrev prefixCountPcExactLastZero
+abbrev prefixCountPcHitBeforeLastZero
+
+theorem prefixCountPcNoZeroIndicatorSum :
+  (sum y : Fin n -> ZMod m,
+    if prefixCountPcNoZero y then (1 : ZMod m) else 0) =
+    (-1 : ZMod m) ^ n
+
+theorem prefixCountPcSomeZeroIndicatorSum :
+  0 < n ->
+  (sum y : Fin n -> ZMod m,
+    if prefixCountPcSomeZero y then (1 : ZMod m) else 0) =
+    -((-1 : ZMod m) ^ n)
+
+theorem prefixCountPcExactLastZeroIndicatorSum :
+  (sum y : Fin (k + 1) -> ZMod m,
+    if prefixCountPcExactLastZero y then (1 : ZMod m) else 0) =
+    -((-1 : ZMod m) ^ (k + 1))
+
+theorem prefixCountPcHitBeforeLastZeroIndicatorSum :
+  (sum y : Fin (k + 1) -> ZMod m,
+    if prefixCountPcHitBeforeLastZero y then (1 : ZMod m) else 0) =
+    0
+
 theorem prefixCountFirstHitReturnBaseStep_sum_fin_iterate :
   (sum u : Fin m,
     F (((prefixCountFirstHitReturnBaseStep C c)^[u.val]) (0 : ZMod m))) =
@@ -177,6 +203,8 @@ listed above: increment-dependency plus full bijectivity of `F` makes the
 actual `skewFiberIterate`.
 The two pair-count lemmas above are intended to match the local split where the
 last coordinate is either free or is the first hit.
+The named `pc...` predicates and their four pure finite first-hit counts from
+the completed response are now Lean-closed.
 The signed coefficient and layer-symbol matrix sum from the completed response
 are also now Lean-closed; the only large remaining return-tail piece is the
 actual low-residual reindexing/local hit-condition theorem.

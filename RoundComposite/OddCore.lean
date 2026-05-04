@@ -881,6 +881,138 @@ theorem prefixCountPairFirstHitLastIndicatorSum
     _ = (-1 : ZMod m) ^ n :=
           prefixCountNoHitIndicatorSum (m := m) (n := n) t
 
+abbrev prefixCountPcNoZero {m n : Nat}
+    (y : Fin n → ZMod m) : Prop :=
+  ∀ i : Fin n, y i ≠ 0
+
+abbrev prefixCountPcSomeZero {m n : Nat}
+    (y : Fin n → ZMod m) : Prop :=
+  ∃ i : Fin n, y i = 0
+
+abbrev prefixCountPcExactLastZero {m k : Nat}
+    (y : Fin (k + 1) → ZMod m) : Prop :=
+  (∀ i : Fin k, y i.castSucc ≠ 0) ∧ y (Fin.last k) = 0
+
+abbrev prefixCountPcHitBeforeLastZero {m k : Nat}
+    (y : Fin (k + 1) → ZMod m) : Prop :=
+  ∃ i : Fin k, y i.castSucc = 0
+
+theorem prefixCountPcNoZeroIndicatorSum
+    {m n : Nat} [NeZero m] :
+    (∑ y : Fin n → ZMod m,
+        if prefixCountPcNoZero y then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  simpa [prefixCountPcNoZero] using
+    prefixCountNoHitIndicatorSum (m := m) (n := n) (0 : ZMod m)
+
+theorem prefixCountPcSomeZeroIndicatorSum
+    {m n : Nat} [NeZero m] (hn : 0 < n) :
+    (∑ y : Fin n → ZMod m,
+        if prefixCountPcSomeZero y then (1 : ZMod m) else 0) =
+      -((-1 : ZMod m) ^ n) := by
+  simpa [prefixCountPcSomeZero] using
+    prefixCountHasHitIndicatorSum (m := m) (n := n) hn (0 : ZMod m)
+
+theorem prefixCountPcExactLastZeroIndicatorSum
+    {m k : Nat} [NeZero m] :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if prefixCountPcExactLastZero y then (1 : ZMod m) else 0) =
+      -((-1 : ZMod m) ^ (k + 1)) := by
+  classical
+  let e := Shared.zmodVectorSnocEquiv k m
+  calc
+    (∑ y : Fin (k + 1) → ZMod m,
+        if prefixCountPcExactLastZero y then (1 : ZMod m) else 0)
+        =
+        ∑ p : (Fin k → ZMod m) × ZMod m,
+          if (∀ i : Fin k, p.1 i ≠ 0) ∧ p.2 = 0
+          then (1 : ZMod m) else 0 := by
+          exact Fintype.sum_equiv e
+            (fun y =>
+              if prefixCountPcExactLastZero y then (1 : ZMod m) else 0)
+            (fun p =>
+              if (∀ i : Fin k, p.1 i ≠ 0) ∧ p.2 = 0
+              then (1 : ZMod m) else 0)
+            (by
+              intro y
+              have hp :
+                  ((∀ i : Fin k, y i.castSucc ≠ 0) ∧
+                      y (Fin.last k) = 0) ↔
+                    ((∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0) := by
+                constructor
+                · intro h
+                  exact ⟨fun i => by simpa [Fin.init] using h.1 i, h.2⟩
+                · intro h
+                  exact ⟨fun i => by simpa [Fin.init] using h.1 i, h.2⟩
+              by_cases hP :
+                  (∀ i : Fin k, y i.castSucc ≠ 0) ∧
+                    y (Fin.last k) = 0
+              · have hQ :
+                    (∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0 := hp.mp hP
+                simp [e, prefixCountPcExactLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ]
+              · have hQ :
+                    ¬ ((∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0) := by
+                  intro hQ
+                  exact hP (hp.mpr hQ)
+                simp [e, prefixCountPcExactLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ])
+    _ = (-1 : ZMod m) ^ k :=
+          prefixCountPairFirstHitLastIndicatorSum
+            (m := m) (n := k) (0 : ZMod m)
+    _ = -((-1 : ZMod m) ^ (k + 1)) := by
+          rw [pow_succ]
+          ring
+
+theorem prefixCountPcHitBeforeLastZeroIndicatorSum
+    {m k : Nat} [NeZero m] :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if prefixCountPcHitBeforeLastZero y then (1 : ZMod m) else 0) =
+      0 := by
+  classical
+  let e := Shared.zmodVectorSnocEquiv k m
+  calc
+    (∑ y : Fin (k + 1) → ZMod m,
+        if prefixCountPcHitBeforeLastZero y then (1 : ZMod m) else 0)
+        =
+        ∑ p : (Fin k → ZMod m) × ZMod m,
+          if (∃ i : Fin k, p.1 i = 0)
+          then (1 : ZMod m) else 0 := by
+          exact Fintype.sum_equiv e
+            (fun y =>
+              if prefixCountPcHitBeforeLastZero y then (1 : ZMod m) else 0)
+            (fun p =>
+              if (∃ i : Fin k, p.1 i = 0)
+              then (1 : ZMod m) else 0)
+            (by
+              intro y
+              have hp :
+                  (∃ i : Fin k, y i.castSucc = 0) ↔
+                    ∃ i : Fin k, Fin.init y i = 0 := by
+                constructor
+                · intro h
+                  rcases h with ⟨i, hi⟩
+                  exact ⟨i, by simpa [Fin.init] using hi⟩
+                · intro h
+                  rcases h with ⟨i, hi⟩
+                  exact ⟨i, by simpa [Fin.init] using hi⟩
+              by_cases hP : ∃ i : Fin k, y i.castSucc = 0
+              · have hQ : ∃ i : Fin k, Fin.init y i = 0 := hp.mp hP
+                simp [e, prefixCountPcHitBeforeLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ]
+              · have hQ : ¬ ∃ i : Fin k, Fin.init y i = 0 := by
+                  intro hQ
+                  exact hP (hp.mpr hQ)
+                simp [e, prefixCountPcHitBeforeLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ])
+    _ = 0 :=
+          prefixCountPairFreeLastIndicatorSum_zero
+            (m := m) (n := k)
+            (P := fun x : Fin k → ZMod m => ∃ i : Fin k, x i = 0)
+
 def prefixCountCanonicalDir {d m : Nat} [NeZero m]
     {M : Matrix (Fin d) (Fin d) Nat}
     (rho : ZMod m → PrefixCountRootState d m → Fin d)

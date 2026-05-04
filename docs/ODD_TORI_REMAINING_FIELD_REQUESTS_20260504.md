@@ -341,6 +341,14 @@ prefixCountNoHitIndicatorSum
 prefixCountHasHitIndicatorSum
 prefixCountPairFreeLastIndicatorSum_zero
 prefixCountPairFirstHitLastIndicatorSum
+prefixCountPcNoZero
+prefixCountPcSomeZero
+prefixCountPcExactLastZero
+prefixCountPcHitBeforeLastZero
+prefixCountPcNoZeroIndicatorSum
+prefixCountPcSomeZeroIndicatorSum
+prefixCountPcExactLastZeroIndicatorSum
+prefixCountPcHitBeforeLastZeroIndicatorSum
 prefixCountFirstHitReturnBaseStep_sum_fin_iterate
 prefixCountFirstHitReturnBaseStep_sum_range_iterate
 Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
@@ -353,6 +361,8 @@ The raw no-hit/has-hit cardinalities modulo `m`, the base-orbit `u`-sum
 reindexing, and the projected-low-prefix bijections are now Lean-closed.
 The pair-count lemmas also cover the local cases where the final coordinate is
 free, or is the first hit after a no-hit prefix.
+The named `pc...` predicates from the GPT response and their pure finite
+first-hit count lemmas are now Lean-closed.
 
 ### Already Lean-Closed
 
