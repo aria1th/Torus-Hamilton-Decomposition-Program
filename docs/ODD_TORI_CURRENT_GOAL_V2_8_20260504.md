@@ -214,6 +214,17 @@ theorem RoundComposite.ActiveHall.exists_balanced_unit_residues_fin
         forall i : Fin d, IsUnit (u i)
 ```
 
+and the universal active-symbol residue spec:
+
+```lean
+noncomputable def RoundComposite.ActiveHall.universalUnitResidueSpec
+    (m d n : Nat) (u : Fin d -> ZMod m) :
+    ActiveHall.ResidueSpec m (n + 2) (Fin d)
+
+theorem RoundComposite.ActiveHall.universalUnitResidueSpec_rowCompatible
+theorem RoundComposite.ActiveHall.universalUnitResidueSpec_colCompatible
+```
+
 Closed support added for the successor arithmetic:
 
 ```lean

@@ -350,6 +350,75 @@ theorem exists_balanced_unit_residues_fin {d m : Nat}
   · intro i
     exact balancedUnitResidues_isUnit hmodd (e i)
 
+noncomputable def universalUnitResidueSpec (m d n : Nat)
+    (u : Fin d → ZMod m) : ResidueSpec m (n + 2) (Fin d) where
+  target := fun c σ =>
+    if σ.val = 0 then u c else if σ.val = 1 then -u c else 0
+
+theorem universalUnitResidueSpec_row_sum {m d n : Nat}
+    (u : Fin d → ZMod m) (c : Fin d) :
+    (∑ σ : Fin (n + 2),
+      (universalUnitResidueSpec m d n u).target c σ) = 0 := by
+  induction n with
+  | zero =>
+      rw [Fin.sum_univ_two]
+      simp [universalUnitResidueSpec]
+  | succ n ih =>
+      change (∑ σ : Fin ((n + 2) + 1),
+        (universalUnitResidueSpec m d (n + 1) u).target c σ) = 0
+      rw [Fin.sum_univ_castSucc]
+      have hcast :
+          (∑ i : Fin (n + 2),
+            (universalUnitResidueSpec m d (n + 1) u).target c i.castSucc)
+          =
+          (∑ i : Fin (n + 2),
+            (universalUnitResidueSpec m d n u).target c i) := by
+        apply Finset.sum_congr rfl
+        intro i _hi
+        by_cases h0 : i.val = 0
+        · simp [universalUnitResidueSpec, h0]
+        · by_cases h1 : i.val = 1
+          · simp [universalUnitResidueSpec, h1]
+          · simp [universalUnitResidueSpec, h1]
+      have hlast :
+          (universalUnitResidueSpec m d (n + 1) u).target c
+            (Fin.last (n + 2)) = 0 := by
+        simp [universalUnitResidueSpec]
+      rw [hcast, hlast, ih]
+      simp
+
+theorem universalUnitResidueSpec_col_sum {m d n : Nat}
+    {u : Fin d → ZMod m} (hu : (∑ c : Fin d, u c) = 0)
+    (σ : Fin (n + 2)) :
+    (∑ c : Fin d, (universalUnitResidueSpec m d n u).target c σ) = 0 := by
+  by_cases hs0 : σ = 0
+  · subst σ
+    simp [universalUnitResidueSpec, hu]
+  · by_cases hs1 : σ = 1
+    · subst σ
+      simp [universalUnitResidueSpec, hu]
+    · have h1 : σ.val ≠ 1 := by
+        intro hval
+        exact hs1 (Fin.ext hval)
+      simp [universalUnitResidueSpec, hs0, h1]
+
+theorem universalUnitResidueSpec_rowCompatible
+    {m d n : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (I : Incidence (n + 2) X (Fin d)) (u : Fin d → ZMod m)
+    (hColor : ∀ c : Fin d, (I.colorDegree c : ZMod m) = 0) :
+    (universalUnitResidueSpec m d n u).RowCompatible I := by
+  intro c
+  rw [hColor c, universalUnitResidueSpec_row_sum]
+
+theorem universalUnitResidueSpec_colCompatible
+    {m d n : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (I : Incidence (n + 2) X (Fin d)) {u : Fin d → ZMod m}
+    (hu : (∑ c : Fin d, u c) = 0)
+    (hX : (Fintype.card X : ZMod m) = 0) :
+    (universalUnitResidueSpec m d n u).ColCompatible I := by
+  intro σ
+  rw [hX, universalUnitResidueSpec_col_sum hu σ]
+
 namespace CountMatrix
 
 def cutMass {T : Nat} {X C : Type*}
