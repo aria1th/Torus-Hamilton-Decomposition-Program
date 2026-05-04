@@ -435,6 +435,10 @@ theorem RoundComposite.ActiveHall.Incidence
   .cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
 theorem RoundComposite.ActiveHall.Incidence
   .exists_choiceDegree_bijective_token_matching
+structure RoundComposite.ActiveHall.CountMatrix.ColumnFilling
+theorem RoundComposite.ActiveHall.CountMatrix
+  .exists_columnFilling_of_hallCuts
+def RoundComposite.ActiveHall.Symboling.toColumnFilling
 ```
 
 Remaining Active Hall proof obligation:
@@ -452,3 +456,10 @@ Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
 ```
 
 for every nonempty proper color cut `U` and nonempty lower-symbol cut `S`.
+
+Plain Hall matching now gives the weaker `CountMatrix.ColumnFilling`: each
+symbol column can be filled with active colors and the prescribed column
+counts.  This does not enforce the row-Latin condition that, at each vertex,
+the `T` chosen colors are all distinct.  The remaining theorem is exactly the
+Hoffman/capacitated strengthening that upgrades this column-wise relaxation to
+a genuine `Symboling`.

@@ -73,6 +73,9 @@ theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
 Also available:
 
 ```lean
+structure CountMatrix.ColumnFilling
+theorem CountMatrix.exists_columnFilling_of_hallCuts
+def Symboling.toColumnFilling
 Incidence.tokenLoadOn
 Incidence.tokenLoadOn_eq_choiceHitCountOn
 Incidence.tokenLoadOn_eq_sum_choiceDegreeOn
@@ -84,6 +87,13 @@ Incidence.tokenLoadOn_colors_empty
 Incidence.tokenLoadOn_colors_univ
 eraseLastHallCutsTokenLinearChoice_zero
 ```
+
+`CountMatrix.exists_columnFilling_of_hallCuts` is the strongest result that
+follows immediately from plain Hall matching: each symbol column can be filled
+with active colors and the prescribed column counts.  This relaxation does not
+force the colors chosen at a fixed vertex to be distinct, so it is not yet a
+`Symboling`.  The remaining theorem is the capacitated/Hoffman strengthening
+that upgrades column-wise fillings to row-Latin symbolings.
 
 ## Mathematical Request
 

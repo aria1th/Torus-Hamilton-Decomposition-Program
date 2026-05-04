@@ -1598,6 +1598,40 @@ theorem choiceDegree_of_bijective_token_matching
               _ = M.val c σ := by
                       simp
 
+structure ColumnFilling {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) where
+  color : X → Fin T → C
+  active : ∀ x : X, ∀ σ : Fin T, color x σ ∈ I.active x
+  count_eq :
+    ∀ c : C, ∀ σ : Fin T,
+      Incidence.choiceDegree (fun x : X => color x σ) c = M.val c σ
+
+theorem exists_columnFilling_of_hallCuts
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    Nonempty M.ColumnFilling := by
+  classical
+  have hmatch :
+      ∀ σ : Fin T,
+        ∃ f : (Sigma fun c : C => Fin (M.val c σ)) ≃ X,
+          ∀ q : Sigma fun c : C => Fin (M.val c σ),
+            q.1 ∈ I.active (f q) := by
+    intro σ
+    exact M.exists_singleSymbol_bijective_token_matching hHall σ
+  choose f hfActive using hmatch
+  exact ⟨{
+    color := fun x σ => ((f σ).symm x).1
+    active := by
+      intro x σ
+      simpa using hfActive σ ((f σ).symm x)
+    count_eq := by
+      intro c σ
+      exact M.choiceDegree_of_bijective_token_matching σ (f σ) c
+  }⟩
+
 theorem eraseChoice_colorDegree_add_val_of_bijective_token_matching
     {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -2185,6 +2219,16 @@ def Realizes {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) (M : C → Fin T → Nat) : Prop :=
   ∀ c σ, Φ.count c σ = M c σ
+
+def toColumnFilling {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) (M : CountMatrix I)
+    (hReal : Φ.Realizes M.val) : M.ColumnFilling where
+  color := Φ.color
+  active := fun x σ => Φ.color_mem_active x σ
+  count_eq := by
+    intro c σ
+    rw [← Φ.count_eq_choiceDegree c σ, hReal c σ]
 
 def HasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
