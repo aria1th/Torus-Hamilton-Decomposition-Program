@@ -3,16 +3,16 @@
 Date: 2026-05-04.
 
 This note is a proof-request companion to
-`docs/ODD_TORI_MINIMAL_BLOCKS_COMPLETION_AUDIT_20260504.md`.  It gives the
-three exact remaining Lean fields for the current minimal endpoint and the
-recommended prompt for asking a separate mathematical proof attempt.
+`docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`.  It gives the three exact
+remaining Lean fields for the current preferred endpoint and the recommended
+prompt for asking a separate mathematical proof attempt.
 
 Current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
-    (hBlocks : OddModulusToriV4MinimalBlocksGoal)
+  .odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit_blocks
+    (hBlocks : OddModulusToriV4ReturnTailOrbitBlocksGoal)
     {d m : Nat} (hd2 : 2 <= d)
     (hmodd : Odd m) (hm3 : 3 <= m) :
     Shared.CayleyHamiltonDecomposition d m
@@ -22,7 +22,7 @@ Remaining fields:
 
 ```lean
 PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
-PrefixCountRootFlatCanonicalScheduleCriterionGoal
+PrefixCountFirstHitReturnTailMonodromyOrbitGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
@@ -31,7 +31,7 @@ OddSuccessorSmallModulusBaseTailGoal
 ### Files To Read
 
 1. `RoundComposite/PrefixCount.lean`
-2. `docs/ODD_TORI_MINIMAL_BLOCKS_COMPLETION_AUDIT_20260504.md`
+2. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
 3. `docs/GPT55_PRO_SIGNED_TRANSPORT_COUNT_BRANCH_RESPONSE_20260503.md`
 
 ### Exact Lean Target
@@ -161,65 +161,177 @@ Please provide either:
 The most useful output is a sequence of auxiliary Lean theorem statements with
 proof outlines and exact points where existing `PrefixCount` lemmas apply.
 
-## Request 2: Root-Flat Canonical Schedule Criterion
+## Request 2: First-Hit Return-Tail Orbit / Rank Route
 
 ### Files To Read
 
-1. `Shared/RootFlat.lean`
-2. `RoundComposite/OddCore.lean`
-3. `RoundComposite/PrefixCount.lean`
-4. `docs/ODD_TORI_MINIMAL_BLOCKS_COMPLETION_AUDIT_20260504.md`
+1. `RoundComposite/OddCore.lean`
+2. `RoundComposite/PrefixCount.lean`
+3. `Shared/Monodromy.lean`
+4. `Shared/RankCycle.lean`
+5. `Shared/TorusCayley.lean`
+6. `Shared/RootFlat.lean`
+7. `docs/FIRST_HIT_RETURN_TAIL_MONODROMY_REQUEST_20260504.md`
+8. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
 
 ### Exact Lean Target
 
+The preferred target is the orbit/transitivity part of the first-hit
+return-tail monodromy:
+
 ```lean
 def RoundComposite.Concrete
-  .PrefixCountRootFlatCanonicalScheduleCriterionGoal : Prop :=
-  ∀ {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+  .PrefixCountFirstHitReturnTailMonodromyOrbitGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d)
       {C : PrefixCount.Parts d},
-    Odd d → 5 ≤ d → Odd m → d ≤ m →
-    C.Admissible m →
-    PrefixCount.LayerPermCounts d m (C.toMatrix hd2) →
-    ∃ S : Shared.RootFlatSchedule
-        (Fin d) (Fin d) (PrefixCountRootState d m) m,
-      S.step = prefixCountRootStep d m ∧
-      S.rowLatin ∧ S.layerBijective ∧ S.returnsSingleCycle
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d, forall tail1 tail2 : Fin (d - 2) -> ZMod m,
+      exists n : Nat,
+        (prefixCountFirstHitReturnTailMonodromy hd2 L c)^[n] tail1 =
+          tail2
+```
+
+If an odometer coordinate is more natural, either of the following sufficient
+targets is preferable:
+
+```lean
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailRankGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      exists rank :
+          ((Fin (d - 2) -> ZMod m) -> ZMod (m ^ (d - 2))),
+        Function.Bijective rank /\
+        forall tail : Fin (d - 2) -> ZMod m,
+          rank (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
+            rank tail + 1
+
+def RoundComposite.Concrete
+  .PrefixCountFirstHitReturnTailRankEquivGoal : Prop :=
+  forall {d m : Nat} [NeZero m] (hd2 : 2 <= d) {C : PrefixCount.Parts d},
+    Odd d -> 5 <= d -> Odd m -> d <= m ->
+    C.Admissible m ->
+    (L : PrefixCount.LayerPermCounts d m (C.toMatrix hd2)) ->
+    forall c : Fin d,
+      exists e :
+          ((Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))),
+        forall tail : Fin (d - 2) -> ZMod m,
+          e (prefixCountFirstHitReturnTailMonodromy hd2 L c tail) =
+            e tail + 1
 ```
 
 ### Already Lean-Closed
 
-The generic lift is done.  If this target supplies a schedule with the stated
-properties, Lean converts it to the return certificate and then to the torus
-Hamilton decomposition:
+Lean already builds the first-hit schedule, proves the row-Latin and
+layer-bijective parts, reduces the root-flat return to head-tail monodromy, and
+proves bijectivity of the tail map.  The remaining request is only the orbit
+or odometer part.
+
+Useful closed bridges:
 
 ```lean
-prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion
-Shared.rootFlatLayeredDecomposition_of_schedule
-standardCayleySolved_of_rootFlatLayered_standardStep
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromy_bijective :
+    Function.Bijective (prefixCountFirstHitReturnTailMonodromy hd2 L c)
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyGoal_of_orbit
+    (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal) :
+    PrefixCountFirstHitReturnTailMonodromyGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromyOrbitGoal_of_rank
+    (hRank : PrefixCountFirstHitReturnTailRankGoal) :
+    PrefixCountFirstHitReturnTailMonodromyOrbitGoal
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailRankGoal_of_rankEquiv
+    (hEquiv : PrefixCountFirstHitReturnTailRankEquivGoal) :
+    PrefixCountFirstHitReturnTailRankGoal
+
+theorem Shared.single_cycle_of_zmod_rank
+    (f : alpha -> alpha) (rank : alpha -> ZMod N)
+    (hrank : Function.Bijective rank)
+    (hstep : forall x, rank (f x) = rank x + 1) :
+    Shared.IsSingleCycleMap f
+
+theorem Shared.single_cycle_of_zmod_rank_equiv
+    (f : alpha -> alpha) (rank : alpha ≃ ZMod N)
+    (hstep : forall x, rank (f x) = rank x + 1) :
+    Shared.IsSingleCycleMap f
+
+noncomputable def Shared.zmodVectorPowerEquiv (n m : Nat) [NeZero m] :
+    (Fin n -> ZMod m) ≃ ZMod (m ^ n)
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnTailMonodromy_eq_fiberIterate :
+    prefixCountFirstHitReturnTailMonodromy hd2 L c =
+      Shared.skewFiberIterate
+        (prefixCountFirstHitReturnBaseStep C c)
+        (prefixCountFirstHitReturnFiberStep hd2 L c)
+        m (0 : ZMod m)
+
+theorem RoundComposite.Concrete
+  .prefixCountFirstHitReturnFiberStep_apply :
+    prefixCountFirstHitReturnFiberStep hd2 L c z tail j =
+      tail j +
+        ∑ t ∈ Finset.range m,
+          if (prefixCountLambdaRho d
+              (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t
+                  ((prefixCountRootStateHeadTailEquiv d m hd2).symm
+                    (z, tail))))
+              (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val
+              = j.val + 1
+          then (1 : ZMod m) else 0
 ```
 
 ### Prompt
 
-Construct the canonical root-flat schedule from admissible prefix counts and a
-layer permutation decomposition.  The schedule must use
+Prove the high-modulus first-hit return-tail orbit theorem
+`PrefixCountFirstHitReturnTailMonodromyOrbitGoal`.  It is also sufficient to
+prove either rank target above.
+
+The proof should focus on the tail map
 
 ```lean
-S.step = prefixCountRootStep d m
+prefixCountFirstHitReturnTailMonodromy hd2 L c :
+  (Fin (d - 2) -> ZMod m) -> (Fin (d - 2) -> ZMod m)
 ```
 
-and prove:
+for fixed color `c`.  Lean already proves bijectivity, so it is enough to show
+that every tail reaches every other tail under iteration.  A rank proof should
+construct an odometer coordinate
 
-1. `S.rowLatin`;
-2. `S.layerBijective`;
-3. `S.returnsSingleCycle`.
+```lean
+rank :
+  (Fin (d - 2) -> ZMod m) -> ZMod (m ^ (d - 2))
+```
 
-The expected proof should identify the exact rule assigning directions from the
-prefix-count columns, show that `LayerPermCounts` supplies the layer-wise Latin
-permutations, and prove the first-return maps are single cycles from the
-primitive row conditions in `C.Admissible`.
+or equivalence
 
-Please avoid reproving the final torus lift; `Shared/RootFlat.lean` already
-handles that once the schedule properties are established.
+```lean
+e : (Fin (d - 2) -> ZMod m) ≃ ZMod (m ^ (d - 2))
+```
+
+such that the monodromy increments that coordinate by `1`.
+
+The expected mathematical route is triangular/skew:
+
+1. choose a tail-coordinate order compatible with the first-hit rule;
+2. prove each next coordinate is a skew extension over the previous prefix;
+3. compute the total carry from the primitive row data in `C.Admissible`;
+4. use the existing `Shared/Monodromy.lean` and `Shared/RankCycle.lean`
+   cycle criteria.
+
+Do not spend effort on row-Latin, layer bijectivity, root-flat schedule
+construction, or the final torus lift.  Those bridges are already Lean-closed;
+the open field is exactly the tail orbit/rank argument.
 
 ## Request 3: Successor Small-Modulus Base-Tail Branch
 
@@ -231,7 +343,7 @@ handles that once the schedule properties are established.
 4. `Shared/RootFlat.lean`
 5. `docs/ACTIVE_HALL_TOKEN_LINEAR_REQUEST_20260504.md`
 6. `docs/GPT55_PRO_ACTIVE_HALL_TOKEN_LINEAR_RESPONSE_20260504.md`
-7. `docs/ODD_TORI_MINIMAL_BLOCKS_COMPLETION_AUDIT_20260504.md`
+7. `docs/ODD_TORI_CURRENT_GOAL_V3_3_20260504.md`
 
 ### Exact Lean Target
 
@@ -301,8 +413,8 @@ the successor case: Lean already proves these via `successor_hall_slack` and
 
 The likely fastest order is:
 
-1. Root-flat schedule criterion, if the canonical return proof from the paper is
-   already sufficiently explicit.
+1. First-hit return-tail rank/equivalence, if the canonical return proof from
+   the paper already contains an explicit odometer.
 2. q>=2 proper-cut signed closure, if a standard finite flow theorem can be
    imported or stated cleanly.
 3. successor small branch, because it combines the base-tail construction with
