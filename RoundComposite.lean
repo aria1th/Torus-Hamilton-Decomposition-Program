@@ -1,6 +1,7 @@
 import Mathlib
 import RoundComposite.ActiveHall
 import RoundComposite.PrefixCount
+import RoundComposite.PrefixCountHalfSlack
 import Shared.CayleyProduct
 
 namespace RoundComposite

@@ -458,6 +458,48 @@ theorem.
 Only item 1 is the immediate direct Lean formalization attempt fixed by this
 audit.
 
+### Progress On Item 1
+
+Status after the first implementation pass:
+
+```lean
+import RoundComposite.PrefixCountHalfSlack
+```
+
+has been added to `RoundComposite.lean`, and the new module
+`RoundComposite/PrefixCountHalfSlack.lean` now Lean-closes:
+
+```lean
+PrefixCount.exists_nat_shift_of_int_weight
+PrefixCount.nat_eq_sum_upper_indicators
+PrefixCount.int_weight_dot_eq_nat_upperLevels
+PrefixCount.qge2OrdinaryHalfSlackGoal
+```
+
+It also isolates the remaining sorted-pattern support estimate as:
+
+```lean
+PrefixCount.Qge2SignedSupportHalfPenaltyGoal
+```
+
+and proves the conditional bridge:
+
+```lean
+PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal_of_signedSupportHalfPenalty
+PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_signedSupportHalfPenalty
+```
+
+Therefore the current remaining blocker for item 1 is exactly the signed
+support half-penalty estimate, i.e. the sorted signed-column pattern proof that
+should imply `Qge2SignedSupportHalfPenaltyGoal`.  Item 1 is not yet complete
+until that estimate is proved internally and the unconditional theorem
+
+```lean
+PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal
+```
+
+is provided.
+
 ## Verification Gate
 
 For any future Lean proof change, run:
