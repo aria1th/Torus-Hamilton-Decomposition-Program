@@ -2282,6 +2282,13 @@ theorem odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
     (oddModulusToriV4SuccessorScheduleBlocksGoal_of_minimalBlocks hBlocks)
     hd2 hmodd hm3
 
+theorem oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
+    (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_minimal_blocks
+    hBlocks hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks
     (hBlocks : OddModulusToriV4MinimalAddBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -2291,6 +2298,13 @@ theorem odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks
     (oddModulusToriV4SuccessorScheduleAddBlocksGoal_of_minimalAddBlocks
       hBlocks)
     hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_minimalAdd_blocks
+    (hBlocks : OddModulusToriV4MinimalAddBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks
+    hBlocks hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_v4_successorSchedule
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
@@ -2303,6 +2317,15 @@ theorem odd_modulus_tori_all_dimensions_of_v4_successorSchedule
     ⟨hQge2Proper, hSchedule, hSmall⟩
     hd2 hmodd hm3
 
+theorem oddModulusToriAllDimensionsGoal_of_v4_successorSchedule
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_successorSchedule
+    hQge2Proper hSchedule hSmall hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
     (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
@@ -2313,6 +2336,15 @@ theorem odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd
   odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd_blocks
     ⟨hQge2Proper, hSchedule, hSmall⟩
     hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_successorScheduleAdd
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
+    (hSmall : OddSuccessorSmallModulusSlackPacketLiftAddGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_successorScheduleAdd
+    hQge2Proper hSchedule hSmall hd2 hmodd hm3
 
 theorem odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
     (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)

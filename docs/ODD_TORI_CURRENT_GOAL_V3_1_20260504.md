@@ -218,42 +218,29 @@ The older tuple shape
 workflow purposes; Lean records this as
 `oddModulusToriV4MinimalBlocksGoal_iff_successorScheduleBlocks`.
 
-After the q>=2 refactor, proof scripts may replace the first field by the pure
-packing theorem `PrefixCount.Qge2SignedColumnPackingGoal` and use:
+Lean also packages the same endpoint as the named final target:
 
 ```lean
-def RoundComposite.Concrete
-  .OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
-  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
-  OddSuccessorSmallModulusBaseTailGoal
-
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
-    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
-
-theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
-    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
-    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
-    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
+  .oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
+    (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
 ```
 
-The current column-packing packet has exactly three external fields:
+The active proof obligations are exactly:
 
-1. `PrefixCount.Qge2SignedColumnPackingGoal`
+1. `PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`
 2. `PrefixCountRootFlatCanonicalScheduleCriterionGoal`
 3. `OddSuccessorSmallModulusBaseTailGoal`
 
-The older minimal packet can still use
-`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` as its first field.
-Lean now exposes this equivalent nontrivial-cut formulation, and the endpoint
-cuts `J = empty` and `J = univ` are no longer external obligations:
+An attempted pure packing replacement,
+`PrefixCount.Qge2SignedColumnPackingGoal`, is now known to be too strong:
+Lean proves `PrefixCount.not_qge2SignedColumnPackingGoal` by a small
+`n = 4` counterexample.  The column-packing endpoints remain only as diagnostic
+conditional wrappers and are not part of the active goal.
+
+For the first item, Lean exposes the equivalent nontrivial-cut formulation.
+The endpoint cuts `J = empty` and `J = univ` are no longer external obligations:
 `PrefixCount.ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` proves that
 they are forced by the row/column sum hypotheses and the `qge2ColumnCapacity`
 endpoint arithmetic.  The direct final-theorem endpoint from this formulation is

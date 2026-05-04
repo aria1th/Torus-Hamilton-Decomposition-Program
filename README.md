@@ -375,12 +375,12 @@ when `m` is odd and `m >= 3`.
   `odd_modulus_tori_all_dimensions_of_v4_minimalAdd_blocks`, from
   `OddModulusToriV4MinimalAddBlocksGoal`, where the small branch uses the
   explicit `T = b + 1` form `OddSuccessorSmallModulusSlackPacketLiftAddGoal`.
-  After the q>=2 refactor, the proper-cut field can also be supplied by the
-  pure column-packing theorem `PrefixCount.Qge2SignedColumnPackingGoal`; the
-  compact block endpoint is
-  `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks`, and
-  the named final-goal wrapper is
-  `oddModulusToriAllDimensionsGoal_of_v4_columnPackingSchedule_blocks`.
+  A later audit shows that the pure arbitrary-row column-packing replacement
+  `PrefixCount.Qge2SignedColumnPackingGoal` is too strong; Lean records the
+  counterexample as `PrefixCount.not_qge2SignedColumnPackingGoal`.  The active
+  compact endpoint remains `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks`,
+  with named final-goal wrapper
+  `oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks`.
 - `docs/ODD_TORI_GLOBAL_COMPLETION_AUDIT_20260503.md`: prompt-to-artifact
   completion audit for the global odd-modulus theorem, recording which parts
   are Lean-closed, which are conditional skeletons, and the remaining

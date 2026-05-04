@@ -36,70 +36,7 @@ OddSuccessorSmallModulusBaseTailGoal
 
 ### Exact Lean Target
 
-The cleanest current target is the pure signed-column packing theorem in the
-exact ordinary q>=2 branch shape:
-
-```lean
-def RoundComposite.PrefixCount.Qge2SignedColumnPackingGoal : Prop :=
-  forall {n : Nat}, 4 <= n ->
-    forall (R : Fin n -> Int) (c : Fin (n - 1) -> Nat),
-    (forall k : Fin (n - 1), c k = 1 ∨ c k = 2) ->
-    (sum i : Fin n, R i) =
-      - (sum k : Fin (n - 1), (c k : Int)) ->
-    (forall J : Finset (Fin n),
-      (sum i in J, R i)
-        <= sum k : Fin (n - 1), qge2ColumnCapacity n J.card (c k)) ->
-    exists S : Fin n -> Fin (n - 1) -> Int,
-      (forall i k, IsSignedVal (S i k)) ∧
-      (forall i : Fin n, (sum k : Fin (n - 1), S i k) = R i) ∧
-      (forall k : Fin (n - 1),
-        (sum i : Fin n, S i k) = - (c k : Int))
-```
-
-The `n - 1` column count and `4 <= n` hypothesis are intentional.  A completely
-free column count would be too strong: for very small or single-column cases,
-the cut upper bounds alone do not characterize entrywise nonzero signed columns.
-
-Lean proves the adapter:
-
-```lean
-theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
-    (hPacking : Qge2SignedColumnPackingGoal) :
-    OrdinaryQge2SignedSeedClosureGoal
-```
-
-Together with
-`ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure`, this is sufficient
-for the q>=2 field in the minimal odd-tori endpoint.
-
-Lean also exposes direct odd-tori endpoints consuming this packing theorem:
-
-```lean
-theorem RoundComposite.Concrete
-  .oddSuccessorClosureGoal_of_v4_columnPackingSchedule
-    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
-    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
-    (hSmall : OddSuccessorSmallModulusBaseTailGoal) :
-    OddSuccessorClosureGoal
-
-theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
-    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
-    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
-    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
-
-theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
-    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
-```
-
-The torus-shaped target is:
+The active target is the torus-shaped ordinary q>=2 signed closure:
 
 ```lean
 def RoundComposite.PrefixCount
@@ -128,6 +65,12 @@ def RoundComposite.PrefixCount
                 - (n : Int) * (epsBit i : Int)) ∧
         (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
 ```
+
+Do not target the broader arbitrary-row theorem
+`RoundComposite.PrefixCount.Qge2SignedColumnPackingGoal`: Lean now proves
+`PrefixCount.not_qge2SignedColumnPackingGoal` by a small `n = 4` counterexample.
+The cut upper bounds alone do not characterize arbitrary row targets; the
+ordinary row shape above is still the active field.
 
 ### Already Lean-Closed
 

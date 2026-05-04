@@ -1650,6 +1650,111 @@ def Qge2SignedColumnPackingGoal : Prop :=
       (∀ i : Fin n, (∑ k : Fin (n - 1), S i k) = R i) ∧
       (∀ k : Fin (n - 1), (∑ i : Fin n, S i k) = - (c k : Int))
 
+/--
+The arbitrary-row version of the q>=2 signed-column packing statement is too
+strong.  The active q>=2 field remains the ordinary-row/proper-cut theorem
+`OrdinaryQge2SignedSeedProperCutClosureGoal`.
+-/
+theorem not_qge2SignedColumnPackingGoal :
+    ¬ Qge2SignedColumnPackingGoal := by
+  classical
+  intro hPacking
+  let R : Fin 4 → Int := fun i =>
+    match i.val with
+    | 0 => -6
+    | 1 => -5
+    | 2 => 2
+    | _ => 6
+  let c : Fin (4 - 1) → Nat := fun _ => 1
+  have hc : ∀ k : Fin (4 - 1), c k = 1 ∨ c k = 2 := by
+    intro k
+    left
+    rfl
+  have hsum : (∑ i : Fin 4, R i)
+      = - (∑ k : Fin (4 - 1), (c k : Int)) := by
+    decide
+  have hCuts :
+      ∀ J : Finset (Fin 4),
+        (∑ i ∈ J, R i)
+          ≤ ∑ k : Fin (4 - 1), qge2ColumnCapacity 4 J.card (c k) := by
+    decide
+  rcases hPacking (n := 4) (by decide) R c hc hsum hCuts with
+    ⟨S, hSigned, hRow, hCol⟩
+  have hrow0 :
+      S (0 : Fin 4) (0 : Fin 3) +
+        S (0 : Fin 4) (1 : Fin 3) +
+        S (0 : Fin 4) (2 : Fin 3) = -6 := by
+    simpa [R, Fin.sum_univ_three] using hRow (0 : Fin 4)
+  have hrow1 :
+      S (1 : Fin 4) (0 : Fin 3) +
+        S (1 : Fin 4) (1 : Fin 3) +
+        S (1 : Fin 4) (2 : Fin 3) = -5 := by
+    simpa [R, Fin.sum_univ_three] using hRow (1 : Fin 4)
+  have hrow3 :
+      S (3 : Fin 4) (0 : Fin 3) +
+        S (3 : Fin 4) (1 : Fin 3) +
+        S (3 : Fin 4) (2 : Fin 3) = 6 := by
+    simpa [R, Fin.sum_univ_three] using hRow (3 : Fin 4)
+  have hS0 : ∀ k : Fin 3, S (0 : Fin 4) k = -2 := by
+    intro k
+    fin_cases k
+    · have hge1 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (1 : Fin 3))
+      have hge2 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (2 : Fin 3))
+      have hge0 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (0 : Fin 3))
+      norm_num at hrow0 ⊢
+      omega
+    · have hge0 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (0 : Fin 3))
+      have hge2 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (2 : Fin 3))
+      have hge1 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (1 : Fin 3))
+      norm_num at hrow0 ⊢
+      omega
+    · have hge0 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (0 : Fin 3))
+      have hge1 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (1 : Fin 3))
+      have hge2 := signedVal_ge_neg_two (hSigned (0 : Fin 4) (2 : Fin 3))
+      norm_num at hrow0 ⊢
+      change S (0 : Fin 4) (2 : Fin 3) = -2
+      omega
+  have hS3 : ∀ k : Fin 3, S (3 : Fin 4) k = 2 := by
+    intro k
+    fin_cases k
+    · have hle1 := signedVal_le_two (hSigned (3 : Fin 4) (1 : Fin 3))
+      have hle2 := signedVal_le_two (hSigned (3 : Fin 4) (2 : Fin 3))
+      have hle0 := signedVal_le_two (hSigned (3 : Fin 4) (0 : Fin 3))
+      norm_num at hrow3 ⊢
+      omega
+    · have hle0 := signedVal_le_two (hSigned (3 : Fin 4) (0 : Fin 3))
+      have hle2 := signedVal_le_two (hSigned (3 : Fin 4) (2 : Fin 3))
+      have hle1 := signedVal_le_two (hSigned (3 : Fin 4) (1 : Fin 3))
+      norm_num at hrow3 ⊢
+      omega
+    · have hle0 := signedVal_le_two (hSigned (3 : Fin 4) (0 : Fin 3))
+      have hle1 := signedVal_le_two (hSigned (3 : Fin 4) (1 : Fin 3))
+      have hle2 := signedVal_le_two (hSigned (3 : Fin 4) (2 : Fin 3))
+      norm_num at hrow3 ⊢
+      change S (3 : Fin 4) (2 : Fin 3) = 2
+      omega
+  have hS1 : ∀ k : Fin 3,
+      S (1 : Fin 4) k = -2 ∨ S (1 : Fin 4) k = 1 := by
+    intro k
+    have hcol :
+        S (0 : Fin 4) k + S (1 : Fin 4) k +
+          S (2 : Fin 4) k + S (3 : Fin 4) k = -1 := by
+      simpa [c, Fin.sum_univ_four] using hCol k
+    have hpair : S (1 : Fin 4) k + S (2 : Fin 4) k = -1 := by
+      rw [hS0 k, hS3 k] at hcol
+      omega
+    have h1 : S (1 : Fin 4) k = -2 ∨ S (1 : Fin 4) k = -1 ∨
+        S (1 : Fin 4) k = 1 ∨ S (1 : Fin 4) k = 2 := by
+      simpa [IsSignedVal, signedVals] using hSigned (1 : Fin 4) k
+    have h2 : S (2 : Fin 4) k = -2 ∨ S (2 : Fin 4) k = -1 ∨
+        S (2 : Fin 4) k = 1 ∨ S (2 : Fin 4) k = 2 := by
+      simpa [IsSignedVal, signedVals] using hSigned (2 : Fin 4) k
+    omega
+  rcases hS1 (0 : Fin 3) with h10 | h10 <;>
+    rcases hS1 (1 : Fin 3) with h11 | h11 <;>
+    rcases hS1 (2 : Fin 3) with h12 | h12 <;>
+    omega
+
 theorem ordinaryQge2PlanData_row_cut_first_bound
     {n m q r : Nat} (P : OrdinaryQge2PlanData n m q r)
     (J : Finset (Fin n)) :

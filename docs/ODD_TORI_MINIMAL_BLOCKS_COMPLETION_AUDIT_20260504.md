@@ -75,29 +75,13 @@ theorem RoundComposite.Concrete
     Shared.CayleyHamiltonDecomposition d m
 ```
 
-The q>=2 field can also be supplied through the pure packing theorem:
+The same endpoint is also packaged as the named final target:
 
 ```lean
-def RoundComposite.Concrete
-  .OddModulusToriV4ColumnPackingScheduleBlocksGoal : Prop :=
-  OddCoreHighModulusColumnPackingScheduleBlocksGoal ∧
-  OddSuccessorSmallModulusBaseTailGoal
-
 theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks
-    (hBlocks : OddModulusToriV4ColumnPackingScheduleBlocksGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
-
-theorem RoundComposite.Concrete
-  .odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule
-    (hPacking : PrefixCount.Qge2SignedColumnPackingGoal)
-    (hSchedule : PrefixCountRootFlatCanonicalScheduleCriterionGoal)
-    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
-    {d m : Nat} (hd2 : 2 <= d)
-    (hmodd : Odd m) (hm3 : 3 <= m) :
-    Shared.CayleyHamiltonDecomposition d m
+  .oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks
+    (hBlocks : OddModulusToriV4MinimalBlocksGoal) :
+    OddModulusToriAllDimensionsGoal
 ```
 
 ## Prompt-To-Artifact Checklist
@@ -112,43 +96,43 @@ theorem RoundComposite.Concrete
 | Dispatcher from seeds + successor | `odd_modulus_tori_all_dimensions_of_357_and_successor` | Lean-closed | `RoundComposite/ConcreteEndpoints.lean` |
 | Successor closure split | `oddSuccessorClosureGoal_of_high_and_successorSmall` | Lean-closed | `RoundComposite/OddCore.lean` |
 | Successor closure from current three fields | `oddSuccessorClosureGoal_of_v4_successorSchedule` | Lean-closed conditional | Directly consumes the three remaining fields |
-| q>=2 column-packing packet | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Replaces the q>=2 proper-cut field by `PrefixCount.Qge2SignedColumnPackingGoal` |
+| q>=2 pure column-packing overreach | `PrefixCount.not_qge2SignedColumnPackingGoal` | Lean-closed negative | Shows the attempted arbitrary-row packing replacement is false |
 | High branch from current schedule fields | `oddCoreHighModulusPrefixCountGoal_of_v4_highSchedule_blocks` | Lean-closed | `RoundComposite/OddCore.lean` |
 | q=1 auxiliary count branch | `PrefixCount.ordinaryQeq1AuxTargetHallDataGoal` | Lean-closed | Used by the high-branch adapter |
 | q>=2 endpoint cut cleanup | `ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure` | Lean-closed | Empty and full cuts are no longer external obligations |
 | Root-flat certificate wrapper | `prefixCountRootFlatCanonicalReturnGoal_iff_scheduleCriterion` | Lean-closed | Schedule-facing field is enough |
 | Successor small additive wrapper | `oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd` | Lean-closed | Instantiates `T = b + 1`, unit packets, and successor Hall slack |
-| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
-| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_columnPackingSchedule_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
+| Current compact all-dimensional conditional theorem | `odd_modulus_tori_all_dimensions_of_v4_minimal_blocks` | Lean-closed conditional | Depends only on the three remaining fields below |
+| Named final-goal wrapper | `oddModulusToriAllDimensionsGoal_of_v4_minimal_blocks` | Lean-closed conditional | Same endpoint, packaged as `OddModulusToriAllDimensionsGoal` |
 
 ## Remaining External Fields
 
-The goal is not complete.  In the current column-packing packet, the remaining
-proof obligations are exactly:
+The goal is not complete.  In the current minimal packet, the remaining proof
+obligations are exactly:
 
 ```lean
-PrefixCount.Qge2SignedColumnPackingGoal
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
 PrefixCountRootFlatCanonicalScheduleCriterionGoal
 OddSuccessorSmallModulusBaseTailGoal
 ```
 
 These are not assumptions hidden behind `sorry`; they are explicit fields in
-the conditional theorem statement.  The older minimal packet may instead use
-`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal` as the first field.
+the conditional theorem statement.
 
-## Field 1: q>=2 Column Packing
+## Field 1: q>=2 Proper-Cut Signed Closure
 
-The newest first field is the pure signed-column packing theorem:
+The current first field is the nonempty proper-cut integral decomposition
+theorem:
 
 ```lean
-PrefixCount.Qge2SignedColumnPackingGoal
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
 ```
 
 Mathematically this is a finite signed-column Hoffman/Rado-Edmonds style
 decomposition with entries in `{±1, ±2}`.  It is isolated from the torus
-geometry.  Lean proves that this field implies the older
-`PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal`, whose empty and full
-row cuts are automatic.
+geometry.  The overly broad arbitrary-row packing theorem
+`PrefixCount.Qge2SignedColumnPackingGoal` is false; Lean records this as
+`PrefixCount.not_qge2SignedColumnPackingGoal`.
 
 ## Field 2: Root-Flat Canonical Schedule Criterion
 
