@@ -856,6 +856,24 @@ def eraseLastCountMatrix
     intro σ
     exact M.col_sum σ.castSucc
 
+theorem eraseLastCountMatrix_cutMass
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (U : Finset C) (S : Finset (Fin T)) :
+    (M.eraseLastCountMatrix choice hchoice hdegree).cutMass U S =
+      M.cutMass U (S.image Fin.castSucc) := by
+  classical
+  unfold cutMass eraseLastCountMatrix
+  apply Finset.sum_congr rfl
+  intro c _hc
+  rw [Finset.sum_image]
+  intro a _ha b _hb hab
+  exact Fin.castSucc_injective T hab
+
 theorem rowCompatible_of_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I)
