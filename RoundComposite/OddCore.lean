@@ -1458,6 +1458,44 @@ theorem prefixCountFirstHitCanonicalSchedule_prefixMap_apply_zero
         ring
       · simp [hzero]
 
+theorem prefixCountFirstHitCanonicalSchedule_prefixMap_apply_coord
+    {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
+    {M : Matrix (Fin d) (Fin d) Nat}
+    (L : PrefixCount.LayerPermCounts d m M) (c : Fin d) :
+    ∀ k : Nat, ∀ w : PrefixCountRootState d m, ∀ j : Fin (d - 1),
+      ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c k w) j =
+        w j +
+          ∑ t ∈ Finset.range k,
+            if (prefixCountLambdaRho d
+                (prefixCountCanonicalRho d m hd2 ((t : Nat) : ZMod m)
+                  ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c t w))
+                (L.layer (prefixCountLayerIndex ((t : Nat) : ZMod m)) c)).val
+                = j.val
+            then (1 : ZMod m) else 0
+  | 0, w, j => by
+      simp [Shared.RootFlatSchedule.prefixMap]
+  | k + 1, w, j => by
+      rw [Shared.RootFlatSchedule.prefixMap]
+      rw [prefixCountFirstHitCanonicalSchedule_layerMap_eq_symbolMap]
+      change
+        prefixCountFirstHitSymbolMap hd2 ((k : Nat) : ZMod m)
+          (L.layer (prefixCountLayerIndex ((k : Nat) : ZMod m)) c)
+          ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c k w)
+          j = _
+      rw [prefixCountFirstHitSymbolMap_apply_coord]
+      rw [prefixCountFirstHitCanonicalSchedule_prefixMap_apply_coord
+        hd2 L c k w j]
+      rw [Finset.sum_range_succ]
+      by_cases hhit :
+          (prefixCountLambdaRho d
+              (prefixCountCanonicalRho d m hd2 ((k : Nat) : ZMod m)
+                ((prefixCountFirstHitCanonicalSchedule hd2 L).prefixMap c k w))
+              (L.layer (prefixCountLayerIndex ((k : Nat) : ZMod m)) c)).val
+            = j.val
+      · simp [hhit]
+        ring
+      · simp [hhit]
+
 theorem prefixCountFirstHitCanonicalSchedule_returnMap_apply_zero
     {d m : Nat} [NeZero m] (hd2 : 2 ≤ d)
     {M : Matrix (Fin d) (Fin d) Nat}
