@@ -178,6 +178,27 @@ theorem cutCap_mono_symbols {T : Nat} {X C : Type*}
     I.cutCap U S₁ ≤ I.cutCap U S₂ :=
   I.cutCap_mono (fun _ h => h) hS
 
+theorem exists_injective_token_matching_of_hall
+    {T : Nat} {X C Q : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (colorOf : Q → C)
+    (hHall : ∀ A : Finset Q, A.card ≤ I.hitCount (A.image colorOf)) :
+    ∃ f : Q → X, Function.Injective f ∧
+      ∀ q : Q, colorOf q ∈ I.active (f q) := by
+  classical
+  rw [← Fintype.all_card_le_filter_rel_iff_exists_injective
+    (r := fun q x => colorOf q ∈ I.active x)]
+  intro A
+  have hfilter :
+      ({x : X | ∃ q ∈ A, colorOf q ∈ I.active x} : Finset X)
+        =
+      (Finset.univ.filter
+        (fun x : X => (I.active x ∩ A.image colorOf).Nonempty)) := by
+    ext x
+    simp [Finset.Nonempty, and_comm]
+  rw [hfilter]
+  exact hHall A
+
 end Incidence
 
 /-- A nonnegative count matrix with the row and column sums forced by incidence. -/

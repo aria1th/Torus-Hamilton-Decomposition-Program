@@ -88,6 +88,8 @@ condition for this realization problem.
 - one-symbol Hall extraction:
   `Incidence.hitCount`, `Incidence.cutCap_symbol_singleton`,
   `CountMatrix.cutMass_symbol_singleton`, `CountMatrix.singleSymbol_hall`;
+- ordinary Hall token matching:
+  `Incidence.exists_injective_token_matching_of_hall`;
 - residue compatibility adapters for feasible matrices and symbolings.
 
 Thus the missing theorem should not reprove the torus machinery.  It should
