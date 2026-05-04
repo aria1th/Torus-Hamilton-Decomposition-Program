@@ -365,6 +365,113 @@ theorem cutCap_image_castSucc_insert_last {T : Nat} {X C : Type*}
   unfold cutCap
   rw [card_image_castSucc_insert_last]
 
+theorem eraseChoice_min_card_add_indicator_le_min_succ
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    min (((I.eraseChoice choice hchoice).active x ∩ U).card) S.card
+        + (if choice x ∈ U then 1 else 0)
+      ≤ min ((I.active x ∩ U).card) (S.card + 1) := by
+  classical
+  have hEq :=
+    I.eraseChoice_active_inter_card_add_indicator choice hchoice x U
+  by_cases hU : choice x ∈ U
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a + 1 = A := by
+      simpa [a, A, hU] using hEq
+    simp only [hU, if_true]
+    change min a S.card + 1 ≤ min A (S.card + 1)
+    rw [← hEq']
+    have hmin :
+        min (a + 1) (S.card + 1) = min a S.card + 1 := by
+      simp [Nat.succ_eq_add_one, Nat.succ_min_succ]
+    rw [hmin]
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a = A := by
+      simp [a, A, hU]
+    simp only [hU, if_false, add_zero]
+    change min a S.card ≤ min A (S.card + 1)
+    rw [← hEq']
+    exact min_le_min le_rfl (Nat.le_succ S.card)
+
+theorem min_card_le_eraseChoice_min_card_add_indicator
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (x : X) (U : Finset C) (S : Finset (Fin T)) :
+    min ((I.active x ∩ U).card) S.card
+      ≤ min (((I.eraseChoice choice hchoice).active x ∩ U).card) S.card
+          + (if choice x ∈ U then 1 else 0) := by
+  classical
+  have hEq :=
+    I.eraseChoice_active_inter_card_add_indicator choice hchoice x U
+  by_cases hU : choice x ∈ U
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a + 1 = A := by
+      simpa [a, A, hU] using hEq
+    simp only [hU, if_true]
+    change min A S.card ≤ min a S.card + 1
+    rw [← hEq']
+    let s := S.card
+    change min (a + 1) s ≤ min a s + 1
+    by_cases hlt : a < s
+    · have ha : a ≤ s := Nat.le_of_lt hlt
+      have has : a + 1 ≤ s := Nat.succ_le_of_lt hlt
+      rw [min_eq_left has, min_eq_left ha]
+    · have hs : s ≤ a := Nat.le_of_not_gt hlt
+      have hs' : s ≤ a + 1 := hs.trans (Nat.le_succ a)
+      rw [min_eq_right hs', min_eq_right hs]
+      omega
+  · let a := ((I.eraseChoice choice hchoice).active x ∩ U).card
+    let A := (I.active x ∩ U).card
+    have hEq' : a = A := by
+      simp [a, A, hU]
+    simp only [hU, if_false, add_zero]
+    change min A S.card ≤ min a S.card
+    rw [← hEq']
+
+theorem eraseChoice_cutCap_add_choiceHitCount_le_cutCap_image_castSucc_insert_last
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (U : Finset C) (S : Finset (Fin T)) :
+    (I.eraseChoice choice hchoice).cutCap U S
+        + choiceHitCount choice U
+      ≤ I.cutCap U
+          (insert (Fin.last T)
+            (S.image (Fin.castSucc : Fin T → Fin (T + 1)))) := by
+  classical
+  rw [cutCap_image_castSucc_insert_last]
+  unfold cutCap choiceHitCount
+  rw [Finset.card_filter, ← Finset.sum_add_distrib]
+  apply Finset.sum_le_sum
+  intro x _hx
+  exact I.eraseChoice_min_card_add_indicator_le_min_succ choice hchoice x U S
+
+theorem cutCap_image_castSucc_le_eraseChoice_cutCap_add_choiceHitCount
+    {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (choice : X → C)
+    (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (U : Finset C) (S : Finset (Fin T)) :
+    I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+      ≤ (I.eraseChoice choice hchoice).cutCap U S
+          + choiceHitCount choice U := by
+  classical
+  rw [cutCap_image_castSucc]
+  unfold cutCap choiceHitCount
+  rw [Finset.card_filter, ← Finset.sum_add_distrib]
+  apply Finset.sum_le_sum
+  intro x _hx
+  exact I.min_card_le_eraseChoice_min_card_add_indicator choice hchoice x U S
+
 theorem exists_injective_token_matching_of_hall
     {T : Nat} {X C Q : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C]
