@@ -2367,6 +2367,10 @@ def lowCols (n r : Nat) : Finset (Fin (n - 1)) :=
 def highCols (n r : Nat) : Finset (Fin (n - 1)) :=
   Finset.univ.filter fun k => r ≤ k.val
 
+def pRowTargetCols (n r : Nat) (special : Fin (n - 1)) :
+    Finset (Fin (n - 1)) :=
+  insert special (highCols n r)
+
 theorem lowCols_card {n r : Nat} (hrlt : r < n) :
     (lowCols n r).card = r := by
   dsimp [lowCols]
@@ -2387,6 +2391,19 @@ theorem highCols_card {n r : Nat} (hrlt : r < n) :
     (highCols n r).card = n - 1 - r := by
   rw [highCols_eq_lowCols_compl, Finset.card_compl, lowCols_card hrlt]
   simp [Fintype.card_fin]
+
+theorem notMem_highCols_of_lt {n r : Nat} {k : Fin (n - 1)}
+    (hk : k.val < r) :
+    k ∉ highCols n r := by
+  have hnot : ¬ r ≤ k.val := by omega
+  simp [highCols, hnot]
+
+theorem pRowTargetCols_card {n r : Nat} (hrlt : r < n)
+    {special : Fin (n - 1)} (hspecial : special.val < r) :
+    (pRowTargetCols n r special).card = n - r := by
+  rw [pRowTargetCols, Finset.card_insert_of_notMem
+    (notMem_highCols_of_lt hspecial), highCols_card hrlt]
+  omega
 
 def pRows (n r : Nat) : Finset (Fin n) :=
   Finset.univ.filter fun i => r ≤ i.val
@@ -2422,6 +2439,11 @@ theorem pRows_card_eq_highCols_card_succ {n r : Nat} (hrlt : r < n) :
     (pRows n r).card = (highCols n r).card + 1 := by
   rw [pRows_card hrlt, highCols_card hrlt]
   omega
+
+theorem pRows_card_eq_pRowTargetCols_card {n r : Nat} (hrlt : r < n)
+    {special : Fin (n - 1)} (hspecial : special.val < r) :
+    (pRows n r).card = (pRowTargetCols n r special).card := by
+  rw [pRows_card hrlt, pRowTargetCols_card hrlt hspecial]
 
 def pRowNeighbors {n r : Nat} (A : OrdinaryQeq1AuxMatrixData n r)
     (X : Finset (Fin n)) : Finset (Fin (n - 1)) :=
