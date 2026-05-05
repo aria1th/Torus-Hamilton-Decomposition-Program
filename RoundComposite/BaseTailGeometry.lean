@@ -2884,6 +2884,8 @@ theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
     omega
   have hj0_succ_lt : j0 + 1 < n := by
     omega
+  have hj0_succ : j0 + 1 = ρ.val := by
+    omega
   have hhit_z : activeTailCanonicalRhoHitNat z j0 := by
     simpa [ρ, j0] using activeTailCanonicalRho_pred_hitNat hT hρ
   let w : Fin n → ZMod m := fun τ =>
@@ -2896,6 +2898,9 @@ theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
           ⟨ρ.val, by simpa [ρ] using hρ⟩ := by
       intro h
       have hval := congrArg Fin.val h
+      have hval' : j0 = ρ.val := by
+        simpa using hval
+      have : j0 + 1 = ρ.val := hj0_succ
       omega
     simp [w, hne, hz]
   have hwexists : ∃ j : Nat, activeTailCanonicalRhoHitNat w j :=
@@ -2915,6 +2920,12 @@ theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
           ⟨ρ.val, by simpa [ρ] using hρ⟩ := by
       intro h
       have hval := congrArg Fin.val h
+      have hval' :
+          activeTailCanonicalRhoFirstNat w hwexists = ρ.val := by
+        simpa using hval
+      have hltρ :
+          activeTailCanonicalRhoFirstNat w hwexists < ρ.val := by
+        omega
       omega
     have hz_hit :
         activeTailCanonicalRhoHitNat z
@@ -2970,8 +2981,12 @@ theorem activeTailCanonicalRho_sub_at_rho {m n : Nat}
             then (1 : ZMod m) else 0)
       =
     activeTailCanonicalRho hT z := by
-  simpa [sub_eq_add_neg] using
-    activeTailCanonicalRho_update_at_rho hT hρ (-(1 : ZMod m))
+  convert activeTailCanonicalRho_update_at_rho hT hρ (-(1 : ZMod m)) using 2
+  funext τ
+  by_cases hτ :
+      τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+  · simp [hτ, sub_eq_add_neg]
+  · simp [hτ]
 
 noncomputable def activePrefixTailPerm
     {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1) :
