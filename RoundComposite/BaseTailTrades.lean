@@ -427,6 +427,40 @@ def SuccessorActiveBlockZeroReservoirSwapScheduleGoal : Prop :=
                 (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves) = R
 
 /--
+Strict paper-style reservoir endpoint where every scheduled `0 ↔ τ` local
+trade carries the proof that `τ ≠ 0`.
+-/
+def SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      (R : ActiveHall.ResidueSpec m T (Fin (b + T))) →
+      IsCylinder Cyl →
+      ActiveBlockData Cyl →
+      R.RowCompatible Cyl.incidence →
+      R.ColCompatible Cyl.incidence →
+        ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+          ∃ moves :
+            List
+              (ActiveHall.Symboling.NonzeroZeroSwapMove
+                (Shared.TorusVertex (b + 1) m) T),
+            Φ.applySwapResidueSpecs (Φ.residueSpec (m := m))
+              (ActiveHall.Symboling.nonzeroZeroSwapMoves
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves) = R
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -939,6 +973,19 @@ theorem successorActiveBlockInitialReservoirSwapScheduleGoal_of_zeroReservoirSwa
   exact ⟨Φ,
     ActiveHall.Symboling.zeroSwapMoves
       (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves,
+    hMoves⟩
+
+theorem successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockZeroReservoirSwapScheduleGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock
+    hRow hCol
+  rcases hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol with
+    ⟨Φ, moves, hMoves⟩
+  exact ⟨Φ, moves.map ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove,
     hMoves⟩
 
 theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwapSchedule

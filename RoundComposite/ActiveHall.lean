@@ -3887,6 +3887,11 @@ structure ZeroSwapMove (X : Type*) (T : Nat) where
   vertex : X
   right : Fin T
 
+structure NonzeroZeroSwapMove (X : Type*) (T : Nat) where
+  vertex : X
+  right : Fin T
+  right_ne_zero : right.val ≠ 0
+
 namespace ZeroSwapMove
 
 def toSwapMove {X : Type*} {T : Nat} (hTpos : 0 < T)
@@ -3897,9 +3902,22 @@ def toSwapMove {X : Type*} {T : Nat} (hTpos : 0 < T)
 
 end ZeroSwapMove
 
+namespace NonzeroZeroSwapMove
+
+def toZeroSwapMove {X : Type*} {T : Nat}
+    (move : NonzeroZeroSwapMove X T) : ZeroSwapMove X T where
+  vertex := move.vertex
+  right := move.right
+
+end NonzeroZeroSwapMove
+
 def zeroSwapMoves {X : Type*} {T : Nat} (hTpos : 0 < T)
     (moves : List (ZeroSwapMove X T)) : List (SwapMove X T) :=
   moves.map (ZeroSwapMove.toSwapMove hTpos)
+
+def nonzeroZeroSwapMoves {X : Type*} {T : Nat} (hTpos : 0 < T)
+    (moves : List (NonzeroZeroSwapMove X T)) : List (SwapMove X T) :=
+  zeroSwapMoves hTpos (moves.map NonzeroZeroSwapMove.toZeroSwapMove)
 
 noncomputable def applySwapMoves {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]

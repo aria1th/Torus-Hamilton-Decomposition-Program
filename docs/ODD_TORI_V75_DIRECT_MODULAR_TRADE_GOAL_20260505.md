@@ -164,8 +164,11 @@ ActiveHall.Symboling.swapResidueSpec_target_eq_add_localTradeDelta
 ActiveHall.Symboling.swapResidueSpec_target_eq_add_zeroTradeDelta
 ActiveHall.Symboling.SwapMove
 ActiveHall.Symboling.ZeroSwapMove
+ActiveHall.Symboling.NonzeroZeroSwapMove
 ActiveHall.Symboling.ZeroSwapMove.toSwapMove
+ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove
 ActiveHall.Symboling.zeroSwapMoves
+ActiveHall.Symboling.nonzeroZeroSwapMoves
 ActiveHall.Symboling.applySwapMoves
 ActiveHall.Symboling.applySwapResidueSpecs
 ActiveHall.Symboling.applySwapMoves_hasResidues
@@ -269,9 +272,11 @@ BaseTail.Trades.successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasib
 Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControlledRounding
 Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_largeMarginControlled
 BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
+BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockZeroReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockInitialReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockReservoirSwapScheduleGoal
+BaseTail.Trades.successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockInitialReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
@@ -321,10 +326,13 @@ the baseline residue matrix can now be inferred from the initial symboling via
 paper-style `0 ↔ τ` local trades via
 `SuccessorActiveBlockZeroReservoirSwapScheduleGoal`.  `V75Endpoints` now has
 matching zero-reservoir input, block, successor-closure, and all-dimensional
-wrappers.  The sharpest remaining hard content is selecting enough distinct
-reservoir sites, choosing an initial symboling with the required local baseline
-positions, and turning the row/column-compatible residue matrix into the
-zero-swap witness required by `SuccessorActiveBlockZeroReservoirSwapScheduleGoal`.
+wrappers.  The stricter
+`SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal` matches the paper's
+`τ ≠ 0` trade sites and adapts down to the zero-reservoir endpoint.  The
+sharpest remaining hard content is selecting enough distinct reservoir sites,
+choosing an initial symboling with the required local baseline positions, and
+turning the row/column-compatible residue matrix into the nonzero zero-swap
+witness.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
