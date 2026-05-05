@@ -726,6 +726,58 @@ def mixedCount {T : Nat} {X C : Type*}
     if 0 < (I.active x ∩ U).card ∧ (I.active x ∩ U).card < T
     then 1 else 0
 
+theorem mixedCount_eq_card_filter {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.mixedCount U =
+      ((Finset.univ : Finset X).filter
+        (fun x =>
+          0 < (I.active x ∩ U).card ∧
+            (I.active x ∩ U).card < T)).card := by
+  rw [mixedCount, Finset.card_filter]
+
+theorem mixedCount_le_hitCount {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.mixedCount U ≤ I.hitCount U := by
+  classical
+  rw [I.mixedCount_eq_card_filter U]
+  unfold hitCount
+  apply Finset.card_le_card
+  intro x hx
+  exact Finset.mem_filter.mpr
+    ⟨Finset.mem_univ x,
+      Finset.card_pos.mp (Finset.mem_filter.mp hx).2.1⟩
+
+theorem mixedCount_le_hitCount_compl {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.mixedCount U ≤ I.hitCount Uᶜ := by
+  classical
+  rw [I.mixedCount_eq_card_filter U]
+  unfold hitCount
+  apply Finset.card_le_card
+  intro x hx
+  rcases (Finset.mem_filter.mp hx).2 with ⟨_hpos, hlt⟩
+  have hnotSubset : ¬ I.active x ⊆ U := by
+    intro hsubset
+    have heq : I.active x ∩ U = I.active x := by
+      ext c
+      constructor
+      · intro hc
+        exact (Finset.mem_inter.mp hc).1
+      · intro hc
+        exact Finset.mem_inter.mpr ⟨hc, hsubset hc⟩
+    have hcard :
+        (I.active x ∩ U).card = T := by
+      rw [heq, I.active_card x]
+    omega
+  rw [Finset.not_subset] at hnotSubset
+  rcases hnotSubset with ⟨c, hcActive, hcNotU⟩
+  refine Finset.mem_filter.mpr ⟨Finset.mem_univ x, ?_⟩
+  exact ⟨c, Finset.mem_inter.mpr
+    ⟨hcActive, Finset.mem_compl.mpr hcNotU⟩⟩
+
 theorem scaled_bary_cutMass_le_cutCap {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) (S : Finset (Fin T)) :
