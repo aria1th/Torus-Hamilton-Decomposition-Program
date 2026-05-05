@@ -2181,6 +2181,48 @@ def PrimitiveActivePrefixLiftAssemblyGoal : Prop :=
       ActiveSymbolingCountsPrimitive hT A →
       Shared.CayleyHamiltonDecomposition (b + T) m
 
+structure PrefixProjectedLiftColorDir {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    (Cyl : Cylinder b m T packets) where
+  colorDir :
+    Shared.TorusColor (b + T) →
+      Shared.TorusVertex (b + T) m →
+      Shared.TorusDirection (b + T)
+  edgePartition : Shared.IsCayleyEdgePartition colorDir
+  colorHamiltonian : Shared.IsCayleyColorHamiltonian colorDir
+  collapse_step :
+    ∀ c : Fin (b + T), ∀ x : Shared.TorusVertex (b + T) m,
+      collapseVertex b m T (Shared.cayleyColorStep colorDir c x) =
+        Cyl.step c (collapseVertex b m T x)
+
+/--
+Concrete primitive prefix-lift target.
+
+This asks for an actual expanded Cayley direction selector whose steps project
+to the compressed cylinder and whose color classes are Hamiltonian.  The
+projection field is not needed to package the final decomposition, but it is
+the useful invariant for the intended prefix-tail proof.
+-/
+def PrimitiveActivePrefixProjectedLiftAssemblyGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ T),
+      IsCylinder Cyl →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      Nonempty (PrefixProjectedLiftColorDir Cyl)
+
+theorem primitiveActivePrefixLiftAssemblyGoal_of_projectedLift
+    (hLift : PrimitiveActivePrefixProjectedLiftAssemblyGoal) :
+    PrimitiveActivePrefixLiftAssemblyGoal := by
+  intro b m T _inst packets Cyl A hT hCyl hA hPrim
+  rcases hLift hT hCyl hA hPrim with ⟨D⟩
+  exact ⟨{
+    colorDir := D.colorDir
+    edgePartition := D.edgePartition
+    colorHamiltonian := D.colorHamiltonian
+  }⟩
+
 theorem primitiveActiveLiftAssemblyGoal_of_prefixLiftAssembly
     (hLift : PrimitiveActivePrefixLiftAssemblyGoal) :
     PrimitiveActiveLiftAssemblyGoal := by
