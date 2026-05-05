@@ -303,6 +303,108 @@ def collapseVertex (b m T : Nat)
     else
       ∑ σ : Fin T, x (tailExpandedDir b σ)
 
+def collapseFiberInit (b m n : Nat)
+    (x : Shared.TorusVertex (b + (n + 1)) m) : Fin n → ZMod m :=
+  fun σ => x (tailExpandedDir b σ.castSucc)
+
+def collapseFiberAssemble (b m n : Nat)
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m) :
+    Shared.TorusVertex (b + (n + 1)) m :=
+  fun j =>
+    if hOrd : j.val < b then
+      y ⟨j.val, by omega⟩
+    else if hInit : j.val < b + n then
+      z ⟨j.val - b, by omega⟩
+    else
+      y (activeDir b) - ∑ σ : Fin n, z σ
+
+noncomputable def collapseVertexFiberEquiv (b m n : Nat) :
+    Shared.TorusVertex (b + (n + 1)) m ≃
+      Shared.TorusVertex (b + 1) m × (Fin n → ZMod m) where
+  toFun x := (collapseVertex b m (n + 1) x, collapseFiberInit b m n x)
+  invFun p := collapseFiberAssemble b m n p.1 p.2
+  left_inv := by
+    classical
+    intro x
+    funext j
+    by_cases hOrd : j.val < b
+    · have hj : (⟨j.val, by omega⟩ : Fin (b + (n + 1))) = j := by
+        ext
+        rfl
+      simp [collapseFiberAssemble, collapseVertex, hOrd, hj]
+    · by_cases hInit : j.val < b + n
+      · let σ : Fin n := ⟨j.val - b, by omega⟩
+        have htail : tailExpandedDir b σ.castSucc = j := by
+          ext
+          simp [tailExpandedDir, σ]
+          omega
+        simpa [collapseFiberAssemble, collapseFiberInit, hOrd, hInit, σ]
+          using congrArg x htail
+      · have hjval : j.val = b + n := by omega
+        have hlast : tailExpandedDir b (Fin.last n) = j := by
+          ext
+          simp [tailExpandedDir, hjval]
+        have hsum :
+            (∑ τ : Fin (n + 1), x (tailExpandedDir b τ)) =
+              (∑ σ : Fin n, x (tailExpandedDir b σ.castSucc)) +
+                x (tailExpandedDir b (Fin.last n)) := by
+          rw [Fin.sum_univ_castSucc]
+        have hActiveOrd : ¬ (activeDir b).val < b := by
+          simp [activeDir]
+        have hLastOrd : ¬ (tailExpandedDir b (Fin.last n)).val < b := by
+          simp [tailExpandedDir]
+        have hLastInit :
+            ¬ (tailExpandedDir b (Fin.last n)).val < b + n := by
+          simp [tailExpandedDir]
+        rw [← hlast]
+        simp [collapseFiberAssemble, collapseVertex, collapseFiberInit,
+          hsum, hActiveOrd, hLastOrd, hLastInit, sub_eq_add_neg]
+  right_inv := by
+    classical
+    intro p
+    rcases p with ⟨y, z⟩
+    ext i
+    · by_cases hi : i.val < b
+      · have hi' : (⟨i.val, by omega⟩ : Fin (b + (n + 1))) =
+            ⟨i.val, by omega⟩ := rfl
+        simp [collapseFiberAssemble, collapseVertex, hi]
+      · have hactive : i = activeDir b := by
+          ext
+          simp [activeDir]
+          omega
+        subst i
+        have hsum :
+            (∑ τ : Fin (n + 1),
+                collapseFiberAssemble b m n y z (tailExpandedDir b τ)) =
+              (∑ σ : Fin n, z σ) +
+                (y (activeDir b) - ∑ σ : Fin n, z σ) := by
+          rw [Fin.sum_univ_castSucc]
+          congr 1
+          · apply Finset.sum_congr rfl
+            intro σ _hσ
+            have hOrd : ¬ (tailExpandedDir b σ.castSucc).val < b := by
+              simp [tailExpandedDir]
+            have hInit : (tailExpandedDir b σ.castSucc).val < b + n := by
+              simp [tailExpandedDir]
+            have hidx :
+                ((tailExpandedDir b σ.castSucc).val - b) = σ.val := by
+              simp [tailExpandedDir]
+            simp [collapseFiberAssemble, hOrd, hInit, hidx]
+          · have hOrd : ¬ (tailExpandedDir b (Fin.last n)).val < b := by
+              simp [tailExpandedDir]
+            have hInit :
+                ¬ (tailExpandedDir b (Fin.last n)).val < b + n := by
+              simp [tailExpandedDir]
+            simp [collapseFiberAssemble, hOrd, hInit]
+        simp [collapseVertex, activeDir, hsum, sub_eq_add_neg]
+    · have hOrd : ¬ (tailExpandedDir b i.castSucc).val < b := by
+        simp [tailExpandedDir]
+      have hInit : (tailExpandedDir b i.castSucc).val < b + n := by
+        simp [tailExpandedDir]
+      have hidx : ((tailExpandedDir b i.castSucc).val - b) = i.val := by
+        simp [tailExpandedDir]
+      simp [collapseFiberAssemble, collapseFiberInit, hOrd, hInit, hidx]
+
 theorem collapseVertex_add_ordinaryExpandedDir {b m T : Nat}
     (x : Shared.TorusVertex (b + T) m)
     (i : Fin (b + 1)) (hi : i ≠ activeDir b) :
