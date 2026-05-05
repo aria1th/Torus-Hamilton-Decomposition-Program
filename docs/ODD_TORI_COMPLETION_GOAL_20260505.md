@@ -345,6 +345,9 @@ ActiveHall.Incidence.scaled_bary_cutMass_le_cutCap
 ActiveHall.Incidence.scaled_bary_cutMass_add_mixed_le_cutCap
 ActiveHall.CountMatrix.hallCuts_of_scaled_bary_error_le_mixed
 ActiveHall.CountMatrix.hallCuts_of_nontrivial_scaled_bary_error_le_mixed
+MixedExpansionData.mixed_lower
+MixedExpansionData.slack_error_le_mixedCount_mul_proper_min
+MixedExpansionData.hallCuts_of_scaled_error_le_slack
 ActiveBlockData.sum_active_complement_eq
 ActiveBlockData.sum_activeBlock_eq
 ActiveBlockData.isCylinder_of_activeBlockData
@@ -368,6 +371,29 @@ T * M.cutMass U S
 for all cuts; `CountMatrix.hallCuts_of_scaled_bary_error_le_mixed` then turns
 that estimate into `M.HallCuts`.
 
+The active-block degree data alone does not imply the required `mixedCount`
+lower bound.  The cylinder-construction side should therefore also expose
+`MixedExpansionData`, whose core field is
+
+```lean
+m ^ b ≤ (Cyl.incidence).mixedCount U
+```
+
+for every nonempty proper color cut `U`.  The lemma
+`MixedExpansionData.slack_error_le_mixedCount_mul_proper_min` converts this
+mixed expansion plus `m ^ b > m * (b + T) * T` into the mixed slack margin
+needed by the scaled-barycenter Hall proof.  The bridge theorem
+`MixedExpansionData.hallCuts_of_scaled_error_le_slack` then turns the explicit
+controlled-error estimate
+
+```lean
+T * M.cutMass U S
+  ≤ S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c)
+      + m * (b + T) * min S.card (T - S.card)
+```
+
+on nontrivial cuts into `M.HallCuts`.
+
 Therefore the base-tail proof should expose this data deliberately, either by
 strengthening the cylinder-construction subgoal with an internal
 `BlockCylinder`/`StrongCylinder` predicate or by proving the active-block
@@ -379,24 +405,28 @@ abstract endpoint.
 
 ```lean
 OddSuccessorBaseTailActiveBlockCylinderConstructionGoal
+OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal
 OddSuccessorBaseTailActiveBlockResidueRoundingGoal
 OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal
+OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal
 OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal
 oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockPieces
 oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockCompatiblePieces
+oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
 ```
 
 The practical target decomposition is:
 
-1. Cylinder construction with active-block data:
+1. Cylinder construction with active-block and mixed-expansion data:
    construct the base-tail cylinder from `StandardCayleySolved b m` and packet
-   data, and prove the active-degree formula above.
+   data, prove the active-degree formula above, and prove
+   `m ^ b ≤ mixedCount U` for every nonempty proper color cut `U`.
 2. Controlled residue rounding:
-   use the active-degree formula and `m ^ b > m * (b + T) * T` to prove the
-   sharper compatible-residue theorem:
+   use the active-degree formula, mixed expansion, and
+   `m ^ b > m * (b + T) * T` to prove the sharper compatible-residue theorem:
 
    ```lean
-   OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal
+   OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal
    ```
 
    This says that every row/column compatible primitive residue specification

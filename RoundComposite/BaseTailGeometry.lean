@@ -65,6 +65,59 @@ structure ActiveBlockData {b m T : Nat} [NeZero m]
     ∀ c : Fin (b + T),
       (Cyl.incidence).colorDegree c = (m - activeBlock c) * m ^ b
 
+structure MixedExpansionData {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    (Cyl : Cylinder b m T packets) where
+  mixed_lower :
+    ∀ U : Finset (Fin (b + T)),
+      U.Nonempty → U ≠ Finset.univ →
+        m ^ b ≤ (Cyl.incidence).mixedCount U
+
+namespace MixedExpansionData
+
+theorem slack_error_le_mixedCount_mul_proper_min
+    {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : MixedExpansionData Cyl) {U : Finset (Fin (b + T))}
+    (hUne : U.Nonempty) (hUuniv : U ≠ Finset.univ)
+    (hTpos : 0 < T) (hSlack : m ^ b > m * (b + T) * T)
+    (S : Finset (Fin T)) :
+    m * (b + T) * min S.card (T - S.card)
+      ≤ (Cyl.incidence).mixedCount U * min S.card (T - S.card) := by
+  have hbaseScale : m * (b + T) ≤ m * (b + T) * T := by
+    exact Nat.le_mul_of_pos_right (m * (b + T)) hTpos
+  have hbaseLtPow : m * (b + T) < m ^ b :=
+    hbaseScale.trans_lt hSlack
+  have hbaseLeMixed : m * (b + T) ≤ (Cyl.incidence).mixedCount U :=
+    Nat.le_of_lt (hbaseLtPow.trans_le (D.mixed_lower U hUne hUuniv))
+  simpa [Nat.mul_assoc] using
+    Nat.mul_le_mul_right (min S.card (T - S.card)) hbaseLeMixed
+
+theorem hallCuts_of_scaled_error_le_slack
+    {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : MixedExpansionData Cyl) (hTpos : 0 < T)
+    (hSlack : m ^ b > m * (b + T) * T)
+    (M : ActiveHall.CountMatrix Cyl.incidence)
+    (hScaled :
+      ∀ U : Finset (Fin (b + T)), ∀ S : Finset (Fin T),
+        U.Nonempty → U ≠ Finset.univ →
+        S.Nonempty → S ≠ Finset.univ →
+          T * M.cutMass U S ≤
+            S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c) +
+              m * (b + T) * min S.card (T - S.card)) :
+    M.HallCuts := by
+  apply M.hallCuts_of_nontrivial_scaled_bary_error_le_mixed hTpos
+  intro U S hUne hUuniv hSne hSuniv
+  exact
+    (hScaled U S hUne hUuniv hSne hSuniv).trans
+      (Nat.add_le_add_left
+        (D.slack_error_le_mixedCount_mul_proper_min
+          hUne hUuniv hTpos hSlack S)
+        (S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c)))
+
+end MixedExpansionData
+
 namespace ActiveBlockData
 
 theorem active_complement_pos {b m T : Nat} [NeZero m]

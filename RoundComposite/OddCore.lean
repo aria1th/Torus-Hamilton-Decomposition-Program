@@ -5378,6 +5378,26 @@ def OddSuccessorBaseTailActiveBlockCylinderConstructionGoal : Prop :=
       ∃ _D : BaseTail.ActiveBlockData Cyl,
         BaseTail.IsCylinder Cyl
 
+def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+      ∃ _Mix : BaseTail.MixedExpansionData Cyl,
+        BaseTail.IsCylinder Cyl
+
 def OddSuccessorBaseTailActiveBlockResidueRoundingGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
@@ -5426,6 +5446,34 @@ def OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal : Prop :=
     ∀ {Cyl : BaseTail.Cylinder b m T packets},
       BaseTail.IsCylinder Cyl →
       BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+      ∀ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
+        R.RowCompatible Cyl.incidence →
+        R.ColCompatible Cyl.incidence →
+        (∀ c : Fin (b + T), IsUnit (R.target c ⟨0, by omega⟩)) →
+        (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+          IsUnit (R.target c σ - R.target c ⟨1, by omega⟩)) →
+        ActiveHall.FeasibleWithResidues Cyl.incidence R
+
+def OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      BaseTail.MixedExpansionData Cyl →
       (hT2 : 2 ≤ T) →
       ∀ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
         R.RowCompatible Cyl.incidence →
@@ -5527,6 +5575,32 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockC
     hCyl
     (oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible hRound)
     hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
+    (hCyl : OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal)
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hLift : OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
+  intro hHall b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+  letI : NeZero m := ⟨ne_of_gt (by omega : 0 < m)⟩
+  rcases hCyl hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT with
+    ⟨Cyl, hBlock, hMix, hCylValid⟩
+  have hT2 : 2 ≤ T := by omega
+  have hResidues :
+      BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl :=
+    BaseTail.feasiblePrimitiveResidues_of_successor_activeBlockData_feasible_compatible
+      hb5 hT hmodd hBlock
+      (hRound hb5 hmodd hm3 hsmall packets hlen htotal
+        hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hMix hT2)
+  rcases
+    BaseTail.primitiveActiveSymboling_of_feasiblePrimitiveResidues_and_hallRealization
+      hHall hResidues with
+    ⟨A, hA⟩
+  exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 hA
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
