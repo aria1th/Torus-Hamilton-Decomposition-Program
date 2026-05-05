@@ -3199,6 +3199,26 @@ theorem swapAt_count_right_zmod {m T : Nat} {X C : Type*}
   simpa [add_comm] using
     (Φ.swapAt_count_zmod (m := m) x₀ σ τ τ c)
 
+noncomputable def swapResidueSpec {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) (x₀ : X) (σ τ : Fin T) :
+    ResidueSpec m T C where
+  target := fun c ρ =>
+    R.target c ρ
+      - (if Φ.color x₀ ρ = c then 1 else 0)
+      + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0)
+
+@[simp] theorem swapResidueSpec_target {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) (x₀ : X) (σ τ ρ : Fin T) (c : C) :
+    (Φ.swapResidueSpec R x₀ σ τ).target c ρ =
+      R.target c ρ
+        - (if Φ.color x₀ ρ = c then 1 else 0)
+        + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0) := by
+  rfl
+
 theorem count_eq_choiceDegree {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) (c : C) (σ : Fin T) :
@@ -3484,6 +3504,16 @@ def HasResidues {m T : Nat} {X C : Type*}
     (R : ResidueSpec m T C) : Prop :=
   ∀ c σ, (Φ.count c σ : ZMod m) = R.target c σ
 
+theorem swapAt_hasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {Φ : Symboling I}
+    {R : ResidueSpec m T C} {x₀ : X} {σ τ : Fin T}
+    (hResidues : Φ.HasResidues R) :
+    (Φ.swapAt x₀ σ τ).HasResidues (Φ.swapResidueSpec R x₀ σ τ) := by
+  intro c ρ
+  rw [Φ.swapAt_count_zmod (m := m) x₀ σ τ ρ c, hResidues c ρ]
+  rfl
+
 theorem hasResidues_of_realizes {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} {Φ : Symboling I} {M : CountMatrix I}
@@ -3687,6 +3717,15 @@ def SymbolingWithResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (R : ResidueSpec m T C) : Prop :=
   ∃ Φ : Symboling I, Φ.HasResidues R
+
+theorem symbolingWithResidues_of_swapAt_hasResidues
+    {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {Φ : Symboling I}
+    {R : ResidueSpec m T C} (hResidues : Φ.HasResidues R)
+    (x₀ : X) (σ τ : Fin T) :
+    SymbolingWithResidues I (Φ.swapResidueSpec R x₀ σ τ) :=
+  ⟨Φ.swapAt x₀ σ τ, Φ.swapAt_hasResidues hResidues⟩
 
 universe uX uC
 
