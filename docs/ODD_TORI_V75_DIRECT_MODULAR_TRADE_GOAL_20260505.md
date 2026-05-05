@@ -128,13 +128,18 @@ BaseTail.Trades.successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_
 BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
 BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade
 BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteReservoir
+BaseTail.Trades.successorActiveBlockCanonicalPermutationCorrectionGoal_of_canonicalLocalTrade
+BaseTail.Trades.successorActiveBlockCanonicalPermutationCorrectionGoal_iff_canonicalLocalTrade
+BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir
 ```
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
-returns from pre-correction to canonical local trade.  Worker A's remaining
-mathematical content is therefore the actual finite canonical local/reservoir
-realization, not an extra correction endpoint.
+returns from pre-correction to canonical local trade.  The finite-reservoir,
+pre-correction, and permutation-correction names are now theorem-equivalent to
+the canonical local-trade endpoint.  Worker A's remaining mathematical content
+is therefore the actual finite canonical local/reservoir realization, not an
+extra correction endpoint.
 
 ### Worker B: Base-Tail Prefix Lift
 

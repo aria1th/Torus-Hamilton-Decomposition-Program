@@ -792,6 +792,19 @@ theorem successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteRese
     (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_finiteCoactiveSiteReservoir
       hReservoir)
 
+theorem successorActiveBlockCanonicalPermutationCorrectionGoal_of_canonicalLocalTrade
+    (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
+    SuccessorActiveBlockCanonicalPermutationCorrectionGoal :=
+  successorActiveBlockCanonicalPermutationCorrectionGoal_of_preCorrection
+    (successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+      hTrade)
+
+theorem successorActiveBlockCanonicalPermutationCorrectionGoal_iff_canonicalLocalTrade :
+    SuccessorActiveBlockCanonicalPermutationCorrectionGoal ↔
+      SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  ⟨successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrection,
+    successorActiveBlockCanonicalPermutationCorrectionGoal_of_canonicalLocalTrade⟩
+
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_permutationCorrection
     (hCorrection : SuccessorActiveBlockCanonicalPermutationCorrectionGoal) :
     SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
@@ -810,6 +823,12 @@ theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_finiteCo
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
     (successorActiveBlockLocalSymbolTradeGoal_of_finiteCoactiveSiteReservoir
       hReservoir)
+
+theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
+      SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  ⟨successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_preCorrection,
+    successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteReservoir⟩
 
 theorem successorActiveBlockCanonicalFeasibleResidueGoal_of_canonicalLocalTrade
     (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
