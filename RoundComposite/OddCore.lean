@@ -5636,6 +5636,33 @@ abbrev nonbufferTokenBase
       c ≠ A.buffer.color1 A.slotEquiv ∧
       c ≠ A.buffer.color2 A.slotEquiv} × Fin (T - 1)
 
+def nonbufferTokenBaseRight
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (hTpos : 0 < T) (a : A.nonbufferTokenBase) : Fin T :=
+  Fin.cast (by omega) a.2.succ
+
+def bufferTokenBaseRight
+    {T : Nat} (hTpos : 0 < T) (ρ : Fin (T - 1)) : Fin T :=
+  Fin.cast (by omega) ρ.succ
+
+@[simp] theorem nonbufferTokenBaseRight_eq_token_right
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (hTpos : 0 < T) (a : A.nonbufferTokenBase) (k : Fin (m - 1)) :
+    BaseTail.Trades.NonbufferReservoirToken.right hTpos (a, k) =
+      nonbufferTokenBaseRight (A := A) hTpos a := rfl
+
+@[simp] theorem bufferTokenBaseRight_eq_token_right
+    {m T : Nat} (hTpos : 0 < T)
+    (k : Fin (m - 1)) (ρ : Fin (T - 1)) :
+    BaseTail.Trades.BufferReservoirToken.right hTpos (k, ρ) =
+      bufferTokenBaseRight hTpos ρ := rfl
+
 inductive ReservoirMoveToken
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
@@ -6848,6 +6875,136 @@ theorem thresholdMoveList_nonzero_delta_eq_family_sums
   exact
     P.thresholdMoveTokenFinset_sum_eq_family_sums quota
       (P.thresholdTokenNonzeroDelta hTpos σ c)
+
+def zeroReservoirDelta
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (_P : ReservoirSitePlan A) : Fin (b + T) → Fin T → ZMod m :=
+  fun _ _ => 0
+
+noncomputable def baselineReservoirResidual
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (initial : ActiveHall.Symboling A.Cyl.incidence) :
+    Fin (b + T) → Fin T → ZMod m :=
+  BaseTail.Trades.reservoirResidual
+    (BaseTail.Trades.activeBlockResidueSpec A.D)
+    (initial.residueSpec (m := m))
+    P.zeroReservoirDelta
+
+noncomputable def thresholdNonbufferCorrectionQuota
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence) :
+    ReservoirMoveToken A → ZMod m
+  | ReservoirMoveToken.nonbuffer q =>
+      P.baselineReservoirResidual initial
+        (BaseTail.Trades.NonbufferReservoirToken.color q)
+        (BaseTail.Trades.NonbufferReservoirToken.right hTpos q)
+  | ReservoirMoveToken.buffer01 _ => 0
+  | ReservoirMoveToken.buffer02 _ => 0
+
+noncomputable def thresholdNonbufferCorrectionDelta
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence) :
+    Fin (b + T) → Fin T → ZMod m :=
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+    (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+    (P.thresholdMoveList hTpos
+      (P.thresholdNonbufferCorrectionQuota hTpos initial))
+
+noncomputable def postNonbufferReservoirResidual
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence) :
+    Fin (b + T) → Fin T → ZMod m :=
+  BaseTail.Trades.reservoirResidual
+    (BaseTail.Trades.activeBlockResidueSpec A.D)
+    (initial.residueSpec (m := m))
+    (P.thresholdNonbufferCorrectionDelta hT initial)
+
+noncomputable def thresholdCanonicalQuota
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence) :
+    ReservoirMoveToken A → ZMod m :=
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  fun q =>
+    match q with
+    | ReservoirMoveToken.nonbuffer q =>
+        P.thresholdNonbufferCorrectionQuota hTpos initial
+          (ReservoirMoveToken.nonbuffer q)
+    | ReservoirMoveToken.buffer01 q =>
+        -P.postNonbufferReservoirResidual hT initial
+          (A.buffer.color1 A.slotEquiv)
+          (BaseTail.Trades.BufferReservoirToken.right hTpos q)
+    | ReservoirMoveToken.buffer02 q =>
+        -P.postNonbufferReservoirResidual hT initial
+          (A.buffer.color2 A.slotEquiv)
+          (BaseTail.Trades.BufferReservoirToken.right hTpos q)
+
+@[simp] theorem thresholdCanonicalQuota_nonbuffer_copy
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    (a : A.nonbufferTokenBase) (k : Fin (m - 1)) :
+    P.thresholdCanonicalQuota hT initial
+        (ReservoirMoveToken.nonbuffer (a, k)) =
+      P.baselineReservoirResidual initial a.1.1
+        (nonbufferTokenBaseRight (A := A)
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) a) := rfl
+
+@[simp] theorem thresholdCanonicalQuota_buffer01_copy
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    (ρ : Fin (T - 1)) (k : Fin (m - 1)) :
+    P.thresholdCanonicalQuota hT initial
+        (ReservoirMoveToken.buffer01 (k, ρ)) =
+      -P.postNonbufferReservoirResidual hT initial
+        (A.buffer.color1 A.slotEquiv)
+        (bufferTokenBaseRight
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) ρ) := rfl
+
+@[simp] theorem thresholdCanonicalQuota_buffer02_copy
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    (ρ : Fin (T - 1)) (k : Fin (m - 1)) :
+    P.thresholdCanonicalQuota hT initial
+        (ReservoirMoveToken.buffer02 (k, ρ)) =
+      -P.postNonbufferReservoirResidual hT initial
+        (A.buffer.color2 A.slotEquiv)
+        (bufferTokenBaseRight
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) ρ) := rfl
 
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
