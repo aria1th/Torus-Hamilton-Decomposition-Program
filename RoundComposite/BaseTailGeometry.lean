@@ -338,6 +338,91 @@ theorem packetPhase_step_second {N m : Nat} [NeZero N] [NeZero m]
   dsimp [packetPhase]
   abel
 
+def packetPhaseFiberEquiv {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (φ : ZMod m) :
+    ZMod N ≃ {y : ZMod N × ZMod m // packetPhase hdiv y = φ} where
+  toFun x :=
+    ⟨(x, φ - ZMod.castHom hdiv (ZMod m) x), by
+      dsimp [packetPhase]
+      abel⟩
+  invFun y := y.1.1
+  left_inv x := rfl
+  right_inv y := by
+    rcases y with ⟨⟨x, z⟩, hθ⟩
+    apply Subtype.ext
+    change (x, φ - ZMod.castHom hdiv (ZMod m) x) = (x, z)
+    apply Prod.ext
+    · rfl
+    · dsimp [packetPhase] at hθ
+      rw [← hθ]
+      rw [ZMod.castHom_apply]
+      abel
+
+theorem packetPhase_fiber_card {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (φ : ZMod m) :
+    ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+      (fun y => packetPhase hdiv y = φ)).card = N := by
+  have hsub :
+      Fintype.card
+        {y : ZMod N × ZMod m // packetPhase hdiv y = φ} =
+        ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+          (fun y => packetPhase hdiv y = φ)).card := by
+    exact Fintype.card_subtype _
+  have hcongr :
+      Fintype.card (ZMod N) =
+        Fintype.card
+          {y : ZMod N × ZMod m // packetPhase hdiv y = φ} :=
+    Fintype.card_congr (packetPhaseFiberEquiv hdiv φ)
+  rw [← hsub, ← hcongr]
+  exact ZMod.card N
+
+def packetPhasePreimageEquiv {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (S : Finset (ZMod m)) :
+    ZMod N × {φ : ZMod m // φ ∈ S} ≃
+      {y : ZMod N × ZMod m // packetPhase hdiv y ∈ S} where
+  toFun x :=
+    ⟨(x.1, x.2.1 - ZMod.castHom hdiv (ZMod m) x.1), by
+      dsimp [packetPhase]
+      convert x.2.2 using 1
+      abel⟩
+  invFun y :=
+    (y.1.1, ⟨packetPhase hdiv y.1, y.2⟩)
+  left_inv x := by
+    rcases x with ⟨x, φ⟩
+    apply Prod.ext
+    · rfl
+    · apply Subtype.ext
+      dsimp [packetPhase]
+      abel_nf
+  right_inv y := by
+    rcases y with ⟨⟨x, z⟩, hS⟩
+    apply Subtype.ext
+    change (x, packetPhase hdiv (x, z) -
+        ZMod.castHom hdiv (ZMod m) x) = (x, z)
+    apply Prod.ext
+    · rfl
+    · dsimp [packetPhase]
+      abel_nf
+
+theorem packetPhase_preimage_card {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (S : Finset (ZMod m)) :
+    ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+      (fun y => packetPhase hdiv y ∈ S)).card = S.card * N := by
+  have hsub :
+      Fintype.card
+        {y : ZMod N × ZMod m // packetPhase hdiv y ∈ S} =
+        ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+          (fun y => packetPhase hdiv y ∈ S)).card := by
+    exact Fintype.card_subtype _
+  have hcongr :
+      Fintype.card (ZMod N × {φ : ZMod m // φ ∈ S}) =
+        Fintype.card
+          {y : ZMod N × ZMod m // packetPhase hdiv y ∈ S} :=
+    Fintype.card_congr (packetPhasePreimageEquiv hdiv S)
+  rw [← hsub, ← hcongr]
+  simp [Fintype.card_prod, ZMod.card, Fintype.card_subtype,
+    Nat.mul_comm]
+
 def packetPrefixLo (packet : List Nat) (r : Fin packet.length) : Nat :=
   (packet.take r.val).sum
 
@@ -410,6 +495,16 @@ theorem packetPrefixPhaseSet_card
     exact
       Nat.ModEq.eq_of_lt_of_lt
         ((ZMod.natCast_eq_natCast_iff a b m).mp hab) ha_lt hb_lt
+
+theorem packetPhase_preimage_packetPrefixPhaseSet_card
+    {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) {packet : List Nat} (hsum : packet.sum = m)
+    (r : Fin packet.length) :
+    ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+      (fun y => packetPhase hdiv y ∈ packetPrefixPhaseSet m packet r)).card =
+        packet.get r * N := by
+  rw [packetPhase_preimage_card hdiv,
+    packetPrefixPhaseSet_card hsum]
 
 /--
 The remaining local packet theorem needed by the active-block cylinder.
