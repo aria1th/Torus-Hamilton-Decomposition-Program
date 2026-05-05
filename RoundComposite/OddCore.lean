@@ -5486,6 +5486,194 @@ def OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGo
             ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
         (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
 
+theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal :
+    OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal := by
+  classical
+  intro b m T _instM _instPow _hb5 hm3 Dbase packets hlen htotal
+    hpacketSum hpacketUnits _hPrefix hPacketSplits _hT
+  let slotEquiv : BaseTail.PacketPartSlot packets ≃ Fin (b + T) :=
+    Classical.choice (BaseTail.successorPacketPartSlotEquivGoal hlen htotal)
+  let S : ∀ i : Fin packets.length,
+      BaseTail.PacketPhaseSplit (m ^ b) m (packets.get i) :=
+    fun i =>
+      Classical.choice
+        (hPacketSplits (packets.get i) (List.get_mem packets i))
+  let baseColorOfSlot : BaseTail.PacketPartSlot packets → Fin b :=
+    fun slot => Fin.cast hlen slot.1
+  let rankAt : Shared.TorusVertex (b + 1) m → Fin packets.length →
+      ZMod (m ^ b) :=
+    fun x i =>
+      (Dbase.cycleCoordinate (Fin.cast hlen i)).equiv.symm
+        (BaseTail.basePart x)
+  let ordinaryAt : Fin (b + T) → Shared.TorusVertex (b + 1) m → Bool :=
+    fun c x =>
+      (S (slotEquiv.symm c).1).ordinary (slotEquiv.symm c).2
+        (rankAt x (slotEquiv.symm c).1, BaseTail.activeCoord x)
+  let dir : Fin (b + T) → Shared.TorusVertex (b + 1) m → Fin (b + 1) :=
+    fun c x =>
+      if ordinaryAt c x then
+        (Dbase.colorDir (baseColorOfSlot (slotEquiv.symm c))
+          (BaseTail.basePart x)).castSucc
+      else
+        BaseTail.activeDir b
+  let Cyl : BaseTail.Cylinder b m T packets :=
+    {
+      dir := dir
+      active_card := by
+        intro x
+        simpa [dir, ordinaryAt, rankAt, BaseTail.castSucc_ne_activeDir] using
+          BaseTail.packetPartColor_false_card_at_state_successor
+            packets slotEquiv hm3 hlen htotal hpacketSum hpacketUnits
+            S (fun i => rankAt x i) (BaseTail.activeCoord x)
+    }
+  let D : BaseTail.ActiveBlockData Cyl :=
+    {
+      activeBlock := fun c =>
+        BaseTail.packetPartSlotValue packets (slotEquiv.symm c)
+      activeBlock_pos := by
+        intro c
+        exact
+          (BaseTail.successorPacketPartSlotUnitsGoal
+            hlen htotal hpacketUnits (slotEquiv.symm c)).1
+      activeBlock_lt := by
+        intro c
+        exact
+          (BaseTail.successorPacketPartSlotUnitsGoal
+            hlen htotal hpacketUnits (slotEquiv.symm c)).2.1
+      activeBlock_coprime := by
+        intro c
+        exact
+          (BaseTail.successorPacketPartSlotUnitsGoal
+            hlen htotal hpacketUnits (slotEquiv.symm c)).2.2
+      active_degree_eq := by
+        intro c
+        let slot := slotEquiv.symm c
+        let baseColor : Fin b := baseColorOfSlot slot
+        let C := Dbase.cycleCoordinate baseColor
+        have hslotUnits :=
+          BaseTail.successorPacketPartSlotUnitsGoal
+            hlen htotal hpacketUnits slot
+        have hfalse :=
+          (S slot.1).ordinary_false_card_of_equiv
+            (BaseTail.baseActiveRankEquiv C) slot.2
+            (Nat.le_of_lt hslotUnits.2.1)
+        simpa [ActiveHall.Incidence.colorDegree, BaseTail.Cylinder.incidence,
+          BaseTail.Cylinder.active, Cyl, dir, ordinaryAt, rankAt,
+          baseColorOfSlot, slot, baseColor, C,
+          BaseTail.baseActiveRankEquiv_apply, BaseTail.castSucc_ne_activeDir]
+          using hfalse
+    }
+  refine ⟨Cyl, D, ?_, ?_⟩
+  · intro x i hi
+    have hiv : i.val < b := by
+      by_contra hnot
+      have hlast : i = BaseTail.activeDir b := by
+        apply Fin.ext
+        simp [BaseTail.activeDir]
+        omega
+      exact hi hlast
+    let j : Fin b := ⟨i.val, hiv⟩
+    have hj_cast : j.castSucc = i := by
+      apply Fin.ext
+      rfl
+    rcases Dbase.edgePartition (BaseTail.basePart x) j with
+      ⟨baseColor, hbaseColor, hbaseUnique⟩
+    let packetIndex : Fin packets.length := Fin.cast hlen.symm baseColor
+    let y : ZMod (m ^ b) × ZMod m :=
+      (rankAt x packetIndex, BaseTail.activeCoord x)
+    rcases (S packetIndex).ordinary_unique y with
+      ⟨part, hpart, hpartUnique⟩
+    let slot : BaseTail.PacketPartSlot packets := ⟨packetIndex, part⟩
+    refine ⟨slotEquiv slot, ?_, ?_⟩
+    · have hbaseCast : baseColorOfSlot slot = baseColor := by
+        simp [baseColorOfSlot, slot, packetIndex]
+      have hordCand : ordinaryAt (slotEquiv slot) x = true := by
+        change
+          (S (slotEquiv.symm (slotEquiv slot)).1).ordinary
+              (slotEquiv.symm (slotEquiv slot)).2
+              (rankAt x (slotEquiv.symm (slotEquiv slot)).1,
+                BaseTail.activeCoord x) = true
+        rw [Equiv.symm_apply_apply]
+        simpa [slot, y] using hpart
+      simp [Cyl, dir, hordCand, hbaseCast,
+        hbaseColor, hj_cast]
+    · intro c hc
+      have hordinary' :
+          (S (slotEquiv.symm c).1).ordinary (slotEquiv.symm c).2
+            (rankAt x (slotEquiv.symm c).1, BaseTail.activeCoord x) =
+              true := by
+        by_cases hord :
+            (S (slotEquiv.symm c).1).ordinary (slotEquiv.symm c).2
+              (rankAt x (slotEquiv.symm c).1, BaseTail.activeCoord x)
+        · simpa using hord
+        · exfalso
+          have hdirActive : Cyl.dir c x = BaseTail.activeDir b := by
+            simpa [Cyl, dir, ordinaryAt, hord]
+          exact hi (hc.symm.trans hdirActive)
+      have hdirCast :
+          (Dbase.colorDir (baseColorOfSlot (slotEquiv.symm c))
+            (BaseTail.basePart x)).castSucc =
+            i := by
+        simpa [Cyl, dir, ordinaryAt, hordinary'] using hc
+      have hbaseEqJ :
+          Dbase.colorDir (baseColorOfSlot (slotEquiv.symm c))
+            (BaseTail.basePart x) = j := by
+        apply Fin.ext
+        have hv := congrArg Fin.val hdirCast
+        simpa [hj_cast] using hv
+      have hbaseEq : baseColorOfSlot (slotEquiv.symm c) = baseColor :=
+        hbaseUnique (baseColorOfSlot (slotEquiv.symm c)) hbaseEqJ
+      have hpacketEq : (slotEquiv.symm c).1 = packetIndex := by
+        apply Fin.ext
+        have hv := congrArg Fin.val hbaseEq
+        simp [baseColorOfSlot, packetIndex] at hv ⊢
+        exact hv
+      have hslotEq : slotEquiv.symm c = slot := by
+        cases hraw : slotEquiv.symm c with
+        | mk packetIndex' part' =>
+          rw [hraw] at hpacketEq hordinary'
+          dsimp [slot] at hpacketEq hordinary' ⊢
+          subst packetIndex'
+          have hpartEq : part' = part := by
+            exact hpartUnique part' (by simpa [y] using hordinary')
+          subst part'
+          rfl
+      calc
+        c = slotEquiv (slotEquiv.symm c) := by simp
+        _ = slotEquiv slot := by rw [hslotEq]
+  · intro c
+    let slot : BaseTail.PacketPartSlot packets := slotEquiv.symm c
+    let baseColor : Fin b := baseColorOfSlot slot
+    let C := Dbase.cycleCoordinate baseColor
+    let g : ZMod (m ^ b) × ZMod m → ZMod (m ^ b) × ZMod m :=
+      fun y =>
+        if (S slot.1).ordinary slot.2 y then
+          (y.1 + 1, y.2)
+        else
+          (y.1, y.2 + 1)
+    refine
+      Shared.single_cycle_of_equiv_conj
+        (BaseTail.baseActiveRankEquiv C).symm
+        (Cyl.step c) g
+        ((S slot.1).step_singleCycle slot.2) ?_
+    intro y
+    rcases y with ⟨z, a⟩
+    by_cases hord : (S slot.1).ordinary slot.2 (z, a)
+    · have hstep :
+          Shared.cayleyColorStep Dbase.colorDir baseColor (C.equiv z) =
+            C.equiv z +
+              Shared.torusBasis b m
+                (Dbase.colorDir baseColor (C.equiv z)) := rfl
+      simpa [Cyl, BaseTail.Cylinder.step, dir, ordinaryAt, rankAt,
+        baseColorOfSlot, slot, baseColor, C, g, hord,
+        Shared.cayleyColorStep] using
+        BaseTail.baseActiveRankEquiv_add_castSucc_of_step
+          C (C.equiv z) a
+          (Dbase.colorDir baseColor (C.equiv z)) hstep
+    · simpa [Cyl, BaseTail.Cylinder.step, dir, ordinaryAt, rankAt,
+        baseColorOfSlot, slot, baseColor, C, g, hord] using
+        BaseTail.baseActiveRankEquiv_add_activeDir C (C.equiv z) a
+
 /--
 Phase-split construction target for the full mixed active-block cylinder.
 
@@ -5528,6 +5716,11 @@ theorem oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal_of_coo
     hBuild hb5 hm3
       (Shared.coordinatizedCayleyDecomposition_of_single_cycle hpow Dbase)
       packets hlen htotal hpacketSum hpacketUnits hPrefix hPacketSplits hT
+
+theorem oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal :
+    OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal :=
+  oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal_of_coordinatized
+    oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal
 
 def OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockMixedCylinderConstructionGoal :
     Prop :=
@@ -5584,6 +5777,11 @@ theorem oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_o
     (oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal_of_coordinatized
       hBuild)
 
+theorem oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :
+    OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :=
+  oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_of_coordinatized_activeBlock
+    oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal
+
 theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
     (hSplit : BaseTail.SuccessorPacketPhaseSplitPowerGoal)
     (hBuild : OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal) :
@@ -5604,6 +5802,12 @@ theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
     hBuild hb5 hm3 Dbase packets hlen htotal
       hpacketSum hpacketUnits hPrefix hPacketSplits hT
 
+theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal :
+    OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal :=
+  oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
+    BaseTail.successorPacketPhaseSplitPowerGoal
+    oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal
+
 theorem oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw
     (hRaw : OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal) :
     OddSuccessorBaseTailActiveBlockCylinderConstructionGoal := by
@@ -5614,6 +5818,11 @@ theorem oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw
     ⟨Cyl, D, hOrdinary, hHamiltonian⟩
   refine ⟨Cyl, D, ?_⟩
   exact D.isCylinder_of_activeBlockData hOrdinary hHamiltonian (by omega)
+
+theorem oddSuccessorBaseTailActiveBlockCylinderConstructionGoal :
+    OddSuccessorBaseTailActiveBlockCylinderConstructionGoal :=
+  oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw
+    oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal
 
 def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
@@ -5664,6 +5873,11 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_coordina
     BaseTail.successorPacketPhaseSplitPowerGoal
     (oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_of_coordinatized_activeBlock
       hBuild)
+
+theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal :
+    OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal :=
+  oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_coordinatized_phaseSplit
+    oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal
 
 def OddSuccessorBaseTailActiveBlockMixedExpansionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
@@ -6069,6 +6283,17 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockM
       hRound)
     hLift
 
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_closedCylinder_controlled_prefix
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
+    oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal
+    hRound
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
     (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
@@ -6144,6 +6369,15 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixe
   oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
       hCyl hMix hRound hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_controlled_prefix
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_closedCylinder_controlled_prefix
+      hRound hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
@@ -6286,6 +6520,18 @@ def OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal : Prop :
   OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.ExpandedColorDirColorHamiltonianGoal
+
+def OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedCylinderResiduals
+    (h : OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_controlled_prefix
+      hRound hLift
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
     (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :
