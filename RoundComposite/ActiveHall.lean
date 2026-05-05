@@ -778,6 +778,65 @@ theorem mixedCount_le_hitCount_compl {T : Nat} {X C : Type*}
   exact ⟨c, Finset.mem_inter.mpr
     ⟨hcActive, Finset.mem_compl.mpr hcNotU⟩⟩
 
+theorem mixedCount_eq_card_filter_hit_and_compl
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.mixedCount U =
+      ((Finset.univ : Finset X).filter
+        (fun x =>
+          (I.active x ∩ U).Nonempty ∧
+            (I.active x ∩ Uᶜ).Nonempty)).card := by
+  classical
+  rw [I.mixedCount_eq_card_filter U]
+  apply congrArg Finset.card
+  ext x
+  constructor
+  · intro hx
+    rcases (Finset.mem_filter.mp hx).2 with ⟨hpos, hlt⟩
+    refine Finset.mem_filter.mpr ⟨Finset.mem_univ x, ?_⟩
+    have hhit : (I.active x ∩ U).Nonempty := Finset.card_pos.mp hpos
+    have hnotSubset : ¬ I.active x ⊆ U := by
+      intro hsubset
+      have heq : I.active x ∩ U = I.active x := by
+        ext c
+        constructor
+        · intro hc
+          exact (Finset.mem_inter.mp hc).1
+        · intro hc
+          exact Finset.mem_inter.mpr ⟨hc, hsubset hc⟩
+      have hcard :
+          (I.active x ∩ U).card = T := by
+        rw [heq, I.active_card x]
+      omega
+    rw [Finset.not_subset] at hnotSubset
+    rcases hnotSubset with ⟨c, hcActive, hcNotU⟩
+    exact ⟨hhit, ⟨c, Finset.mem_inter.mpr
+      ⟨hcActive, Finset.mem_compl.mpr hcNotU⟩⟩⟩
+  · intro hx
+    rcases (Finset.mem_filter.mp hx).2 with ⟨hhit, hcompl⟩
+    refine Finset.mem_filter.mpr ⟨Finset.mem_univ x, ?_⟩
+    have hpos : 0 < (I.active x ∩ U).card := hhit.card_pos
+    rcases hcompl with ⟨c, hc⟩
+    have hproper : (I.active x ∩ U).card < T := by
+      have hnotmem : c ∉ I.active x ∩ U := by
+        intro hcu
+        exact (Finset.mem_compl.mp (Finset.mem_inter.mp hc).2)
+          (Finset.mem_inter.mp hcu).2
+      have hsub : I.active x ∩ U ⊆ I.active x := by
+        intro d hd
+        exact (Finset.mem_inter.mp hd).1
+      have hlt_active :
+          (I.active x ∩ U).card < (I.active x).card :=
+        Finset.card_lt_card (Finset.ssubset_iff_subset_ne.mpr
+          ⟨hsub, by
+            intro heq
+            exact hnotmem (by
+              rw [heq]
+              exact (Finset.mem_inter.mp hc).1)⟩)
+      simpa [I.active_card x] using hlt_active
+    exact ⟨hpos, hproper⟩
+
 theorem scaled_bary_cutMass_le_cutCap {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) (S : Finset (Fin T)) :
