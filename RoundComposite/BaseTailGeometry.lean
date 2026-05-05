@@ -3038,6 +3038,251 @@ theorem activeTailCanonicalRho_no_hit_before {m n : Nat}
     omega
   · exact h ⟨j, hhit⟩
 
+theorem activeTailCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+    {m n k : Nat} (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (hk : k + 1 < n) :
+    (activeTailCanonicalRho hT z).val = k + 1 ↔
+      activeTailCanonicalRhoHitNat z k ∧
+        ∀ j : Nat, j < k → ¬ activeTailCanonicalRhoHitNat z j := by
+  constructor
+  · intro hρ
+    have hlt : (activeTailCanonicalRho hT z).val < n := by omega
+    constructor
+    · have hhit := activeTailCanonicalRho_pred_hitNat hT hlt
+      have hidx : (activeTailCanonicalRho hT z).val - 1 = k := by omega
+      simpa [hidx] using hhit
+    · intro j hj hhit
+      exact activeTailCanonicalRho_no_hit_before hT (z := z)
+        (j := j) (by omega) hhit
+  · intro h
+    have hlt_succ :
+        (activeTailCanonicalRho hT z).val < k + 2 := by
+      have hiff :=
+        activeTailCanonicalRho_val_lt_iff_exists_hit_before
+          (m := m) (n := n) hT (q := k + 2) (by omega) (z := z)
+      exact hiff.mpr ⟨k, by omega, h.1⟩
+    have hnlt :
+        ¬ (activeTailCanonicalRho hT z).val < k + 1 := by
+      intro hlt
+      have hiff :=
+        activeTailCanonicalRho_val_lt_iff_exists_hit_before
+          (m := m) (n := n) hT (q := k + 1) (by omega) (z := z)
+      rcases hiff.mp hlt with ⟨j, hjlt, hjhit⟩
+      exact h.2 j (by omega) hjhit
+    omega
+
+theorem activePrefixNoHitSubtypeCard
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t} =
+      (m - 1) ^ n := by
+  classical
+  let e :
+      {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t} ≃
+        (Fin n → {a : ZMod m // a ≠ t}) :=
+  { toFun := fun x i => ⟨x.1 i, x.2 i⟩
+    invFun := fun y => ⟨fun i => (y i).1, fun i => (y i).2⟩
+    left_inv := by
+      intro x
+      ext i
+      rfl
+    right_inv := by
+      intro y
+      ext i
+      rfl }
+  calc
+    Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t}
+        = Fintype.card (Fin n → {a : ZMod m // a ≠ t}) :=
+          Fintype.card_congr e
+    _ = Fintype.card {a : ZMod m // a ≠ t} ^ n := by
+          simp
+    _ = (m - 1) ^ n := by
+          have hsub :
+              Fintype.card {a : ZMod m // a ≠ t} = m - 1 := by
+            have hcompl :=
+              Fintype.card_subtype_compl (fun a : ZMod m => a = t)
+            rw [Fintype.card_subtype_eq t] at hcompl
+            rw [ZMod.card m] at hcompl
+            exact hcompl
+          rw [hsub]
+
+theorem activePrefixNoHitIndicatorSum
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    (∑ x : (Fin n → ZMod m),
+        if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  classical
+  calc
+    (∑ x : (Fin n → ZMod m),
+        if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0)
+        =
+        ((Fintype.card {x : Fin n → ZMod m // ∀ i : Fin n, x i ≠ t}) :
+          ZMod m) := by
+          simp [Fintype.card_subtype]
+    _ = (((m - 1) ^ n : Nat) : ZMod m) := by
+          rw [activePrefixNoHitSubtypeCard (m := m) (n := n) t]
+    _ = (-1 : ZMod m) ^ n := by
+          rw [Nat.cast_pow]
+          have hbase : ((m - 1 : Nat) : ZMod m) = (-1 : ZMod m) := by
+            rw [Nat.cast_pred (NeZero.pos m)]
+            simp
+          rw [hbase]
+
+theorem activePrefixPairFreeLastIndicatorSum_zero
+    {m n : Nat} [NeZero m]
+    (P : (Fin n → ZMod m) → Prop) [DecidablePred P] :
+    (∑ p : (Fin n → ZMod m) × ZMod m,
+        if P p.1 then (1 : ZMod m) else 0) = 0 := by
+  classical
+  rw [Fintype.sum_prod_type]
+  apply Finset.sum_eq_zero
+  intro x _hx
+  by_cases hx : P x
+  · simp [hx]
+  · simp [hx]
+
+theorem activePrefixPairFirstHitLastIndicatorSum
+    {m n : Nat} [NeZero m] (t : ZMod m) :
+    (∑ p : (Fin n → ZMod m) × ZMod m,
+        if (∀ i : Fin n, p.1 i ≠ t) ∧ p.2 = t
+        then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  classical
+  rw [Fintype.sum_prod_type]
+  calc
+    (∑ x : Fin n → ZMod m, ∑ a : ZMod m,
+        if (∀ i : Fin n, x i ≠ t) ∧ a = t
+        then (1 : ZMod m) else 0)
+        =
+        ∑ x : Fin n → ZMod m,
+          if (∀ i : Fin n, x i ≠ t) then (1 : ZMod m) else 0 := by
+          apply Finset.sum_congr rfl
+          intro x _hx
+          by_cases hx : ∀ i : Fin n, x i ≠ t
+          · simp [hx]
+          · simp [hx]
+    _ = (-1 : ZMod m) ^ n :=
+          activePrefixNoHitIndicatorSum (m := m) (n := n) t
+
+abbrev activePrefixNoZero {m n : Nat}
+    (y : Fin n → ZMod m) : Prop :=
+  ∀ i : Fin n, y i ≠ 0
+
+abbrev activePrefixExactLastZero {m k : Nat}
+    (y : Fin (k + 1) → ZMod m) : Prop :=
+  (∀ i : Fin k, y i.castSucc ≠ 0) ∧ y (Fin.last k) = 0
+
+abbrev activePrefixHitBeforeLastZero {m k : Nat}
+    (y : Fin (k + 1) → ZMod m) : Prop :=
+  ∃ i : Fin k, y i.castSucc = 0
+
+theorem activePrefixNoZeroIndicatorSum
+    {m n : Nat} [NeZero m] :
+    (∑ y : Fin n → ZMod m,
+        if activePrefixNoZero y then (1 : ZMod m) else 0) =
+      (-1 : ZMod m) ^ n := by
+  simpa [activePrefixNoZero] using
+    activePrefixNoHitIndicatorSum (m := m) (n := n) (0 : ZMod m)
+
+theorem activePrefixExactLastZeroIndicatorSum
+    {m k : Nat} [NeZero m] :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if activePrefixExactLastZero y then (1 : ZMod m) else 0) =
+      -((-1 : ZMod m) ^ (k + 1)) := by
+  classical
+  let e := Shared.zmodVectorSnocEquiv k m
+  calc
+    (∑ y : Fin (k + 1) → ZMod m,
+        if activePrefixExactLastZero y then (1 : ZMod m) else 0)
+        =
+        ∑ p : (Fin k → ZMod m) × ZMod m,
+          if (∀ i : Fin k, p.1 i ≠ 0) ∧ p.2 = 0
+          then (1 : ZMod m) else 0 := by
+          exact Fintype.sum_equiv e
+            (fun y =>
+              if activePrefixExactLastZero y then (1 : ZMod m) else 0)
+            (fun p =>
+              if (∀ i : Fin k, p.1 i ≠ 0) ∧ p.2 = 0
+              then (1 : ZMod m) else 0)
+            (by
+              intro y
+              have hp :
+                  ((∀ i : Fin k, y i.castSucc ≠ 0) ∧
+                      y (Fin.last k) = 0) ↔
+                    ((∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0) := by
+                constructor
+                · intro h
+                  exact ⟨fun i => by simpa [Fin.init] using h.1 i, h.2⟩
+                · intro h
+                  exact ⟨fun i => by simpa [Fin.init] using h.1 i, h.2⟩
+              by_cases hP :
+                  (∀ i : Fin k, y i.castSucc ≠ 0) ∧
+                    y (Fin.last k) = 0
+              · have hQ :
+                    (∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0 := hp.mp hP
+                simp [e, activePrefixExactLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ]
+              · have hQ :
+                    ¬ ((∀ i : Fin k, Fin.init y i ≠ 0) ∧
+                      y (Fin.last k) = 0) := by
+                  intro hQ
+                  exact hP (hp.mpr hQ)
+                simp [e, activePrefixExactLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ])
+    _ = (-1 : ZMod m) ^ k :=
+          activePrefixPairFirstHitLastIndicatorSum
+            (m := m) (n := k) (0 : ZMod m)
+    _ = -((-1 : ZMod m) ^ (k + 1)) := by
+          rw [pow_succ]
+          ring
+
+theorem activePrefixHitBeforeLastZeroIndicatorSum
+    {m k : Nat} [NeZero m] :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if activePrefixHitBeforeLastZero y then (1 : ZMod m) else 0) =
+      0 := by
+  classical
+  let e := Shared.zmodVectorSnocEquiv k m
+  calc
+    (∑ y : Fin (k + 1) → ZMod m,
+        if activePrefixHitBeforeLastZero y then (1 : ZMod m) else 0)
+        =
+        ∑ p : (Fin k → ZMod m) × ZMod m,
+          if (∃ i : Fin k, p.1 i = 0)
+          then (1 : ZMod m) else 0 := by
+          exact Fintype.sum_equiv e
+            (fun y =>
+              if activePrefixHitBeforeLastZero y then (1 : ZMod m) else 0)
+            (fun p =>
+              if (∃ i : Fin k, p.1 i = 0)
+              then (1 : ZMod m) else 0)
+            (by
+              intro y
+              have hp :
+                  (∃ i : Fin k, y i.castSucc = 0) ↔
+                    ∃ i : Fin k, Fin.init y i = 0 := by
+                constructor
+                · intro h
+                  rcases h with ⟨i, hi⟩
+                  exact ⟨i, by simpa [Fin.init] using hi⟩
+                · intro h
+                  rcases h with ⟨i, hi⟩
+                  exact ⟨i, by simpa [Fin.init] using hi⟩
+              by_cases hP : ∃ i : Fin k, y i.castSucc = 0
+              · have hQ : ∃ i : Fin k, Fin.init y i = 0 := hp.mp hP
+                simp [e, activePrefixHitBeforeLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ]
+              · have hQ : ¬ ∃ i : Fin k, Fin.init y i = 0 := by
+                  intro hQ
+                  exact hP (hp.mpr hQ)
+                simp [e, activePrefixHitBeforeLastZero,
+                  Shared.zmodVectorSnocEquiv, hP, hQ])
+    _ = 0 :=
+          activePrefixPairFreeLastIndicatorSum_zero
+            (m := m) (n := k)
+            (P := fun x : Fin k → ZMod m => ∃ i : Fin k, x i = 0)
+
 theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
     (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
     (hρ : (activeTailCanonicalRho hT z).val < n)
