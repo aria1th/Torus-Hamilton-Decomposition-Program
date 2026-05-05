@@ -5359,6 +5359,14 @@ def OddSuccessorBaseTailPrimitiveActiveLiftGoal : Prop :=
       BaseTail.IsPrimitiveActiveSymboling hT2 A →
       StandardCayleySolved (b + T) m
 
+theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_primitiveActiveLiftAssembly
+    (hLift : BaseTail.PrimitiveActiveLiftAssemblyGoal) :
+    OddSuccessorBaseTailPrimitiveActiveLiftGoal := by
+  intro b m T _inst _hb5 _hmodd _hm3 _hsmall _hbase packets
+    _hlen _htotal _hpacketSum _hpacketUnits _hPrefix _hT _hSlack
+    Cyl A hCyl hT2 hA
+  exact hLift hT2 hCyl hA
+
 def OddSuccessorBaseTailActiveBlockCylinderConstructionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
@@ -5541,6 +5549,16 @@ def OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal : Prop :=
       (hT2 : 2 ≤ T) →
       BaseTail.IsPrimitiveActiveSymboling hT2 A →
       StandardCayleySolved (b + T) m
+
+theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
+    (hLift : OddSuccessorBaseTailPrimitiveActiveLiftGoal) :
+    OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+    Cyl A hCyl _hBlock hT2 hA
+  exact hLift hb5 hmodd hm3 hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+    hCyl hT2 hA
 
 theorem oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
     (hCompatible :

@@ -652,6 +652,23 @@ def IsPrimitiveActiveSymboling {b m T : Nat} [NeZero m]
     (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
       IsUnit (A.R.target c σ - A.R.target c ⟨1, by omega⟩))
 
+/--
+The local geometric assembly theorem still needed for the primitive lift.
+
+This deliberately omits packet arithmetic, slack, and the solved base
+hypothesis: those are used to construct the cylinder and its primitive active
+symboling.  Once those objects exist, the remaining content is to expand the
+compressed base-tail cylinder into a Cayley Hamilton decomposition in dimension
+`b + T`.
+-/
+def PrimitiveActiveLiftAssemblyGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ T),
+      IsCylinder Cyl →
+      IsPrimitiveActiveSymboling hT A →
+      Shared.CayleyHamiltonDecomposition (b + T) m
+
 def HasFeasiblePrimitiveResidues {b m T : Nat} [NeZero m]
     {packets : List (List Nat)}
     (hT : 2 ≤ T) (Cyl : Cylinder b m T packets) : Prop :=
