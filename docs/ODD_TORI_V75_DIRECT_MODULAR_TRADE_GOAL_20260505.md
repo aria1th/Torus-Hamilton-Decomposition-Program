@@ -290,8 +290,17 @@ ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwis
 BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal
 BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_zero
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero
+BaseTail.Trades.reservoirResidual
+BaseTail.Trades.ThreeBufferReservoirArithmetic
+BaseTail.Trades.ThreeBufferReservoirArithmetic.residual_eq_zero
+BaseTail.Trades.ThreeBufferReservoirArithmetic.target_delta
+BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic
+BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic.target_delta
 BaseTail.Trades.swapDeltaSum_eq_tradeDeltaSum_of_baseline
 BaseTail.Trades.CanonicalNonzeroZeroReservoirScript
+BaseTail.Trades.CanonicalNonzeroZeroReservoirScript.ofArithmetic
 BaseTail.Trades.CanonicalNonzeroZeroReservoirScript.applySwapResidueSpecs_eq
 BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal
 BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal
@@ -377,7 +386,15 @@ final `applySwapResidueSpecs` equality from
 `localTradeDelta_left`, `localTradeDelta_right`, and `localTradeDelta_of_ne`
 lemmas are the column-case algebra for the next λ/μ residual arithmetic step:
 only the two swapped columns contribute, and their signs are now exposed as
-standalone rewrite targets.  The
+standalone rewrite targets.  This has been lifted to the successor reservoir
+sum by `nonzeroZeroTradeDeltaSumOfTwoLe_zero` and
+`nonzeroZeroTradeDeltaSumOfTwoLe_nonzero`, so the next proof can reason about
+plain finite lists of toggles.  The new
+`ThreeBufferReservoirArithmetic` and
+`CanonicalNonzeroZeroReservoirArithmetic` certificates isolate the final paper
+step after the λ/μ toggles: all nonzero columns are solved, and the zero column
+is forced by zero row residuals.  `CanonicalNonzeroZeroReservoirScript.ofArithmetic`
+then inserts that certificate into the existing script endpoint.  The
 sharpest remaining hard content is now the actual script construction:
 selecting enough distinct reservoir sites, choosing the initial symboling with
 the required local baseline positions, and proving the canonical active-block

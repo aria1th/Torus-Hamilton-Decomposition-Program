@@ -515,6 +515,236 @@ def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
         move.right σ +
       nonzeroZeroTradeDeltaSumOfTwoLe hT zeroColor rightColor moves c σ
 
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_zero {m T : Nat} {X C : Type*}
+    [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      ∀ c : C,
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+            moves c ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+          moves.foldr
+            (fun move acc =>
+              ((if rightColor move = c then (1 : ZMod m) else 0) -
+                  (if zeroColor move = c then (1 : ZMod m) else 0)) +
+                acc)
+            0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro c
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro c
+      have hLeftNe :
+          (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+            move.right := by
+        intro h
+        have hval : move.right.val = 0 := by
+          simpa using congrArg Fin.val h.symm
+        exact move.right_ne_zero hval
+      have hHead :
+          ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+            (if rightColor move = c then (1 : ZMod m) else 0) -
+              (if zeroColor move = c then (1 : ZMod m) else 0) :=
+        ActiveHall.Symboling.localTradeDelta_left (m := m) hLeftNe
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, ih c]
+
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_nonzero {m T : Nat} {X C : Type*}
+    [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      ∀ c : C,
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+            moves c σ =
+          moves.foldr
+            (fun move acc =>
+              (if σ = move.right then
+                (if zeroColor move = c then (1 : ZMod m) else 0) -
+                  (if rightColor move = c then (1 : ZMod m) else 0)
+               else 0) +
+                acc)
+            0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro c
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro c
+      by_cases hσright : σ = move.right
+      · have hLeftNe :
+            (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+              move.right := by
+          intro h
+          have hval : move.right.val = 0 := by
+            simpa using congrArg Fin.val h.symm
+          exact move.right_ne_zero hval
+        have hHead :
+            ActiveHall.Symboling.localTradeDelta (m := m)
+                (zeroColor move) (rightColor move) c
+                ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+                move.right move.right =
+              (if zeroColor move = c then (1 : ZMod m) else 0) -
+                (if rightColor move = c then (1 : ZMod m) else 0) := by
+          exact
+            ActiveHall.Symboling.localTradeDelta_right (m := m) hLeftNe
+              (leftColor := zeroColor move) (rightColor := rightColor move)
+              (c := c)
+        have hTail :
+            nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+                rightColor moves c move.right =
+              moves.foldr
+                (fun move' acc =>
+                  (if move.right = move'.right then
+                    (if zeroColor move' = c then (1 : ZMod m) else 0) -
+                      (if rightColor move' = c then (1 : ZMod m) else 0)
+                   else 0) +
+                    acc)
+                0 := by
+          simpa [hσright] using ih c
+        simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hσright, hTail]
+      · have hσleft :
+            σ ≠ ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ := by
+          intro h
+          exact hσ0 (by simpa using congrArg Fin.val h)
+        have hHead :
+            ActiveHall.Symboling.localTradeDelta (m := m)
+                (zeroColor move) (rightColor move) c
+                ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+                move.right σ = 0 :=
+          ActiveHall.Symboling.localTradeDelta_of_ne (m := m)
+            (leftColor := zeroColor move) (rightColor := rightColor move)
+            (c := c) hσleft hσright
+        simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hσright, ih c]
+
+def reservoirResidual {m T : Nat} {C : Type*} [Fintype C]
+    (target initial : ActiveHall.ResidueSpec m T C)
+    (delta : C → Fin T → ZMod m) : C → Fin T → ZMod m :=
+  fun c σ => target.target c σ - (initial.target c σ + delta c σ)
+
+/--
+Arithmetic certificate for the final residual step of the v7.6 three-buffer
+reservoir schedule.
+
+The λ/μ toggles are expected to kill every nonzero symbol column.  Since the
+residual row sums are zero, the symbol-zero entries are then forced too.
+-/
+structure ThreeBufferReservoirArithmetic
+    {m T : Nat} {C : Type*} [Fintype C]
+    (target initial : ActiveHall.ResidueSpec m T C)
+    (delta : C → Fin T → ZMod m) where
+  beta0 : C
+  beta1 : C
+  beta2 : C
+  beta01 : beta0 ≠ beta1
+  beta02 : beta0 ≠ beta2
+  beta12 : beta1 ≠ beta2
+  row_zero :
+    ∀ c : C, (∑ σ : Fin T, reservoirResidual target initial delta c σ) = 0
+  nonzero_solved :
+    ∀ c : C, ∀ σ : Fin T, σ.val ≠ 0 →
+      reservoirResidual target initial delta c σ = 0
+
+namespace ThreeBufferReservoirArithmetic
+
+theorem residual_eq_zero {m T : Nat} {C : Type*} [Fintype C]
+    {target initial : ActiveHall.ResidueSpec m T C}
+    {delta : C → Fin T → ZMod m}
+    (cert : ThreeBufferReservoirArithmetic target initial delta)
+    (hTpos : 0 < T) :
+    ∀ c : C, ∀ σ : Fin T,
+      reservoirResidual target initial delta c σ = 0 := by
+  intro c σ
+  by_cases hσ0 : σ.val = 0
+  · have hσ : σ = ⟨0, hTpos⟩ := Fin.ext hσ0
+    subst σ
+    have hsum :
+        (∑ τ : Fin T, reservoirResidual target initial delta c τ) =
+          reservoirResidual target initial delta c ⟨0, hTpos⟩ := by
+      rw [Finset.sum_eq_single (⟨0, hTpos⟩ : Fin T)]
+      · intro τ _hτmem hτ
+        exact cert.nonzero_solved c τ (by
+          intro hval
+          exact hτ (Fin.ext hval))
+      · intro hnot
+        exact False.elim (hnot (Finset.mem_univ _))
+    have hrow := cert.row_zero c
+    rwa [hsum] at hrow
+  · exact cert.nonzero_solved c σ hσ0
+
+theorem target_delta {m T : Nat} {C : Type*} [Fintype C]
+    {target initial : ActiveHall.ResidueSpec m T C}
+    {delta : C → Fin T → ZMod m}
+    (cert : ThreeBufferReservoirArithmetic target initial delta)
+    (hTpos : 0 < T) :
+    ∀ c : C, ∀ σ : Fin T,
+      target.target c σ = initial.target c σ + delta c σ := by
+  intro c σ
+  have hres :
+      target.target c σ - (initial.target c σ + delta c σ) = 0 := by
+    simpa [reservoirResidual] using cert.residual_eq_zero hTpos c σ
+  exact sub_eq_zero.mp hres
+
+end ThreeBufferReservoirArithmetic
+
+/--
+Specialization of the three-buffer arithmetic certificate to the canonical
+successor reservoir script delta.
+-/
+structure CanonicalNonzeroZeroReservoirArithmetic
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    (hT : 2 ≤ T) (D : ActiveBlockData Cyl)
+    (initial : ActiveHall.Symboling Cyl.incidence)
+    (moves :
+      List
+        (ActiveHall.Symboling.NonzeroZeroSwapMove
+          (Shared.TorusVertex (b + 1) m) T))
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T →
+        Fin (b + T)) where
+  arithmetic :
+    ThreeBufferReservoirArithmetic
+      (activeBlockResidueSpec D)
+      (initial.residueSpec (m := m))
+      (nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        zeroColor rightColor moves)
+
+namespace CanonicalNonzeroZeroReservoirArithmetic
+
+theorem target_delta
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    {initial : ActiveHall.Symboling Cyl.incidence}
+    {moves :
+      List
+        (ActiveHall.Symboling.NonzeroZeroSwapMove
+          (Shared.TorusVertex (b + 1) m) T)}
+    {zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T →
+        Fin (b + T)}
+    (cert :
+      CanonicalNonzeroZeroReservoirArithmetic hT D initial moves
+        zeroColor rightColor) :
+    ∀ c σ,
+      (activeBlockResidueSpec D).target c σ =
+        (initial.residueSpec (m := m)).target c σ +
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+            zeroColor rightColor moves c σ :=
+  cert.arithmetic.target_delta (by omega)
+
+end CanonicalNonzeroZeroReservoirArithmetic
+
 theorem swapDeltaSum_eq_tradeDeltaSum_of_baseline
     {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
@@ -636,6 +866,43 @@ structure CanonicalNonzeroZeroReservoirScript
             zeroColor rightColor moves c σ
 
 namespace CanonicalNonzeroZeroReservoirScript
+
+def ofArithmetic
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    (initial : ActiveHall.Symboling Cyl.incidence)
+    (moves :
+      List
+        (ActiveHall.Symboling.NonzeroZeroSwapMove
+          (Shared.TorusVertex (b + 1) m) T))
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T →
+        Fin (b + T))
+    (arithmetic :
+      CanonicalNonzeroZeroReservoirArithmetic hT D initial moves
+        zeroColor rightColor)
+    (swapMoves_pairwise :
+      (nonzeroZeroSwapMovesOfTwoLe hT moves).Pairwise
+        (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex))
+    (baseline_zero :
+      ∀ move, move ∈ moves →
+        initial.color move.vertex
+            ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+          zeroColor move)
+    (baseline_right :
+      ∀ move, move ∈ moves →
+        initial.color move.vertex move.right = rightColor move) :
+    CanonicalNonzeroZeroReservoirScript hT D where
+  initial := initial
+  moves := moves
+  swapMoves_pairwise := swapMoves_pairwise
+  zeroColor := zeroColor
+  rightColor := rightColor
+  baseline_zero := baseline_zero
+  baseline_right := baseline_right
+  target_delta := arithmetic.target_delta
 
 theorem swapDeltaSum_eq_tradeDeltaSum
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
