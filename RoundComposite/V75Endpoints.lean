@@ -52,6 +52,14 @@ def OddModulusToriV75ZeroReservoirSwapScheduleInputsGoal : Prop :=
   BaseTail.Trades.SuccessorActiveBlockZeroReservoirSwapScheduleGoal
 
 /--
+v7.6 input package for strict paper-style `0 ↔ τ` reservoir schedules with
+`τ ≠ 0` carried in each scheduled move.
+-/
+def OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal
+
+/--
 v7.5 input package using the one-site pre-correction reservoir surface.
 -/
 def OddModulusToriV75PreCorrectionInputsGoal : Prop :=
@@ -252,6 +260,27 @@ theorem oddModulusToriV75ReservoirInputsGoal_of_zeroReservoirSwapScheduleInputs
     OddModulusToriV75ReservoirInputsGoal :=
   oddModulusToriV75ReservoirInputsGoal_of_compatibleResidueSchedulingInputs
     (oddModulusToriV75CompatibleResidueSchedulingInputsGoal_of_zeroReservoirSwapScheduleInputs
+      h)
+
+theorem oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddModulusToriV75ZeroReservoirSwapScheduleInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+      h.2⟩
+
+theorem oddModulusToriV75DirectModularTradeInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddModulusToriV75DirectModularTradeInputsGoal :=
+  oddModulusToriV75DirectModularTradeInputsGoal_of_zeroReservoirSwapScheduleInputs
+    (oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+      h)
+
+theorem oddModulusToriV75ReservoirInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddModulusToriV75ReservoirInputsGoal :=
+  oddModulusToriV75ReservoirInputsGoal_of_zeroReservoirSwapScheduleInputs
+    (oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
       h)
 
 theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
@@ -539,6 +568,13 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_zeroReservoirSwapSchedu
     (oddModulusToriV75DirectModularTradeInputsGoal_of_zeroReservoirSwapScheduleInputs
       h)
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_zeroReservoirSwapScheduleInputs
+    (oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+      h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -670,6 +706,14 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_zeroReservoirSwapSchedu
   oddModulusToriV75DirectModularTradeBlocksGoal_of_zeroReservoirSwapScheduleInputs
     ⟨hHigh, hSchedule⟩
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+    ⟨hHigh, hSchedule⟩
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
     (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
@@ -755,6 +799,21 @@ theorem oddSuccessorClosureGoal_of_v75_zeroReservoirSwapSchedule
       BaseTail.Trades.SuccessorActiveBlockZeroReservoirSwapScheduleGoal) :
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v75_zeroReservoirSwapSchedule_inputs
+    ⟨hHigh, hSchedule⟩
+
+theorem oddSuccessorClosureGoal_of_v75_nonzeroZeroReservoirSwapSchedule_inputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_zeroReservoirSwapSchedule_inputs
+    (oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+      h)
+
+theorem oddSuccessorClosureGoal_of_v75_nonzeroZeroReservoirSwapSchedule
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_nonzeroZeroReservoirSwapSchedule_inputs
     ⟨hHigh, hSchedule⟩
 
 theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
@@ -898,6 +957,21 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_zeroReservoirSwapSchedule
       BaseTail.Trades.SuccessorActiveBlockZeroReservoirSwapScheduleGoal) :
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_zeroReservoirSwapSchedule_inputs
+    ⟨hHigh, hSchedule⟩
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_nonzeroZeroReservoirSwapSchedule_inputs
+    (h : OddModulusToriV75NonzeroZeroReservoirSwapScheduleInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_zeroReservoirSwapSchedule_inputs
+    (oddModulusToriV75ZeroReservoirSwapScheduleInputsGoal_of_nonzeroZeroReservoirSwapScheduleInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_nonzeroZeroReservoirSwapSchedule
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_nonzeroZeroReservoirSwapSchedule_inputs
     ⟨hHigh, hSchedule⟩
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
