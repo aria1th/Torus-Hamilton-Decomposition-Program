@@ -3281,6 +3281,51 @@ noncomputable def swapResidueSpec {m T : Nat} {X C : Type*}
         + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0) := by
   rfl
 
+/--
+Rank-one residue delta for one local symbol trade.
+
+If the symbols `σ` and `τ` are swapped at one active vertex, the color currently
+at `σ` loses one count in column `σ` and gains one in column `τ`, while the
+color currently at `τ` makes the opposite move.  This is the Lean form of the
+local symbol-trade lemma used by the v7.6 residue scheduling proof.
+-/
+theorem swapResidueSpec_target_eq_add_localTradeDelta {m T : Nat}
+    {X C : Type*} [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) (x₀ : X) {σ τ ρ : Fin T} (hστ : σ ≠ τ)
+    (c : C) :
+    (Φ.swapResidueSpec R x₀ σ τ).target c ρ =
+      R.target c ρ
+        + (if Φ.color x₀ σ = c then
+            (if ρ = τ then (1 : ZMod m)
+             else if ρ = σ then -1 else 0)
+          else 0)
+        + (if Φ.color x₀ τ = c then
+            (if ρ = σ then (1 : ZMod m)
+             else if ρ = τ then -1 else 0)
+          else 0) := by
+  by_cases hρσ : ρ = σ
+  · subst ρ
+    by_cases hσc : Φ.color x₀ σ = c
+    · by_cases hτc : Φ.color x₀ τ = c
+      · simp [hστ, hσc, hτc, sub_eq_add_neg]
+      · simp [hστ, hσc, hτc, sub_eq_add_neg]
+    · by_cases hτc : Φ.color x₀ τ = c
+      · simp [hσc, hτc, sub_eq_add_neg]
+      · simp [hσc, hτc, sub_eq_add_neg]
+  · by_cases hρτ : ρ = τ
+    · subst ρ
+      by_cases hσc : Φ.color x₀ σ = c
+      · by_cases hτc : Φ.color x₀ τ = c
+        · simp [hρσ, hσc, hτc, sub_eq_add_neg]
+        · simp [hσc, hτc, sub_eq_add_neg]
+      · by_cases hτc : Φ.color x₀ τ = c
+        · simp [hρσ, hσc, hτc, sub_eq_add_neg]
+        · simp [hσc, hτc, sub_eq_add_neg]
+    · have hswap : (Equiv.swap σ τ) ρ = ρ :=
+        Equiv.swap_apply_of_ne_of_ne hρσ hρτ
+      simp [hρσ, hρτ, hswap]
+
 theorem swapResidueSpec_rowCompatible {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I)
