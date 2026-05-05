@@ -995,11 +995,35 @@ theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwap
     (successorActiveBlockInitialReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
       hSchedule)
 
+theorem successorActiveBlockInitialReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockInitialReservoirSwapScheduleGoal :=
+  successorActiveBlockInitialReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+      hSchedule)
+
+theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCompatibleResidueSchedulingGoal :=
+  successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+      hSchedule)
+
 theorem successorActiveBlockReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
     (hSchedule : SuccessorActiveBlockZeroReservoirSwapScheduleGoal) :
     SuccessorActiveBlockReservoirSwapScheduleGoal :=
   successorActiveBlockReservoirSwapScheduleGoal_of_initialReservoirSwapSchedule
     (successorActiveBlockInitialReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
+      hSchedule)
+
+theorem successorActiveBlockReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockReservoirSwapScheduleGoal :=
+  successorActiveBlockReservoirSwapScheduleGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
       hSchedule)
 
 theorem successorActiveBlockLocalSymbolTradeGoal_of_reservoirSwapSchedule
@@ -1014,6 +1038,14 @@ theorem successorActiveBlockLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
     SuccessorActiveBlockLocalSymbolTradeGoal :=
   successorActiveBlockLocalSymbolTradeGoal_of_compatibleResidueScheduling
     (successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwapSchedule
+      hSchedule)
+
+theorem successorActiveBlockLocalSymbolTradeGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockLocalSymbolTradeGoal :=
+  successorActiveBlockLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
       hSchedule)
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
@@ -1039,6 +1071,14 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_zeroReservoirSwapSc
     SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
     (successorActiveBlockCompatibleResidueSchedulingGoal_of_zeroReservoirSwapSchedule
+      hSchedule)
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
       hSchedule)
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
@@ -1190,6 +1230,13 @@ theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_zeroRese
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
     hSchedule
 
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_nonzeroZeroReservoirSwapSchedule
+    hSchedule
+
 theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir :
     SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
       SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
@@ -1249,6 +1296,14 @@ theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_zeroReservo
     (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
       hSchedule)
 
+theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
+    (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+      hSchedule)
+
 theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
     (hReservoir :
       SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
@@ -1282,6 +1337,13 @@ theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_
     (hSchedule : SuccessorActiveBlockZeroReservoirSwapScheduleGoal) :
     SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
   successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
+    hSchedule
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_nonzeroZeroReservoirSwapSchedule
     hSchedule
 
 theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_iff_feasibleLocalTrade :
