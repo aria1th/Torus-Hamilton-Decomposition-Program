@@ -338,6 +338,30 @@ theorem packetPhase_step_second {N m : Nat} [NeZero N] [NeZero m]
   dsimp [packetPhase]
   abel
 
+def packetPrefixLo (packet : List Nat) (r : Fin packet.length) : Nat :=
+  (packet.take r.val).sum
+
+def packetPrefixHi (packet : List Nat) (r : Fin packet.length) : Nat :=
+  (packet.take (r.val + 1)).sum
+
+def packetPrefixInterval (packet : List Nat) (r : Fin packet.length) :
+    Finset Nat :=
+  Finset.Ico (packetPrefixLo packet r) (packetPrefixHi packet r)
+
+theorem packetPrefixHi_eq_lo_add_get
+    (packet : List Nat) (r : Fin packet.length) :
+    packetPrefixHi packet r =
+      packetPrefixLo packet r + packet.get r := by
+  simpa [packetPrefixHi, packetPrefixLo] using
+    List.sum_take_succ packet r.val r.isLt
+
+theorem packetPrefixInterval_card
+    (packet : List Nat) (r : Fin packet.length) :
+    (packetPrefixInterval packet r).card = packet.get r := by
+  rw [packetPrefixInterval, Nat.card_Ico,
+    packetPrefixHi_eq_lo_add_get]
+  omega
+
 /--
 The remaining local packet theorem needed by the active-block cylinder.
 
