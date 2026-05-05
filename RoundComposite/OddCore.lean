@@ -5505,6 +5505,7 @@ theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
     intro packet hp
     exact
       hSplit (b := b) (m := m) (T := T) (packets := packets)
+        (by omega)
         hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
@@ -5556,6 +5557,7 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSpl
     intro packet hp
     exact
       hSplit (b := b) (m := m) (T := T) (packets := packets)
+        (by omega)
         hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
