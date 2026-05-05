@@ -1010,6 +1010,20 @@ theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_feasible
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
     hFeasible hTrade
 
+theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleLocalTrade :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade.trans
+    successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade
+
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_iff_feasible_and_feasibleLocalTrade :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir.symm.trans
+    successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleLocalTrade
+
 theorem cylinderTradeReservoirGoal :
     CylinderTradeReservoirGoal := by
   intro b m T _instM packets Cyl hT R hRow hCol hPrim hFeasible
