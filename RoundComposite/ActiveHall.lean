@@ -3794,6 +3794,24 @@ theorem hasResidues_residueSpec {m T : Nat} {X C : Type*}
   intro c σ
   rfl
 
+theorem residueSpec_rowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    (Φ.residueSpec (m := m)).RowCompatible I := by
+  intro c
+  change (I.colorDegree c : ZMod m) =
+    ∑ σ : Fin T, (Φ.count c σ : ZMod m)
+  rw [← Nat.cast_sum, Φ.count_row_sum c]
+
+theorem residueSpec_colCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    (Φ.residueSpec (m := m)).ColCompatible I := by
+  intro σ
+  change (Fintype.card X : ZMod m) =
+    ∑ c : C, (Φ.count c σ : ZMod m)
+  rw [← Nat.cast_sum, Φ.count_col_sum σ]
+
 theorem swapAt_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} {Φ : Symboling I}
@@ -3852,6 +3870,36 @@ theorem applySwapMoves_hasResidues {m T : Nat} {X C : Type*}
   | cons move moves ih =>
       simpa [applySwapMoves, applySwapResidueSpecs] using
         ih (Φ.swapAt_hasResidues hResidues)
+
+theorem applySwapResidueSpecs_rowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {R : ResidueSpec m T C} (hRow : R.RowCompatible I)
+    (moves : List (SwapMove X T)) :
+    (Φ.applySwapResidueSpecs R moves).RowCompatible I := by
+  induction moves generalizing Φ R with
+  | nil =>
+      simpa [applySwapResidueSpecs] using hRow
+  | cons move moves ih =>
+      simpa [applySwapResidueSpecs] using
+        ih (Φ := Φ.swapAt move.vertex move.left move.right)
+          (R := Φ.swapResidueSpec R move.vertex move.left move.right)
+          (Φ.swapResidueSpec_rowCompatible hRow)
+
+theorem applySwapResidueSpecs_colCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {R : ResidueSpec m T C} (hCol : R.ColCompatible I)
+    (moves : List (SwapMove X T)) :
+    (Φ.applySwapResidueSpecs R moves).ColCompatible I := by
+  induction moves generalizing Φ R with
+  | nil =>
+      simpa [applySwapResidueSpecs] using hCol
+  | cons move moves ih =>
+      simpa [applySwapResidueSpecs] using
+        ih (Φ := Φ.swapAt move.vertex move.left move.right)
+          (R := Φ.swapResidueSpec R move.vertex move.left move.right)
+          (Φ.swapResidueSpec_colCompatible hCol)
 
 theorem hasResidues_of_realizes {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
