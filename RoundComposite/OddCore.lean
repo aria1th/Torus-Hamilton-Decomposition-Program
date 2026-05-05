@@ -5367,6 +5367,13 @@ theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_primitiveActiveLiftAssemb
     Cyl A hCyl hT2 hA
   exact hLift hT2 hCyl hA
 
+theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_expandedColorDirHamiltonian
+    (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
+    OddSuccessorBaseTailPrimitiveActiveLiftGoal :=
+  oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_primitiveActiveLiftAssembly
+    (BaseTail.primitiveActiveLiftAssemblyGoal_of_expandedColorDirHamiltonian
+      hHam)
+
 def OddSuccessorBaseTailActiveBlockCylinderConstructionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
@@ -5559,6 +5566,13 @@ theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
   exact hLift hb5 hmodd hm3 hsmall hbase packets
     hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
     hCyl hT2 hA
+
+theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_expandedColorDirHamiltonian
+    (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
+    OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal :=
+  oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
+    (oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_expandedColorDirHamiltonian
+      hHam)
 
 theorem oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
     (hCompatible :
