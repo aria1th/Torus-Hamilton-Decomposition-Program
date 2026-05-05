@@ -2988,6 +2988,135 @@ theorem activeTailCanonicalRho_sub_at_rho {m n : Nat}
   · simp [hτ, sub_eq_add_neg]
   · simp [hτ]
 
+theorem activeTailCanonicalRho_dynamic_add_bijective {m n : Nat}
+    (hT : 2 ≤ n + 1) :
+    Function.Bijective
+      (fun z : Fin n → ZMod m =>
+        fun τ : Fin n =>
+          if hρ : (activeTailCanonicalRho hT z).val < n then
+            z τ +
+              if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+              then (1 : ZMod m) else 0
+          else z τ) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if hρ : (activeTailCanonicalRho hT z).val < n then
+        z τ +
+          if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+          then (1 : ZMod m) else 0
+      else z τ
+  let G : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if hρ : (activeTailCanonicalRho hT z).val < n then
+        z τ -
+          if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+          then (1 : ZMod m) else 0
+      else z τ
+  have hleft : Function.LeftInverse G F := by
+    intro z
+    funext τ
+    by_cases hρ : (activeTailCanonicalRho hT z).val < n
+    · have hF :
+          F z =
+            (fun τ : Fin n =>
+              z τ +
+                if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+                then (1 : ZMod m) else 0) := by
+        funext τ
+        simp [F, hρ]
+      have hpres :
+          activeTailCanonicalRho hT (F z) =
+            activeTailCanonicalRho hT z := by
+        rw [hF]
+        exact activeTailCanonicalRho_add_at_rho hT hρ
+      have hρF : (activeTailCanonicalRho hT (F z)).val < n := by
+        simpa [hpres] using hρ
+      have hidx :
+          (⟨(activeTailCanonicalRho hT (F z)).val, hρF⟩ : Fin n) =
+            ⟨(activeTailCanonicalRho hT z).val, hρ⟩ := by
+        ext
+        simp [hpres]
+      calc
+        G (F z) τ =
+            F z τ -
+              if τ = ⟨(activeTailCanonicalRho hT (F z)).val, hρF⟩
+              then (1 : ZMod m) else 0 := by
+                simp [G, hρF]
+        _ =
+            (z τ +
+              if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+              then (1 : ZMod m) else 0) -
+              if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+              then (1 : ZMod m) else 0 := by
+                have hFτ := congrFun hF τ
+                rw [hFτ, hidx]
+        _ = z τ := by
+              by_cases hτ :
+                  τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hF : F z = z := by
+        funext τ
+        simp [F, hρ]
+      have hρF : ¬ (activeTailCanonicalRho hT (F z)).val < n := by
+        simpa [hF] using hρ
+      calc
+        G (F z) τ = F z τ := by
+          simp [G, hρF]
+        _ = z τ := by rw [hF]
+  have hright : Function.RightInverse G F := by
+    intro z
+    funext τ
+    by_cases hρ : (activeTailCanonicalRho hT z).val < n
+    · have hG :
+          G z =
+            (fun τ : Fin n =>
+              z τ -
+                if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+                then (1 : ZMod m) else 0) := by
+        funext τ
+        simp [G, hρ]
+      have hpres :
+          activeTailCanonicalRho hT (G z) =
+            activeTailCanonicalRho hT z := by
+        rw [hG]
+        exact activeTailCanonicalRho_sub_at_rho hT hρ
+      have hρG : (activeTailCanonicalRho hT (G z)).val < n := by
+        simpa [hpres] using hρ
+      have hidx :
+          (⟨(activeTailCanonicalRho hT (G z)).val, hρG⟩ : Fin n) =
+            ⟨(activeTailCanonicalRho hT z).val, hρ⟩ := by
+        ext
+        simp [hpres]
+      calc
+        F (G z) τ =
+            G z τ +
+              if τ = ⟨(activeTailCanonicalRho hT (G z)).val, hρG⟩
+              then (1 : ZMod m) else 0 := by
+                simp [F, hρG]
+        _ =
+            (z τ -
+              if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+              then (1 : ZMod m) else 0) +
+              if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+              then (1 : ZMod m) else 0 := by
+                have hGτ := congrFun hG τ
+                rw [hGτ, hidx]
+        _ = z τ := by
+              by_cases hτ :
+                  τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hG : G z = z := by
+        funext τ
+        simp [G, hρ]
+      have hρG : ¬ (activeTailCanonicalRho hT (G z)).val < n := by
+        simpa [hG] using hρ
+      calc
+        F (G z) τ = G z τ := by
+          simp [F, hρG]
+        _ = z τ := by rw [hG]
+  exact ⟨hleft.injective, hright.surjective⟩
+
 noncomputable def activePrefixTailPerm
     {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1) :
     Shared.TorusVertex (b + 1) m →
