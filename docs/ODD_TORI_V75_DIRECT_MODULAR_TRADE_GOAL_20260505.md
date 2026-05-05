@@ -146,16 +146,37 @@ Worker B status note:
 ```lean
 BaseTail.expandedColorDirCore_fiberStep_coord_eq_add_directCarry
 BaseTail.expandedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+BaseTail.expandedColorDirCore_sectionReturn_increment_eq_sum_directCarry
+BaseTail.expandedColorDirCore_sectionReturn_increment_independent_of_fiber
 ```
 
 These Lean lemmas now make the diagnostic `expandedColorDir` route explicit:
 its fiber section return is a direct sum of symbol-count carries along the
-compressed base orbit.  Therefore `expandedColorDir` itself should not be used
-as the final lower-triangular primitive lift.  The remaining proof of
-`BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` must introduce
-a fiber-dependent active prefix-count tail rule whose section return has the
-unit lower-triangular cocycles required by
+compressed base orbit, and the resulting coordinate increment is independent of
+the incoming fiber point.  Therefore `expandedColorDir` itself should not be
+used as the final lower-triangular primitive lift.  For ranks `k > 0`, a
+fiber-independent increment cannot supply the unit lower-triangular cocycle
+needed after summing over the previous `k` fiber coordinates.  The remaining
+proof of `BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` must
+introduce a fiber-dependent active prefix-count tail rule whose section return
+has the unit lower-triangular cocycles required by
 `Shared.zmodVectorLowerTriangularUnitCycleCoordinate`.
+
+Completion audit for the current Worker B goal:
+
+| Requirement | Current evidence | Status |
+|---|---|---|
+| Close `BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` | The name is still a `Prop` input in `RoundComposite/BaseTailGeometry.lean`; `RoundComposite/V75Endpoints.lean` packages it as an input. | Open |
+| Wire the v7.5 endpoint without old ActiveHall/de Werra route | `RoundComposite/V75Endpoints.lean` uses the high branch, canonical local trade, and lower-triangular lift inputs. It does not require `RawZeroOneMatrixGoal`, `CompatibleDeWerraGoal`, or `HallRealizationGoal`. | Wired |
+| Stabilize the build surface | `lake build RoundComposite.BaseTailGeometry` and `lake build RoundComposite.V75Endpoints` pass with warnings only. | Built |
+| Identify the exact remaining theorem | The missing theorem is a concrete fiber-dependent active prefix-count lift, not the diagnostic `expandedColorDir` monodromy. | Open |
+
+The next Lean target should be a new core below
+`PrefixProjectedLowerTriangularLiftColorDir`, replacing `expandedColorDirCore`
+with an active tail permutation depending on the collapse fiber.  Its local
+rule should be the active analogue of the prefix-count `lambda_rho` rule:
+symbol `0` supplies the rank-zero unit count, and symbols `sigma >= 2` supply
+unit cocycles through the primitive differences `count sigma - count 1`.
 
 ### Main Thread: Endpoint Wiring
 

@@ -3224,6 +3224,45 @@ theorem expandedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
           hCyl c y fiber τ)
       period base z
 
+theorem expandedColorDirCore_sectionReturn_increment_eq_sum_directCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (z : Fin n → ZMod m) (τ : Fin n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c) ((expandedColorDirCore Cyl A hCyl).fiberStep c))
+        base period z τ -
+      z τ =
+        ∑ u ∈ Finset.range period,
+          expandedColorDirCoreDirectCarry A c
+            (((Cyl.step c)^[u]) base) τ := by
+  rw [expandedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+    hCyl c base period z τ]
+  abel
+
+theorem expandedColorDirCore_sectionReturn_increment_independent_of_fiber
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (z z' : Fin n → ZMod m) (τ : Fin n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c) ((expandedColorDirCore Cyl A hCyl).fiberStep c))
+        base period z τ -
+      z τ =
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c) ((expandedColorDirCore Cyl A hCyl).fiberStep c))
+        base period z' τ -
+      z' τ := by
+  rw [expandedColorDirCore_sectionReturn_increment_eq_sum_directCarry
+      hCyl c base period z τ,
+    expandedColorDirCore_sectionReturn_increment_eq_sum_directCarry
+      hCyl c base period z' τ]
+
 /--
 The concrete monodromy data still needed for the intended expanded
 base-tail lift.
