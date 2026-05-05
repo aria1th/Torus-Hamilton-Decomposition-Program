@@ -189,6 +189,8 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer02Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken.equivSum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken.sum_eq_nonbuffer_add_buffer01_add_buffer02
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer01Equiv
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer02Equiv
@@ -584,7 +586,10 @@ then choose the λ/μ quota from that baseline's residual matrix.
 selected-list nonzero delta as a fold over selected reservoir tokens, exposing
 the next proof as token-family counting, and
 `ReservoirSitePlan.thresholdMoveTokenFinset_toList_foldr_eq_sum` converts that
-fold to a `Finset.sum` over selected tokens for later family partitions.  The
+fold to a `Finset.sum` over selected tokens for later family partitions.
+`ReservoirMoveToken.equivSum` and
+`ReservoirMoveToken.sum_eq_nonbuffer_add_buffer01_add_buffer02` then split
+unrestricted token sums into the non-buffer, β₀β₁, and β₀β₂ families.  The
 sharpest remaining hard content is now proving existence of that quota and the
 resulting nonzero-column equations.
 

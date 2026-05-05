@@ -5636,6 +5636,56 @@ inductive ReservoirMoveToken
   | buffer02 : BaseTail.Trades.BufferReservoirToken m T → ReservoirMoveToken A
 deriving Fintype, DecidableEq
 
+namespace ReservoirMoveToken
+
+def equivSum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets} :
+    ReservoirMoveToken A ≃
+      A.nonbufferTokens ⊕
+        (BaseTail.Trades.BufferReservoirToken m T ⊕
+          BaseTail.Trades.BufferReservoirToken m T) where
+  toFun
+  | nonbuffer q => Sum.inl q
+  | buffer01 q => Sum.inr (Sum.inl q)
+  | buffer02 q => Sum.inr (Sum.inr q)
+  invFun
+  | Sum.inl q => nonbuffer q
+  | Sum.inr (Sum.inl q) => buffer01 q
+  | Sum.inr (Sum.inr q) => buffer02 q
+  left_inv q := by
+    cases q <;> rfl
+  right_inv q := by
+    rcases q with q | q
+    · rfl
+    · rcases q with q | q <;> rfl
+
+theorem sum_eq_nonbuffer_add_buffer01_add_buffer02
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (f : ReservoirMoveToken A → ZMod m) :
+    (∑ q : ReservoirMoveToken A, f q) =
+      (∑ q : A.nonbufferTokens, f (nonbuffer q)) +
+        ((∑ q : BaseTail.Trades.BufferReservoirToken m T,
+            f (buffer01 q)) +
+          (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+            f (buffer02 q))) := by
+  classical
+  let e :
+      ReservoirMoveToken A ≃
+        A.nonbufferTokens ⊕
+          (BaseTail.Trades.BufferReservoirToken m T ⊕
+            BaseTail.Trades.BufferReservoirToken m T) :=
+    equivSum
+  rw [← e.symm.sum_comp f]
+  simp [e, equivSum]
+
+end ReservoirMoveToken
+
 structure ReservoirSitePlan
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
