@@ -3339,6 +3339,30 @@ theorem swapResidueSpec_target_eq_add_localTradeDelta {m T : Nat}
         Equiv.swap_apply_of_ne_of_ne hρσ hρτ
       simp [hρσ, hρτ, hswap]
 
+theorem swapResidueSpec_target_eq_add_zeroTradeDelta {m T : Nat}
+    [NeZero T] {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) (x₀ : X) {τ ρ : Fin T} (hτ : τ ≠ 0)
+    {c₀ β : C} (hc₀ : Φ.color x₀ 0 = c₀) (hβ : Φ.color x₀ τ = β)
+    (c : C) :
+    (Φ.swapResidueSpec R x₀ 0 τ).target c ρ =
+      R.target c ρ
+        + (if c₀ = c then
+            (if ρ = τ then (1 : ZMod m)
+             else if ρ = 0 then -1 else 0)
+          else 0)
+        + (if β = c then
+            (if ρ = 0 then (1 : ZMod m)
+             else if ρ = τ then -1 else 0)
+          else 0) := by
+  have h0τ : (0 : Fin T) ≠ τ := by
+    intro h
+    exact hτ h.symm
+  simpa [hc₀, hβ] using
+    (Φ.swapResidueSpec_target_eq_add_localTradeDelta R x₀
+      (σ := (0 : Fin T)) (τ := τ) (ρ := ρ) h0τ c)
+
 theorem swapResidueSpec_rowCompatible {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I)
