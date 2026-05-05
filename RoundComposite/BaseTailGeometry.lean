@@ -352,8 +352,8 @@ theorem packetPrefixHi_eq_lo_add_get
     (packet : List Nat) (r : Fin packet.length) :
     packetPrefixHi packet r =
       packetPrefixLo packet r + packet.get r := by
-  simpa [packetPrefixHi, packetPrefixLo] using
-    List.sum_take_succ packet r.val r.isLt
+  simp [packetPrefixHi, packetPrefixLo,
+    List.sum_take_succ packet r.val r.isLt]
 
 theorem packetPrefixInterval_card
     (packet : List Nat) (r : Fin packet.length) :
@@ -361,6 +361,55 @@ theorem packetPrefixInterval_card
   rw [packetPrefixInterval, Nat.card_Ico,
     packetPrefixHi_eq_lo_add_get]
   omega
+
+theorem packetPrefixHi_le_sum
+    (packet : List Nat) (r : Fin packet.length) :
+    packetPrefixHi packet r ≤ packet.sum := by
+  dsimp [packetPrefixHi]
+  have h :=
+    List.sum_take_add_sum_drop packet (r.val + 1)
+  omega
+
+theorem packetPrefixHi_le_of_sum_eq
+    {packet : List Nat} {m : Nat} (hsum : packet.sum = m)
+    (r : Fin packet.length) :
+    packetPrefixHi packet r ≤ m := by
+  rw [← hsum]
+  exact packetPrefixHi_le_sum packet r
+
+theorem packetPrefixInterval_mem_lt_sum
+    {packet : List Nat} {r : Fin packet.length} {q : Nat}
+    (hq : q ∈ packetPrefixInterval packet r) :
+    q < packet.sum := by
+  have hlt : q < packetPrefixHi packet r := by
+    have hmem :
+        packetPrefixLo packet r ≤ q ∧ q < packetPrefixHi packet r := by
+      simpa [packetPrefixInterval] using hq
+    exact hmem.2
+  exact lt_of_lt_of_le hlt (packetPrefixHi_le_sum packet r)
+
+def packetPrefixPhaseSet (m : Nat)
+    (packet : List Nat) (r : Fin packet.length) : Finset (ZMod m) :=
+  (packetPrefixInterval packet r).image
+    (fun q : Nat => (q : ZMod m))
+
+theorem packetPrefixPhaseSet_card
+    {m : Nat} {packet : List Nat} (hsum : packet.sum = m)
+    (r : Fin packet.length) :
+    (packetPrefixPhaseSet m packet r).card = packet.get r := by
+  rw [packetPrefixPhaseSet]
+  rw [Finset.card_image_of_injOn]
+  · exact packetPrefixInterval_card packet r
+  · intro a ha b hb hab
+    have ha_lt : a < m := by
+      rw [← hsum]
+      exact packetPrefixInterval_mem_lt_sum ha
+    have hb_lt : b < m := by
+      rw [← hsum]
+      exact packetPrefixInterval_mem_lt_sum hb
+    exact
+      Nat.ModEq.eq_of_lt_of_lt
+        ((ZMod.natCast_eq_natCast_iff a b m).mp hab) ha_lt hb_lt
 
 /--
 The remaining local packet theorem needed by the active-block cylinder.
