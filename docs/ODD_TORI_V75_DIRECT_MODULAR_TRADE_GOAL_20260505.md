@@ -159,6 +159,7 @@ ActiveHall.Symboling.hasResidues_residueSpec
 ActiveHall.Symboling.residueSpec_rowCompatible
 ActiveHall.Symboling.residueSpec_colCompatible
 ActiveHall.Symboling.swapResidueSpec_target_eq_add_localTradeDelta
+ActiveHall.Symboling.swapResidueSpec_target_eq_add_zeroTradeDelta
 ActiveHall.Symboling.SwapMove
 ActiveHall.Symboling.applySwapMoves
 ActiveHall.Symboling.applySwapResidueSpecs
