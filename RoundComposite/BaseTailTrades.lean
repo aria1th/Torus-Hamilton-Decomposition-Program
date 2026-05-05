@@ -501,6 +501,60 @@ def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
   ActiveHall.Symboling.nonzeroZeroSwapMoves
     (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
 
+def successorReservoirColorQuota (m T : Nat) : Nat :=
+  (m - 1) * (T - 1)
+
+theorem successorReservoirColorQuota_mul_le_pow {b m T : Nat}
+    (hLarge : m ^ b > m * (b + T) * T) :
+    T * successorReservoirColorQuota m T ≤ m ^ b := by
+  have hQuota :
+      successorReservoirColorQuota m T ≤ m * (b + T) := by
+    unfold successorReservoirColorQuota
+    exact Nat.mul_le_mul (Nat.sub_le m 1) (by omega)
+  have hMul :
+      T * successorReservoirColorQuota m T ≤ T * (m * (b + T)) :=
+    Nat.mul_le_mul_left T hQuota
+  have hLarge' : T * (m * (b + T)) < m ^ b := by
+    simpa [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hLarge
+  exact hMul.trans (Nat.le_of_lt hLarge')
+
+theorem exists_injective_color_quota_matching_of_activeBlockData
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {Q : Type*} [Fintype Q]
+    (D : ActiveBlockData Cyl) (colorOf : Q → Fin (b + T))
+    (quota : Fin (b + T) → Nat)
+    (hTokenQuota :
+      ∀ c : Fin (b + T),
+        ((Finset.univ : Finset Q).filter (fun q => colorOf q = c)).card ≤
+          quota c)
+    (hQuotaPow : ∀ c : Fin (b + T), T * quota c ≤ m ^ b)
+    (hTpos : 0 < T) :
+    ∃ f : Q → Shared.TorusVertex (b + 1) m, Function.Injective f ∧
+      ∀ q : Q, colorOf q ∈ (Cyl.incidence).active (f q) := by
+  classical
+  refine
+    ActiveHall.Incidence.exists_injective_token_matching_of_color_quota
+      (Cyl.incidence) colorOf quota hTokenQuota ?_ hTpos
+  intro c
+  exact (hQuotaPow c).trans (D.active_degree_lower_bound c)
+
+theorem exists_injective_successorReservoirColorQuota_matching_of_activeBlockData
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {Q : Type*} [Fintype Q]
+    (D : ActiveBlockData Cyl) (colorOf : Q → Fin (b + T))
+    (hTokenQuota :
+      ∀ c : Fin (b + T),
+        ((Finset.univ : Finset Q).filter (fun q => colorOf q = c)).card ≤
+          successorReservoirColorQuota m T)
+    (hLarge : m ^ b > m * (b + T) * T)
+    (hTpos : 0 < T) :
+    ∃ f : Q → Shared.TorusVertex (b + 1) m, Function.Injective f ∧
+      ∀ q : Q, colorOf q ∈ (Cyl.incidence).active (f q) := by
+  exact
+    exists_injective_color_quota_matching_of_activeBlockData
+      D colorOf (fun _ => successorReservoirColorQuota m T) hTokenQuota
+      (fun _ => successorReservoirColorQuota_mul_le_pow hLarge) hTpos
+
 def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
     [DecidableEq C] (hT : 2 ≤ T)
     (zeroColor rightColor :
