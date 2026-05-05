@@ -290,8 +290,11 @@ ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwis
 BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal
 BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_append
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_zero
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_eq
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne
 BaseTail.Trades.reservoirResidual
 BaseTail.Trades.ThreeBufferReservoirArithmetic
 BaseTail.Trades.ThreeBufferReservoirArithmetic.residual_eq_zero
@@ -389,7 +392,12 @@ only the two swapped columns contribute, and their signs are now exposed as
 standalone rewrite targets.  This has been lifted to the successor reservoir
 sum by `nonzeroZeroTradeDeltaSumOfTwoLe_zero` and
 `nonzeroZeroTradeDeltaSumOfTwoLe_nonzero`, so the next proof can reason about
-plain finite lists of toggles.  The new
+plain finite lists of toggles.  The append and fixed-column helpers
+`nonzeroZeroTradeDeltaSumOfTwoLe_append`,
+`nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_eq`, and
+`nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne` are the intended
+rewrite layer for joining the non-buffer, β₀β₁, and β₀β₂ toggle groups without
+manually expanding the recursive delta each time.  The new
 `ThreeBufferReservoirArithmetic` and
 `CanonicalNonzeroZeroReservoirArithmetic` certificates isolate the final paper
 step after the λ/μ toggles: all nonzero columns are solved, and the zero column

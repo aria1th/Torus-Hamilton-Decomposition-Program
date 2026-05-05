@@ -515,6 +515,28 @@ def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
         move.right σ +
       nonzeroZeroTradeDeltaSumOfTwoLe hT zeroColor rightColor moves c σ
 
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_append {m T : Nat} {X C : Type*}
+    [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    ∀ moves₁ moves₂ :
+        List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      ∀ c σ,
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+            (moves₁ ++ moves₂) c σ =
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+              moves₁ c σ +
+            nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+              moves₂ c σ := by
+  intro moves₁
+  induction moves₁ with
+  | nil =>
+      intro moves₂ c σ
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves₁ ih =>
+      intro moves₂ c σ
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe, ih moves₂ c σ, add_assoc]
+
 theorem nonzeroZeroTradeDeltaSumOfTwoLe_zero {m T : Nat} {X C : Type*}
     [DecidableEq C] (hT : 2 ≤ T)
     (zeroColor rightColor :
@@ -623,6 +645,95 @@ theorem nonzeroZeroTradeDeltaSumOfTwoLe_nonzero {m T : Nat} {X C : Type*}
             (leftColor := zeroColor move) (rightColor := rightColor move)
             (c := c) hσleft hσright
         simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hσright, ih c]
+
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_eq
+    {m T : Nat} {X C : Type*} [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C)
+    {σ : Fin T} :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      (∀ move, move ∈ moves → move.right = σ) →
+      ∀ c : C,
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+            moves c σ =
+          moves.foldr
+            (fun move acc =>
+              ((if zeroColor move = c then (1 : ZMod m) else 0) -
+                  (if rightColor move = c then (1 : ZMod m) else 0)) +
+                acc)
+            0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro _hRight c
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro hRight c
+      have hMoveRight : move.right = σ := hRight move (by simp)
+      have hTail :
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+              rightColor moves c σ =
+            moves.foldr
+              (fun move acc =>
+                ((if zeroColor move = c then (1 : ZMod m) else 0) -
+                    (if rightColor move = c then (1 : ZMod m) else 0)) +
+                  acc)
+              0 :=
+        ih (fun move hmem => hRight move (by simp [hmem])) c
+      have hLeftNe :
+          (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+            move.right := by
+        intro h
+        have hval : move.right.val = 0 := by
+          simpa using congrArg Fin.val h.symm
+        exact move.right_ne_zero hval
+      have hHead :
+          ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right σ =
+            (if zeroColor move = c then (1 : ZMod m) else 0) -
+              (if rightColor move = c then (1 : ZMod m) else 0) := by
+        simpa [hMoveRight] using
+          ActiveHall.Symboling.localTradeDelta_right (m := m) hLeftNe
+            (leftColor := zeroColor move) (rightColor := rightColor move)
+            (c := c)
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hTail]
+
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne
+    {m T : Nat} {X C : Type*} [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      (∀ move, move ∈ moves → σ ≠ move.right) →
+      ∀ c : C,
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+            moves c σ = 0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro _hRight c
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro hRight c
+      have hTail :
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+              rightColor moves c σ = 0 :=
+        ih (fun move hmem => hRight move (by simp [hmem])) c
+      have hσleft :
+          σ ≠ ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ := by
+        intro h
+        exact hσ0 (by simpa using congrArg Fin.val h)
+      have hHead :
+          ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right σ = 0 :=
+        ActiveHall.Symboling.localTradeDelta_of_ne (m := m)
+          (leftColor := zeroColor move) (rightColor := rightColor move)
+          (c := c) hσleft (hRight move (by simp))
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hTail]
 
 def reservoirResidual {m T : Nat} {C : Type*} [Fintype C]
     (target initial : ActiveHall.ResidueSpec m T C)
