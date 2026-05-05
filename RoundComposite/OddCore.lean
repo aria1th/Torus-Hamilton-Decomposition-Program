@@ -5565,10 +5565,9 @@ theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_con
       hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hMix hT2
       R hRow hCol hZero hNumeric with
     ⟨M, hResidues, hScaled⟩
-  refine ⟨M, ?_, hResidues⟩
   exact
-    hMix.hallCuts_of_scaled_error_le_slack
-      (by omega : 0 < T) hSlack M hScaled
+    hMix.feasibleWithResidues_of_scaled_error_le_slack
+      (by omega : 0 < T) hSlack M hResidues hScaled
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)

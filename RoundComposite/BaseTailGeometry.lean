@@ -150,6 +150,25 @@ theorem hallCuts_of_scaled_error_le_slack
           hUne hUuniv hTpos hSlack S)
         (S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c)))
 
+theorem feasibleWithResidues_of_scaled_error_le_slack
+    {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : MixedExpansionData Cyl) (hTpos : 0 < T)
+    (hSlack : m ^ b > m * (b + T) * T)
+    {R : ActiveHall.ResidueSpec m T (Fin (b + T))}
+    (M : ActiveHall.CountMatrix Cyl.incidence)
+    (hResidues : M.HasResidues R)
+    (hScaled :
+      ∀ U : Finset (Fin (b + T)), ∀ S : Finset (Fin T),
+        U.Nonempty → U ≠ Finset.univ →
+        S.Nonempty → S ≠ Finset.univ →
+          T * M.cutMass U S ≤
+            S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c) +
+              m * (b + T) * min S.card (T - S.card)) :
+    ActiveHall.FeasibleWithResidues Cyl.incidence R :=
+  ⟨M, D.hallCuts_of_scaled_error_le_slack hTpos hSlack M hScaled,
+    hResidues⟩
+
 end MixedExpansionData
 
 namespace ActiveBlockData
