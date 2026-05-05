@@ -94,6 +94,53 @@ theorem symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_targe
       hΦ x₀ π
 
 /--
+Canonical active-block residue correction by one local permutation, phrased in
+the three cases of the canonical target schedule.
+
+This is the form expected from the reserved local-trade site: symbol `0`
+receives the active-block unit, symbol `1` receives its negative, and all
+remaining symbols receive zero.
+-/
+theorem symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_target_cases
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    {R : ActiveHall.ResidueSpec m T (Fin (b + T))}
+    {Φ : ActiveHall.Symboling Cyl.incidence}
+    (D : ActiveBlockData Cyl)
+    (hT : 2 ≤ T)
+    (hΦ : Φ.HasResidues R)
+    (x₀ : Shared.TorusVertex (b + 1) m)
+    (π : Equiv.Perm (Fin T))
+    (hZero :
+      ∀ c : Fin (b + T),
+        (Φ.permuteResidueSpec R x₀ π).target c ⟨0, by omega⟩ =
+          (D.activeBlock c : ZMod m))
+    (hOne :
+      ∀ c : Fin (b + T),
+        (Φ.permuteResidueSpec R x₀ π).target c ⟨1, by omega⟩ =
+          -((D.activeBlock c : Nat) : ZMod m))
+    (hTail :
+      ∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+        (Φ.permuteResidueSpec R x₀ π).target c σ = 0) :
+    ActiveHall.SymbolingWithResidues Cyl.incidence
+      (activeBlockResidueSpec D) := by
+  exact
+    symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_target_eq
+      D hΦ x₀ π (by
+        intro c σ
+        by_cases hσ0 : σ.val = 0
+        · have hσ : σ = ⟨0, by omega⟩ := Fin.ext hσ0
+          rw [hσ]
+          simpa using hZero c
+        · by_cases hσ1 : σ.val = 1
+          · have hσ : σ = ⟨1, by omega⟩ := Fin.ext hσ1
+            rw [hσ]
+            simpa using hOne c
+          · have hσ2 : 2 ≤ σ.val := by omega
+            rw [hTail c σ hσ2,
+              activeBlockResidueSpec_target_of_two_le D c hσ2])
+
+/--
 Direct active-block residue scheduler.
 
 This is the v7.3 replacement surface for the old count-matrix feasibility
@@ -243,6 +290,48 @@ downstream.
 -/
 def SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal : Prop :=
   SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
+
+/--
+Successor-scoped one-site permutation correction for the canonical schedule.
+
+This is a proof surface for the reserved coactive-site construction: it may
+first build any residue-realizing symboling `Φ` for a nearby target `R`, but it
+must also supply one active vertex and one symbol permutation whose residue
+update has exactly the canonical active-block targets.
+-/
+def SuccessorActiveBlockCanonicalPermutationCorrectionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
+          ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+            Φ.HasResidues R ∧
+            ∃ x₀ : Shared.TorusVertex (b + 1) m,
+              ∃ π : Equiv.Perm (Fin T),
+                (∀ c : Fin (b + T),
+                  (Φ.permuteResidueSpec R x₀ π).target c
+                      ⟨0, by omega⟩ =
+                    (D.activeBlock c : ZMod m)) ∧
+                (∀ c : Fin (b + T),
+                  (Φ.permuteResidueSpec R x₀ π).target c
+                      ⟨1, by omega⟩ =
+                    -((D.activeBlock c : Nat) : ZMod m)) ∧
+                (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+                  (Φ.permuteResidueSpec R x₀ π).target c σ = 0)
 
 /--
 Broader paper-facing finite coactive-site reservoir endpoint.  This version is
@@ -553,6 +642,24 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_finiteCoactiveSiteR
     (hReservoir : SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal) :
     SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
   hReservoir
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrection
+    (hCorrection : SuccessorActiveBlockCanonicalPermutationCorrectionGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hCorrection hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨R, Φ, hΦ, x₀, π, hZero, hOne, hTail⟩
+  exact
+    symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_target_cases
+      hBlock hT hΦ x₀ π hZero hOne hTail
+
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_permutationCorrection
+    (hCorrection : SuccessorActiveBlockCanonicalPermutationCorrectionGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrection
+    hCorrection
 
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_finiteCoactiveSiteReservoir
     (hReservoir : SuccessorActiveBlockFiniteCoactiveSiteReservoirGoal) :
