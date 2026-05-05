@@ -3163,6 +3163,56 @@ theorem packetPartSlot_false_card_at_state_successor
   rw [hlen, htotal] at hsum
   omega
 
+theorem packetPartColor_false_card_at_state_successor
+    {b T N m : Nat} [NeZero N] [NeZero m]
+    (packets : List (List Nat))
+    (e : PacketPartSlot packets ≃ Fin (b + T))
+    (hm3 : 3 ≤ m)
+    (hlen : packets.length = b)
+    (htotal : (packets.map List.length).sum = b + T)
+    (hpacketSum : ∀ packet, packet ∈ packets → packet.sum = m)
+    (hunit :
+      ∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m)
+    (S : ∀ i : Fin packets.length,
+      PacketPhaseSplit N m (packets.get i))
+    (rank : Fin packets.length → ZMod N) (a : ZMod m) :
+    ((Finset.univ : Finset (Fin (b + T))).filter
+      (fun c =>
+        (S (e.symm c).1).ordinary (e.symm c).2
+          (rank (e.symm c).1, a) = false)).card = T := by
+  classical
+  let P : PacketPartSlot packets → Prop := fun slot =>
+    (S slot.1).ordinary slot.2 (rank slot.1, a) = false
+  let eSub :
+      {c : Fin (b + T) // P (e.symm c)} ≃
+        {slot : PacketPartSlot packets // P slot} :=
+  {
+    toFun := fun c => ⟨e.symm c.1, c.2⟩
+    invFun := fun slot => ⟨e slot.1, by simpa [P] using slot.2⟩
+    left_inv := by
+      intro c
+      apply Subtype.ext
+      simp
+    right_inv := by
+      intro slot
+      apply Subtype.ext
+      simp
+  }
+  have hcolor :
+      Fintype.card {c : Fin (b + T) // P (e.symm c)} =
+      ((Finset.univ : Finset (Fin (b + T))).filter
+        (fun c => P (e.symm c))).card := by
+    exact Fintype.card_subtype _
+  have hslot :
+      Fintype.card {slot : PacketPartSlot packets // P slot} =
+      ((Finset.univ : Finset (PacketPartSlot packets)).filter
+        (fun slot => P slot)).card := by
+    exact Fintype.card_subtype _
+  rw [← hcolor, Fintype.card_congr eSub, hslot]
+  exact packetPartSlot_false_card_at_state_successor
+    packets hm3 hlen htotal hpacketSum hunit S rank a
+
 def SuccessorPacketPartSlotCardGoal : Prop :=
   ∀ {b T : Nat} {packets : List (List Nat)},
     packets.length = b →
