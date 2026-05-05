@@ -1233,6 +1233,49 @@ theorem exists_injective_token_matching_of_hall
   rw [hfilter]
   exact hHall A
 
+theorem exists_injective_token_matching_of_color_quota
+    {T : Nat} {X C Q : Type*} [Fintype X] [Fintype C] [Fintype Q]
+    [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (colorOf : Q → C) (quota : C → Nat)
+    (hTokenQuota :
+      ∀ c : C,
+        ((Finset.univ : Finset Q).filter (fun q => colorOf q = c)).card ≤
+          quota c)
+    (hQuotaDegree : ∀ c : C, T * quota c ≤ I.colorDegree c)
+    (hTpos : 0 < T) :
+    ∃ f : Q → X, Function.Injective f ∧
+      ∀ q : Q, colorOf q ∈ I.active (f q) := by
+  classical
+  apply I.exists_injective_token_matching_of_hall colorOf
+  intro A
+  let U : Finset C := A.image colorOf
+  have hAquota : A.card ≤ ∑ c ∈ U, quota c := by
+    calc
+      A.card = ∑ c ∈ U, (A.filter (fun q => colorOf q = c)).card := by
+        exact Finset.card_eq_sum_card_image colorOf A
+      _ ≤ ∑ c ∈ U, quota c := by
+        apply Finset.sum_le_sum
+        intro c _hc
+        have hsubset :
+            A.filter (fun q => colorOf q = c) ⊆
+              (Finset.univ : Finset Q).filter (fun q => colorOf q = c) := by
+          intro q hq
+          exact Finset.mem_filter.mpr
+            ⟨Finset.mem_univ q, (Finset.mem_filter.mp hq).2⟩
+        exact (Finset.card_le_card hsubset).trans (hTokenQuota c)
+  have hQuotaDegreeSum :
+      T * (∑ c ∈ U, quota c) ≤ ∑ c ∈ U, I.colorDegree c := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_le_sum (by
+      intro c _hc
+      exact hQuotaDegree c)
+  have hHit := I.sum_colorDegree_on_le_hitCount_mul U
+  have hMul :
+      T * A.card ≤ T * I.hitCount U :=
+    (Nat.mul_le_mul_left T hAquota).trans
+      (hQuotaDegreeSum.trans hHit)
+  exact Nat.le_of_mul_le_mul_left hMul hTpos
+
 set_option linter.unusedFintypeInType false in
 theorem exists_choiceDegree_bijective_token_matching
     {X C : Type*} [Fintype X] [Fintype C]

@@ -154,6 +154,7 @@ Current Lean helper names for `lem:local-symbol-trade` and finite swap
 schedules:
 
 ```lean
+ActiveHall.Incidence.exists_injective_token_matching_of_color_quota
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
@@ -181,6 +182,11 @@ ActiveHall.Symboling.applySwapResidueSpecs_colCompatible
 
 The proof should construct symbolings directly from reserved local trade sites.
 It should not detour through a global count-matrix Hall realization theorem.
+The quota matching helper
+`ActiveHall.Incidence.exists_injective_token_matching_of_color_quota` is the
+first reusable finite-reservoir site-selection cut: color-token quotas can be
+matched injectively into active sites from the active color-degree lower bounds,
+without invoking unrestricted Hall/de Werra count-matrix realization.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
