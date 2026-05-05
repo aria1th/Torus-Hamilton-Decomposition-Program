@@ -6094,7 +6094,8 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
         hLift)
 
 def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
-  BaseTail.SuccessorPacketPhaseSplitGoal ∧
+  BaseTail.PacketPhaseSplitLengthTwoGoal ∧
+  BaseTail.PacketPhaseSplitLengthThreeGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
@@ -6103,15 +6104,18 @@ def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResiduals
     (h : OddSuccessorBaseTailWorker1PhaseResidualGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
-  rcases h with ⟨hSplit, hCyl, hMix, hRound, hLift⟩
+  rcases h with ⟨hSplit2, hSplit3, hCyl, hMix, hRound, hLift⟩
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
       ⟨oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
-          hSplit hCyl,
+          (BaseTail.successorPacketPhaseSplitGoal_of_lengthTwoThree
+            hSplit2 hSplit3)
+          hCyl,
         hMix, hRound, hLift⟩
 
 def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
-  BaseTail.SuccessorPacketPhaseSplitGoal ∧
+  BaseTail.PacketPhaseSplitLengthTwoGoal ∧
+  BaseTail.PacketPhaseSplitLengthThreeGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
@@ -6119,12 +6123,14 @@ def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixedResiduals
     (h : OddSuccessorBaseTailWorker1PhaseMixedResidualGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
-  rcases h with ⟨hSplit, hCylMix, hRound, hLift⟩
+  rcases h with ⟨hSplit2, hSplit3, hCylMix, hRound, hLift⟩
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
       (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
         (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
-          hSplit hCylMix)
+          (BaseTail.successorPacketPhaseSplitGoal_of_lengthTwoThree
+            hSplit2 hSplit3)
+          hCylMix)
         hRound
         (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
           hLift))

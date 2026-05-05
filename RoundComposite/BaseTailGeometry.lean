@@ -1839,6 +1839,35 @@ theorem successorPacketPhaseSplitGoal_of_packetPhaseSplitGoal
       (successorPacketProperPrefixUnitsGoal
         hm3 hT hlen htotal hpacketSum hunit packet hp)
 
+def PacketPhaseSplitLengthTwoGoal : Prop :=
+  ∀ {N m : Nat} [NeZero N] [NeZero m] {packet : List Nat},
+    m ∣ N →
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    packet.length = 2 →
+    Nonempty (PacketPhaseSplit N m packet)
+
+def PacketPhaseSplitLengthThreeGoal : Prop :=
+  ∀ {N m : Nat} [NeZero N] [NeZero m] {packet : List Nat},
+    m ∣ N →
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    packet.length = 3 →
+    Nonempty (PacketPhaseSplit N m packet)
+
+theorem successorPacketPhaseSplitGoal_of_lengthTwoThree
+    (hTwo : PacketPhaseSplitLengthTwoGoal)
+    (hThree : PacketPhaseSplitLengthThreeGoal) :
+    SuccessorPacketPhaseSplitGoal := by
+  intro N b m T _instN _instM packets hdiv hm3 hT hlen htotal
+    hpacketSum hunit packet hp
+  have hlen23 :=
+    successorPacketLengthTwoOrThreeGoal hm3 hT hlen htotal hpacketSum hunit
+      packet hp
+  rcases hlen23 with hlen2 | hlen3
+  · exact hTwo hdiv (hpacketSum packet hp) (hunit packet hp) hlen2
+  · exact hThree hdiv (hpacketSum packet hp) (hunit packet hp) hlen3
+
 def SuccessorPacketProperPrefixRangeGoal : Prop :=
   ∀ {b m T : Nat} {packets : List (List Nat)},
     3 ≤ m →
