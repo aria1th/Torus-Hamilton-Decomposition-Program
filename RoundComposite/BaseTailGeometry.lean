@@ -1,5 +1,6 @@
 import Mathlib
 import RoundComposite.ActiveHall
+import Shared.Monodromy
 import Shared.TorusCayley
 
 namespace RoundComposite
@@ -802,6 +803,26 @@ theorem packetPhaseIntervalStep_conj_skew
         packetPhaseSkewStep]
       rw [hordCast]
       simp [hφ]
+
+theorem packetPhaseIntervalStep_singleCycle_of_skew
+    {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length)
+    (hSkew :
+      Shared.IsSingleCycleMap
+        (packetPhaseSkewStep (N := N)
+          (packetPrefixPhaseSet m packet r))) :
+    Shared.IsSingleCycleMap
+      (packetPhaseIntervalStep hdiv packet r) := by
+  refine
+    Shared.single_cycle_of_equiv_conj
+      (packetPhaseCoordEquiv hdiv).symm
+      (packetPhaseIntervalStep hdiv packet r)
+      (packetPhaseSkewStep (N := N)
+        (packetPrefixPhaseSet m packet r))
+      hSkew
+      ?_
+  intro p
+  exact packetPhaseIntervalStep_conj_skew hdiv packet r p
 
 /--
 The remaining local packet theorem needed by the active-block cylinder.
@@ -2387,6 +2408,40 @@ def PacketPhaseIntervalPowerConstructionGoal : Prop :=
     packet.sum = m →
     (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
     Nonempty (PacketPhaseSplit (m ^ b) m packet)
+
+def PacketPhaseSkewSingleCycleConstructionGoal : Prop :=
+  ∀ {N m : Nat} [NeZero N] [NeZero m] (_hdiv : m ∣ N)
+    {packet : List Nat},
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    ∀ r : Fin packet.length,
+      Shared.IsSingleCycleMap
+        (packetPhaseSkewStep (N := N)
+          (packetPrefixPhaseSet m packet r))
+
+theorem packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
+    (hSkew : PacketPhaseSkewSingleCycleConstructionGoal) :
+    PacketPhaseIntervalPowerConstructionGoal := by
+  intro b m _instM _instPow packet hbpos hsum hunit
+  let hdiv : m ∣ m ^ b := dvd_pow_self m hbpos.ne'
+  have hpos : ∀ a, a ∈ packet → 0 < a := by
+    intro a ha
+    exact (hunit a ha).1
+  exact
+    ⟨{
+      ordinary := packetPhaseIntervalOrdinary hdiv packet
+      ordinary_unique := by
+        intro y
+        exact packetPhaseIntervalOrdinary_existsUnique hdiv hsum hpos y
+      ordinary_card := by
+        intro r
+        exact packetPhaseIntervalOrdinary_card hdiv hsum r
+      step_singleCycle := by
+        intro r
+        exact
+          packetPhaseIntervalStep_singleCycle_of_skew
+            hdiv packet r (hSkew hdiv hsum hunit r)
+    }⟩
 
 theorem zmodPower_add_singleCycle_of_base_coprime
     {b m a : Nat} [NeZero (m ^ b)] (ha : Nat.Coprime a m) :
