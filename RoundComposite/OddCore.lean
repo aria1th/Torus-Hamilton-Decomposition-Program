@@ -7773,6 +7773,122 @@ theorem thresholdCanonicalQuota_reservoirResidual_buffer2
   simp [BaseTail.Trades.reservoirResidual, postNonbufferReservoirResidual]
   ring
 
+theorem thresholdCanonicalQuota_reservoirResidual_buffer0
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    BaseTail.Trades.reservoirResidual
+      (BaseTail.Trades.activeBlockResidueSpec A.D)
+      (initial.residueSpec (m := m))
+      (BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+        (P.moveRightColorOfMove
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+        (P.thresholdMoveList
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT)
+          (P.thresholdCanonicalQuota hT initial)))
+      (A.buffer.color0 A.slotEquiv) σ = 0 := by
+  classical
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  let target := BaseTail.Trades.activeBlockResidueSpec A.D
+  let init := initial.residueSpec (m := m)
+  let moves := P.thresholdMoveList hTpos
+    (P.thresholdCanonicalQuota hT initial)
+  let zeroColor := P.moveZeroColorOfMove hTpos
+  let rightColor := P.moveRightColorOfMove hTpos
+  let delta := BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe
+    (m := m) hT zeroColor rightColor moves
+  change
+    BaseTail.Trades.reservoirResidual target init delta
+      (A.buffer.color0 A.slotEquiv) σ = 0
+  have hCompat :=
+    BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+      A.isCylinder A.D hT
+  have hcolzero :
+      (∑ c : Fin (b + T),
+        BaseTail.Trades.reservoirResidual target init delta c σ) = 0 := by
+    exact
+      BaseTail.Trades.reservoirResidual_col_zero_of_colCompatible
+        (I := A.Cyl.incidence)
+        (target := target) (initial := init) (delta := delta)
+        hCompat.2.1
+        (initial.residueSpec_colCompatible (m := m))
+        (BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_col_sum
+          (m := m) hT zeroColor rightColor moves)
+        σ
+  have hzero_ne0 :
+      ∀ c : Fin (b + T), c ≠ A.buffer.color0 A.slotEquiv →
+        BaseTail.Trades.reservoirResidual target init delta c σ = 0 := by
+    intro c hc0
+    by_cases hc1 : c = A.buffer.color1 A.slotEquiv
+    · subst c
+      simpa [target, init, delta, moves, zeroColor, rightColor, hTpos] using
+        P.thresholdCanonicalQuota_reservoirResidual_buffer1
+          hT initial hσ0
+    · by_cases hc2 : c = A.buffer.color2 A.slotEquiv
+      · subst c
+        simpa [target, init, delta, moves, zeroColor, rightColor, hTpos] using
+          P.thresholdCanonicalQuota_reservoirResidual_buffer2
+            hT initial hσ0
+      · simpa [target, init, delta, moves, zeroColor, rightColor, hTpos] using
+          P.thresholdCanonicalQuota_reservoirResidual_nonbuffer
+            hT initial hc0 hc1 hc2 hσ0
+  have hsum_single :
+      (∑ c : Fin (b + T),
+        BaseTail.Trades.reservoirResidual target init delta c σ) =
+        BaseTail.Trades.reservoirResidual target init delta
+          (A.buffer.color0 A.slotEquiv) σ := by
+    rw [Finset.sum_eq_single (A.buffer.color0 A.slotEquiv)]
+    · intro c _hc hne
+      exact hzero_ne0 c hne
+    · intro hnot
+      exact False.elim
+        (hnot (Finset.mem_univ (A.buffer.color0 A.slotEquiv)))
+  rw [hsum_single] at hcolzero
+  exact hcolzero
+
+theorem thresholdCanonicalQuota_reservoirResidual_nonzero
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    (c : Fin (b + T)) {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    BaseTail.Trades.reservoirResidual
+      (BaseTail.Trades.activeBlockResidueSpec A.D)
+      (initial.residueSpec (m := m))
+      (BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+        (P.moveRightColorOfMove
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+        (P.thresholdMoveList
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT)
+          (P.thresholdCanonicalQuota hT initial)))
+      c σ = 0 := by
+  classical
+  by_cases hc0 : c = A.buffer.color0 A.slotEquiv
+  · subst c
+    exact P.thresholdCanonicalQuota_reservoirResidual_buffer0
+      hT initial hσ0
+  · by_cases hc1 : c = A.buffer.color1 A.slotEquiv
+    · subst c
+      exact P.thresholdCanonicalQuota_reservoirResidual_buffer1
+        hT initial hσ0
+    · by_cases hc2 : c = A.buffer.color2 A.slotEquiv
+      · subst c
+        exact P.thresholdCanonicalQuota_reservoirResidual_buffer2
+          hT initial hσ0
+      · exact
+          P.thresholdCanonicalQuota_reservoirResidual_nonbuffer
+            hT initial hc0 hc1 hc2 hσ0
+
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
@@ -8019,6 +8135,22 @@ theorem exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSo
         exact
           ⟨P.thresholdCanonicalQuota hT initial,
             hCanonical initial hzero hright⟩)
+
+theorem exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) :
+    ∃ _script :
+      BaseTail.Trades.CanonicalNonzeroZeroReservoirScript hT A.D, True := by
+  exact
+    P.exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSolved
+      hT (by
+        intro initial _hzero _hright c σ hσ0
+        exact
+          P.thresholdCanonicalQuota_reservoirResidual_nonzero
+            hT initial c hσ0)
 
 noncomputable def moveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]

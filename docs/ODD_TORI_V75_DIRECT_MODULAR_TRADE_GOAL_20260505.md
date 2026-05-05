@@ -274,10 +274,13 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCa
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_nonbuffer
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_buffer1
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_buffer2
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_buffer0
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_nonzero
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSolved
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_mem_moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList_pairwise_vertex
@@ -474,6 +477,7 @@ ActiveHall.Symboling.localTradeDelta_left
 ActiveHall.Symboling.localTradeDelta_right
 ActiveHall.Symboling.localTradeDelta_of_ne
 ActiveHall.Symboling.localTradeDelta_row_sum
+ActiveHall.Symboling.localTradeDelta_col_sum
 ActiveHall.Symboling.swapMoveDelta_eq_localTradeDelta
 ActiveHall.Symboling.swapDeltaSum
 ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
@@ -486,8 +490,10 @@ BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_eq
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_row_sum
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_col_sum
 BaseTail.Trades.reservoirResidual
 BaseTail.Trades.reservoirResidual_row_zero_of_rowCompatible
+BaseTail.Trades.reservoirResidual_col_zero_of_colCompatible
 BaseTail.Trades.ThreeBufferReservoirArithmetic
 BaseTail.Trades.ThreeBufferReservoirArithmetic.residual_eq_zero
 BaseTail.Trades.ThreeBufferReservoirArithmetic.target_delta
@@ -602,7 +608,11 @@ row-zero side of the certificate is now automatic:
 `ActiveHall.Symboling.localTradeDelta_row_sum`,
 `BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_row_sum`, and
 `BaseTail.Trades.reservoirResidual_row_zero_of_rowCompatible` show that local
-trades preserve row sums, while
+trades preserve row sums.  The parallel column-sum lemmas
+`ActiveHall.Symboling.localTradeDelta_col_sum`,
+`BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_col_sum`, and
+`BaseTail.Trades.reservoirResidual_col_zero_of_colCompatible` provide the β₀
+closure route from column compatibility, while
 `CanonicalNonzeroZeroReservoirArithmetic.ofNonzeroSolved` builds the arithmetic
 certificate once the nonzero columns are solved.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
@@ -661,12 +671,15 @@ they equal the post-nonbuffer residuals, while the opposite buffer family
 contributes zero.  Consequently
 `thresholdCanonicalQuota_reservoirResidual_nonbuffer`,
 `thresholdCanonicalQuota_reservoirResidual_buffer1`, and
-`thresholdCanonicalQuota_reservoirResidual_buffer2` close all nonzero residual
-equations except the β₀ row.  The canonical-quota adapter fixes the previous
-existential quota endpoint to this named quota.  The sharpest remaining hard
-content is now the β₀ nonzero-column equation, expected to follow from column
-compatibility after the non-buffer, β₁, and β₂ residual equations, and then the
-single all-color `nonzeroSolved` adapter for the canonical quota.
+`thresholdCanonicalQuota_reservoirResidual_buffer2` close the non-buffer, β₁,
+and β₂ nonzero residual equations.  Column compatibility then gives
+`thresholdCanonicalQuota_reservoirResidual_buffer0`, and
+`thresholdCanonicalQuota_reservoirResidual_nonzero` packages the all-color
+nonzero residual certificate for the canonical quota.  The canonical-quota
+adapter fixes the previous existential quota endpoint to this named quota, and
+`exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota`
+closes the selected canonical reservoir script endpoint for a fixed
+`ReservoirSitePlan`.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

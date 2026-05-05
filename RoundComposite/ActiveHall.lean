@@ -4234,6 +4234,36 @@ theorem localTradeDelta_row_sum {m T : Nat} {C : Type*} [DecidableEq C]
         hsum_pos_neg left right h
     · simp [localTradeDelta, hleft, hright]
 
+theorem localTradeDelta_col_sum {m T : Nat} {C : Type*}
+    [Fintype C] [DecidableEq C]
+    {leftColor rightColor : C} {left right ρ : Fin T}
+    (h : left ≠ right) :
+    (∑ c : C,
+      localTradeDelta (m := m) leftColor rightColor c left right ρ) = 0 := by
+  classical
+  have hsum_single :
+      ∀ a : C, (∑ c : C, if a = c then (1 : ZMod m) else 0) = 1 := by
+    intro a
+    rw [Finset.sum_eq_single a]
+    · simp
+    · intro c _hc hne
+      have hne' : a ≠ c := by
+        intro h
+        exact hne h.symm
+      simp [hne']
+    · intro hnot
+      exact False.elim (hnot (Finset.mem_univ a))
+  by_cases hρright : ρ = right
+  · have hρleft : ρ ≠ left := by
+      intro hρleft
+      exact h (hρleft.symm.trans hρright)
+    simp [localTradeDelta, hρright, h.symm,
+      Finset.sum_add_distrib, hsum_single]
+  · by_cases hρleft : ρ = left
+    · simp [localTradeDelta, h, hρleft,
+        Finset.sum_add_distrib, hsum_single]
+    · simp [localTradeDelta, hρright, hρleft]
+
 theorem swapMoveDelta_eq_localTradeDelta {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I)

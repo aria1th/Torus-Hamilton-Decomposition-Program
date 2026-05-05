@@ -1162,6 +1162,49 @@ theorem nonzeroZeroTradeDeltaSumOfTwoLe_row_sum
           rw [ActiveHall.Symboling.localTradeDelta_row_sum hLeftNe, ih c]
           simp
 
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_col_sum
+    {m T : Nat} {X C : Type*} [Fintype C] [DecidableEq C]
+    (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      ∀ σ : Fin T,
+        (∑ c : C,
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+            rightColor moves c σ) = 0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro σ
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro σ
+      have hLeftNe :
+          (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+            move.right := by
+        intro h
+        have hval : move.right.val = 0 := by
+          simpa using congrArg Fin.val h.symm
+        exact move.right_ne_zero hval
+      calc
+        (∑ c : C,
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+            rightColor (move :: moves) c σ)
+            =
+          (∑ c : C,
+            ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right σ) +
+            ∑ c : C,
+              nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+                rightColor moves c σ := by
+              simp [nonzeroZeroTradeDeltaSumOfTwoLe,
+                Finset.sum_add_distrib]
+        _ = 0 := by
+          rw [ActiveHall.Symboling.localTradeDelta_col_sum hLeftNe, ih σ]
+          simp
+
 def reservoirResidual {m T : Nat} {C : Type*} [Fintype C]
     (target initial : ActiveHall.ResidueSpec m T C)
     (delta : C → Fin T → ZMod m) : C → Fin T → ZMod m :=
@@ -1181,6 +1224,21 @@ theorem reservoirResidual_row_zero_of_rowCompatible
   simp [reservoirResidual, Finset.sum_sub_distrib,
     Finset.sum_add_distrib, ← hTargetRow c, ← hInitialRow c,
     hDeltaRow c]
+
+theorem reservoirResidual_col_zero_of_colCompatible
+    {m T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] {I : ActiveHall.Incidence T X C}
+    {target initial : ActiveHall.ResidueSpec m T C}
+    {delta : C → Fin T → ZMod m}
+    (hTargetCol : target.ColCompatible I)
+    (hInitialCol : initial.ColCompatible I)
+    (hDeltaCol : ∀ σ : Fin T, (∑ c : C, delta c σ) = 0) :
+    ∀ σ : Fin T, (∑ c : C,
+      reservoirResidual target initial delta c σ) = 0 := by
+  intro σ
+  simp [reservoirResidual, Finset.sum_sub_distrib,
+    Finset.sum_add_distrib, ← hTargetCol σ, ← hInitialCol σ,
+    hDeltaCol σ]
 
 /--
 Arithmetic certificate for the final residual step of the v7.6 three-buffer
