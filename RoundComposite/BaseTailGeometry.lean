@@ -42,6 +42,92 @@ def step {b m T : Nat} {packets : List (List Nat)}
 
 end Cylinder
 
+def ordinaryExpandedDir {b T : Nat}
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) : Fin (b + T) :=
+  ⟨i.val, by
+    have hlt : i.val < b := by
+      by_contra hnot
+      have hv : i.val = b := by omega
+      exact hi (by
+        apply Fin.ext
+        simp [activeDir, hv])
+    omega⟩
+
+def tailExpandedDir (b : Nat) {T : Nat} (σ : Fin T) : Fin (b + T) :=
+  ⟨b + σ.val, by omega⟩
+
+def ordinaryBaseDirOfExpandedDir {b T : Nat}
+    (i : Fin (b + T)) (hi : i.val < b) : Fin (b + 1) :=
+  ⟨i.val, by omega⟩
+
+def tailSymbolOfExpandedDir {b T : Nat}
+    (i : Fin (b + T)) (hi : b ≤ i.val) : Fin T :=
+  ⟨i.val - b, by omega⟩
+
+theorem ordinaryBaseDirOfExpandedDir_ne_active {b T : Nat}
+    (i : Fin (b + T)) (hi : i.val < b) :
+    ordinaryBaseDirOfExpandedDir i hi ≠ activeDir b := by
+  intro h
+  have hv := congrArg Fin.val h
+  simp [ordinaryBaseDirOfExpandedDir, activeDir] at hv
+  omega
+
+theorem ordinaryExpandedDir_val_lt {b T : Nat}
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) :
+    (ordinaryExpandedDir (T := T) i hi).val < b := by
+  have hval : (ordinaryExpandedDir (T := T) i hi).val = i.val := rfl
+  by_contra hnot
+  rw [hval] at hnot
+  have hv : i.val = b := by omega
+  exact hi (by
+    apply Fin.ext
+    simp [activeDir, hv])
+
+theorem ordinaryExpandedDir_of_ordinaryBaseDir {b T : Nat}
+    (i : Fin (b + T)) (hi : i.val < b) :
+    ordinaryExpandedDir
+        (ordinaryBaseDirOfExpandedDir i hi)
+        (ordinaryBaseDirOfExpandedDir_ne_active i hi) = i := by
+  apply Fin.ext
+  simp [ordinaryExpandedDir, ordinaryBaseDirOfExpandedDir]
+
+theorem tailExpandedDir_val_ge (b : Nat) {T : Nat} (σ : Fin T) :
+    b ≤ (tailExpandedDir b σ).val := by
+  simp [tailExpandedDir]
+
+theorem tailExpandedDir_of_tailSymbol {b T : Nat}
+    (i : Fin (b + T)) (hi : b ≤ i.val) :
+    tailExpandedDir b (tailSymbolOfExpandedDir i hi) = i := by
+  apply Fin.ext
+  simp [tailExpandedDir, tailSymbolOfExpandedDir]
+  omega
+
+theorem tailExpandedDir_injective {b T : Nat} :
+    Function.Injective (tailExpandedDir b : Fin T → Fin (b + T)) := by
+  intro σ τ h
+  apply Fin.ext
+  have hv := congrArg Fin.val h
+  simp [tailExpandedDir] at hv
+  omega
+
+theorem ordinaryExpandedDir_ne_tailExpandedDir {b T : Nat}
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) (σ : Fin T) :
+    ordinaryExpandedDir (T := T) i hi ≠ tailExpandedDir b σ := by
+  intro h
+  have hlt := ordinaryExpandedDir_val_lt (T := T) i hi
+  have hge := tailExpandedDir_val_ge b σ
+  rw [h] at hlt
+  omega
+
+def collapseVertex (b m T : Nat)
+    (x : Shared.TorusVertex (b + T) m) :
+    Shared.TorusVertex (b + 1) m :=
+  fun i =>
+    if hi : i.val < b then
+      x ⟨i.val, by omega⟩
+    else
+      ∑ σ : Fin T, x (tailExpandedDir b σ)
+
 structure IsCylinder {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     (Cyl : Cylinder b m T packets) : Prop where
   ordinary_unique :
@@ -637,6 +723,24 @@ structure ActiveSymboling {b m T : Nat} [NeZero m]
   R : ActiveHall.ResidueSpec m T (Fin (b + T))
   Φ : ActiveHall.Symboling Cyl.incidence
 
+noncomputable def expandedColorDir
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m T packets) (A : ActiveSymboling Cyl) :
+    Shared.TorusColor (b + T) →
+      Shared.TorusVertex (b + T) m →
+      Shared.TorusDirection (b + T) :=
+  fun c x =>
+    let y := collapseVertex b m T x
+    let i := Cyl.dir c y
+    if hactive : i = activeDir b then
+      tailExpandedDir b
+        ((A.Φ.equiv y).symm
+          ⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩)
+    else
+      ordinaryExpandedDir i hactive
+
 structure IsActiveSymboling {b m T : Nat} [NeZero m]
     {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets}
@@ -668,6 +772,127 @@ def PrimitiveActiveLiftAssemblyGoal : Prop :=
       IsCylinder Cyl →
       IsPrimitiveActiveSymboling hT A →
       Shared.CayleyHamiltonDecomposition (b + T) m
+
+def ExpandedColorDirEdgePartitionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl},
+      IsCylinder Cyl →
+      Shared.IsCayleyEdgePartition (expandedColorDir Cyl A)
+
+def ExpandedColorDirColorHamiltonianGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ T),
+      IsCylinder Cyl →
+      IsPrimitiveActiveSymboling hT A →
+      Shared.IsCayleyColorHamiltonian (expandedColorDir Cyl A)
+
+theorem primitiveActiveLiftAssemblyGoal_of_expandedColorDirPieces
+    (hEdge : ExpandedColorDirEdgePartitionGoal)
+    (hHam : ExpandedColorDirColorHamiltonianGoal) :
+    PrimitiveActiveLiftAssemblyGoal := by
+  intro b m T _inst packets Cyl A hT hCyl hA
+  exact ⟨{
+    colorDir := expandedColorDir Cyl A
+    edgePartition := hEdge hCyl
+    colorHamiltonian := hHam hT hCyl hA
+  }⟩
+
+theorem expandedColorDirEdgePartitionGoal :
+    ExpandedColorDirEdgePartitionGoal := by
+  classical
+  intro b m T _inst packets Cyl A hCyl x j
+  let y := collapseVertex b m T x
+  by_cases hj : j.val < b
+  · let i : Fin (b + 1) := ordinaryBaseDirOfExpandedDir j hj
+    have hi : i ≠ activeDir b :=
+      ordinaryBaseDirOfExpandedDir_ne_active j hj
+    rcases hCyl.ordinary_unique y i hi with ⟨c, hc, huniq⟩
+    refine ⟨c, ?_, ?_⟩
+    · have hnot : Cyl.dir c y ≠ activeDir b := by
+        rw [hc]
+        exact hi
+      apply Fin.ext
+      simp [expandedColorDir, y, hi, ordinaryExpandedDir, hc]
+      rfl
+    · intro d hd
+      have hnot : Cyl.dir d y ≠ activeDir b := by
+        intro hactive
+        have hval := congrArg Fin.val hd
+        have hge : b ≤ (expandedColorDir Cyl A d x).val := by
+          simp [expandedColorDir, y, hactive, tailExpandedDir]
+        rw [hval] at hge
+        omega
+      have hdir : Cyl.dir d y = i := by
+        apply Fin.ext
+        have hval := congrArg Fin.val hd
+        have hval' :
+            (expandedColorDir Cyl A d x).val = (Cyl.dir d y).val := by
+          simp [expandedColorDir, y, hnot, ordinaryExpandedDir]
+        rw [hval'] at hval
+        simpa [i, ordinaryBaseDirOfExpandedDir] using hval
+      exact huniq d hdir
+  · have hjge : b ≤ j.val := by omega
+    let σ : Fin T := tailSymbolOfExpandedDir j hjge
+    let p : {c : Fin (b + T) // c ∈ (Cyl.incidence).active y} :=
+      A.Φ.equiv y σ
+    let c : Fin (b + T) := p.1
+    have hcActive : Cyl.dir c y = activeDir b := by
+      have hp : c ∈ Cyl.active y := by
+        simp [Cylinder.incidence, c, p]
+      exact (Finset.mem_filter.mp hp).2
+    have hsub :
+        (⟨c, by
+          change c ∈ Cyl.active y
+          exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hcActive⟩⟩ :
+          {c : Fin (b + T) // c ∈ (Cyl.incidence).active y}) = p := by
+      apply Subtype.ext
+      rfl
+    have hsymm :
+        (A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hcActive⟩⟩ :
+            {c : Fin (b + T) // c ∈ (Cyl.incidence).active y}) = σ := by
+      rw [hsub]
+      exact (A.Φ.equiv y).symm_apply_apply σ
+    refine ⟨c, ?_, ?_⟩
+    · calc
+        expandedColorDir Cyl A c x = tailExpandedDir b σ := by
+          simp [expandedColorDir, y, hcActive, hsymm]
+        _ = j := tailExpandedDir_of_tailSymbol j hjge
+    · intro d hd
+      have hactive : Cyl.dir d y = activeDir b := by
+        by_contra hnot
+        have hval := congrArg Fin.val hd
+        have hlt : (expandedColorDir Cyl A d x).val < b := by
+          simp [expandedColorDir, y, hnot, ordinaryExpandedDir_val_lt]
+        rw [hval] at hlt
+        omega
+      have hdmem : d ∈ Cyl.active y :=
+        Finset.mem_filter.mpr ⟨Finset.mem_univ d, hactive⟩
+      let q : {c : Fin (b + T) // c ∈ (Cyl.incidence).active y} :=
+        ⟨d, by
+          change d ∈ Cyl.active y
+          exact hdmem⟩
+      have hsymm_d : (A.Φ.equiv y).symm q = σ := by
+        have hbranch :
+            expandedColorDir Cyl A d x =
+              tailExpandedDir b ((A.Φ.equiv y).symm q) := by
+          simp [expandedColorDir, y, hactive, q]
+        apply tailExpandedDir_injective (b := b)
+        rw [← hbranch, hd]
+        exact (tailExpandedDir_of_tailSymbol j hjge).symm
+      have hq : q = p := by
+        have happly := congrArg (A.Φ.equiv y) hsymm_d
+        simpa [q, p] using happly
+      exact congrArg Subtype.val hq
+
+theorem primitiveActiveLiftAssemblyGoal_of_expandedColorDirHamiltonian
+    (hHam : ExpandedColorDirColorHamiltonianGoal) :
+    PrimitiveActiveLiftAssemblyGoal :=
+  primitiveActiveLiftAssemblyGoal_of_expandedColorDirPieces
+    expandedColorDirEdgePartitionGoal hHam
 
 def HasFeasiblePrimitiveResidues {b m T : Nat} [NeZero m]
     {packets : List (List Nat)}
