@@ -149,6 +149,8 @@ surfaces:
 
 ```lean
 BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal
+BaseTail.Trades.successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasibleResidue
 BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
 BaseTail.Trades.successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
 BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade
@@ -156,9 +158,10 @@ BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_
 BaseTail.Trades.successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_iff_feasible_and_feasibleLocalTrade
 ```
 
-The first endpoint packages the canonical feasible residue matrix; the second
-is the successor-scoped feasible-to-symboling bridge.  This route still avoids
-the unrestricted Hall/de Werra/count-matrix targets listed above.
+The scaled endpoint packages the canonical residue matrix together with the
+proper-cut slack inequality consumed by `MixedExpansionData`.  The local-symbol
+endpoint is the successor-scoped feasible-to-symboling bridge.  This route
+still avoids the unrestricted Hall/de Werra/count-matrix targets listed above.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

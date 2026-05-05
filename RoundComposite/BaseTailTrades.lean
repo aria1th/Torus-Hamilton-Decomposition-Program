@@ -441,6 +441,43 @@ def SuccessorActiveBlockCanonicalFeasibleResidueGoal : Prop :=
           (activeBlockResidueSpec D)
 
 /--
+Canonical successor feasibility reduced to a concrete scaled Hall-slack
+witness.
+
+This is the arithmetic residue-rounding surface below
+`SuccessorActiveBlockCanonicalFeasibleResidueGoal`: it supplies a count matrix
+with the canonical residues plus the scaled proper-cut inequality consumed by
+the mixed-expansion slack lemma.
+-/
+def SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ M : ActiveHall.CountMatrix Cyl.incidence,
+          M.HasResidues (activeBlockResidueSpec D) ∧
+            ∀ U : Finset (Fin (b + T)), ∀ S : Finset (Fin T),
+              U.Nonempty → U ≠ Finset.univ →
+              S.Nonempty → S ≠ Finset.univ →
+                T * M.cutMass U S ≤
+                  S.card *
+                      (∑ c ∈ U, (Cyl.incidence).colorDegree c) +
+                    m * (b + T) * min S.card (T - S.card)
+
+/--
 Successor-scoped feasible-to-symboling bridge for the canonical schedule.
 
 This is the corrected local-trade replacement for the unrestricted
@@ -839,6 +876,19 @@ theorem successorActiveBlockCanonicalFeasibleResidueGoal_of_canonicalLocalTrade
     ActiveHall.feasibleWithResidues_of_symbolingWithResidues
       (hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
         hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock)
+
+theorem successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasibleResidue
+    (hScaled : SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal) :
+    SuccessorActiveBlockCanonicalFeasibleResidueGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hScaled hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨M, hResidues, hScaledCuts⟩
+  have hTpos : 0 < T := by omega
+  exact
+    (hBlock.mixedExpansionData_of_successor hT_eq).feasibleWithResidues_of_scaled_error_le_slack
+      hTpos hSlack M hResidues hScaledCuts
 
 theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
     (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
