@@ -5626,6 +5626,16 @@ abbrev nonbufferTokens
     (A.buffer.color1 A.slotEquiv)
     (A.buffer.color2 A.slotEquiv)
 
+inductive ReservoirMoveToken
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) : Type where
+  | nonbuffer : A.nonbufferTokens → ReservoirMoveToken A
+  | buffer01 : BaseTail.Trades.BufferReservoirToken m T → ReservoirMoveToken A
+  | buffer02 : BaseTail.Trades.BufferReservoirToken m T → ReservoirMoveToken A
+deriving Fintype
+
 structure ReservoirSitePlan
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
@@ -5661,7 +5671,370 @@ structure ReservoirSitePlan
   buffer01_card :
     buffer01Sites.card = BaseTail.Trades.successorReservoirColorQuota m T
   buffer02_card :
-    buffer02Sites.card = BaseTail.Trades.successorReservoirColorQuota m T
+      buffer02Sites.card = BaseTail.Trades.successorReservoirColorQuota m T
+
+namespace ReservoirSitePlan
+
+noncomputable def buffer01Equiv
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    BaseTail.Trades.BufferReservoirToken m T ≃
+      {x : Shared.TorusVertex (b + 1) m // x ∈ P.buffer01Sites} :=
+  Fintype.equivOfCardEq (by
+    rw [BaseTail.Trades.BufferReservoirToken.card]
+    rw [Fintype.card_subtype]
+    simpa using P.buffer01_card.symm)
+
+noncomputable def buffer02Equiv
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    BaseTail.Trades.BufferReservoirToken m T ≃
+      {x : Shared.TorusVertex (b + 1) m // x ∈ P.buffer02Sites} :=
+  Fintype.equivOfCardEq (by
+    rw [BaseTail.Trades.BufferReservoirToken.card]
+    rw [Fintype.card_subtype]
+    simpa using P.buffer02_card.symm)
+
+noncomputable def buffer01Site
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    Shared.TorusVertex (b + 1) m :=
+  (P.buffer01Equiv q).1
+
+noncomputable def buffer02Site
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    Shared.TorusVertex (b + 1) m :=
+  (P.buffer02Equiv q).1
+
+theorem buffer01Site_mem
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.buffer01Site q ∈ P.buffer01Sites :=
+  (P.buffer01Equiv q).2
+
+theorem buffer02Site_mem
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.buffer02Site q ∈ P.buffer02Sites :=
+  (P.buffer02Equiv q).2
+
+noncomputable def moveSite
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    ReservoirMoveToken A → Shared.TorusVertex (b + 1) m
+  | ReservoirMoveToken.nonbuffer q => P.nonbufferSite q
+  | ReservoirMoveToken.buffer01 q => P.buffer01Site q
+  | ReservoirMoveToken.buffer02 q => P.buffer02Site q
+
+def moveRight
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (_P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    ReservoirMoveToken A → Fin T
+  | ReservoirMoveToken.nonbuffer q =>
+      BaseTail.Trades.NonbufferReservoirToken.right hTpos q
+  | ReservoirMoveToken.buffer01 q =>
+      BaseTail.Trades.BufferReservoirToken.right hTpos q
+  | ReservoirMoveToken.buffer02 q =>
+      BaseTail.Trades.BufferReservoirToken.right hTpos q
+
+def moveZeroColor
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (_P : ReservoirSitePlan A) :
+    ReservoirMoveToken A → Fin (b + T)
+  | ReservoirMoveToken.nonbuffer q => q.color
+  | ReservoirMoveToken.buffer01 _ => A.buffer.color0 A.slotEquiv
+  | ReservoirMoveToken.buffer02 _ => A.buffer.color0 A.slotEquiv
+
+def moveRightColor
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    ReservoirMoveToken A → Fin (b + T)
+  | ReservoirMoveToken.nonbuffer q => P.nonbufferBufferColor q
+  | ReservoirMoveToken.buffer01 _ => A.buffer.color1 A.slotEquiv
+  | ReservoirMoveToken.buffer02 _ => A.buffer.color2 A.slotEquiv
+
+theorem moveRight_val_ne_zero
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    ∀ q : ReservoirMoveToken A,
+      (P.moveRight hTpos q).val ≠ 0
+  | ReservoirMoveToken.nonbuffer q =>
+      BaseTail.Trades.NonbufferReservoirToken.right_ne_zero hTpos q
+  | ReservoirMoveToken.buffer01 q =>
+      BaseTail.Trades.BufferReservoirToken.right_ne_zero hTpos q
+  | ReservoirMoveToken.buffer02 q =>
+      BaseTail.Trades.BufferReservoirToken.right_ne_zero hTpos q
+
+theorem moveRight_ne_zero
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    (⟨0, hTpos⟩ : Fin T) ≠ P.moveRight hTpos q := by
+  intro h
+  have hval : (P.moveRight hTpos q).val = 0 := by
+    simpa using congrArg Fin.val h.symm
+  exact P.moveRight_val_ne_zero hTpos q hval
+
+theorem moveSite_injective
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    Function.Injective P.moveSite := by
+  classical
+  intro q r h
+  cases q with
+  | nonbuffer q =>
+      cases r with
+      | nonbuffer r =>
+          have hqr : q = r := P.nonbufferSite_injective (by
+            simpa [moveSite] using h)
+          cases hqr
+          rfl
+      | buffer01 r =>
+          exfalso
+          have hsite : P.nonbufferSite q = P.buffer01Site r := by
+            simpa [moveSite] using h
+          have hnb :
+              P.nonbufferSite q ∈
+                ((Finset.univ : Finset A.nonbufferTokens).image
+                  P.nonbufferSite) := by
+            exact Finset.mem_image.mpr ⟨q, by simp, rfl⟩
+          have hd := P.buffer01_disjoint_nonbuffer
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer01Site_mem r) (by simpa [hsite] using hnb)
+      | buffer02 r =>
+          exfalso
+          have hsite : P.nonbufferSite q = P.buffer02Site r := by
+            simpa [moveSite] using h
+          have hnb :
+              P.nonbufferSite q ∈
+                ((Finset.univ : Finset A.nonbufferTokens).image
+                  P.nonbufferSite) := by
+            exact Finset.mem_image.mpr ⟨q, by simp, rfl⟩
+          have hd := P.buffer02_disjoint_nonbuffer
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer02Site_mem r) (by simpa [hsite] using hnb)
+  | buffer01 q =>
+      cases r with
+      | nonbuffer r =>
+          exfalso
+          have hsite : P.buffer01Site q = P.nonbufferSite r := by
+            simpa [moveSite] using h
+          have hnb :
+              P.nonbufferSite r ∈
+                ((Finset.univ : Finset A.nonbufferTokens).image
+                  P.nonbufferSite) := by
+            exact Finset.mem_image.mpr ⟨r, by simp, rfl⟩
+          have hd := P.buffer01_disjoint_nonbuffer
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer01Site_mem q) (by simpa [hsite] using hnb)
+      | buffer01 r =>
+          have hsite : P.buffer01Site q = P.buffer01Site r := by
+            simpa [moveSite] using h
+          have hequiv : P.buffer01Equiv q = P.buffer01Equiv r := by
+            apply Subtype.ext
+            simpa [buffer01Site] using hsite
+          have hqr : q = r := P.buffer01Equiv.injective hequiv
+          cases hqr
+          rfl
+      | buffer02 r =>
+          exfalso
+          have hsite : P.buffer01Site q = P.buffer02Site r := by
+            simpa [moveSite] using h
+          have hd := P.buffer01_disjoint_buffer02
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer01Site_mem q)
+            (by simpa [hsite] using P.buffer02Site_mem r)
+  | buffer02 q =>
+      cases r with
+      | nonbuffer r =>
+          exfalso
+          have hsite : P.buffer02Site q = P.nonbufferSite r := by
+            simpa [moveSite] using h
+          have hnb :
+              P.nonbufferSite r ∈
+                ((Finset.univ : Finset A.nonbufferTokens).image
+                  P.nonbufferSite) := by
+            exact Finset.mem_image.mpr ⟨r, by simp, rfl⟩
+          have hd := P.buffer02_disjoint_nonbuffer
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer02Site_mem q) (by simpa [hsite] using hnb)
+      | buffer01 r =>
+          exfalso
+          have hsite : P.buffer02Site q = P.buffer01Site r := by
+            simpa [moveSite] using h
+          have hd := P.buffer01_disjoint_buffer02
+          rw [Finset.disjoint_left] at hd
+          exact hd (P.buffer01Site_mem r)
+            (by simpa [hsite.symm] using P.buffer02Site_mem q)
+      | buffer02 r =>
+          have hsite : P.buffer02Site q = P.buffer02Site r := by
+            simpa [moveSite] using h
+          have hequiv : P.buffer02Equiv q = P.buffer02Equiv r := by
+            apply Subtype.ext
+            simpa [buffer02Site] using hsite
+          have hqr : q = r := P.buffer02Equiv.injective hequiv
+          cases hqr
+          rfl
+
+theorem moveZeroColor_active
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    ∀ q : ReservoirMoveToken A,
+      P.moveZeroColor q ∈ (A.Cyl.incidence).active (P.moveSite q)
+  | ReservoirMoveToken.nonbuffer q => by
+      simpa [moveSite, moveZeroColor] using P.nonbuffer_color_active q
+  | ReservoirMoveToken.buffer01 q => by
+      have hmem : P.buffer01Site q ∈ A.buffer01Candidates :=
+        P.buffer01_subset (P.buffer01Site_mem q)
+      have hpair :
+          A.buffer.color0 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer01Site q) ∧
+            A.buffer.color1 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer01Site q) := by
+        simpa [buffer01Candidates] using hmem
+      simpa [moveSite, moveZeroColor] using hpair.1
+  | ReservoirMoveToken.buffer02 q => by
+      have hmem : P.buffer02Site q ∈ A.buffer02Candidates :=
+        P.buffer02_subset (P.buffer02Site_mem q)
+      have hpair :
+          A.buffer.color0 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer02Site q) ∧
+            A.buffer.color2 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer02Site q) := by
+        simpa [buffer02Candidates] using hmem
+      simpa [moveSite, moveZeroColor] using hpair.1
+
+theorem moveRightColor_active
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    ∀ q : ReservoirMoveToken A,
+      P.moveRightColor q ∈ (A.Cyl.incidence).active (P.moveSite q)
+  | ReservoirMoveToken.nonbuffer q => by
+      simpa [moveSite, moveRightColor] using P.nonbufferBufferColor_active q
+  | ReservoirMoveToken.buffer01 q => by
+      have hmem : P.buffer01Site q ∈ A.buffer01Candidates :=
+        P.buffer01_subset (P.buffer01Site_mem q)
+      have hpair :
+          A.buffer.color0 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer01Site q) ∧
+            A.buffer.color1 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer01Site q) := by
+        simpa [buffer01Candidates] using hmem
+      simpa [moveSite, moveRightColor] using hpair.2
+  | ReservoirMoveToken.buffer02 q => by
+      have hmem : P.buffer02Site q ∈ A.buffer02Candidates :=
+        P.buffer02_subset (P.buffer02Site_mem q)
+      have hpair :
+          A.buffer.color0 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer02Site q) ∧
+            A.buffer.color2 A.slotEquiv ∈
+              (A.Cyl.incidence).active (P.buffer02Site q) := by
+        simpa [buffer02Candidates] using hmem
+      simpa [moveSite, moveRightColor] using hpair.2
+
+theorem moveColor_ne
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) :
+    ∀ q : ReservoirMoveToken A, P.moveZeroColor q ≠ P.moveRightColor q
+  | ReservoirMoveToken.nonbuffer q => by
+      change q.color ≠ P.nonbufferBufferColor q
+      have hne0 : q.color ≠ A.buffer.color0 A.slotEquiv := by
+        simpa [BaseTail.Trades.NonbufferReservoirToken.color] using
+          q.1.1.2.1
+      have hne1 : q.color ≠ A.buffer.color1 A.slotEquiv := by
+        simpa [BaseTail.Trades.NonbufferReservoirToken.color] using
+          q.1.1.2.2.1
+      have hne2 : q.color ≠ A.buffer.color2 A.slotEquiv := by
+        simpa [BaseTail.Trades.NonbufferReservoirToken.color] using
+          q.1.1.2.2.2
+      rcases P.nonbufferBufferColor_is_buffer q with h0 | h12
+      · intro h
+        exact hne0 (h.trans h0)
+      · rcases h12 with h1 | h2
+        · intro h
+          exact hne1 (h.trans h1)
+        · intro h
+          exact hne2 (h.trans h2)
+  | ReservoirMoveToken.buffer01 _ => by
+      simpa [moveZeroColor, moveRightColor] using
+        A.buffer.color0_ne_color1 A.slotEquiv
+  | ReservoirMoveToken.buffer02 _ => by
+      simpa [moveZeroColor, moveRightColor] using
+        A.buffer.color0_ne_color2 A.slotEquiv
+
+theorem exists_moveBaselineSymboling
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    ∃ Φ : ActiveHall.Symboling A.Cyl.incidence,
+      (∀ q : ReservoirMoveToken A,
+        Φ.color (P.moveSite q) (⟨0, hTpos⟩ : Fin T) =
+          P.moveZeroColor q) ∧
+        (∀ q : ReservoirMoveToken A,
+          Φ.color (P.moveSite q) (P.moveRight hTpos q) =
+            P.moveRightColor q) :=
+  ActiveHall.Symboling.exists_with_prescribed_pairs_of_injective_site
+    (I := A.Cyl.incidence) hTpos P.moveSite P.moveSite_injective
+    (P.moveRight hTpos) (P.moveRight_ne_zero hTpos)
+    P.moveZeroColor P.moveRightColor
+    P.moveZeroColor_active P.moveRightColor_active P.moveColor_ne
+
+end ReservoirSitePlan
 
 noncomputable def reservoirSitePlan
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]

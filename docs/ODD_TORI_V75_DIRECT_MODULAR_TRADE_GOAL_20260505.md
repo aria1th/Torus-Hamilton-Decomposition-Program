@@ -167,6 +167,10 @@ BaseTail.Trades.NonbufferReservoirToken.card
 BaseTail.Trades.NonbufferReservoirToken.color_quota
 BaseTail.Trades.successorReservoirTotalSiteBudget_le_pow
 BaseTail.Trades.NonbufferReservoirToken.card_add_two_quotas_le_pow
+BaseTail.Trades.BufferReservoirToken
+BaseTail.Trades.BufferReservoirToken.right
+BaseTail.Trades.BufferReservoirToken.right_ne_zero
+BaseTail.Trades.BufferReservoirToken.card
 BaseTail.Trades.exists_disjoint_subset_card_eq_of_card_add_le
 BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le
 BaseTail.SuccessorPacketBuffer
@@ -184,7 +188,23 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer01Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer02Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer01Equiv
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer02Equiv
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer01Site
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer02Site
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveSite
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRight
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroColor
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColor
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRight_val_ne_zero
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRight_ne_zero
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveSite_injective
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroColor_active
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColor_active
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveColor_ne
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_moveBaselineSymboling
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
@@ -249,7 +269,15 @@ using the generic two-family helper
 new `Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan`
 packages all three finite choices at once: injective non-buffer reservoir
 sites with an active partner buffer color, plus disjoint β₀β₁ and β₀β₂ site
-families of size `successorReservoirColorQuota m T`.  On the symboling side,
+families of size `successorReservoirColorQuota m T`.  The buffer-pair families
+are now reindexed by `BaseTail.Trades.BufferReservoirToken`, and
+`Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken`
+combines non-buffer, β₀β₁, and β₀β₂ moves into one finite index.  The
+`ReservoirSitePlan.move*` lemmas prove this combined site map is injective,
+the right symbol is nonzero, both prescribed colors are active, and the two
+colors differ; `ReservoirSitePlan.exists_moveBaselineSymboling` then applies
+the generic prescribed-pairs constructor to build the initial symboling over
+the whole reserved move family.  On the symboling side,
 `ActiveHall.Symboling.exists_perm_apply_two` and
 `ActiveHall.Symboling.exists_with_prescribed_two_at` provide the local baseline
 constructor needed at each reserved site: two distinct active colors can be
@@ -485,8 +513,8 @@ then inserts that certificate into the existing script endpoint.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-combining the non-buffer and buffer-pair site-plan families into one injective
-move index, then constructing the three-buffer arithmetic certificate.
+constructing the concrete move list and the three-buffer arithmetic certificate
+from the combined reservoir move index.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

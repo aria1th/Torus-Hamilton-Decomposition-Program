@@ -504,6 +504,23 @@ def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
 def successorReservoirColorQuota (m T : Nat) : Nat :=
   (m - 1) * (T - 1)
 
+abbrev BufferReservoirToken (m T : Nat) : Type :=
+  Fin (m - 1) × Fin (T - 1)
+
+def BufferReservoirToken.right {m T : Nat} (hTpos : 0 < T)
+    (q : BufferReservoirToken m T) : Fin T :=
+  Fin.cast (by omega) q.2.succ
+
+theorem BufferReservoirToken.right_ne_zero {m T : Nat} (hTpos : 0 < T)
+    (q : BufferReservoirToken m T) :
+    (BufferReservoirToken.right hTpos q).val ≠ 0 := by
+  simp [BufferReservoirToken.right]
+
+theorem BufferReservoirToken.card {m T : Nat} :
+    Fintype.card (BufferReservoirToken m T) =
+      successorReservoirColorQuota m T := by
+  simp [BufferReservoirToken, successorReservoirColorQuota]
+
 theorem successorReservoirColorQuota_mul_le_pow {b m T : Nat}
     (hLarge : m ^ b > m * (b + T) * T) :
     T * successorReservoirColorQuota m T ≤ m ^ b := by
