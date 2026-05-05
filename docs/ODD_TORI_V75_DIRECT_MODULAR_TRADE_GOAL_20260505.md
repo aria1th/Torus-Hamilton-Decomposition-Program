@@ -205,6 +205,13 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroCol
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColor_active
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveColor_ne
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_moveBaselineSymboling
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_injective
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_mem_moveList
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList_pairwise_vertex
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList_swapMoves_pairwise
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_moveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
@@ -227,6 +234,7 @@ ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove_vertex
 ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove_right
 ActiveHall.Symboling.zeroSwapMoves
 ActiveHall.Symboling.nonzeroZeroSwapMoves
+BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe_pairwise_vertex
 ActiveHall.Symboling.applySwapMoves
 ActiveHall.Symboling.applySwapResidueSpecs
 ActiveHall.Symboling.applySwapMoves_hasResidues
@@ -277,7 +285,12 @@ combines non-buffer, β₀β₁, and β₀β₂ moves into one finite index.  Th
 the right symbol is nonzero, both prescribed colors are active, and the two
 colors differ; `ReservoirSitePlan.exists_moveBaselineSymboling` then applies
 the generic prescribed-pairs constructor to build the initial symboling over
-the whole reserved move family.  On the symboling side,
+the whole reserved move family.  The same data now descends to an actual
+`List ActiveHall.Symboling.NonzeroZeroSwapMove` through
+`ReservoirSitePlan.moveList`; the list-level lemmas record token membership,
+injectivity, the pairwise vertex condition after expanding
+`nonzeroZeroSwapMovesOfTwoLe`, and the matching baseline symboling package.
+On the symboling side,
 `ActiveHall.Symboling.exists_perm_apply_two` and
 `ActiveHall.Symboling.exists_with_prescribed_two_at` provide the local baseline
 constructor needed at each reserved site: two distinct active colors can be
@@ -513,8 +526,8 @@ then inserts that certificate into the existing script endpoint.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-constructing the concrete move list and the three-buffer arithmetic certificate
-from the combined reservoir move index.
+constructing the three-buffer arithmetic certificate from the combined
+reservoir move list.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

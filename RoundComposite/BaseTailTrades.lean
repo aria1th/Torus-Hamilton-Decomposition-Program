@@ -501,6 +501,33 @@ def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
   ActiveHall.Symboling.nonzeroZeroSwapMoves
     (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
 
+theorem nonzeroZeroSwapMovesOfTwoLe_pairwise_vertex
+    {X : Type*} {T : Nat} (hT : 2 ≤ T)
+    (moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T))
+    (hpair :
+      moves.Pairwise (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)) :
+    (nonzeroZeroSwapMovesOfTwoLe hT moves).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) := by
+  induction moves with
+  | nil =>
+      simp [nonzeroZeroSwapMovesOfTwoLe,
+        ActiveHall.Symboling.nonzeroZeroSwapMoves,
+        ActiveHall.Symboling.zeroSwapMoves]
+  | cons move moves ih =>
+      rcases List.pairwise_cons.mp hpair with ⟨hhead, htail⟩
+      simp [nonzeroZeroSwapMovesOfTwoLe,
+        ActiveHall.Symboling.nonzeroZeroSwapMoves,
+        ActiveHall.Symboling.zeroSwapMoves,
+        ActiveHall.Symboling.ZeroSwapMove.toSwapMove,
+        ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove]
+      refine ⟨hhead, ?_⟩
+      simpa [nonzeroZeroSwapMovesOfTwoLe,
+        ActiveHall.Symboling.nonzeroZeroSwapMoves,
+        ActiveHall.Symboling.zeroSwapMoves,
+        ActiveHall.Symboling.ZeroSwapMove.toSwapMove,
+        ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove] using
+        ih htail
+
 def successorReservoirColorQuota (m T : Nat) : Nat :=
   (m - 1) * (T - 1)
 

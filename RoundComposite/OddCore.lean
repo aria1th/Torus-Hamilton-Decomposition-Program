@@ -6034,6 +6034,150 @@ theorem exists_moveBaselineSymboling
     P.moveZeroColor P.moveRightColor
     P.moveZeroColor_active P.moveRightColor_active P.moveColor_ne
 
+noncomputable def toNonzeroZeroSwapMove
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    ActiveHall.Symboling.NonzeroZeroSwapMove
+      (Shared.TorusVertex (b + 1) m) T where
+  vertex := P.moveSite q
+  right := P.moveRight hTpos q
+  right_ne_zero := P.moveRight_val_ne_zero hTpos q
+
+@[simp] theorem toNonzeroZeroSwapMove_vertex
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    (P.toNonzeroZeroSwapMove hTpos q).vertex = P.moveSite q := rfl
+
+@[simp] theorem toNonzeroZeroSwapMove_right
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    (P.toNonzeroZeroSwapMove hTpos q).right = P.moveRight hTpos q := rfl
+
+theorem toNonzeroZeroSwapMove_injective
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    Function.Injective (P.toNonzeroZeroSwapMove hTpos) := by
+  intro q r h
+  apply P.moveSite_injective
+  exact congrArg ActiveHall.Symboling.NonzeroZeroSwapMove.vertex h
+
+noncomputable def moveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    List
+      (ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T) :=
+  (Finset.univ : Finset (ReservoirMoveToken A)).toList.map
+    (P.toNonzeroZeroSwapMove hTpos)
+
+theorem toNonzeroZeroSwapMove_mem_moveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    P.toNonzeroZeroSwapMove hTpos q ∈ P.moveList hTpos := by
+  classical
+  simp [moveList]
+
+theorem moveList_pairwise_vertex
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T) :
+    (P.moveList hTpos).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) := by
+  classical
+  let tokens : List (ReservoirMoveToken A) :=
+    (Finset.univ : Finset (ReservoirMoveToken A)).toList
+  have htokens :
+      tokens.Pairwise (fun q r => P.moveSite q ≠ P.moveSite r) := by
+    dsimp [tokens]
+    refine (Finset.nodup_toList _).pairwise_of_forall_ne ?_
+    intro q _hq r _hr hne hsite
+    exact hne (P.moveSite_injective hsite)
+  change (tokens.map (P.toNonzeroZeroSwapMove hTpos)).Pairwise
+    (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)
+  revert htokens
+  induction tokens with
+  | nil =>
+      intro _htokens
+      simp
+  | cons q tokens ih =>
+      intro htokens
+      rcases List.pairwise_cons.mp htokens with ⟨hhead, htail⟩
+      change List.Pairwise
+        (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)
+        (P.toNonzeroZeroSwapMove hTpos q ::
+          tokens.map (P.toNonzeroZeroSwapMove hTpos))
+      rw [List.pairwise_cons]
+      constructor
+      · intro move hmem hEq
+        rcases List.mem_map.mp hmem with ⟨r, hrmem, rfl⟩
+        exact hhead r hrmem (by
+          simpa [toNonzeroZeroSwapMove] using hEq)
+      · exact ih htail
+
+theorem moveList_swapMoves_pairwise
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) :
+    (BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe hT
+      (P.moveList (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) :=
+  BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe_pairwise_vertex hT
+    (P.moveList (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+    (P.moveList_pairwise_vertex
+      (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+
+theorem exists_moveBaselineMoveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) :
+    ∃ Φ : ActiveHall.Symboling A.Cyl.incidence,
+      (BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe hT
+        (P.moveList (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))).Pairwise
+        (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) ∧
+      (∀ q : ReservoirMoveToken A,
+        Φ.color (P.moveSite q)
+            (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) =
+          P.moveZeroColor q) ∧
+        (∀ q : ReservoirMoveToken A,
+          Φ.color (P.moveSite q)
+              (P.moveRight (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) q) =
+            P.moveRightColor q) := by
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  rcases P.exists_moveBaselineSymboling hTpos with
+    ⟨Φ, hzero, hright⟩
+  refine ⟨Φ, ?_, ?_, ?_⟩
+  · exact P.moveList_swapMoves_pairwise hT
+  · simpa [hTpos] using hzero
+  · simpa [hTpos] using hright
+
 end ReservoirSitePlan
 
 noncomputable def reservoirSitePlan
