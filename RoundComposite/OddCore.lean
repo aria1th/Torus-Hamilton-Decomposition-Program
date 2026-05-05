@@ -7200,6 +7200,27 @@ theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoa
     (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
       hFeasible hTrade)
 
+theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedCompatibleRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
+    (oddSuccessorBaseTailCanonicalFeasibleResidueGoal_of_mixedCompatibleRounding
+      hRound)
+    hTrade
+
+theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedControlledRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
+    (BaseTail.Trades.successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasibleResidue
+      (oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControlledRounding
+        hRound))
+    hTrade
+
 theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
     (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
     (hTrade :
@@ -7221,6 +7242,24 @@ theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoa
   oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
     (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
       hRound hTrade hLift)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding_closed
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeClosedResiduals
+    (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedCompatibleRounding
+      hRound hTrade)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_mixedControlledRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeClosedResiduals
+    (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedControlledRounding
+      hRound hTrade)
 
 theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_expandedMonodromyResiduals
     (h : OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal) :
@@ -10044,6 +10083,11 @@ def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTra
   OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
   OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal
 
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal
+
 def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :
     Prop :=
   OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
@@ -10113,6 +10157,52 @@ theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLo
   ⟨hBlocks.1,
     oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
       hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_closedBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_closedResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeClosedBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal :=
+  oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_closedBlocks
+      hBlocks)
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal_of_feasibleLocalTrade
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hFeasible : BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
+      hFeasible hTrade⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal_of_mixedCompatibleRounding
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedCompatibleRounding
+      hRound hTrade⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal_of_mixedControlledRounding
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hRound : OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_mixedControlledRounding
+      hRound hTrade⟩
 
 theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_mixedCompatibleRounding
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
@@ -11108,6 +11198,14 @@ theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonic
     (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
       hBlocks)
 
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosed_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_closedBlocks
+      hBlocks)
+
 theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
     (hBlocks :
       OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal) :
@@ -11856,6 +11954,17 @@ theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrelli
       hBlocks)
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosed_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_closedBlocks
+      hBlocks)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
     (hBlocks :
       OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal)
@@ -12457,6 +12566,15 @@ theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrelli
   intro d m hd2 hmodd hm3
   exact
     odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosed_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosedBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeClosed_blocks
       hBlocks hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
