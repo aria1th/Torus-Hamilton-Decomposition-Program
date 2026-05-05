@@ -2502,23 +2502,117 @@ def PacketPhaseSkewPeriodReturnConstructionGoal : Prop :=
         (packetPrefixPhaseSet m packet r))^[m] (0, x) =
         (0, x + (packet.get r : ZMod (m ^ b)))
 
+def PacketPhaseSkewHitCountConstructionGoal : Prop :=
+  ∀ {b m : Nat} [NeZero m] [NeZero (m ^ b)] {packet : List Nat},
+    packet.sum = m →
+    ∀ r : Fin packet.length,
+      Finset.sum (Finset.range m)
+        (fun k =>
+          if (0 : ZMod m) + (k : ZMod m) ∈
+              packetPrefixPhaseSet m packet r then
+            (1 : ZMod (m ^ b))
+          else
+            0) =
+        (packet.get r : ZMod (m ^ b))
+
+theorem zmod_range_filter_card_eq
+    {m : Nat} [NeZero m] (S : Finset (ZMod m)) :
+    ((Finset.range m).filter
+      (fun k : Nat => (k : ZMod m) ∈ S)).card = S.card := by
+  classical
+  apply Finset.card_bij
+    (s := (Finset.range m).filter
+      (fun k : Nat => (k : ZMod m) ∈ S))
+    (t := S)
+    (fun k _hk => (k : ZMod m))
+  · intro k hk
+    exact (Finset.mem_filter.mp hk).2
+  · intro a ha b hb hab
+    have ha_lt : a < m := by
+      simpa [Finset.mem_range] using (Finset.mem_filter.mp ha).1
+    have hb_lt : b < m := by
+      simpa [Finset.mem_range] using (Finset.mem_filter.mp hb).1
+    exact
+      Nat.ModEq.eq_of_lt_of_lt
+        ((ZMod.natCast_eq_natCast_iff a b m).mp hab) ha_lt hb_lt
+  · intro z hz
+    refine ⟨z.val, ?_, ?_⟩
+    · exact Finset.mem_filter.mpr
+        ⟨by simpa [Finset.mem_range] using ZMod.val_lt z,
+          by simpa [ZMod.natCast_zmod_val] using hz⟩
+    · exact ZMod.natCast_zmod_val z
+
+theorem packetPhaseSkewHitCountConstructionGoal :
+    PacketPhaseSkewHitCountConstructionGoal := by
+  intro b m _instM _instPow packet hsum r
+  have hcard :=
+    zmod_range_filter_card_eq
+      (S := packetPrefixPhaseSet m packet r)
+  have hcard' :
+      ((Finset.range m).filter
+        (fun k : Nat => (k : ZMod m) ∈
+          packetPrefixPhaseSet m packet r)).card = packet.get r :=
+    hcard.trans (packetPrefixPhaseSet_card hsum r)
+  simpa [hcard'] using
+    (Finset.sum_boole
+      (fun k : Nat =>
+        (0 : ZMod m) + (k : ZMod m) ∈
+          packetPrefixPhaseSet m packet r)
+      (Finset.range m) :
+        (∑ k ∈ Finset.range m,
+          (if (0 : ZMod m) + (k : ZMod m) ∈
+              packetPrefixPhaseSet m packet r then
+            (1 : ZMod (m ^ b))
+          else
+            0)) =
+          (((Finset.range m).filter
+            (fun k : Nat =>
+              (0 : ZMod m) + (k : ZMod m) ∈
+                packetPrefixPhaseSet m packet r)).card : ZMod (m ^ b)))
+
+theorem packetPhaseSkewPeriodReturnConstructionGoal_of_hitCount
+    (hHit : PacketPhaseSkewHitCountConstructionGoal) :
+    PacketPhaseSkewPeriodReturnConstructionGoal := by
+  intro b m _instM _instPow packet _hbpos hsum _hunit r x
+  apply Prod.ext
+  · rw [packetPhaseSkewStep_fst_iterate]
+    simp
+  · rw [packetPhaseSkewStep_snd_iterate]
+    rw [hHit hsum r]
+
+theorem packetPhaseSkewPeriodReturnConstructionGoal :
+    PacketPhaseSkewPeriodReturnConstructionGoal :=
+  packetPhaseSkewPeriodReturnConstructionGoal_of_hitCount
+    packetPhaseSkewHitCountConstructionGoal
+
+theorem zmodPower_add_singleCycle_of_base_coprime
+    {b m a : Nat} [NeZero (m ^ b)] (ha : Nat.Coprime a m) :
+    Shared.IsSingleCycleMap
+      (fun x : ZMod (m ^ b) => x + (a : ZMod (m ^ b))) := by
+  exact
+    Shared.zmod_add_single_cycle_of_coprime
+      (m := m ^ b) (a := a) (ha.pow_right b)
+
 theorem packetPhaseSkewSingleCycleConstructionGoal_of_periodReturn
     (hReturn : PacketPhaseSkewPeriodReturnConstructionGoal) :
     PacketPhaseSkewSingleCycleConstructionGoal := by
   intro b m _instM _instPow packet hbpos hsum hunit r
-  refine
+  exact
     packetPhaseSkewStep_singleCycle_of_return
       (N := m ^ b)
       (packetPrefixPhaseSet m packet r)
       (fun x : ZMod (m ^ b) => x + (packet.get r : ZMod (m ^ b)))
-      ?_
-      ?_
-  · intro x
-    exact hReturn hbpos hsum hunit r x
-  · exact
-      Shared.zmod_add_single_cycle_of_coprime
-        (m := m ^ b) (a := packet.get r)
-        ((hunit (packet.get r) (List.get_mem packet r)).2.2.pow_right b)
+      (by
+        intro x
+        exact hReturn hbpos hsum hunit r x)
+      (zmodPower_add_singleCycle_of_base_coprime
+        ((hunit (packet.get r) (List.get_mem packet r)).2.2))
+
+theorem packetPhaseSkewSingleCycleConstructionGoal :
+    PacketPhaseSkewSingleCycleConstructionGoal :=
+  packetPhaseSkewSingleCycleConstructionGoal_of_periodReturn
+    (packetPhaseSkewPeriodReturnConstructionGoal_of_hitCount
+      packetPhaseSkewHitCountConstructionGoal)
 
 theorem packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
     (hSkew : PacketPhaseSkewSingleCycleConstructionGoal) :
@@ -2544,13 +2638,10 @@ theorem packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
             hdiv packet r (hSkew hbpos hsum hunit r)
     }⟩
 
-theorem zmodPower_add_singleCycle_of_base_coprime
-    {b m a : Nat} [NeZero (m ^ b)] (ha : Nat.Coprime a m) :
-    Shared.IsSingleCycleMap
-      (fun x : ZMod (m ^ b) => x + (a : ZMod (m ^ b))) := by
-  exact
-    Shared.zmod_add_single_cycle_of_coprime
-      (m := m ^ b) (a := a) (ha.pow_right b)
+theorem packetPhaseIntervalPowerConstructionGoal :
+    PacketPhaseIntervalPowerConstructionGoal :=
+  packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
+    packetPhaseSkewSingleCycleConstructionGoal
 
 theorem packetPhaseSplitLengthTwoPowerGoal_of_intervalPower
     (hInterval : PacketPhaseIntervalPowerConstructionGoal) :
@@ -2558,11 +2649,21 @@ theorem packetPhaseSplitLengthTwoPowerGoal_of_intervalPower
   intro b m _instM _instPow packet hbpos hsum hunit _hlen
   exact hInterval hbpos hsum hunit
 
+theorem packetPhaseSplitLengthTwoPowerGoal :
+    PacketPhaseSplitLengthTwoPowerGoal :=
+  packetPhaseSplitLengthTwoPowerGoal_of_intervalPower
+    packetPhaseIntervalPowerConstructionGoal
+
 theorem packetPhaseSplitLengthThreePowerGoal_of_intervalPower
     (hInterval : PacketPhaseIntervalPowerConstructionGoal) :
     PacketPhaseSplitLengthThreePowerGoal := by
   intro b m _instM _instPow packet hbpos hsum hunit _hlen
   exact hInterval hbpos hsum hunit
+
+theorem packetPhaseSplitLengthThreePowerGoal :
+    PacketPhaseSplitLengthThreePowerGoal :=
+  packetPhaseSplitLengthThreePowerGoal_of_intervalPower
+    packetPhaseIntervalPowerConstructionGoal
 
 theorem successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
     (hTwo : PacketPhaseSplitLengthTwoPowerGoal)
@@ -2580,6 +2681,12 @@ theorem successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
   · exact hThree (b := b) (m := m)
       hbpos
       (hpacketSum packet hp) (hunit packet hp) hlen3
+
+theorem successorPacketPhaseSplitPowerGoal :
+    SuccessorPacketPhaseSplitPowerGoal :=
+  successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
+    packetPhaseSplitLengthTwoPowerGoal
+    packetPhaseSplitLengthThreePowerGoal
 
 def SuccessorPacketProperPrefixRangeGoal : Prop :=
   ∀ {b m T : Nat} {packets : List (List Nat)},

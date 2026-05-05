@@ -6165,6 +6165,21 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1SkewMixed
           hSkew,
         hCylMix, hRound, hLift⟩
 
+def OddSuccessorBaseTailWorker1ClosedPacketMixedResidualGoal : Prop :=
+  OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedPacketMixedResiduals
+    (h : OddSuccessorBaseTailWorker1ClosedPacketMixedResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hCylMix, hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixedResiduals
+      ⟨BaseTail.packetPhaseSplitLengthTwoPowerGoal,
+        BaseTail.packetPhaseSplitLengthThreePowerGoal,
+        hCylMix, hRound, hLift⟩
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
     OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
