@@ -6095,6 +6095,32 @@ def ActiveHallControlledResidueRoundingGoal : Prop :=
                 S.card * (∑ c ∈ U, I.colorDegree c) +
                   m * Fintype.card C * min S.card (T - S.card)
 
+/--
+Large-margin form of controlled active-Hall residue rounding.
+
+The base-tail geometry should only be responsible for producing an incidence
+whose color degrees are much larger than the residue/error scale.  The
+remaining rounding theorem is a pure finite arithmetic statement for
+incidence count matrices.
+-/
+def ActiveHallLargeMarginControlledResidueRoundingGoal : Prop :=
+  ∀ {m T : Nat} [NeZero m] {X C : Type}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    (I : ActiveHall.Incidence T X C) →
+    0 < T →
+    (∀ c : C, m * Fintype.card C * T < I.colorDegree c) →
+    ∀ R : ActiveHall.ResidueSpec m T C,
+      R.RowCompatible I →
+      R.ColCompatible I →
+      ∃ M : ActiveHall.CountMatrix I,
+        M.HasResidues R ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            U.Nonempty → U ≠ Finset.univ →
+            S.Nonempty → S ≠ Finset.univ →
+              T * M.cutMass U S ≤
+                S.card * (∑ c ∈ U, I.colorDegree c) +
+                  m * Fintype.card C * min S.card (T - S.card)
+
 theorem oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
     (hRound : ActiveHallControlledResidueRoundingGoal) :
     OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal := by
@@ -6102,6 +6128,28 @@ theorem oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_act
     _hpacketSum _hpacketUnits _hPrefix _hT _hSlack
     Cyl _hCyl _hBlock _hMix _hT2 R hRow hCol _hZero _hNumeric
   rcases hRound Cyl.incidence R hRow hCol with ⟨M, hResidues, hScaled⟩
+  refine ⟨M, hResidues, ?_⟩
+  intro U S hUne hUuniv hSne hSuniv
+  simpa [Fintype.card_fin] using
+    hScaled U S hUne hUuniv hSne hSuniv
+
+theorem oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_largeMarginControlled
+    (hRound : ActiveHallLargeMarginControlledResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal := by
+  intro b m T _inst _hb5 _hmodd _hm3 _hsmall packets _hlen _htotal
+    _hpacketSum _hpacketUnits _hPrefix _hT hSlack
+    Cyl _hCyl hBlock _hMix hT2 R hRow hCol _hZero _hNumeric
+  have hTpos : 0 < T := by omega
+  have hLarge :
+      ∀ c : Fin (b + T),
+        m * Fintype.card (Fin (b + T)) * T <
+          (Cyl.incidence).colorDegree c := by
+    intro c
+    have hScale : m * Fintype.card (Fin (b + T)) * T < m ^ b := by
+      simpa [Fintype.card_fin] using hSlack
+    exact hScale.trans_le (hBlock.active_degree_lower_bound c)
+  rcases hRound Cyl.incidence hTpos hLarge R hRow hCol with
+    ⟨M, hResidues, hScaled⟩
   refine ⟨M, hResidues, ?_⟩
   intro U S hUne hUuniv hSne hSuniv
   simpa [Fintype.card_fin] using
@@ -6379,6 +6427,15 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_c
     (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_closedCylinder_controlled_prefix
       hRound hLift)
 
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_prefix
+    (hRound : ActiveHallLargeMarginControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_controlled_prefix
+    (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_largeMarginControlled
+      hRound)
+    hLift
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
     (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
@@ -6525,12 +6582,24 @@ def OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal : Prop :=
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1LargeMarginResidualGoal : Prop :=
+  ActiveHallLargeMarginControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedCylinderResiduals
     (h : OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
   rcases h with ⟨hRound, hLift⟩
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_controlled_prefix
+      hRound hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1LargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_prefix
       hRound hLift
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
