@@ -7004,6 +7004,121 @@ noncomputable def thresholdNonbufferCorrectionDelta
     (P.thresholdMoveList hTpos
       (P.thresholdNonbufferCorrectionQuota hTpos initial))
 
+theorem thresholdNonbufferCorrectionDelta_nonbuffer
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    {c : Fin (b + T)}
+    (hc0 : c ≠ A.buffer.color0 A.slotEquiv)
+    (hc1 : c ≠ A.buffer.color1 A.slotEquiv)
+    (hc2 : c ≠ A.buffer.color2 A.slotEquiv)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    P.thresholdNonbufferCorrectionDelta hT initial c σ =
+      P.baselineReservoirResidual initial c σ := by
+  classical
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  let quota := P.thresholdNonbufferCorrectionQuota hTpos initial
+  let weight : A.nonbufferTokenBase → ZMod m :=
+    fun a =>
+      if σ = nonbufferTokenBaseRight (A := A) hTpos a then
+        if a.1.1 = c then (1 : ZMod m) else 0
+      else
+        0
+  change
+    BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+        (P.thresholdMoveList hTpos quota) c σ =
+      P.baselineReservoirResidual initial c σ
+  rw [P.thresholdMoveList_nonzero_delta_eq_family_sums hT hTpos
+    quota hσ0 c]
+  have hnonbuffer :
+      (∑ q : A.nonbufferTokens,
+        if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+        then
+          P.thresholdTokenNonzeroDelta hTpos σ c
+            (ReservoirMoveToken.nonbuffer q)
+        else
+          0) =
+        P.baselineReservoirResidual initial c σ := by
+    calc
+      (∑ q : A.nonbufferTokens,
+        if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+        then
+          P.thresholdTokenNonzeroDelta hTpos σ c
+            (ReservoirMoveToken.nonbuffer q)
+        else
+          0) =
+          (∑ q : A.nonbufferTokens,
+            if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+            then weight q.1
+            else 0) := by
+            refine Finset.sum_congr rfl ?_
+            intro q _hq
+            rcases q with ⟨a, k⟩
+            have hbc : P.nonbufferBufferColor (a, k) ≠ c := by
+              intro hEq
+              rcases P.nonbufferBufferColor_is_buffer (a, k) with h0 | h1 | h2
+              · exact hc0 (hEq ▸ h0)
+              · exact hc1 (hEq ▸ h1)
+              · exact hc2 (hEq ▸ h2)
+            by_cases hright : σ = nonbufferTokenBaseRight (A := A) hTpos a
+            · by_cases hcolor : a.1.1 = c
+              · simp [thresholdMoveTokenFinset, weight, hright, hcolor, hbc,
+                  BaseTail.Trades.NonbufferReservoirToken.color]
+              · simp [thresholdMoveTokenFinset, weight, hright, hcolor, hbc,
+                  BaseTail.Trades.NonbufferReservoirToken.color]
+            · simp [thresholdMoveTokenFinset, weight, hright]
+      _ =
+          ∑ a : A.nonbufferTokenBase,
+            P.baselineReservoirResidual initial a.1.1
+              (nonbufferTokenBaseRight (A := A) hTpos a) *
+              weight a := by
+            exact
+              P.thresholdMoveTokenFinset_nonbuffer_family_sum_const
+                quota
+                (fun a =>
+                  P.baselineReservoirResidual initial a.1.1
+                    (nonbufferTokenBaseRight (A := A) hTpos a))
+                weight
+                (by
+                  intro a k
+                  simp [quota, thresholdNonbufferCorrectionQuota,
+                    BaseTail.Trades.NonbufferReservoirToken.color,
+                    nonbufferTokenBaseRight_eq_token_right])
+      _ = P.baselineReservoirResidual initial c σ := by
+            exact
+              nonbufferTokenBase_sum_single_nonzero (A := A) hTpos
+                (P.baselineReservoirResidual initial) hc0 hc1 hc2 hσ0
+  have hbuffer01 :
+      (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+        if ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota
+        then
+          P.thresholdTokenNonzeroDelta hTpos σ c
+            (ReservoirMoveToken.buffer01 q)
+        else
+          0) = 0 := by
+    apply Finset.sum_eq_zero
+    intro q _hq
+    simp [quota, thresholdNonbufferCorrectionQuota,
+      thresholdMoveTokenFinset]
+  have hbuffer02 :
+      (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+        if ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota
+        then
+          P.thresholdTokenNonzeroDelta hTpos σ c
+            (ReservoirMoveToken.buffer02 q)
+        else
+          0) = 0 := by
+    apply Finset.sum_eq_zero
+    intro q _hq
+    simp [quota, thresholdNonbufferCorrectionQuota,
+      thresholdMoveTokenFinset]
+  rw [hnonbuffer, hbuffer01, hbuffer02]
+  simp
+
 noncomputable def postNonbufferReservoirResidual
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}

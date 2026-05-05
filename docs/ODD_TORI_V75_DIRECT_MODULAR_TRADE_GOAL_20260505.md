@@ -255,6 +255,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.zeroReservo
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.baselineReservoirResidual
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionQuota
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionDelta
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionDelta_nonbuffer
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.postNonbufferReservoirResidual
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_nonbuffer_copy
@@ -639,7 +640,9 @@ three constructor-copy simp lemmas show that this quota is copy-index constant
 on each reservoir family.  The canonical quota also has direct family-level
 constant-weight folds, and nonzero symbols have a named predecessor into
 `Fin (T - 1)`.  The non-buffer base-token singleton sum lemma packages the
-unique `(color, nonzero-symbol)` token extraction used by the λ correction.
+unique `(color, nonzero-symbol)` token extraction used by the λ correction,
+and `thresholdNonbufferCorrectionDelta_nonbuffer` proves that this λ
+correction exactly reproduces the baseline residual on non-buffer colors.
 The canonical-quota adapter fixes the previous
 existential quota endpoint to this named quota, leaving only the nonzero
 residual equations for that quota.  The
