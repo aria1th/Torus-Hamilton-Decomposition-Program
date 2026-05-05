@@ -185,6 +185,8 @@ BaseTail.activePermutedColorDir
 BaseTail.collapseVertex_cayleyColorStep_activePermutedColorDir
 BaseTail.activePermutedColorDirEdgePartition
 BaseTail.activePermutedColorDirCore
+BaseTail.activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+BaseTail.activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
 ```
 
 Here `tailPerm y z : Fin T ≃ Fin T` is an arbitrary permutation depending on
@@ -194,7 +196,11 @@ active-tail permutation preserves the Cayley edge partition, and
 `collapseVertex_cayleyColorStep_activePermutedColorDir` proves that it still
 projects to the compressed cylinder step.  Thus the remaining proof is now
 purely the monodromy/cocycle theorem for the specific prefix-count
-`lambda_rho` choice of `tailPerm`.
+`lambda_rho` choice of `tailPerm`.  The direct-carry theorem records the
+pointwise rule: at an active edge the fiber step adds `1` exactly in the
+permuted non-last tail coordinate, and the section-return theorem rewrites the
+fiber increment as the sum of those fiber-dependent carries along the base
+orbit.
 
 ### Main Thread: Endpoint Wiring
 

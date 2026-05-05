@@ -2604,6 +2604,122 @@ theorem skew_conj {b m n : Nat} [NeZero m]
     rw [hy]
   · rfl
 
+theorem fiberStep_of_tail_castSucc {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLiftColorDirCore Cyl)
+    (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (σ : Fin n)
+    (hcolor :
+      D.colorDir c ((collapseVertexFiberEquiv b m n).symm (y, z)) =
+        tailExpandedDir b σ.castSucc) :
+    D.fiberStep c y z =
+      fun τ : Fin n => z τ + if τ = σ then (1 : ZMod m) else 0 := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hz :
+      collapseFiberInit b m n x = z := by
+    have h :=
+      congrArg Prod.snd
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hcolor' :
+      D.colorDir c x = tailExpandedDir b σ.castSucc := by
+    simpa [x] using hcolor
+  have hfiber :=
+    congrArg Prod.snd
+      (collapseVertexFiberEquiv_add_tailExpandedDir_castSucc
+        (b := b) (m := m) (n := n) x σ)
+  calc
+    D.fiberStep c y z
+        =
+      (collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b σ.castSucc))).2 := by
+        simp [PrefixProjectedLiftColorDirCore.fiberStep,
+          Shared.cayleyColorStep, x, hcolor']
+    _ =
+      (fun τ : Fin n =>
+        collapseFiberInit b m n x τ +
+          if τ = σ then (1 : ZMod m) else 0) := by
+        simpa using hfiber
+    _ = (fun τ : Fin n => z τ + if τ = σ then (1 : ZMod m) else 0) := by
+        funext τ
+        rw [hz]
+
+theorem fiberStep_of_tail_last {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLiftColorDirCore Cyl)
+    (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (hcolor :
+      D.colorDir c ((collapseVertexFiberEquiv b m n).symm (y, z)) =
+        tailExpandedDir b (Fin.last n)) :
+    D.fiberStep c y z = z := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hz :
+      collapseFiberInit b m n x = z := by
+    have h :=
+      congrArg Prod.snd
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hcolor' :
+      D.colorDir c x = tailExpandedDir b (Fin.last n) := by
+    simpa [x] using hcolor
+  have hfiber :=
+    congrArg Prod.snd
+      (collapseVertexFiberEquiv_add_tailExpandedDir_last
+        (b := b) (m := m) (n := n) x)
+  calc
+    D.fiberStep c y z
+        =
+      (collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b (Fin.last n)))).2 := by
+        simp [PrefixProjectedLiftColorDirCore.fiberStep,
+          Shared.cayleyColorStep, x, hcolor']
+    _ = collapseFiberInit b m n x := by
+        simpa using hfiber
+    _ = z := hz
+
+theorem fiberStep_of_ordinaryExpandedDir {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLiftColorDirCore Cyl)
+    (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (i : Fin (b + 1)) (hdir : i ≠ activeDir b)
+    (hcolor :
+      D.colorDir c ((collapseVertexFiberEquiv b m n).symm (y, z)) =
+        ordinaryExpandedDir i hdir) :
+    D.fiberStep c y z = z := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hz :
+      collapseFiberInit b m n x = z := by
+    have h :=
+      congrArg Prod.snd
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hcolor' :
+      D.colorDir c x = ordinaryExpandedDir i hdir := by
+    simpa [x] using hcolor
+  have hfiber :=
+    congrArg Prod.snd
+      (collapseVertexFiberEquiv_add_ordinaryExpandedDir
+        (b := b) (m := m) (n := n) x i hdir)
+  calc
+    D.fiberStep c y z
+        =
+      (collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (ordinaryExpandedDir i hdir))).2 := by
+        simp [PrefixProjectedLiftColorDirCore.fiberStep,
+          Shared.cayleyColorStep, x, hcolor']
+    _ = collapseFiberInit b m n x := by
+        simpa using hfiber
+    _ = z := hz
+
 end PrefixProjectedLiftColorDirCore
 
 noncomputable def activePermutedColorDirCore
@@ -2621,6 +2737,338 @@ noncomputable def activePermutedColorDirCore
     intro c x
     exact collapseVertex_cayleyColorStep_activePermutedColorDir
       Cyl A tailPerm c x
+
+theorem activePermutedColorDirCore_fiberStep_of_inactive
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (hactive : Cyl.dir c y ≠ activeDir b) :
+    (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z = z := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hy :
+      collapseVertex b m (n + 1) x = y := by
+    have h :=
+      congrArg Prod.fst
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hactive_x :
+      Cyl.dir c (collapseVertex b m (n + 1) x) ≠ activeDir b := by
+    simpa [hy] using hactive
+  have hcolor :
+      activePermutedColorDir Cyl A tailPerm c x =
+        ordinaryExpandedDir (Cyl.dir c y) hactive := by
+    simp [activePermutedColorDir, x, hy, hactive]
+  exact
+    PrefixProjectedLiftColorDirCore.fiberStep_of_ordinaryExpandedDir
+      (activePermutedColorDirCore Cyl A tailPerm hCyl)
+      c y z (Cyl.dir c y) hactive hcolor
+
+theorem activePermutedColorDirCore_fiberStep_of_active_castSucc
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (σ : Fin n)
+    (hactive : Cyl.dir c y = activeDir b)
+    (hsym :
+      (tailPerm y z)
+        ((A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y})) =
+        σ.castSucc) :
+    (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z =
+      fun τ : Fin n => z τ + if τ = σ then (1 : ZMod m) else 0 := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hy :
+      collapseVertex b m (n + 1) x = y := by
+    have h :=
+      congrArg Prod.fst
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hz :
+      collapseFiberInit b m n x = z := by
+    have h :=
+      congrArg Prod.snd
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hactive_x :
+      Cyl.dir c (collapseVertex b m (n + 1) x) = activeDir b := by
+    simpa [hy] using hactive
+  have hmem_x : c ∈ Cyl.active (collapseVertex b m (n + 1) x) :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive_x⟩
+  have hmem_y : c ∈ Cyl.active y :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩
+  have hsym_base :
+      (A.Φ.equiv (collapseVertex b m (n + 1) x)).symm
+          (⟨c, by
+            change c ∈ Cyl.active (collapseVertex b m (n + 1) x)
+            exact hmem_x⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active
+                (collapseVertex b m (n + 1) x)}) =
+        (A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact hmem_y⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y}) :=
+    activeSymboling_symm_congr (A := A) hy hmem_x hmem_y
+  have hcolor :
+      activePermutedColorDir Cyl A tailPerm c x =
+        tailExpandedDir b σ.castSucc := by
+    calc
+      activePermutedColorDir Cyl A tailPerm c x =
+          tailExpandedDir b
+            ((tailPerm y z)
+              ((A.Φ.equiv y).symm
+                (⟨c, by
+                  change c ∈ Cyl.active y
+                  exact hmem_y⟩ :
+                  {c : Fin (b + (n + 1)) //
+                    c ∈ (Cyl.incidence).active y}))) := by
+        simp [activePermutedColorDir, x, hy, hz, hactive, hsym_base]
+      _ = tailExpandedDir b σ.castSucc := by
+        rw [hsym]
+  exact
+    PrefixProjectedLiftColorDirCore.fiberStep_of_tail_castSucc
+      (activePermutedColorDirCore Cyl A tailPerm hCyl)
+      c y z σ hcolor
+
+theorem activePermutedColorDirCore_fiberStep_of_active_last
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (hactive : Cyl.dir c y = activeDir b)
+    (hsym :
+      (tailPerm y z)
+        ((A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y})) =
+        Fin.last n) :
+    (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z = z := by
+  classical
+  let x := (collapseVertexFiberEquiv b m n).symm (y, z)
+  have hy :
+      collapseVertex b m (n + 1) x = y := by
+    have h :=
+      congrArg Prod.fst
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hz :
+      collapseFiberInit b m n x = z := by
+    have h :=
+      congrArg Prod.snd
+        ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+    exact h
+  have hactive_x :
+      Cyl.dir c (collapseVertex b m (n + 1) x) = activeDir b := by
+    simpa [hy] using hactive
+  have hmem_x : c ∈ Cyl.active (collapseVertex b m (n + 1) x) :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive_x⟩
+  have hmem_y : c ∈ Cyl.active y :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩
+  have hsym_base :
+      (A.Φ.equiv (collapseVertex b m (n + 1) x)).symm
+          (⟨c, by
+            change c ∈ Cyl.active (collapseVertex b m (n + 1) x)
+            exact hmem_x⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active
+                (collapseVertex b m (n + 1) x)}) =
+        (A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact hmem_y⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y}) :=
+    activeSymboling_symm_congr (A := A) hy hmem_x hmem_y
+  have hcolor :
+      activePermutedColorDir Cyl A tailPerm c x =
+        tailExpandedDir b (Fin.last n) := by
+    calc
+      activePermutedColorDir Cyl A tailPerm c x =
+          tailExpandedDir b
+            ((tailPerm y z)
+              ((A.Φ.equiv y).symm
+                (⟨c, by
+                  change c ∈ Cyl.active y
+                  exact hmem_y⟩ :
+                  {c : Fin (b + (n + 1)) //
+                    c ∈ (Cyl.incidence).active y}))) := by
+        simp [activePermutedColorDir, x, hy, hz, hactive, hsym_base]
+      _ = tailExpandedDir b (Fin.last n) := by
+        rw [hsym]
+  exact
+    PrefixProjectedLiftColorDirCore.fiberStep_of_tail_last
+      (activePermutedColorDirCore Cyl A tailPerm hCyl)
+      c y z hcolor
+
+noncomputable def activePermutedColorDirCoreDirectCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    (z : Fin n → ZMod m) (τ : Fin n) : ZMod m :=
+  if hactive : Cyl.dir c y = activeDir b then
+    if
+      (tailPerm y z)
+        ((A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y})) =
+        τ.castSucc
+    then 1
+    else 0
+  else 0
+
+theorem activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (τ : Fin n) :
+    (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z τ =
+      z τ + activePermutedColorDirCoreDirectCarry A tailPerm c y z τ := by
+  classical
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · let activeSymbol : Fin (n + 1) :=
+      (tailPerm y z)
+        ((A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y}))
+    by_cases hτσ : activeSymbol = τ.castSucc
+    · have hstep :=
+        activePermutedColorDirCore_fiberStep_of_active_castSucc
+          tailPerm hCyl c y z τ hactive (by
+            simpa [activeSymbol] using hτσ)
+      calc
+        (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z τ
+            =
+          (fun υ : Fin n =>
+            z υ + if υ = τ then (1 : ZMod m) else 0) τ := by
+            exact congrFun hstep τ
+        _ = z τ + activePermutedColorDirCoreDirectCarry A tailPerm c y z τ := by
+            simp [activePermutedColorDirCoreDirectCarry, hactive,
+              activeSymbol, hτσ]
+    · rcases Fin.eq_castSucc_or_eq_last activeSymbol with ⟨σ, hσ⟩ | hlast
+      · have hne : τ ≠ σ := by
+          intro h
+          apply hτσ
+          rw [h, hσ]
+        have hstep :=
+          activePermutedColorDirCore_fiberStep_of_active_castSucc
+            tailPerm hCyl c y z σ hactive (by
+              simpa [activeSymbol] using hσ)
+        calc
+          (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z τ
+              =
+            (fun υ : Fin n =>
+              z υ + if υ = σ then (1 : ZMod m) else 0) τ := by
+              exact congrFun hstep τ
+          _ = z τ + activePermutedColorDirCoreDirectCarry A tailPerm c y z τ := by
+              simp [activePermutedColorDirCoreDirectCarry, hactive,
+                activeSymbol, hσ, hne, hne.symm]
+      · have hcarry :
+            activePermutedColorDirCoreDirectCarry A tailPerm c y z τ = 0 := by
+          have hnot :
+              (tailPerm y z)
+                  ((A.Φ.equiv y).symm
+                    (⟨c, by
+                      change c ∈ Cyl.active y
+                      exact
+                        Finset.mem_filter.mpr
+                          ⟨Finset.mem_univ c, hactive⟩⟩ :
+                      {c : Fin (b + (n + 1)) //
+                        c ∈ (Cyl.incidence).active y})) ≠
+                τ.castSucc := by
+            simpa [activeSymbol] using hτσ
+          simp [activePermutedColorDirCoreDirectCarry, hactive, hnot]
+        have hstep :=
+          activePermutedColorDirCore_fiberStep_of_active_last
+            tailPerm hCyl c y z hactive (by
+              simpa [activeSymbol] using hlast)
+        calc
+          (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z τ
+              = z τ := by
+              exact congrFun hstep τ
+          _ = z τ + activePermutedColorDirCoreDirectCarry A tailPerm c y z τ := by
+              rw [hcarry, add_zero]
+  · have hstep :=
+      activePermutedColorDirCore_fiberStep_of_inactive (A := A)
+        tailPerm hCyl c y z hactive
+    calc
+      (activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y z τ
+          = z τ := by
+          exact congrFun hstep τ
+      _ = z τ + activePermutedColorDirCoreDirectCarry A tailPerm c y z τ := by
+          simp [activePermutedColorDirCoreDirectCarry, hactive]
+
+theorem activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (z : Fin n → ZMod m) (τ : Fin n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c))
+        base period z τ =
+      z τ +
+        ∑ u ∈ Finset.range period,
+          activePermutedColorDirCoreDirectCarry A tailPerm c
+            (((Cyl.step c)^[u]) base)
+            (Shared.skewFiberIterate
+              (Cyl.step c)
+              ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c)
+              u base z)
+            τ := by
+  classical
+  rw [Shared.sectionReturn_skewProductMap_eq_fiberIterate]
+  exact
+    Shared.skewFiberIterate_coord_eq_add_sum_range
+      (Cyl.step c)
+      ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c)
+      (fun y fiber =>
+        activePermutedColorDirCoreDirectCarry A tailPerm c y fiber τ)
+      τ
+      (by
+        intro y fiber
+        exact activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+          tailPerm hCyl c y fiber τ)
+      period base z
 
 /--
 Lower-triangular monodromy form of the projected primitive lift.
