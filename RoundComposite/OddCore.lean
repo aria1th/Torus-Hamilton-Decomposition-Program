@@ -7214,6 +7214,45 @@ theorem exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolv
       hpair hzero hright,
       trivial⟩
 
+theorem exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSolved
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (hCanonical :
+      ∀ initial : ActiveHall.Symboling A.Cyl.incidence,
+        (∀ q : ReservoirMoveToken A,
+          initial.color (P.moveSite q)
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+            P.moveZeroColor q) →
+        (∀ q : ReservoirMoveToken A,
+          initial.color (P.moveSite q)
+              (P.moveRight (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) q) =
+            P.moveRightColor q) →
+        ∀ c : Fin (b + T), ∀ σ : Fin T, σ.val ≠ 0 →
+          BaseTail.Trades.reservoirResidual
+            (BaseTail.Trades.activeBlockResidueSpec A.D)
+            (initial.residueSpec (m := m))
+            (BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+              (P.moveZeroColorOfMove
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+              (P.moveRightColorOfMove
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+              (P.thresholdMoveList
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT)
+                (P.thresholdCanonicalQuota hT initial)))
+            c σ = 0) :
+    ∃ _script :
+      BaseTail.Trades.CanonicalNonzeroZeroReservoirScript hT A.D, True := by
+  exact
+    P.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
+      hT (by
+        intro initial hzero hright
+        exact
+          ⟨P.thresholdCanonicalQuota hT initial,
+            hCanonical initial hzero hright⟩)
+
 noncomputable def moveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}

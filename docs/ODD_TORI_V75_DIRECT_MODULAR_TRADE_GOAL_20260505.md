@@ -259,6 +259,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCa
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_mem_moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList_pairwise_vertex
@@ -628,7 +629,9 @@ copy index, each family sum reduces to `quota * weight` over the base token.
 The paper's staged quota choice is now named in Lean as baseline residual,
 non-buffer correction, post-nonbuffer residual, and final canonical quota; the
 three constructor-copy simp lemmas show that this quota is copy-index constant
-on each reservoir family.  The
+on each reservoir family.  The canonical-quota adapter fixes the previous
+existential quota endpoint to this named quota, leaving only the nonzero
+residual equations for that quota.  The
 sharpest remaining hard content is now proving existence of that quota and the
 resulting nonzero-column equations.
 
