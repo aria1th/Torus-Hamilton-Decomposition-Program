@@ -6932,6 +6932,54 @@ theorem activePrefixPermutedColorDirCore_returnGamma_sum_succ
         simp [coeff, delta, step]
         ring
 
+theorem activePrefixPermutedColorDirCore_returnGamma_sum_zero
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (B : CylinderBaseCycleData Cyl)
+    (c : Fin (b + (n + 1))) (h0 : 0 < n) :
+    (∑ x : Fin 0 → ZMod m,
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c (B.base c) (B.period c) 0 h0 x) =
+      ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+  classical
+  have hpoint :
+      ∀ x : Fin 0 → ZMod m,
+        activePrefixPermutedColorDirCore_returnGamma
+            (A := A) hT hCyl c (B.base c) (B.period c) 0 h0 x =
+          ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+    intro x
+    unfold activePrefixPermutedColorDirCore_returnGamma
+    let z0 : Fin n → ZMod m :=
+      Shared.zmodVectorExtendZero (Nat.le_of_lt h0) x
+    have hz0 : z0 ⟨0, h0⟩ = 0 := by
+      simp [z0]
+    have hsection :=
+      activePrefixPermutedColorDirCore_sectionReturn_zero_eq_add_count
+        (A := A) hT hCyl B c z0 h0
+    change
+      Shared.sectionReturn
+          (Shared.skewProductMap
+            (Cyl.step c)
+            ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+          (B.base c) (B.period c) z0 ⟨0, h0⟩ -
+          z0 ⟨0, h0⟩ =
+        ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m)
+    rw [hsection, hz0]
+    abel
+  calc
+    (∑ x : Fin 0 → ZMod m,
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c (B.base c) (B.period c) 0 h0 x)
+        =
+      ∑ _x : Fin 0 → ZMod m,
+        ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+        apply Finset.sum_congr rfl
+        intro x _hx
+        exact hpoint x
+    _ = ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+        simp
+
 /--
 Canonical active-prefix monodromy residual after local fiber invertibility has
 been closed.
@@ -7009,6 +7057,43 @@ theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPerm
   primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberMonodromy
     (activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
       hReturn)
+
+theorem activePrefixPermutedColorDirFiberLowerTriangularReturnGoal :
+    ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal := by
+  intro b m n _inst packets Cyl A hT hCyl _hA hPrim B
+  refine
+    ⟨{
+      gamma := fun c k hk =>
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c (B.base c) (B.period c) k hk
+      return_lower_triangular := ?_
+      return_unit := ?_
+    }⟩
+  · intro c z k hk
+    exact
+      activePrefixPermutedColorDirCore_sectionReturn_lowerTriangular
+        (A := A) hT hCyl c (B.base c) (B.period c) z k hk
+  · intro c k hk
+    cases k with
+    | zero =>
+        rw [activePrefixPermutedColorDirCore_returnGamma_sum_zero
+          (A := A) hT hCyl B c hk]
+        exact hPrim.1 c
+    | succ k =>
+        rw [activePrefixPermutedColorDirCore_returnGamma_sum_succ
+          (A := A) hT hCyl B c hk]
+        let σ : Fin (n + 1) := ⟨k + 2, by omega⟩
+        have hσ : 2 ≤ σ.val := by
+          simp [σ]
+        exact
+          IsUnit.mul
+            (IsUnit.pow (k + 1) (IsUnit.neg isUnit_one))
+            (hPrim.2 c σ hσ)
+
+theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal :
+    PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal :=
+  primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
+    activePrefixPermutedColorDirFiberLowerTriangularReturnGoal
 
 theorem expandedColorDirCore_fiberStep_bijective
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
