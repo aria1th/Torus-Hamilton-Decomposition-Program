@@ -115,6 +115,36 @@ theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionReturnInpu
   oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
     (oddModulusToriV75PreCorrectionInputsGoal_of_preCorrectionReturnInputs h)
 
+theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriV75PreCorrectionReturnInputsGoal :=
+  ⟨hHigh, hTrade, hReturn⟩
+
+theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriV75PreCorrectionReturnInputsGoal :=
+  oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection_return
+    hHigh
+    (BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+      hTrade)
+    hReturn
+
+theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hReservoir :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriV75PreCorrectionReturnInputsGoal :=
+  oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection_return
+    hHigh
+    (BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteReservoir
+      hReservoir)
+    hReturn
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_reservoirInputs
     (h : OddModulusToriV75ReservoirInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -132,6 +162,15 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInpu
     OddModulusToriV75DirectModularTradeBlocksGoal :=
   oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionReturnInputs h)
+
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInputs
+    (oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade_return
+      hHigh hTrade hReturn)
 
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
@@ -209,6 +248,25 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionReturnInputs h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalLocalTrade_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
+    (oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade_return
+      hHigh hTrade hReturn)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_reservoir_return
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hReservoir :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
+    (oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir_return
+      hHigh hReservoir hReturn)
 
 end Concrete
 end RoundComposite
