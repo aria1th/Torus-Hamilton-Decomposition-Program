@@ -5461,6 +5461,31 @@ def OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal : Prop :=
             ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
         (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
 
+def OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal :
+    Prop :=
+  ∀ {b m T : Nat} [NeZero m] [NeZero (m ^ b)],
+    5 ≤ b →
+    3 ≤ m →
+    Shared.CoordinatizedCayleyDecomposition b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    (∀ packet, packet ∈ packets →
+      Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet)) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+        (∀ x : Shared.TorusVertex (b + 1) m,
+          ∀ i : Fin (b + 1), i ≠ BaseTail.activeDir b →
+            ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
+        (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
+
 /--
 Phase-split construction target for the full mixed active-block cylinder.
 
@@ -5490,6 +5515,19 @@ def OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :
       ∃ _D : BaseTail.ActiveBlockData Cyl,
       ∃ _Mix : BaseTail.MixedExpansionData Cyl,
         BaseTail.IsCylinder Cyl
+
+theorem oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal_of_coordinatized
+    (hBuild :
+      OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal) :
+    OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal := by
+  intro b m T _instM _instPow hb5 hm3 Dbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hPacketSplits hT
+  have hpow : 1 < m ^ b := by
+    exact Nat.one_lt_pow (by omega : b ≠ 0) (by omega : 1 < m)
+  exact
+    hBuild hb5 hm3
+      (Shared.coordinatizedCayleyDecomposition_of_single_cycle hpow Dbase)
+      packets hlen htotal hpacketSum hpacketUnits hPrefix hPacketSplits hT
 
 def OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockMixedCylinderConstructionGoal :
     Prop :=
@@ -5537,6 +5575,14 @@ theorem oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_o
     ⟨Cyl, D, hOrdinary, hHamiltonian⟩
   refine ⟨Cyl, D, D.mixedExpansionData_of_successor hT, ?_⟩
   exact D.isCylinder_of_activeBlockData hOrdinary hHamiltonian (by omega)
+
+theorem oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_of_coordinatized_activeBlock
+    (hBuild :
+      OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal) :
+    OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :=
+  oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_of_activeBlock
+    (oddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal_of_coordinatized
+      hBuild)
 
 theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
     (hSplit : BaseTail.SuccessorPacketPhaseSplitPowerGoal)

@@ -43,6 +43,169 @@ def step {b m T : Nat} {packets : List (List Nat)}
 
 end Cylinder
 
+def basePart {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) : Shared.TorusVertex b m :=
+  fun j => x j.castSucc
+
+def activeCoord {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) : ZMod m :=
+  x (activeDir b)
+
+@[simp] theorem basePart_snoc {b m : Nat}
+    (x : Shared.TorusVertex b m) (a : ZMod m) :
+    basePart (b := b) (m := m) (Fin.snoc x a) = x := by
+  funext j
+  exact Fin.snoc_castSucc (α := fun _ : Fin (b + 1) => ZMod m) a x j
+
+@[simp] theorem activeCoord_snoc {b m : Nat}
+    (x : Shared.TorusVertex b m) (a : ZMod m) :
+    activeCoord (b := b) (m := m) (Fin.snoc x a) = a := by
+  simp [activeCoord, activeDir]
+
+@[simp] theorem snoc_basePart_activeCoord {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) :
+    Fin.snoc (basePart x) (activeCoord x) = x := by
+  exact Fin.snoc_init_self x
+
+@[simp] theorem basePart_add_castSucc {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) (i : Fin b) :
+    basePart (x + Shared.torusBasis (b + 1) m i.castSucc) =
+      basePart x + Shared.torusBasis b m i := by
+  funext j
+  by_cases hji : j = i
+  · subst j
+    simp [basePart, Shared.torusBasis]
+  · have hne : j.castSucc ≠ i.castSucc := by
+      intro h
+      exact hji (Fin.ext (by simpa using congrArg Fin.val h))
+    simp [basePart, Shared.torusBasis, hji, hne]
+
+@[simp] theorem activeCoord_add_castSucc {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) (i : Fin b) :
+    activeCoord (x + Shared.torusBasis (b + 1) m i.castSucc) =
+      activeCoord x := by
+  have hne : activeDir b ≠ i.castSucc := by
+    intro h
+    have hv := congrArg Fin.val h
+    simp [activeDir] at hv
+    omega
+  simp [activeCoord, Shared.torusBasis, hne]
+
+@[simp] theorem basePart_add_activeDir {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) :
+    basePart (x + Shared.torusBasis (b + 1) m (activeDir b)) =
+      basePart x := by
+  funext j
+  have hne : j.castSucc ≠ activeDir b := by
+    intro h
+    have hv := congrArg Fin.val h
+    simp [activeDir] at hv
+    omega
+  simp [basePart, Shared.torusBasis, hne]
+
+@[simp] theorem activeCoord_add_activeDir {b m : Nat}
+    (x : Shared.TorusVertex (b + 1) m) :
+    activeCoord (x + Shared.torusBasis (b + 1) m (activeDir b)) =
+      activeCoord x + 1 := by
+  simp [activeCoord, Shared.torusBasis]
+
+def baseActiveEquiv (b m : Nat) :
+    Shared.TorusVertex (b + 1) m ≃
+      Shared.TorusVertex b m × ZMod m where
+  toFun x := (basePart x, activeCoord x)
+  invFun y := Fin.snoc y.1 y.2
+  left_inv := by
+    intro x
+    exact snoc_basePart_activeCoord x
+  right_inv := by
+    intro y
+    rcases y with ⟨x, a⟩
+    simp [activeCoord, activeDir]
+
+noncomputable def baseActiveRankEquiv {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f) :
+    Shared.TorusVertex (b + 1) m ≃ ZMod N × ZMod m where
+  toFun x := (C.equiv.symm (basePart x), activeCoord x)
+  invFun y := Fin.snoc (C.equiv y.1) y.2
+  left_inv := by
+    intro x
+    simp
+  right_inv := by
+    intro y
+    rcases y with ⟨z, a⟩
+    simp
+
+@[simp] theorem baseActiveRankEquiv_apply {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (x : Shared.TorusVertex (b + 1) m) :
+    baseActiveRankEquiv C x =
+      (C.equiv.symm (basePart x), activeCoord x) := by
+  rfl
+
+@[simp] theorem baseActiveRankEquiv_symm_apply {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (y : ZMod N × ZMod m) :
+    (baseActiveRankEquiv C).symm y =
+      Fin.snoc (C.equiv y.1) y.2 := by
+  rfl
+
+@[simp] theorem baseActiveRankEquiv_snoc {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (u : Shared.TorusVertex b m) (a : ZMod m) :
+    baseActiveRankEquiv C (Fin.snoc u a) =
+      (C.equiv.symm u, a) := by
+  simp [baseActiveRankEquiv]
+
+theorem baseActiveRankEquiv_snoc_step {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (u : Shared.TorusVertex b m) (a : ZMod m) :
+    baseActiveRankEquiv C (Fin.snoc (f u) a) =
+      (C.equiv.symm u + 1, a) := by
+  simp [Shared.CycleCoordinate.rank_step C u]
+
+theorem baseActiveRankEquiv_active_step {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (u : Shared.TorusVertex b m) (a : ZMod m) :
+    baseActiveRankEquiv C (Fin.snoc u (a + 1)) =
+      (C.equiv.symm u, a + 1) := by
+  simp [baseActiveRankEquiv]
+
+theorem baseActiveRankEquiv_add_castSucc_of_step
+    {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (u : Shared.TorusVertex b m) (a : ZMod m) (i : Fin b)
+    (hstep : f u = u + Shared.torusBasis b m i) :
+    baseActiveRankEquiv C
+        (Fin.snoc u a + Shared.torusBasis (b + 1) m i.castSucc) =
+      (C.equiv.symm u + 1, a) := by
+  calc
+    baseActiveRankEquiv C
+        (Fin.snoc u a + Shared.torusBasis (b + 1) m i.castSucc)
+        =
+      (C.equiv.symm (u + Shared.torusBasis b m i), a) := by
+        simp [baseActiveRankEquiv]
+    _ = (C.equiv.symm (f u), a) := by
+        rw [← hstep]
+    _ = (C.equiv.symm u + 1, a) := by
+        rw [Shared.CycleCoordinate.rank_step C u]
+
+theorem baseActiveRankEquiv_add_activeDir
+    {b m N : Nat} [NeZero N]
+    {f : Shared.TorusVertex b m → Shared.TorusVertex b m}
+    (C : Shared.CycleCoordinate N f)
+    (u : Shared.TorusVertex b m) (a : ZMod m) :
+    baseActiveRankEquiv C
+        (Fin.snoc u a + Shared.torusBasis (b + 1) m (activeDir b)) =
+      (C.equiv.symm u, a + 1) := by
+  simp [baseActiveRankEquiv]
+
 def ordinaryExpandedDir {b T : Nat}
     (i : Fin (b + 1)) (hi : i ≠ activeDir b) : Fin (b + T) :=
   ⟨i.val, by
