@@ -212,6 +212,12 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.mem_thresho
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.nonbuffer_mem_thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer01_mem_thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer02_mem_thresholdMoveTokenFinset
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_nonbuffer_copy_sum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_nonbuffer_copy_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer01_copy_sum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer01_copy_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer02_copy_sum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer02_copy_sum_const
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroColorOfMove
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColorOfMove
@@ -558,10 +564,15 @@ threshold-selection infrastructure is now explicit:
 `BaseTail.Trades.zmod_sum_fin_one_if_val_lt_val` records the basic residue
 counting identity; its specialized
 `BaseTail.Trades.zmod_sum_fin_m_sub_one_one_if_val_lt_val` form removes the
-routine `ZMod.val ≤ m - 1` side condition.  `ReservoirSitePlan.thresholdMoveList`
-packages the selected reservoir moves with pairwise and baseline-color
-witnesses, and its constructor-specific membership lemmas expose threshold
-selection as `k < quota.val` on each token family.
+routine `ZMod.val ≤ m - 1` side condition, and
+`BaseTail.Trades.zmod_sum_fin_m_sub_one_const_if_val_lt_val` supplies the
+weighted form used by signed local-trade deltas.  The
+`ReservoirSitePlan.thresholdMoveTokenFinset_*_copy_sum` lemmas now apply those
+identities to fixed non-buffer, β₀β₁, and β₀β₂ token families, with both unit
+and weighted variants.  `ReservoirSitePlan.thresholdMoveList` packages the
+selected reservoir moves with pairwise and baseline-color witnesses, and its
+constructor-specific membership lemmas expose threshold selection as
+`k < quota.val` on each token family.
 `ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved`
 then inserts such a selected list into the canonical reservoir script once the
 nonzero residual equations are supplied.  The baseline-first variant

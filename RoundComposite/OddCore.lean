@@ -5634,7 +5634,7 @@ inductive ReservoirMoveToken
   | nonbuffer : A.nonbufferTokens → ReservoirMoveToken A
   | buffer01 : BaseTail.Trades.BufferReservoirToken m T → ReservoirMoveToken A
   | buffer02 : BaseTail.Trades.BufferReservoirToken m T → ReservoirMoveToken A
-deriving Fintype
+deriving Fintype, DecidableEq
 
 structure ReservoirSitePlan
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
@@ -6167,6 +6167,136 @@ def thresholdMoveTokenFinset
     ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota ↔
       q.1.val < (quota (ReservoirMoveToken.buffer02 q)).val := by
   simp
+
+theorem thresholdMoveTokenFinset_nonbuffer_copy_sum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (a :
+      {c : Fin (b + T) //
+        c ≠ A.buffer.color0 A.slotEquiv ∧
+          c ≠ A.buffer.color1 A.slotEquiv ∧
+          c ≠ A.buffer.color2 A.slotEquiv} × Fin (T - 1))
+    (z : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.nonbuffer (a, k)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.nonbuffer (a, k) ∈
+          P.thresholdMoveTokenFinset quota then
+        (1 : ZMod m)
+      else
+        0) = z := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_one_if_val_lt_val
+      (m := m) z
+
+theorem thresholdMoveTokenFinset_nonbuffer_copy_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (a :
+      {c : Fin (b + T) //
+        c ≠ A.buffer.color0 A.slotEquiv ∧
+          c ≠ A.buffer.color1 A.slotEquiv ∧
+          c ≠ A.buffer.color2 A.slotEquiv} × Fin (T - 1))
+    (z weight : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.nonbuffer (a, k)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.nonbuffer (a, k) ∈
+          P.thresholdMoveTokenFinset quota then
+        weight
+      else
+        0) = z * weight := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_const_if_val_lt_val
+      (m := m) z weight
+
+theorem thresholdMoveTokenFinset_buffer01_copy_sum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (ρ : Fin (T - 1)) (z : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer01 (k, ρ)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.buffer01 (k, ρ) ∈
+          P.thresholdMoveTokenFinset quota then
+        (1 : ZMod m)
+      else
+        0) = z := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_one_if_val_lt_val
+      (m := m) z
+
+theorem thresholdMoveTokenFinset_buffer01_copy_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (ρ : Fin (T - 1)) (z weight : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer01 (k, ρ)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.buffer01 (k, ρ) ∈
+          P.thresholdMoveTokenFinset quota then
+        weight
+      else
+        0) = z * weight := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_const_if_val_lt_val
+      (m := m) z weight
+
+theorem thresholdMoveTokenFinset_buffer02_copy_sum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (ρ : Fin (T - 1)) (z : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer02 (k, ρ)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.buffer02 (k, ρ) ∈
+          P.thresholdMoveTokenFinset quota then
+        (1 : ZMod m)
+      else
+        0) = z := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_one_if_val_lt_val
+      (m := m) z
+
+theorem thresholdMoveTokenFinset_buffer02_copy_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (ρ : Fin (T - 1)) (z weight : ZMod m)
+    (hquota : ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer02 (k, ρ)) = z) :
+    (∑ k : Fin (m - 1),
+      if ReservoirMoveToken.buffer02 (k, ρ) ∈
+          P.thresholdMoveTokenFinset quota then
+        weight
+      else
+        0) = z * weight := by
+  simpa [hquota] using
+    BaseTail.Trades.zmod_sum_fin_m_sub_one_const_if_val_lt_val
+      (m := m) z weight
 
 noncomputable def moveZeroColorOfMove
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]

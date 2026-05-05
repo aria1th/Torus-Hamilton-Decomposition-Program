@@ -576,6 +576,23 @@ theorem zmod_sum_fin_m_sub_one_one_if_val_lt_val {m : Nat} [NeZero m]
     have hlt := ZMod.val_lt z
     omega)
 
+theorem zmod_sum_fin_m_sub_one_const_if_val_lt_val {m : Nat} [NeZero m]
+    (z a : ZMod m) :
+    (∑ k : Fin (m - 1), if k.val < z.val then a else 0) =
+      z * a := by
+  calc
+    (∑ k : Fin (m - 1), if k.val < z.val then a else 0) =
+        (∑ k : Fin (m - 1),
+          if k.val < z.val then (1 : ZMod m) else 0) * a := by
+      rw [Finset.sum_mul]
+      refine Finset.sum_congr rfl ?_
+      intro k _hk
+      by_cases h : k.val < z.val
+      · simp [h]
+      · simp [h]
+    _ = z * a := by
+      rw [zmod_sum_fin_m_sub_one_one_if_val_lt_val]
+
 theorem successorReservoirColorQuota_mul_le_pow {b m T : Nat}
     (hLarge : m ^ b > m * (b + T) * T) :
     T * successorReservoirColorQuota m T ≤ m ^ b := by
