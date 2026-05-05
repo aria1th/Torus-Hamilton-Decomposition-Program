@@ -258,6 +258,7 @@ BaseTail.activeTailCanonicalRho_no_hit_before
 BaseTail.activeTailCanonicalRho_update_at_rho
 BaseTail.activeTailCanonicalRho_add_at_rho
 BaseTail.activeTailCanonicalRho_sub_at_rho
+BaseTail.activeTailCanonicalRho_dynamic_add_bijective
 ```
 
 The reusable fiber-bijection algebra for piecewise single-coordinate
@@ -269,8 +270,18 @@ BaseTail.zmodVector_piecewise_id_add_single_bijective
 BaseTail.zmodVector_piecewise_add_single_add_single_bijective
 ```
 
-These lemmas are the immediate support layer for the next target,
-`BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective`.
+The local bijectivity target for the canonical active prefix rule is now also
+closed:
+
+```lean
+BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective
+```
+
+This proves that every one-step fiber map for the canonical `lambda_rho` active
+tail rule is a permutation.  The remaining Worker B content is therefore no
+longer local invertibility; it is the section-return monodromy theorem showing
+that the iterated canonical active prefix rule supplies the required
+lower-triangular unit cocycles.
 
 ### Main Thread: Endpoint Wiring
 

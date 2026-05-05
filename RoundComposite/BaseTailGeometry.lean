@@ -4856,6 +4856,256 @@ theorem zmodVector_piecewise_add_single_add_single_bijective {m n : Nat}
                 simp [hτ, sub_eq_add_neg, add_assoc]
   exact ⟨hleft.injective, hright.surjective⟩
 
+theorem activePrefixPermutedColorDirCore_fiberStep_bijective
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m) :
+    Function.Bijective
+      ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y) := by
+  classical
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · let hmem : c ∈ Cyl.active y :=
+      Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩
+    let s : Fin (n + 1) :=
+      (A.Φ.equiv y).symm
+        (⟨c, by
+          change c ∈ Cyl.active y
+          exact hmem⟩ :
+          {c : Fin (b + (n + 1)) //
+            c ∈ (Cyl.incidence).active y})
+    by_cases hs0 : s.val = 0
+    · have hnpos : 0 < n := by omega
+      let σ : Fin n := ⟨0, hnpos⟩
+      have hstep :
+          (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y =
+            (fun z : Fin n → ZMod m =>
+              fun τ : Fin n =>
+                z τ + if τ = σ then (1 : ZMod m) else 0) := by
+        funext z
+        have hsym :
+            (activePrefixTailPerm hT y z) s = σ.castSucc := by
+          apply Fin.ext
+          simp [activePrefixTailPerm_apply, activeTailLambdaRho, hs0, σ]
+        exact
+          activePermutedColorDirCore_fiberStep_of_active_castSucc
+            (activePrefixTailPerm hT) hCyl c y z σ hactive
+            (by simpa [s] using hsym)
+      rw [hstep]
+      exact zmodVector_add_single_bijective σ
+    · by_cases hs1 : s.val = 1
+      · have hstep :
+            (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y =
+              (fun z : Fin n → ZMod m =>
+                fun τ : Fin n =>
+                  if hρ : (activeTailCanonicalRho hT z).val < n then
+                    z τ +
+                      if τ = ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+                      then (1 : ZMod m) else 0
+                  else z τ) := by
+          funext z
+          by_cases hρ : (activeTailCanonicalRho hT z).val < n
+          · let σ : Fin n := ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+            have hsym :
+                (activePrefixTailPerm hT y z) s = σ.castSucc := by
+              apply Fin.ext
+              simp [activePrefixTailPerm_apply, activeTailLambdaRho, hs1, σ]
+            have h :=
+              activePermutedColorDirCore_fiberStep_of_active_castSucc
+                (activePrefixTailPerm hT) hCyl c y z σ hactive
+                (by simpa [s] using hsym)
+            funext τ
+            have hτ := congrFun h τ
+            simpa [hρ, σ] using hτ
+          · have hρval : (activeTailCanonicalRho hT z).val = n := by
+              have hle : (activeTailCanonicalRho hT z).val ≤ n :=
+                Nat.le_of_lt_succ (activeTailCanonicalRho hT z).isLt
+              omega
+            have hsym :
+                (activePrefixTailPerm hT y z) s = Fin.last n := by
+              apply Fin.ext
+              simp [activePrefixTailPerm_apply, activeTailLambdaRho, hs1,
+                Fin.last, hρval]
+            have h :=
+              activePermutedColorDirCore_fiberStep_of_active_last
+                (activePrefixTailPerm hT) hCyl c y z hactive
+                (by simpa [s] using hsym)
+            funext τ
+            have hτ := congrFun h τ
+            simpa [hρ] using hτ
+        rw [hstep]
+        exact activeTailCanonicalRho_dynamic_add_bijective hT
+      · by_cases hslt : s.val < n
+        · let σ : Fin n := ⟨s.val, hslt⟩
+          let υ : Fin n := ⟨s.val - 1, by omega⟩
+          let P : (Fin n → ZMod m) → Prop :=
+            fun z => (activeTailCanonicalRho hT z).val < s.val
+          have hstep :
+              (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y =
+                (fun z : Fin n → ZMod m =>
+                  fun τ : Fin n =>
+                    if P z then
+                      z τ + if τ = σ then (1 : ZMod m) else 0
+                    else
+                      z τ + if τ = υ then (1 : ZMod m) else 0) := by
+            funext z
+            by_cases hP : P z
+            · have hsym :
+                  (activePrefixTailPerm hT y z) s = σ.castSucc := by
+                apply Fin.ext
+                have hlt :
+                    (activeTailCanonicalRho hT z).val < s.val := by
+                  simpa [P] using hP
+                simp [activePrefixTailPerm_apply, activeTailLambdaRho,
+                  hs0, hs1, hlt, σ]
+              have h :=
+                activePermutedColorDirCore_fiberStep_of_active_castSucc
+                  (activePrefixTailPerm hT) hCyl c y z σ hactive
+                  (by simpa [s] using hsym)
+              funext τ
+              have hτ := congrFun h τ
+              calc
+                (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y z τ =
+                    z τ + if τ = σ then (1 : ZMod m) else 0 := by
+                      simpa [activePrefixPermutedColorDirCore] using hτ
+                _ =
+                    (if P z then
+                      z τ + if τ = σ then (1 : ZMod m) else 0
+                    else
+                      z τ + if τ = υ then (1 : ZMod m) else 0) := by
+                      rw [if_pos hP]
+            · have hsym :
+                  (activePrefixTailPerm hT y z) s = υ.castSucc := by
+                apply Fin.ext
+                have hnotlt :
+                    ¬ (activeTailCanonicalRho hT z).val < s.val := by
+                  simpa [P] using hP
+                simp [activePrefixTailPerm_apply, activeTailLambdaRho,
+                  hs0, hs1, hnotlt, υ]
+              have h :=
+                activePermutedColorDirCore_fiberStep_of_active_castSucc
+                  (activePrefixTailPerm hT) hCyl c y z υ hactive
+                  (by simpa [s] using hsym)
+              funext τ
+              have hτ := congrFun h τ
+              calc
+                (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y z τ =
+                    z τ + if τ = υ then (1 : ZMod m) else 0 := by
+                      simpa [activePrefixPermutedColorDirCore] using hτ
+                _ =
+                    (if P z then
+                      z τ + if τ = σ then (1 : ZMod m) else 0
+                    else
+                      z τ + if τ = υ then (1 : ZMod m) else 0) := by
+                      rw [if_neg hP]
+          rw [hstep]
+          refine
+            zmodVector_piecewise_add_single_add_single_bijective
+              P σ υ ?_ ?_ ?_ ?_
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_add_single_iff
+                hT (z := z) (q := s.val) (by omega)
+                (σ := σ) (by
+                  show s.val ≤ σ.val + 1
+                  dsimp [σ]
+                  omega)
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_sub_single_iff
+                hT (z := z) (q := s.val) (by omega)
+                (σ := σ) (by
+                  show s.val ≤ σ.val + 1
+                  dsimp [σ]
+                  omega)
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_add_single_iff
+                hT (z := z) (q := s.val) (by omega)
+                (σ := υ) (by
+                  show s.val ≤ υ.val + 1
+                  simp [υ]
+                  omega)
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_sub_single_iff
+                hT (z := z) (q := s.val) (by omega)
+                (σ := υ) (by
+                  show s.val ≤ υ.val + 1
+                  simp [υ]
+                  omega)
+        · have hsLast : s.val = n := by
+            have hsle : s.val ≤ n := Nat.le_of_lt_succ s.isLt
+            omega
+          have hn0 : n ≠ 0 := by omega
+          have hn1 : n ≠ 1 := by omega
+          let υ : Fin n := ⟨n - 1, by omega⟩
+          let P : (Fin n → ZMod m) → Prop :=
+            fun z => (activeTailCanonicalRho hT z).val < n
+          have hstep :
+              (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y =
+                (fun z : Fin n → ZMod m =>
+                  fun τ : Fin n =>
+                    if P z then z τ
+                    else z τ + if τ = υ then (1 : ZMod m) else 0) := by
+            funext z
+            by_cases hP : P z
+            · have hsym :
+                  (activePrefixTailPerm hT y z) s = Fin.last n := by
+                apply Fin.ext
+                simp [activePrefixTailPerm_apply, activeTailLambdaRho,
+                  P, hP, hsLast, hn0, hn1, Fin.last]
+              have h :=
+                activePermutedColorDirCore_fiberStep_of_active_last
+                  (activePrefixTailPerm hT) hCyl c y z hactive
+                  (by simpa [s] using hsym)
+              funext τ
+              have hτ := congrFun h τ
+              simpa [P, hP] using hτ
+            · have hρval : (activeTailCanonicalRho hT z).val = n := by
+                have hle : (activeTailCanonicalRho hT z).val ≤ n :=
+                  Nat.le_of_lt_succ (activeTailCanonicalRho hT z).isLt
+                omega
+              have hsym :
+                  (activePrefixTailPerm hT y z) s = υ.castSucc := by
+                apply Fin.ext
+                simp [activePrefixTailPerm_apply, activeTailLambdaRho,
+                  hρval, hsLast, hn0, hn1, υ]
+              have h :=
+                activePermutedColorDirCore_fiberStep_of_active_castSucc
+                  (activePrefixTailPerm hT) hCyl c y z υ hactive
+                  (by simpa [s] using hsym)
+              funext τ
+              have hτ := congrFun h τ
+              simpa [P, hP, υ] using hτ
+          rw [hstep]
+          refine zmodVector_piecewise_id_add_single_bijective P υ ?_ ?_
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_add_single_iff
+                hT (z := z) (q := n) (by omega)
+                (σ := υ) (by
+                  show n ≤ υ.val + 1
+                  simp [υ]
+                  omega)
+          · intro z
+            exact
+              activeTailCanonicalRho_val_lt_sub_single_iff
+                hT (z := z) (q := n) (by omega)
+                (σ := υ) (by
+                  show n ≤ υ.val + 1
+                  simp [υ]
+                  omega)
+  · have hstep :
+        (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y =
+          id := by
+      funext z
+      exact
+        activePermutedColorDirCore_fiberStep_of_inactive
+          (activePrefixTailPerm hT) hCyl c y z hactive
+    rw [hstep]
+    exact Function.bijective_id
+
 theorem expandedColorDirCore_fiberStep_bijective
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
