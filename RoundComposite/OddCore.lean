@@ -6299,6 +6299,76 @@ theorem exists_thresholdMoveBaselineMoveList
     simpa [hTpos, moveRightColorOfMove_toNonzeroZeroSwapMove] using
       hright q
 
+theorem exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (hNonzeroSolved :
+      ∀ initial : ActiveHall.Symboling A.Cyl.incidence,
+        (∀ move, move ∈
+            P.thresholdMoveList
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota →
+          initial.color move.vertex
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+            P.moveZeroColorOfMove
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) move) →
+        (∀ move, move ∈
+            P.thresholdMoveList
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota →
+          initial.color move.vertex move.right =
+            P.moveRightColorOfMove
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) move) →
+        ∀ c : Fin (b + T), ∀ σ : Fin T, σ.val ≠ 0 →
+          BaseTail.Trades.reservoirResidual
+            (BaseTail.Trades.activeBlockResidueSpec A.D)
+            (initial.residueSpec (m := m))
+            (BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+              (P.moveZeroColorOfMove
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+              (P.moveRightColorOfMove
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT))
+              (P.thresholdMoveList
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota))
+            c σ = 0) :
+    ∃ _script :
+      BaseTail.Trades.CanonicalNonzeroZeroReservoirScript hT A.D, True := by
+  classical
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  rcases P.exists_thresholdMoveBaselineMoveList hT quota with
+    ⟨Φ, hpair, hzero, hright⟩
+  have hCompat :=
+    BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+      A.isCylinder A.D hT
+  let moves := P.thresholdMoveList hTpos quota
+  let zeroColor := P.moveZeroColorOfMove hTpos
+  let rightColor := P.moveRightColorOfMove hTpos
+  have arithmetic :
+      BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic hT A.D Φ
+        moves zeroColor rightColor :=
+    BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic.ofNonzeroSolved
+      (Cyl := A.Cyl) (hT := hT) (D := A.D) (initial := Φ)
+      (moves := moves) (zeroColor := zeroColor) (rightColor := rightColor)
+      (A.buffer.color0 A.slotEquiv) (A.buffer.color1 A.slotEquiv)
+      (A.buffer.color2 A.slotEquiv)
+      (A.buffer.color0_ne_color1 A.slotEquiv)
+      (A.buffer.color0_ne_color2 A.slotEquiv)
+      (A.buffer.color1_ne_color2 A.slotEquiv)
+      hCompat.1
+      (Φ.residueSpec_rowCompatible (m := m))
+      (by
+        simpa [hTpos, moves, zeroColor, rightColor] using
+          hNonzeroSolved Φ hzero hright)
+  refine
+    ⟨BaseTail.Trades.CanonicalNonzeroZeroReservoirScript.ofArithmetic
+      (D := A.D) (hT := hT) Φ moves zeroColor rightColor arithmetic ?_ ?_ ?_,
+      trivial⟩
+  · simpa [hTpos, moves] using hpair
+  · simpa [hTpos, moves, zeroColor] using hzero
+  · simpa [hTpos, moves, rightColor] using hright
+
 noncomputable def moveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
