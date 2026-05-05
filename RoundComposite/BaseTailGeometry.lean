@@ -506,6 +506,23 @@ theorem packetPhase_preimage_packetPrefixPhaseSet_card
   rw [packetPhase_preimage_card hdiv,
     packetPrefixPhaseSet_card hsum]
 
+def packetPhaseIntervalOrdinary {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (packet : List Nat)
+    (r : Fin packet.length) (y : ZMod N × ZMod m) : Bool :=
+  decide (packetPhase hdiv y ∈ packetPrefixPhaseSet m packet r)
+
+theorem packetPhaseIntervalOrdinary_card
+    {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) {packet : List Nat} (hsum : packet.sum = m)
+    (r : Fin packet.length) :
+    ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+      (fun y => packetPhaseIntervalOrdinary hdiv packet r y = true)).card =
+        packet.get r * N := by
+  convert packetPhase_preimage_packetPrefixPhaseSet_card
+    hdiv hsum r using 2
+  ext y
+  simp [packetPhaseIntervalOrdinary]
+
 /--
 The remaining local packet theorem needed by the active-block cylinder.
 
