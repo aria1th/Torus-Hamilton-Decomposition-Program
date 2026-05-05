@@ -3068,6 +3068,101 @@ theorem packetPartSlot_card_eq_sum (packets : List (List Nat)) :
     list_sum_map_eq_sum_get (fun packet : List Nat => packet.length)
       packets
 
+theorem packetPartSlot_false_card_at_state
+    {N m : Nat} [NeZero N] [NeZero m]
+    (packets : List (List Nat))
+    (S : ∀ i : Fin packets.length,
+      PacketPhaseSplit N m (packets.get i))
+    (rank : Fin packets.length → ZMod N) (a : ZMod m) :
+    ((Finset.univ : Finset (PacketPartSlot packets)).filter
+      (fun slot =>
+        (S slot.1).ordinary slot.2 (rank slot.1, a) = false)).card =
+      (packets.map (fun packet => packet.length - 1)).sum := by
+  classical
+  let e :
+      {slot : PacketPartSlot packets //
+        (S slot.1).ordinary slot.2 (rank slot.1, a) = false} ≃
+        Sigma fun i : Fin packets.length =>
+          {r : Fin (packets.get i).length //
+            (S i).ordinary r (rank i, a) = false} :=
+  {
+    toFun := fun slot =>
+      ⟨slot.1.1, ⟨slot.1.2, slot.2⟩⟩
+    invFun := fun slot =>
+      ⟨⟨slot.1, slot.2.1⟩, slot.2.2⟩
+    left_inv := by
+      intro slot
+      rfl
+    right_inv := by
+      intro slot
+      rfl
+  }
+  have hsub :
+      Fintype.card
+        {slot : PacketPartSlot packets //
+          (S slot.1).ordinary slot.2 (rank slot.1, a) = false} =
+      ((Finset.univ : Finset (PacketPartSlot packets)).filter
+        (fun slot =>
+          (S slot.1).ordinary slot.2 (rank slot.1, a) = false)).card := by
+    exact Fintype.card_subtype _
+  rw [← hsub, Fintype.card_congr e, Fintype.card_sigma]
+  simpa using
+    (show
+      (∑ i : Fin packets.length,
+        Fintype.card
+          {r : Fin (packets.get i).length //
+            (S i).ordinary r (rank i, a) = false}) =
+        (packets.map (fun packet => packet.length - 1)).sum from by
+          calc
+            (∑ i : Fin packets.length,
+              Fintype.card
+                {r : Fin (packets.get i).length //
+                  (S i).ordinary r (rank i, a) = false})
+                =
+              ∑ i : Fin packets.length,
+                ((Finset.univ : Finset (Fin (packets.get i).length)).filter
+                  (fun r => (S i).ordinary r (rank i, a) = false)).card := by
+                apply Finset.sum_congr rfl
+                intro i _hi
+                exact Fintype.card_subtype _
+            _ =
+              ∑ i : Fin packets.length,
+                ((packets.get i).length - 1) := by
+                apply Finset.sum_congr rfl
+                intro i _hi
+                exact (S i).ordinary_false_card_at_state (rank i, a)
+            _ =
+              (packets.map (fun packet => packet.length - 1)).sum := by
+                exact list_sum_map_eq_sum_get
+                  (fun packet : List Nat => packet.length - 1) packets)
+
+theorem packetPartSlot_false_card_at_state_successor
+    {b T N m : Nat} [NeZero N] [NeZero m]
+    (packets : List (List Nat))
+    (hm3 : 3 ≤ m)
+    (hlen : packets.length = b)
+    (htotal : (packets.map List.length).sum = b + T)
+    (hpacketSum : ∀ packet, packet ∈ packets → packet.sum = m)
+    (hunit :
+      ∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m)
+    (S : ∀ i : Fin packets.length,
+      PacketPhaseSplit N m (packets.get i))
+    (rank : Fin packets.length → ZMod N) (a : ZMod m) :
+    ((Finset.univ : Finset (PacketPartSlot packets)).filter
+      (fun slot =>
+        (S slot.1).ordinary slot.2 (rank slot.1, a) = false)).card = T := by
+  rw [packetPartSlot_false_card_at_state packets S rank a]
+  have hge : ∀ packet, packet ∈ packets → 1 ≤ packet.length := by
+    intro packet hp
+    have htwo : 2 ≤ packet.length :=
+      packet_length_ge_two hm3 (hpacketSum packet hp) (hunit packet hp)
+    omega
+  have hsum :=
+    list_sum_map_length_sub_one_add_length (packets := packets) hge
+  rw [hlen, htotal] at hsum
+  omega
+
 def SuccessorPacketPartSlotCardGoal : Prop :=
   ∀ {b T : Nat} {packets : List (List Nat)},
     packets.length = b →
