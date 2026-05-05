@@ -320,6 +320,24 @@ structure PacketPhaseSplit (N m : Nat) [NeZero N] [NeZero m]
         (fun y : ZMod N × ZMod m =>
           if ordinary r y then (y.1 + 1, y.2) else (y.1, y.2 + 1))
 
+def packetPhase {N m : Nat} [NeZero N] [NeZero m] (hdiv : m ∣ N) :
+    ZMod N × ZMod m → ZMod m :=
+  fun y => ZMod.castHom hdiv (ZMod m) y.1 + y.2
+
+theorem packetPhase_step_first {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (y : ZMod N × ZMod m) :
+    packetPhase hdiv (y.1 + 1, y.2) = packetPhase hdiv y + 1 := by
+  dsimp [packetPhase]
+  rw [ZMod.cast_add (R := ZMod m) hdiv y.1 1]
+  rw [ZMod.cast_one (R := ZMod m) hdiv]
+  abel_nf
+
+theorem packetPhase_step_second {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (y : ZMod N × ZMod m) :
+    packetPhase hdiv (y.1, y.2 + 1) = packetPhase hdiv y + 1 := by
+  dsimp [packetPhase]
+  abel
+
 /--
 The remaining local packet theorem needed by the active-block cylinder.
 
@@ -1904,6 +1922,14 @@ def PacketPhaseIntervalPowerConstructionGoal : Prop :=
     packet.sum = m →
     (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
     Nonempty (PacketPhaseSplit (m ^ b) m packet)
+
+theorem zmodPower_add_singleCycle_of_base_coprime
+    {b m a : Nat} [NeZero (m ^ b)] (ha : Nat.Coprime a m) :
+    Shared.IsSingleCycleMap
+      (fun x : ZMod (m ^ b) => x + (a : ZMod (m ^ b))) := by
+  exact
+    Shared.zmod_add_single_cycle_of_coprime
+      (m := m ^ b) (a := a) (ha.pow_right b)
 
 theorem packetPhaseSplitLengthTwoPowerGoal_of_intervalPower
     (hInterval : PacketPhaseIntervalPowerConstructionGoal) :
