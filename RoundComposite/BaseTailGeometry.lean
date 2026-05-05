@@ -6692,6 +6692,121 @@ theorem activePrefixPermutedColorDirCore_fiberStep_bijective
     rw [hstep]
     exact Function.bijective_id
 
+theorem activePrefixColorDirCoreDirectCarry_skewFiberIterate_succ_sum
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1))) (base : Shared.TorusVertex (b + 1) m)
+    (uIter : Nat) {k : Nat} (hk : k + 1 < n) :
+    (∑ x : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c
+          (((Cyl.step c)^[uIter]) base)
+          (Shared.skewFiberIterate
+            (Cyl.step c)
+            ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+            uIter base
+            (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+          ⟨k + 1, hk⟩) =
+      (if A.Φ.color (((Cyl.step c)^[uIter]) base) ⟨1, by omega⟩ = c
+        then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if A.Φ.color (((Cyl.step c)^[uIter]) base) ⟨k + 2, by omega⟩ = c
+          then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    Shared.skewFiberIterate
+      (Cyl.step c)
+      ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+      uIter base
+  let G : (Fin (k + 1) → ZMod m) → (Fin (k + 1) → ZMod m) :=
+    fun x =>
+      Shared.zmodVectorTake (Nat.le_of_lt hk)
+        (F (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+  have hFinc : Shared.ZModVectorIncrementDependsOnTake F := by
+    simpa [F] using
+      Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
+        (Cyl.step c)
+        ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+        (activePrefixPermutedColorDirCore_fiberStep_incrementDependsOnTake
+          hT hCyl c)
+        uIter base
+  have hFbij : Function.Bijective F := by
+    simpa [F] using
+      Shared.skewFiberIterate_bijective
+        (Cyl.step c)
+        ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+        (activePrefixPermutedColorDirCore_fiberStep_bijective hT hCyl c)
+        uIter base
+  have hG : Function.Bijective G := by
+    simpa [G, F] using
+      Shared.zmodVectorTake_extendZero_apply_bijective_of_incrementDependsOnTake
+        (Nat.le_of_lt hk) hFinc hFbij
+  let e : (Fin (k + 1) → ZMod m) ≃ (Fin (k + 1) → ZMod m) :=
+    Equiv.ofBijective G hG
+  calc
+    (∑ x : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c
+          (((Cyl.step c)^[uIter]) base)
+          (Shared.skewFiberIterate
+            (Cyl.step c)
+            ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+            uIter base
+            (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+          ⟨k + 1, hk⟩)
+        =
+      ∑ x : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c
+          (((Cyl.step c)^[uIter]) base)
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) (G x))
+          ⟨k + 1, hk⟩ := by
+        apply Finset.sum_congr rfl
+        intro x _hx
+        have htake :
+            Shared.zmodVectorTake (Nat.le_of_lt hk)
+                (F (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x)) =
+              Shared.zmodVectorTake (Nat.le_of_lt hk)
+                (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) (G x)) := by
+          simp [G]
+        simpa [F] using
+          activePrefixColorDirCoreDirectCarry_eq_of_take_pos A hT c
+            (((Cyl.step c)^[uIter]) base)
+            (hk := hk) (hkpos := by omega) htake
+    _ =
+      ∑ y : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c
+          (((Cyl.step c)^[uIter]) base)
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)
+          ⟨k + 1, hk⟩ := by
+        change
+          (∑ x : Fin (k + 1) → ZMod m,
+            activePrefixColorDirCoreDirectCarry A hT c
+              (((Cyl.step c)^[uIter]) base)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) (e x))
+              ⟨k + 1, hk⟩) =
+          ∑ y : Fin (k + 1) → ZMod m,
+            activePrefixColorDirCoreDirectCarry A hT c
+              (((Cyl.step c)^[uIter]) base)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)
+              ⟨k + 1, hk⟩
+        exact Fintype.sum_equiv e
+          (fun x =>
+            activePrefixColorDirCoreDirectCarry A hT c
+              (((Cyl.step c)^[uIter]) base)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) (e x))
+              ⟨k + 1, hk⟩)
+          (fun y =>
+            activePrefixColorDirCoreDirectCarry A hT c
+              (((Cyl.step c)^[uIter]) base)
+              (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)
+              ⟨k + 1, hk⟩)
+          (by intro x; rfl)
+    _ =
+      (if A.Φ.color (((Cyl.step c)^[uIter]) base) ⟨1, by omega⟩ = c
+        then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if A.Φ.color (((Cyl.step c)^[uIter]) base) ⟨k + 2, by omega⟩ = c
+          then ((-1 : ZMod m) ^ (k + 1)) else 0) :=
+        activePrefixColorDirCoreDirectCarry_extendZero_succ_sum
+          A hT c (((Cyl.step c)^[uIter]) base) hk
+
 /--
 Canonical active-prefix monodromy residual after local fiber invertibility has
 been closed.
