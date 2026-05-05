@@ -3973,6 +3973,41 @@ def localTradeDelta {m T : Nat} {C : Type*} [DecidableEq C]
        else if ρ = right then -1 else 0)
     else 0)
 
+theorem localTradeDelta_left {m T : Nat} {C : Type*} [DecidableEq C]
+    {leftColor rightColor c : C} {left right : Fin T}
+    (h : left ≠ right) :
+    localTradeDelta (m := m) leftColor rightColor c left right left =
+      (if rightColor = c then (1 : ZMod m) else 0) -
+        (if leftColor = c then (1 : ZMod m) else 0) := by
+  by_cases hleft : leftColor = c
+  · by_cases hright : rightColor = c
+    · simp [localTradeDelta, h, hleft, hright]
+    · simp [localTradeDelta, h, hleft, hright]
+  · by_cases hright : rightColor = c
+    · simp [localTradeDelta, hleft, hright]
+    · simp [localTradeDelta, hleft, hright]
+
+theorem localTradeDelta_right {m T : Nat} {C : Type*} [DecidableEq C]
+    {leftColor rightColor c : C} {left right : Fin T}
+    (h : left ≠ right) :
+    localTradeDelta (m := m) leftColor rightColor c left right right =
+      (if leftColor = c then (1 : ZMod m) else 0) -
+        (if rightColor = c then (1 : ZMod m) else 0) := by
+  have hright_left : right ≠ left := h.symm
+  by_cases hleft : leftColor = c
+  · by_cases hright : rightColor = c
+    · simp [localTradeDelta, hright_left, hleft, hright]
+    · simp [localTradeDelta, hleft, hright]
+  · by_cases hright : rightColor = c
+    · simp [localTradeDelta, hright_left, hleft, hright]
+    · simp [localTradeDelta, hleft, hright]
+
+theorem localTradeDelta_of_ne {m T : Nat} {C : Type*} [DecidableEq C]
+    {leftColor rightColor c : C} {left right ρ : Fin T}
+    (hρleft : ρ ≠ left) (hρright : ρ ≠ right) :
+    localTradeDelta (m := m) leftColor rightColor c left right ρ = 0 := by
+  simp [localTradeDelta, hρleft, hρright]
+
 theorem swapMoveDelta_eq_localTradeDelta {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I)

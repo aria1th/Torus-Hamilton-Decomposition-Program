@@ -281,6 +281,9 @@ Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_largeMarginCo
 BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
 ActiveHall.Symboling.swapMoveDelta
 ActiveHall.Symboling.localTradeDelta
+ActiveHall.Symboling.localTradeDelta_left
+ActiveHall.Symboling.localTradeDelta_right
+ActiveHall.Symboling.localTradeDelta_of_ne
 ActiveHall.Symboling.swapMoveDelta_eq_localTradeDelta
 ActiveHall.Symboling.swapDeltaSum
 ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
@@ -371,6 +374,10 @@ baseline colors at the reserved sites, and the finite sum of the explicit
 `swapDeltaSum` by `swapDeltaSum_eq_tradeDeltaSum_of_baseline`, then proves the
 final `applySwapResidueSpecs` equality from
 `applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex`.  The
+`localTradeDelta_left`, `localTradeDelta_right`, and `localTradeDelta_of_ne`
+lemmas are the column-case algebra for the next λ/μ residual arithmetic step:
+only the two swapped columns contribute, and their signs are now exposed as
+standalone rewrite targets.  The
 sharpest remaining hard content is now the actual script construction:
 selecting enough distinct reservoir sites, choosing the initial symboling with
 the required local baseline positions, and proving the canonical active-block
