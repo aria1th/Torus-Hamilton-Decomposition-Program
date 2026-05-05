@@ -5692,6 +5692,55 @@ def nonzeroSymbolPred {T : Nat} (σ : Fin T) (hσ0 : σ.val ≠ 0) :
   simp [nonbufferTokenBaseRight, nonzeroSymbolPred]
   omega
 
+theorem nonbufferTokenBase_sum_single_nonzero
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (hTpos : 0 < T)
+    (F : Fin (b + T) → Fin T → ZMod m)
+    {c : Fin (b + T)}
+    (hc0 : c ≠ A.buffer.color0 A.slotEquiv)
+    (hc1 : c ≠ A.buffer.color1 A.slotEquiv)
+    (hc2 : c ≠ A.buffer.color2 A.slotEquiv)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    (∑ a : A.nonbufferTokenBase,
+      F a.1.1 (nonbufferTokenBaseRight (A := A) hTpos a) *
+        (if σ = nonbufferTokenBaseRight (A := A) hTpos a then
+          if a.1.1 = c then (1 : ZMod m) else 0
+        else
+          0)) =
+      F c σ := by
+  classical
+  let csub :
+      {c : Fin (b + T) //
+        c ≠ A.buffer.color0 A.slotEquiv ∧
+          c ≠ A.buffer.color1 A.slotEquiv ∧
+          c ≠ A.buffer.color2 A.slotEquiv} :=
+    ⟨c, hc0, hc1, hc2⟩
+  let a0 : A.nonbufferTokenBase := (csub, nonzeroSymbolPred σ hσ0)
+  rw [Finset.sum_eq_single a0]
+  · simp [a0, csub]
+  · intro a _ha hne
+    by_cases hright : σ = nonbufferTokenBaseRight (A := A) hTpos a
+    · by_cases hcolor : a.1.1 = c
+      · have haeq : a = a0 := by
+          rcases a with ⟨color, ρ⟩
+          have hcolorEq : color = csub := by
+            apply Subtype.ext
+            exact hcolor
+          have hρVal : ρ.val = (nonzeroSymbolPred σ hσ0).val := by
+            have hval := congrArg Fin.val hright
+            simp [nonbufferTokenBaseRight, nonzeroSymbolPred] at hval ⊢
+            omega
+          have hρ : ρ = nonzeroSymbolPred σ hσ0 := Fin.ext hρVal
+          simp [a0, hcolorEq, hρ]
+        exact False.elim (hne haeq)
+      · simp [hright, hcolor]
+    · simp [hright]
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_univ a0))
+
 inductive ReservoirMoveToken
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}

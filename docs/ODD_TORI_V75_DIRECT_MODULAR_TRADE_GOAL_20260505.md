@@ -195,6 +195,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBaseRight_eq_to
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.bufferTokenBaseRight_eq_token_right
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.bufferTokenBaseRight_nonzeroSymbolPred
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBaseRight_nonzeroSymbolPred
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBase_sum_single_nonzero
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken.equivSum
@@ -637,7 +638,9 @@ non-buffer correction, post-nonbuffer residual, and final canonical quota; the
 three constructor-copy simp lemmas show that this quota is copy-index constant
 on each reservoir family.  The canonical quota also has direct family-level
 constant-weight folds, and nonzero symbols have a named predecessor into
-`Fin (T - 1)`.  The canonical-quota adapter fixes the previous
+`Fin (T - 1)`.  The non-buffer base-token singleton sum lemma packages the
+unique `(color, nonzero-symbol)` token extraction used by the λ correction.
+The canonical-quota adapter fixes the previous
 existential quota endpoint to this named quota, leaving only the nonzero
 residual equations for that quota.  The
 sharpest remaining hard content is now proving existence of that quota and the
