@@ -473,10 +473,131 @@ theorem packetPrefixInterval_mem_lt_sum
     exact hmem.2
   exact lt_of_lt_of_le hlt (packetPrefixHi_le_sum packet r)
 
+theorem packetPrefixInterval_existsUnique_nat
+    {packet : List Nat}
+    (hpos : ∀ a, a ∈ packet → 0 < a) :
+    ∀ q : Nat, q < packet.sum →
+      ∃! r : Fin packet.length, q ∈ packetPrefixInterval packet r := by
+  induction packet with
+  | nil =>
+      intro q hq
+      simp at hq
+  | cons a tail ih =>
+      intro q hq
+      have ha : 0 < a := hpos a (by simp)
+      have htailpos : ∀ b, b ∈ tail → 0 < b := by
+        intro b hb
+        exact hpos b (by simp [hb])
+      by_cases hqa : q < a
+      · let r0 : Fin (a :: tail).length := ⟨0, by simp⟩
+        refine ⟨r0, ?_, ?_⟩
+        · simp [packetPrefixInterval, packetPrefixLo, packetPrefixHi, r0,
+            hqa]
+        · intro r hr
+          apply Fin.ext
+          rcases r with ⟨n, hn⟩
+          cases n with
+          | zero =>
+              rfl
+          | succ n =>
+              have hmem :
+                  packetPrefixLo (a :: tail) ⟨n + 1, hn⟩ ≤ q ∧
+                    q < packetPrefixHi (a :: tail) ⟨n + 1, hn⟩ := by
+                simpa [packetPrefixInterval] using hr
+              have hle : a ≤ q := by
+                have hle' : a + (tail.take n).sum ≤ q := by
+                  simpa [packetPrefixLo] using hmem.1
+                omega
+              omega
+      · have haq : a ≤ q := Nat.le_of_not_gt hqa
+        have hqtail : q - a < tail.sum := by
+          simp at hq
+          omega
+        rcases ih htailpos (q - a) hqtail with ⟨s, hs, huniq⟩
+        let r : Fin (a :: tail).length :=
+          ⟨s.val + 1, by
+            simp [s.isLt]⟩
+        refine ⟨r, ?_, ?_⟩
+        · have hsmem :
+              packetPrefixLo tail s ≤ q - a ∧
+                q - a < packetPrefixHi tail s := by
+            simpa [packetPrefixInterval] using hs
+          have hlo : a + packetPrefixLo tail s ≤ q := by omega
+          have hhi : q < a + packetPrefixHi tail s := by omega
+          simpa [packetPrefixInterval, packetPrefixLo, packetPrefixHi, r]
+            using And.intro hlo hhi
+        · intro r' hr'
+          rcases r' with ⟨n, hn⟩
+          cases n with
+          | zero =>
+              have hmem :
+                  packetPrefixLo (a :: tail) ⟨0, hn⟩ ≤ q ∧
+                    q < packetPrefixHi (a :: tail) ⟨0, hn⟩ := by
+                simpa [packetPrefixInterval] using hr'
+              have hlt : q < a := by
+                simpa [packetPrefixHi, packetPrefixLo] using hmem.2
+              omega
+          | succ n =>
+              have hn_tail : n < tail.length := by
+                simpa using hn
+              let s' : Fin tail.length := ⟨n, hn_tail⟩
+              have hmem :
+                  packetPrefixLo (a :: tail) ⟨n + 1, hn⟩ ≤ q ∧
+                    q < packetPrefixHi (a :: tail) ⟨n + 1, hn⟩ := by
+                simpa [packetPrefixInterval] using hr'
+              have hs' : q - a ∈ packetPrefixInterval tail s' := by
+                have hlo : packetPrefixLo tail s' ≤ q - a := by
+                  have hle' : a + packetPrefixLo tail s' ≤ q := by
+                    simpa [packetPrefixLo, s'] using hmem.1
+                  omega
+                have hhi : q - a < packetPrefixHi tail s' := by
+                  have hlt' : q < a + packetPrefixHi tail s' := by
+                    simpa [packetPrefixHi, s'] using hmem.2
+                  omega
+                simpa [packetPrefixInterval] using And.intro hlo hhi
+              have hs_eq : s' = s := huniq s' hs'
+              have hn_eq : n = s.val := by
+                simpa [s'] using congrArg Fin.val hs_eq
+              apply Fin.ext
+              simp [r, hn_eq]
+
 def packetPrefixPhaseSet (m : Nat)
     (packet : List Nat) (r : Fin packet.length) : Finset (ZMod m) :=
   (packetPrefixInterval packet r).image
     (fun q : Nat => (q : ZMod m))
+
+theorem packetPrefixPhaseSet_existsUnique
+    {m : Nat} [NeZero m] {packet : List Nat}
+    (hsum : packet.sum = m)
+    (hpos : ∀ a, a ∈ packet → 0 < a) :
+    ∀ φ : ZMod m, ∃! r : Fin packet.length,
+      φ ∈ packetPrefixPhaseSet m packet r := by
+  intro φ
+  have hφlt : φ.val < packet.sum := by
+    rw [hsum]
+    exact ZMod.val_lt φ
+  rcases packetPrefixInterval_existsUnique_nat hpos φ.val hφlt with
+    ⟨r, hr, huniq⟩
+  refine ⟨r, ?_, ?_⟩
+  · change φ ∈ (packetPrefixInterval packet r).image
+      (fun q : Nat => (q : ZMod m))
+    exact Finset.mem_image.mpr
+      ⟨φ.val, hr, ZMod.natCast_zmod_val φ⟩
+  · intro s hs
+    have hs_interval : φ.val ∈ packetPrefixInterval packet s := by
+      change φ ∈ (packetPrefixInterval packet s).image
+        (fun q : Nat => (q : ZMod m)) at hs
+      rcases Finset.mem_image.mp hs with ⟨q, hq, hqφ⟩
+      have hq_lt : q < m := by
+        rw [← hsum]
+        exact packetPrefixInterval_mem_lt_sum hq
+      have hq_eq : q = φ.val := by
+        apply Nat.ModEq.eq_of_lt_of_lt
+          ((ZMod.natCast_eq_natCast_iff q φ.val m).mp ?_)
+          hq_lt (ZMod.val_lt φ)
+        rw [hqφ, ZMod.natCast_zmod_val]
+      simpa [hq_eq] using hq
+    exact huniq s hs_interval
 
 theorem packetPrefixPhaseSet_card
     {m : Nat} {packet : List Nat} (hsum : packet.sum = m)
@@ -540,6 +661,22 @@ theorem packetPhaseIntervalOrdinary_card
     hdiv hsum r using 2
   ext y
   simp [packetPhaseIntervalOrdinary]
+
+theorem packetPhaseIntervalOrdinary_existsUnique
+    {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) {packet : List Nat}
+    (hsum : packet.sum = m)
+    (hpos : ∀ a, a ∈ packet → 0 < a)
+    (y : ZMod N × ZMod m) :
+    ∃! r : Fin packet.length,
+      packetPhaseIntervalOrdinary hdiv packet r y = true := by
+  rcases packetPrefixPhaseSet_existsUnique hsum hpos (packetPhase hdiv y) with
+    ⟨r, hr, huniq⟩
+  refine ⟨r, ?_, ?_⟩
+  · simpa [packetPhaseIntervalOrdinary] using hr
+  · intro s hs
+    apply huniq
+    simpa [packetPhaseIntervalOrdinary] using hs
 
 def packetPhaseIntervalStep {N m : Nat} [NeZero N] [NeZero m]
     (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length) :
