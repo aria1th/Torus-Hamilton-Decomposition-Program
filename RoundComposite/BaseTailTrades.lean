@@ -316,6 +316,44 @@ def SuccessorActiveBlockCompatibleResidueSchedulingGoal : Prop :=
         ActiveHall.SymbolingWithResidues Cyl.incidence R
 
 /--
+Reservoir swap-schedule endpoint for compatible successor residues.
+
+This is the concrete finite-schedule layer below
+`SuccessorActiveBlockCompatibleResidueSchedulingGoal`: it supplies an initial
+residue-realizing symboling and a finite list of local swaps whose induced
+residue specification is exactly the requested compatible target.
+-/
+def SuccessorActiveBlockReservoirSwapScheduleGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      (R : ActiveHall.ResidueSpec m T (Fin (b + T))) →
+      IsCylinder Cyl →
+      ActiveBlockData Cyl →
+      R.RowCompatible Cyl.incidence →
+      R.ColCompatible Cyl.incidence →
+        ∃ R₀ : ActiveHall.ResidueSpec m T (Fin (b + T)),
+          ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+            Φ.HasResidues R₀ ∧
+              ∃ moves :
+                List
+                  (ActiveHall.Symboling.SwapMove
+                    (Shared.TorusVertex (b + 1) m) T),
+                Φ.applySwapResidueSpecs R₀ moves = R
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -784,6 +822,26 @@ theorem successorActiveBlockLocalSymbolTradeGoal_of_compatibleResidueScheduling
   exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol
 
+theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCompatibleResidueSchedulingGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock
+    hRow hCol
+  rcases hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol with
+    ⟨R₀, Φ, hΦ, moves, hMoves⟩
+  exact ⟨Φ.applySwapMoves moves, by
+    have hResidues := Φ.applySwapMoves_hasResidues hΦ moves
+    simpa [hMoves] using hResidues⟩
+
+theorem successorActiveBlockLocalSymbolTradeGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockLocalSymbolTradeGoal :=
+  successorActiveBlockLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    (successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
+      hSchedule)
+
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
     (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
     SuccessorActiveBlockCanonicalLocalSymbolTradeGoal := by
@@ -794,6 +852,13 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueSc
   exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT (activeBlockResidueSpec hBlock)
     hCyl hBlock hRow hCol
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    (successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
+      hSchedule)
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
     (hTrade : SuccessorActiveBlockLocalSymbolTradeGoal) :
@@ -932,6 +997,12 @@ theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_compatib
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
     hSchedule
 
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_reservoirSwapSchedule
+    hSchedule
+
 theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir :
     SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
       SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
@@ -977,6 +1048,13 @@ theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_compatibleR
     (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
       hSchedule)
 
+theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
+    (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_reservoirSwapSchedule
+      hSchedule)
+
 theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
     (hReservoir :
       SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
@@ -998,6 +1076,12 @@ theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_
     (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
     SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
   successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    hSchedule
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_reservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_reservoirSwapSchedule
     hSchedule
 
 theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_iff_feasibleLocalTrade :
