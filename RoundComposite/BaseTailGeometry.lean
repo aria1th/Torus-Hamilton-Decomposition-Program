@@ -51,6 +51,17 @@ def activeCoord {b m : Nat}
     (x : Shared.TorusVertex (b + 1) m) : ZMod m :=
   x (activeDir b)
 
+theorem castSucc_ne_activeDir {b : Nat} (i : Fin b) :
+    i.castSucc ≠ activeDir b := by
+  intro h
+  have hv := congrArg Fin.val h
+  simp [activeDir] at hv
+  omega
+
+theorem activeDir_ne_castSucc {b : Nat} (i : Fin b) :
+    activeDir b ≠ i.castSucc :=
+  (castSucc_ne_activeDir i).symm
+
 @[simp] theorem basePart_snoc {b m : Nat}
     (x : Shared.TorusVertex b m) (a : ZMod m) :
     basePart (b := b) (m := m) (Fin.snoc x a) = x := by
@@ -564,6 +575,44 @@ theorem ordinary_false_card {N m : Nat} [NeZero N] [NeZero m]
     rw [← Nat.add_mul, Nat.add_sub_of_le hgetle]
   rw [← hdecomp] at hsum
   exact Nat.add_left_cancel hsum
+
+theorem ordinary_false_card_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α] [DecidableEq α]
+    {packet : List Nat} (S : PacketPhaseSplit N m packet)
+    (e : α ≃ ZMod N × ZMod m)
+    (r : Fin packet.length) (hgetle : packet.get r ≤ m) :
+    ((Finset.univ : Finset α).filter
+      (fun x => S.ordinary r (e x) = false)).card =
+        (m - packet.get r) * N := by
+  classical
+  let eSub :
+      {x : α // S.ordinary r (e x) = false} ≃
+        {y : ZMod N × ZMod m // S.ordinary r y = false} :=
+  {
+    toFun := fun x => ⟨e x.1, x.2⟩
+    invFun := fun y => ⟨e.symm y.1, by simpa using y.2⟩
+    left_inv := by
+      intro x
+      apply Subtype.ext
+      simp
+    right_inv := by
+      intro y
+      apply Subtype.ext
+      simp
+  }
+  have hα :
+      Fintype.card {x : α // S.ordinary r (e x) = false} =
+      ((Finset.univ : Finset α).filter
+        (fun x => S.ordinary r (e x) = false)).card := by
+    exact Fintype.card_subtype _
+  have hy :
+      Fintype.card {y : ZMod N × ZMod m // S.ordinary r y = false} =
+      ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+        (fun y => S.ordinary r y = false)).card := by
+    exact Fintype.card_subtype _
+  rw [← hα, Fintype.card_congr eSub, hy]
+  exact S.ordinary_false_card r hgetle
 
 end PacketPhaseSplit
 
