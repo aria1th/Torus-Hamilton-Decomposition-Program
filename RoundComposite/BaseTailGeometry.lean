@@ -3283,6 +3283,12 @@ theorem activePrefixHitBeforeLastZeroIndicatorSum
             (m := m) (n := k)
             (P := fun x : Fin k → ZMod m => ∃ i : Fin k, x i = 0)
 
+theorem activePrefix_zmodVectorExtendZero_apply_of_lt
+    {m k r : Nat} (hk : k ≤ r) (x : Fin k → ZMod m)
+    (i : Fin r) (hi : i.val < k) :
+    Shared.zmodVectorExtendZero hk x i = x ⟨i.val, hi⟩ := by
+  simp [Shared.zmodVectorExtendZero, hi]
+
 theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
     (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
     (hρ : (activeTailCanonicalRho hT z).val < n)
