@@ -1898,6 +1898,25 @@ def PacketPhaseSplitLengthThreePowerGoal : Prop :=
     packet.length = 3 →
     Nonempty (PacketPhaseSplit (m ^ b) m packet)
 
+def PacketPhaseIntervalPowerConstructionGoal : Prop :=
+  ∀ {b m : Nat} [NeZero m] [NeZero (m ^ b)] {packet : List Nat},
+    0 < b →
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    Nonempty (PacketPhaseSplit (m ^ b) m packet)
+
+theorem packetPhaseSplitLengthTwoPowerGoal_of_intervalPower
+    (hInterval : PacketPhaseIntervalPowerConstructionGoal) :
+    PacketPhaseSplitLengthTwoPowerGoal := by
+  intro b m _instM _instPow packet hbpos hsum hunit _hlen
+  exact hInterval hbpos hsum hunit
+
+theorem packetPhaseSplitLengthThreePowerGoal_of_intervalPower
+    (hInterval : PacketPhaseIntervalPowerConstructionGoal) :
+    PacketPhaseSplitLengthThreePowerGoal := by
+  intro b m _instM _instPow packet hbpos hsum hunit _hlen
+  exact hInterval hbpos hsum hunit
+
 theorem successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
     (hTwo : PacketPhaseSplitLengthTwoPowerGoal)
     (hThree : PacketPhaseSplitLengthThreePowerGoal) :
