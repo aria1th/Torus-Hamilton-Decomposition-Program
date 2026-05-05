@@ -6468,6 +6468,30 @@ theorem oddSuccessorBaseTailCanonicalFeasibleResidueGoal_of_mixedCompatibleRound
       (BaseTail.Trades.activeBlockResidueSpec hBlock)
       hRow hCol hPrim.1 hPrim.2
 
+theorem oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControlledRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal) :
+    BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hT2 hCyl hBlock
+  have hMix : BaseTail.MixedExpansionData Cyl :=
+    hBlock.mixedExpansionData_of_successor hT
+  rcases
+      BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+        hCyl hBlock hT2 with
+    ⟨hRow, hCol, hPrim⟩
+  exact
+    hRound hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hMix hT2
+      (BaseTail.Trades.activeBlockResidueSpec hBlock)
+      hRow hCol hPrim.1 hPrim.2
+
+theorem oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_largeMarginControlled
+    (hRound : ActiveHallLargeMarginControlledResidueRoundingGoal) :
+    BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal :=
+  oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControlledRounding
+    (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_largeMarginControlled
+      hRound)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
     (hRound : OddSuccessorBaseTailResidueRoundingGoal)
