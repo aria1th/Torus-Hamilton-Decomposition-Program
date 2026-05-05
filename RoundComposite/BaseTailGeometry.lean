@@ -3727,6 +3727,121 @@ noncomputable def activePrefixColorDirCoreDirectCarry
     (z : Fin n → ZMod m) (τ : Fin n) : ZMod m :=
   activePermutedColorDirCoreDirectCarry A (activePrefixTailPerm hT) c y z τ
 
+theorem activePrefixColorDirCoreDirectCarry_zero
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (hT : 2 ≤ n + 1)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    (z : Fin n → ZMod m) (h0 : 0 < n) :
+    activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, h0⟩ =
+      if A.Φ.color y ⟨0, by omega⟩ = c then (1 : ZMod m) else 0 := by
+  classical
+  let zeroTail : Fin (n + 1) := ⟨0, by omega⟩
+  change
+    activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, h0⟩ =
+      if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · let hmem : c ∈ Cyl.active y :=
+      Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩
+    let p :
+        {c : Fin (b + (n + 1)) // c ∈ (Cyl.incidence).active y} :=
+      ⟨c, by
+        change c ∈ Cyl.active y
+        exact hmem⟩
+    let s : Fin (n + 1) := (A.Φ.equiv y).symm p
+    have hperm_iff :
+        (activePrefixTailPerm hT y z s = (⟨0, h0⟩ : Fin n).castSucc) ↔
+          s.val = 0 := by
+      constructor
+      · intro h
+        have hval :
+            (activeTailLambdaRho (n + 1)
+              (activeTailCanonicalRho hT z) s).val = 0 := by
+          simpa [activePrefixTailPerm_apply] using congrArg Fin.val h
+        exact
+          (activeTailLambdaRho_val_eq_zero_iff
+            (activeTailCanonicalRho hT z)
+            (activeTailCanonicalRho_ne_zero hT z)).mp hval
+      · intro hs
+        apply Fin.ext
+        have hval :
+            (activeTailLambdaRho (n + 1)
+              (activeTailCanonicalRho hT z) s).val = 0 :=
+          (activeTailLambdaRho_val_eq_zero_iff
+            (activeTailCanonicalRho hT z)
+            (activeTailCanonicalRho_ne_zero hT z)).mpr hs
+        simpa [activePrefixTailPerm_apply] using hval
+    have hcolor_iff :
+        A.Φ.color y zeroTail = c ↔ s.val = 0 := by
+      constructor
+      · intro hcolor
+        have hp : A.Φ.equiv y zeroTail = p := by
+          apply Subtype.ext
+          simpa [ActiveHall.Symboling.color, zeroTail, p] using hcolor
+        have hs : s = zeroTail := by
+          have hsymm := congrArg ((A.Φ.equiv y).symm) hp
+          simpa [s] using hsymm.symm
+        exact congrArg Fin.val hs
+      · intro hsval
+        have hs : s = zeroTail := Fin.ext hsval
+        have hp : A.Φ.equiv y zeroTail = p := by
+          rw [← hs]
+          exact (A.Φ.equiv y).apply_symm_apply p
+        exact congrArg Subtype.val hp
+    by_cases hcolor : A.Φ.color y zeroTail = c
+    · have hsval : s.val = 0 := hcolor_iff.mp hcolor
+      have hperm := hperm_iff.mpr hsval
+      have hperm0 :
+          activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT z)
+              ((A.Φ.equiv y).symm p) =
+            (0 : Fin (n + 1)) := by
+        simpa [activePrefixTailPerm_apply, s] using hperm
+      calc
+        activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, h0⟩ =
+            (1 : ZMod m) := by
+          simp [activePrefixColorDirCoreDirectCarry,
+            activePermutedColorDirCoreDirectCarry, hactive, p, hperm0]
+        _ = (if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0) := by
+          rw [if_pos hcolor]
+    · have hsval : s.val ≠ 0 := by
+        intro hs
+        exact hcolor (hcolor_iff.mpr hs)
+      have hperm : activePrefixTailPerm hT y z s ≠
+          (⟨0, h0⟩ : Fin n).castSucc := by
+        intro h
+        exact hsval (hperm_iff.mp h)
+      have hperm0 :
+          activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT z)
+              ((A.Φ.equiv y).symm p) ≠
+            (0 : Fin (n + 1)) := by
+        intro h
+        exact hperm (by
+          simpa [activePrefixTailPerm_apply, s] using h)
+      calc
+        activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, h0⟩ =
+            (0 : ZMod m) := by
+          simp [activePrefixColorDirCoreDirectCarry,
+            activePermutedColorDirCoreDirectCarry, hactive, p, hperm0]
+        _ = (if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0) := by
+          rw [if_neg hcolor]
+  · have hcolor : A.Φ.color y zeroTail ≠ c := by
+      intro hc
+      have hmemColor :=
+        ActiveHall.Symboling.color_mem_active A.Φ y zeroTail
+      have hcActive' : c ∈ (Cyl.incidence).active y := by
+        rw [← hc]
+        exact hmemColor
+      have hcActive : c ∈ Cyl.active y := by
+        exact hcActive'
+      exact hactive (Finset.mem_filter.mp hcActive).2
+    calc
+      activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, h0⟩ =
+          (0 : ZMod m) := by
+        simp [activePrefixColorDirCoreDirectCarry,
+          activePermutedColorDirCoreDirectCarry, hactive]
+      _ = (if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0) := by
+        rw [if_neg hcolor]
+
 theorem activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
