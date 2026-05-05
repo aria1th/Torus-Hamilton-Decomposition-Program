@@ -3904,10 +3904,25 @@ end ZeroSwapMove
 
 namespace NonzeroZeroSwapMove
 
+theorem right_ne_zero_fin {X : Type*} {T : Nat} [NeZero T]
+    (move : NonzeroZeroSwapMove X T) : move.right ≠ 0 := by
+  intro h
+  have hval : move.right.val = 0 := by
+    simp [h]
+  exact move.right_ne_zero hval
+
 def toZeroSwapMove {X : Type*} {T : Nat}
     (move : NonzeroZeroSwapMove X T) : ZeroSwapMove X T where
   vertex := move.vertex
   right := move.right
+
+@[simp] theorem toZeroSwapMove_vertex {X : Type*} {T : Nat}
+    (move : NonzeroZeroSwapMove X T) :
+    move.toZeroSwapMove.vertex = move.vertex := rfl
+
+@[simp] theorem toZeroSwapMove_right {X : Type*} {T : Nat}
+    (move : NonzeroZeroSwapMove X T) :
+    move.toZeroSwapMove.right = move.right := rfl
 
 end NonzeroZeroSwapMove
 

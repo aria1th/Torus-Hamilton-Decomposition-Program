@@ -166,7 +166,10 @@ ActiveHall.Symboling.SwapMove
 ActiveHall.Symboling.ZeroSwapMove
 ActiveHall.Symboling.NonzeroZeroSwapMove
 ActiveHall.Symboling.ZeroSwapMove.toSwapMove
+ActiveHall.Symboling.NonzeroZeroSwapMove.right_ne_zero_fin
 ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove
+ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove_vertex
+ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove_right
 ActiveHall.Symboling.zeroSwapMoves
 ActiveHall.Symboling.nonzeroZeroSwapMoves
 ActiveHall.Symboling.applySwapMoves
