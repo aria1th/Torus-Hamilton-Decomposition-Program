@@ -578,7 +578,7 @@ theorem ordinary_false_card {N m : Nat} [NeZero N] [NeZero m]
 
 theorem ordinary_false_card_of_equiv
     {N m : Nat} [NeZero N] [NeZero m]
-    {α : Type*} [Fintype α] [DecidableEq α]
+    {α : Type*} [Fintype α]
     {packet : List Nat} (S : PacketPhaseSplit N m packet)
     (e : α ≃ ZMod N × ZMod m)
     (r : Fin packet.length) (hgetle : packet.get r ≤ m) :
