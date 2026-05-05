@@ -1089,6 +1089,57 @@ def SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal : Prop :=
         ∃ _script : CanonicalNonzeroZeroReservoirScript hT D, True
 
 /--
+Successor-scoped arithmetic script endpoint for the v7.6 canonical reservoir
+proof.
+
+This is the proof surface immediately below `CanonicalNonzeroZeroReservoirScript`:
+the target delta is supplied by a three-buffer residual arithmetic certificate,
+while the remaining obligations are the actual site/baseline construction.
+-/
+def SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ initial : ActiveHall.Symboling Cyl.incidence,
+          ∃ moves :
+            List
+              (ActiveHall.Symboling.NonzeroZeroSwapMove
+                (Shared.TorusVertex (b + 1) m) T),
+            ∃ zeroColor :
+              ActiveHall.Symboling.NonzeroZeroSwapMove
+                (Shared.TorusVertex (b + 1) m) T →
+                Fin (b + T),
+              ∃ rightColor :
+                ActiveHall.Symboling.NonzeroZeroSwapMove
+                  (Shared.TorusVertex (b + 1) m) T →
+                  Fin (b + T),
+                ∃ arithmetic :
+                  CanonicalNonzeroZeroReservoirArithmetic hT D initial moves
+                    zeroColor rightColor,
+                  (nonzeroZeroSwapMovesOfTwoLe hT moves).Pairwise
+                    (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) ∧
+                  (∀ move, move ∈ moves →
+                    initial.color move.vertex
+                        ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+                      zeroColor move) ∧
+                  (∀ move, move ∈ moves →
+                    initial.color move.vertex move.right = rightColor move)
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -1733,6 +1784,22 @@ theorem successorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal_of_scr
   exact ⟨script.initial, script.moves, by
     simpa [nonzeroZeroSwapMovesOfTwoLe] using
       script.applySwapResidueSpecs_eq⟩
+
+theorem successorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal_of_arithmetic
+    (hArithmetic :
+      SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal) :
+    SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hArithmetic hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨initial, moves, zeroColor, rightColor, arithmetic, hPairwise,
+      hBaselineZero, hBaselineRight⟩
+  exact ⟨
+    CanonicalNonzeroZeroReservoirScript.ofArithmetic
+      initial moves zeroColor rightColor arithmetic hPairwise
+      hBaselineZero hBaselineRight,
+    True.intro⟩
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_canonicalNonzeroZeroReservoirSwapSchedule
     (hSchedule :
