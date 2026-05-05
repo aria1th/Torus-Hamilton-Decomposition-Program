@@ -3289,6 +3289,359 @@ theorem activePrefix_zmodVectorExtendZero_apply_of_lt
     Shared.zmodVectorExtendZero hk x i = x ⟨i.val, hi⟩ := by
   simp [Shared.zmodVectorExtendZero, hi]
 
+theorem activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+    {m n k j : Nat} (hk : k + 1 < n) (hj : j < k + 1)
+    (y : Fin (k + 1) → ZMod m) :
+    activeTailCanonicalRhoHitNat
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y) j ↔
+      y ⟨j, hj⟩ = 0 := by
+  constructor
+  · intro hhit
+    rcases hhit with ⟨hjn, _hjnext, hz⟩
+    simpa [activePrefix_zmodVectorExtendZero_apply_of_lt
+      (Nat.le_of_lt hk) y ⟨j, hjn⟩ hj] using hz
+  · intro hy
+    refine ⟨by omega, by omega, ?_⟩
+    simpa [activePrefix_zmodVectorExtendZero_apply_of_lt
+      (Nat.le_of_lt hk) y ⟨j, by omega⟩ hj] using hy
+
+theorem activeTailCanonicalRho_extendZero_val_eq_succ_iff_exactLastZero
+    {m n k : Nat} (hT : 2 ≤ n + 1) (hk : k + 1 < n)
+    (y : Fin (k + 1) → ZMod m) :
+    (activeTailCanonicalRho hT
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)).val = k + 1 ↔
+      activePrefixExactLastZero y := by
+  classical
+  let z : Fin n → ZMod m :=
+    Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y
+  have hiff :=
+    activeTailCanonicalRho_val_eq_succ_iff_hit_and_no_hit_before
+      (m := m) (n := n) (k := k) hT (z := z) hk
+  constructor
+  · intro hρ
+    rcases hiff.mp hρ with ⟨hhit, hno⟩
+    constructor
+    · intro i hi0
+      have hhit_i :
+          activeTailCanonicalRhoHitNat z i.val := by
+        have hhit_iff :=
+          activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+            (m := m) (n := n) (k := k) (j := i.val)
+            hk (by omega) y
+        exact hhit_iff.mpr (by simpa using hi0)
+      exact hno i.val i.isLt hhit_i
+    · have hlast :=
+        (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+          (m := m) (n := n) (k := k) (j := k) hk
+          (by omega) y).mp hhit
+      simpa [Fin.last] using hlast
+  · intro hexact
+    refine hiff.mpr ?_
+    constructor
+    · exact
+        (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+          (m := m) (n := n) (k := k) (j := k) hk
+          (by omega) y).mpr (by
+            simpa [Fin.last] using hexact.2)
+    · intro j hj hhit
+      have hz :=
+        (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+          (m := m) (n := n) (k := k) (j := j) hk
+          (by omega) y).mp hhit
+      exact hexact.1 ⟨j, hj⟩ (by simpa using hz)
+
+theorem activeTailCanonicalRho_extendZero_val_lt_succ_iff_hitBeforeLastZero
+    {m n k : Nat} (hT : 2 ≤ n + 1) (hk : k + 1 < n)
+    (y : Fin (k + 1) → ZMod m) :
+    (activeTailCanonicalRho hT
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)).val < k + 1 ↔
+      activePrefixHitBeforeLastZero y := by
+  classical
+  let z : Fin n → ZMod m :=
+    Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y
+  have hiff :=
+    activeTailCanonicalRho_val_lt_iff_exists_hit_before
+      (m := m) (n := n) hT (z := z) (q := k + 1) (by omega)
+  constructor
+  · intro hρ
+    rcases hiff.mp hρ with ⟨j, hjlt, hhit⟩
+    refine ⟨⟨j, by omega⟩, ?_⟩
+    have hz :=
+      (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+        (m := m) (n := n) (k := k) (j := j) hk
+        (by omega) y).mp hhit
+    simpa [Fin.castSucc] using hz
+  · intro hbefore
+    rcases hbefore with ⟨i, hi0⟩
+    refine hiff.mpr ⟨i.val, by omega, ?_⟩
+    exact
+      (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+        (m := m) (n := n) (k := k) (j := i.val) hk
+        (by omega) y).mpr (by
+          simpa [Fin.castSucc] using hi0)
+
+theorem activeTailCanonicalRho_extendZero_not_val_lt_succ_succ_iff_noZero
+    {m n k : Nat} (hT : 2 ≤ n + 1) (hk : k + 1 < n)
+    (y : Fin (k + 1) → ZMod m) :
+    ¬ (activeTailCanonicalRho hT
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)).val < k + 2 ↔
+      activePrefixNoZero y := by
+  classical
+  let z : Fin n → ZMod m :=
+    Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y
+  have hiff :=
+    activeTailCanonicalRho_val_lt_iff_exists_hit_before
+      (m := m) (n := n) hT (z := z) (q := k + 2) (by omega)
+  constructor
+  · intro hno i hi0
+    apply hno
+    refine hiff.mpr ⟨i.val, by omega, ?_⟩
+    exact
+      (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+        (m := m) (n := n) (k := k) (j := i.val) hk
+        (by omega) y).mpr hi0
+  · intro hnoZero hρ
+    rcases hiff.mp hρ with ⟨j, hjlt, hhit⟩
+    have hz :=
+      (activeTailCanonicalRhoHitNat_extendZero_iff_of_lt
+        (m := m) (n := n) (k := k) (j := j) hk
+        (by omega) y).mp hhit
+    exact hnoZero ⟨j, by omega⟩ hz
+
+theorem activeTailLambdaRho_extendZero_val_eq_succ_succ_iff_split
+    {m n k : Nat} (hT : 2 ≤ n + 1) (hk : k + 1 < n)
+    (y : Fin (k + 1) → ZMod m) (s : Fin (n + 1)) :
+    (activeTailLambdaRho (n + 1)
+        (activeTailCanonicalRho hT
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y)) s).val =
+        k + 1 ↔
+      (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+        (s.val = k + 1 ∧ 1 < s.val ∧
+          activePrefixHitBeforeLastZero y) ∨
+        (s.val = k + 2 ∧ activePrefixNoZero y) := by
+  classical
+  let z : Fin n → ZMod m :=
+    Shared.zmodVectorExtendZero (Nat.le_of_lt hk) y
+  let rho : Fin (n + 1) := activeTailCanonicalRho hT z
+  have hLambda :
+      (activeTailLambdaRho (n + 1) rho s).val = k + 1 ↔
+        (s.val = 1 ∧ rho.val = k + 1) ∨
+          (s.val = k + 1 ∧ 1 < s.val ∧ rho.val < s.val) ∨
+          (s.val = k + 2 ∧ ¬ rho.val < s.val) :=
+    activeTailLambdaRho_val_eq_pos_iff rho s (l := k + 1) (by omega)
+  have hExact :
+      rho.val = k + 1 ↔ activePrefixExactLastZero y := by
+    simpa [rho, z] using
+      activeTailCanonicalRho_extendZero_val_eq_succ_iff_exactLastZero
+        (m := m) (n := n) (k := k) hT hk y
+  have hBefore :
+      rho.val < k + 1 ↔ activePrefixHitBeforeLastZero y := by
+    simpa [rho, z] using
+      activeTailCanonicalRho_extendZero_val_lt_succ_iff_hitBeforeLastZero
+        (m := m) (n := n) (k := k) hT hk y
+  have hNo :
+      ¬ rho.val < k + 2 ↔ activePrefixNoZero y := by
+    simpa [rho, z] using
+      activeTailCanonicalRho_extendZero_not_val_lt_succ_succ_iff_noZero
+        (m := m) (n := n) (k := k) hT hk y
+  constructor
+  · intro h
+    rcases hLambda.mp h with hcase | hcase | hcase
+    · exact Or.inl ⟨hcase.1, hExact.mp hcase.2⟩
+    · have hlt : rho.val < k + 1 := by
+        simpa [hcase.1] using hcase.2.2
+      exact Or.inr (Or.inl ⟨hcase.1, hcase.2.1, hBefore.mp hlt⟩)
+    · have hnlt : ¬ rho.val < k + 2 := by
+        simpa [hcase.1] using hcase.2
+      exact Or.inr (Or.inr ⟨hcase.1, hNo.mp hnlt⟩)
+  · intro h
+    apply hLambda.mpr
+    rcases h with hcase | hcase | hcase
+    · exact Or.inl ⟨hcase.1, hExact.mpr hcase.2⟩
+    · have hlt : rho.val < s.val := by
+        have hlt' := hBefore.mpr hcase.2.2
+        simpa [hcase.1] using hlt'
+      exact Or.inr (Or.inl ⟨hcase.1, hcase.2.1, hlt⟩)
+    · have hnlt : ¬ rho.val < s.val := by
+        have hnlt' := hNo.mpr hcase.2
+        simpa [hcase.1] using hnlt'
+      exact Or.inr (Or.inr ⟨hcase.1, hnlt⟩)
+
+theorem activePrefixReturnTailLocalSymbolSplitIndicatorSum
+    {m n : Nat} [NeZero m] {k : Nat} (s : Fin (n + 1)) :
+    (∑ y : Fin (k + 1) → ZMod m,
+        if
+          (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+            (s.val = k + 1 ∧ 1 < s.val ∧
+              activePrefixHitBeforeLastZero y) ∨
+            (s.val = k + 2 ∧ activePrefixNoZero y)
+        then (1 : ZMod m) else 0) =
+      (if s.val = 1 then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+  classical
+  by_cases hDelta : s.val = 1
+  · have hNotStep : s.val ≠ k + 2 := by omega
+    have hNotMiddle : ¬ (s.val = k + 1 ∧ 1 < s.val) := by
+      intro h
+      omega
+    calc
+      (∑ y : Fin (k + 1) → ZMod m,
+          if
+            (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+              (s.val = k + 1 ∧ 1 < s.val ∧
+                activePrefixHitBeforeLastZero y) ∨
+              (s.val = k + 2 ∧ activePrefixNoZero y)
+          then (1 : ZMod m) else 0)
+          =
+          ∑ y : Fin (k + 1) → ZMod m,
+            if activePrefixExactLastZero y then (1 : ZMod m) else 0 := by
+            apply Finset.sum_congr rfl
+            intro y _hy
+            have hiff :
+                ((s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    activePrefixHitBeforeLastZero y) ∨
+                  (s.val = k + 2 ∧ activePrefixNoZero y)) ↔
+                  activePrefixExactLastZero y := by
+              constructor
+              · intro h
+                rcases h with h | h | h
+                · exact h.2
+                · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                · exact False.elim (hNotStep h.1)
+              · intro hy
+                exact Or.inl ⟨hDelta, hy⟩
+            by_cases hP :
+                (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    activePrefixHitBeforeLastZero y) ∨
+                  (s.val = k + 2 ∧ activePrefixNoZero y)
+            · have hy : activePrefixExactLastZero y := hiff.mp hP
+              rw [if_pos hP, if_pos hy]
+            · have hy : ¬ activePrefixExactLastZero y := by
+                intro hy
+                exact hP (hiff.mpr hy)
+              rw [if_neg hP, if_neg hy]
+      _ =
+          (if s.val = 1 then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+            (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+            rw [activePrefixExactLastZeroIndicatorSum]
+            simp [hDelta]
+  · by_cases hStep : s.val = k + 2
+    · have hNotMiddle : ¬ (s.val = k + 1 ∧ 1 < s.val) := by
+        intro h
+        omega
+      calc
+        (∑ y : Fin (k + 1) → ZMod m,
+            if
+              (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                (s.val = k + 1 ∧ 1 < s.val ∧
+                  activePrefixHitBeforeLastZero y) ∨
+                (s.val = k + 2 ∧ activePrefixNoZero y)
+            then (1 : ZMod m) else 0)
+            =
+            ∑ y : Fin (k + 1) → ZMod m,
+              if activePrefixNoZero y then (1 : ZMod m) else 0 := by
+              apply Finset.sum_congr rfl
+              intro y _hy
+              have hiff :
+                  ((s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                    (s.val = k + 1 ∧ 1 < s.val ∧
+                      activePrefixHitBeforeLastZero y) ∨
+                    (s.val = k + 2 ∧ activePrefixNoZero y)) ↔
+                    activePrefixNoZero y := by
+                constructor
+                · intro h
+                  rcases h with h | h | h
+                  · exact False.elim (hDelta h.1)
+                  · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                  · exact h.2
+                · intro hy
+                  exact Or.inr (Or.inr ⟨hStep, hy⟩)
+              by_cases hP :
+                  (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                    (s.val = k + 1 ∧ 1 < s.val ∧
+                      activePrefixHitBeforeLastZero y) ∨
+                    (s.val = k + 2 ∧ activePrefixNoZero y)
+              · have hy : activePrefixNoZero y := hiff.mp hP
+                rw [if_pos hP, if_pos hy]
+              · have hy : ¬ activePrefixNoZero y := by
+                  intro hy
+                  exact hP (hiff.mpr hy)
+                rw [if_neg hP, if_neg hy]
+        _ =
+            (if s.val = 1 then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+              (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+              rw [activePrefixNoZeroIndicatorSum]
+              simp [hStep]
+    · by_cases hMiddle : s.val = k + 1 ∧ 1 < s.val
+      · calc
+          (∑ y : Fin (k + 1) → ZMod m,
+              if
+                (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    activePrefixHitBeforeLastZero y) ∨
+                  (s.val = k + 2 ∧ activePrefixNoZero y)
+              then (1 : ZMod m) else 0)
+              =
+              ∑ y : Fin (k + 1) → ZMod m,
+                if activePrefixHitBeforeLastZero y
+                then (1 : ZMod m) else 0 := by
+                apply Finset.sum_congr rfl
+                intro y _hy
+                have hiff :
+                    ((s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                      (s.val = k + 1 ∧ 1 < s.val ∧
+                        activePrefixHitBeforeLastZero y) ∨
+                      (s.val = k + 2 ∧ activePrefixNoZero y)) ↔
+                      activePrefixHitBeforeLastZero y := by
+                  constructor
+                  · intro h
+                    rcases h with h | h | h
+                    · exact False.elim (hDelta h.1)
+                    · exact h.2.2
+                    · exact False.elim (hStep h.1)
+                  · intro hy
+                    exact Or.inr (Or.inl ⟨hMiddle.1, hMiddle.2, hy⟩)
+                by_cases hP :
+                    (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                      (s.val = k + 1 ∧ 1 < s.val ∧
+                        activePrefixHitBeforeLastZero y) ∨
+                      (s.val = k + 2 ∧ activePrefixNoZero y)
+                · have hy : activePrefixHitBeforeLastZero y := hiff.mp hP
+                  rw [if_pos hP, if_pos hy]
+                · have hy : ¬ activePrefixHitBeforeLastZero y := by
+                    intro hy
+                    exact hP (hiff.mpr hy)
+                  rw [if_neg hP, if_neg hy]
+          _ =
+              (if s.val = 1 then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+                (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+                rw [activePrefixHitBeforeLastZeroIndicatorSum]
+                simp [hDelta, hStep]
+      · calc
+          (∑ y : Fin (k + 1) → ZMod m,
+              if
+                (s.val = 1 ∧ activePrefixExactLastZero y) ∨
+                  (s.val = k + 1 ∧ 1 < s.val ∧
+                    activePrefixHitBeforeLastZero y) ∨
+                  (s.val = k + 2 ∧ activePrefixNoZero y)
+              then (1 : ZMod m) else 0)
+              =
+              ∑ _y : Fin (k + 1) → ZMod m, 0 := by
+                apply Finset.sum_congr rfl
+                intro y _hy
+                have hNoMiddle :
+                    ¬ (s.val = k + 1 ∧ 1 < s.val ∧
+                        activePrefixHitBeforeLastZero y) := by
+                  intro h
+                  exact hMiddle ⟨h.1, h.2.1⟩
+                simp [hDelta, hStep, hNoMiddle]
+          _ =
+              (if s.val = 1 then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+                (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+                simp [hDelta, hStep]
+
 theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
     (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
     (hρ : (activeTailCanonicalRho hT z).val < n)
