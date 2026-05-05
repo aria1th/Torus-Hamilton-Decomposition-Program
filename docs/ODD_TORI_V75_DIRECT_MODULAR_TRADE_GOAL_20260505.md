@@ -152,6 +152,8 @@ Current Lean helper names for `lem:local-symbol-trade` and finite swap
 schedules:
 
 ```lean
+ActiveHall.Symboling.ofIncidence
+ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
 ActiveHall.Symboling.hasResidues_residueSpec
 ActiveHall.Symboling.residueSpec_rowCompatible
