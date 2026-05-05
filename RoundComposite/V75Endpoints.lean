@@ -145,6 +145,12 @@ theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir_return
       hReservoir)
     hReturn
 
+theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_worker1Residuals
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddModulusToriV75PreCorrectionReturnInputsGoal :=
+  ⟨hHigh, h.1, h.2⟩
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_reservoirInputs
     (h : OddModulusToriV75ReservoirInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -267,6 +273,14 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_reservoir_return
   oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
     (oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir_return
       hHigh hReservoir hReturn)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_worker1PreCorrectionReturnResiduals
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
+    (oddModulusToriV75PreCorrectionReturnInputsGoal_of_worker1Residuals
+      hHigh h)
 
 end Concrete
 end RoundComposite
