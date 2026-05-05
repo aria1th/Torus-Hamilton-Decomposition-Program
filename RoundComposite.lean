@@ -1,6 +1,7 @@
 import Mathlib
 import RoundComposite.ActiveHall
 import RoundComposite.BaseTailGeometry
+import RoundComposite.BaseTailTrades
 import RoundComposite.FiniteHoffman.EdgeColoring
 import RoundComposite.FiniteHoffman.SignedTrellis
 import RoundComposite.PrefixCount

@@ -1,4 +1,4 @@
-import RoundComposite.BaseTailGeometry
+import RoundComposite.BaseTailTrades
 import RoundComposite.FiniteHoffman.EdgeColoring
 import RoundComposite.SeedSemigroup
 
@@ -5273,6 +5273,9 @@ def OddSuccessorSmallModulusBaseTailGeometryFromHallGoal : Prop :=
   ActiveHall.HallRealizationGoal.{0, 0} →
     OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
+def OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal : Prop :=
+  OddSuccessorSmallModulusSlackPacketLiftAddGoal
+
 /--
 The successor-small geometry target after the pure packet arithmetic has been
 separated out.  Compared with
@@ -5281,6 +5284,29 @@ the nonempty proper packet-prefix unit condition explicitly.
 -/
 def OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal : Prop :=
   ActiveHall.HallRealizationGoal.{0, 0} →
+  ∀ {b m T : Nat},
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    StandardCayleySolved (b + T) m
+
+/--
+Hall-free successor-small geometry target.  This is the v7.3 modular-trade
+surface: local trades are expected to produce a primitive active symboling
+directly, so the core statement has no Hall-realization parameter.
+-/
+def OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal : Prop :=
   ∀ {b m T : Nat},
     5 ≤ b →
     Odd m → 3 ≤ m → m < b + T →
@@ -5969,6 +5995,42 @@ def OddSuccessorBaseTailActiveBlockResidueRoundingGoal : Prop :=
         BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl
 
 /--
+Closed pre-Hall part of active-block residue rounding.
+
+This packages the universal primitive residues, row/column compatibility, and
+nonnegative count-matrix realization.  It intentionally stops before
+`FeasibleWithResidues`; the missing step is the Hall/slack cut estimate.
+-/
+def OddSuccessorBaseTailActiveBlockResidueCountMatrixGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+        BaseTail.HasPrimitiveResidueCountMatrix hT2 Cyl
+
+theorem oddSuccessorBaseTailActiveBlockResidueCountMatrixGoal :
+    OddSuccessorBaseTailActiveBlockResidueCountMatrixGoal := by
+  intro b m T _inst hb5 hmodd _hm3 _hsmall packets _hlen _htotal
+    _hpacketSum _hpacketUnits _hPrefix hT hSlack Cyl _hCyl hBlock _hT2
+  exact
+    BaseTail.primitiveResidueCountMatrix_of_successor_activeBlockData_largeMargin
+      hb5 hT hmodd hBlock hSlack
+
+/--
 The active-block residue-rounding problem in its sharpest local form.
 
 The universal primitive residue pattern is already constructed from the
@@ -6121,6 +6183,33 @@ def ActiveHallLargeMarginControlledResidueRoundingGoal : Prop :=
                 S.card * (∑ c ∈ U, I.colorDegree c) +
                   m * Fintype.card C * min S.card (T - S.card)
 
+/--
+Closed large-margin residue realization sub-endpoint.
+
+This isolates the nonnegativity and row/column compatibility part of residue
+rounding: under the same large-margin hypotheses, compatible residues already
+lift to an integer count matrix.  The remaining controlled-rounding blocker is
+the balanced cut-slack estimate in `ActiveHallLargeMarginControlledResidueRoundingGoal`.
+-/
+def ActiveHallLargeMarginResidueCountMatrixGoal : Prop :=
+  ∀ {m T : Nat} [NeZero m] {X C : Type}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    (I : ActiveHall.Incidence T X C) →
+    0 < T →
+    (∀ c : C, m * Fintype.card C * T < I.colorDegree c) →
+    ∀ R : ActiveHall.ResidueSpec m T C,
+      R.RowCompatible I →
+      R.ColCompatible I →
+      ∃ M : ActiveHall.CountMatrix I, M.HasResidues R
+
+theorem activeHallLargeMarginResidueCountMatrixGoal :
+    ActiveHallLargeMarginResidueCountMatrixGoal := by
+  intro m T _inst X C _instX _instC _decX _decC I hTpos hLarge
+    R hRow hCol
+  exact
+    ActiveHall.CountMatrix.exists_with_residues_of_largeMargin
+      I hTpos hLarge R hRow hCol
+
 theorem oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
     (hRound : ActiveHallControlledResidueRoundingGoal) :
     OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal := by
@@ -6179,6 +6268,28 @@ def OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal : Prop :=
       BaseTail.IsPrimitiveActiveSymboling hT2 A →
       StandardCayleySolved (b + T) m
 
+def OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+        ∃ A : BaseTail.ActiveSymboling Cyl,
+          BaseTail.IsPrimitiveActiveSymboling hT2 A
+
 theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
     (hLift : OddSuccessorBaseTailPrimitiveActiveLiftGoal) :
     OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal := by
@@ -6214,6 +6325,75 @@ theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_expandedColorDirHami
   oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
     (oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_expandedColorDirHamiltonian
       hHam)
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_tradeEndpoint
+    (hTrade : BaseTail.Trades.PrimitiveActiveSymbolingEndpointGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal := by
+  intro b m T _inst _hb5 _hmodd _hm3 _hsmall packets
+    _hlen _htotal _hpacketSum _hpacketUnits _hPrefix _hT _hSlack
+    Cyl hCyl _hBlock hT2
+  exact hTrade hCyl hT2
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_countEndpoint
+    (hTrade : BaseTail.Trades.PrimitiveActiveCountSymbolingEndpointGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal :=
+  oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_tradeEndpoint
+    (BaseTail.Trades.primitiveActiveSymbolingEndpointGoal_of_countEndpoint
+      hTrade)
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_activeBlockTrade
+    (hTrade : BaseTail.Trades.ActiveBlockTradeRealizationGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal := by
+  intro b m T _inst _hb5 _hmodd _hm3 _hsmall packets
+    _hlen _htotal _hpacketSum _hpacketUnits _hPrefix _hT _hSlack
+    Cyl hCyl hBlock hT2
+  exact hTrade hCyl hBlock hT2
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_activeBlockCountTrade
+    (hTrade : BaseTail.Trades.ActiveBlockCountTradeRealizationGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal :=
+  oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_activeBlockTrade
+    (BaseTail.Trades.activeBlockTradeRealizationGoal_of_count hTrade)
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_scheduling_and_localTrade
+    (hSchedule : BaseTail.Trades.ActiveResidueSchedulingGoal)
+    (hTrade : BaseTail.Trades.LocalSymbolTradeGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal :=
+  oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_tradeEndpoint
+    (BaseTail.Trades.primitiveActiveSymbolingEndpointGoal_of_scheduling_and_localSymbolTrade
+      hSchedule hTrade)
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_successorScheduleLocalTrade
+    (hSchedule : BaseTail.Trades.SuccessorActiveBlockResidueScheduleGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+    Cyl hCyl hBlock hT2
+  rcases hSchedule hb5 hmodd hm3 hsmall hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hT2 with
+    ⟨R, hRow, hCol, hPrim⟩
+  rcases hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT hSlack hT2 R hCyl hBlock hRow hCol hPrim with
+    ⟨Φ, hΦ⟩
+  exact ⟨{ R := R, Φ := Φ }, ⟨⟨hΦ⟩, hPrim.1, hPrim.2⟩⟩
+
+theorem oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_successorCanonicalLocalTrade
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+    Cyl hCyl hBlock hT2
+  rcases
+      BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+        hCyl hBlock hT2 with
+    ⟨hRow, hCol, hPrim⟩
+  rcases hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT hSlack hT2 hCyl hBlock with
+    ⟨Φ, hΦ⟩
+  exact
+    ⟨{ R := BaseTail.Trades.activeBlockResidueSpec hBlock, Φ := Φ },
+      ⟨⟨hΦ⟩, hPrim.1, hPrim.2⟩⟩
 
 theorem oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
     (hCompatible :
@@ -6255,6 +6435,38 @@ theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_lar
   oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
     (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_largeMarginControlled
       hRound)
+
+theorem oddSuccessorBaseTailCanonicalFeasibleResidueGoal_of_compatibleRounding
+    (hRound : OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal) :
+    BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hT2 hCyl hBlock
+  rcases
+      BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+        hCyl hBlock hT2 with
+    ⟨hRow, hCol, hPrim⟩
+  exact
+    hRound hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hT2
+      (BaseTail.Trades.activeBlockResidueSpec hBlock)
+      hRow hCol hPrim.1 hPrim.2
+
+theorem oddSuccessorBaseTailCanonicalFeasibleResidueGoal_of_mixedCompatibleRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal) :
+    BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hT2 hCyl hBlock
+  have hMix : BaseTail.MixedExpansionData Cyl :=
+    hBlock.mixedExpansionData_of_successor hT
+  rcases
+      BaseTail.Trades.activeBlockResidueSpec_compatible_primitive
+        hCyl hBlock hT2 with
+    ⟨hRow, hCol, hPrim⟩
+  exact
+    hRound hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hMix hT2
+      (BaseTail.Trades.activeBlockResidueSpec hBlock)
+      hRow hCol hPrim.1 hPrim.2
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
@@ -6301,6 +6513,105 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockP
     ⟨A, hA⟩
   exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
     hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 hA
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockPieces
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : OddSuccessorBaseTailActiveBlockModularTradeRealizationGoal)
+    (hLift : OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal := by
+  intro b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+  letI : NeZero m := ⟨ne_of_gt (by omega : 0 < m)⟩
+  rcases hCyl hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT with
+    ⟨Cyl, hBlock, hCylValid⟩
+  have hT2 : 2 ≤ T := by omega
+  rcases hTrade hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 with
+    ⟨A, hA⟩
+  exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 hA
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_tradeEndpoint_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.PrimitiveActiveSymbolingEndpointGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockPieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_tradeEndpoint
+      hTrade)
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_countEndpoint_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.PrimitiveActiveCountSymbolingEndpointGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_tradeEndpoint_prefix
+    hCyl
+    (BaseTail.Trades.primitiveActiveSymbolingEndpointGoal_of_countEndpoint
+      hTrade)
+    hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.ActiveBlockTradeRealizationGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockPieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_activeBlockTrade
+      hTrade)
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockCountTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.ActiveBlockCountTradeRealizationGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockTrade_prefix
+    hCyl
+    (BaseTail.Trades.activeBlockTradeRealizationGoal_of_count hTrade)
+    hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorScheduleLocalTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hSchedule : BaseTail.Trades.SuccessorActiveBlockResidueScheduleGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockPieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_successorScheduleLocalTrade
+      hSchedule hTrade)
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorLocalTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorScheduleLocalTrade_prefix
+    hCyl
+    BaseTail.Trades.successorActiveBlockResidueScheduleGoal
+    hTrade
+    hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorCanonicalLocalTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockPieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockModularTradeRealizationGoal_of_successorCanonicalLocalTrade
+      hTrade)
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockCompatiblePieces
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
@@ -6427,6 +6738,74 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
   exact hCore hHall hb5 hmodd hm3 hsmall hbase
     packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
 
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  intro b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hT hSlack
+  have hPrefix :
+      ∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m :=
+    BaseTail.successorPacketProperPrefixUnitsGoal
+      hm3 hT hlen htotal hpacketSum hpacketUnits
+  exact hCore hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_tradeEndpoint_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.PrimitiveActiveSymbolingEndpointGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_tradeEndpoint_prefix
+      hCyl hTrade hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_countEndpoint_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.PrimitiveActiveCountSymbolingEndpointGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_countEndpoint_prefix
+      hCyl hTrade hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.ActiveBlockTradeRealizationGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockTrade_prefix
+      hCyl hTrade hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockCountTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.ActiveBlockCountTradeRealizationGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_activeBlockCountTrade_prefix
+      hCyl hTrade hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_successorLocalTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorLocalTrade_prefix
+      hCyl hTrade hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_successorCanonicalLocalTrade_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal_of_successorCanonicalLocalTrade_prefix
+      hCyl hTrade hLift)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
     (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
@@ -6463,6 +6842,15 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginContr
   oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_prefix
     hRound
     (BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_projectedLift hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_expandedColorDirHamiltonian
+    (hRound : ActiveHallLargeMarginControlledResidueRoundingGoal)
+    (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_projectedPrefix
+    hRound
+    (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_expandedColorDirHamiltonian
+      hHam)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
@@ -6610,6 +6998,219 @@ def OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal : Prop :=
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1ModularTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.PrimitiveActiveSymbolingEndpointGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1CountModularTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.PrimitiveActiveCountSymbolingEndpointGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1ActiveBlockTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.ActiveBlockTradeRealizationGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1ActiveBlockCountTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.ActiveBlockCountTradeRealizationGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1ResidueTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.ActiveBlockResidueTradeRealizationGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1ResidueScheduleTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.ActiveBlockResidueScheduleGoal ∧
+  BaseTail.Trades.ActiveBlockLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal :
+    Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal
+
+def OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
+  BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal
+
+theorem oddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal_of_localTrade_prefixLift
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hTrade, hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_localTrade_prefixLift
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hTrade, hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_successorLocalTradeResiduals
+    (h : OddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    ⟨hCyl,
+      BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
+        hTrade,
+      hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_lowerTriangularResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    ⟨hCyl, hTrade,
+      BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_projectedLift
+        (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
+          hLift)⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_localTrade_lowerTriangular
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hTrade, hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_successorLocalTrade_lowerTriangular
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_localTrade_lowerTriangular
+    (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
+      hTrade)
+    hLift
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
+    (h :
+      OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal := by
+  rcases h with ⟨hCyl, hFeasible, hTrade, hLift⟩
+  exact
+    ⟨hCyl,
+      BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
+        hFeasible hTrade,
+      hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal,
+    oddSuccessorBaseTailCanonicalFeasibleResidueGoal_of_mixedCompatibleRounding
+      hRound,
+    hTrade,
+    hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
+    (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
+      hRound hTrade hLift)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_expandedMonodromyResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal := by
+  rcases h with ⟨hCyl, hTrade, hMono⟩
+  exact
+    ⟨hCyl, hTrade,
+      BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_expandedMonodromy
+        hMono⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_localTrade_expandedMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hMono : BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hTrade, hMono⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_fiberMonodromyResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal := by
+  rcases h with ⟨hCyl, hTrade, hFiber⟩
+  exact
+    ⟨hCyl, hTrade,
+      BaseTail.primitiveActivePrefixExpandedLowerTriangularMonodromyGoal_of_baseCycle_fiber
+        hFiber⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_localTrade_fiberMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hTrade, hFiber⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_localTrade_fiberMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_fiberMonodromyResiduals
+    (oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_localTrade_fiberMonodromy
+      hTrade hFiber)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_successorLocalTrade_expandedMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hMono : BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_localTrade_expandedMonodromy
+    (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
+      hTrade)
+    hMono
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_successorLocalTrade_fiberMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_localTrade_fiberMonodromy
+    (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
+      hTrade)
+    hFiber
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_successorLocalTrade_fiberMonodromy
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_fiberMonodromyResiduals
+    (oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_successorLocalTrade_fiberMonodromy
+      hTrade hFiber)
+
+def OddSuccessorBaseTailWorker1ScheduledModularTradeResidualGoal : Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.ActiveResidueSchedulingGoal ∧
+  BaseTail.Trades.LocalSymbolTradeGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
 def OddSuccessorBaseTailWorker1LargeMarginResidualGoal : Prop :=
   ActiveHallLargeMarginControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
@@ -6618,9 +7219,27 @@ def OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal : Prop :=
   ActiveHallLargeMarginControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixProjectedLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal : Prop :=
+  ActiveHallLargeMarginControlledResidueRoundingGoal ∧
+  BaseTail.ExpandedColorDirColorHamiltonianGoal
+
 def OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal : Prop :=
   ActiveHallLargeMarginControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+
+def OddSuccessorBaseTailWorker1ExpandedMonodromyLargeMarginResidualGoal :
+    Prop :=
+  ActiveHallLargeMarginControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal
+
+theorem oddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal_of_expandedMonodromy
+    (h : OddSuccessorBaseTailWorker1ExpandedMonodromyLargeMarginResidualGoal) :
+    OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal := by
+  rcases h with ⟨hRound, hMono⟩
+  exact
+    ⟨hRound,
+      BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_expandedMonodromy
+        hMono⟩
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedCylinderResiduals
     (h : OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal) :
@@ -6629,6 +7248,87 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedCyl
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_closedCylinder_controlled_prefix
       hRound hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ModularTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ModularTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_tradeEndpoint_prefix
+      hCyl hTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1CountModularTradeResiduals
+    (h : OddSuccessorBaseTailWorker1CountModularTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_countEndpoint_prefix
+      hCyl hTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ActiveBlockTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ActiveBlockTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockTrade_prefix
+      hCyl hTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ActiveBlockCountTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ActiveBlockCountTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockCountTrade_prefix
+      hCyl hTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ResidueTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ResidueTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hResidueTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockTrade_prefix
+      hCyl
+      (BaseTail.Trades.activeBlockTradeRealizationGoal_of_residueTrade
+        hResidueTrade)
+      hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ResidueScheduleTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ResidueScheduleTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hSchedule, hLocalTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_activeBlockTrade_prefix
+      hCyl
+      (BaseTail.Trades.activeBlockTradeRealizationGoal_of_schedule_and_localTrade
+        hSchedule hLocalTrade)
+      hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1SuccessorLocalTradeResiduals
+    (h : OddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hLocalTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_successorLocalTrade_prefix
+      hCyl hLocalTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1CanonicalLocalTradeResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hLocalTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_successorCanonicalLocalTrade_prefix
+      hCyl hLocalTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ScheduledModularTradeResiduals
+    (h : OddSuccessorBaseTailWorker1ScheduledModularTradeResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal := by
+  rcases h with ⟨hCyl, hSchedule, hTrade, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_tradeEndpoint_prefix
+      hCyl
+      (BaseTail.Trades.primitiveActiveSymbolingEndpointGoal_of_scheduling_and_localSymbolTrade
+        hSchedule hTrade)
+      hLift
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
     (h : OddSuccessorBaseTailWorker1LargeMarginResidualGoal) :
@@ -6646,6 +7346,14 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Projected
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_projectedPrefix
       hRound hLift
 
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1HamiltonianLargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hRound, hHam⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_expandedColorDirHamiltonian
+      hRound hHam
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LowerTriangularLargeMarginResiduals
     (h : OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
@@ -6655,6 +7363,34 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LowerTria
       hRound
       (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
         hLift)
+
+theorem oddSmallGeom_of_worker1LowerTriangularLargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LowerTriangularLargeMarginResiduals
+    h
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ExpandedMonodromyLargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1ExpandedMonodromyLargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LowerTriangularLargeMarginResiduals
+    (oddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal_of_expandedMonodromy
+      h)
+
+theorem oddSmallGeom_of_worker1ExpandedMonodromyLargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1ExpandedMonodromyLargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ExpandedMonodromyLargeMarginResiduals
+    h
+
+theorem oddSuccessorBaseTailWorker1ClosedPacketMixedResidualGoal_of_hamiltonian
+    (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :
+    OddSuccessorBaseTailWorker1ClosedPacketMixedResidualGoal := by
+  rcases h with ⟨hCylMix, hRound, hHam⟩
+  exact
+    ⟨hCylMix, hRound,
+      BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_expandedColorDirHamiltonian
+        hHam⟩
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
     (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :
@@ -6703,11 +7439,62 @@ def OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal : Prop :=
   OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
   ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}
 
+def OddSuccessorSmallModulusBaseTailGeometryDeWerraGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
+def OddSuccessorSmallModulusBaseTailGeometryCompatibleMatrixGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusBaseTailGeometryRawMatrixGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusBaseTailGeometryHallGoal : Prop :=
+  OddSuccessorSmallModulusBaseTailGeometryFromHallGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryDeWerraGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryCompatibleMatrixGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryExactEdgeColoringGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_exactEdgeColoringGoal h.2
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawExactEdgeColoringGoal h.2
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryRawMatrixGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusBaseTailGeometryHallGoal :
+    ¬ OddSuccessorSmallModulusBaseTailGeometryHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2
+
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
     (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
   hGeom hHall
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromModularTrades
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  hGeom
 
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal)
@@ -6746,6 +7533,55 @@ theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryRawEdg
   oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawEdgeColoring
     hBlocks.1 hBlocks.2
 
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromDeWerra
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
+    hGeom
+    (ActiveHall.FiniteHoffman.hallRealizationGoal_of_compatibleDeWerraGoal hDW)
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryDeWerra
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryDeWerraGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromDeWerra
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromCompatibleMatrix
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
+    hGeom
+    (ActiveHall.FiniteHoffman.hallRealizationGoal_of_compatibleZeroOneMatrixGoal
+      hMat)
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryCompatibleMatrix
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromCompatibleMatrix
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawMatrix
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
+    hGeom
+    (ActiveHall.FiniteHoffman.hallRealizationGoal_of_rawZeroOneMatrixGoal hMat)
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryRawMatrix
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryRawMatrixGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawMatrix
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryHall
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryHallGoal) :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
+    hBlocks.1 hBlocks.2
+
 theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
     OddSuccessorSmallModulusSlackPacketLiftAddGoal := by
@@ -6768,6 +7604,16 @@ def OddSuccessorSmallModulusBaseTailGoal : Prop :=
     m < 2 * b + 1 →
     StandardCayleySolved b m →
     StandardCayleySolved (2 * b + 1) m
+
+theorem odd_successor_small_modulus_base_tail_of_goal
+    (hSmall : OddSuccessorSmallModulusBaseTailGoal)
+    {b m : Nat}
+    (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  hSmall hb5 hmodd hm3 hmSmall hb
 
 def OddCoreSmallBaseSlackWitnessGoal : Prop :=
   ∀ {d m : Nat},
@@ -6918,6 +7764,13 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
     (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromHall
       hGeom hHall)
 
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromModularTrades
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+    (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromModularTrades
+      hGeom)
+
 theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHoffman
     (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal)
     (hHoffman : ActiveHall.HoffmanOrderedSDRGoal.{0, 0}) :
@@ -6960,6 +7813,864 @@ theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawEdgeColoring
     OddSuccessorSmallModulusBaseTailGoal :=
   oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawEdgeColoring
     hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+    (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromDeWerra
+      hGeom hDW)
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryDeWerra
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryDeWerraGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+    (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromCompatibleMatrix
+      hGeom hMat)
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryCompatibleMatrix
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_slackPacketLiftAdd
+    (oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_baseTailGeometryFromRawMatrix
+      hGeom hMat)
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawMatrix
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryRawMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    hBlocks.1 hBlocks.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryHall
+    (hBlocks : OddSuccessorSmallModulusBaseTailGeometryHallGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromHall
+    hBlocks.1 hBlocks.2
+
+def OddSuccessorSmallModulusLargeMarginHallGoal : Prop :=
+  OddSuccessorBaseTailWorker1LargeMarginResidualGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+def OddSuccessorSmallModulusLargeMarginDeWerraGoal : Prop :=
+  OddSuccessorBaseTailWorker1LargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
+def OddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal : Prop :=
+  OddSuccessorBaseTailWorker1LargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusLargeMarginRawMatrixGoal : Prop :=
+  OddSuccessorBaseTailWorker1LargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+theorem not_oddSuccessorSmallModulusLargeMarginHallGoal :
+    ¬ OddSuccessorSmallModulusLargeMarginHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2
+
+theorem not_oddSuccessorSmallModulusLargeMarginDeWerraGoal :
+    ¬ OddSuccessorSmallModulusLargeMarginDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2
+
+theorem not_oddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorSmallModulusLargeMarginRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_largeMarginHall
+    (h : OddSuccessorSmallModulusLargeMarginHallGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryHall
+    ⟨oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+        h.1,
+      h.2⟩
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_largeMarginDeWerra
+    (h : OddSuccessorSmallModulusLargeMarginDeWerraGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+      h.1)
+    h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_largeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+      h.1)
+    h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_largeMarginRawMatrix
+    (h : OddSuccessorSmallModulusLargeMarginRawMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+      h.1)
+    h.2
+
+def OddSuccessorSmallModulusProjectedLargeMarginHallGoal : Prop :=
+  OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+def OddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal : Prop :=
+  OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
+def OddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal : Prop :=
+  OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+theorem not_oddSuccessorSmallModulusProjectedLargeMarginHallGoal :
+    ¬ OddSuccessorSmallModulusProjectedLargeMarginHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2
+
+theorem not_oddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal :
+    ¬ OddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2
+
+theorem not_oddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginHall
+    (h : OddSuccessorSmallModulusProjectedLargeMarginHallGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryHall
+    ⟨oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ProjectedLargeMarginResiduals
+        h.1,
+      h.2⟩
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ProjectedLargeMarginResiduals
+      h.1)
+    h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ProjectedLargeMarginResiduals
+      h.1)
+    h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ProjectedLargeMarginResiduals
+      h.1)
+    h.2
+
+def OddSuccessorSmallModulusHamiltonianLargeMarginHallGoal : Prop :=
+  OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+def OddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal : Prop :=
+  OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
+def OddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal : Prop :=
+  OddSuccessorBaseTailWorker1HamiltonianLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+theorem not_oddSuccessorSmallModulusHamiltonianLargeMarginHallGoal :
+    ¬ OddSuccessorSmallModulusHamiltonianLargeMarginHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2
+
+theorem not_oddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal :
+    ¬ OddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2
+
+theorem not_oddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginHall
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginHallGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1HamiltonianLargeMarginResiduals
+      h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryHall ⟨hGeom, h.2⟩
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1HamiltonianLargeMarginResiduals
+      h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    hGeom h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1HamiltonianLargeMarginResiduals
+      h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    hGeom h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1HamiltonianLargeMarginResiduals
+      h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    hGeom h.2
+
+def OddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal : Prop :=
+  OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+def OddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal : Prop :=
+  OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
+def OddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal : Prop :=
+  OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+theorem not_oddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal :
+    ¬ OddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2
+
+theorem not_oddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal :
+    ¬ OddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2
+
+theorem not_oddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2
+
+theorem not_oddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginHall
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSmallGeom_of_worker1LowerTriangularLargeMarginResiduals h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryHall ⟨hGeom, h.2⟩
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSmallGeom_of_worker1LowerTriangularLargeMarginResiduals h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromDeWerra
+    hGeom h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginCompatibleMatrix
+    (h :
+      OddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSmallGeom_of_worker1LowerTriangularLargeMarginResiduals h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromCompatibleMatrix
+    hGeom h.2
+
+theorem oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal) :
+    OddSuccessorSmallModulusBaseTailGoal :=
+  let hGeom :=
+    oddSmallGeom_of_worker1LowerTriangularLargeMarginResiduals h.1
+  oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawMatrix
+    hGeom h.2
+
+theorem odd_successor_small_modulus_base_tail_of_largeMarginHall
+    (h : OddSuccessorSmallModulusLargeMarginHallGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginHall h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_largeMarginDeWerra
+    (h : OddSuccessorSmallModulusLargeMarginDeWerraGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginDeWerra h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_largeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginCompatibleMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_largeMarginRawMatrix
+    (h : OddSuccessorSmallModulusLargeMarginRawMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginRawMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_projectedLargeMarginHall
+    (h : OddSuccessorSmallModulusProjectedLargeMarginHallGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginHall h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_projectedLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginDeWerra h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_projectedLargeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginCompatibleMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_projectedLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginRawMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_hamiltonianLargeMarginHall
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginHallGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginHall h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_hamiltonianLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginDeWerra h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_hamiltonianLargeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginCompatibleMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_hamiltonianLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginRawMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_lowerTriangularLargeMarginHall
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginHall h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_lowerTriangularLargeMarginDeWerra
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginDeWerra h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_lowerTriangularLargeMarginCompatibleMatrix
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginCompatibleMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+theorem odd_successor_small_modulus_base_tail_of_lowerTriangularLargeMarginRawMatrix
+    (h : OddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal)
+    {b m : Nat} (hb5 : 5 ≤ b)
+    (hmodd : Odd m) (hm3 : 3 ≤ m)
+    (hmSmall : m < 2 * b + 1)
+    (hb : StandardCayleySolved b m) :
+    StandardCayleySolved (2 * b + 1) m :=
+  odd_successor_small_modulus_base_tail_of_goal
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginRawMatrix h)
+    hb5 hmodd hm3 hmSmall hb
+
+def OddSuccessorClosureLargeMarginHallGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLargeMarginHallGoal
+
+def OddSuccessorClosureLargeMarginDeWerraGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLargeMarginDeWerraGoal
+
+def OddSuccessorClosureLargeMarginCompatibleMatrixGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal
+
+def OddSuccessorClosureLargeMarginRawMatrixGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLargeMarginRawMatrixGoal
+
+theorem not_oddSuccessorClosureLargeMarginHallGoal :
+    ¬ OddSuccessorClosureLargeMarginHallGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLargeMarginHallGoal h.2
+
+theorem not_oddSuccessorClosureLargeMarginDeWerraGoal :
+    ¬ OddSuccessorClosureLargeMarginDeWerraGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLargeMarginDeWerraGoal h.2
+
+theorem not_oddSuccessorClosureLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorClosureLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLargeMarginCompatibleMatrixGoal h.2
+
+theorem not_oddSuccessorClosureLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorClosureLargeMarginRawMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLargeMarginRawMatrixGoal h.2
+
+theorem oddSuccessorClosureGoal_of_largeMarginHall
+    (h : OddSuccessorClosureLargeMarginHallGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginHall h.2)
+
+theorem oddSuccessorClosureGoal_of_largeMarginDeWerra
+    (h : OddSuccessorClosureLargeMarginDeWerraGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginDeWerra h.2)
+
+theorem oddSuccessorClosureGoal_of_largeMarginCompatibleMatrix
+    (h : OddSuccessorClosureLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginCompatibleMatrix
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_largeMarginRawMatrix
+    (h : OddSuccessorClosureLargeMarginRawMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_largeMarginRawMatrix h.2)
+
+theorem oddModulusToriAllDimensionsGoal_of_largeMarginHall
+    (h : OddSuccessorClosureLargeMarginHallGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_largeMarginHall h)
+
+theorem oddModulusToriAllDimensionsGoal_of_largeMarginDeWerra
+    (h : OddSuccessorClosureLargeMarginDeWerraGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_largeMarginDeWerra h)
+
+theorem oddModulusToriAllDimensionsGoal_of_largeMarginCompatibleMatrix
+    (h : OddSuccessorClosureLargeMarginCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_largeMarginCompatibleMatrix h)
+
+theorem oddModulusToriAllDimensionsGoal_of_largeMarginRawMatrix
+    (h : OddSuccessorClosureLargeMarginRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_largeMarginRawMatrix h)
+
+def OddSuccessorClosureProjectedLargeMarginHallGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusProjectedLargeMarginHallGoal
+
+def OddSuccessorClosureProjectedLargeMarginDeWerraGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal
+
+def OddSuccessorClosureProjectedLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal
+
+def OddSuccessorClosureProjectedLargeMarginRawMatrixGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal
+
+theorem not_oddSuccessorClosureProjectedLargeMarginHallGoal :
+    ¬ OddSuccessorClosureProjectedLargeMarginHallGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusProjectedLargeMarginHallGoal h.2
+
+theorem not_oddSuccessorClosureProjectedLargeMarginDeWerraGoal :
+    ¬ OddSuccessorClosureProjectedLargeMarginDeWerraGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusProjectedLargeMarginDeWerraGoal h.2
+
+theorem not_oddSuccessorClosureProjectedLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorClosureProjectedLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusProjectedLargeMarginCompatibleMatrixGoal h.2
+
+theorem not_oddSuccessorClosureProjectedLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorClosureProjectedLargeMarginRawMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusProjectedLargeMarginRawMatrixGoal h.2
+
+theorem oddSuccessorClosureGoal_of_projectedLargeMarginHall
+    (h : OddSuccessorClosureProjectedLargeMarginHallGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginHall
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_projectedLargeMarginDeWerra
+    (h : OddSuccessorClosureProjectedLargeMarginDeWerraGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginDeWerra
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_projectedLargeMarginCompatibleMatrix
+    (h : OddSuccessorClosureProjectedLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginCompatibleMatrix
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_projectedLargeMarginRawMatrix
+    (h : OddSuccessorClosureProjectedLargeMarginRawMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_projectedLargeMarginRawMatrix
+      h.2)
+
+theorem oddModulusToriAllDimensionsGoal_of_projectedLargeMarginHall
+    (h : OddSuccessorClosureProjectedLargeMarginHallGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_projectedLargeMarginHall h)
+
+theorem oddModulusToriAllDimensionsGoal_of_projectedLargeMarginDeWerra
+    (h : OddSuccessorClosureProjectedLargeMarginDeWerraGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_projectedLargeMarginDeWerra h)
+
+theorem oddModulusToriAllDimensionsGoal_of_projectedLargeMarginCompatibleMatrix
+    (h : OddSuccessorClosureProjectedLargeMarginCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_projectedLargeMarginCompatibleMatrix h)
+
+theorem oddModulusToriAllDimensionsGoal_of_projectedLargeMarginRawMatrix
+    (h : OddSuccessorClosureProjectedLargeMarginRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_projectedLargeMarginRawMatrix h)
+
+def OddSuccessorClosureHamiltonianLargeMarginHallGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusHamiltonianLargeMarginHallGoal
+
+def OddSuccessorClosureHamiltonianLargeMarginDeWerraGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal
+
+def OddSuccessorClosureHamiltonianLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal
+
+def OddSuccessorClosureHamiltonianLargeMarginRawMatrixGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal
+
+theorem not_oddSuccessorClosureHamiltonianLargeMarginHallGoal :
+    ¬ OddSuccessorClosureHamiltonianLargeMarginHallGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusHamiltonianLargeMarginHallGoal h.2
+
+theorem not_oddSuccessorClosureHamiltonianLargeMarginDeWerraGoal :
+    ¬ OddSuccessorClosureHamiltonianLargeMarginDeWerraGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusHamiltonianLargeMarginDeWerraGoal h.2
+
+theorem not_oddSuccessorClosureHamiltonianLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorClosureHamiltonianLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusHamiltonianLargeMarginCompatibleMatrixGoal h.2
+
+theorem not_oddSuccessorClosureHamiltonianLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorClosureHamiltonianLargeMarginRawMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusHamiltonianLargeMarginRawMatrixGoal h.2
+
+theorem oddSuccessorClosureGoal_of_hamiltonianLargeMarginHall
+    (h : OddSuccessorClosureHamiltonianLargeMarginHallGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginHall
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_hamiltonianLargeMarginDeWerra
+    (h : OddSuccessorClosureHamiltonianLargeMarginDeWerraGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginDeWerra
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_hamiltonianLargeMarginCompatibleMatrix
+    (h : OddSuccessorClosureHamiltonianLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginCompatibleMatrix
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_hamiltonianLargeMarginRawMatrix
+    (h : OddSuccessorClosureHamiltonianLargeMarginRawMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_hamiltonianLargeMarginRawMatrix
+      h.2)
+
+theorem oddModulusToriAllDimensionsGoal_of_hamiltonianLargeMarginHall
+    (h : OddSuccessorClosureHamiltonianLargeMarginHallGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_hamiltonianLargeMarginHall h)
+
+theorem oddModulusToriAllDimensionsGoal_of_hamiltonianLargeMarginDeWerra
+    (h : OddSuccessorClosureHamiltonianLargeMarginDeWerraGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_hamiltonianLargeMarginDeWerra h)
+
+theorem oddModulusToriAllDimensionsGoal_of_hamiltonianLargeMarginCompatibleMatrix
+    (h : OddSuccessorClosureHamiltonianLargeMarginCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_hamiltonianLargeMarginCompatibleMatrix h)
+
+theorem oddModulusToriAllDimensionsGoal_of_hamiltonianLargeMarginRawMatrix
+    (h : OddSuccessorClosureHamiltonianLargeMarginRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_hamiltonianLargeMarginRawMatrix h)
+
+def OddSuccessorClosureLowerTriangularLargeMarginHallGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal
+
+def OddSuccessorClosureLowerTriangularLargeMarginDeWerraGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal
+
+def OddSuccessorClosureLowerTriangularLargeMarginCompatibleMatrixGoal :
+    Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal
+
+def OddSuccessorClosureLowerTriangularLargeMarginRawMatrixGoal : Prop :=
+  OddCoreHighModulusPrefixCountGoal ∧
+  OddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal
+
+theorem not_oddSuccessorClosureLowerTriangularLargeMarginHallGoal :
+    ¬ OddSuccessorClosureLowerTriangularLargeMarginHallGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLowerTriangularLargeMarginHallGoal h.2
+
+theorem not_oddSuccessorClosureLowerTriangularLargeMarginDeWerraGoal :
+    ¬ OddSuccessorClosureLowerTriangularLargeMarginDeWerraGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLowerTriangularLargeMarginDeWerraGoal h.2
+
+theorem not_oddSuccessorClosureLowerTriangularLargeMarginCompatibleMatrixGoal :
+    ¬ OddSuccessorClosureLowerTriangularLargeMarginCompatibleMatrixGoal := by
+  intro h
+  exact
+    not_oddSuccessorSmallModulusLowerTriangularLargeMarginCompatibleMatrixGoal
+      h.2
+
+theorem not_oddSuccessorClosureLowerTriangularLargeMarginRawMatrixGoal :
+    ¬ OddSuccessorClosureLowerTriangularLargeMarginRawMatrixGoal := by
+  intro h
+  exact not_oddSuccessorSmallModulusLowerTriangularLargeMarginRawMatrixGoal h.2
+
+theorem oddSuccessorClosureGoal_of_lowerTriangularLargeMarginHall
+    (h : OddSuccessorClosureLowerTriangularLargeMarginHallGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginHall
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_lowerTriangularLargeMarginDeWerra
+    (h : OddSuccessorClosureLowerTriangularLargeMarginDeWerraGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginDeWerra
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_lowerTriangularLargeMarginCompatibleMatrix
+    (h :
+      OddSuccessorClosureLowerTriangularLargeMarginCompatibleMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginCompatibleMatrix
+      h.2)
+
+theorem oddSuccessorClosureGoal_of_lowerTriangularLargeMarginRawMatrix
+    (h : OddSuccessorClosureLowerTriangularLargeMarginRawMatrixGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_high_and_successorSmall h.1
+    (oddSuccessorSmallModulusBaseTailGoal_of_lowerTriangularLargeMarginRawMatrix
+      h.2)
+
+theorem oddModulusToriAllDimensionsGoal_of_lowerTriangularLargeMarginHall
+    (h : OddSuccessorClosureLowerTriangularLargeMarginHallGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_lowerTriangularLargeMarginHall h)
+
+theorem oddModulusToriAllDimensionsGoal_of_lowerTriangularLargeMarginDeWerra
+    (h : OddSuccessorClosureLowerTriangularLargeMarginDeWerraGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_lowerTriangularLargeMarginDeWerra h)
+
+theorem oddModulusToriAllDimensionsGoal_of_lowerTriangularLargeMarginCompatibleMatrix
+    (h :
+      OddSuccessorClosureLowerTriangularLargeMarginCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_lowerTriangularLargeMarginCompatibleMatrix h)
+
+theorem oddModulusToriAllDimensionsGoal_of_lowerTriangularLargeMarginRawMatrix
+    (h : OddSuccessorClosureLowerTriangularLargeMarginRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_357_and_successor
+    (oddSuccessorClosureGoal_of_lowerTriangularLargeMarginRawMatrix h)
 
 theorem odd_successor_small_modulus_base_tail_of_slackPacketLiftAdd
     (hSmallPacket : OddSuccessorSmallModulusSlackPacketLiftAddGoal)
@@ -8189,6 +9900,289 @@ def OddModulusToriV4ReturnTailClosedFullSupportTrellisGeometryRawEdgeBlocksGoal 
   OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGeometryRawEdgeColoringGoal
 
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisWorker1ModularTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ModularTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCountTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CountModularTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ActiveBlockTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockCountTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ActiveBlockCountTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ResidueTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueScheduleTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ResidueScheduleTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal_of_localTrade_prefixLift
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1SuccessorLocalTradeResidualGoal_of_localTrade_prefixLift
+      hTrade hLift⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_localTrade_prefixLift
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_localTrade_prefixLift
+      hTrade hLift⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_successorLocalTradeBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_successorLocalTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_localTrade_lowerTriangular
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_localTrade_lowerTriangular
+      hTrade hLift⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_successorLocalTrade_lowerTriangular
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_successorLocalTrade_lowerTriangular
+      hTrade hLift⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_lowerTriangularResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal_of_mixedCompatibleRounding
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
+      hRound hTrade hLift⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_localTrade_expandedMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hMono : BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_localTrade_expandedMonodromy
+      hTrade hMono⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal_of_localTrade_fiberMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_localTrade_fiberMonodromy
+      hTrade hFiber⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_fiberMonodromyBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_fiberMonodromyResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_localTrade_fiberMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :=
+  oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_fiberMonodromyBlocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal_of_localTrade_fiberMonodromy
+      hHigh hTrade hFiber)
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_successorLocalTrade_expandedMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hMono : BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal_of_successorLocalTrade_expandedMonodromy
+      hTrade hMono⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal_of_successorLocalTrade_fiberMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal :=
+  ⟨hHigh,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal_of_successorLocalTrade_fiberMonodromy
+      hTrade hFiber⟩
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_successorLocalTrade_fiberMonodromy
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal)
+    (hFiber : BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal :=
+  oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal_of_fiberMonodromyBlocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal_of_successorLocalTrade_fiberMonodromy
+      hHigh hTrade hFiber)
+
+theorem oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_expandedMonodromyBlocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_expandedMonodromyResiduals
+      hBlocks.2⟩
+
+def OddModulusToriV73ReturnTailClosedFullSupportTrellisScheduledTradeBlocksGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  OddSuccessorBaseTailWorker1ScheduledModularTradeResidualGoal
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_worker1
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisWorker1ModularTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ModularTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_countTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCountTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1CountModularTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ActiveBlockTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockCountTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockCountTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ActiveBlockCountTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_residueTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ResidueTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_residueScheduleTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueScheduleTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ResidueScheduleTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_successorLocalTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1SuccessorLocalTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_canonicalLocalTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1CanonicalLocalTradeResiduals
+      hBlocks.2⟩
+
+theorem oddModulusToriV73ModularTradesBlocksGoal_of_scheduledTrade
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisScheduledTradeBlocksGoal) :
+    OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal :=
+  ⟨hBlocks.1,
+    oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ScheduledModularTradeResiduals
+      hBlocks.2⟩
+
 def OddModulusToriV4ReturnTailTriangularBlocksGoal : Prop :=
   OddCoreHighModulusReturnTailTriangularBlocksGoal ∧
   OddSuccessorSmallModulusBaseTailGoal
@@ -8944,6 +10938,102 @@ theorem oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellisGeometry
       oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryRawEdgeColoring
         hBlocks.2⟩
 
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v4_returnTailClosedFullSupportTrellis_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromModularTrades
+        hBlocks.2⟩
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisWorker1ModularTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisWorker1ModularTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_worker1 hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCountTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_countTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisActiveBlockTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisActiveBlockCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockCountTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockCountTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisResidueTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_residueTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisResidueScheduleTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueScheduleTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_residueScheduleTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisSuccessorLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_successorLocalTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_canonicalLocalTrade hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+      hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+      hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_expandedMonodromyBlocks
+      hBlocks)
+
+theorem oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisScheduledTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisScheduledTradeBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_scheduledTrade hBlocks)
+
 theorem oddSuccessorClosureGoal_of_v4_returnTailTriangular_blocks
     (hBlocks : OddModulusToriV4ReturnTailTriangularBlocksGoal) :
     OddSuccessorClosureGoal :=
@@ -9563,6 +11653,141 @@ theorem odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis
         hBlocks.2⟩
     hd2 hmodd hm3
 
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellis_blocks
+    ⟨hBlocks.1,
+      oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromModularTrades
+        hBlocks.2⟩
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisWorker1ModularTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisWorker1ModularTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_worker1 hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCountTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_countTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisActiveBlockTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisActiveBlockCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockCountTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_activeBlockCountTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisResidueTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_residueTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisResidueScheduleTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueScheduleTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_residueScheduleTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisSuccessorLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_successorLocalTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_canonicalLocalTrade hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+      hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+      hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_expandedMonodromyBlocks
+      hBlocks)
+    hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisScheduledTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisScheduledTradeBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (oddModulusToriV73ModularTradesBlocksGoal_of_scheduledTrade hBlocks)
+    hd2 hmodd hm3
+
 theorem odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
@@ -10046,6 +12271,123 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellis
     odd_modulus_tori_all_dimensions_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge_blocks
       hBlocks hd2 hmodd hm3
 
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisModularTradesBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisWorker1ModularTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisWorker1ModularTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisWorker1ModularTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCountTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCountTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisActiveBlockTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisActiveBlockTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisActiveBlockCountTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisActiveBlockCountTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisActiveBlockCountTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisResidueTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisResidueTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisResidueScheduleTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisResidueScheduleTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisResidueScheduleTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisSuccessorLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisSuccessorLocalTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisSuccessorLocalTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+      hBlocks hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisScheduledTrade_blocks
+    (hBlocks :
+      OddModulusToriV73ReturnTailClosedFullSupportTrellisScheduledTradeBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisScheduledTrade_blocks
+      hBlocks hd2 hmodd hm3
+
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellis
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)
     (hOrbit : PrefixCountFirstHitReturnTailMonodromyOrbitGoal)
@@ -10127,10 +12469,35 @@ def OddModulusToriV4CompletionCoreCompatibleMatrixGoal : Prop :=
   OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
   ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
 
+def OddModulusToriV4CompletionCoreDeWerraGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}
+
 def OddModulusToriV4CompletionCoreHallGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
   OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
   ActiveHall.HallRealizationGoal.{0, 0}
+
+theorem not_oddModulusToriV4CompletionCoreCompatibleMatrixGoal :
+    ¬ OddModulusToriV4CompletionCoreCompatibleMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleZeroOneMatrixGoal h.2.2
+
+theorem not_oddModulusToriV4CompletionCoreDeWerraGoal :
+    ¬ OddModulusToriV4CompletionCoreDeWerraGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_compatibleDeWerraGoal h.2.2
+
+theorem not_oddModulusToriV4CompletionCoreRawMatrixGoal :
+    ¬ OddModulusToriV4CompletionCoreRawMatrixGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_rawZeroOneMatrixGoal h.2.2
+
+theorem not_oddModulusToriV4CompletionCoreHallGoal :
+    ¬ OddModulusToriV4CompletionCoreHallGoal := by
+  intro h
+  exact ActiveHall.FiniteHoffman.not_hallRealizationGoal h.2.2
 
 theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_rawMatrix
     (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
@@ -10186,6 +12553,34 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_completionCoreCompatibleMatrix
     (hCore : OddModulusToriV4CompletionCoreCompatibleMatrixGoal) :
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_compatibleMatrix
+    hCore.1 hCore.2.1 hCore.2.2
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_deWerra
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_deWerra
+    hQge2Proper
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core hCore)
+    hDW
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_deWerra
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_core_deWerra
+    hQge2Proper hCore hDW hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_completionCoreDeWerra
+    (hCore : OddModulusToriV4CompletionCoreDeWerraGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_deWerra
     hCore.1 hCore.2.1 hCore.2.2
 
 theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_hall

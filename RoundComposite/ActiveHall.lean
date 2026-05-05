@@ -1684,6 +1684,109 @@ theorem exists_universalUnitResidueSpecOfTwoLe_compatible_primitive
     exact universalUnitResidueSpecOfTwoLe_numeric_sub_delta_isUnit
       hT huUnit c hσ
 
+/--
+Finite transportation for natural row and column marginals.
+
+This is the quotient-transport core used by residue rounding: once the row and
+column residual quotas have the same total, a nonnegative matrix with those
+marginals exists.
+-/
+theorem exists_nat_matrix_with_marginals
+    {α β : Type*} [Fintype α] [Fintype β]
+    (row : α → Nat) (col : β → Nat)
+    (h : (∑ a : α, row a) = ∑ b : β, col b) :
+    ∃ k : α → β → Nat,
+      (∀ a : α, (∑ b : β, k a b) = row a) ∧
+      (∀ b : β, (∑ a : α, k a b) = col b) := by
+  classical
+  let RowTok := Sigma fun a : α => Fin (row a)
+  let ColTok := Sigma fun b : β => Fin (col b)
+  have hcard : Fintype.card RowTok = Fintype.card ColTok := by
+    simp [RowTok, ColTok, Fintype.card_sigma, h]
+  let e : RowTok ≃ ColTok := Fintype.equivOfCardEq hcard
+  let k : α → β → Nat := fun a b =>
+    Fintype.card {i : Fin (row a) // (e ⟨a, i⟩).1 = b}
+  refine ⟨k, ?_, ?_⟩
+  · intro a
+    have hcongr :
+        Fintype.card (Sigma fun b : β =>
+            {i : Fin (row a) // (e ⟨a, i⟩).1 = b}) =
+          Fintype.card (Fin (row a)) := by
+      refine Fintype.card_congr ?_
+      exact {
+        toFun := fun q => q.2.1
+        invFun := fun i => ⟨(e ⟨a, i⟩).1, ⟨i, rfl⟩⟩
+        left_inv := by
+          intro q
+          rcases q with ⟨b, i, hb⟩
+          dsimp
+          cases hb
+          rfl
+        right_inv := by
+          intro i
+          rfl }
+    calc
+      (∑ b : β, k a b)
+          = Fintype.card (Sigma fun b : β =>
+              {i : Fin (row a) // (e ⟨a, i⟩).1 = b}) := by
+              simp [k, Fintype.card_sigma]
+      _ = row a := by simpa using hcongr
+  · intro b
+    have hpre :
+        Fintype.card (Sigma fun a : α =>
+            {i : Fin (row a) // (e ⟨a, i⟩).1 = b}) =
+          Fintype.card {q : RowTok // (e q).1 = b} := by
+      refine Fintype.card_congr ?_
+      exact {
+        toFun := fun q => ⟨⟨q.1, q.2.1⟩, q.2.2⟩
+        invFun := fun q => ⟨q.1.1, ⟨q.1.2, q.2⟩⟩
+        left_inv := by intro q; rfl
+        right_inv := by intro q; rfl }
+    have hmap :
+        Fintype.card {q : RowTok // (e q).1 = b} =
+          Fintype.card {q : ColTok // q.1 = b} := by
+      refine Fintype.card_congr ?_
+      exact {
+        toFun := fun q => ⟨e q.1, q.2⟩
+        invFun := fun q => ⟨e.symm q.1, by
+          have hq := e.apply_symm_apply q.1
+          have hf : (e (e.symm q.1)).1 = q.1.1 :=
+            congrArg (fun r : ColTok => r.1) hq
+          exact hf.trans q.2⟩
+        left_inv := by
+          intro q
+          apply Subtype.ext
+          exact e.symm_apply_apply q.1
+        right_inv := by
+          intro q
+          apply Subtype.ext
+          exact e.apply_symm_apply q.1 }
+    have hcolcard :
+        Fintype.card {q : ColTok // q.1 = b} = Fintype.card (Fin (col b)) := by
+      refine Fintype.card_congr ?_
+      exact {
+        toFun := fun q =>
+          ⟨q.1.2.val, by
+            have hlt := q.1.2.isLt
+            simpa [q.2] using hlt⟩
+        invFun := fun j => ⟨⟨b, j⟩, rfl⟩
+        left_inv := by
+          intro q
+          rcases q with ⟨q, hq⟩
+          rcases q with ⟨b', j⟩
+          dsimp
+          cases hq
+          rfl
+        right_inv := by
+          intro j
+          rfl }
+    calc
+      (∑ a : α, k a b)
+          = Fintype.card (Sigma fun a : α =>
+              {i : Fin (row a) // (e ⟨a, i⟩).1 = b}) := by
+              simp [k, Fintype.card_sigma]
+      _ = col b := by simpa using hpre.trans (hmap.trans hcolcard)
+
 namespace CountMatrix
 
 def cutMass {T : Nat} {X C : Type*}
@@ -1709,6 +1812,251 @@ def HasResidues {m T : Nat} {X C : Type*}
     {I : Incidence T X C} (M : CountMatrix I)
     (R : ResidueSpec m T C) : Prop :=
   ∀ c σ, (M.val c σ : ZMod m) = R.target c σ
+
+theorem exists_with_residueQuotients
+    {m T : Nat} [NeZero m] {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (r : C → Fin T → Nat)
+    (hr : ∀ c σ, ((r c σ : Nat) : ZMod m) = R.target c σ)
+    (hrowLe : ∀ c : C, (∑ σ : Fin T, r c σ) ≤ I.colorDegree c)
+    (hcolLe : ∀ σ : Fin T, (∑ c : C, r c σ) ≤ Fintype.card X)
+    (hrowDiv : ∀ c : C,
+      m * ((I.colorDegree c - ∑ σ : Fin T, r c σ) / m) =
+        I.colorDegree c - ∑ σ : Fin T, r c σ)
+    (hcolDiv : ∀ σ : Fin T,
+      m * ((Fintype.card X - ∑ c : C, r c σ) / m) =
+        Fintype.card X - ∑ c : C, r c σ)
+    (hTotal :
+      (∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ) / m) =
+        ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) / m) :
+    ∃ M : CountMatrix I, M.HasResidues R := by
+  classical
+  let rowQ : C → Nat := fun c =>
+    (I.colorDegree c - ∑ σ : Fin T, r c σ) / m
+  let colQ : Fin T → Nat := fun σ =>
+    (Fintype.card X - ∑ c : C, r c σ) / m
+  rcases exists_nat_matrix_with_marginals rowQ colQ
+      (by simpa [rowQ, colQ] using hTotal) with
+    ⟨K, hKrow, hKcol⟩
+  let val : C → Fin T → Nat := fun c σ => r c σ + m * K c σ
+  refine ⟨{ val := val, row_sum := ?_, col_sum := ?_ }, ?_⟩
+  · intro c
+    have hsum : (∑ σ : Fin T, val c σ) =
+        (∑ σ : Fin T, r c σ) + m * rowQ c := by
+      calc
+        (∑ σ : Fin T, val c σ)
+            = (∑ σ : Fin T, (r c σ + m * K c σ)) := rfl
+        _ = (∑ σ : Fin T, r c σ) + ∑ σ : Fin T, m * K c σ := by
+            rw [Finset.sum_add_distrib]
+        _ = (∑ σ : Fin T, r c σ) + m * (∑ σ : Fin T, K c σ) := by
+            rw [← Finset.mul_sum]
+        _ = (∑ σ : Fin T, r c σ) + m * rowQ c := by
+            rw [hKrow c]
+    rw [hsum]
+    have hdiv : m * rowQ c = I.colorDegree c - ∑ σ : Fin T, r c σ := by
+      simpa [rowQ] using hrowDiv c
+    rw [hdiv]
+    exact Nat.add_sub_of_le (hrowLe c)
+  · intro σ
+    have hsum : (∑ c : C, val c σ) =
+        (∑ c : C, r c σ) + m * colQ σ := by
+      calc
+        (∑ c : C, val c σ)
+            = (∑ c : C, (r c σ + m * K c σ)) := rfl
+        _ = (∑ c : C, r c σ) + ∑ c : C, m * K c σ := by
+            rw [Finset.sum_add_distrib]
+        _ = (∑ c : C, r c σ) + m * (∑ c : C, K c σ) := by
+            rw [← Finset.mul_sum]
+        _ = (∑ c : C, r c σ) + m * colQ σ := by
+            rw [hKcol σ]
+    rw [hsum]
+    have hdiv : m * colQ σ = Fintype.card X - ∑ c : C, r c σ := by
+      simpa [colQ] using hcolDiv σ
+    rw [hdiv]
+    exact Nat.add_sub_of_le (hcolLe σ)
+  · intro c σ
+    simp [val, hr]
+
+theorem exists_with_residueVals
+    {m T : Nat} [NeZero m] {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (R : ResidueSpec m T C)
+    (hrow : R.RowCompatible I) (hcol : R.ColCompatible I)
+    (hrowLe : ∀ c : C,
+      (∑ σ : Fin T, (R.target c σ).val) ≤ I.colorDegree c)
+    (hcolLe : ∀ σ : Fin T,
+      (∑ c : C, (R.target c σ).val) ≤ Fintype.card X) :
+    ∃ M : CountMatrix I, M.HasResidues R := by
+  classical
+  let r : C → Fin T → Nat := fun c σ => (R.target c σ).val
+  have hr : ∀ c σ, ((r c σ : Nat) : ZMod m) = R.target c σ := by
+    intro c σ
+    simp [r]
+  have hrowDiv : ∀ c : C,
+      m * ((I.colorDegree c - ∑ σ : Fin T, r c σ) / m) =
+        I.colorDegree c - ∑ σ : Fin T, r c σ := by
+    intro c
+    have hsumCast : (((∑ σ : Fin T, r c σ) : Nat) : ZMod m) =
+        ∑ σ : Fin T, R.target c σ := by
+      simp [r]
+    have hdiff :
+        (((I.colorDegree c - ∑ σ : Fin T, r c σ) : Nat) : ZMod m) =
+          0 := by
+      rw [Nat.cast_sub (hrowLe c), hrow c, hsumCast, sub_self]
+    have hdvd : m ∣ I.colorDegree c - ∑ σ : Fin T, r c σ :=
+      (ZMod.natCast_eq_zero_iff
+        (I.colorDegree c - ∑ σ : Fin T, r c σ) m).mp hdiff
+    simpa [Nat.mul_comm] using Nat.div_mul_cancel hdvd
+  have hcolDiv : ∀ σ : Fin T,
+      m * ((Fintype.card X - ∑ c : C, r c σ) / m) =
+        Fintype.card X - ∑ c : C, r c σ := by
+    intro σ
+    have hsumCast : (((∑ c : C, r c σ) : Nat) : ZMod m) =
+        ∑ c : C, R.target c σ := by
+      simp [r]
+    have hdiff :
+        (((Fintype.card X - ∑ c : C, r c σ) : Nat) : ZMod m) =
+          0 := by
+      rw [Nat.cast_sub (hcolLe σ), hcol σ, hsumCast, sub_self]
+    have hdvd : m ∣ Fintype.card X - ∑ c : C, r c σ :=
+      (ZMod.natCast_eq_zero_iff
+        (Fintype.card X - ∑ c : C, r c σ) m).mp hdiff
+    simpa [Nat.mul_comm] using Nat.div_mul_cancel hdvd
+  have hTotal :
+      (∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ) / m) =
+        ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) / m := by
+    have hmulRow :
+        m * (∑ c : C,
+            (I.colorDegree c - ∑ σ : Fin T, r c σ) / m) =
+          ∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ) := by
+      calc
+        m * (∑ c : C,
+            (I.colorDegree c - ∑ σ : Fin T, r c σ) / m)
+            =
+          ∑ c : C,
+            m * ((I.colorDegree c - ∑ σ : Fin T, r c σ) / m) := by
+              rw [Finset.mul_sum]
+        _ = ∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ) := by
+              apply Finset.sum_congr rfl
+              intro c _hc
+              exact hrowDiv c
+    have hmulCol :
+        m * (∑ σ : Fin T,
+            (Fintype.card X - ∑ c : C, r c σ) / m) =
+          ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) := by
+      calc
+        m * (∑ σ : Fin T,
+            (Fintype.card X - ∑ c : C, r c σ) / m)
+            =
+          ∑ σ : Fin T,
+            m * ((Fintype.card X - ∑ c : C, r c σ) / m) := by
+              rw [Finset.mul_sum]
+        _ = ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) := by
+              apply Finset.sum_congr rfl
+              intro σ _hσ
+              exact hcolDiv σ
+    have hdiffEq :
+        (∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ)) =
+          ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) := by
+      calc
+        (∑ c : C, (I.colorDegree c - ∑ σ : Fin T, r c σ))
+            = (∑ c : C, I.colorDegree c) -
+                ∑ c : C, ∑ σ : Fin T, r c σ := by
+                simpa using
+                  (Finset.sum_tsub_distrib (s := (Finset.univ : Finset C))
+                    (f := fun c : C => I.colorDegree c)
+                    (g := fun c : C => ∑ σ : Fin T, r c σ)
+                    (by intro c _hc; exact hrowLe c))
+        _ = T * Fintype.card X -
+                ∑ c : C, ∑ σ : Fin T, r c σ := by
+                rw [I.sum_colorDegree]
+        _ = (∑ σ : Fin T, Fintype.card X) -
+                ∑ σ : Fin T, ∑ c : C, r c σ := by
+                rw [Finset.sum_comm]
+                simp [Finset.sum_const]
+        _ = ∑ σ : Fin T, (Fintype.card X - ∑ c : C, r c σ) := by
+                simpa using
+                  (Finset.sum_tsub_distrib
+                    (s := (Finset.univ : Finset (Fin T)))
+                    (f := fun _σ : Fin T => Fintype.card X)
+                    (g := fun σ : Fin T => ∑ c : C, r c σ)
+                    (by intro σ _hσ; exact hcolLe σ)).symm
+    have hmpos : 0 < m := Nat.pos_of_ne_zero (NeZero.ne m)
+    exact Nat.eq_of_mul_eq_mul_left hmpos
+      (by rw [hmulRow, hmulCol, hdiffEq])
+  exact exists_with_residueQuotients r hr hrowLe hcolLe hrowDiv hcolDiv
+    hTotal
+
+theorem exists_with_residues_of_largeMargin
+    {m T : Nat} [NeZero m] {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (hTpos : 0 < T)
+    (hLarge : ∀ c : C, m * Fintype.card C * T < I.colorDegree c)
+    (R : ResidueSpec m T C)
+    (hrow : R.RowCompatible I) (hcol : R.ColCompatible I) :
+    ∃ M : CountMatrix I, M.HasResidues R := by
+  classical
+  refine exists_with_residueVals I R hrow hcol ?_ ?_
+  · intro c
+    have hvalLe :
+        ∀ σ ∈ (Finset.univ : Finset (Fin T)),
+          (R.target c σ).val ≤ m - 1 := by
+      intro σ _hσ
+      have hlt := ZMod.val_lt (R.target c σ)
+      omega
+    have hsumBound :=
+      Finset.sum_le_card_nsmul (Finset.univ : Finset (Fin T))
+        (fun σ : Fin T => (R.target c σ).val) (m - 1) hvalLe
+    have hsumBound' :
+        (∑ σ : Fin T, (R.target c σ).val) ≤ T * (m - 1) := by
+      simpa [Fintype.card_fin, nsmul_eq_mul, Nat.mul_comm] using hsumBound
+    have hcardCpos : 0 < Fintype.card C :=
+      Fintype.card_pos_iff.mpr ⟨c⟩
+    have hscale : T * (m - 1) ≤ m * Fintype.card C * T := by
+      calc
+        T * (m - 1) ≤ T * m :=
+          Nat.mul_le_mul_left T (Nat.sub_le m 1)
+        _ = m * T := Nat.mul_comm T m
+        _ ≤ (m * Fintype.card C) * T :=
+          Nat.mul_le_mul_right T (Nat.le_mul_of_pos_right m hcardCpos)
+        _ = m * Fintype.card C * T := rfl
+    exact hsumBound'.trans (hscale.trans (Nat.le_of_lt (hLarge c)))
+  · intro σ
+    by_cases hC : Nonempty C
+    · rcases hC with ⟨c0⟩
+      have hvalLe :
+          ∀ c ∈ (Finset.univ : Finset C),
+            (R.target c σ).val ≤ m - 1 := by
+        intro c _hc
+        have hlt := ZMod.val_lt (R.target c σ)
+        omega
+      have hsumBound :=
+        Finset.sum_le_card_nsmul (Finset.univ : Finset C)
+          (fun c : C => (R.target c σ).val) (m - 1) hvalLe
+      have hsumBound' :
+          (∑ c : C, (R.target c σ).val) ≤
+            Fintype.card C * (m - 1) := by
+        simpa [nsmul_eq_mul, Nat.mul_comm] using hsumBound
+      have hdegreeLe : I.colorDegree c0 ≤ Fintype.card X := by
+        unfold Incidence.colorDegree
+        exact Finset.card_filter_le (Finset.univ : Finset X)
+          (fun x : X => c0 ∈ I.active x)
+      have hcap : Fintype.card C * (m - 1) ≤ Fintype.card X := by
+        have hlargeX : m * Fintype.card C * T < Fintype.card X :=
+          (hLarge c0).trans_le hdegreeLe
+        have hscale : Fintype.card C * (m - 1) ≤ m * Fintype.card C * T := by
+          calc
+            Fintype.card C * (m - 1) ≤ Fintype.card C * m :=
+              Nat.mul_le_mul_left (Fintype.card C) (Nat.sub_le m 1)
+            _ = m * Fintype.card C := Nat.mul_comm (Fintype.card C) m
+            _ ≤ (m * Fintype.card C) * T :=
+              Nat.le_mul_of_pos_right (m * Fintype.card C) hTpos
+            _ = m * Fintype.card C * T := rfl
+        exact hscale.trans (Nat.le_of_lt hlargeX)
+      exact hsumBound'.trans hcap
+    · haveI : IsEmpty C := not_nonempty_iff.mp hC
+      simp
 
 theorem cutMass_symbols_univ {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -2723,10 +3071,74 @@ theorem color_mem_active {T : Nat} {X C : Type*}
     Φ.color x σ ∈ I.active x :=
   (Φ.equiv x σ).2
 
+/--
+Swap two active symbols at one base vertex.
+
+This is the local move used by the v7.5 coactive-site reservoir proof: it
+changes only one local bijection `Fin T ≃ I.active x` and preserves every
+other active-set bijection verbatim.
+-/
+noncomputable def swapAt {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ : Fin T) : Symboling I where
+  equiv := fun x =>
+    if h : x = x₀ then by
+      subst x
+      exact (Equiv.swap σ τ).trans (Φ.equiv x₀)
+    else
+      Φ.equiv x
+
+@[simp] theorem swapAt_color_self {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ ρ : Fin T) :
+    (Φ.swapAt x₀ σ τ).color x₀ ρ =
+      Φ.color x₀ ((Equiv.swap σ τ) ρ) := by
+  simp [swapAt, color]
+
+@[simp] theorem swapAt_color_ne {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {x₀ x : X} (h : x ≠ x₀) (σ τ ρ : Fin T) :
+    (Φ.swapAt x₀ σ τ).color x ρ = Φ.color x ρ := by
+  simp [swapAt, color, h]
+
+@[simp] theorem swapAt_color_left {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ : Fin T) :
+    (Φ.swapAt x₀ σ τ).color x₀ σ = Φ.color x₀ τ := by
+  simp
+
+@[simp] theorem swapAt_color_right {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ : Fin T) :
+    (Φ.swapAt x₀ σ τ).color x₀ τ = Φ.color x₀ σ := by
+  simp
+
 def count {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] {I : Incidence T X C}
     (Φ : Symboling I) (c : C) (σ : Fin T) : Nat :=
   ∑ x : X, if Φ.color x σ = c then 1 else 0
+
+theorem swapAt_count_of_ne {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ ρ : Fin T) (c : C)
+    (hρσ : ρ ≠ σ) (hρτ : ρ ≠ τ) :
+    (Φ.swapAt x₀ σ τ).count c ρ = Φ.count c ρ := by
+  classical
+  unfold count
+  apply Finset.sum_congr rfl
+  intro x _hx
+  by_cases hx : x = x₀
+  · subst x
+    have hswap : (Equiv.swap σ τ) ρ = ρ :=
+      Equiv.swap_apply_of_ne_of_ne hρσ hρτ
+    simp [hswap]
+  · simp [swapAt_color_ne Φ hx σ τ ρ]
 
 theorem count_eq_choiceDegree {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -4003,6 +4415,65 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
       ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
     exact hLow
 
+theorem eraseLastHallCutsProperTokenQuotaSelection_of_realizes
+    {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) (Φ : Symboling I) (hReal : Φ.Realizes M.val) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin T),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  classical
+  let choice : X → C := fun x => Φ.color x (Fin.last T)
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    exact Φ.color_mem_active x (Fin.last T)
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T) := by
+    intro c
+    rw [← Φ.count_eq_choiceDegree c (Fin.last T), hReal c (Fin.last T)]
+  rcases Incidence.exists_choiceDegree_bijective_token_matching
+      choice (fun c : C => M.val c (Fin.last T)) hdegree with
+    ⟨f, hfChoice⟩
+  refine ⟨f, ?_, ?_⟩
+  · intro q
+    rw [hfChoice q]
+    exact hchoice (f q)
+  · have hchoiceEq : (fun x : X => (f.symm x).1) = choice := by
+      funext x
+      have h := hfChoice (f.symm x)
+      simpa using h
+    intro U S _hUne _hUuniv _hSne _hSuniv
+    have hHallUS :
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) ≤
+          I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+      hHall U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+    have hAdd :
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+            + Incidence.choiceLowHitCount I choice U S
+          ≤ I.cutCap U
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+      simpa [choice] using
+        Φ.cutMass_image_castSucc_add_choiceLowHitCount_le_cutCap_of_realizes
+          M hReal U S
+    have hLow :
+        Incidence.choiceLowHitCount I choice U S
+          ≤ M.cutSlack U
+              (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+      ((M.cutMass_add_le_iff_le_cutSlack U
+        (S.image (Fin.castSucc : Fin T → Fin (T + 1))) hHallUS
+        (Incidence.choiceLowHitCount I choice U S)).1 hAdd)
+    rw [← M.cutSlack_image_castSucc U S]
+    rw [Incidence.tokenLoadOn_eq_choiceHitCountOn, hchoiceEq,
+      ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
+    exact hLow
+
 theorem eraseLastHallCutsTokenLinearChoiceGoal_of_proper
     (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC}) :
     EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} := by
@@ -4451,6 +4922,81 @@ theorem eraseLastHallCuts_one {X : Type uX} {C : Type uC}
   change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
   exact CountMatrix.hallCuts_one (M.eraseLastCountMatrix choice hchoice hdegree)
 
+theorem eraseLastHallCutsProperTokenQuotaSelection_zero
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 1 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 0))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 0)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin 0),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin 0)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 0) with
+    ⟨f, hfActive⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro _U S _hUne _hUuniv hSne _hSuniv
+  rcases hSne with ⟨σ, _hσ⟩
+  exact Fin.elim0 σ
+
+theorem eraseLastHallCutsProperTokenQuotaSelection_one
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 2 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 1))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 1)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin 1),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin 1)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 1) with
+    ⟨f, hfActive⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro _U S _hUne _hUuniv hSne hSuniv
+  have h0 : (0 : Fin 1) ∈ S := by
+    rcases hSne with ⟨σ, hσ⟩
+    fin_cases σ
+    exact hσ
+  have hS : S = (Finset.univ : Finset (Fin 1)) := by
+    ext σ
+    constructor
+    · intro _h
+      fin_cases σ
+      exact Finset.mem_univ _
+    · intro _h
+      fin_cases σ
+      exact h0
+  exact False.elim (hSuniv hS)
+
+theorem eraseLastHallCutsProperTokenQuotaSelection_of_T_le_one
+    {T : Nat} (hT : T ≤ 1)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin T),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  interval_cases T
+  · exact eraseLastHallCutsProperTokenQuotaSelection_zero I M hHall
+  · exact eraseLastHallCutsProperTokenQuotaSelection_one I M hHall
+
 theorem hallRealization_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 0 X C) (M : CountMatrix I) :
@@ -4668,6 +5214,110 @@ def EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal : Prop :=
               Incidence.tokenLoadOn f
                   (Incidence.lowCutSet I U ({σ} : Finset (Fin 2))) U
                 ≤ I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc σ)
+
+lemma finset_fin_two_eq_singleton_of_mem_of_ne_univ
+    (S : Finset (Fin 2)) {σ : Fin 2} (hσ : σ ∈ S)
+    (hS : S ≠ (Finset.univ : Finset (Fin 2))) :
+    S = {σ} := by
+  ext τ
+  constructor
+  · intro hτ
+    by_cases hτσ : τ = σ
+    · simp [hτσ]
+    · exfalso
+      have hUniv : S = (Finset.univ : Finset (Fin 2)) := by
+        ext ρ
+        constructor
+        · intro _
+          simp
+        · intro _
+          fin_cases σ <;> fin_cases τ <;> fin_cases ρ <;>
+            simp_all
+      exact hS hUniv
+  · intro hτ
+    rw [Finset.mem_singleton] at hτ
+    rw [hτ]
+    exact hσ
+
+theorem eraseLastHallCutsTwoSingletonProperTokenQuotaSelection_of_realizes
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence 3 X C} (M : CountMatrix I)
+    (hHall : M.HallCuts) (Φ : Symboling I) (hReal : Φ.Realizes M.val) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ σ : Fin 2,
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            Incidence.tokenLoadOn f
+                (Incidence.lowCutSet I U ({σ} : Finset (Fin 2))) U
+              ≤ I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc σ) := by
+  classical
+  rcases eraseLastHallCutsProperTokenQuotaSelection_of_realizes
+      (T := 2) M hHall Φ hReal with
+    ⟨f, hfActive, hQuota⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U σ hUne hUuniv
+  have hSingletonProper : ({σ} : Finset (Fin 2)) ≠ Finset.univ := by
+    intro h
+    have hcard := congrArg Finset.card h
+    simp at hcard
+  have h :=
+    hQuota U ({σ} : Finset (Fin 2)) hUne hUuniv
+      (Finset.singleton_nonempty σ) hSingletonProper
+  rw [← M.cutSlack_image_castSucc U ({σ} : Finset (Fin 2)),
+    M.cutSlack_image_castSucc_singleton U σ] at h
+  exact h
+
+theorem eraseLastHallCutsProperTokenQuotaSelection_two_of_twoSingletonProperTokenQuota
+    (hTwo :
+      EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin 2),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin 2)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  classical
+  rcases hTwo I M hHall with ⟨f, hfActive, hSingleton⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne hSuniv
+  rcases hSne with ⟨σ, hσ⟩
+  have hS : S = {σ} :=
+    finset_fin_two_eq_singleton_of_mem_of_ne_univ S hσ hSuniv
+  rw [← M.cutSlack_image_castSucc U S, hS,
+    M.cutSlack_image_castSucc_singleton U σ]
+  exact hSingleton U σ hUne hUuniv
+
+theorem eraseLastHallCutsProperTokenQuotaSelection_of_T_le_two
+    (hTwo :
+      EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 2)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+      (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+          q.1 ∈ I.active (f q)) ∧
+        ∀ U : Finset C, ∀ S : Finset (Fin T),
+          U.Nonempty → U ≠ (Finset.univ : Finset C) →
+            S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                    - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  interval_cases T
+  · exact eraseLastHallCutsProperTokenQuotaSelection_zero I M hHall
+  · exact eraseLastHallCutsProperTokenQuotaSelection_one I M hHall
+  · exact eraseLastHallCutsProperTokenQuotaSelection_two_of_twoSingletonProperTokenQuota
+      hTwo I M hHall
 
 theorem eraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal_of_quota
     (hQuota :

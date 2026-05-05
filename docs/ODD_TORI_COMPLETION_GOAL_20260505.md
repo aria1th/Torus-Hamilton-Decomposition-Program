@@ -32,7 +32,12 @@ theorem RoundComposite.Concrete
     OddModulusToriAllDimensionsGoal
 ```
 
-Thus the completion goal is to prove the following package:
+This adapter is still useful as a map of the old Lean plumbing, but the latest
+finite counterexamples show that its raw matrix input cannot remain the
+mathematical target in this unrestricted form.  The completion goal therefore
+has to be restated before the final wrapper can be closed.
+
+Former package:
 
 ```lean
 RoundComposite.Concrete.OddModulusToriV4CompletionCoreRawMatrixGoal
@@ -46,11 +51,76 @@ OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal
 ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
 ```
 
-The compatible-matrix or Hall-realization variants are equally sufficient:
+The compatible-matrix or Hall-realization variants were formerly treated as
+equally sufficient:
 
 ```lean
 ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
 ActiveHall.HallRealizationGoal.{0, 0}
+```
+
+The current v7.5 replacement route is the direct small-modulus modular-trade
+surface.  It bypasses the false unrestricted ActiveHall/de Werra theorem and
+the older controlled count-matrix rounding route.  The live successor branch is
+active residue trade scheduling, a finite coactive-site reservoir, and a
+lower-triangular base-tail lift:
+
+```lean
+BaseTail.Trades.activeBlockResidueSpec
+BaseTail.Trades.activeBlockResidueScheduleGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
+BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+BaseTail.ExpandedColorDirLowerTriangularMonodromyDataOfCountsPrimitiveGoal
+BaseTail.CylinderBaseCycleData
+BaseTail.cylinderBaseCycleData_of_isCylinder
+BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal
+BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_expandedMonodromy
+Concrete.OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+```
+
+The planned top-level import for this paper-facing route is:
+
+```lean
+import RoundComposite.V75Endpoints
+```
+
+That file exposes the v7.5 theorem surfaces:
+
+```lean
+Concrete.OddModulusToriV75DirectModularTradeInputsGoal
+Concrete.OddModulusToriV75DirectModularTradeBlocksGoal
+Concrete.OddModulusToriV75GeneralLocalTradeInputsGoal
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_generalInputs
+Concrete.oddSuccessorClosureGoal_of_v75_directModularTrade_blocks
+Concrete.odd_modulus_tori_all_dimensions_of_v75_directModularTrade_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
+```
+
+The implementation goal and success criteria are recorded in:
+
+```text
+docs/ODD_TORI_V75_DIRECT_MODULAR_TRADE_GOAL_20260505.md
 ```
 
 ## Closed Context
@@ -71,9 +141,10 @@ PrefixCount.ordinaryQge2SignedFullSupportTrellisGoal_iff_seedProperCutClosureGoa
 PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_iff_seedProperCutClosureGoal
 ```
 
-The ActiveHall extraction/adapters are already in place; proving a matrix,
-exact edge-colouring, or Hall-realization theorem feeds the final endpoint
-through existing Lean code.
+The ActiveHall extraction/adapters are already in place as plumbing.  They must
+now be treated carefully: the unrestricted matrix, exact edge-colouring, and
+Hall-realization theorem shapes are refuted by finite counterexamples unless
+additional successor-specific hypotheses are added.
 
 The successor packet arithmetic is also closed, including packet shape,
 proper-prefix unit facts, prefix slot counts, and tail-carry residue units.
@@ -116,15 +187,169 @@ flow, Rado-Edmonds extraction, or a specialized integral network theorem.  A
 large direct proof is acceptable if it closes the exact ordinary/proper-cut
 target above.
 
-## Target 2: Finite de Werra / Active Hall Realization
+## Target 2: Successor-Specific Modular Trade Realization
 
-Preferred theorem:
+Current preferred theorem package:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
+BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+```
+
+The paper-facing reservoir name for the first item is:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal
+BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_finiteCoactiveSiteReservoir
+```
+
+The broader `BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal` is still
+a sufficient optional fallback, but the current proof surface only asks for the
+canonical schedule selected by `BaseTail.Trades.activeBlockResidueSpec`.
+Lean records this fallback explicitly via
+`BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade`.
+The same fallback is also wired into the sharper lower-triangular residual:
+
+```lean
+Concrete.oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_successorLocalTrade_lowerTriangular
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_successorLocalTrade_lowerTriangular
+```
+
+There is also a weaker feasibility split point:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal
+BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_localTrade
+BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
+BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
+```
+
+`SuccessorActiveBlockCanonicalFeasibleResidueGoal` alone only supplies a count
+matrix.  Paired with the successor-scoped feasible-to-symboling bridge
+`SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal`, it closes the
+canonical local-trade endpoint without invoking the known-false unrestricted
+Hall-realization layer.
+
+The active-block residue scheduler itself is now closed in Lean:
+
+```lean
+BaseTail.Trades.activeBlockResidueSpec
+BaseTail.Trades.activeBlockResidueScheduleGoal
+BaseTail.Trades.successorActiveBlockResidueScheduleGoal
+```
+
+Equivalently, Worker 2 may prove the already packaged residual:
+
+```lean
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeFiberMonodromyResidualGoal
+```
+
+This is sufficient for the final all-dimensional route through:
+
+```lean
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromyBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeFiberMonodromyBlocksGoal
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTrade_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangular_blocks
+Concrete.oddModulusToriAllDimensionsGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeExpandedMonodromy_blocks
+```
+
+The remaining hard mathematical endpoint in the trade layer is the
+canonical successor-scoped local-symbol trade theorem.  It must be proved for
+the actual base-tail cylinder incidence data and canonical residue schedule;
+it should not be replaced by the
+unrestricted finite Hall theorem below.
+
+Paper-to-Lean correspondence for the v7.5 modular-trade branch:
+
+```text
+lem:trade-reservoir
+  -> BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal
+     and the missing finite reservoir/coactive-site proof for the actual cylinder
+
+thm:active-residue-scheduling
+  -> BaseTail.Trades.SuccessorActiveBlockLocalSymbolTradeGoal
+
+thm:active-realization
+  -> BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
+     plus BaseTail.Trades.activeBlockResidueSpec
+
+thm:base-tail-lift
+  -> BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+     via BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+```
+
+The sharpest current Lean target for the prefix lift is the generic
+lower-triangular projected-lift endpoint:
+
+```lean
+BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal
+Concrete.OddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalFeasibleLocalTradeLowerTriangularBlocksGoal
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeBlocksGoal_of_lowerTriangularBlocks
+Concrete.oddModulusToriV73ReturnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangularBlocksGoal_of_feasibleLocalTradeLowerTriangularBlocks
+```
+
+Existing adapters already prove:
+
+```lean
+BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+  -> BaseTail.PrimitiveActivePrefixProjectedLiftAssemblyGoal
+  -> BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+```
+
+Thus the remaining prefix-lift content is to construct the
+lower-triangular/unit projected lift from the active symboling count data.
+The compressed base-cycle part needed by such a construction is now closed:
+
+```lean
+BaseTail.CylinderBaseCycleData
+BaseTail.cylinderBaseCycleData_of_isCylinder
+```
+
+`CylinderBaseCycleData` fixes `period c = m ^ (b + 1)`, so the remaining
+prefix theorem can work over one compressed base cycle, not an arbitrary
+multiple of that cycle.
+
+The following expanded-color-direction monodromy surfaces are still present as
+diagnostic adapters, but they should not be treated as the primary remaining
+proof boundary.  The `expandedColorDir` return data depends only on the
+collapsed base direction, so this route appears too weak for the final
+primitive fiber lift unless an additional nontrivial fiber-return theorem is
+supplied:
+
+```lean
+BaseTail.ExpandedColorDirLowerTriangularMonodromyDataOfCountsPrimitiveGoal
+BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal
+BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal
+BaseTail.ExpandedColorDirFiberLowerTriangularMonodromyGoal
+  -> BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal
+BaseTail.PrimitiveActivePrefixExpandedLowerTriangularMonodromyGoal
+  -> BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_expandedMonodromy
+  -> BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+```
+
+Legacy target, no longer current:
+
+Former preferred theorem:
 
 ```lean
 ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
 ```
 
-Equivalent sufficient targets:
+Former equivalent targets:
 
 ```lean
 ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}
@@ -139,14 +364,43 @@ ActiveHall.EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal.{0, 0}
 ActiveHall.EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{0, 0}
 ```
 
-The mathematical content is the finite compatible edge-colouring theorem.  The
-existing Lean adapters already handle one-hot extraction and translation among
-the copied-edge, exact-colouring, compatible-colouring, and Hall-realization
-forms.
+Latest update: the general theorem shape above is false.  It should not be
+pursued as a proof target without new hypotheses.
 
-The next induction interface is also explicit: once the last-symbol erase
-choice is supplied, the `T = 4` case reduces to the already closed `T <= 3`
-pipeline based on singleton token cut-slack selection.
+Two obstructions have been found.
+
+1. The two-sided compatible de Werra form with allowed left and right sets
+   satisfies all stated degree and rectangle-cut hypotheses on a `3 x 3` finite
+   graph, but no compatible colouring exists.  A forced edge of colour `β`
+   leaves colour `β` needing a missing edge.
+
+2. The one-sided raw zero-one/Hall-realization form is also false.  In a
+   `|R| = 3`, `|C| = 6`, `|X| = 5` instance, all row sums, column sums, and Hall
+   rectangle cuts hold, but the support pattern forces `x1`, `x2`, and `x4` to
+   use three copies of one cell `(c2,r3)` even though the matrix has only two.
+
+The existing Lean adapters still describe how a valid active symboling theorem
+would feed the rest of the code, but they do not supply the missing
+mathematical content.  The legacy ActiveHall branch can only be revived by one
+of:
+
+```text
+1. formalize the counterexamples and remove the false general endpoint from
+   the final completion route; or
+2. replace the finite theorem by a successor-specific active symboling theorem
+   whose extra structural hypotheses rule out forced-cell capacity
+   obstructions.
+```
+
+The intended successor-specific theorem should cover only the incidence/count
+matrices produced by the base-tail construction and residue-compatible
+rounding.  In that restricted setting it must still realize the full count
+matrix, not just a one-column Hall matching.
+
+The historical induction interface remains explicit: if a corrected
+last-symbol erase choice is supplied under successor-specific hypotheses, the
+`T = 4` case reduces to the already closed `T <= 3` pipeline based on singleton
+token cut-slack selection.
 
 ```lean
 ActiveHall.hallRealization_succ_of_eraseLastHallCuts_and_lower_T_le_three
@@ -201,7 +455,8 @@ ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_of_eraseLastHallCutsProperTokenQuo
 ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_iff_eraseLastHallCutsProperTokenQuotaSelectionGoal
 ```
 
-The new proper-token target is a genuine reduction of the general erase step:
+Historical note: the proper-token target was a reduction of the general erase
+step under the now-questioned ActiveHall theorem shape:
 the case `S = Finset.univ : Finset (Fin T)` is automatic from the erased
 matrix identity below, so the hard finite theorem only has to control
 nonempty proper symbol cuts.
@@ -222,10 +477,10 @@ right-hand side is
 
 The adapter `eraseLastHallCutsProperTokenLinearChoiceGoal_of_quota` rewrites
 this quota inequality to the old cut-slack form using
-`CountMatrix.cutSlack_image_castSucc`.  Thus a proof of the quota target is
-already enough for the full `RawZeroOneMatrixGoal` route.  Lean also records
-the reverse implication from `HallRealizationGoal`, so this quota formulation
-is not a weaker side condition but an equivalent form of the ActiveHall core.
+`CountMatrix.cutSlack_image_castSucc`.  Thus a proof of the quota target was
+intended to feed the full `RawZeroOneMatrixGoal` route.  In light of the
+counterexamples, this should be treated as an adapter/equivalence note, not as
+evidence that the unrestricted theorem is true.
 
 The new `SmallToken` target applies the same idea to the `T = 4` erase step:
 the case `S = Finset.univ : Finset (Fin 3)` is automatic from the erased
@@ -272,10 +527,12 @@ where the right-hand side is `I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc 
 This quota theorem implies the cut-slack theorem by the two displayed
 `cutSlack` identities.
 
-Direct proof fallback: prove `RawZeroOneMatrixGoal.{0,0}` or
-`HallRealizationGoal.{0,0}` directly.  Ordinary one-column Hall matching is not
-enough by itself, because the last-symbol choice must preserve all residual
-Hall cut inequalities.
+Direct proof fallback: prove a corrected successor-specific active symboling
+theorem and wrap it into the small-modulus base-tail route.  Do not try to prove
+`RawZeroOneMatrixGoal.{0,0}` or `HallRealizationGoal.{0,0}` as currently stated.
+Ordinary one-column Hall matching is not enough by itself, because the
+last-symbol choice must preserve all residual Hall cut inequalities and avoid
+forced-cell capacity obstructions.
 
 ## Target 3: Successor Small-Modulus Base-Tail Geometry
 
@@ -456,13 +713,13 @@ rounding/Hall cuts, and base-tail Hamilton lift.
 
 ## Goal Statement To Pursue
 
-The active proof goal should be:
+The old active proof goal was:
 
 ```text
 Prove OddModulusToriV4CompletionCoreRawMatrixGoal, hence for all d >= 2 and
 odd m >= 3 construct Shared.CayleyHamiltonDecomposition d m.
 
-Concretely close:
+Concretely it asked to close:
   1. PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal.
   2. ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0,0}
      or an equivalent Hall/de Werra theorem.
@@ -471,12 +728,29 @@ Concretely close:
      cylinder interface carrying colorDegree c = (m - activeBlock c) * m^b.
 ```
 
+Latest status correction: item 2 is not a valid target as stated.  The active
+Goal 2 proof goal is now:
+
+```text
+Prove the small-modulus successor theorem:
+
+  for b >= 5, odd m >= 3, and m < 2b + 1,
+  StandardCayleySolved b m
+  => StandardCayleySolved (2b + 1) m.
+
+The proof must use:
+  1. base-tail cylinder construction from the b-dimensional decomposition;
+  2. successor-specific residue-compatible active symboling, not the false
+     unrestricted RawZeroOneMatrixGoal;
+  3. primitive lower-triangular tail lift.
+```
+
 ## Direct-Proof Fallback Policy
 
-Large direct proofs are acceptable, but only when they close one of the exact
-interfaces consumed by the final endpoint.  A direct proof should not introduce
-another opaque theorem unless it is immediately wrapped into one of the three
-fields below.
+Large direct proofs are acceptable, but only when they close a corrected
+interface consumed by the final endpoint.  A direct proof should not introduce
+another opaque theorem unless it is immediately wrapped into the replacement
+successor route.
 
 ### Direct q >= 2 Target
 
@@ -491,24 +765,49 @@ extraction, or a specialized integral flow argument.  The proof must preserve
 the ordinary-row hypotheses and the proper-cut reduction; it must not assert
 the false arbitrary-row signed packing theorem.
 
-### Direct ActiveHall Target
+### Direct Successor Modular-Trade Target
 
-The direct target is one of:
+The current direct targets are:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal
+BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+```
+
+Together with the already isolated geometry and lift interfaces, these imply:
+
+```lean
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal
+Concrete.OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal
+Concrete.OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal
+```
+
+The former direct targets were:
 
 ```lean
 ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
 ActiveHall.HallRealizationGoal.{0, 0}
 ```
 
-The direct theorem may be proved as finite de Werra/Hoffman compatible
-edge-colouring, a 0-1 matrix theorem, or a finite integral flow theorem.  The
-important constraint is that the result realizes the whole count matrix under
-all rectangle/Hall cuts; a single ordinary matching lemma is not sufficient
-unless it also proves preservation of all residual cuts.
+These targets are no longer acceptable as currently stated.  The direct theorem
+must be a corrected successor-specific active symboling theorem, or a formal
+counterexample record followed by a replacement of the final completion route.
+The important constraint remains that the result must realize the whole count
+matrix under the successor structure; a single ordinary matching lemma is not
+sufficient unless it also proves preservation of all residual cuts and cell
+capacities.
 
 ### Direct Base-Tail Geometry Target
 
-The direct target is:
+The direct target is now:
+
+```lean
+Concrete.OddSuccessorSmallModulusBaseTailGeometryCoreModularTradeGoal
+```
+
+The older Hall-shaped core target remains useful only as a legacy adapter:
 
 ```lean
 Concrete.OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal

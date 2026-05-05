@@ -244,6 +244,140 @@ theorem compatibleZeroOneMatrixGoal_iff_compatibleDeWerraGoal :
   ⟨compatibleDeWerraGoal_of_matrix,
     compatibleZeroOneMatrixGoal_of_compatibleDeWerraGoal⟩
 
+/--
+A finite obstruction to the unrestricted two-sided compatible de Werra
+endpoint.
+
+The graph is the `3 × 3` bipartite graph with the diagonal removed.  The three
+listed colours satisfy all degree and rectangle-cut hypotheses, but the forced
+edge `(0, 1)` makes colour `1` unavailable for `(0, 2)`, while the alternative
+colour `0` is already forced at right endpoint `2`.
+-/
+theorem not_compatibleDeWerraGoal :
+    ¬ CompatibleDeWerraGoal.{0, 0} := by
+  classical
+  intro hDW
+  let left : Fin 6 → Fin 3 := fun e =>
+    if e = 0 then 0 else
+    if e = 1 then 0 else
+    if e = 2 then 1 else
+    if e = 3 then 1 else
+    if e = 4 then 2 else
+      2
+  let right : Fin 6 → Fin 3 := fun e =>
+    if e = 0 then 1 else
+    if e = 1 then 2 else
+    if e = 2 then 0 else
+    if e = 3 then 2 else
+    if e = 4 then 0 else
+      1
+  let A : Fin 3 → Finset (Fin 3) := fun k =>
+    if k = 0 then ({0, 1} : Finset (Fin 3)) else
+    if k = 1 then ({0, 2} : Finset (Fin 3)) else
+      ({1, 2} : Finset (Fin 3))
+  let B : Fin 3 → Finset (Fin 3) := fun k =>
+    if k = 0 then ({0, 2} : Finset (Fin 3)) else
+    if k = 1 then ({1, 2} : Finset (Fin 3)) else
+      ({0, 1} : Finset (Fin 3))
+  have hCard : ∀ k : Fin 3, (A k).card = (B k).card := by
+    decide
+  have hLeft :
+      ∀ l : Fin 3,
+        ((Finset.univ : Finset (Fin 6)).filter
+          (fun e => left e = l)).card =
+          ((Finset.univ : Finset (Fin 3)).filter
+            (fun k => l ∈ A k)).card := by
+    decide
+  have hRight :
+      ∀ r : Fin 3,
+        ((Finset.univ : Finset (Fin 6)).filter
+          (fun e => right e = r)).card =
+          ((Finset.univ : Finset (Fin 3)).filter
+            (fun k => r ∈ B k)).card := by
+    decide
+  have hRect :
+      ∀ U : Finset (Fin 3), ∀ V : Finset (Fin 3),
+        ((Finset.univ : Finset (Fin 6)).filter
+          (fun e => left e ∈ U ∧ right e ∈ V)).card
+          ≤ ∑ k : Fin 3, min ((A k ∩ U).card) ((B k ∩ V).card) := by
+    decide
+  rcases hDW (left := left) (right := right) (A := A) (B := B)
+      hCard hLeft hRight hRect with
+    ⟨κ, hκ, hκLeft, hκRight⟩
+  have hκ0 : κ 0 = 1 := by
+    let k : Fin 3 := κ 0
+    have hkdef : k = κ 0 := rfl
+    have h : left 0 ∈ A k ∧ right 0 ∈ B k := by
+      simpa [k] using hκ 0
+    have hk : k = 1 := by
+      have hcases : k.val = 0 ∨ k.val = 1 ∨ k.val = 2 := by
+        omega
+      rcases hcases with hk0 | hk1 | hk2
+      · have hk0' : k = 0 := Fin.ext hk0
+        exfalso
+        simp [left, right, A, B, hk0'] at h
+      · exact Fin.ext hk1
+      · have hk2' : k = 2 := Fin.ext hk2
+        exfalso
+        simp [left, right, A, B, hk2'] at h
+    exact hkdef.symm.trans hk
+  have hκ3 : κ 3 = 0 := by
+    let k : Fin 3 := κ 3
+    have hkdef : k = κ 3 := rfl
+    have h : left 3 ∈ A k ∧ right 3 ∈ B k := by
+      simpa [k] using hκ 3
+    have hk : k = 0 := by
+      have hcases : k.val = 0 ∨ k.val = 1 ∨ k.val = 2 := by
+        omega
+      rcases hcases with hk0 | hk1 | hk2
+      · exact Fin.ext hk0
+      · have hk1' : k = 1 := Fin.ext hk1
+        exfalso
+        simp [left, right, A, B, hk1'] at h
+      · have hk2' : k = 2 := Fin.ext hk2
+        exfalso
+        simp [left, right, A, B, hk2'] at h
+    exact hkdef.symm.trans hk
+  have hκ1_cases : κ 1 = 0 ∨ κ 1 = 1 := by
+    let k : Fin 3 := κ 1
+    have hkdef : k = κ 1 := rfl
+    have h : left 1 ∈ A k ∧ right 1 ∈ B k := by
+      simpa [k] using hκ 1
+    have hk : k = 0 ∨ k = 1 := by
+      have hcases : k.val = 0 ∨ k.val = 1 ∨ k.val = 2 := by
+        omega
+      rcases hcases with hk0 | hk1 | hk2
+      · exact Or.inl (Fin.ext hk0)
+      · exact Or.inr (Fin.ext hk1)
+      · have hk2' : k = 2 := Fin.ext hk2
+        exfalso
+        simp [left, right, A, B, hk2'] at h
+    exact hk.imp (fun h0 => hkdef.symm.trans h0)
+      (fun h1 => hkdef.symm.trans h1)
+  rcases hκ1_cases with hκ1 | hκ1
+  · have h13 : right (1 : Fin 6) = 2 ∧ κ (1 : Fin 6) = 0 := by
+      exact ⟨by decide, hκ1⟩
+    have h33 : right (3 : Fin 6) = 2 ∧ κ (3 : Fin 6) = 0 := by
+      exact ⟨by decide, hκ3⟩
+    have heq : (1 : Fin 6) = 3 :=
+      (hκRight 2 0 (by decide)).unique h13 h33
+    have hval := congrArg Fin.val heq
+    norm_num at hval
+  · have h01 : left (0 : Fin 6) = 0 ∧ κ (0 : Fin 6) = 1 := by
+      exact ⟨by decide, hκ0⟩
+    have h11 : left (1 : Fin 6) = 0 ∧ κ (1 : Fin 6) = 1 := by
+      exact ⟨by decide, hκ1⟩
+    have heq : (0 : Fin 6) = 1 :=
+      (hκLeft 0 1 (by decide)).unique h01 h11
+    have hval := congrArg Fin.val heq
+    norm_num at hval
+
+theorem not_compatibleZeroOneMatrixGoal :
+    ¬ CompatibleZeroOneMatrixGoal.{0, 0} := by
+  intro hMat
+  exact not_compatibleDeWerraGoal
+    (compatibleDeWerraGoal_of_matrix hMat)
+
 theorem rawExactEdgeColoringGoal_of_matrix
     (hMat : CompatibleZeroOneMatrixGoal.{uX, uC}) :
     RawExactEdgeColoringGoal.{uX, uC} :=
@@ -480,6 +614,18 @@ theorem rawZeroOneMatrixGoal_iff_rawExactEdgeColoringGoal :
     RawZeroOneMatrixGoal.{uX, uC} ↔ RawExactEdgeColoringGoal.{uX, uC} :=
   ⟨rawExactEdgeColoringGoal_of_rawMatrix,
     rawZeroOneMatrixGoal_of_rawExactEdgeColoringGoal⟩
+
+theorem rawZeroOneMatrixGoal_of_compatibleZeroOneMatrixGoal
+    (hMat : CompatibleZeroOneMatrixGoal.{uX, uC}) :
+    RawZeroOneMatrixGoal.{uX, uC} :=
+  rawZeroOneMatrixGoal_of_rawExactEdgeColoringGoal
+    (rawExactEdgeColoringGoal_of_matrix hMat)
+
+theorem rawZeroOneMatrixGoal_of_compatibleDeWerraGoal
+    (hDW : CompatibleDeWerraGoal.{uX, uC}) :
+    RawZeroOneMatrixGoal.{uX, uC} :=
+  rawZeroOneMatrixGoal_of_compatibleZeroOneMatrixGoal
+    (compatibleZeroOneMatrixGoal_of_compatibleDeWerraGoal hDW)
 
 theorem rawExactEdgeColoring_of_exactWitness
     {T : Nat} {X : Type uX} {C E : Type uC}
@@ -1422,6 +1568,219 @@ theorem rawZeroOneMatrixGoal_iff_hallRealizationGoal :
       (exactEdgeColoringGoal_of_raw
         (rawExactEdgeColoringGoal_of_rawMatrix hRaw)),
     rawZeroOneMatrixGoal_of_hallRealizationGoal⟩
+
+theorem hallRealizationGoal_of_compatibleDeWerraGoal
+    (hDW : CompatibleDeWerraGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_exactEdgeColoring
+    (exactEdgeColoringGoal_of_compatibleDeWerra hDW)
+
+theorem hallRealizationGoal_of_compatibleZeroOneMatrixGoal
+    (hMat : CompatibleZeroOneMatrixGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_compatibleDeWerraGoal
+    (compatibleDeWerraGoal_of_matrix hMat)
+
+theorem hallRealizationGoal_of_rawZeroOneMatrixGoal
+    (hRaw : RawZeroOneMatrixGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  (rawZeroOneMatrixGoal_iff_hallRealizationGoal).1 hRaw
+
+/--
+A finite obstruction to the unrestricted one-sided raw/Hall realization
+endpoint.
+
+The active sets have `T = 3`, `X = Fin 5`, and `C = Fin 6`.  The count matrix
+has the required row sums, column sums, and Hall rectangle cuts, but any local
+symboling realizing its zero pattern forces vertices `0`, `1`, and `4` to place
+colour `1` in symbol `1`, while the matrix contains only two copies of that
+cell.
+-/
+theorem not_hallRealizationGoal :
+    ¬ HallRealizationGoal.{0, 0} := by
+  classical
+  intro hHall
+  let active : Fin 5 → Finset (Fin 6) := fun x =>
+    if x = 0 then ({1, 0, 2} : Finset (Fin 6)) else
+    if x = 1 then ({1, 3, 4} : Finset (Fin 6)) else
+    if x = 2 then ({2, 3, 5} : Finset (Fin 6)) else
+    if x = 3 then ({2, 4, 5} : Finset (Fin 6)) else
+      ({1, 0, 4} : Finset (Fin 6))
+  have hActive : ∀ x : Fin 5, (active x).card = 3 := by
+    decide
+  let I : Incidence 3 (Fin 5) (Fin 6) := {
+    active := active
+    active_card := hActive
+  }
+  let mVal : Fin 6 → Fin 3 → Nat := fun c σ =>
+    if c = 0 then
+      if σ = 0 then 0 else if σ = 1 then 0 else 2
+    else if c = 1 then
+      if σ = 0 then 0 else if σ = 1 then 2 else 1
+    else if c = 2 then
+      if σ = 0 then 1 else if σ = 1 then 1 else 1
+    else if c = 3 then
+      if σ = 0 then 1 else if σ = 1 then 0 else 1
+    else if c = 4 then
+      if σ = 0 then 3 else if σ = 1 then 0 else 0
+    else
+      if σ = 0 then 0 else if σ = 1 then 2 else 0
+  have hrow : ∀ c : Fin 6, (∑ σ : Fin 3, mVal c σ) = I.colorDegree c := by
+    intro c
+    change (∑ σ : Fin 3, mVal c σ) =
+      ((Finset.univ : Finset (Fin 5)).filter
+        (fun x => c ∈ active x)).card
+    decide +revert
+  have hcol : ∀ σ : Fin 3, (∑ c : Fin 6, mVal c σ) = Fintype.card (Fin 5) := by
+    decide
+  let M : CountMatrix I := {
+    val := mVal
+    row_sum := hrow
+    col_sum := hcol
+  }
+  have hCuts : M.HallCuts := by
+    intro U S
+    change (∑ c ∈ U, ∑ σ ∈ S, mVal c σ) ≤
+      ∑ x : Fin 5, min ((active x ∩ U).card) S.card
+    decide +revert
+  rcases hHall I M hCuts with ⟨Φ, hReal⟩
+  have color_pos :
+      ∀ x : Fin 5, ∀ σ : Fin 3, 0 < mVal (Φ.color x σ) σ := by
+    intro x σ
+    have hmem :
+        x ∈ (Finset.univ : Finset (Fin 5)).filter
+            (fun y => Φ.color y σ = Φ.color x σ) := by
+      simp
+    have hchoicePos :
+        0 <
+          Incidence.choiceDegree
+            (fun y : Fin 5 => Φ.color y σ) (Φ.color x σ) := by
+      rw [Incidence.choiceDegree]
+      exact Finset.card_pos.mpr ⟨x, hmem⟩
+    have hcount :
+        Incidence.choiceDegree
+            (fun y : Fin 5 => Φ.color y σ) (Φ.color x σ) =
+          mVal (Φ.color x σ) σ := by
+      rw [← Φ.count_eq_choiceDegree (Φ.color x σ) σ]
+      exact hReal (Φ.color x σ) σ
+    omega
+  have color_ne {x : Fin 5} {σ τ : Fin 3} (hστ : σ ≠ τ) :
+      Φ.color x σ ≠ Φ.color x τ := by
+    intro hcolor
+    have hsub : Φ.equiv x σ = Φ.equiv x τ := Subtype.ext hcolor
+    exact hστ ((Φ.equiv x).injective hsub)
+  have hForce0 :
+      ∀ a0 a1 a2 : Fin 6,
+        a0 ∈ active 0 → a1 ∈ active 0 → a2 ∈ active 0 →
+        0 < mVal a0 0 → 0 < mVal a1 1 → 0 < mVal a2 2 →
+        a0 ≠ a1 → a0 ≠ a2 → a1 ≠ a2 → a1 = 1 := by
+    decide
+  have hForce1 :
+      ∀ a0 a1 a2 : Fin 6,
+        a0 ∈ active 1 → a1 ∈ active 1 → a2 ∈ active 1 →
+        0 < mVal a0 0 → 0 < mVal a1 1 → 0 < mVal a2 2 →
+        a0 ≠ a1 → a0 ≠ a2 → a1 ≠ a2 → a1 = 1 := by
+    decide
+  have hForce4 :
+      ∀ a0 a1 a2 : Fin 6,
+        a0 ∈ active 4 → a1 ∈ active 4 → a2 ∈ active 4 →
+        0 < mVal a0 0 → 0 < mVal a1 1 → 0 < mVal a2 2 →
+        a0 ≠ a1 → a0 ≠ a2 → a1 ≠ a2 → a1 = 1 := by
+    decide
+  have hΦ01 : Φ.color 0 (1 : Fin 3) = 1 :=
+    hForce0 (Φ.color 0 0) (Φ.color 0 1) (Φ.color 0 2)
+      (Φ.color_mem_active 0 0) (Φ.color_mem_active 0 1)
+      (Φ.color_mem_active 0 2) (color_pos 0 0)
+      (color_pos 0 1) (color_pos 0 2)
+      (color_ne (by decide : (0 : Fin 3) ≠ 1))
+      (color_ne (by decide : (0 : Fin 3) ≠ 2))
+      (color_ne (by decide : (1 : Fin 3) ≠ 2))
+  have hΦ11 : Φ.color 1 (1 : Fin 3) = 1 :=
+    hForce1 (Φ.color 1 0) (Φ.color 1 1) (Φ.color 1 2)
+      (Φ.color_mem_active 1 0) (Φ.color_mem_active 1 1)
+      (Φ.color_mem_active 1 2) (color_pos 1 0)
+      (color_pos 1 1) (color_pos 1 2)
+      (color_ne (by decide : (0 : Fin 3) ≠ 1))
+      (color_ne (by decide : (0 : Fin 3) ≠ 2))
+      (color_ne (by decide : (1 : Fin 3) ≠ 2))
+  have hΦ41 : Φ.color 4 (1 : Fin 3) = 1 :=
+    hForce4 (Φ.color 4 0) (Φ.color 4 1) (Φ.color 4 2)
+      (Φ.color_mem_active 4 0) (Φ.color_mem_active 4 1)
+      (Φ.color_mem_active 4 2) (color_pos 4 0)
+      (color_pos 4 1) (color_pos 4 2)
+      (color_ne (by decide : (0 : Fin 3) ≠ 1))
+      (color_ne (by decide : (0 : Fin 3) ≠ 2))
+      (color_ne (by decide : (1 : Fin 3) ≠ 2))
+  have hthree :
+      3 ≤ Φ.count (1 : Fin 6) (1 : Fin 3) := by
+    rw [Φ.count_eq_choiceDegree]
+    unfold Incidence.choiceDegree
+    let S : Finset (Fin 5) := {0, 1, 4}
+    have hsub :
+        S ⊆ (Finset.univ : Finset (Fin 5)).filter
+          (fun x => Φ.color x (1 : Fin 3) = (1 : Fin 6)) := by
+      intro x hx
+      fin_cases x
+      · simpa [S] using hΦ01
+      · simpa [S] using hΦ11
+      · simp [S] at hx
+      · simp [S] at hx
+      · simpa [S] using hΦ41
+    have hScard : S.card = 3 := by
+      decide
+    have hcardle :
+        S.card ≤
+          ((Finset.univ : Finset (Fin 5)).filter
+            (fun x => Φ.color x (1 : Fin 3) = (1 : Fin 6))).card :=
+      Finset.card_le_card hsub
+    have hcardle' :
+        3 ≤
+          ((Finset.univ : Finset (Fin 5)).filter
+            (fun x => Φ.color x (1 : Fin 3) = (1 : Fin 6))).card := by
+      omega
+    change 3 ≤
+      ((Finset.univ : Finset (Fin 5)).filter
+        (fun x => Φ.color x (1 : Fin 3) = (1 : Fin 6))).card
+    exact hcardle'
+  have htwo : Φ.count (1 : Fin 6) (1 : Fin 3) = 2 := by
+    simpa [M, mVal] using hReal (1 : Fin 6) (1 : Fin 3)
+  omega
+
+theorem not_rawZeroOneMatrixGoal :
+    ¬ RawZeroOneMatrixGoal.{0, 0} := by
+  intro hRaw
+  exact not_hallRealizationGoal
+    (hallRealizationGoal_of_rawZeroOneMatrixGoal hRaw)
+
+theorem not_exactEdgeColoringGoal :
+    ¬ ExactEdgeColoringGoal.{0, 0} := by
+  intro hExact
+  exact not_hallRealizationGoal
+    (hallRealizationGoal_of_exactEdgeColoring hExact)
+
+theorem not_rawExactEdgeColoringGoal :
+    ¬ RawExactEdgeColoringGoal.{0, 0} := by
+  intro hRaw
+  exact not_rawZeroOneMatrixGoal
+    (rawZeroOneMatrixGoal_of_rawExactEdgeColoringGoal hRaw)
+
+theorem eraseLastHallCutsProperTokenQuotaSelectionGoal_of_compatibleDeWerraGoal
+    (hDW : CompatibleDeWerraGoal.{uX, uC}) :
+    EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC} :=
+  (hallRealizationGoal_iff_eraseLastHallCutsProperTokenQuotaSelectionGoal).1
+    (hallRealizationGoal_of_compatibleDeWerraGoal hDW)
+
+theorem eraseLastHallCutsProperTokenQuotaSelectionGoal_of_compatibleZeroOneMatrixGoal
+    (hMat : CompatibleZeroOneMatrixGoal.{uX, uC}) :
+    EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC} :=
+  (hallRealizationGoal_iff_eraseLastHallCutsProperTokenQuotaSelectionGoal).1
+    (hallRealizationGoal_of_compatibleZeroOneMatrixGoal hMat)
+
+theorem eraseLastHallCutsProperTokenQuotaSelectionGoal_of_rawZeroOneMatrixGoal
+    (hRaw : RawZeroOneMatrixGoal.{uX, uC}) :
+    EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC} :=
+  (hallRealizationGoal_iff_eraseLastHallCutsProperTokenQuotaSelectionGoal).1
+    (hallRealizationGoal_of_rawZeroOneMatrixGoal hRaw)
 
 theorem rawZeroOneMatrixGoal_of_eraseLastHallCutsTokenLinearChoiceGoal
     (hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC}) :
