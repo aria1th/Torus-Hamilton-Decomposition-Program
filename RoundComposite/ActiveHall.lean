@@ -3258,6 +3258,91 @@ theorem exists_with_prescribed_two_at {T : Nat} {X C : Type*}
   · rw [permuteAt_color_self, hπτ]
     simp [color, b]
 
+theorem exists_with_prescribed_pairs_of_injective_site
+    {T : Nat} {X C Q : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (hTpos : 0 < T)
+    (site : Q → X) (hsiteInj : Function.Injective site)
+    (right : Q → Fin T)
+    (hright : ∀ q, (⟨0, hTpos⟩ : Fin T) ≠ right q)
+    (zeroColor rightColor : Q → C)
+    (hZeroActive : ∀ q, zeroColor q ∈ I.active (site q))
+    (hRightActive : ∀ q, rightColor q ∈ I.active (site q))
+    (hColorNe : ∀ q, zeroColor q ≠ rightColor q) :
+    ∃ Φ : Symboling I,
+      (∀ q, Φ.color (site q) (⟨0, hTpos⟩ : Fin T) = zeroColor q) ∧
+        (∀ q, Φ.color (site q) (right q) = rightColor q) := by
+  classical
+  let zero : Fin T := ⟨0, hTpos⟩
+  let base : Symboling I := ofIncidence I
+  let localEquiv :
+      (x : X) → Fin T ≃ {c : C // c ∈ I.active x} := fun x =>
+    if hx : ∃ q, site q = x then by
+      let qx : Q := Classical.choose hx
+      have hqx : site qx = x := Classical.choose_spec hx
+      exact
+        (Classical.choose
+          (exists_with_prescribed_two_at (I := I) x
+            (σ := zero) (τ := right qx)
+            (hright qx)
+            (by simpa [hqx] using hZeroActive qx)
+            (by simpa [hqx] using hRightActive qx)
+            (hColorNe qx))).equiv x
+    else
+      base.equiv x
+  let Φ : Symboling I := { equiv := localEquiv }
+  refine ⟨Φ, ?_, ?_⟩
+  · intro q0
+    have hx : ∃ q, site q = site q0 := ⟨q0, rfl⟩
+    change (localEquiv (site q0) zero).1 = zeroColor q0
+    dsimp [localEquiv]
+    rw [dif_pos hx]
+    let qx : Q := Classical.choose hx
+    have hqx : site qx = site q0 := Classical.choose_spec hx
+    have hqeq : qx = q0 := hsiteInj hqx
+    have hspec :=
+      Classical.choose_spec
+        (exists_with_prescribed_two_at (I := I) (site q0)
+          (σ := zero) (τ := right qx)
+          (hright qx)
+          (by simpa [hqx] using hZeroActive qx)
+          (by simpa [hqx] using hRightActive qx)
+          (hColorNe qx))
+    change (Classical.choose
+        (exists_with_prescribed_two_at (I := I) (site q0)
+          (σ := zero) (τ := right qx)
+          (hright qx)
+          (by simpa [hqx] using hZeroActive qx)
+          (by simpa [hqx] using hRightActive qx)
+          (hColorNe qx))).color (site q0) zero = zeroColor q0
+    exact hspec.1.trans (congrArg zeroColor hqeq)
+  · intro q0
+    have hx : ∃ q, site q = site q0 := ⟨q0, rfl⟩
+    change (localEquiv (site q0) (right q0)).1 = rightColor q0
+    dsimp [localEquiv]
+    rw [dif_pos hx]
+    let qx : Q := Classical.choose hx
+    have hqx : site qx = site q0 := Classical.choose_spec hx
+    have hqeq : qx = q0 := hsiteInj hqx
+    have hrightEq : right qx = right q0 := congrArg right hqeq
+    have hspec :=
+      Classical.choose_spec
+        (exists_with_prescribed_two_at (I := I) (site q0)
+          (σ := zero) (τ := right qx)
+          (hright qx)
+          (by simpa [hqx] using hZeroActive qx)
+          (by simpa [hqx] using hRightActive qx)
+          (hColorNe qx))
+    rw [← hrightEq]
+    change (Classical.choose
+        (exists_with_prescribed_two_at (I := I) (site q0)
+          (σ := zero) (τ := right qx)
+          (hright qx)
+          (by simpa [hqx] using hZeroActive qx)
+          (by simpa [hqx] using hRightActive qx)
+          (hColorNe qx))).color (site q0) (right qx) = rightColor q0
+    exact hspec.2.trans (congrArg rightColor hqeq)
+
 def count {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] {I : Incidence T X C}
     (Φ : Symboling I) (c : C) (σ : Fin T) : Nat :=

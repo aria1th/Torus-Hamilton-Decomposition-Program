@@ -190,6 +190,7 @@ ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.exists_perm_apply_two
 ActiveHall.Symboling.exists_with_prescribed_two_at
+ActiveHall.Symboling.exists_with_prescribed_pairs_of_injective_site
 ActiveHall.Symboling.residueSpec
 ActiveHall.Symboling.hasResidues_residueSpec
 ActiveHall.Symboling.residueSpec_rowCompatible
@@ -253,6 +254,10 @@ families of size `successorReservoirColorQuota m T`.  On the symboling side,
 `ActiveHall.Symboling.exists_with_prescribed_two_at` provide the local baseline
 constructor needed at each reserved site: two distinct active colors can be
 placed at two distinct symbols without changing the global incidence data.
+The injective-family version
+`ActiveHall.Symboling.exists_with_prescribed_pairs_of_injective_site` lifts
+that construction across any reserved site family indexed by an injective
+site map.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
@@ -480,8 +485,8 @@ then inserts that certificate into the existing script endpoint.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-lifting the one-site baseline constructor over the pairwise reserved site plan,
-then constructing the three-buffer arithmetic certificate.
+combining the non-buffer and buffer-pair site-plan families into one injective
+move index, then constructing the three-buffer arithmetic certificate.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
