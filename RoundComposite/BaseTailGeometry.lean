@@ -75,6 +75,22 @@ structure MixedExpansionData {b m T : Nat} [NeZero m]
 
 namespace MixedExpansionData
 
+theorem mixed_lower_compl
+    {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : MixedExpansionData Cyl) {U : Finset (Fin (b + T))}
+    (hUne : U.Nonempty) (hUuniv : U ≠ Finset.univ) :
+    m ^ b ≤ (Cyl.incidence).mixedCount Uᶜ := by
+  classical
+  have hcomp_ne : Uᶜ.Nonempty := by
+    rw [Finset.nonempty_iff_ne_empty]
+    intro hEmpty
+    exact hUuniv ((Finset.compl_eq_empty_iff U).mp hEmpty)
+  have hcomp_univ : Uᶜ ≠ (Finset.univ : Finset (Fin (b + T))) := by
+    intro hUniv
+    exact hUne.ne_empty ((Finset.compl_eq_univ_iff U).mp hUniv)
+  exact D.mixed_lower Uᶜ hcomp_ne hcomp_univ
+
 theorem slack_error_le_mixedCount_mul_proper_min
     {b m T : Nat} [NeZero m]
     {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
@@ -90,6 +106,24 @@ theorem slack_error_le_mixedCount_mul_proper_min
     hbaseScale.trans_lt hSlack
   have hbaseLeMixed : m * (b + T) ≤ (Cyl.incidence).mixedCount U :=
     Nat.le_of_lt (hbaseLtPow.trans_le (D.mixed_lower U hUne hUuniv))
+  simpa [Nat.mul_assoc] using
+    Nat.mul_le_mul_right (min S.card (T - S.card)) hbaseLeMixed
+
+theorem slack_error_le_mixedCount_compl_mul_proper_min
+    {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : MixedExpansionData Cyl) {U : Finset (Fin (b + T))}
+    (hUne : U.Nonempty) (hUuniv : U ≠ Finset.univ)
+    (hTpos : 0 < T) (hSlack : m ^ b > m * (b + T) * T)
+    (S : Finset (Fin T)) :
+    m * (b + T) * min S.card (T - S.card)
+      ≤ (Cyl.incidence).mixedCount Uᶜ * min S.card (T - S.card) := by
+  have hbaseScale : m * (b + T) ≤ m * (b + T) * T := by
+    exact Nat.le_mul_of_pos_right (m * (b + T)) hTpos
+  have hbaseLtPow : m * (b + T) < m ^ b :=
+    hbaseScale.trans_lt hSlack
+  have hbaseLeMixed : m * (b + T) ≤ (Cyl.incidence).mixedCount Uᶜ :=
+    Nat.le_of_lt (hbaseLtPow.trans_le (D.mixed_lower_compl hUne hUuniv))
   simpa [Nat.mul_assoc] using
     Nat.mul_le_mul_right (min S.card (T - S.card)) hbaseLeMixed
 

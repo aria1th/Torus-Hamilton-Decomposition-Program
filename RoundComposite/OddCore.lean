@@ -5653,6 +5653,18 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockM
   exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
     hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 hA
 
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
+    (hCyl : OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal)
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hLift : OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
+      hRound)
+    hLift
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by

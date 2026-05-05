@@ -837,6 +837,17 @@ theorem mixedCount_eq_card_filter_hit_and_compl
       simpa [I.active_card x] using hlt_active
     exact ⟨hpos, hproper⟩
 
+theorem mixedCount_compl {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    I.mixedCount Uᶜ = I.mixedCount U := by
+  classical
+  rw [I.mixedCount_eq_card_filter_hit_and_compl Uᶜ,
+    I.mixedCount_eq_card_filter_hit_and_compl U]
+  apply congrArg Finset.card
+  ext x
+  simp [and_comm]
+
 theorem scaled_bary_cutMass_le_cutCap {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) (S : Finset (Fin T)) :
