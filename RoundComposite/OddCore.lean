@@ -7079,6 +7079,12 @@ def OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidua
   BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal ∧
   BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal :
+    Prop :=
+  OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
+
 def OddSuccessorBaseTailWorker1CanonicalLocalTradeExpandedMonodromyResidualGoal : Prop :=
   OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
   BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
@@ -7164,6 +7170,35 @@ theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoa
       BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
         hFeasible hTrade,
       hLift⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
+    (hFeasible : BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal :=
+  ⟨oddSuccessorBaseTailActiveBlockCylinderConstructionGoal, hFeasible, hTrade⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_closedResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal :=
+  ⟨h.1, h.2.1, h.2.2,
+    BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal⟩
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeClosedResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
+    (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_closedResiduals
+      h)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTrade
+    (hFeasible : BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal)
+    (hTrade :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeClosedResiduals
+    (oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeClosedResidualGoal_of_feasibleLocalTrade
+      hFeasible hTrade)
 
 theorem oddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal_of_mixedCompatibleRounding
     (hRound : OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal)
