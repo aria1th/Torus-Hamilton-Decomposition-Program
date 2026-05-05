@@ -6644,6 +6644,54 @@ def thresholdTokenNonzeroDelta
     else
       0
 
+@[simp] theorem thresholdTokenNonzeroDelta_nonbuffer
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (σ : Fin T) (c : Fin (b + T)) (q : A.nonbufferTokens) :
+    P.thresholdTokenNonzeroDelta hTpos σ c
+        (ReservoirMoveToken.nonbuffer q) =
+      if σ = BaseTail.Trades.NonbufferReservoirToken.right hTpos q then
+        (if BaseTail.Trades.NonbufferReservoirToken.color q = c then
+          (1 : ZMod m) else 0) -
+          (if P.nonbufferBufferColor q = c then (1 : ZMod m) else 0)
+      else
+        0 := rfl
+
+@[simp] theorem thresholdTokenNonzeroDelta_buffer01
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (σ : Fin T) (c : Fin (b + T))
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.thresholdTokenNonzeroDelta hTpos σ c
+        (ReservoirMoveToken.buffer01 q) =
+      if σ = BaseTail.Trades.BufferReservoirToken.right hTpos q then
+        (if A.buffer.color0 A.slotEquiv = c then (1 : ZMod m) else 0) -
+          (if A.buffer.color1 A.slotEquiv = c then (1 : ZMod m) else 0)
+      else
+        0 := rfl
+
+@[simp] theorem thresholdTokenNonzeroDelta_buffer02
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (σ : Fin T) (c : Fin (b + T))
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.thresholdTokenNonzeroDelta hTpos σ c
+        (ReservoirMoveToken.buffer02 q) =
+      if σ = BaseTail.Trades.BufferReservoirToken.right hTpos q then
+        (if A.buffer.color0 A.slotEquiv = c then (1 : ZMod m) else 0) -
+          (if A.buffer.color2 A.slotEquiv = c then (1 : ZMod m) else 0)
+      else
+        0 := rfl
+
 theorem thresholdMoveList_nonzero_delta_eq_token_sum
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
