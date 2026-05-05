@@ -3680,6 +3680,88 @@ theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedFi
     (activePermutedColorDirLowerTriangularMonodromyGoal_of_baseCycle_fiber
       hFiber)
 
+/--
+Canonical active-prefix specialization of the active-permuted monodromy
+residual.
+
+This is the theorem surface for the concrete prefix-count `lambda_rho` tail
+rule.  It removes the arbitrary `tailPerm` parameter from the generic
+active-permuted residual.
+-/
+structure ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets}
+    (A : ActiveSymboling Cyl) (hT : 2 ≤ n + 1)
+    (hCyl : IsCylinder Cyl) (B : CylinderBaseCycleData Cyl) where
+  fiber_bijective :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        Function.Bijective
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y)
+  gamma :
+    Fin (b + (n + 1)) →
+      ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m
+  return_lower_triangular :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        Shared.sectionReturn
+            (Shared.skewProductMap
+              (Cyl.step c)
+              ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+            (B.base c) (B.period c) z ⟨k, hk⟩
+          =
+        z ⟨k, hk⟩ +
+          gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  return_unit :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), gamma c k hk z)
+
+namespace ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+
+noncomputable def toActivePermutedData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    {hT : 2 ≤ n + 1} {hCyl : IsCylinder Cyl}
+    {B : CylinderBaseCycleData Cyl}
+    (D :
+      ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+        A hT hCyl B) :
+    ActivePermutedColorDirFiberLowerTriangularMonodromyData A hCyl B where
+  tailPerm := activePrefixTailPerm hT
+  fiber_bijective := D.fiber_bijective
+  gamma := D.gamma
+  return_lower_triangular := D.return_lower_triangular
+  return_unit := D.return_unit
+
+end ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+
+def ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal : Prop :=
+  ∀ {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1),
+      (hCyl : IsCylinder Cyl) →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      (B : CylinderBaseCycleData Cyl) →
+      Nonempty
+        (ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+          A hT hCyl B)
+
+theorem activePermutedColorDirFiberLowerTriangularMonodromyGoal_of_activePrefix
+    (hFiber : ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal) :
+    ActivePermutedColorDirFiberLowerTriangularMonodromyGoal := by
+  intro b m n _inst packets Cyl A hT hCyl hA hPrim B
+  rcases hFiber hT hCyl hA hPrim B with ⟨D⟩
+  exact ⟨D.toActivePermutedData⟩
+
+theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberMonodromy
+    (hFiber : ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal) :
+    PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal :=
+  primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedFiberMonodromy
+    (activePermutedColorDirFiberLowerTriangularMonodromyGoal_of_activePrefix
+      hFiber)
+
 def ExpandedColorDirEdgePartitionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl},
