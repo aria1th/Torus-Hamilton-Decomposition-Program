@@ -32,6 +32,67 @@ noncomputable def activeBlockResidueSpec {b m T : Nat} [NeZero m]
   ActiveHall.universalUnitResidueSpecOfTwoLe m (b + T) T
     (fun c => (D.activeBlock c : ZMod m))
 
+@[simp] theorem activeBlockResidueSpec_target_zero {b m T : Nat}
+    [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (D : ActiveBlockData Cyl)
+    (c : Fin (b + T)) (h0 : 0 < T) :
+    (activeBlockResidueSpec D).target c ⟨0, h0⟩ =
+      (D.activeBlock c : ZMod m) := by
+  simp [activeBlockResidueSpec, ActiveHall.universalUnitResidueSpecOfTwoLe]
+
+@[simp] theorem activeBlockResidueSpec_target_one {b m T : Nat}
+    [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (D : ActiveBlockData Cyl)
+    (c : Fin (b + T)) (h1 : 1 < T) :
+    (activeBlockResidueSpec D).target c ⟨1, h1⟩ =
+      -((D.activeBlock c : Nat) : ZMod m) := by
+  simp [activeBlockResidueSpec, ActiveHall.universalUnitResidueSpecOfTwoLe]
+
+theorem activeBlockResidueSpec_target_of_two_le {b m T : Nat}
+    [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (D : ActiveBlockData Cyl)
+    (c : Fin (b + T)) {σ : Fin T} (hσ : 2 ≤ σ.val) :
+    (activeBlockResidueSpec D).target c σ = 0 := by
+  have h0 : σ.val ≠ 0 := by omega
+  have h1 : σ.val ≠ 1 := by omega
+  simp [activeBlockResidueSpec, ActiveHall.universalUnitResidueSpecOfTwoLe,
+    h0, h1]
+
+theorem symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_target_eq
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    {R : ActiveHall.ResidueSpec m T (Fin (b + T))}
+    {Φ : ActiveHall.Symboling Cyl.incidence}
+    (D : ActiveBlockData Cyl)
+    (hΦ : Φ.HasResidues R)
+    (x₀ : Shared.TorusVertex (b + 1) m)
+    (π : Equiv.Perm (Fin T))
+    (hTarget :
+      ∀ c σ,
+        (Φ.permuteResidueSpec R x₀ π).target c σ =
+          (activeBlockResidueSpec D).target c σ) :
+    ActiveHall.SymbolingWithResidues Cyl.incidence
+      (activeBlockResidueSpec D) := by
+  have hR :
+      Φ.permuteResidueSpec R x₀ π = activeBlockResidueSpec D := by
+    have htarget :
+        (Φ.permuteResidueSpec R x₀ π).target =
+          (activeBlockResidueSpec D).target := by
+      funext c σ
+      exact hTarget c σ
+    cases hperm : Φ.permuteResidueSpec R x₀ π with
+    | mk targetPerm =>
+        cases hblock : activeBlockResidueSpec D with
+        | mk targetBlock =>
+            have htarget' : targetPerm = targetBlock := by
+              rw [hperm, hblock] at htarget
+              exact htarget
+            cases htarget'
+            rfl
+  simpa [hR] using
+    ActiveHall.symbolingWithResidues_of_permuteAt_hasResidues
+      hΦ x₀ π
+
 /--
 Direct active-block residue scheduler.
 
