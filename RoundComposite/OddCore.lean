@@ -1,3 +1,5 @@
+import RoundComposite.BaseTailGeometry
+import RoundComposite.FiniteHoffman.EdgeColoring
 import RoundComposite.SeedSemigroup
 
 namespace RoundComposite
@@ -5271,6 +5273,290 @@ def OddSuccessorSmallModulusBaseTailGeometryFromHallGoal : Prop :=
   ActiveHall.HallRealizationGoal.{0, 0} →
     OddSuccessorSmallModulusSlackPacketLiftAddGoal
 
+/--
+The successor-small geometry target after the pure packet arithmetic has been
+separated out.  Compared with
+`OddSuccessorSmallModulusSlackPacketLiftAddGoal`, this core statement receives
+the nonempty proper packet-prefix unit condition explicitly.
+-/
+def OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal : Prop :=
+  ActiveHall.HallRealizationGoal.{0, 0} →
+  ∀ {b m T : Nat},
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    StandardCayleySolved (b + T) m
+
+def OddSuccessorBaseTailCylinderConstructionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      BaseTail.IsCylinder Cyl
+
+def OddSuccessorBaseTailResidueRoundingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      (hT2 : 2 ≤ T) →
+        BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl
+
+def OddSuccessorBaseTailPrimitiveActiveLiftGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets}
+      {A : BaseTail.ActiveSymboling Cyl},
+      BaseTail.IsCylinder Cyl →
+      (hT2 : 2 ≤ T) →
+      BaseTail.IsPrimitiveActiveSymboling hT2 A →
+      StandardCayleySolved (b + T) m
+
+def OddSuccessorBaseTailActiveBlockCylinderConstructionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+        BaseTail.IsCylinder Cyl
+
+def OddSuccessorBaseTailActiveBlockResidueRoundingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+        BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl
+
+/--
+The active-block residue-rounding problem in its sharpest local form.
+
+The universal primitive residue pattern is already constructed from the
+active-block degree formula in `BaseTailGeometry.lean`.  The remaining
+rounding content is therefore exactly this: every row/column compatible
+primitive residue specification admits a nonnegative count matrix satisfying
+the active Hall cuts and those residues.
+-/
+def OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+      ∀ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
+        R.RowCompatible Cyl.incidence →
+        R.ColCompatible Cyl.incidence →
+        (∀ c : Fin (b + T), IsUnit (R.target c ⟨0, by omega⟩)) →
+        (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+          IsUnit (R.target c σ - R.target c ⟨1, by omega⟩)) →
+        ActiveHall.FeasibleWithResidues Cyl.incidence R
+
+def OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets}
+      {A : BaseTail.ActiveSymboling Cyl},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      (hT2 : 2 ≤ T) →
+      BaseTail.IsPrimitiveActiveSymboling hT2 A →
+      StandardCayleySolved (b + T) m
+
+theorem oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
+    (hCompatible :
+      OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockResidueRoundingGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack Cyl hCyl hBlock hT2
+  exact
+    BaseTail.feasiblePrimitiveResidues_of_successor_activeBlockData_feasible_compatible
+      hb5 hT hmodd hBlock
+      (hCompatible hb5 hmodd hm3 hsmall packets hlen htotal
+        hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hT2)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
+    (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
+    (hRound : OddSuccessorBaseTailResidueRoundingGoal)
+    (hLift : OddSuccessorBaseTailPrimitiveActiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
+  intro hHall b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+  letI : NeZero m := ⟨ne_of_gt (by omega : 0 < m)⟩
+  rcases hCyl hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT with
+    ⟨Cyl, hCylValid⟩
+  have hT2 : 2 ≤ T := by omega
+  have hResidues :
+      BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl :=
+    hRound hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hT2
+  rcases
+    BaseTail.primitiveActiveSymboling_of_feasiblePrimitiveResidues_and_hallRealization
+      hHall hResidues with
+    ⟨A, hA⟩
+  exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hT2 hA
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockPieces
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hRound : OddSuccessorBaseTailActiveBlockResidueRoundingGoal)
+    (hLift : OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
+  intro hHall b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+  letI : NeZero m := ⟨ne_of_gt (by omega : 0 < m)⟩
+  rcases hCyl hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT with
+    ⟨Cyl, hBlock, hCylValid⟩
+  have hT2 : 2 ≤ T := by omega
+  have hResidues :
+      BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl :=
+    hRound hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2
+  rcases
+    BaseTail.primitiveActiveSymboling_of_feasiblePrimitiveResidues_and_hallRealization
+      hHall hResidues with
+    ⟨A, hA⟩
+  exact hLift hb5 hmodd hm3 hsmall hbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack hCylValid hBlock hT2 hA
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockCompatiblePieces
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hRound :
+      OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal)
+    (hLift : OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockPieces
+    hCyl
+    (oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible hRound)
+    hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  intro hHall b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hT hSlack
+  have hPrefix :
+      ∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m :=
+    BaseTail.successorPacketProperPrefixUnitsGoal
+      hm3 hT hlen htotal hpacketSum hpacketUnits
+  exact hCore hHall hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
+    (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
+  intro _hHall b m T hb5 hmodd hm3 hsmall hbase
+    packets hlen htotal hpacketSum hpacketUnits _hPrefix hT hSlack
+  have hdodd : Odd (b + T) := by
+    rw [hT]
+    exact ⟨b, by omega⟩
+  have hd11 : 11 ≤ b + T := by omega
+  have hTgt : T > b := by omega
+  exact hLift
+    (d := b + T) (m := m) (b := b) (T := T)
+    hdodd hd11 hmodd hm3 hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits rfl hTgt hSlack
+
 def OddSuccessorSmallModulusBaseTailGeometryFromHoffmanGoal : Prop :=
   ActiveHall.HoffmanOrderedSDRGoal.{0, 0} →
     OddSuccessorSmallModulusSlackPacketLiftAddGoal
@@ -8652,6 +8938,150 @@ theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitAdd
   intro d m hd2 hmodd hm3
   exact odd_modulus_tori_all_dimensions_of_v4_returnTailOrbitAdd
     hQge2Proper hOrbit hSmall hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_returnTailOrbit
+    hQge2Proper
+    prefixCountFirstHitReturnTailMonodromyOrbitGoal
+    (oddSuccessorSmallModulusBaseTailGoal_of_baseTailGeometryFromRawEdgeColoring
+      hGeom hRaw)
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_geometry_rawEdge
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    hQge2Proper hGeom hRaw hd2 hmodd hm3
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_deWerra
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    hQge2Proper hGeom
+    (ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_compatibleDeWerra hDW)
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_geometry_deWerra
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_deWerra
+    hQge2Proper hGeom hDW hd2 hmodd hm3
+
+def OddModulusToriV4CompletionCoreRawMatrixGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
+  ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
+
+def OddModulusToriV4CompletionCoreCompatibleMatrixGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
+  ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
+
+def OddModulusToriV4CompletionCoreHallGoal : Prop :=
+  PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧
+  OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal ∧
+  ActiveHall.HallRealizationGoal.{0, 0}
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_rawMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    hQge2Proper
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core hCore)
+    (ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_rawMatrix hMat)
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_rawMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_core_rawMatrix
+    hQge2Proper hCore hMat hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_completionCoreRawMatrix
+    (hCore : OddModulusToriV4CompletionCoreRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_rawMatrix
+    hCore.1 hCore.2.1 hCore.2.2
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_compatibleMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    hQge2Proper
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core hCore)
+    (ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_matrix hMat)
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_compatibleMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_core_compatibleMatrix
+    hQge2Proper hCore hMat hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_completionCoreCompatibleMatrix
+    (hCore : OddModulusToriV4CompletionCoreCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_compatibleMatrix
+    hCore.1 hCore.2.1 hCore.2.2
+
+theorem odd_modulus_tori_all_dimensions_of_v4_seedProper_core_hall
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hHall : ActiveHall.HallRealizationGoal.{0, 0})
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v4_seedProper_geometry_rawEdge
+    hQge2Proper
+    (oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core hCore)
+    (ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_hallRealizationGoal
+      hHall)
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_hall
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact odd_modulus_tori_all_dimensions_of_v4_seedProper_core_hall
+    hQge2Proper hCore hHall hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v4_completionCoreHall
+    (hCore : OddModulusToriV4CompletionCoreHallGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_hall
+    hCore.1 hCore.2.1 hCore.2.2
 
 theorem oddModulusToriAllDimensionsGoal_of_v4_returnTailOrbitTrellisAdd
     (hQge2Trellis : PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal)

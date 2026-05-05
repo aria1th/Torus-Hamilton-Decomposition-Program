@@ -2316,6 +2316,31 @@ theorem ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman
   · intro k
     simpa using hXcol k
 
+theorem ordinaryQge2SignedTrellisHoffmanGoal_of_signedSeedClosure
+    (hClosure : OrdinaryQge2SignedSeedClosureGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal := by
+  classical
+  intro n r hnEven hn4 hrOdd hrlt hrpos a epsBit c
+    ha heps hc heps_sum ha_eq_c hCuts
+  rcases hClosure
+      (C := ∑ i : Fin n, a i)
+      hnEven hn4 hrOdd hrlt hrpos a epsBit c
+      ha heps hc rfl heps_sum ha_eq_c.symm hCuts with
+    ⟨S, hSval, hSrow, hScol⟩
+  refine ⟨fun k i => S i k, ?_, ?_, ?_⟩
+  · intro k i
+    exact hSval i k
+  · intro k
+    exact hScol k
+  · intro i
+    exact hSrow i
+
+theorem ordinaryQge2SignedTrellisHoffmanGoal_iff_signedSeedClosureGoal :
+    OrdinaryQge2SignedTrellisHoffmanGoal ↔
+      OrdinaryQge2SignedSeedClosureGoal :=
+  ⟨ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman,
+    ordinaryQge2SignedTrellisHoffmanGoal_of_signedSeedClosure⟩
+
 theorem ordinaryQge2SignedSeedClosureGoal_of_columnPacking
     (hPacking : Qge2SignedColumnPackingGoal) :
     OrdinaryQge2SignedSeedClosureGoal := by
@@ -2425,6 +2450,18 @@ theorem ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman
     OrdinaryQge2SignedSeedProperCutClosureGoal :=
   ordinaryQge2SignedSeedClosureGoal_iff_properCutClosure.mp
     (ordinaryQge2SignedSeedClosureGoal_of_signedTrellisHoffman hHoffman)
+
+theorem ordinaryQge2SignedTrellisHoffmanGoal_of_seedProperCutClosure
+    (hClosure : OrdinaryQge2SignedSeedProperCutClosureGoal) :
+    OrdinaryQge2SignedTrellisHoffmanGoal :=
+  ordinaryQge2SignedTrellisHoffmanGoal_of_signedSeedClosure
+    (ordinaryQge2SignedSeedClosureGoal_of_properCutClosure hClosure)
+
+theorem ordinaryQge2SignedTrellisHoffmanGoal_iff_seedProperCutClosureGoal :
+    OrdinaryQge2SignedTrellisHoffmanGoal ↔
+      OrdinaryQge2SignedSeedProperCutClosureGoal :=
+  ⟨ordinaryQge2SignedSeedProperCutClosureGoal_of_signedTrellisHoffman,
+    ordinaryQge2SignedTrellisHoffmanGoal_of_seedProperCutClosure⟩
 
 def OrdinaryQge2SignedMatrixGoal : Prop :=
   ∀ {n m q r : Nat},

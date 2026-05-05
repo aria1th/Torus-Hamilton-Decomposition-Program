@@ -1,5 +1,7 @@
 import Mathlib
 import RoundComposite.ActiveHall
+import RoundComposite.BaseTailGeometry
+import RoundComposite.FiniteHoffman.EdgeColoring
 import RoundComposite.PrefixCount
 import RoundComposite.PrefixCountHalfSlack
 import Shared.CayleyProduct

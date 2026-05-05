@@ -44,13 +44,39 @@ Preferred current endpoint:
 
 ```lean
 theorem RoundComposite.Concrete
-  .oddModulusToriAllDimensionsGoal_of_v4_returnTailClosedFullSupportTrellisGeometryRawEdge
-    (hFull : PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal)
-    (hLift : PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal)
-    (hGeom : OddSuccessorSmallModulusBaseTailGeometryFromHallGoal)
-    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}) :
+  .oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_rawMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}) :
     OddModulusToriAllDimensionsGoal
 ```
+
+There is also a compatible-matrix-facing variant:
+
+```lean
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_compatibleMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal
+```
+
+There is also a Hall-realization-facing variant:
+
+```lean
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_hall
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hHall : ActiveHall.HallRealizationGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal
+```
+
+The older geometry/raw-edge and de Werra endpoints remain available as
+intermediate adapters, but the core/matrix/Hall endpoints are the sharpest
+current Lean handoffs because packet arithmetic and representation extraction
+are already closed.
 
 ## Closed In Lean
 
@@ -174,7 +200,53 @@ theorem PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_halfSlackBridge
     OrdinaryQge2IndicatorToFullSupportGoal
 ```
 
-So `OrdinaryQge2IndicatorToFullSupportGoal` is no longer the direct target.
+The internal half-slack/support branch is now closed in
+`RoundComposite/PrefixCountHalfSlack.lean`:
+
+```lean
+theorem PrefixCount.qge2SignedColumnSupport_indicator_le_capacity
+    {n c : Nat} (hnEven : Even n) (hn4 : 4 <= n)
+    (hc : c = 1 ∨ c = 2) (J : Finset (Fin n)) :
+    qge2SignedColumnSupport n c
+        (fun i : Fin n => if i ∈ J then (1 : Int) else 0)
+      <= qge2ColumnCapacity n J.card c
+
+theorem PrefixCount.qge2SignedSupportHalfPenaltyGoal :
+    PrefixCount.Qge2SignedSupportHalfPenaltyGoal
+
+theorem PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal :
+    PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal
+
+theorem PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_internalHalfSlack :
+    PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+
+theorem PrefixCount.ordinaryQge2SignedFullSupportTrellisGoal_of_seedClosure
+    (hClosure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal) :
+    PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
+
+theorem PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_of_signedSeedClosure
+    (hClosure : PrefixCount.OrdinaryQge2SignedSeedClosureGoal) :
+    PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
+
+theorem PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_iff_signedSeedClosureGoal :
+    PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ↔
+      PrefixCount.OrdinaryQge2SignedSeedClosureGoal
+
+theorem PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_of_seedProperCutClosure
+    (hClosure : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal) :
+    PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal
+
+theorem PrefixCount.ordinaryQge2SignedTrellisHoffmanGoal_iff_seedProperCutClosureGoal :
+    PrefixCount.OrdinaryQge2SignedTrellisHoffmanGoal ↔
+      PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+```
+
+So `OrdinaryQge2IndicatorToFullSupportGoal` is closed by internal Lean proof
+and is no longer a remaining q>=2 target.  The full-support trellis endpoint
+is also reduced to the seed-closure theorem by indicator support upper bounds.
+The seed/proper-cut and trellis-Hoffman formulations are now interchangeable
+adapters; the remaining mathematical content is the ordinary signed trellis
+decomposition theorem itself.
 
 ### ActiveHall Wrappers Already Exposed
 
@@ -192,195 +264,307 @@ theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_raw
 theorem ActiveHall.hallRealizationGoal_of_exactEdgeColoring
     (hEdge : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal.{0, 0}) :
     ActiveHall.HallRealizationGoal.{0, 0}
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_exactEdgeColoringGoal
+    (hExact : ActiveHall.FiniteHoffman.ExactEdgeColoringGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_iff_exactEdgeColoringGoal :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal ↔
+      ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_hoffmanOrderedSDRGoal
+    (hHoffman : ActiveHall.HoffmanOrderedSDRGoal) :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_iff_hoffmanOrderedSDRGoal :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal ↔
+      ActiveHall.HoffmanOrderedSDRGoal
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_of_hallRealizationGoal
+    (hHall : ActiveHall.HallRealizationGoal) :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.exactEdgeColoringGoal_iff_hallRealizationGoal :
+    ActiveHall.FiniteHoffman.ExactEdgeColoringGoal ↔
+      ActiveHall.HallRealizationGoal
+```
+
+The zero-one matrix extraction layer is also closed:
+
+```lean
+theorem ActiveHall.FiniteHoffman.compatibleDeWerraGoal_of_matrix
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal) :
+    ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
+
+theorem ActiveHall.FiniteHoffman.compatibleZeroOneMatrixGoal_of_compatibleDeWerraGoal
+    (hDW : ActiveHall.FiniteHoffman.CompatibleDeWerraGoal) :
+    ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal
+
+theorem ActiveHall.FiniteHoffman.compatibleZeroOneMatrixGoal_iff_compatibleDeWerraGoal :
+    ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal ↔
+      ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_matrix
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_rawMatrix
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_of_rawExactEdgeColoringGoal
+    (hRaw : ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal) :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_iff_rawExactEdgeColoringGoal :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal ↔
+      ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawExactEdgeColoringGoal_of_hallRealizationGoal
+    (hHall : ActiveHall.HallRealizationGoal) :
+    ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_of_hallRealizationGoal
+    (hHall : ActiveHall.HallRealizationGoal) :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_iff_hallRealizationGoal :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal ↔
+      ActiveHall.HallRealizationGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_of_eraseLastHallCutsTokenLinearChoiceGoal
+    (hToken : ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal) :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal
+
+theorem ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
+    ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal ↔
+      ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal
+```
+
+The pointwise `T <= 2` ActiveHall base cases and the `T = 3` singleton
+selection adapters are also closed, including the token-load form:
+
+```lean
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_zero
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_one
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_two
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_of_T_le_two
+ActiveHall.EraseLastHallCutsTwoSingletonSelectionGoal
+ActiveHall.EraseLastHallCutsTwoSingletonCutSlackSelectionGoal
+ActiveHall.EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal
+ActiveHall.eraseLastHallCutsTwoSingletonCutSlackSelectionGoal_of_token
+ActiveHall.hallRealization_three_of_singletonTokenCutSlackSelection
+ActiveHall.hallRealization_of_T_le_three_of_singletonTokenCutSlackSelection
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_three_of_singletonTokenCutSlackSelection
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_of_T_le_three_of_singletonTokenCutSlackSelection
+ActiveHall.hallRealization_succ_of_eraseLastHallCuts_and_lower_T_le_three
+ActiveHall.hallRealization_four_of_eraseLastHallCuts_and_singletonTokenCutSlackSelection
+ActiveHall.EraseLastHallCutsFourGoal
+ActiveHall.hallRealization_four_of_eraseLastHallCutsFourGoal
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_four_of_eraseLastHallCutsFourGoal
+ActiveHall.EraseLastHallCutsFourTokenCutSlackSelectionGoal
+ActiveHall.eraseLastHallCutsFourGoal_of_tokenCutSlackSelection
+ActiveHall.hallRealization_four_of_fourTokenCutSlackSelection
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_four_of_fourTokenCutSlackSelection
+```
+
+The base-tail cylinder layer now also proves the first structural positivity
+fact needed by residue rounding: if a cylinder color is Hamiltonian and
+`1 < m`, its active degree cannot be zero.
+
+```lean
+Concrete.BaseTail.Cylinder.iterate_step_activeDir_eq_of_colorDegree_zero
+Concrete.BaseTail.IsCylinder.active_degree_pos
+Concrete.BaseTail.IsCylinder.active_degree_dvd_modulus
+Concrete.BaseTail.IsCylinder.modulus_le_active_degree
+```
+
+It also has the stronger active-block interface needed for the paper-style
+controlled rounding proof.  If a cylinder construction supplies
+`colorDegree c = (m - activeBlock c) * m^b` with `activeBlock c` a unit between
+`0` and `m`, Lean now derives the corresponding unit, divisibility, lower
+bound, and existing weak-cylinder facts:
+
+```lean
+Concrete.BaseTail.ActiveBlockData
+Concrete.BaseTail.ActiveBlockData.activeBlock_isUnit
+Concrete.BaseTail.ActiveBlockData.active_complement_coprime
+Concrete.BaseTail.ActiveBlockData.active_complement_isUnit
+Concrete.BaseTail.ActiveBlockData.active_degree_mod
+Concrete.BaseTail.ActiveBlockData.active_degree_lower_bound
+Concrete.BaseTail.ActiveBlockData.active_degree_upper_bound
+Concrete.BaseTail.ActiveBlockData.sum_colorDegree_lower_bound
+Concrete.BaseTail.ActiveBlockData.sum_active_complement_eq
+Concrete.BaseTail.ActiveBlockData.sum_activeBlock_eq
+Concrete.BaseTail.ActiveBlockData.isCylinder_of_activeBlockData
+Concrete.BaseTail.exists_universalResidueSpec_compatible_primitive_of_activeBlockData
+Concrete.BaseTail.exists_universalResidueSpec_compatible_primitive_of_successor_activeBlockData
+Concrete.BaseTail.feasiblePrimitiveResidues_of_successor_activeBlockData_feasible_compatible
+Concrete.BaseTail.primitiveActiveSymboling_of_successor_activeBlockData_feasible_compatible
+```
+
+The successor-small geometry core also has an explicit active-block proof
+split in `RoundComposite/OddCore.lean`:
+
+```lean
+OddSuccessorBaseTailActiveBlockCylinderConstructionGoal
+OddSuccessorBaseTailActiveBlockResidueRoundingGoal
+OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal
+oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockPieces
 ```
 
 This means the remaining ActiveHall work is the finite combinatorics theorem
-itself, not the adapter plumbing.
+that supplies either `CompatibleZeroOneMatrixGoal` or the narrower
+`RawZeroOneMatrixGoal`/`RawExactEdgeColoringGoal` or
+`ExactEdgeColoringGoal` or `HallRealizationGoal` or
+`EraseLastHallCutsTokenLinearChoiceGoal` or
+`CompatibleZeroOneMatrixGoal`/`CompatibleDeWerraGoal`, not the one-hot
+extraction or adapter plumbing.
 
 ## Remaining Lean Fields
 
 For the preferred endpoint, the remaining fields are:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
-PrefixCount.Qge2IndicatorCutsHalfSlackToSupportGoal
-PrefixCount.Qge2OrdinaryHalfSlackGoal
-OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
-ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal
+ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
 ```
 
-`ActiveHall.FiniteHoffman.CompatibleDeWerraGoal` is also sufficient, since it
-implies the raw copied-edge field.
+Equivalently, `ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}` is
+also sufficient.  `ActiveHall.HallRealizationGoal.{0, 0}` is now sufficient as
+well, since it is Lean-equivalent to the raw zero-one matrix and exact
+edge-colouring formulations.
+
+The current final adapters are:
+
+```lean
+def RoundComposite.Concrete.OddModulusToriV4CompletionCoreRawMatrixGoal :
+    Prop
+
+def RoundComposite.Concrete.OddModulusToriV4CompletionCoreCompatibleMatrixGoal :
+    Prop
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_rawMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_seedProper_core_compatibleMatrix
+    (hQge2Proper : PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal)
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal)
+    (hMat : ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}) :
+    OddModulusToriAllDimensionsGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_completionCoreRawMatrix
+    (hCore : OddModulusToriV4CompletionCoreRawMatrixGoal) :
+    OddModulusToriAllDimensionsGoal
+
+theorem RoundComposite.Concrete
+  .oddModulusToriAllDimensionsGoal_of_v4_completionCoreCompatibleMatrix
+    (hCore : OddModulusToriV4CompletionCoreCompatibleMatrixGoal) :
+    OddModulusToriAllDimensionsGoal
+```
+
+The older endpoint remains useful if a researcher proves a less reduced field:
+
+```lean
+OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
+ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
+ActiveHall.HallRealizationGoal
+```
+
+As a final-resort direct proof, it is also valid to prove one of the bundled
+completion Props directly:
+
+```lean
+OddModulusToriV4CompletionCoreRawMatrixGoal
+OddModulusToriV4CompletionCoreCompatibleMatrixGoal
+OddModulusToriV4CompletionCoreHallGoal
+```
+
+This is intentionally a large theorem: it contains the q>=2 seed/proper-cut
+closure, the successor-small geometry core, and the finite zero-one
+edge-colouring content in one package.
+
+Thus the only remaining q>=2 field is:
+
+```lean
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+```
+
+The full-support route remains available through:
+
+```lean
+PrefixCount.ordinaryQge2SignedFullSupportTrellisGoal_of_seedClosure
+PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_internalHalfSlack
+```
+
+but it is no longer the preferred endpoint because the closed return-tail orbit
+wrapper can consume the proper-cut seed closure directly.
 
 ## Next Direct Lean Formalization Targets
 
-The next direct Lean work should be the half-slack internal branch.  This is
-local, specialized, and does not require importing a general finite Hoffman
-library.
+The half-slack internal branch and the adapter layers are closed.  The next
+direct Lean work should be one of the three theorem-content fields below.
 
-### Target Module
-
-Use a new parallel file:
-
-```text
-RoundComposite/PrefixCountHalfSlack.lean
-```
-
-Do not use:
-
-```text
-RoundComposite/PrefixCount/HalfSlack.lean
-```
-
-because `RoundComposite/PrefixCount.lean` is currently a file, so that path
-cannot also be a directory without a larger module refactor.
-
-Suggested import plan:
+1. q>=2 seed/proper-cut closure:
 
 ```lean
--- RoundComposite/PrefixCountHalfSlack.lean
-import RoundComposite.PrefixCount
-
-namespace RoundComposite
-namespace PrefixCount
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+PrefixCount.OrdinaryQge2SignedMatrixGoal
 ```
 
-Then add:
+This is the shortest high-modulus path.  The equivalent
+`OrdinaryQge2SignedSeedClosureGoal` is also acceptable.  The matrix version is
+the narrowest paper-facing theorem: it supplies the signed matrix for each
+`OrdinaryQge2PlanData`, while the already-closed Lean estimates supply the cut
+conditions.
+
+2. finite zero-one edge-colouring theorem:
 
 ```lean
-import RoundComposite.PrefixCountHalfSlack
+ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal.{0, 0}
 ```
 
-to `RoundComposite.lean` after `RoundComposite.PrefixCount`.
-
-### Attempt 1: Ordinary Half-Size Slack
-
-First target:
+The existing raw exact copied-edge theorem is equivalent:
 
 ```lean
-PrefixCount.Qge2OrdinaryHalfSlackGoal
+ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal.{0, 0}
+ActiveHall.FiniteHoffman.ExactEdgeColoringGoal.{0, 0}
+ActiveHall.HallRealizationGoal.{0, 0}
+ActiveHall.EraseLastHallCutsTokenLinearChoiceGoal.{0, 0}
+ActiveHall.EraseLastHallCutsProperTokenLinearChoiceGoal.{0, 0}
 ```
 
-Reason: this is arithmetic and `Finset` bookkeeping, with no support-function
-or sorting argument.
-
-Concrete helper targets:
+The compatible matrix theorem is also sufficient:
 
 ```lean
-theorem qge2ColumnCapacity_half_of_one
-    {n : Nat} (hnEven : Even n) :
-    qge2ColumnCapacity n (n / 2) 1 = ...
-
-theorem qge2ColumnCapacity_half_of_two
-    {n : Nat} (hnEven : Even n) :
-    qge2ColumnCapacity n (n / 2) 2 = ...
-
-theorem sum_eps_on_half_lower_bound
-    {n r : Nat} {epsBit : Fin n -> Nat} {J : Finset (Fin n)}
-    (hnEven : Even n)
-    (heps : forall i : Fin n, epsBit i = 0 \/ epsBit i = 1)
-    (hepsSum : (sum i : Fin n, epsBit i) = r)
-    (hJ : J.card = n / 2) :
-    ...
+ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal.{0, 0}
 ```
 
-Then close:
+The extraction from a one-hot matrix to the existing `RawExactEdgeColoringGoal`
+is already proved.
+
+3. successor-small base-tail geometry core:
 
 ```lean
-theorem qge2OrdinaryRowTarget_halfLevel_le_capacity_sub_allColumns
-    ... :
-    (sum i in J, qge2OrdinaryRowTarget n r a epsBit i)
-      <= (sum k : Fin (n - 1), qge2ColumnCapacity n J.card (c k))
-          - ((n - 1 : Nat) : Int)
+OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal
+OddCoreSmallModulusSlackPacketLiftAddGoal
 ```
 
-and package it as:
-
-```lean
-theorem qge2OrdinaryHalfSlackGoal :
-    Qge2OrdinaryHalfSlackGoal
-```
-
-### Target 2: Level-Set Decomposition
-
-Second target:
-
-```lean
-lemma exists_nat_shift_of_int_weight {n : Nat} (w : Fin n -> Int) :
-    exists (lo : Int) (u : Fin n -> Nat) (D : Nat),
-      (forall i, w i = lo + (u i : Int)) /\
-      (forall i, u i <= D)
-```
-
-and:
-
-```lean
-lemma int_weight_dot_eq_nat_upperLevels {n : Nat}
-    (R w : Fin n -> Int) (lo : Int) (u : Fin n -> Nat) (D : Nat)
-    (hw : forall i, w i = lo + (u i : Int))
-    (hD : forall i, u i <= D) :
-    (sum i : Fin n, w i * R i)
-      =
-    lo * (sum i : Fin n, R i)
-      + sum t in Finset.range D,
-          sum i in qge2UpperLevel u t, R i
-```
-
-Reason: this is reusable for the support bridge and does not depend on the
-specific signed-column witness.
-
-### Target 3: Signed Support Half-Penalty Bound
-
-Third target:
-
-```lean
-theorem qge2SignedColumnSupport_ge_levelCapacity_sub_halfPenalty
-    {n c : Nat}
-    (hnEven : Even n) (hn4 : 4 <= n)
-    (hc : c = 1 \/ c = 2)
-    (w : Fin n -> Int) (lo : Int) (u : Fin n -> Nat) (D : Nat)
-    (hw : forall i, w i = lo + (u i : Int))
-    (hD : forall i, u i <= D) :
-    lo * (-(c : Int))
-      + sum t in Finset.range D,
-          (qge2ColumnCapacity n (qge2UpperLevel u t).card c
-            - qge2HalfLevelPenalty n u t)
-      <= qge2SignedColumnSupport n c w
-```
-
-Then sum over columns:
-
-```lean
-theorem qge2SignedColumnSupport_sum_ge_levelCapacity_sub_halfPenalty
-    ... :
-    ...
-```
-
-Reason: this is the only half-slack target that needs an explicit witness or
-sorting argument for the local signed alphabet.
-
-### Target 4: Indicator Cuts Plus Half-Slack
-
-Final internal half-slack target:
-
-```lean
-theorem qge2IndicatorCutsHalfSlackToSupportGoal :
-    Qge2IndicatorCutsHalfSlackToSupportGoal
-```
-
-Use the level-set decomposition, the ordinary/cut hypotheses at each level,
-and the signed support lower bound.  Then close:
-
-```lean
-theorem ordinaryQge2IndicatorToFullSupportGoal :
-    OrdinaryQge2IndicatorToFullSupportGoal :=
-  ordinaryQge2IndicatorToFullSupportGoal_of_halfSlackBridge
-    qge2IndicatorCutsHalfSlackToSupportGoal
-    qge2OrdinaryHalfSlackGoal
-```
-
-Name choice may need an `_of_halfSlack` suffix if it conflicts with existing
-declarations.
+This core target may assume the proper-prefix-unit packet condition directly.
+`oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core` converts the raw
+successor packet hypotheses and `T = b + 1` to that condition using the already
+closed packet arithmetic in `RoundComposite/BaseTailGeometry.lean`.  The
+stronger `OddCoreSmallModulusSlackPacketLiftAddGoal` also suffices via
+`oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd`.
 
 ## Separate Module Targets
 
@@ -388,10 +572,10 @@ These should not be attempted inside the half-slack file.
 
 ### Finite Hoffman / Signed Trellis
 
-Target:
+Preferred target:
 
 ```lean
-PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
 ```
 
 Recommended location:
@@ -400,14 +584,23 @@ Recommended location:
 RoundComposite/FiniteHoffman/SignedTrellis.lean
 ```
 
-This requires a finite integral Hoffman/Rado-Edmonds style theorem.  It should
-be imported into the main chain only after its API is stable.
+The equivalent `OrdinaryQge2SignedSeedClosureGoal` is also sufficient.  The
+full-support target remains available as an intermediate:
+
+```lean
+PrefixCount.ordinaryQge2SignedFullSupportTrellisGoal_of_seedClosure
+```
+
+Do not replace this by the false arbitrary-row
+`Qge2SignedColumnPackingGoal`; the repository contains a counterexample.
 
 ### Finite Hoffman / Edge Coloring
 
 Targets:
 
 ```lean
+ActiveHall.FiniteHoffman.CompatibleZeroOneMatrixGoal
+ActiveHall.FiniteHoffman.RawZeroOneMatrixGoal
 ActiveHall.FiniteHoffman.RawExactEdgeColoringGoal
 ActiveHall.FiniteHoffman.ExactEdgeColoringGoal
 ActiveHall.FiniteHoffman.CompatibleDeWerraGoal
@@ -419,10 +612,56 @@ Recommended location:
 RoundComposite/FiniteHoffman/EdgeColoring.lean
 ```
 
-Any one of these is enough if adapters are used:
+The module now proves:
+
+```text
+CompatibleZeroOneMatrixGoal -> CompatibleDeWerraGoal
+CompatibleZeroOneMatrixGoal -> RawExactEdgeColoringGoal
+RawZeroOneMatrixGoal -> RawExactEdgeColoringGoal
+ExactEdgeColoringGoal -> RawExactEdgeColoringGoal
+RawExactEdgeColoringGoal <-> ExactEdgeColoringGoal
+```
+
+The `T = 4` active-Hall branch has also been reduced one step further.  The
+universal lower-symbol cut is automatic in all dimensions:
+
+```lean
+ActiveHall.CountMatrix.choiceLowHitCount_univ_le_cutSlack_image_castSucc
+ActiveHall.EraseLastHallCutsProperTokenLinearChoiceGoal
+ActiveHall.eraseLastHallCutsTokenLinearChoiceGoal_of_proper
+ActiveHall.hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice
+ActiveHall.hallRealizationGoal_iff_eraseLastHallCutsProperTokenLinearChoiceGoal
+ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_of_eraseLastHallCutsProperTokenLinearChoiceGoal
+ActiveHall.FiniteHoffman.rawZeroOneMatrixGoal_iff_eraseLastHallCutsProperTokenLinearChoiceGoal
+```
+
+Thus the general erase theorem may be targeted with only nonempty proper symbol
+cuts `S ≠ Finset.univ`.  The four-symbol selection theorem can now be targeted
+through:
+
+```lean
+ActiveHall.EraseLastHallCutsFourSmallTokenCutSlackSelectionGoal
+ActiveHall.EraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal
+ActiveHall.eraseLastHallCutsFourSmallTokenCutSlackSelectionGoal_of_singletonPair
+ActiveHall.eraseLastHallCutsFourTokenCutSlackSelectionGoal_of_small
+ActiveHall.hallRealization_four_of_fourSmallTokenCutSlackSelection
+ActiveHall.hallRealization_four_of_fourSingletonPairTokenCutSlackSelection
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_four_of_fourSmallTokenCutSlackSelection
+ActiveHall.FiniteHoffman.rawZeroOneMatrix_four_of_fourSingletonPairTokenCutSlackSelection
+```
+
+Thus, for the `T = 4` erase step, the remaining token-selection proof only
+needs nonempty proper symbol cuts with `S.card ≤ 2`; the case
+`S = Finset.univ : Finset (Fin 3)` no longer has to be supplied by the
+external theorem.  The `SmallToken` goal is now also split into explicit
+singleton and pair symbol cuts, so the remaining proof can target only
+`S = {σ}` and `S = {σ, τ}` with `σ ≠ τ`.
+
+Any one of the theorem-content endpoints is enough if adapters are used:
 
 ```text
 CompatibleDeWerraGoal -> RawExactEdgeColoringGoal -> ExactEdgeColoringGoal
+ExactEdgeColoringGoal -> RawExactEdgeColoringGoal
 ```
 
 ### Successor Small Geometry
@@ -430,16 +669,45 @@ CompatibleDeWerraGoal -> RawExactEdgeColoringGoal -> ExactEdgeColoringGoal
 Target:
 
 ```lean
-OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal
 ```
 
 Recommended timing: after the finite Hall/edge-coloring API is stable.  This
 is project-specific geometry glue rather than a standard finite-combinatorics
 theorem.
 
+The successor packet arithmetic sublayer is now closed independently in
+`RoundComposite/BaseTailGeometry.lean`:
+
+```lean
+theorem Concrete.BaseTail.successorPacketLengthTwoOrThreeGoal :
+    Concrete.BaseTail.SuccessorPacketLengthTwoOrThreeGoal
+
+theorem Concrete.BaseTail.successorPacketProperPrefixUnitsGoal :
+    Concrete.BaseTail.SuccessorPacketProperPrefixUnitsGoal
+```
+
+These prove that under the raw successor hypotheses `T = b + 1`, every packet
+has length `2` or `3`, and every nonempty proper packet prefix has sum coprime
+to `m`.  The remaining successor-small work is the geometric cylinder,
+residue-rounding/Hall, and base-tail lift construction.
+
+`RoundComposite/OddCore.lean` now exposes the reduced core target:
+
+```lean
+def OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal : Prop := ...
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal
+```
+
+So the remaining geometry theorem may assume the proper-prefix-unit condition
+directly; the raw packet hypotheses are converted to that condition internally.
+
 ## Current Fixed Attempt Order
 
-1. `RoundComposite/PrefixCountHalfSlack.lean`
+1. Completed: `RoundComposite/PrefixCountHalfSlack.lean`
    - `Qge2OrdinaryHalfSlackGoal`
    - level-set decomposition helpers
    - signed support half-penalty bound
@@ -447,77 +715,53 @@ theorem.
    - wrapper to `OrdinaryQge2IndicatorToFullSupportGoal`
 
 2. `RoundComposite/FiniteHoffman/SignedTrellis.lean`
-   - `OrdinaryQge2SignedFullSupportTrellisGoal`
+   - `OrdinaryQge2SignedSeedProperCutClosureGoal`
 
 3. `RoundComposite/FiniteHoffman/EdgeColoring.lean`
-   - raw/exact/de Werra edge-colouring theorem
+   - `RawZeroOneMatrixGoal.{0,0}` or `CompatibleZeroOneMatrixGoal.{0,0}`
 
 4. Successor-small geometry glue
-   - `OddSuccessorSmallModulusBaseTailGeometryFromHallGoal`
+   - `OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal`
 
-Only item 1 is the immediate direct Lean formalization attempt fixed by this
-audit.
+Item 1 is complete.  The next q>=2 direct Lean target is item 2.
 
 ### Progress On Item 1
-
-Status after the first implementation pass:
 
 ```lean
 import RoundComposite.PrefixCountHalfSlack
 ```
 
 has been added to `RoundComposite.lean`, and the new module
-`RoundComposite/PrefixCountHalfSlack.lean` now Lean-closes:
+`RoundComposite/PrefixCountHalfSlack.lean` Lean-closes:
 
 ```lean
 PrefixCount.exists_nat_shift_of_int_weight
 PrefixCount.nat_eq_sum_upper_indicators
 PrefixCount.int_weight_dot_eq_nat_upperLevels
 PrefixCount.qge2OrdinaryHalfSlackGoal
-```
-
-It also isolates the remaining sorted-pattern support estimate as:
-
-```lean
-PrefixCount.Qge2SignedSupportHalfPenaltyGoal
-```
-
-and proves the conditional bridge:
-
-```lean
+PrefixCount.qge2SignedSupportHalfPenaltyGoal
 PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal_of_signedSupportHalfPenalty
-PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_signedSupportHalfPenalty
-```
-
-Therefore the current remaining blocker for item 1 is exactly the signed
-support half-penalty estimate, i.e. the sorted signed-column pattern proof that
-should imply `Qge2SignedSupportHalfPenaltyGoal`.  Item 1 is not yet complete
-until that estimate is proved internally and the unconditional theorem
-
-```lean
 PrefixCount.qge2IndicatorCutsHalfSlackToSupportGoal
+PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_signedSupportHalfPenalty
+PrefixCount.ordinaryQge2IndicatorToFullSupportGoal_of_internalHalfSlack
 ```
 
-is provided.
-
-The immediate subgoal can now be stated more sharply:
-
-```lean
-theorem PrefixCount.qge2SignedSupportHalfPenaltyGoal :
-    PrefixCount.Qge2SignedSupportHalfPenaltyGoal
-```
-
-The new file already contains the closed-form prefix-pattern bounds:
+The sorted signed-column pattern proof is now internal.  It uses `Tuple.sort`
+to arrange `u : Fin n -> Nat` in descending order, proves that upper level sets
+are sorted prefixes, and feeds the explicit signed pattern columns to
+`qge2SignedColumnSupport_ge_of_intColumn`.  The key closed-form bounds are:
 
 ```lean
 PrefixCount.qge2SignedPatternPrefixOne_capacity
 PrefixCount.qge2SignedPatternPrefixTwo_capacity_sub_half
 ```
 
-so the remaining Lean work is the permutation/sorting layer: use `Tuple.sort`
-to arrange `u : Fin n -> Nat` in descending order, construct the corresponding
-signed column pattern, prove that every upper level set is a sorted prefix, and
-feed that explicit column to `qge2SignedColumnSupport_ge_of_intColumn`.
+The remaining q>=2 proof work is no longer the indicator/full-support bridge;
+it is the separate seed/proper-cut closure theorem:
+
+```lean
+PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal
+```
 
 ## Verification Gate
 

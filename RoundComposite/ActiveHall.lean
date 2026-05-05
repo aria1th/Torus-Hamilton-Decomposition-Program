@@ -633,6 +633,153 @@ theorem sum_colorDegree_on {T : Nat} {X C : Type*}
             rw [← hfilter]
             exact (Finset.card_filter (fun c : C => c ∈ I.active x) U).symm
 
+theorem sum_colorDegree_on_le_hitCount_mul {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) :
+    (∑ c ∈ U, I.colorDegree c) ≤ T * I.hitCount U := by
+  classical
+  rw [I.sum_colorDegree_on U]
+  calc
+    (∑ x : X, (I.active x ∩ U).card)
+        ≤ ∑ x : X,
+            (if (I.active x ∩ U).Nonempty then T else 0) := by
+          apply Finset.sum_le_sum
+          intro x _hx
+          by_cases hhit : (I.active x ∩ U).Nonempty
+          · have hcard :
+                (I.active x ∩ U).card ≤ (I.active x).card :=
+              Finset.card_le_card (by
+                intro c hc
+                exact (Finset.mem_inter.mp hc).1)
+            rw [I.active_card x] at hcard
+            simpa [hhit] using hcard
+          · have hzero : (I.active x ∩ U).card = 0 := by
+              rw [Finset.card_eq_zero]
+              exact Finset.not_nonempty_iff_eq_empty.mp hhit
+            simp [hhit, hzero]
+    _ = T * I.hitCount U := by
+          rw [hitCount, Finset.card_filter]
+          calc
+            (∑ x : X,
+              (if (I.active x ∩ U).Nonempty then T else 0))
+                =
+              ∑ x : X,
+                T * (if (I.active x ∩ U).Nonempty then 1 else 0) := by
+                  apply Finset.sum_congr rfl
+                  intro x _hx
+                  by_cases hhit : (I.active x ∩ U).Nonempty <;>
+                    simp [hhit]
+            _ = T *
+                (∑ x : X,
+                  (if (I.active x ∩ U).Nonempty then 1 else 0)) := by
+                  rw [Finset.mul_sum]
+
+theorem scaled_bary_point_le_cutCap_point
+    {T a s : Nat} (haT : a ≤ T) (hsT : s ≤ T) :
+    s * a ≤ T * min a s := by
+  by_cases has : a ≤ s
+  · rw [min_eq_left has]
+    exact Nat.mul_le_mul_right a hsT
+  · have hsa : s ≤ a := Nat.le_of_not_ge has
+    rw [min_eq_right hsa]
+    simpa [Nat.mul_comm] using Nat.mul_le_mul_right s haT
+
+theorem scaled_bary_point_add_mixed_le_cutCap_point
+    {T a s : Nat} (haT : a ≤ T) (hsT : s ≤ T) :
+    s * a + (if 0 < a ∧ a < T then min s (T - s) else 0)
+      ≤ T * min a s := by
+  by_cases hmix : 0 < a ∧ a < T
+  · have hapos : 0 < a := hmix.1
+    have haLt : a < T := hmix.2
+    by_cases has : a ≤ s
+    · rw [if_pos hmix, min_eq_left has]
+      have hmin_le_sub : min s (T - s) ≤ T - s := Nat.min_le_right _ _
+      have hsub_le_mul : T - s ≤ (T - s) * a :=
+        Nat.le_mul_of_pos_right (T - s) hapos
+      calc
+        s * a + min s (T - s)
+            ≤ s * a + (T - s) * a := by
+                exact Nat.add_le_add_left
+                  (hmin_le_sub.trans hsub_le_mul) (s * a)
+        _ = T * a := by
+                rw [← Nat.add_mul, Nat.add_sub_of_le hsT]
+    · have hsa : s ≤ a := Nat.le_of_not_ge has
+      rw [if_pos hmix, min_eq_right hsa]
+      have hmin_le_s : min s (T - s) ≤ s := Nat.min_le_left _ _
+      have hsub_pos : 0 < T - a := Nat.sub_pos_of_lt haLt
+      have hs_le_mul : s ≤ s * (T - a) :=
+        Nat.le_mul_of_pos_right s hsub_pos
+      calc
+        s * a + min s (T - s)
+            ≤ s * a + s * (T - a) := by
+                exact Nat.add_le_add_left
+                  (hmin_le_s.trans hs_le_mul) (s * a)
+        _ = T * s := by
+                rw [← Nat.mul_add, Nat.add_sub_of_le haT]
+                exact Nat.mul_comm s T
+  · simp [hmix, scaled_bary_point_le_cutCap_point haT hsT]
+
+def mixedCount {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) : Nat :=
+  ∑ x : X,
+    if 0 < (I.active x ∩ U).card ∧ (I.active x ∩ U).card < T
+    then 1 else 0
+
+theorem scaled_bary_cutMass_le_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) (S : Finset (Fin T)) :
+    S.card * (∑ c ∈ U, I.colorDegree c) ≤ T * I.cutCap U S := by
+  classical
+  rw [I.sum_colorDegree_on U]
+  unfold cutCap
+  rw [Finset.mul_sum, Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro x _hx
+  have haT : (I.active x ∩ U).card ≤ T := by
+    have hsub : I.active x ∩ U ⊆ I.active x := by
+      intro c hc
+      exact (Finset.mem_inter.mp hc).1
+    have hcard := Finset.card_le_card hsub
+    simpa [I.active_card x] using hcard
+  have hsT : S.card ≤ T := by
+    simpa [Fintype.card_fin] using Finset.card_le_univ S
+  exact scaled_bary_point_le_cutCap_point
+    (T := T) (a := (I.active x ∩ U).card) (s := S.card)
+    haT hsT
+
+theorem scaled_bary_cutMass_add_mixed_le_cutCap {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (U : Finset C) (S : Finset (Fin T)) :
+    S.card * (∑ c ∈ U, I.colorDegree c) +
+        I.mixedCount U * min S.card (T - S.card)
+      ≤ T * I.cutCap U S := by
+  classical
+  rw [I.sum_colorDegree_on U]
+  unfold cutCap mixedCount
+  rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib,
+    Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro x _hx
+  have haT : (I.active x ∩ U).card ≤ T := by
+    have hsub : I.active x ∩ U ⊆ I.active x := by
+      intro c hc
+      exact (Finset.mem_inter.mp hc).1
+    have hcard := Finset.card_le_card hsub
+    simpa [I.active_card x] using hcard
+  have hsT : S.card ≤ T := by
+    simpa [Fintype.card_fin] using Finset.card_le_univ S
+  by_cases hmix :
+      0 < (I.active x ∩ U).card ∧ (I.active x ∩ U).card < T
+  · simpa [hmix] using
+      scaled_bary_point_add_mixed_le_cutCap_point
+        (T := T) (a := (I.active x ∩ U).card) (s := S.card)
+        haT hsT
+  · simpa [hmix] using
+      scaled_bary_point_add_mixed_le_cutCap_point
+        (T := T) (a := (I.active x ∩ U).card) (s := S.card)
+        haT hsT
+
 theorem cutCap_symbols_univ {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence T X C) (U : Finset C) :
@@ -757,6 +904,17 @@ theorem cutCap_image_castSucc {T : Nat} {X C : Type*}
       ∑ x : X, min ((I.active x ∩ U).card) S.card := by
   unfold cutCap
   rw [card_image_castSucc]
+
+theorem cutCap_image_castSucc_pair {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (U : Finset C)
+    {σ τ : Fin T} (hστ : σ ≠ τ) :
+    I.cutCap U
+        (({σ, τ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+      ∑ x : X, min ((I.active x ∩ U).card) 2 := by
+  rw [I.cutCap_image_castSucc U ({σ, τ} : Finset (Fin T))]
+  simp [Finset.card_pair hστ]
 
 theorem cutCap_image_castSucc_insert_last {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -1316,6 +1474,94 @@ theorem exists_universalUnitResidueSpec_compatible_primitive
   · intro c σ hσ
     exact universalUnitResidueSpec_numeric_sub_delta_isUnit huUnit c hσ
 
+noncomputable def universalUnitResidueSpecOfTwoLe (m d T : Nat)
+    (u : Fin d → ZMod m) : ResidueSpec m T (Fin d) where
+  target := fun c σ =>
+    if σ.val = 0 then u c else if σ.val = 1 then -u c else 0
+
+theorem universalUnitResidueSpecOfTwoLe_row_sum {m d T : Nat}
+    (hT : 2 ≤ T) (u : Fin d → ZMod m) (c : Fin d) :
+    (∑ σ : Fin T,
+      (universalUnitResidueSpecOfTwoLe m d T u).target c σ) = 0 := by
+  rcases T with _ | T
+  · omega
+  rcases T with _ | T
+  · omega
+  simpa [universalUnitResidueSpecOfTwoLe, universalUnitResidueSpec] using
+    (universalUnitResidueSpec_row_sum (m := m) (d := d) (n := T) u c)
+
+theorem universalUnitResidueSpecOfTwoLe_col_sum {m d T : Nat}
+    (hT : 2 ≤ T) {u : Fin d → ZMod m}
+    (hu : (∑ c : Fin d, u c) = 0) (σ : Fin T) :
+    (∑ c : Fin d,
+      (universalUnitResidueSpecOfTwoLe m d T u).target c σ) = 0 := by
+  rcases T with _ | T
+  · omega
+  rcases T with _ | T
+  · omega
+  simpa [universalUnitResidueSpecOfTwoLe, universalUnitResidueSpec] using
+    (universalUnitResidueSpec_col_sum
+      (m := m) (d := d) (n := T) (u := u) hu σ)
+
+theorem universalUnitResidueSpecOfTwoLe_rowCompatible
+    {m d T : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (hT : 2 ≤ T) (I : Incidence T X (Fin d)) (u : Fin d → ZMod m)
+    (hColor : ∀ c : Fin d, (I.colorDegree c : ZMod m) = 0) :
+    (universalUnitResidueSpecOfTwoLe m d T u).RowCompatible I := by
+  intro c
+  rw [hColor c, universalUnitResidueSpecOfTwoLe_row_sum hT u c]
+
+theorem universalUnitResidueSpecOfTwoLe_colCompatible
+    {m d T : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (hT : 2 ≤ T) (I : Incidence T X (Fin d))
+    {u : Fin d → ZMod m} (hu : (∑ c : Fin d, u c) = 0)
+    (hX : (Fintype.card X : ZMod m) = 0) :
+    (universalUnitResidueSpecOfTwoLe m d T u).ColCompatible I := by
+  intro σ
+  rw [hX, universalUnitResidueSpecOfTwoLe_col_sum hT hu σ]
+
+theorem universalUnitResidueSpecOfTwoLe_zero_isUnit {m d T : Nat}
+    (hT : 2 ≤ T)
+    {u : Fin d → ZMod m} (huUnit : ∀ c : Fin d, IsUnit (u c))
+    (c : Fin d) :
+    IsUnit
+      ((universalUnitResidueSpecOfTwoLe m d T u).target c
+        ⟨0, by omega⟩) := by
+  simpa [universalUnitResidueSpecOfTwoLe] using huUnit c
+
+theorem universalUnitResidueSpecOfTwoLe_numeric_sub_delta_isUnit
+    {m d T : Nat} {u : Fin d → ZMod m}
+    (hT : 2 ≤ T)
+    (huUnit : ∀ c : Fin d, IsUnit (u c))
+    (c : Fin d) {σ : Fin T} (hσ : 2 ≤ σ.val) :
+    IsUnit ((universalUnitResidueSpecOfTwoLe m d T u).target c σ -
+      (universalUnitResidueSpecOfTwoLe m d T u).target c
+        ⟨1, by omega⟩) := by
+  have hs0 : σ.val ≠ 0 := by omega
+  have h1 : σ.val ≠ 1 := by omega
+  simpa [universalUnitResidueSpecOfTwoLe, hs0, h1] using huUnit c
+
+theorem exists_universalUnitResidueSpecOfTwoLe_compatible_primitive
+    {m d T : Nat} {X : Type*} [Fintype X] [DecidableEq X]
+    (hT : 2 ≤ T) (I : Incidence T X (Fin d))
+    (hdodd : Odd d) (hd3 : 3 ≤ d) (hmodd : Odd m)
+    (hColor : ∀ c : Fin d, (I.colorDegree c : ZMod m) = 0)
+    (hX : (Fintype.card X : ZMod m) = 0) :
+    ∃ R : ResidueSpec m T (Fin d),
+      R.RowCompatible I ∧ R.ColCompatible I ∧
+      (∀ c : Fin d, IsUnit (R.target c ⟨0, by omega⟩)) ∧
+      (∀ c : Fin d, ∀ σ : Fin T, 2 ≤ σ.val →
+        IsUnit (R.target c σ - R.target c ⟨1, by omega⟩)) := by
+  rcases exists_balanced_unit_residues_fin hdodd hd3 hmodd with
+    ⟨u, huSum, huUnit⟩
+  refine ⟨universalUnitResidueSpecOfTwoLe m d T u, ?_, ?_, ?_, ?_⟩
+  · exact universalUnitResidueSpecOfTwoLe_rowCompatible hT I u hColor
+  · exact universalUnitResidueSpecOfTwoLe_colCompatible hT I huSum hX
+  · exact universalUnitResidueSpecOfTwoLe_zero_isUnit hT huUnit
+  · intro c σ hσ
+    exact universalUnitResidueSpecOfTwoLe_numeric_sub_delta_isUnit
+      hT huUnit c hσ
+
 namespace CountMatrix
 
 def cutMass {T : Nat} {X C : Type*}
@@ -1417,6 +1663,110 @@ theorem cutMass_symbol_singleton {T : Nat} {X C : Type*}
     M.cutMass U ({σ} : Finset (Fin T)) = ∑ c ∈ U, M.val c σ := by
   simp [cutMass]
 
+theorem cutSlack_symbol_singleton {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (U : Finset C) (σ : Fin T) :
+    M.cutSlack U ({σ} : Finset (Fin T)) =
+      I.hitCount U - ∑ c ∈ U, M.val c σ := by
+  rw [cutSlack, M.cutMass_symbol_singleton U σ,
+    I.cutCap_symbol_singleton U σ]
+
+theorem cutSlack_image_castSucc_singleton {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) (σ : Fin T) :
+    M.cutSlack U
+        (({σ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+      I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc σ) := by
+  simpa using M.cutSlack_symbol_singleton U (Fin.castSucc σ)
+
+theorem cutMass_image_castSucc {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) (S : Finset (Fin T)) :
+    M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+      ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  classical
+  unfold cutMass
+  apply Finset.sum_congr rfl
+  intro c _hc
+  rw [Finset.sum_image]
+  intro σ hσ τ hτ hEq
+  exact Fin.ext (by simpa using congrArg Fin.val hEq)
+
+theorem cutSlack_image_castSucc {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) (S : Finset (Fin T)) :
+    M.cutSlack U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+      (∑ x : X, min ((I.active x ∩ U).card) S.card)
+        - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ) := by
+  rw [cutSlack, M.cutMass_image_castSucc U S,
+    I.cutCap_image_castSucc U S]
+
+theorem cutMass_pair {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I)
+    (U : Finset C) {σ τ : Fin T} (hστ : σ ≠ τ) :
+    M.cutMass U ({σ, τ} : Finset (Fin T)) =
+      ∑ c ∈ U, (M.val c σ + M.val c τ) := by
+  classical
+  unfold cutMass
+  apply Finset.sum_congr rfl
+  intro c _hc
+  rw [Finset.sum_pair hστ]
+
+theorem cutMass_image_castSucc_pair {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) {σ τ : Fin T} (hστ : σ ≠ τ) :
+    M.cutMass U
+        (({σ, τ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+      ∑ c ∈ U, (M.val c (Fin.castSucc σ) +
+        M.val c (Fin.castSucc τ)) := by
+  classical
+  have hcast : Fin.castSucc σ ≠ Fin.castSucc τ := by
+    intro h
+    exact hστ (Fin.ext (by simpa using congrArg Fin.val h))
+  have himage :
+      (({σ, τ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+        ({Fin.castSucc σ, Fin.castSucc τ} : Finset (Fin (T + 1))) := by
+    ext ρ
+    simp
+  rw [himage]
+  exact M.cutMass_pair U hcast
+
+theorem cutSlack_image_castSucc_pair {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) {σ τ : Fin T} (hστ : σ ≠ τ) :
+    M.cutSlack U
+        (({σ, τ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+      I.cutCap U
+          (({σ, τ} : Finset (Fin T)).image
+            (Fin.castSucc : Fin T → Fin (T + 1)))
+        - ∑ c ∈ U, (M.val c (Fin.castSucc σ) +
+          M.val c (Fin.castSucc τ)) := by
+  rw [cutSlack, M.cutMass_image_castSucc_pair U hστ]
+
+theorem cutSlack_image_castSucc_pair_eq_min_two {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (U : Finset C) {σ τ : Fin T} (hστ : σ ≠ τ) :
+    M.cutSlack U
+        (({σ, τ} : Finset (Fin T)).image
+          (Fin.castSucc : Fin T → Fin (T + 1))) =
+      (∑ x : X, min ((I.active x ∩ U).card) 2)
+        - ∑ c ∈ U, (M.val c (Fin.castSucc σ) +
+          M.val c (Fin.castSucc τ)) := by
+  rw [M.cutSlack_image_castSucc_pair U hστ,
+    I.cutCap_image_castSucc_pair U hστ]
+
 theorem cutMass_colors_empty_eq_cutCap {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (M : CountMatrix I) (S : Finset (Fin T)) :
@@ -1500,6 +1850,109 @@ theorem hallCuts_iff_nontrivial {T : Nat} {X C : Type*}
   · intro hCuts U S _hUne _hUuniv _hSne _hSuniv
     exact hCuts U S
   · exact M.hallCuts_of_nontrivial
+
+theorem hallCuts_of_scaled_bary_error_le_mixed {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (hTpos : 0 < T)
+    (hScaled :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        T * M.cutMass U S ≤
+          S.card * (∑ c ∈ U, I.colorDegree c) +
+            I.mixedCount U * min S.card (T - S.card)) :
+    M.HallCuts := by
+  intro U S
+  have hmul :
+      T * M.cutMass U S ≤ T * I.cutCap U S :=
+    (hScaled U S).trans
+      (I.scaled_bary_cutMass_add_mixed_le_cutCap U S)
+  exact Nat.le_of_mul_le_mul_left hmul hTpos
+
+theorem hallCuts_of_nontrivial_scaled_bary_error_le_mixed
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (M : CountMatrix I) (hTpos : 0 < T)
+    (hScaled :
+      ∀ U : Finset C, ∀ S : Finset (Fin T),
+        U.Nonempty → U ≠ (Finset.univ : Finset C) →
+        S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+          T * M.cutMass U S ≤
+            S.card * (∑ c ∈ U, I.colorDegree c) +
+              I.mixedCount U * min S.card (T - S.card)) :
+    M.HallCuts := by
+  apply M.hallCuts_of_nontrivial
+  intro U S hUne hUuniv hSne hSuniv
+  have hmul :
+      T * M.cutMass U S ≤ T * I.cutCap U S :=
+    (hScaled U S hUne hUuniv hSne hSuniv).trans
+      (I.scaled_bary_cutMass_add_mixed_le_cutCap U S)
+  exact Nat.le_of_mul_le_mul_left hmul hTpos
+
+theorem hallCuts_one {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence 1 X C} (M : CountMatrix I) :
+    M.HallCuts := by
+  classical
+  apply M.hallCuts_of_nontrivial
+  intro U S _hUne _hUuniv hSne hSuniv
+  have hS : S = (Finset.univ : Finset (Fin 1)) := by
+    rcases hSne with ⟨σ, hσ⟩
+    fin_cases σ
+    ext τ
+    fin_cases τ
+    constructor
+    · intro _h
+      simp
+    · intro _h
+      simpa using hσ
+  exact False.elim (hSuniv hS)
+
+theorem finset_fin_two_nonempty_proper_eq_singleton
+    (S : Finset (Fin 2)) (hSne : S.Nonempty)
+    (hSuniv : S ≠ (Finset.univ : Finset (Fin 2))) :
+    ∃ σ : Fin 2, S = {σ} := by
+  classical
+  by_cases h0 : (0 : Fin 2) ∈ S
+  · by_cases h1 : (1 : Fin 2) ∈ S
+    · have hS : S = (Finset.univ : Finset (Fin 2)) := by
+        ext σ
+        fin_cases σ <;> simp [h0, h1]
+      exact False.elim (hSuniv hS)
+    · exact ⟨0, by
+        ext σ
+        fin_cases σ <;> simp [h0, h1]⟩
+  · rcases hSne with ⟨σ, hσ⟩
+    fin_cases σ
+    · exact False.elim (h0 hσ)
+    · have h1 : (1 : Fin 2) ∈ S := by
+        simpa using hσ
+      exact ⟨1, by
+        ext τ
+        fin_cases τ <;> simp [h0, h1]⟩
+
+theorem hallCuts_two_of_singleSymbol {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence 2 X C} (M : CountMatrix I)
+    (hSingle : ∀ U : Finset C, ∀ σ : Fin 2,
+      (∑ c ∈ U, M.val c σ) ≤ I.hitCount U) :
+    M.HallCuts := by
+  classical
+  apply M.hallCuts_of_nontrivial
+  intro U S _hUne _hUuniv hSne hSuniv
+  rcases finset_fin_two_nonempty_proper_eq_singleton S hSne hSuniv with
+    ⟨σ, rfl⟩
+  rw [M.cutMass_symbol_singleton U σ, I.cutCap_symbol_singleton U σ]
+  exact hSingle U σ
+
+theorem hallCuts_two_iff_singleSymbol {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence 2 X C} (M : CountMatrix I) :
+    M.HallCuts ↔
+      ∀ U : Finset C, ∀ σ : Fin 2,
+        (∑ c ∈ U, M.val c σ) ≤ I.hitCount U :=
+  ⟨fun hHall U σ => by
+      rw [← M.cutMass_symbol_singleton U σ, ← I.cutCap_symbol_singleton U σ]
+      exact hHall U ({σ} : Finset (Fin 2)),
+    M.hallCuts_two_of_singleSymbol⟩
 
 theorem singleSymbol_hall {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -1833,6 +2286,208 @@ theorem eraseLastCountMatrix_hallCuts_of_cutCap_slack
     exact hSlack U S
   change M'.cutMass U S ≤ (I.eraseChoice choice hchoice).cutCap U S
   omega
+
+theorem choiceLowHitCount_univ_le_cutSlack_image_castSucc
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence (T + 1) X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T))
+    (hHall : M.HallCuts) (U : Finset C) :
+    Incidence.choiceLowHitCount I choice U
+        (Finset.univ : Finset (Fin T))
+      ≤ M.cutSlack U
+          ((Finset.univ : Finset (Fin T)).image
+            (Fin.castSucc : Fin T → Fin (T + 1))) := by
+  classical
+  let S : Finset (Fin T) := Finset.univ
+  let M' := M.eraseLastCountMatrix choice hchoice hdegree
+  let I' := I.eraseChoice choice hchoice
+  let low := Incidence.choiceLowHitCount I choice U S
+  have hHallUS :
+      M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+        ≤ I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) :=
+    hHall U (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+  have hMass :
+      M'.cutMass U S =
+        M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+    simpa [M', S] using
+      M.eraseLastCountMatrix_cutMass choice hchoice hdegree U
+        (Finset.univ : Finset (Fin T))
+  have hUniv :
+      M'.cutMass U S = I'.cutCap U S := by
+    simpa [M', I', S] using
+      M'.cutMass_symbols_univ_eq_cutCap U
+  have hCap :
+      I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) =
+        I'.cutCap U S + low := by
+    simpa [I', S, low] using
+      I.cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
+        choice hchoice U (Finset.univ : Finset (Fin T))
+  have hAdd :
+      M.cutMass U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) + low
+        ≤ I.cutCap U (S.image (Fin.castSucc : Fin T → Fin (T + 1))) := by
+    rw [← hMass, hUniv, hCap]
+  exact
+    ((M.cutMass_add_le_iff_le_cutSlack U
+      (S.image (Fin.castSucc : Fin T → Fin (T + 1))) hHallUS low).1
+      hAdd)
+
+theorem eraseLastCountMatrix_hallCuts_two_of_singleton_cutCap_slack
+    {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence 3 X C} (M : CountMatrix I)
+    (choice : X → C) (hchoice : ∀ x : X, choice x ∈ I.active x)
+    (hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 2))
+    (hSlack : ∀ U : Finset C, ∀ σ : Fin 2,
+      M.cutMass U
+          (({σ} : Finset (Fin 2)).image
+            (Fin.castSucc : Fin 2 → Fin 3))
+        + Incidence.choiceLowHitCount I choice U ({σ} : Finset (Fin 2))
+          ≤ I.cutCap U
+              (({σ} : Finset (Fin 2)).image
+                (Fin.castSucc : Fin 2 → Fin 3))) :
+    (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  apply CountMatrix.hallCuts_two_of_singleSymbol
+  intro U σ
+  let M' := M.eraseLastCountMatrix choice hchoice hdegree
+  let I' := I.eraseChoice choice hchoice
+  let low := Incidence.choiceLowHitCount I choice U ({σ} : Finset (Fin 2))
+  have hMass :
+      M'.cutMass U ({σ} : Finset (Fin 2)) =
+        M.cutMass U
+          (({σ} : Finset (Fin 2)).image
+            (Fin.castSucc : Fin 2 → Fin 3)) := by
+    simpa [M'] using
+      M.eraseLastCountMatrix_cutMass choice hchoice hdegree U
+        ({σ} : Finset (Fin 2))
+  have hCap :
+      I.cutCap U
+          (({σ} : Finset (Fin 2)).image
+            (Fin.castSucc : Fin 2 → Fin 3)) =
+        I'.cutCap U ({σ} : Finset (Fin 2)) + low := by
+    simpa [I', low] using
+      I.cutCap_image_castSucc_eq_eraseChoice_cutCap_add_choiceLowHitCount
+        choice hchoice U ({σ} : Finset (Fin 2))
+  rw [← M'.cutMass_symbol_singleton U σ,
+    ← I'.cutCap_symbol_singleton U σ]
+  have h := hSlack U σ
+  rw [← hMass, hCap] at h
+  omega
+
+theorem eraseLastHallCuts_two_of_singleton_selection
+    {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (_hHall : M.HallCuts)
+    (hSelect :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          let choice : X → C := fun x => (f.symm x).1
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            M.cutMass U
+                (({σ} : Finset (Fin 2)).image
+                  (Fin.castSucc : Fin 2 → Fin 3))
+              + Incidence.choiceLowHitCount I choice U
+                  ({σ} : Finset (Fin 2))
+                ≤ I.cutCap U
+                    (({σ} : Finset (Fin 2)).image
+                      (Fin.castSucc : Fin 2 → Fin 3))) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+      ∃ hfActive :
+        ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+          q.1 ∈ I.active (f q),
+        let choice : X → C := fun x => (f.symm x).1
+        let hchoice : ∀ x : X, choice x ∈ I.active x := by
+          intro x
+          have h := hfActive (f.symm x)
+          rw [f.apply_symm_apply] at h
+          simpa [choice] using h
+        let hdegree :
+            ∀ c : C,
+              Incidence.choiceDegree choice c = M.val c (Fin.last 2) :=
+          fun c => M.choiceDegree_of_bijective_token_matching
+            (Fin.last 2) f c
+        (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  rcases hSelect with ⟨f, hfActive, hSlack⟩
+  refine ⟨f, hfActive, ?_⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 2) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 2) f c
+  change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+  exact M.eraseLastCountMatrix_hallCuts_two_of_singleton_cutCap_slack
+    choice hchoice hdegree hSlack
+
+theorem eraseLastHallCuts_two_of_singleton_cutSlack_selection
+    {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts)
+    (hSelect :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          let choice : X → C := fun x => (f.symm x).1
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            Incidence.choiceLowHitCount I choice U
+                ({σ} : Finset (Fin 2))
+              ≤ M.cutSlack U
+                  (({σ} : Finset (Fin 2)).image
+                    (Fin.castSucc : Fin 2 → Fin 3))) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+      ∃ hfActive :
+        ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+          q.1 ∈ I.active (f q),
+        let choice : X → C := fun x => (f.symm x).1
+        let hchoice : ∀ x : X, choice x ∈ I.active x := by
+          intro x
+          have h := hfActive (f.symm x)
+          rw [f.apply_symm_apply] at h
+          simpa [choice] using h
+        let hdegree :
+            ∀ c : C,
+              Incidence.choiceDegree choice c = M.val c (Fin.last 2) :=
+          fun c => M.choiceDegree_of_bijective_token_matching
+            (Fin.last 2) f c
+        (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  have hSelectAdd :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          let choice : X → C := fun x => (f.symm x).1
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            M.cutMass U
+                (({σ} : Finset (Fin 2)).image
+                  (Fin.castSucc : Fin 2 → Fin 3))
+              + Incidence.choiceLowHitCount I choice U
+                  ({σ} : Finset (Fin 2))
+                ≤ I.cutCap U
+                    (({σ} : Finset (Fin 2)).image
+                      (Fin.castSucc : Fin 2 → Fin 3)) := by
+    rcases hSelect with ⟨f, hfActive, hSlack⟩
+    refine ⟨f, hfActive, ?_⟩
+    dsimp only
+    intro U σ
+    let S : Finset (Fin 3) :=
+      ({σ} : Finset (Fin 2)).image (Fin.castSucc : Fin 2 → Fin 3)
+    have hHallUS : M.cutMass U S ≤ I.cutCap U S := hHall U S
+    exact
+      ((M.cutMass_add_le_iff_le_cutSlack U S hHallUS
+        (Incidence.choiceLowHitCount I (fun x : X => (f.symm x).1)
+          U ({σ} : Finset (Fin 2)))).2 (hSlack U σ))
+  exact M.eraseLastHallCuts_two_of_singleton_selection I hHall hSelectAdd
 
 theorem eraseLastCountMatrix_hallCuts_of_cutSlack
     {T : Nat} {X C : Type*}
@@ -3135,6 +3790,48 @@ def EraseLastHallCutsTokenLinearChoiceGoal : Prop :=
                 ≤ M.cutSlack U
                     (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
 
+def EraseLastHallCutsProperTokenLinearChoiceGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+                Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                  ≤ M.cutSlack U
+                      (S.image (Fin.castSucc : Fin T → Fin (T + 1)))
+
+def EraseLastHallCutsProperTokenQuotaSelectionGoal : Prop :=
+  ∀ {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence (T + 1) X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              S.Nonempty → S ≠ (Finset.univ : Finset (Fin T)) →
+                Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                  ≤ (∑ x : X, min ((I.active x ∩ U).card) S.card)
+                      - ∑ c ∈ U, ∑ σ ∈ S, M.val c (Fin.castSucc σ)
+
+theorem eraseLastHallCutsProperTokenLinearChoiceGoal_of_quota
+    (hQuota :
+      EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hQuota I M hHall with ⟨f, hfActive, hQuotaCuts⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne hSuniv
+  rw [M.cutSlack_image_castSucc U S]
+  exact hQuotaCuts U S hUne hUuniv hSne hSuniv
+
 theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
     (hRealize : HallRealizationGoal.{uX, uC}) :
     EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} := by
@@ -3184,6 +3881,44 @@ theorem eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
       ← Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet]
     exact hLow
 
+theorem eraseLastHallCutsTokenLinearChoiceGoal_of_proper
+    (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases hProper I M hHall with ⟨f, hfActive, hSlackProper⟩
+  let choice : X → C := fun x : X => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last T) f c
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne
+  by_cases hSuniv : S = (Finset.univ : Finset (Fin T))
+  · subst S
+    have hlow :
+        Incidence.choiceLowHitCount I choice U
+            (Finset.univ : Finset (Fin T))
+          ≤ M.cutSlack U
+              ((Finset.univ : Finset (Fin T)).image
+                (Fin.castSucc : Fin T → Fin (T + 1))) :=
+      M.choiceLowHitCount_univ_le_cutSlack_image_castSucc
+        choice hchoice hdegree hHall U
+    have hload :
+        Incidence.tokenLoadOn f
+            (Incidence.lowCutSet I U (Finset.univ : Finset (Fin T))) U =
+          Incidence.choiceLowHitCount I choice U
+            (Finset.univ : Finset (Fin T)) := by
+      rw [Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet,
+        ← Incidence.tokenLoadOn_eq_choiceHitCountOn]
+    rw [hload]
+    exact hlow
+  · exact hSlackProper U S hUne hUuniv hSne hSuniv
+
 theorem eraseLastHallCutsTokenLinearChoiceGoal_of_exactEdgeColoring
     (hEdge : FiniteHoffman.ExactEdgeColoringGoal.{uX, uC}) :
     EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
@@ -3229,7 +3964,9 @@ theorem eraseLastHallCutsLinearChoiceGoal_of_tokenLinear
   let choice : X → C := fun x => (f.symm x).1
   have hchoice : ∀ x : X, choice x ∈ I.active x := by
     intro x
-    simpa [choice] using hfActive (f.symm x)
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
   have hdegree :
       ∀ c : C,
         Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
@@ -3321,7 +4058,9 @@ theorem eraseLastHallCutsGoal_of_selection
   let choice : X → C := fun x => (f.symm x).1
   have hchoice : ∀ x : X, choice x ∈ I.active x := by
     intro x
-    simpa [choice] using hfActive (f.symm x)
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
   have hdegree :
       ∀ c : C,
         Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
@@ -3360,6 +4099,12 @@ theorem eraseLastHallCutsGoal_of_tokenLinearChoice
     EraseLastHallCutsGoal.{uX, uC} :=
   eraseLastHallCutsGoal_of_linearChoice
     (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear hToken)
+
+theorem eraseLastHallCutsGoal_of_properTokenLinearChoice
+    (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC}) :
+    EraseLastHallCutsGoal.{uX, uC} :=
+  eraseLastHallCutsGoal_of_tokenLinearChoice
+    (eraseLastHallCutsTokenLinearChoiceGoal_of_proper hProper)
 
 theorem eraseLastHallCutsChoice_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -3549,6 +4294,41 @@ theorem eraseLastHallCuts_zero {X : Type uX} {C : Type uC}
   subst S
   rw [CountMatrix.cutMass_symbols_empty_eq_cutCap]
 
+theorem eraseLastHallCuts_one {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 2 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 1))) ≃ X,
+      ∃ hfActive :
+        ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 1)),
+          q.1 ∈ I.active (f q),
+        let choice : X → C := fun x => (f.symm x).1
+        let hchoice : ∀ x : X, choice x ∈ I.active x := by
+          intro x
+          have h := hfActive (f.symm x)
+          rw [f.apply_symm_apply] at h
+          simpa [choice] using h
+        let hdegree :
+            ∀ c : C,
+              Incidence.choiceDegree choice c = M.val c (Fin.last 1) :=
+          fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 1) f c
+        (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts := by
+  classical
+  rcases M.exists_singleSymbol_bijective_token_matching hHall (Fin.last 1) with
+    ⟨f, hfActive⟩
+  refine ⟨f, hfActive, ?_⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 1) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 1) f c
+  change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+  exact CountMatrix.hallCuts_one (M.eraseLastCountMatrix choice hchoice hdegree)
+
 theorem hallRealization_zero {X : Type uX} {C : Type uC}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     (I : Incidence 0 X C) (M : CountMatrix I) :
@@ -3635,6 +4415,677 @@ theorem hallRealization_one {X : Type uX} {C : Type uC}
               _ = M.val c 0 := by
                       simp
 
+theorem hallRealization_succ_of_eraseLastHallCuts
+    {T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (M : CountMatrix I)
+    (hErase :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            have h := hfActive (f.symm x)
+            rw [f.apply_symm_apply] at h
+            simpa [choice] using h
+          let hdegree :
+              ∀ c : C,
+                Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+            fun c => M.choiceDegree_of_bijective_token_matching
+              (Fin.last T) f c
+          (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts)
+    (hLower :
+      ∀ (I' : Incidence T X C) (M' : CountMatrix I'),
+        M'.HallCuts → ∃ Φ : Symboling I', Φ.Realizes M'.val) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  classical
+  rcases hErase with ⟨f, hfActive, hReducedHall⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    simpa [choice] using hfActive (f.symm x)
+  have hdegree :
+      ∀ c : C,
+        Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+    fun c => M.choiceDegree_of_bijective_token_matching
+      (Fin.last T) f c
+  rcases hLower (I.eraseChoice choice hchoice)
+      (M.eraseLastCountMatrix choice hchoice hdegree)
+      hReducedHall with ⟨Φ, hReal⟩
+  exact ⟨Φ.extendLast choice hchoice,
+    Φ.extendLast_realizes_eraseLastCountMatrix M choice hchoice hdegree hReal⟩
+
+theorem hallRealization_two {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 2 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  classical
+  exact hallRealization_succ_of_eraseLastHallCuts I M
+    (eraseLastHallCuts_one I M hHall)
+    (fun I' M' hHall' => hallRealization_one I' M' hHall')
+
+def EraseLastHallCutsTwoSingletonSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 3 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          let choice : X → C := fun x => (f.symm x).1
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            M.cutMass U
+                (({σ} : Finset (Fin 2)).image
+                  (Fin.castSucc : Fin 2 → Fin 3))
+              + Incidence.choiceLowHitCount I choice U
+                  ({σ} : Finset (Fin 2))
+                ≤ I.cutCap U
+                    (({σ} : Finset (Fin 2)).image
+                      (Fin.castSucc : Fin 2 → Fin 3))
+
+def EraseLastHallCutsTwoSingletonCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 3 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          let choice : X → C := fun x => (f.symm x).1
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            Incidence.choiceLowHitCount I choice U
+                ({σ} : Finset (Fin 2))
+              ≤ M.cutSlack U
+                  (({σ} : Finset (Fin 2)).image
+                    (Fin.castSucc : Fin 2 → Fin 3))
+
+def EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 3 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            Incidence.tokenLoadOn f
+                (Incidence.lowCutSet I U ({σ} : Finset (Fin 2))) U
+              ≤ M.cutSlack U
+                  (({σ} : Finset (Fin 2)).image
+                    (Fin.castSucc : Fin 2 → Fin 3))
+
+def EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 3 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ} : Finset (Fin 2))) U
+                ≤ M.cutSlack U
+                    (({σ} : Finset (Fin 2)).image
+                      (Fin.castSucc : Fin 2 → Fin 3))
+
+def EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 3 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 2))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 2)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ σ : Fin 2,
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ} : Finset (Fin 2))) U
+                ≤ I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc σ)
+
+theorem eraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal_of_quota
+    (hQuota :
+      EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hQuota I M hHall with ⟨f, hfActive, hLoad⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U σ hUne hUuniv
+  rw [M.cutSlack_image_castSucc_singleton U σ]
+  exact hLoad U σ hUne hUuniv
+
+theorem eraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal_of_proper
+    (hProper :
+      EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hProper I M hHall with ⟨f, hfActive, hLoadProper⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U σ
+  by_cases hUempty : U = ∅
+  · subst U
+    rw [Incidence.tokenLoadOn_colors_empty]
+    exact Nat.zero_le _
+  by_cases hUuniv : U = (Finset.univ : Finset C)
+  · subst U
+    rw [Incidence.lowCutSet_colors_univ, Incidence.tokenLoadOn_set_empty]
+    exact Nat.zero_le _
+  exact hLoadProper U σ
+    (Finset.nonempty_iff_ne_empty.mpr hUempty) hUuniv
+
+theorem eraseLastHallCutsTwoSingletonCutSlackSelectionGoal_of_token
+    (hToken :
+      EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsTwoSingletonCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hToken I M hHall with ⟨f, hfActive, hLoad⟩
+  refine ⟨f, hfActive, ?_⟩
+  dsimp only
+  intro U σ
+  rw [Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet,
+    ← Incidence.tokenLoadOn_eq_choiceHitCountOn]
+  exact hLoad U σ
+
+theorem eraseLastHallCutsTwoSingletonSelectionGoal_of_cutSlack
+    (hSelect : EraseLastHallCutsTwoSingletonCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsTwoSingletonSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hSelect I M hHall with ⟨f, hfActive, hSlack⟩
+  refine ⟨f, hfActive, ?_⟩
+  dsimp only
+  intro U σ
+  let S : Finset (Fin 3) :=
+    ({σ} : Finset (Fin 2)).image (Fin.castSucc : Fin 2 → Fin 3)
+  have hHallUS : M.cutMass U S ≤ I.cutCap U S := hHall U S
+  exact
+    ((M.cutMass_add_le_iff_le_cutSlack U S hHallUS
+      (Incidence.choiceLowHitCount I (fun x : X => (f.symm x).1)
+        U ({σ} : Finset (Fin 2)))).2 (hSlack U σ))
+
+theorem hallRealization_three_of_singletonSelection
+    (hSelect : EraseLastHallCutsTwoSingletonSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  classical
+  exact hallRealization_succ_of_eraseLastHallCuts I M
+    (CountMatrix.eraseLastHallCuts_two_of_singleton_selection
+      I M hHall (hSelect I M hHall))
+    (fun I' M' hHall' => hallRealization_two I' M' hHall')
+
+theorem hallRealization_three_of_singletonCutSlackSelection
+    (hSelect : EraseLastHallCutsTwoSingletonCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_three_of_singletonSelection
+    (eraseLastHallCutsTwoSingletonSelectionGoal_of_cutSlack hSelect)
+    I M hHall
+
+theorem hallRealization_three_of_singletonTokenCutSlackSelection
+    (hToken :
+      EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_three_of_singletonCutSlackSelection
+    (eraseLastHallCutsTwoSingletonCutSlackSelectionGoal_of_token hToken)
+    I M hHall
+
+theorem hallRealization_three_of_singletonProperTokenCutSlackSelection
+    (hProper :
+      EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_three_of_singletonTokenCutSlackSelection
+    (eraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal_of_proper
+      hProper)
+    I M hHall
+
+theorem hallRealization_three_of_singletonProperTokenQuotaSelection
+    (hQuota :
+      EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 3 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_three_of_singletonProperTokenCutSlackSelection
+    (eraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal_of_quota
+      hQuota)
+    I M hHall
+
+theorem hallRealization_of_T_le_two
+    {T : Nat} (hT : T ≤ 2)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  interval_cases T
+  · exact hallRealization_zero I M
+  · exact hallRealization_one I M hHall
+  · exact hallRealization_two I M hHall
+
+theorem hallRealization_of_T_le_three_of_singletonSelection
+    (hSelect : EraseLastHallCutsTwoSingletonSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val := by
+  interval_cases T
+  · exact hallRealization_zero I M
+  · exact hallRealization_one I M hHall
+  · exact hallRealization_two I M hHall
+  · exact hallRealization_three_of_singletonSelection hSelect I M hHall
+
+theorem hallRealization_of_T_le_three_of_singletonCutSlackSelection
+    (hSelect : EraseLastHallCutsTwoSingletonCutSlackSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_of_T_le_three_of_singletonSelection
+    (eraseLastHallCutsTwoSingletonSelectionGoal_of_cutSlack hSelect)
+    hT I M hHall
+
+theorem hallRealization_of_T_le_three_of_singletonTokenCutSlackSelection
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_of_T_le_three_of_singletonCutSlackSelection
+    (eraseLastHallCutsTwoSingletonCutSlackSelectionGoal_of_token hToken)
+    hT I M hHall
+
+theorem hallRealization_of_T_le_three_of_singletonProperTokenCutSlackSelection
+    (hProper :
+      EraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_of_T_le_three_of_singletonTokenCutSlackSelection
+    (eraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal_of_proper
+      hProper)
+    hT I M hHall
+
+theorem hallRealization_of_T_le_three_of_singletonProperTokenQuotaSelection
+    (hQuota :
+      EraseLastHallCutsTwoSingletonProperTokenQuotaSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence T X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_of_T_le_three_of_singletonProperTokenCutSlackSelection
+    (eraseLastHallCutsTwoSingletonProperTokenCutSlackSelectionGoal_of_quota
+      hQuota)
+    hT I M hHall
+
+theorem hallRealization_succ_of_eraseLastHallCuts_and_lower_T_le_three
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {T : Nat} (hT : T ≤ 3)
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence (T + 1) X C) (M : CountMatrix I)
+    (hErase :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last T))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last T)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            have h := hfActive (f.symm x)
+            rw [f.apply_symm_apply] at h
+            simpa [choice] using h
+          let hdegree :
+              ∀ c : C,
+                Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
+            fun c => M.choiceDegree_of_bijective_token_matching
+              (Fin.last T) f c
+          (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_succ_of_eraseLastHallCuts I M hErase
+    (fun I' M' hHall' =>
+      hallRealization_of_T_le_three_of_singletonTokenCutSlackSelection
+        hToken hT I' M' hHall')
+
+theorem hallRealization_four_of_eraseLastHallCuts_and_singletonTokenCutSlackSelection
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hErase :
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            have h := hfActive (f.symm x)
+            rw [f.apply_symm_apply] at h
+            simpa [choice] using h
+          let hdegree :
+              ∀ c : C,
+                Incidence.choiceDegree choice c = M.val c (Fin.last 3) :=
+            fun c => M.choiceDegree_of_bijective_token_matching
+              (Fin.last 3) f c
+          (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_succ_of_eraseLastHallCuts_and_lower_T_le_three
+    hToken (by omega : 3 ≤ 3) I M hErase
+
+def EraseLastHallCutsFourGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 4 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        ∃ hfActive :
+          ∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q),
+          let choice : X → C := fun x => (f.symm x).1
+          let hchoice : ∀ x : X, choice x ∈ I.active x := by
+            intro x
+            have h := hfActive (f.symm x)
+            rw [f.apply_symm_apply] at h
+            simpa [choice] using h
+          let hdegree :
+              ∀ c : C,
+                Incidence.choiceDegree choice c = M.val c (Fin.last 3) :=
+            fun c => M.choiceDegree_of_bijective_token_matching
+              (Fin.last 3) f c
+          (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+
+def EraseLastHallCutsFourTokenCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 4 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin 3),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) → S.Nonempty →
+              Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                ≤ M.cutSlack U
+                    (S.image (Fin.castSucc : Fin 3 → Fin 4))
+
+def EraseLastHallCutsFourSmallTokenCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 4 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q)) ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin 3),
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              S.Nonempty → S.card ≤ 2 →
+                Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U
+                  ≤ M.cutSlack U
+                      (S.image (Fin.castSucc : Fin 3 → Fin 4))
+
+def EraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 4 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q)) ∧
+          (∀ U : Finset C, ∀ σ : Fin 3,
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ} : Finset (Fin 3))) U
+                ≤ M.cutSlack U
+                    (({σ} : Finset (Fin 3)).image
+                      (Fin.castSucc : Fin 3 → Fin 4))) ∧
+          (∀ U : Finset C, ∀ σ τ : Fin 3, σ ≠ τ →
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ, τ} : Finset (Fin 3))) U
+                ≤ M.cutSlack U
+                    (({σ, τ} : Finset (Fin 3)).image
+                      (Fin.castSucc : Fin 3 → Fin 4)))
+
+def EraseLastHallCutsFourSingletonPairTokenQuotaSelectionGoal : Prop :=
+  ∀ {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    ∀ (I : Incidence 4 X C) (M : CountMatrix I),
+      M.HallCuts →
+      ∃ f : (Sigma fun c : C => Fin (M.val c (Fin.last 3))) ≃ X,
+        (∀ q : Sigma fun c : C => Fin (M.val c (Fin.last 3)),
+            q.1 ∈ I.active (f q)) ∧
+          (∀ U : Finset C, ∀ σ : Fin 3,
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ} : Finset (Fin 3))) U
+                ≤ I.hitCount U - ∑ c ∈ U, M.val c (Fin.castSucc σ)) ∧
+          (∀ U : Finset C, ∀ σ τ : Fin 3, σ ≠ τ →
+            U.Nonempty → U ≠ (Finset.univ : Finset C) →
+              Incidence.tokenLoadOn f
+                  (Incidence.lowCutSet I U ({σ, τ} : Finset (Fin 3))) U
+                ≤ (∑ x : X, min ((I.active x ∩ U).card) 2)
+                    - ∑ c ∈ U,
+                        (M.val c (Fin.castSucc σ) +
+                          M.val c (Fin.castSucc τ)))
+
+theorem eraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal_of_quota
+    (hQuota :
+      EraseLastHallCutsFourSingletonPairTokenQuotaSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hQuota I M hHall with ⟨f, hfActive, hSingleton, hPair⟩
+  refine ⟨f, hfActive, ?_, ?_⟩
+  · intro U σ hUne hUuniv
+    rw [M.cutSlack_image_castSucc_singleton U σ]
+    exact hSingleton U σ hUne hUuniv
+  · intro U σ τ hστ hUne hUuniv
+    rw [M.cutSlack_image_castSucc_pair_eq_min_two U hστ]
+    exact hPair U σ τ hστ hUne hUuniv
+
+theorem eraseLastHallCutsFourSmallTokenCutSlackSelectionGoal_of_singletonPair
+    (hSP :
+      EraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsFourSmallTokenCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hSP I M hHall with ⟨f, hfActive, hSingleton, hPair⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne hScard
+  have hSpos : 0 < S.card := hSne.card_pos
+  have hcases : S.card = 1 ∨ S.card = 2 := by omega
+  rcases hcases with hSone | hStwo
+  · rcases Finset.card_eq_one.mp hSone with ⟨σ, rfl⟩
+    exact hSingleton U σ hUne hUuniv
+  · rcases Finset.card_eq_two.mp hStwo with ⟨σ, τ, hστ, rfl⟩
+    exact hPair U σ τ hστ hUne hUuniv
+
+theorem eraseLastHallCutsFourTokenCutSlackSelectionGoal_of_small
+    (hSmall :
+      EraseLastHallCutsFourSmallTokenCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsFourTokenCutSlackSelectionGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hSmall I M hHall with ⟨f, hfActive, hSlackSmall⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne
+  by_cases hSsmall : S.card ≤ 2
+  · exact hSlackSmall U S hUne hUuniv hSne hSsmall
+  · have hScard_le : S.card ≤ 3 := by
+      simpa [Fintype.card_fin] using Finset.card_le_univ S
+    have hScard : S.card = 3 := by omega
+    have hSuniv : S = (Finset.univ : Finset (Fin 3)) := by
+      exact Finset.eq_univ_of_card S (by
+        simpa [Fintype.card_fin] using hScard)
+    subst S
+    let choice : X → C := fun x => (f.symm x).1
+    have hchoice : ∀ x : X, choice x ∈ I.active x := by
+      intro x
+      have h := hfActive (f.symm x)
+      rw [f.apply_symm_apply] at h
+      simpa [choice] using h
+    have hdegree :
+        ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 3) :=
+      fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 3) f c
+    have hlow :
+        Incidence.choiceLowHitCount I choice U
+            (Finset.univ : Finset (Fin 3))
+          ≤ M.cutSlack U
+              ((Finset.univ : Finset (Fin 3)).image
+                (Fin.castSucc : Fin 3 → Fin 4)) :=
+      M.choiceLowHitCount_univ_le_cutSlack_image_castSucc
+        choice hchoice hdegree hHall U
+    have hload :
+        Incidence.tokenLoadOn f
+            (Incidence.lowCutSet I U (Finset.univ : Finset (Fin 3))) U =
+          Incidence.choiceLowHitCount I choice U
+            (Finset.univ : Finset (Fin 3)) := by
+      rw [Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet,
+        ← Incidence.tokenLoadOn_eq_choiceHitCountOn]
+    rw [hload]
+    exact hlow
+
+theorem eraseLastHallCutsFourGoal_of_tokenCutSlackSelection
+    (hToken : EraseLastHallCutsFourTokenCutSlackSelectionGoal.{uX, uC}) :
+    EraseLastHallCutsFourGoal.{uX, uC} := by
+  classical
+  intro X C _instX _instC _decX _decC I M hHall
+  rcases hToken I M hHall with ⟨f, hfActive, hSlack⟩
+  let choice : X → C := fun x => (f.symm x).1
+  have hchoice : ∀ x : X, choice x ∈ I.active x := by
+    intro x
+    have h := hfActive (f.symm x)
+    rw [f.apply_symm_apply] at h
+    simpa [choice] using h
+  have hdegree :
+      ∀ c : C, Incidence.choiceDegree choice c = M.val c (Fin.last 3) :=
+    fun c => M.choiceDegree_of_bijective_token_matching (Fin.last 3) f c
+  refine ⟨f, hfActive, ?_⟩
+  dsimp only
+  change (M.eraseLastCountMatrix choice hchoice hdegree).HallCuts
+  apply M.eraseLastCountMatrix_hallCuts_of_cutSlack choice hchoice hdegree hHall
+  intro U S
+  by_cases hUempty : U = ∅
+  · subst U
+    rw [Incidence.choiceLowHitCount_colors_empty]
+    exact Nat.zero_le _
+  by_cases hUuniv : U = (Finset.univ : Finset C)
+  · subst U
+    rw [Incidence.choiceLowHitCount_colors_univ]
+    exact Nat.zero_le _
+  by_cases hSempty : S = ∅
+  · subst S
+    rw [Incidence.choiceLowHitCount_symbols_empty I choice hchoice U]
+    exact Nat.zero_le _
+  have hlow :
+      Incidence.choiceLowHitCount I choice U S
+        =
+      Incidence.tokenLoadOn f (Incidence.lowCutSet I U S) U := by
+    rw [Incidence.choiceLowHitCount_eq_choiceHitCountOn_lowCutSet,
+      ← Incidence.tokenLoadOn_eq_choiceHitCountOn]
+  rw [hlow]
+  exact hSlack U S
+    (Finset.nonempty_iff_ne_empty.mpr hUempty) hUuniv
+    (Finset.nonempty_iff_ne_empty.mpr hSempty)
+
+theorem hallRealization_four_of_eraseLastHallCutsFourGoal
+    (hFour : EraseLastHallCutsFourGoal.{uX, uC})
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_four_of_eraseLastHallCuts_and_singletonTokenCutSlackSelection
+    hToken I M (hFour I M hHall)
+
+theorem hallRealization_four_of_fourTokenCutSlackSelection
+    (hFourToken :
+      EraseLastHallCutsFourTokenCutSlackSelectionGoal.{uX, uC})
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_four_of_eraseLastHallCutsFourGoal
+    (eraseLastHallCutsFourGoal_of_tokenCutSlackSelection hFourToken)
+    hToken I M hHall
+
+theorem hallRealization_four_of_fourSmallTokenCutSlackSelection
+    (hFourSmall :
+      EraseLastHallCutsFourSmallTokenCutSlackSelectionGoal.{uX, uC})
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_four_of_fourTokenCutSlackSelection
+    (eraseLastHallCutsFourTokenCutSlackSelectionGoal_of_small hFourSmall)
+    hToken I M hHall
+
+theorem hallRealization_four_of_fourSingletonPairTokenCutSlackSelection
+    (hFourSP :
+      EraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal.{uX, uC})
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_four_of_fourSmallTokenCutSlackSelection
+    (eraseLastHallCutsFourSmallTokenCutSlackSelectionGoal_of_singletonPair
+      hFourSP)
+    hToken I M hHall
+
+theorem hallRealization_four_of_fourSingletonPairTokenQuotaSelection
+    (hFourQuota :
+      EraseLastHallCutsFourSingletonPairTokenQuotaSelectionGoal.{uX, uC})
+    (hToken : EraseLastHallCutsTwoSingletonTokenCutSlackSelectionGoal.{uX, uC})
+    {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : Incidence 4 X C) (M : CountMatrix I)
+    (hHall : M.HallCuts) :
+    ∃ Φ : Symboling I, Φ.Realizes M.val :=
+  hallRealization_four_of_fourSingletonPairTokenCutSlackSelection
+    (eraseLastHallCutsFourSingletonPairTokenCutSlackSelectionGoal_of_quota
+      hFourQuota)
+    hToken I M hHall
+
 theorem hallRealizationGoal_of_eraseLastHallCuts
     (hErase : EraseLastHallCutsGoal.{uX, uC}) :
     HallRealizationGoal.{uX, uC} := by
@@ -3645,21 +5096,8 @@ theorem hallRealizationGoal_of_eraseLastHallCuts
       exact hallRealization_zero I M
   | succ T ih =>
       intro X C _instX _instC _decX _decC I M hHall
-      rcases hErase I M hHall with ⟨f, hfActive, hReducedHall⟩
-      let choice : X → C := fun x => (f.symm x).1
-      have hchoice : ∀ x : X, choice x ∈ I.active x := by
-        intro x
-        simpa [choice] using hfActive (f.symm x)
-      have hdegree :
-          ∀ c : C,
-            Incidence.choiceDegree choice c = M.val c (Fin.last T) :=
-        fun c => M.choiceDegree_of_bijective_token_matching
-          (Fin.last T) f c
-      rcases ih (I.eraseChoice choice hchoice)
-          (M.eraseLastCountMatrix choice hchoice hdegree)
-          hReducedHall with ⟨Φ, hReal⟩
-      exact ⟨Φ.extendLast choice hchoice,
-        Φ.extendLast_realizes_eraseLastCountMatrix M choice hchoice hdegree hReal⟩
+      exact hallRealization_succ_of_eraseLastHallCuts I M
+        (hErase I M hHall) ih
 
 theorem hallRealizationGoal_of_eraseLastHallCutsSelection
     (hSelect : EraseLastHallCutsSelectionGoal.{uX, uC}) :
@@ -3697,11 +5135,55 @@ theorem hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
   hallRealizationGoal_of_eraseLastHallCutsLinearChoice
     (eraseLastHallCutsLinearChoiceGoal_of_tokenLinear hToken)
 
+theorem hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice
+    (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice
+    (eraseLastHallCutsTokenLinearChoiceGoal_of_proper hProper)
+
+theorem eraseLastHallCutsProperTokenQuotaSelectionGoal_of_hallRealization
+    (hRealize : HallRealizationGoal.{uX, uC}) :
+    EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC} := by
+  classical
+  intro T X C _instX _instC _decX _decC I M hHall
+  rcases eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization
+      hRealize I M hHall with
+    ⟨f, hfActive, hSlack⟩
+  refine ⟨f, hfActive, ?_⟩
+  intro U S hUne hUuniv hSne _hSuniv
+  rw [← M.cutSlack_image_castSucc U S]
+  exact hSlack U S hUne hUuniv hSne
+
+theorem hallRealizationGoal_of_eraseLastHallCutsProperTokenQuotaSelection
+    (hQuota : EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC}) :
+    HallRealizationGoal.{uX, uC} :=
+  hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice
+    (eraseLastHallCutsProperTokenLinearChoiceGoal_of_quota hQuota)
+
 theorem hallRealizationGoal_iff_eraseLastHallCutsTokenLinearChoiceGoal :
     HallRealizationGoal.{uX, uC} ↔
       EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
   ⟨eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization,
     hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice⟩
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsProperTokenLinearChoiceGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC} := by
+  constructor
+  · intro hRealize
+    have hToken : EraseLastHallCutsTokenLinearChoiceGoal.{uX, uC} :=
+      eraseLastHallCutsTokenLinearChoiceGoal_of_hallRealization hRealize
+    intro T X C _instX _instC _decX _decC I M hHall
+    rcases hToken I M hHall with ⟨f, hfActive, hSlack⟩
+    exact ⟨f, hfActive, fun U S hUne hUuniv hSne _hSuniv =>
+      hSlack U S hUne hUuniv hSne⟩
+  · exact hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice
+
+theorem hallRealizationGoal_iff_eraseLastHallCutsProperTokenQuotaSelectionGoal :
+    HallRealizationGoal.{uX, uC} ↔
+      EraseLastHallCutsProperTokenQuotaSelectionGoal.{uX, uC} :=
+  ⟨eraseLastHallCutsProperTokenQuotaSelectionGoal_of_hallRealization,
+    hallRealizationGoal_of_eraseLastHallCutsProperTokenQuotaSelection⟩
 
 theorem hallRealizationGoal_iff_eraseLastHallCutsGoal :
     HallRealizationGoal.{uX, uC} ↔
@@ -3884,6 +5366,17 @@ theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsTokenLinearChoice
     (hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice hToken)
     hFeasible
 
+theorem symbolingWithResidues_of_feasible_and_eraseLastHallCutsProperTokenLinearChoice
+    (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C}
+    (hFeasible : FeasibleWithResidues I R) :
+    SymbolingWithResidues I R :=
+  symbolingWithResidues_of_feasible_and_realization
+    (hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice hProper)
+    hFeasible
+
 theorem feasibleWithResidues_of_symbolingWithResidues
     {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
@@ -3982,6 +5475,15 @@ theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsTokenLinearChoice
     SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
   symbolingWithResidues_iff_feasible_of_realization
     (hallRealizationGoal_of_eraseLastHallCutsTokenLinearChoice hToken)
+
+theorem symbolingWithResidues_iff_feasible_of_eraseLastHallCutsProperTokenLinearChoice
+    (hProper : EraseLastHallCutsProperTokenLinearChoiceGoal.{uX, uC})
+    {m T : Nat} {X : Type uX} {C : Type uC}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {R : ResidueSpec m T C} :
+    SymbolingWithResidues I R ↔ FeasibleWithResidues I R :=
+  symbolingWithResidues_iff_feasible_of_realization
+    (hallRealizationGoal_of_eraseLastHallCutsProperTokenLinearChoice hProper)
 
 namespace SymbolingWithResidues
 
