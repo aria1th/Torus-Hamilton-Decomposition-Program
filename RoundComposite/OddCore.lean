@@ -5492,7 +5492,7 @@ def OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :
         BaseTail.IsCylinder Cyl
 
 theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
-    (hSplit : BaseTail.SuccessorPacketPhaseSplitGoal)
+    (hSplit : BaseTail.SuccessorPacketPhaseSplitPowerGoal)
     (hBuild : OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal) :
     OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal := by
   intro b m T _inst hb5 _hmodd hm3 _hsmall hbase packets
@@ -5504,9 +5504,7 @@ theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
         Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
     intro packet hp
     exact
-      hSplit (N := m ^ b) (b := b) (m := m) (T := T)
-        (packets := packets)
-        (dvd_pow_self m (by omega))
+      hSplit (b := b) (m := m) (T := T) (packets := packets)
         hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
@@ -5544,7 +5542,7 @@ def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
         BaseTail.IsCylinder Cyl
 
 theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
-    (hSplit : BaseTail.SuccessorPacketPhaseSplitGoal)
+    (hSplit : BaseTail.SuccessorPacketPhaseSplitPowerGoal)
     (hBuild :
       OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal) :
     OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal := by
@@ -5557,9 +5555,7 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSpl
         Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
     intro packet hp
     exact
-      hSplit (N := m ^ b) (b := b) (m := m) (T := T)
-        (packets := packets)
-        (dvd_pow_self m (by omega))
+      hSplit (b := b) (m := m) (T := T) (packets := packets)
         hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
@@ -6094,8 +6090,8 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
         hLift)
 
 def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
-  BaseTail.PacketPhaseSplitLengthTwoGoal ∧
-  BaseTail.PacketPhaseSplitLengthThreeGoal ∧
+  BaseTail.PacketPhaseSplitLengthTwoPowerGoal ∧
+  BaseTail.PacketPhaseSplitLengthThreePowerGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
@@ -6108,14 +6104,14 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResi
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
       ⟨oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
-          (BaseTail.successorPacketPhaseSplitGoal_of_lengthTwoThree
+          (BaseTail.successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
             hSplit2 hSplit3)
           hCyl,
         hMix, hRound, hLift⟩
 
 def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
-  BaseTail.PacketPhaseSplitLengthTwoGoal ∧
-  BaseTail.PacketPhaseSplitLengthThreeGoal ∧
+  BaseTail.PacketPhaseSplitLengthTwoPowerGoal ∧
+  BaseTail.PacketPhaseSplitLengthThreePowerGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
@@ -6128,7 +6124,7 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixe
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
       (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
         (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
-          (BaseTail.successorPacketPhaseSplitGoal_of_lengthTwoThree
+          (BaseTail.successorPacketPhaseSplitPowerGoal_of_lengthTwoThreePower
             hSplit2 hSplit3)
           hCylMix)
         hRound
