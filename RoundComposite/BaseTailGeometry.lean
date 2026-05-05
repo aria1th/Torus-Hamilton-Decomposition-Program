@@ -8546,6 +8546,119 @@ theorem packetPartSlotValue_mem (packets : List (List Nat))
     packetPartSlotValue packets slot ∈ packetPartSlotPacket packets slot := by
   exact List.get_mem (packets.get slot.1) slot.2
 
+structure SuccessorPacketBuffer (packets : List (List Nat)) where
+  packetIndex : Fin packets.length
+  packet_length : (packets.get packetIndex).length = 3
+
+namespace SuccessorPacketBuffer
+
+def slot0 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) : PacketPartSlot packets :=
+  ⟨B.packetIndex, ⟨0, by rw [B.packet_length]; omega⟩⟩
+
+def slot1 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) : PacketPartSlot packets :=
+  ⟨B.packetIndex, ⟨1, by rw [B.packet_length]; omega⟩⟩
+
+def slot2 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) : PacketPartSlot packets :=
+  ⟨B.packetIndex, ⟨2, by rw [B.packet_length]; omega⟩⟩
+
+@[simp] theorem slot0_packetIndex {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot0.1 = B.packetIndex := rfl
+
+@[simp] theorem slot1_packetIndex {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot1.1 = B.packetIndex := rfl
+
+@[simp] theorem slot2_packetIndex {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot2.1 = B.packetIndex := rfl
+
+theorem slot0_ne_slot1 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot0 ≠ B.slot1 := by
+  intro h
+  have hval := congrArg (fun slot : PacketPartSlot packets => slot.2.val) h
+  simp [slot0, slot1] at hval
+
+theorem slot0_ne_slot2 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot0 ≠ B.slot2 := by
+  intro h
+  have hval := congrArg (fun slot : PacketPartSlot packets => slot.2.val) h
+  simp [slot0, slot2] at hval
+
+theorem slot1_ne_slot2 {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets) :
+    B.slot1 ≠ B.slot2 := by
+  intro h
+  have hval := congrArg (fun slot : PacketPartSlot packets => slot.2.val) h
+  simp [slot1, slot2] at hval
+
+def color0 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) : Fin (b + T) :=
+  e B.slot0
+
+def color1 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) : Fin (b + T) :=
+  e B.slot1
+
+def color2 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) : Fin (b + T) :=
+  e B.slot2
+
+theorem color0_ne_color1 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) :
+    B.color0 e ≠ B.color1 e := by
+  intro h
+  exact B.slot0_ne_slot1 (e.injective h)
+
+theorem color0_ne_color2 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) :
+    B.color0 e ≠ B.color2 e := by
+  intro h
+  exact B.slot0_ne_slot2 (e.injective h)
+
+theorem color1_ne_color2 {b T : Nat} {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (e : PacketPartSlot packets ≃ Fin (b + T)) :
+    B.color1 e ≠ B.color2 e := by
+  intro h
+  exact B.slot1_ne_slot2 (e.injective h)
+
+end SuccessorPacketBuffer
+
+def SuccessorPacketBufferGoal : Prop :=
+  ∀ {b m T : Nat} {packets : List (List Nat)},
+    3 ≤ m →
+    T = b + 1 →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    Nonempty (SuccessorPacketBuffer packets)
+
+theorem successorPacketBufferGoal : SuccessorPacketBufferGoal := by
+  intro b m T packets hm3 hT hlen htotal hpacketSum hunit
+  rcases successorPacketExistsUniqueLengthThreeGoal
+      hm3 hT hlen htotal hpacketSum hunit with
+    ⟨packet, hp, hpacketLen, _huniq⟩
+  rcases List.get_of_mem hp with ⟨i, hi⟩
+  refine ⟨{
+    packetIndex := i
+    packet_length := ?_
+  }⟩
+  rw [hi]
+  exact hpacketLen
+
 theorem packetPartSlot_card_eq_sum (packets : List (List Nat)) :
     Fintype.card (PacketPartSlot packets) =
       (packets.map List.length).sum := by

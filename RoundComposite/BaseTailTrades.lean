@@ -555,6 +555,28 @@ theorem exists_injective_successorReservoirColorQuota_matching_of_activeBlockDat
       D colorOf (fun _ => successorReservoirColorQuota m T) hTokenQuota
       (fun _ => successorReservoirColorQuota_mul_le_pow hLarge) hTpos
 
+theorem exists_disjoint_subset_card_eq_of_card_add_le
+    {X : Type*} {used candidates : Finset X} {n : Nat}
+    (hcard : used.card + n ≤ candidates.card) :
+    ∃ chosen : Finset X,
+      chosen ⊆ candidates ∧ Disjoint chosen used ∧ chosen.card = n := by
+  classical
+  have hinter : (used ∩ candidates).card ≤ used.card :=
+    Finset.card_le_card (by
+      intro x hx
+      exact (Finset.mem_inter.mp hx).1)
+  have havailable : n ≤ (candidates \ used).card := by
+    rw [Finset.card_sdiff]
+    omega
+  rcases Finset.exists_subset_card_eq havailable with
+    ⟨chosen, hchosen, hchosenCard⟩
+  refine ⟨chosen, ?_, ?_, hchosenCard⟩
+  · intro x hx
+    exact (Finset.mem_sdiff.mp (hchosen hx)).1
+  · rw [Finset.disjoint_left]
+    intro x hx hused
+    exact (Finset.mem_sdiff.mp (hchosen hx)).2 hused
+
 def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
     [DecidableEq C] (hT : 2 ≤ T)
     (zeroColor rightColor :
