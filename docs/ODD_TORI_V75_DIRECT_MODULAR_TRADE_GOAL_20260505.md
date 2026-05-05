@@ -187,6 +187,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer_active_exists
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer01Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer02Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBase
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken.equivSum
@@ -220,6 +221,9 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMo
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer01_copy_sum_const
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer02_copy_sum
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer02_copy_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_nonbuffer_family_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer01_family_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_buffer02_family_sum_const
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroColorOfMove
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColorOfMove
@@ -605,7 +609,10 @@ nonzero trade-delta rewrite is now packaged by
 `ReservoirSitePlan.thresholdMoveList_nonzero_delta_eq_family_sums`, so λ/μ
 arithmetic can start from family sums rather than from the recursive move list.
 The constructor simplification lemmas for `thresholdTokenNonzeroDelta` expose
-the exact non-buffer, β₀β₁, and β₀β₂ delta weights.  The
+the exact non-buffer, β₀β₁, and β₀β₂ delta weights.  The copy-count layer also
+has family-level constant-weight folds, so once a quota is constant along the
+copy index, each family sum reduces to `quota * weight` over the base token.
+The
 sharpest remaining hard content is now proving existence of that quota and the
 resulting nonzero-column equations.
 

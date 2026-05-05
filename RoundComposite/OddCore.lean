@@ -5626,6 +5626,16 @@ abbrev nonbufferTokens
     (A.buffer.color1 A.slotEquiv)
     (A.buffer.color2 A.slotEquiv)
 
+abbrev nonbufferTokenBase
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) : Type :=
+  {c : Fin (b + T) //
+    c ≠ A.buffer.color0 A.slotEquiv ∧
+      c ≠ A.buffer.color1 A.slotEquiv ∧
+      c ≠ A.buffer.color2 A.slotEquiv} × Fin (T - 1)
+
 inductive ReservoirMoveToken
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
@@ -6347,6 +6357,95 @@ theorem thresholdMoveTokenFinset_buffer02_copy_sum_const
   simpa [hquota] using
     BaseTail.Trades.zmod_sum_fin_m_sub_one_const_if_val_lt_val
       (m := m) z weight
+
+theorem thresholdMoveTokenFinset_nonbuffer_family_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (z weight : A.nonbufferTokenBase → ZMod m)
+    (hquota : ∀ a : A.nonbufferTokenBase, ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.nonbuffer (a, k)) = z a) :
+    (∑ q : A.nonbufferTokens,
+      if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.1
+      else 0) =
+      ∑ a : A.nonbufferTokenBase, z a * weight a := by
+  classical
+  change
+    (∑ q : A.nonbufferTokenBase × Fin (m - 1),
+      if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.1
+      else 0) =
+      ∑ a : A.nonbufferTokenBase, z a * weight a
+  rw [Fintype.sum_prod_type]
+  refine Finset.sum_congr rfl ?_
+  intro a _ha
+  exact
+    P.thresholdMoveTokenFinset_nonbuffer_copy_sum_const
+      quota a (z a) (weight a) (hquota a)
+
+theorem thresholdMoveTokenFinset_buffer01_family_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (z weight : Fin (T - 1) → ZMod m)
+    (hquota : ∀ ρ : Fin (T - 1), ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer01 (k, ρ)) = z ρ) :
+    (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+      if ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.2
+      else 0) =
+      ∑ ρ : Fin (T - 1), z ρ * weight ρ := by
+  classical
+  change
+    (∑ q : Fin (m - 1) × Fin (T - 1),
+      if ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.2
+      else 0) =
+      ∑ ρ : Fin (T - 1), z ρ * weight ρ
+  rw [Fintype.sum_prod_type]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl ?_
+  intro ρ _hρ
+  exact
+    P.thresholdMoveTokenFinset_buffer01_copy_sum_const
+      quota ρ (z ρ) (weight ρ) (hquota ρ)
+
+theorem thresholdMoveTokenFinset_buffer02_family_sum_const
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (z weight : Fin (T - 1) → ZMod m)
+    (hquota : ∀ ρ : Fin (T - 1), ∀ k : Fin (m - 1),
+      quota (ReservoirMoveToken.buffer02 (k, ρ)) = z ρ) :
+    (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+      if ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.2
+      else 0) =
+      ∑ ρ : Fin (T - 1), z ρ * weight ρ := by
+  classical
+  change
+    (∑ q : Fin (m - 1) × Fin (T - 1),
+      if ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota
+      then weight q.2
+      else 0) =
+      ∑ ρ : Fin (T - 1), z ρ * weight ρ
+  rw [Fintype.sum_prod_type]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl ?_
+  intro ρ _hρ
+  exact
+    P.thresholdMoveTokenFinset_buffer02_copy_sum_const
+      quota ρ (z ρ) (weight ρ) (hquota ρ)
 
 noncomputable def moveZeroColorOfMove
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
