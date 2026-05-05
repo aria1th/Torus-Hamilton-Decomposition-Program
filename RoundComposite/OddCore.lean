@@ -5429,6 +5429,89 @@ def OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal : Prop :=
             ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
         (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
 
+/--
+Phase-split construction target for the active-block cylinder.
+
+The base Hamilton decomposition supplies the compressed base color cycles.
+The separate `PacketPhaseSplitGoal` supplies the one-packet splitter on each
+base cycle.  This goal is the remaining assembly theorem turning those local
+splitters into the raw active-block cylinder data.
+-/
+def OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] [NeZero (m ^ b)],
+    5 ≤ b →
+    3 ≤ m →
+    Shared.CayleyDecomposition b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    (∀ packet, packet ∈ packets →
+      Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet)) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+        (∀ x : Shared.TorusVertex (b + 1) m,
+          ∀ i : Fin (b + 1), i ≠ BaseTail.activeDir b →
+            ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
+        (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
+
+/--
+Phase-split construction target for the full mixed active-block cylinder.
+
+This is weaker and more geometric than asking for mixed witnesses for every
+possible active-block cylinder: the phase-split construction may return the
+cylinder, the active-block degree data, and the mixed expansion data together.
+-/
+def OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :
+    Prop :=
+  ∀ {b m T : Nat} [NeZero m] [NeZero (m ^ b)],
+    5 ≤ b →
+    3 ≤ m →
+    Shared.CayleyDecomposition b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    (∀ packet, packet ∈ packets →
+      Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet)) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+      ∃ _Mix : BaseTail.MixedExpansionData Cyl,
+        BaseTail.IsCylinder Cyl
+
+theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
+    (hSplit : BaseTail.PacketPhaseSplitGoal)
+    (hBuild : OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal) :
+    OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal := by
+  intro b m T _inst hb5 _hmodd hm3 _hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT
+  letI : NeZero (m ^ b) := ⟨pow_ne_zero b (NeZero.ne m)⟩
+  rcases hbase with ⟨Dbase⟩
+  have hPacketSplits :
+      ∀ packet, packet ∈ packets →
+        Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
+    intro packet hp
+    exact
+      hSplit (N := m ^ b) (m := m) (packet := packet)
+        (hpacketSum packet hp)
+        (hpacketUnits packet hp)
+        (hPrefix packet hp)
+  exact
+    hBuild hb5 hm3 Dbase packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hPacketSplits hT
+
 theorem oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw
     (hRaw : OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal) :
     OddSuccessorBaseTailActiveBlockCylinderConstructionGoal := by
@@ -5459,6 +5542,28 @@ def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
       ∃ _D : BaseTail.ActiveBlockData Cyl,
       ∃ _Mix : BaseTail.MixedExpansionData Cyl,
         BaseTail.IsCylinder Cyl
+
+theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
+    (hSplit : BaseTail.PacketPhaseSplitGoal)
+    (hBuild :
+      OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal) :
+    OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal := by
+  intro b m T _inst hb5 _hmodd hm3 _hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT
+  letI : NeZero (m ^ b) := ⟨pow_ne_zero b (NeZero.ne m)⟩
+  rcases hbase with ⟨Dbase⟩
+  have hPacketSplits :
+      ∀ packet, packet ∈ packets →
+        Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
+    intro packet hp
+    exact
+      hSplit (N := m ^ b) (m := m) (packet := packet)
+        (hpacketSum packet hp)
+        (hpacketUnits packet hp)
+        (hPrefix packet hp)
+  exact
+    hBuild hb5 hm3 Dbase packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hPacketSplits hT
 
 def OddSuccessorBaseTailActiveBlockMixedExpansionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
@@ -5978,6 +6083,43 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
       hCyl hMix hRound hLift
+
+def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
+  BaseTail.PacketPhaseSplitGoal ∧
+  OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
+  ActiveHallControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResiduals
+    (h : OddSuccessorBaseTailWorker1PhaseResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hSplit, hCyl, hMix, hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
+      ⟨oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
+          hSplit hCyl,
+        hMix, hRound, hLift⟩
+
+def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
+  BaseTail.PacketPhaseSplitGoal ∧
+  OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
+  ActiveHallControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixedResiduals
+    (h : OddSuccessorBaseTailWorker1PhaseMixedResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hSplit, hCylMix, hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+      (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
+        (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
+          hSplit hCylMix)
+        (oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_activeHallControlled
+          hRound)
+        (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+          hLift))
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :

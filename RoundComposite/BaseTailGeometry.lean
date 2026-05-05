@@ -295,6 +295,46 @@ structure MixedLowerWitnessData {b m T : Nat} [NeZero m]
         0 < (Cyl.incidence.active x ∩ U).card ∧
           (Cyl.incidence.active x ∩ U).card < T
 
+/--
+Phase splitter for one packet over one compressed base color cycle.
+
+For a packet of active block sizes summing to `m`, the splitter chooses exactly
+one packet part as the ordinary move at each `(base-rank, active-coordinate)`
+state.  The cardinality field records that part `r` is ordinary for
+`packet.get r * N` states, and the cycle field is the genuinely hard packet
+Hamiltonicity assertion used by the successor cylinder construction.
+-/
+structure PacketPhaseSplit (N m : Nat) [NeZero N] [NeZero m]
+    (packet : List Nat) where
+  ordinary : Fin packet.length → ZMod N × ZMod m → Bool
+  ordinary_unique :
+    ∀ y : ZMod N × ZMod m,
+      ∃! r : Fin packet.length, ordinary r y = true
+  ordinary_card :
+    ∀ r : Fin packet.length,
+      ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+        (fun y => ordinary r y = true)).card = packet.get r * N
+  step_singleCycle :
+    ∀ r : Fin packet.length,
+      Shared.IsSingleCycleMap
+        (fun y : ZMod N × ZMod m =>
+          if ordinary r y then (y.1 + 1, y.2) else (y.1, y.2 + 1))
+
+/--
+The remaining local packet theorem needed by the active-block cylinder.
+
+This is intentionally isolated from the global torus geometry: unit packet
+entries and unit proper prefix sums should produce a phase splitter on every
+cycle length `N`.
+-/
+def PacketPhaseSplitGoal : Prop :=
+  ∀ {N m : Nat} [NeZero N] [NeZero m] {packet : List Nat},
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ q : Nat, 0 < q → q < packet.length →
+      Nat.Coprime (packet.take q).sum m) →
+    Nonempty (PacketPhaseSplit N m packet)
+
 theorem mixedExpansionData_of_mixedLowerWitnessData
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets}
