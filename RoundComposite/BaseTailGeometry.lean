@@ -506,6 +506,24 @@ theorem packetPhase_preimage_packetPrefixPhaseSet_card
   rw [packetPhase_preimage_card hdiv,
     packetPrefixPhaseSet_card hsum]
 
+def packetPhaseCoordEquiv {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) :
+    ZMod N × ZMod m ≃ ZMod m × ZMod N where
+  toFun y := (packetPhase hdiv y, y.1)
+  invFun p := (p.2, p.1 - ZMod.castHom hdiv (ZMod m) p.2)
+  left_inv y := by
+    rcases y with ⟨x, z⟩
+    apply Prod.ext
+    · rfl
+    · dsimp [packetPhase]
+      abel_nf
+  right_inv p := by
+    rcases p with ⟨φ, x⟩
+    apply Prod.ext
+    · dsimp [packetPhase]
+      abel_nf
+    · rfl
+
 def packetPhaseIntervalOrdinary {N m : Nat} [NeZero N] [NeZero m]
     (hdiv : m ∣ N) (packet : List Nat)
     (r : Fin packet.length) (y : ZMod N × ZMod m) : Bool :=
@@ -522,6 +540,76 @@ theorem packetPhaseIntervalOrdinary_card
     hdiv hsum r using 2
   ext y
   simp [packetPhaseIntervalOrdinary]
+
+def packetPhaseIntervalStep {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length) :
+    ZMod N × ZMod m → ZMod N × ZMod m :=
+  fun y =>
+    if packetPhaseIntervalOrdinary hdiv packet r y then
+      (y.1 + 1, y.2)
+    else
+      (y.1, y.2 + 1)
+
+def packetPhaseSkewStep {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) : ZMod m × ZMod N → ZMod m × ZMod N :=
+  fun p => (p.1 + 1, if p.1 ∈ S then p.2 + 1 else p.2)
+
+theorem packetPhaseIntervalStep_conj_skew
+    {N m : Nat} [NeZero N] [NeZero m]
+    (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length)
+    (p : ZMod m × ZMod N) :
+    packetPhaseCoordEquiv hdiv
+      (packetPhaseIntervalStep hdiv packet r
+        ((packetPhaseCoordEquiv hdiv).symm p)) =
+      packetPhaseSkewStep (packetPrefixPhaseSet m packet r) p := by
+  rcases p with ⟨φ, x⟩
+  let y : ZMod N × ZMod m :=
+    (x, φ - ZMod.castHom hdiv (ZMod m) x)
+  have hphase : packetPhase hdiv y = φ := by
+    dsimp [y, packetPhase]
+    abel
+  have hcast : ZMod.castHom hdiv (ZMod m) x = (x.cast : ZMod m) := by
+    rw [ZMod.castHom_apply]
+  have hphaseCast :
+      packetPhase hdiv (x, φ - (x.cast : ZMod m)) = φ := by
+    simpa [y, hcast] using hphase
+  by_cases hφ : φ ∈ packetPrefixPhaseSet m packet r
+  · have hord :
+        packetPhaseIntervalOrdinary hdiv packet r y = true := by
+      simp [packetPhaseIntervalOrdinary, hphase, hφ]
+    have hordCast :
+        packetPhaseIntervalOrdinary hdiv packet r
+          (x, φ - (x.cast : ZMod m)) = true := by
+      simpa [y, hcast] using hord
+    apply Prod.ext
+    · dsimp [packetPhaseCoordEquiv, packetPhaseIntervalStep,
+        packetPhaseSkewStep]
+      rw [hordCast]
+      simp
+      simpa [hphaseCast] using
+        packetPhase_step_first hdiv (x, φ - (x.cast : ZMod m))
+    · dsimp [packetPhaseCoordEquiv, packetPhaseIntervalStep,
+        packetPhaseSkewStep]
+      rw [hordCast]
+      simp [hφ]
+  · have hord :
+        packetPhaseIntervalOrdinary hdiv packet r y = false := by
+      simp [packetPhaseIntervalOrdinary, hphase, hφ]
+    have hordCast :
+        packetPhaseIntervalOrdinary hdiv packet r
+          (x, φ - (x.cast : ZMod m)) = false := by
+      simpa [y, hcast] using hord
+    apply Prod.ext
+    · dsimp [packetPhaseCoordEquiv, packetPhaseIntervalStep,
+        packetPhaseSkewStep]
+      rw [hordCast]
+      simp
+      simpa [hphaseCast] using
+        packetPhase_step_second hdiv (x, φ - (x.cast : ZMod m))
+    · dsimp [packetPhaseCoordEquiv, packetPhaseIntervalStep,
+        packetPhaseSkewStep]
+      rw [hordCast]
+      simp [hφ]
 
 /--
 The remaining local packet theorem needed by the active-block cylinder.
