@@ -169,6 +169,14 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInpu
   oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionReturnInputs h)
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_worker1Residuals
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInputs
+    (oddModulusToriV75PreCorrectionReturnInputsGoal_of_worker1Residuals
+      hHigh h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade_return
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
     (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal)
@@ -214,6 +222,14 @@ theorem oddSuccessorClosureGoal_of_v75_directModularTrade_blocks
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisCanonicalLocalTradeLowerTriangular_blocks
     hBlocks
+
+theorem oddSuccessorClosureGoal_of_v75_worker1PreCorrectionReturnResiduals
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_directModularTrade_blocks
+    (oddModulusToriV75DirectModularTradeBlocksGoal_of_worker1Residuals
+      hHigh h)
 
 theorem odd_modulus_tori_all_dimensions_of_v75_directModularTrade_blocks
     (hBlocks : OddModulusToriV75DirectModularTradeBlocksGoal)
