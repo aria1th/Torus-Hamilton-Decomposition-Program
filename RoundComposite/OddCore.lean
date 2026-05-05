@@ -5535,6 +5535,13 @@ structure OddSuccessorPhaseSplitBufferReservoirData
     ∀ c : Fin (b + T),
       D.activeBlock c =
         BaseTail.packetPartSlotValue packets (slotEquiv.symm c)
+  buffer_active_exists :
+    ∀ x : Shared.TorusVertex (b + 1) m,
+      ∃ β : Fin (b + T),
+        (β = buffer.color0 slotEquiv ∨
+            β = buffer.color1 slotEquiv ∨
+              β = buffer.color2 slotEquiv) ∧
+          β ∈ (Cyl.incidence).active x
   buffer01_pair_lower :
     m ^ b ≤
       ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
@@ -5608,6 +5615,161 @@ theorem exists_disjoint_buffer_pair_subsets
     BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le
       A.buffer01Candidates_card_lower A.buffer02Candidates_card_lower
       hbudget
+
+abbrev nonbufferTokens
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) : Type :=
+  BaseTail.Trades.NonbufferReservoirToken m T (b + T)
+    (A.buffer.color0 A.slotEquiv)
+    (A.buffer.color1 A.slotEquiv)
+    (A.buffer.color2 A.slotEquiv)
+
+structure ReservoirSitePlan
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) where
+  nonbufferSite :
+    A.nonbufferTokens → Shared.TorusVertex (b + 1) m
+  nonbufferSite_injective : Function.Injective nonbufferSite
+  nonbuffer_color_active :
+    ∀ q : A.nonbufferTokens,
+      q.color ∈ (A.Cyl.incidence).active (nonbufferSite q)
+  nonbufferBufferColor : A.nonbufferTokens → Fin (b + T)
+  nonbufferBufferColor_is_buffer :
+    ∀ q : A.nonbufferTokens,
+      nonbufferBufferColor q = A.buffer.color0 A.slotEquiv ∨
+        nonbufferBufferColor q = A.buffer.color1 A.slotEquiv ∨
+          nonbufferBufferColor q = A.buffer.color2 A.slotEquiv
+  nonbufferBufferColor_active :
+    ∀ q : A.nonbufferTokens,
+      nonbufferBufferColor q ∈
+        (A.Cyl.incidence).active (nonbufferSite q)
+  buffer01Sites : Finset (Shared.TorusVertex (b + 1) m)
+  buffer02Sites : Finset (Shared.TorusVertex (b + 1) m)
+  buffer01_subset : buffer01Sites ⊆ A.buffer01Candidates
+  buffer02_subset : buffer02Sites ⊆ A.buffer02Candidates
+  buffer01_disjoint_nonbuffer :
+    Disjoint buffer01Sites
+      ((Finset.univ : Finset A.nonbufferTokens).image nonbufferSite)
+  buffer02_disjoint_nonbuffer :
+    Disjoint buffer02Sites
+      ((Finset.univ : Finset A.nonbufferTokens).image nonbufferSite)
+  buffer01_disjoint_buffer02 : Disjoint buffer01Sites buffer02Sites
+  buffer01_card :
+    buffer01Sites.card = BaseTail.Trades.successorReservoirColorQuota m T
+  buffer02_card :
+    buffer02Sites.card = BaseTail.Trades.successorReservoirColorQuota m T
+
+noncomputable def reservoirSitePlan
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets)
+    (hLarge : m ^ b > m * (b + T) * T)
+    (hTpos : 0 < T) :
+    ReservoirSitePlan A := by
+  classical
+  let Q := A.nonbufferTokens
+  let colorOf : Q → Fin (b + T) := fun q => q.color
+  have hTokenQuota :
+      ∀ c : Fin (b + T),
+        ((Finset.univ : Finset Q).filter
+            (fun q => colorOf q = c)).card ≤
+          BaseTail.Trades.successorReservoirColorQuota m T := by
+    intro c
+    exact BaseTail.Trades.NonbufferReservoirToken.color_quota c
+  have hMatch :=
+    BaseTail.Trades.exists_injective_successorReservoirColorQuota_matching_of_activeBlockData
+      A.D colorOf hTokenQuota hLarge hTpos
+  let site : Q → Shared.TorusVertex (b + 1) m := Classical.choose hMatch
+  have hsiteSpec :
+      Function.Injective site ∧
+        ∀ q : Q, colorOf q ∈ (A.Cyl.incidence).active (site q) := by
+    simpa [site] using Classical.choose_spec hMatch
+  have hsiteInj : Function.Injective site := hsiteSpec.1
+  have hsiteActive :
+      ∀ q : Q, colorOf q ∈ (A.Cyl.incidence).active (site q) :=
+    hsiteSpec.2
+  let used : Finset (Shared.TorusVertex (b + 1) m) :=
+    (Finset.univ : Finset Q).image site
+  have husedCard : used.card = Fintype.card Q := by
+    exact Finset.card_image_of_injective _ hsiteInj
+  have hbudget :
+      used.card +
+          BaseTail.Trades.successorReservoirColorQuota m T +
+            BaseTail.Trades.successorReservoirColorQuota m T ≤
+        m ^ b := by
+    rw [husedCard]
+    exact
+      BaseTail.Trades.NonbufferReservoirToken.card_add_two_quotas_le_pow
+        (A.buffer.color0_ne_color1 A.slotEquiv)
+        (A.buffer.color0_ne_color2 A.slotEquiv)
+        (A.buffer.color1_ne_color2 A.slotEquiv)
+        hLarge
+  have hPairs :=
+    A.exists_disjoint_buffer_pair_subsets
+      (used := used)
+      (n01 := BaseTail.Trades.successorReservoirColorQuota m T)
+      (n02 := BaseTail.Trades.successorReservoirColorQuota m T)
+      hbudget
+  let chosen01 : Finset (Shared.TorusVertex (b + 1) m) :=
+    Classical.choose hPairs
+  let chosen02 : Finset (Shared.TorusVertex (b + 1) m) :=
+    Classical.choose (Classical.choose_spec hPairs)
+  have hPairSpec :
+      chosen01 ⊆ A.buffer01Candidates ∧
+        chosen02 ⊆ A.buffer02Candidates ∧
+        Disjoint chosen01 used ∧
+        Disjoint chosen02 used ∧
+        Disjoint chosen01 chosen02 ∧
+        chosen01.card = BaseTail.Trades.successorReservoirColorQuota m T ∧
+        chosen02.card = BaseTail.Trades.successorReservoirColorQuota m T := by
+    simpa [chosen01, chosen02] using
+      Classical.choose_spec (Classical.choose_spec hPairs)
+  have hsub01 := hPairSpec.1
+  have hsub02 := hPairSpec.2.1
+  have hdisj01 := hPairSpec.2.2.1
+  have hdisj02 := hPairSpec.2.2.2.1
+  have hdisj012 := hPairSpec.2.2.2.2.1
+  have hcard01 := hPairSpec.2.2.2.2.2.1
+  have hcard02 := hPairSpec.2.2.2.2.2.2
+  let partner : Q → Fin (b + T) :=
+    fun q => Classical.choose (A.buffer_active_exists (site q))
+  have hpartner_spec :
+      ∀ q : Q,
+        (partner q = A.buffer.color0 A.slotEquiv ∨
+            partner q = A.buffer.color1 A.slotEquiv ∨
+              partner q = A.buffer.color2 A.slotEquiv) ∧
+          partner q ∈ (A.Cyl.incidence).active (site q) := by
+    intro q
+    exact Classical.choose_spec (A.buffer_active_exists (site q))
+  exact
+    {
+      nonbufferSite := site
+      nonbufferSite_injective := hsiteInj
+      nonbuffer_color_active := by
+        intro q
+        exact hsiteActive q
+      nonbufferBufferColor := partner
+      nonbufferBufferColor_is_buffer := by
+        intro q
+        exact (hpartner_spec q).1
+      nonbufferBufferColor_active := by
+        intro q
+        exact (hpartner_spec q).2
+      buffer01Sites := chosen01
+      buffer02Sites := chosen02
+      buffer01_subset := hsub01
+      buffer02_subset := hsub02
+      buffer01_disjoint_nonbuffer := hdisj01
+      buffer02_disjoint_nonbuffer := hdisj02
+      buffer01_disjoint_buffer02 := hdisj012
+      buffer01_card := hcard01
+      buffer02_card := hcard02
+    }
 
 end OddSuccessorPhaseSplitBufferReservoirData
 
@@ -5909,6 +6071,69 @@ noncomputable def oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
       0 < BaseTail.packetPartSlotValue packets B.slot2 :=
     (BaseTail.successorPacketPartSlotUnitsGoal
       hlen htotal hpacketUnits B.slot2).1
+  have hBufferActiveExists :
+      ∀ x : Shared.TorusVertex (b + 1) m,
+        ∃ β : Fin (b + T),
+          (β = B.color0 slotEquiv ∨
+              β = B.color1 slotEquiv ∨
+                β = B.color2 slotEquiv) ∧
+            β ∈ (Cyl.incidence).active x := by
+    intro x
+    let y : ZMod (m ^ b) × ZMod m :=
+      (rankAt x B.packetIndex, BaseTail.activeCoord x)
+    rcases (S B.packetIndex).ordinary_unique y with
+      ⟨r, hr, huniq⟩
+    have hrval : r.val = 0 ∨ r.val = 1 ∨ r.val = 2 := by
+      have hltLen := r.isLt
+      have hlen3 : (packets.get B.packetIndex).length = 3 :=
+        B.packet_length
+      omega
+    rcases hrval with hr0 | hr1 | hr2
+    · have hrslot : r = B.slot0.2 := Fin.ext hr0
+      have h0 : (S B.packetIndex).ordinary B.slot0.2 y = true := by
+        simpa [hrslot] using hr
+      have h1false :
+          (S B.packetIndex).ordinary B.slot1.2 y = false := by
+        by_cases h1 : (S B.packetIndex).ordinary B.slot1.2 y
+        · have heq0 := huniq B.slot0.2 h0
+          have heq1 := huniq B.slot1.2 h1
+          have hslots : B.slot0.2 = B.slot1.2 := heq0.trans heq1.symm
+          have hval := congrArg Fin.val hslots
+          simp [BaseTail.SuccessorPacketBuffer.slot0,
+            BaseTail.SuccessorPacketBuffer.slot1] at hval
+        · exact Bool.eq_false_iff.mpr h1
+      refine ⟨B.color1 slotEquiv, Or.inr (Or.inl rfl), ?_⟩
+      exact (hActiveSlot B.slot1 x).2 (by simpa [y] using h1false)
+    · have hrslot : r = B.slot1.2 := Fin.ext hr1
+      have h1 : (S B.packetIndex).ordinary B.slot1.2 y = true := by
+        simpa [hrslot] using hr
+      have h0false :
+          (S B.packetIndex).ordinary B.slot0.2 y = false := by
+        by_cases h0 : (S B.packetIndex).ordinary B.slot0.2 y
+        · have heq0 := huniq B.slot0.2 h0
+          have heq1 := huniq B.slot1.2 h1
+          have hslots : B.slot0.2 = B.slot1.2 := heq0.trans heq1.symm
+          have hval := congrArg Fin.val hslots
+          simp [BaseTail.SuccessorPacketBuffer.slot0,
+            BaseTail.SuccessorPacketBuffer.slot1] at hval
+        · exact Bool.eq_false_iff.mpr h0
+      refine ⟨B.color0 slotEquiv, Or.inl rfl, ?_⟩
+      exact (hActiveSlot B.slot0 x).2 (by simpa [y] using h0false)
+    · have hrslot : r = B.slot2.2 := Fin.ext hr2
+      have h2 : (S B.packetIndex).ordinary B.slot2.2 y = true := by
+        simpa [hrslot] using hr
+      have h0false :
+          (S B.packetIndex).ordinary B.slot0.2 y = false := by
+        by_cases h0 : (S B.packetIndex).ordinary B.slot0.2 y
+        · have heq0 := huniq B.slot0.2 h0
+          have heq2 := huniq B.slot2.2 h2
+          have hslots : B.slot0.2 = B.slot2.2 := heq0.trans heq2.symm
+          have hval := congrArg Fin.val hslots
+          simp [BaseTail.SuccessorPacketBuffer.slot0,
+            BaseTail.SuccessorPacketBuffer.slot2] at hval
+        · exact Bool.eq_false_iff.mpr h0
+      refine ⟨B.color0 slotEquiv, Or.inl rfl, ?_⟩
+      exact (hActiveSlot B.slot0 x).2 (by simpa [y] using h0false)
   have hfilter01 :
       ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
         (fun x =>
@@ -5944,6 +6169,7 @@ noncomputable def oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
       splitter := S
       buffer := B
       activeBlock_eq_slotValue := ?_
+      buffer_active_exists := hBufferActiveExists
       buffer01_pair_lower := ?_
       buffer02_pair_lower := ?_
     }

@@ -555,6 +555,182 @@ theorem exists_injective_successorReservoirColorQuota_matching_of_activeBlockDat
       D colorOf (fun _ => successorReservoirColorQuota m T) hTokenQuota
       (fun _ => successorReservoirColorQuota_mul_le_pow hLarge) hTpos
 
+abbrev NonbufferReservoirToken
+    (m T d : Nat) (β0 β1 β2 : Fin d) : Type :=
+  ({c : Fin d // c ≠ β0 ∧ c ≠ β1 ∧ c ≠ β2} × Fin (T - 1)) ×
+    Fin (m - 1)
+
+def NonbufferReservoirToken.color
+    {m T d : Nat} {β0 β1 β2 : Fin d}
+    (q : NonbufferReservoirToken m T d β0 β1 β2) : Fin d :=
+  q.1.1.1
+
+def NonbufferReservoirToken.right
+    {m T d : Nat} {β0 β1 β2 : Fin d}
+    (hTpos : 0 < T)
+    (q : NonbufferReservoirToken m T d β0 β1 β2) : Fin T :=
+  Fin.cast (by omega) q.1.2.succ
+
+theorem NonbufferReservoirToken.right_ne_zero
+    {m T d : Nat} {β0 β1 β2 : Fin d}
+    (hTpos : 0 < T)
+    (q : NonbufferReservoirToken m T d β0 β1 β2) :
+    (NonbufferReservoirToken.right hTpos q).val ≠ 0 := by
+  simp [NonbufferReservoirToken.right]
+
+theorem nonbufferColorSubtype_card
+    {d : Nat} {β0 β1 β2 : Fin d}
+    (h01 : β0 ≠ β1) (h02 : β0 ≠ β2) (h12 : β1 ≠ β2) :
+    Fintype.card {c : Fin d // c ≠ β0 ∧ c ≠ β1 ∧ c ≠ β2} = d - 3 := by
+  classical
+  let s : Finset (Fin d) :=
+    (((Finset.univ : Finset (Fin d)).erase β0).erase β1).erase β2
+  have hs :
+      ((Finset.univ : Finset (Fin d)).filter
+        (fun c => c ≠ β0 ∧ c ≠ β1 ∧ c ≠ β2)) = s := by
+    ext c
+    simp [s, and_assoc, and_comm]
+  have hcard0 :
+      ((Finset.univ : Finset (Fin d)).erase β0).card = d - 1 := by
+    rw [Finset.card_erase_of_mem]
+    · simp
+    · simp
+  have hmem1 : β1 ∈ (Finset.univ : Finset (Fin d)).erase β0 := by
+    simp [h01.symm]
+  have hcard1 :
+      (((Finset.univ : Finset (Fin d)).erase β0).erase β1).card =
+        d - 2 := by
+    rw [Finset.card_erase_of_mem hmem1, hcard0]
+    omega
+  have hmem2 :
+      β2 ∈ (((Finset.univ : Finset (Fin d)).erase β0).erase β1) := by
+    simp [h02.symm, h12.symm]
+  have hcard2 : s.card = d - 3 := by
+    rw [Finset.card_erase_of_mem hmem2, hcard1]
+    omega
+  rw [Fintype.card_subtype]
+  rw [hs, hcard2]
+
+theorem NonbufferReservoirToken.card
+    {m T d : Nat} {β0 β1 β2 : Fin d}
+    (h01 : β0 ≠ β1) (h02 : β0 ≠ β2) (h12 : β1 ≠ β2) :
+    Fintype.card (NonbufferReservoirToken m T d β0 β1 β2) =
+      (d - 3) * (T - 1) * (m - 1) := by
+  change
+    Fintype.card
+      (({c : Fin d // c ≠ β0 ∧ c ≠ β1 ∧ c ≠ β2} ×
+          Fin (T - 1)) × Fin (m - 1)) =
+      (d - 3) * (T - 1) * (m - 1)
+  rw [Fintype.card_prod, Fintype.card_prod, Fintype.card_fin,
+    Fintype.card_fin,
+    nonbufferColorSubtype_card h01 h02 h12]
+
+theorem NonbufferReservoirToken.color_quota
+    {m T d : Nat} {β0 β1 β2 : Fin d}
+    (c : Fin d) :
+    ((Finset.univ :
+      Finset (NonbufferReservoirToken m T d β0 β1 β2)).filter
+        (fun q => q.color = c)).card ≤ (m - 1) * (T - 1) := by
+  classical
+  let E :=
+    {q : NonbufferReservoirToken m T d β0 β1 β2 // q.color = c}
+  let f : E → Fin (T - 1) × Fin (m - 1) :=
+    fun q => (q.1.1.2, q.1.2)
+  have hf : Function.Injective f := by
+    intro q r hqr
+    apply Subtype.ext
+    rcases q with ⟨⟨⟨cq, tq⟩, kq⟩, hq⟩
+    rcases r with ⟨⟨⟨cr, tr⟩, kr⟩, hr⟩
+    dsimp [f, NonbufferReservoirToken.color] at hqr hq hr ⊢
+    have hc : cq = cr := by
+      apply Subtype.ext
+      exact hq.trans hr.symm
+    have ht : tq = tr := congrArg Prod.fst hqr
+    have hk : kq = kr := congrArg Prod.snd hqr
+    subst cq
+    subst tq
+    subst kq
+    rfl
+  have hcardE :
+      Fintype.card E ≤ Fintype.card (Fin (T - 1) × Fin (m - 1)) :=
+    Fintype.card_le_of_injective f hf
+  have hfilter :
+      Fintype.card E =
+        ((Finset.univ :
+          Finset (NonbufferReservoirToken m T d β0 β1 β2)).filter
+            (fun q => q.color = c)).card := by
+    exact Fintype.card_subtype _
+  rw [← hfilter]
+  exact hcardE.trans_eq (by simp [Nat.mul_comm])
+
+theorem successorReservoirTotalSiteBudget_le_pow
+    {b m T : Nat}
+    (hLarge : m ^ b > m * (b + T) * T) :
+    (b + T - 1) * ((m - 1) * (T - 1)) ≤ m ^ b := by
+  have hleft : b + T - 1 ≤ b + T := Nat.sub_le (b + T) 1
+  have hquota :
+      (m - 1) * (T - 1) ≤ m * T :=
+    Nat.mul_le_mul (Nat.sub_le m 1) (Nat.sub_le T 1)
+  have hmul :
+      (b + T - 1) * ((m - 1) * (T - 1)) ≤
+        (b + T) * (m * T) :=
+    Nat.mul_le_mul hleft hquota
+  have hlarge' : (b + T) * (m * T) < m ^ b := by
+    simpa [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hLarge
+  exact hmul.trans (Nat.le_of_lt hlarge')
+
+theorem NonbufferReservoirToken.card_add_two_quotas_le_pow
+    {b m T : Nat} {β0 β1 β2 : Fin (b + T)}
+    (h01 : β0 ≠ β1) (h02 : β0 ≠ β2) (h12 : β1 ≠ β2)
+    (hLarge : m ^ b > m * (b + T) * T) :
+    Fintype.card (NonbufferReservoirToken m T (b + T) β0 β1 β2) +
+        successorReservoirColorQuota m T +
+          successorReservoirColorQuota m T ≤
+      m ^ b := by
+  let L := (m - 1) * (T - 1)
+  have hcard :=
+    NonbufferReservoirToken.card (m := m) (T := T)
+      (d := b + T) h01 h02 h12
+  have hd3 : 3 ≤ b + T := by
+    have h01v : β0.val ≠ β1.val := by
+      intro h
+      exact h01 (Fin.ext h)
+    have h02v : β0.val ≠ β2.val := by
+      intro h
+      exact h02 (Fin.ext h)
+    have h12v : β1.val ≠ β2.val := by
+      intro h
+      exact h12 (Fin.ext h)
+    have h0lt := β0.isLt
+    have h1lt := β1.isLt
+    have h2lt := β2.isLt
+    omega
+  have hcard' :
+      Fintype.card (NonbufferReservoirToken m T (b + T) β0 β1 β2) =
+        (b + T - 3) * L := by
+    rw [hcard]
+    simp [L, Nat.mul_assoc, Nat.mul_comm]
+  have hquota : successorReservoirColorQuota m T = L := by
+    simp [successorReservoirColorQuota, L]
+  have hsum :
+      Fintype.card (NonbufferReservoirToken m T (b + T) β0 β1 β2) +
+          successorReservoirColorQuota m T +
+            successorReservoirColorQuota m T =
+        (b + T - 1) * L := by
+    calc
+      Fintype.card (NonbufferReservoirToken m T (b + T) β0 β1 β2) +
+          successorReservoirColorQuota m T +
+            successorReservoirColorQuota m T =
+          (b + T - 3) * L + L + L := by
+            rw [hcard', hquota]
+      _ = ((b + T - 3) + 1 + 1) * L := by
+            ring
+      _ = (b + T - 1) * L := by
+            congr 1
+            omega
+  rw [hsum]
+  exact successorReservoirTotalSiteBudget_le_pow hLarge
+
 theorem exists_disjoint_subset_card_eq_of_card_add_le
     {X : Type*} {used candidates : Finset X} {n : Nat}
     (hcard : used.card + n ≤ candidates.card) :

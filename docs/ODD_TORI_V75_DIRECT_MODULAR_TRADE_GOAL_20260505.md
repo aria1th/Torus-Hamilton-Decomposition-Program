@@ -159,6 +159,14 @@ BaseTail.Trades.successorReservoirColorQuota
 BaseTail.Trades.successorReservoirColorQuota_mul_le_pow
 BaseTail.Trades.exists_injective_color_quota_matching_of_activeBlockData
 BaseTail.Trades.exists_injective_successorReservoirColorQuota_matching_of_activeBlockData
+BaseTail.Trades.NonbufferReservoirToken
+BaseTail.Trades.NonbufferReservoirToken.color
+BaseTail.Trades.NonbufferReservoirToken.right
+BaseTail.Trades.NonbufferReservoirToken.right_ne_zero
+BaseTail.Trades.NonbufferReservoirToken.card
+BaseTail.Trades.NonbufferReservoirToken.color_quota
+BaseTail.Trades.successorReservoirTotalSiteBudget_le_pow
+BaseTail.Trades.NonbufferReservoirToken.card_add_two_quotas_le_pow
 BaseTail.Trades.exists_disjoint_subset_card_eq_of_card_add_le
 BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le
 BaseTail.SuccessorPacketBuffer
@@ -171,9 +179,13 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData
 Concrete.OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
 Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
 Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer_active_exists
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer01Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer02Candidates
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
@@ -209,25 +221,32 @@ without invoking unrestricted Hall/de Werra count-matrix realization.
 The successor specialization
 `BaseTail.Trades.exists_injective_successorReservoirColorQuota_matching_of_activeBlockData`
 closes the v7.6 non-buffer color-token Hall reservation under the margin
-`m ^ b > m * (b + T) * T`; the remaining construction must still choose the
-three buffer colors and the two buffer-buffer site families.  The packet-side
+`m ^ b > m * (b + T) * T`.  The non-buffer token type
+`BaseTail.Trades.NonbufferReservoirToken` records the v7.6 choices
+`(c, τ, k)` with `c` outside the three buffer colors, `τ ≠ 0`, and
+`k < m - 1`; its `color_quota` and `card_add_two_quotas_le_pow` lemmas are the
+finite budget estimates used by the reservoir site plan.  The packet-side
 buffer witness `BaseTail.successorPacketBufferGoal` now supplies the unique
-successor length-three packet as three distinct candidate buffer slots; the next
-geometric step is to connect those slots to same-packet coactivity in the
-constructed cylinder.  The phase-split side of that connection is isolated by
+successor length-three packet as three distinct candidate buffer slots.  The
+phase-split side of that connection is isolated by
 `BaseTail.SuccessorPacketBuffer.pair01_false_card_lower_of_equiv` and
 `BaseTail.SuccessorPacketBuffer.pair02_false_card_lower_of_equiv`, which count
 the two buffer-buffer candidate families inside the length-three packet.
 `Concrete.OddSuccessorPhaseSplitBufferReservoirData` now preserves the actual
 phase-split cylinder construction internals: the slot-color equivalence, packet
-splitters, active-block slot values, and the two `m ^ b` buffer-buffer coactive
-lower bounds.  The ordinary cylinder-construction theorem is folded through
-this data, so the reservoir proof no longer has to rediscover the packet
-geometry from an opaque `Cyl`.  The two buffer-pair candidate families can now
-be carved into disjoint finite site subsets by
+splitters, active-block slot values, a buffer-color active witness at every
+site, and the two `m ^ b` buffer-buffer coactive lower bounds.  The ordinary
+cylinder-construction theorem is folded through this data, so the reservoir
+proof no longer has to rediscover the packet geometry from an opaque `Cyl`.
+The two buffer-pair candidate families can now be carved into disjoint finite
+site subsets by
 `Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets`,
 using the generic two-family helper
-`BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le`.
+`BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le`.  The
+new `Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan`
+packages all three finite choices at once: injective non-buffer reservoir
+sites with an active partner buffer color, plus disjoint β₀β₁ and β₀β₂ site
+families of size `successorReservoirColorQuota m T`.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
@@ -455,9 +474,9 @@ then inserts that certificate into the existing script endpoint.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-selecting enough distinct reservoir sites, choosing the initial symboling with
-the required local baseline positions, and constructing the three-buffer
-arithmetic certificate.
+choosing the initial symboling with the required local baseline positions on
+the reserved site plan, then constructing the three-buffer arithmetic
+certificate.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
