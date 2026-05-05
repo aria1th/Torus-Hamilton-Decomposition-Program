@@ -60,11 +60,24 @@ ActiveHallLargeMarginControlledResidueRoundingGoal
 Those theorem shapes remain useful as legacy adapters and counterexample
 context, but they are not live proof targets for the current paper route.
 
-The small-modulus proof boundary is now:
+The BaseTail prefix-count lift is now closed and is no longer a live proof
+blocker for the v7.5 route:
 
 ```lean
+BaseTail.activePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal
+```
+
+`RoundComposite.V75Endpoints` consumes these theorem constants directly.  The
+remaining small-modulus proof boundary is the successor-specific residue and
+local-trade surface:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal
+OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal
+BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
 BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal
-BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
 ```
 
 The broader local-trade theorem is still a sufficient fallback:
@@ -133,10 +146,23 @@ BaseTail.Trades.successorActiveBlockCanonicalPermutationCorrectionGoal_iff_canon
 BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir
 ```
 
-The v7.5 endpoint now also exposes the smaller feasible-local-trade cut:
+The v7.5 endpoint now also exposes the smaller feasible-local-trade cut.  The
+`ReturnInputs` names remain as compatibility aliases, but the return/lift
+content is supplied by the closed `BaseTail` theorems rather than by an
+external input.
 
 ```lean
+Concrete.OddModulusToriV75PreCorrectionClosedInputsGoal
+Concrete.OddModulusToriV75FeasibleLocalTradeInputsGoal
+Concrete.OddModulusToriV75ScaledFeasibleLocalTradeInputsGoal
+Concrete.OddModulusToriV75MixedControlledFeasibleLocalTradeInputsGoal
 Concrete.OddModulusToriV75FeasibleLocalTradeReturnInputsGoal
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrectionClosedInputs
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTrade
+Concrete.oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleLocalTradeInputs
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTrade_return
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
@@ -144,20 +170,33 @@ Concrete.oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
 Concrete.OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal
 Concrete.oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeInputs
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTrade
 Concrete.OddModulusToriV75MixedControlledFeasibleLocalTradeReturnInputsGoal
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeReturnInputs
+Concrete.oddModulusToriV75MixedControlledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeInputs
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTrade
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTradeReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTrade
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_mixedControlledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_mixedControlledFeasibleLocalTrade
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade
 Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
 Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return
+Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade
 Concrete.oddSuccessorClosureGoal_of_v75_mixedControlledFeasibleLocalTrade_return
+Concrete.oddSuccessorClosureGoal_of_v75_mixedControlledFeasibleLocalTrade
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_mixedControlledFeasibleLocalTrade_return
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_mixedControlledFeasibleLocalTrade
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_canonicalLocalTrade
 ```
 
 This fixes the Worker A residual as a pair of successor-specific theorem
@@ -197,167 +236,29 @@ Owned file:
 RoundComposite/BaseTailGeometry.lean
 ```
 
-Primary theorem:
+Closed theorem constants:
 
 ```lean
+BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+BaseTail.activePrefixPermutedColorDirFiberLowerTriangularReturnGoal
 BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal
 ```
 
-The proof should use the closed compressed base-cycle data:
-
-```lean
-BaseTail.CylinderBaseCycleData
-BaseTail.cylinderBaseCycleData_of_isCylinder
-BaseTail.CylinderBaseCycleData.sum_orbit_eq_univ
-```
-
-and construct the lower-triangular/unit return data needed by the active
-prefix-count lift.
-
-Worker B status note:
-
-```lean
-BaseTail.expandedColorDirCore_fiberStep_coord_eq_add_directCarry
-BaseTail.expandedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
-BaseTail.expandedColorDirCore_sectionReturn_increment_eq_sum_directCarry
-BaseTail.expandedColorDirCore_sectionReturn_increment_independent_of_fiber
-```
-
-These Lean lemmas now make the diagnostic `expandedColorDir` route explicit:
-its fiber section return is a direct sum of symbol-count carries along the
-compressed base orbit, and the resulting coordinate increment is independent of
-the incoming fiber point.  Therefore `expandedColorDir` itself should not be
-used as the final lower-triangular primitive lift.  For ranks `k > 0`, a
-fiber-independent increment cannot supply the unit lower-triangular cocycle
-needed after summing over the previous `k` fiber coordinates.  The remaining
-proof of `BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` must
-introduce a fiber-dependent active prefix-count tail rule whose section return
-has the unit lower-triangular cocycles required by
-`Shared.zmodVectorLowerTriangularUnitCycleCoordinate`.
+Worker B closed the return and primitive lift layer in
+`RoundComposite/BaseTailGeometry.lean`.  The v7.5 endpoint now uses
+`BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal` directly, so
+`PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` should be treated as
+proved infrastructure rather than as a Worker A or Main residual.
 
 Completion audit for the current Worker B goal:
 
 | Requirement | Current evidence | Status |
 |---|---|---|
-| Close `BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` | The name is still a `Prop` input in `RoundComposite/BaseTailGeometry.lean`; `RoundComposite/V75Endpoints.lean` packages it as an input. | Open |
-| Wire the v7.5 endpoint without old ActiveHall/de Werra route | `RoundComposite/V75Endpoints.lean` uses the high branch, canonical local trade, and lower-triangular lift inputs. It does not require `RawZeroOneMatrixGoal`, `CompatibleDeWerraGoal`, or `HallRealizationGoal`. | Wired |
-| Stabilize the build surface | `lake build RoundComposite.BaseTailGeometry` and `lake build RoundComposite.V75Endpoints` pass with warnings only. | Built |
-| Identify the exact remaining theorem | The missing theorem is a concrete fiber-dependent active prefix-count lift, not the diagnostic `expandedColorDir` monodromy. | Open |
-
-The next Lean target should be a new core below
-`PrefixProjectedLowerTriangularLiftColorDir`, replacing `expandedColorDirCore`
-with an active tail permutation depending on the collapse fiber.  Its local
-rule should be the active analogue of the prefix-count `lambda_rho` rule:
-symbol `0` supplies the rank-zero unit count, and symbols `sigma >= 2` supply
-unit cocycles through the primitive differences `count sigma - count 1`.
-
-The common Latin/projection part of this replacement is now separated in Lean:
-
-```lean
-BaseTail.activePermutedColorDir
-BaseTail.collapseVertex_cayleyColorStep_activePermutedColorDir
-BaseTail.activePermutedColorDirEdgePartition
-BaseTail.activePermutedColorDirCore
-BaseTail.ActiveSymboling.count_cast_eq_sum_indicator
-BaseTail.activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
-BaseTail.activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
-```
-
-Here `tailPerm y z : Fin T ≃ Fin T` is an arbitrary permutation depending on
-the collapsed base point `y` and collapse fiber `z`.  The theorem
-`activePermutedColorDirEdgePartition` proves that any such fiber-dependent
-active-tail permutation preserves the Cayley edge partition, and
-`collapseVertex_cayleyColorStep_activePermutedColorDir` proves that it still
-projects to the compressed cylinder step.  Thus the remaining proof is now
-purely the monodromy/cocycle theorem for the specific prefix-count
-`lambda_rho` choice of `tailPerm`.  The direct-carry theorem records the
-pointwise rule: at an active edge the fiber step adds `1` exactly in the
-permuted non-last tail coordinate, and the section-return theorem rewrites the
-fiber increment as the sum of those fiber-dependent carries along the base
-orbit.
-
-The canonical prefix-count specialization is also separated from the generic
-permuted-tail skeleton:
-
-```lean
-BaseTail.activeTailLambdaRho
-BaseTail.activeTailCanonicalRho
-BaseTail.activePrefixTailPerm
-BaseTail.activePrefixPermutedColorDirCore
-BaseTail.activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
-BaseTail.activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
-```
-
-This keeps `BaseTailGeometry.lean` independent of `OddCore.lean` while making
-the intended prefix-count `lambda_rho` rule explicit at the active-tail level.
-The latest decomposition also isolates the remaining monodromy theorem behind:
-
-```lean
-BaseTail.ActivePermutedColorDirLowerTriangularMonodromyGoal
-BaseTail.ActivePermutedColorDirFiberLowerTriangularMonodromyGoal
-BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedMonodromy
-BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedFiberMonodromy
-```
-
-Thus `PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` is reduced to
-constructing lower-triangular section-return data for the canonical active
-prefix permutation, preferably over the already closed `CylinderBaseCycleData`
-base-cycle witness.
-
-The first canonical-rho layer is now closed in Lean:
-
-```lean
-BaseTail.activeTailCanonicalRhoFirstNat_minimal
-BaseTail.activeTailCanonicalRho_val_lt_iff_exists_hit_before
-BaseTail.activeTailCanonicalRho_val_lt_congr_of_agree_before
-BaseTail.activeTailCanonicalRho_val_lt_add_single_iff
-BaseTail.activeTailCanonicalRho_val_lt_sub_single_iff
-BaseTail.activeTailCanonicalRho_last_iff
-BaseTail.activeTailCanonicalRho_pred_hitNat
-BaseTail.activeTailCanonicalRho_no_hit_before
-BaseTail.activeTailCanonicalRho_update_at_rho
-BaseTail.activeTailCanonicalRho_add_at_rho
-BaseTail.activeTailCanonicalRho_sub_at_rho
-BaseTail.activeTailCanonicalRho_dynamic_add_bijective
-```
-
-The reusable fiber-bijection algebra for piecewise single-coordinate
-translations is also available:
-
-```lean
-BaseTail.zmodVector_piecewise_add_single_id_bijective
-BaseTail.zmodVector_piecewise_id_add_single_bijective
-BaseTail.zmodVector_piecewise_add_single_add_single_bijective
-```
-
-The local bijectivity target for the canonical active prefix rule is now also
-closed:
-
-```lean
-BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective
-BaseTail.CylinderBaseCycleData.sum_range_orbit_eq_univ
-BaseTail.ActiveSymboling.count_cast_eq_sum_indicator
-BaseTail.activePrefixColorDirCoreDirectCarry_zero
-BaseTail.activePrefixPermutedColorDirCore_sectionReturn_zero_eq_add_count
-BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
-BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
-BaseTail.activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
-BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
-```
-
-This proves that every one-step fiber map for the canonical `lambda_rho` active
-tail rule is a permutation and exposes a smaller return-only residual.  The
-rank-zero local carry is also identified: coordinate `0` receives a carry
-exactly when the active symbol `0` is assigned to the current color, independent
-of the incoming fiber.  This has now been lifted through a full base cycle:
-the orbit sum over `CylinderBaseCycleData` is converted to a global vertex sum,
-then folded into `ActiveHall.Symboling.count`, proving that the rank-zero
-section-return carry is exactly `Φ.count c 0`.  The remaining Worker B content
-is therefore the positive-rank section-return theorem showing that the iterated
-canonical active prefix rule supplies all lower-triangular unit cocycles.  The
-return-data target keeps only `gamma`, `return_lower_triangular`, and
-`return_unit`; the `fiber_bijective` field is now filled automatically from
-`BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective`.
+| Close `BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` | `BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal` is a theorem in `RoundComposite/BaseTailGeometry.lean`. | Closed |
+| Close return-only lower-triangular data | `BaseTail.activePrefixPermutedColorDirFiberLowerTriangularReturnGoal` is a theorem in `RoundComposite/BaseTailGeometry.lean`. | Closed |
+| Wire the v7.5 endpoint without old ActiveHall/de Werra route | `RoundComposite/V75Endpoints.lean` uses the high branch, successor local trade, feasible residue/local-trade cuts, and the closed BaseTail theorem constants. | Wired |
+| Stabilize the build surface | `lake build RoundComposite.BaseTailGeometry` and `lake build RoundComposite.V75Endpoints` are the relevant gates for this layer. | Built locally |
 
 ### Main Thread: Endpoint Wiring
 
@@ -383,37 +284,61 @@ Concrete.oddModulusToriV75PreCorrectionInputsGoal_iff_directInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
 Concrete.OddModulusToriV75PreCorrectionReturnInputsGoal
+Concrete.OddModulusToriV75PreCorrectionClosedInputsGoal
+Concrete.oddModulusToriV75PreCorrectionInputsGoal_of_preCorrection
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrectionClosedInputs
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_preCorrection_return
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_canonicalLocalTrade_return
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_reservoir_return
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_worker1Residuals
+Concrete.OddModulusToriV75FeasibleLocalTradeInputsGoal
 Concrete.OddModulusToriV75FeasibleLocalTradeReturnInputsGoal
+Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTrade
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTrade_return
+Concrete.oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleLocalTradeInputs
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+Concrete.OddModulusToriV75ScaledFeasibleLocalTradeInputsGoal
 Concrete.OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal
 Concrete.oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTrade
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTrade_return
+Concrete.OddModulusToriV75MixedControlledFeasibleLocalTradeInputsGoal
 Concrete.OddModulusToriV75MixedControlledFeasibleLocalTradeReturnInputsGoal
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeReturnInputs
+Concrete.oddModulusToriV75MixedControlledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTradeInputs
+Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTrade
 Concrete.oddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal_of_mixedControlledFeasibleLocalTrade_return
 Concrete.oddModulusToriV75PreCorrectionReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_worker1Residuals
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTradeReturnInputs
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTrade
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_mixedControlledFeasibleLocalTrade
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_mixedControlledFeasibleLocalTrade_return
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade_return
 Concrete.oddSuccessorClosureGoal_of_v75_worker1PreCorrectionReturnResiduals
 Concrete.oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
 Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
+Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade
 Concrete.oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return
+Concrete.oddSuccessorClosureGoal_of_v75_mixedControlledFeasibleLocalTrade
 Concrete.oddSuccessorClosureGoal_of_v75_mixedControlledFeasibleLocalTrade_return
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_mixedControlledFeasibleLocalTrade
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_mixedControlledFeasibleLocalTrade_return
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_canonicalLocalTrade
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_canonicalLocalTrade_return
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_reservoir_return
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_worker1PreCorrectionReturnResiduals
