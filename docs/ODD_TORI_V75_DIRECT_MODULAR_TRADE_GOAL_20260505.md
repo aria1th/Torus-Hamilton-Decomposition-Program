@@ -78,6 +78,7 @@ BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal
 BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal
 OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal
 BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
+BaseTail.Trades.SuccessorActiveBlockInitialReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
 BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal
@@ -128,6 +129,7 @@ BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
 Concrete subgoal after the local-swap algebra split:
 
 ```lean
+BaseTail.Trades.SuccessorActiveBlockInitialReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockReservoirSwapScheduleGoal
 ```
 
@@ -150,6 +152,8 @@ Current Lean helper names for `lem:local-symbol-trade` and finite swap
 schedules:
 
 ```lean
+ActiveHall.Symboling.residueSpec
+ActiveHall.Symboling.hasResidues_residueSpec
 ActiveHall.Symboling.swapResidueSpec_target_eq_add_localTradeDelta
 ActiveHall.Symboling.SwapMove
 ActiveHall.Symboling.applySwapMoves
@@ -248,7 +252,10 @@ BaseTail.Trades.successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasib
 Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControlledRounding
 Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_largeMarginControlled
 BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
+BaseTail.Trades.SuccessorActiveBlockInitialReservoirSwapScheduleGoal
 BaseTail.Trades.SuccessorActiveBlockReservoirSwapScheduleGoal
+BaseTail.Trades.successorActiveBlockReservoirSwapScheduleGoal_of_initialReservoirSwapSchedule
+BaseTail.Trades.successorActiveBlockCompatibleResidueSchedulingGoal_of_initialReservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockLocalSymbolTradeGoal_of_reservoirSwapSchedule
 BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_reservoirSwapSchedule
@@ -283,9 +290,12 @@ is the direct paper-facing theorem for `thm:active-residue-scheduling`; the
 feasible local-trade and finite-reservoir names are compatibility adapters, not
 the preferred proof shape.  The generic `ActiveHall.Symboling` swap-list
 lemmas now cover the algebraic part of applying a finite reservoir schedule;
-the remaining hard content is selecting enough distinct reservoir sites and
-turning the row/column-compatible residue matrix into the witness required by
-`SuccessorActiveBlockReservoirSwapScheduleGoal`.
+the baseline residue matrix can now be inferred from the initial symboling via
+`ActiveHall.Symboling.residueSpec`.  The sharpest remaining hard content is
+selecting enough distinct reservoir sites, choosing an initial symboling with
+the required local baseline positions, and turning the row/column-compatible
+residue matrix into the swap-list witness required by
+`SuccessorActiveBlockInitialReservoirSwapScheduleGoal`.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
