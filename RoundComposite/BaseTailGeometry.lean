@@ -2833,6 +2833,122 @@ theorem activeTailCanonicalRho_val_lt_congr_of_agree_before
       rw [hagree ⟨j, hjn⟩ hjlt]
       exact hw⟩⟩
 
+theorem activeTailCanonicalRho_val_lt_congr_of_take
+    {m n k q : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
+    (hk : k < n) (hq : q ≤ k + 1)
+    (htake :
+      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w) :
+    (activeTailCanonicalRho hT z).val < q ↔
+      (activeTailCanonicalRho hT w).val < q := by
+  refine
+    activeTailCanonicalRho_val_lt_congr_of_agree_before
+      hT (show q ≤ n by omega) ?_
+  intro j hj
+  have hjk : j.val < k + 1 := by omega
+  have hcoord := congrFun htake ⟨j.val, hjk⟩
+  simpa [Shared.zmodVectorTake] using hcoord
+
+theorem activeTailCanonicalRho_val_eq_congr_of_take
+    {m n k : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
+    (hk : k < n)
+    (htake :
+      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w) :
+    (activeTailCanonicalRho hT z).val = k ↔
+      (activeTailCanonicalRho hT w).val = k := by
+  have hlt_k :
+      (activeTailCanonicalRho hT z).val < k ↔
+        (activeTailCanonicalRho hT w).val < k :=
+    activeTailCanonicalRho_val_lt_congr_of_take
+      (k := k) (q := k) hT hk (by omega) htake
+  have hlt_succ :
+      (activeTailCanonicalRho hT z).val < k + 1 ↔
+        (activeTailCanonicalRho hT w).val < k + 1 :=
+    activeTailCanonicalRho_val_lt_congr_of_take
+      (k := k) (q := k + 1) hT hk (by omega) htake
+  constructor
+  · intro hz
+    have hzlt : (activeTailCanonicalRho hT z).val < k + 1 := by omega
+    have hznlt : ¬ (activeTailCanonicalRho hT z).val < k := by omega
+    have hwlt : (activeTailCanonicalRho hT w).val < k + 1 :=
+      hlt_succ.mp hzlt
+    have hwnlt : ¬ (activeTailCanonicalRho hT w).val < k := by
+      intro hw
+      exact hznlt (hlt_k.mpr hw)
+    omega
+  · intro hw
+    have hwlt : (activeTailCanonicalRho hT w).val < k + 1 := by omega
+    have hwnlt : ¬ (activeTailCanonicalRho hT w).val < k := by omega
+    have hzlt : (activeTailCanonicalRho hT z).val < k + 1 :=
+      hlt_succ.mpr hwlt
+    have hznlt : ¬ (activeTailCanonicalRho hT z).val < k := by
+      intro hz
+      exact hwnlt (hlt_k.mp hz)
+    omega
+
+theorem activeTailLambdaRho_val_eq_pos_congr_of_take
+    {m n k : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
+    (hk : k < n) (hkpos : 0 < k)
+    (htake :
+      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w)
+    (s : Fin (n + 1)) :
+    (activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT z) s).val = k ↔
+      (activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT w) s).val =
+        k := by
+  have heq_k :
+      (activeTailCanonicalRho hT z).val = k ↔
+        (activeTailCanonicalRho hT w).val = k :=
+    activeTailCanonicalRho_val_eq_congr_of_take hT hk htake
+  have hlt_k :
+      (activeTailCanonicalRho hT z).val < k ↔
+        (activeTailCanonicalRho hT w).val < k :=
+    activeTailCanonicalRho_val_lt_congr_of_take
+      (k := k) (q := k) hT hk (by omega) htake
+  have hlt_succ :
+      (activeTailCanonicalRho hT z).val < k + 1 ↔
+        (activeTailCanonicalRho hT w).val < k + 1 :=
+    activeTailCanonicalRho_val_lt_congr_of_take
+      (k := k) (q := k + 1) hT hk (by omega) htake
+  rw [activeTailLambdaRho_val_eq_pos_iff
+        (activeTailCanonicalRho hT z) s hkpos,
+      activeTailLambdaRho_val_eq_pos_iff
+        (activeTailCanonicalRho hT w) s hkpos]
+  constructor
+  · intro hcase
+    rcases hcase with hcase | hcase | hcase
+    · exact Or.inl ⟨hcase.1, heq_k.mp hcase.2⟩
+    · exact Or.inr (Or.inl ⟨hcase.1, hcase.2.1, by
+        have hs : s.val = k := hcase.1
+        have hzlt : (activeTailCanonicalRho hT z).val < k := by
+          simpa [hs] using hcase.2.2
+        simpa [hs] using hlt_k.mp hzlt⟩)
+    · exact Or.inr (Or.inr ⟨hcase.1, by
+        have hs : s.val = k + 1 := hcase.1
+        intro hw
+        have hwlt : (activeTailCanonicalRho hT w).val < k + 1 := by
+          simpa [hs] using hw
+        have hzlt : (activeTailCanonicalRho hT z).val < k + 1 :=
+          hlt_succ.mpr hwlt
+        exact hcase.2 (by simpa [hs] using hzlt)⟩)
+  · intro hcase
+    rcases hcase with hcase | hcase | hcase
+    · exact Or.inl ⟨hcase.1, heq_k.mpr hcase.2⟩
+    · exact Or.inr (Or.inl ⟨hcase.1, hcase.2.1, by
+        have hs : s.val = k := hcase.1
+        have hwlt : (activeTailCanonicalRho hT w).val < k := by
+          simpa [hs] using hcase.2.2
+        simpa [hs] using hlt_k.mpr hwlt⟩)
+    · exact Or.inr (Or.inr ⟨hcase.1, by
+        have hs : s.val = k + 1 := hcase.1
+        intro hz
+        have hzlt : (activeTailCanonicalRho hT z).val < k + 1 := by
+          simpa [hs] using hz
+        have hwlt : (activeTailCanonicalRho hT w).val < k + 1 :=
+          hlt_succ.mp hzlt
+        exact hcase.2 (by simpa [hs] using hwlt)⟩)
+
 theorem activeTailCanonicalRho_val_lt_add_single_iff
     {m n : Nat} (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
     {q : Nat} (hq : q ≤ n) {σ : Fin n} (hσ : q ≤ σ.val + 1) :
