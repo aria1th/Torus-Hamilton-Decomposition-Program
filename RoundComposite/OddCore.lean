@@ -7044,6 +7044,10 @@ def OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal : 
   BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ∧
   BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal : Prop :=
+  BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal ∧
+  BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+
 def OddSuccessorBaseTailWorker1CanonicalFeasibleLocalTradeLowerTriangularResidualGoal :
     Prop :=
   OddSuccessorBaseTailActiveBlockCylinderConstructionGoal ∧
@@ -7107,6 +7111,24 @@ theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoa
     (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
       hTrade)
     hLift
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_preCorrection_return
+    (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal)
+    (hReturn : BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal :=
+  oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_localTrade_lowerTriangular
+    (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
+      hTrade)
+    (BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
+      hReturn)
+
+theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_preCorrectionReturnResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal := by
+  rcases h with ⟨hTrade, hReturn⟩
+  exact
+    oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_preCorrection_return
+      hTrade hReturn
 
 theorem oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_feasibleLocalTradeResiduals
     (h :
@@ -7318,6 +7340,14 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_successorCanonicalLocalTrade_prefix
       hCyl hLocalTrade hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1PreCorrectionReturnResiduals
+    (h : OddSuccessorBaseTailWorker1CanonicalPreCorrectionReturnResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1CanonicalLocalTradeResiduals
+    (oddSuccessorBaseTailWorker1CanonicalLocalTradeResidualGoal_of_lowerTriangularResiduals
+      (oddSuccessorBaseTailWorker1CanonicalLocalTradeLowerTriangularResidualGoal_of_preCorrectionReturnResiduals
+        h))
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_worker1ScheduledModularTradeResiduals
     (h : OddSuccessorBaseTailWorker1ScheduledModularTradeResidualGoal) :
