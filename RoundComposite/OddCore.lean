@@ -6236,6 +6236,13 @@ theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_act
     (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
       hRound)
 
+theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_largeMarginControlled
+    (hRound : ActiveHallLargeMarginControlledResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal :=
+  oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
+    (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_largeMarginControlled
+      hRound)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
     (hRound : OddSuccessorBaseTailResidueRoundingGoal)

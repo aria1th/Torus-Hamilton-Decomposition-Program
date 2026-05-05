@@ -59,6 +59,32 @@ Do not weaken the target back to an opaque `OddCoreSmallModulusSlackPacketLift`
 unless the proof internally exposes the cylinder, mixed expansion, rounding,
 and lift components.
 
+Current Worker 1 state:
+
+```lean
+Concrete.OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal
+```
+
+is closed in Lean.  The base-tail geometry path now has a closed-cylinder
+adapter:
+
+```lean
+Concrete.oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LargeMarginResiduals
+```
+
+so the remaining Worker 1 residuals are exactly:
+
+```lean
+Concrete.ActiveHallLargeMarginControlledResidueRoundingGoal
+BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+```
+
+The first is the pure finite residue-aware count-matrix rounding theorem with
+large row margins.  The second is the prefix-tail lift theorem; the legacy
+`BaseTail.ExpandedColorDirColorHamiltonianGoal` route is diagnostic only,
+because the direct expanded direction has only translation monodromy on a
+`(T - 1)`-dimensional fiber and cannot be the general `T > 2` proof.
+
 ## Worker 2: Finite Integrality And de Werra
 
 Owner: parallel Lean implementer / external prover.
@@ -140,6 +166,8 @@ grep -R -n -E '\b(sorry|admit|axiom|constant)\b' \
 Recent relevant commits:
 
 ```text
+f963730 Isolate large-margin active rounding residual
+47ef1c1 Close successor base-tail cylinder assembly
 201469d Refine odd tori formalization targets
 d2a28e7 Clarify active Hall mixed-count slack
 fab6c04 Isolate base-tail mixed expansion target
@@ -154,4 +182,3 @@ lake-manifest.json
 scripts/d5_odd_paper_verify.py
 Torus-Hamilton-Decomposition/
 ```
-
