@@ -8378,6 +8378,21 @@ theorem exists_canonicalReservoirScript_of_reservoirSitePlan
     (reservoirSitePlan A hLarge hTpos).exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota
       hT
 
+theorem exists_primitiveActiveSymboling_of_reservoirSitePlan
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets)
+    (hLarge : m ^ b > m * (b + T) * T)
+    (hT : 2 ≤ T) :
+    ∃ S : BaseTail.ActiveSymboling A.Cyl,
+      BaseTail.IsPrimitiveActiveSymboling hT S := by
+  rcases A.exists_canonicalReservoirScript_of_reservoirSitePlan hLarge hT with
+    ⟨script, _hScript⟩
+  exact
+    BaseTail.Trades.CanonicalNonzeroZeroReservoirScript.exists_primitiveActiveSymboling
+      A.isCylinder script
+
 end OddSuccessorPhaseSplitBufferReservoirData
 
 def OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal :
@@ -9886,6 +9901,51 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_core
       hm3 hT hlen htotal hpacketSum hpacketUnits
   exact hCore hb5 hmodd hm3 hsmall hbase
     packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+
+theorem oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_phaseSplitBufferReservoir :
+    OddSuccessorSmallModulusSlackPacketLiftAddGoal := by
+  intro b m T hb5 _hmodd hm3 _hsmall hbase packets hlen htotal
+    hpacketSum hpacketUnits hT hSlack
+  letI : NeZero m := ⟨ne_of_gt (by omega : 0 < m)⟩
+  letI : NeZero (m ^ b) := ⟨pow_ne_zero b (NeZero.ne m)⟩
+  rcases hbase with ⟨DbaseRaw⟩
+  have hPrefix :
+      ∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m :=
+    BaseTail.successorPacketProperPrefixUnitsGoal
+      hm3 hT hlen htotal hpacketSum hpacketUnits
+  have hPacketSplits :
+      ∀ packet, packet ∈ packets →
+        Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
+    intro packet hp
+    exact
+      BaseTail.successorPacketPhaseSplitPowerGoal
+        (b := b) (m := m) (T := T) (packets := packets)
+        (by omega : 0 < b)
+        hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
+  have hpow : 1 < m ^ b := by
+    exact Nat.one_lt_pow (by omega : b ≠ 0) (by omega : 1 < m)
+  let Dbase : Shared.CoordinatizedCayleyDecomposition b m :=
+    Shared.coordinatizedCayleyDecomposition_of_single_cycle hpow DbaseRaw
+  let R :=
+    oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
+      hb5 hm3 Dbase packets hlen htotal hpacketSum hpacketUnits
+      hPrefix hPacketSplits hT
+  have hT2 : 2 ≤ T := by omega
+  rcases R.exists_primitiveActiveSymboling_of_reservoirSitePlan
+      hSlack hT2 with
+    ⟨S, hS⟩
+  have hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal :=
+    BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_projectedLift
+      (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
+        BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal)
+  exact hLift hT2 R.isCylinder hS.1
+    (BaseTail.activeSymbolingCountsPrimitive_of_isPrimitive hT2 hS)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_phaseSplitBufferReservoir :
+    OddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal :=
+  oddSuccessorSmallModulusSlackPacketLiftAddGoal_of_phaseSplitBufferReservoir
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_tradeEndpoint_prefix
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)

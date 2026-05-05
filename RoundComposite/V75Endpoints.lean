@@ -999,6 +999,18 @@ theorem oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirArithmetic
   oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirArithmetic_inputs
     ⟨hHigh, hArithmetic⟩
 
+/--
+Closed v7.6 successor route: the small-modulus branch is discharged by the
+phase-split buffer reservoir construction, so only the high-modulus
+full-support trellis block remains as an input.
+-/
+theorem oddSuccessorClosureGoal_of_v75_phaseSplitBufferReservoir
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    ⟨hHigh,
+      oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_phaseSplitBufferReservoir⟩
+
 theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
     (h : OddModulusToriV75FeasibleLocalTradeReturnInputsGoal) :
     OddSuccessorClosureGoal :=
@@ -1201,6 +1213,28 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirArit
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirArithmetic_inputs
     ⟨hHigh, hArithmetic⟩
+
+/--
+All-dimensional v7.6 endpoint corresponding to
+`oddSuccessorClosureGoal_of_v75_phaseSplitBufferReservoir`.
+-/
+theorem odd_modulus_tori_all_dimensions_of_v75_phaseSplitBufferReservoir
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v73_returnTailClosedFullSupportTrellisModularTrades_blocks
+    ⟨hHigh,
+      oddSuccessorSmallModulusBaseTailGeometryFromModularTradesGoal_of_phaseSplitBufferReservoir⟩
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_phaseSplitBufferReservoir
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal) :
+    OddModulusToriAllDimensionsGoal := by
+  intro d m hd2 hmodd hm3
+  exact
+    odd_modulus_tori_all_dimensions_of_v75_phaseSplitBufferReservoir
+      hHigh hd2 hmodd hm3
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :

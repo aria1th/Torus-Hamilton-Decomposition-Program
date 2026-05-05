@@ -1604,6 +1604,22 @@ theorem applySwapResidueSpecs_eq
           cases htarget'
           rfl
 
+theorem symbolingWithResidues
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    (script : CanonicalNonzeroZeroReservoirScript hT D) :
+    ActiveHall.SymbolingWithResidues Cyl.incidence
+      (activeBlockResidueSpec D) := by
+  refine
+    ⟨script.initial.applySwapMoves
+        (nonzeroZeroSwapMovesOfTwoLe hT script.moves), ?_⟩
+  have hResidues :=
+    script.initial.applySwapMoves_hasResidues
+      (script.initial.hasResidues_residueSpec (m := m))
+      (nonzeroZeroSwapMovesOfTwoLe hT script.moves)
+  simpa [script.applySwapResidueSpecs_eq] using hResidues
+
 end CanonicalNonzeroZeroReservoirScript
 
 /--
@@ -2132,6 +2148,23 @@ theorem exists_activeBlockResidueSpec_compatible_primitive {b m T : Nat}
       PrimitiveResidueSpec hT R := by
   exact ⟨activeBlockResidueSpec D,
     activeBlockResidueSpec_compatible_primitive hCyl D hT⟩
+
+namespace CanonicalNonzeroZeroReservoirScript
+
+theorem exists_primitiveActiveSymboling
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    (hCyl : IsCylinder Cyl)
+    (script : CanonicalNonzeroZeroReservoirScript hT D) :
+    ∃ A : ActiveSymboling Cyl, IsPrimitiveActiveSymboling hT A := by
+  rcases activeBlockResidueSpec_compatible_primitive hCyl D hT with
+    ⟨_hRow, _hCol, hPrim⟩
+  rcases script.symbolingWithResidues with ⟨Φ, hΦ⟩
+  let A : ActiveSymboling Cyl := { R := activeBlockResidueSpec D, Φ := Φ }
+  exact ⟨A, ⟨⟨hΦ⟩, hPrim.1, hPrim.2⟩⟩
+
+end CanonicalNonzeroZeroReservoirScript
 
 theorem activeBlockResidueScheduleGoal : ActiveBlockResidueScheduleGoal := by
   intro b m T _inst packets Cyl hCyl hBlock hT
