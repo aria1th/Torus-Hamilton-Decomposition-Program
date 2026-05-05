@@ -409,9 +409,11 @@ OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal
 OddSuccessorBaseTailActiveBlockResidueRoundingGoal
 OddSuccessorBaseTailActiveBlockCompatibleResidueRoundingGoal
 OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal
+OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal
 OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal
 oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockPieces
 oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockCompatiblePieces
+oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
 oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
 ```
 
@@ -426,18 +428,20 @@ The practical target decomposition is:
    `m ^ b > m * (b + T) * T` to prove the sharper compatible-residue theorem:
 
    ```lean
-   OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal
+   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal
    ```
 
-   This says that every row/column compatible primitive residue specification
-   has a nonnegative count matrix satisfying Hall cuts and the required
-   residues.  Lean now proves
+   This is the precise construction target: for every row/column compatible
+   primitive residue specification, build a nonnegative count matrix with the
+   requested residues and the explicit scaled-error bound above.  Lean now
+   proves
 
    ```lean
+   oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
    oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
    ```
 
-   so this sharper theorem immediately supplies
+   so this controlled theorem supplies the mixed compatible theorem, then
    `OddSuccessorBaseTailActiveBlockResidueRoundingGoal` and hence
    `BaseTail.HasFeasiblePrimitiveResidues hT2 Cyl`.
 3. Primitive active lift:

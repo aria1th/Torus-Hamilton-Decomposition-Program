@@ -5483,6 +5483,41 @@ def OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal : Prop :=
           IsUnit (R.target c σ - R.target c ⟨1, by omega⟩)) →
         ActiveHall.FeasibleWithResidues Cyl.incidence R
 
+def OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    m ^ b > m * (b + T) * T →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      BaseTail.MixedExpansionData Cyl →
+      (hT2 : 2 ≤ T) →
+      ∀ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
+        R.RowCompatible Cyl.incidence →
+        R.ColCompatible Cyl.incidence →
+        (∀ c : Fin (b + T), IsUnit (R.target c ⟨0, by omega⟩)) →
+        (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+          IsUnit (R.target c σ - R.target c ⟨1, by omega⟩)) →
+        ∃ M : ActiveHall.CountMatrix Cyl.incidence,
+          M.HasResidues R ∧
+            ∀ U : Finset (Fin (b + T)), ∀ S : Finset (Fin T),
+              U.Nonempty → U ≠ Finset.univ →
+              S.Nonempty → S ≠ Finset.univ →
+                T * M.cutMass U S ≤
+                  S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c) +
+                    m * (b + T) * min S.card (T - S.card)
+
 def OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
@@ -5518,6 +5553,22 @@ theorem oddSuccessorBaseTailActiveBlockResidueRoundingGoal_of_compatible
       hb5 hT hmodd hBlock
       (hCompatible hb5 hmodd hm3 hsmall packets hlen htotal
         hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hT2)
+
+theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
+    (hControlled :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hT hSlack Cyl hCyl hBlock hMix hT2
+    R hRow hCol hZero hNumeric
+  rcases hControlled hb5 hmodd hm3 hsmall packets hlen htotal
+      hpacketSum hpacketUnits hPrefix hT hSlack hCyl hBlock hMix hT2
+      R hRow hCol hZero hNumeric with
+    ⟨M, hResidues, hScaled⟩
+  refine ⟨M, ?_, hResidues⟩
+  exact
+    hMix.hallCuts_of_scaled_error_le_slack
+      (by omega : 0 < T) hSlack M hScaled
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
