@@ -6629,6 +6629,79 @@ theorem thresholdMoveTokenFinset_sum_eq_family_sums
       (fun q =>
         if q ∈ P.thresholdMoveTokenFinset quota then f q else 0)
 
+def thresholdTokenNonzeroDelta
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (σ : Fin T) (c : Fin (b + T)) :
+    ReservoirMoveToken A → ZMod m :=
+  fun q =>
+    if σ = P.moveRight hTpos q then
+      (if P.moveZeroColor q = c then (1 : ZMod m) else 0) -
+        (if P.moveRightColor q = c then (1 : ZMod m) else 0)
+    else
+      0
+
+theorem thresholdMoveList_nonzero_delta_eq_token_sum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) (c : Fin (b + T)) :
+    BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+        (P.thresholdMoveList hTpos quota) c σ =
+      (P.thresholdMoveTokenFinset quota).sum
+        (P.thresholdTokenNonzeroDelta hTpos σ c) := by
+  classical
+  rw [P.thresholdMoveList_nonzero_delta_eq_token_foldr hT hTpos
+    quota hσ0 c]
+  exact
+    P.thresholdMoveTokenFinset_toList_foldr_eq_sum quota
+      (P.thresholdTokenNonzeroDelta hTpos σ c)
+
+theorem thresholdMoveList_nonzero_delta_eq_family_sums
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) (c : Fin (b + T)) :
+    BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+        (P.thresholdMoveList hTpos quota) c σ =
+      (∑ q : A.nonbufferTokens,
+        if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+        then
+          P.thresholdTokenNonzeroDelta hTpos σ c
+            (ReservoirMoveToken.nonbuffer q)
+        else
+          0) +
+        ((∑ q : BaseTail.Trades.BufferReservoirToken m T,
+          if ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota
+          then
+            P.thresholdTokenNonzeroDelta hTpos σ c
+              (ReservoirMoveToken.buffer01 q)
+          else
+            0) +
+          (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+            if ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota
+            then
+              P.thresholdTokenNonzeroDelta hTpos σ c
+                (ReservoirMoveToken.buffer02 q)
+            else
+              0)) := by
+  rw [P.thresholdMoveList_nonzero_delta_eq_token_sum hT hTpos quota
+    hσ0 c]
+  exact
+    P.thresholdMoveTokenFinset_sum_eq_family_sums quota
+      (P.thresholdTokenNonzeroDelta hTpos σ c)
+
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
