@@ -94,6 +94,35 @@ theorem symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_targe
       hΦ x₀ π
 
 /--
+Target equality for one-site permutation correction from a pre-correction
+formula.
+
+This is the algebraic form produced by a local trade that reserves one site for
+the final symbol permutation: the pre-correction target is the canonical target
+plus the old local contribution minus the permuted local contribution.
+-/
+theorem permuteResidueSpec_target_eq_activeBlockResidueSpec_of_preTarget
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    {R : ActiveHall.ResidueSpec m T (Fin (b + T))}
+    {Φ : ActiveHall.Symboling Cyl.incidence}
+    (D : ActiveBlockData Cyl)
+    (x₀ : Shared.TorusVertex (b + 1) m)
+    (π : Equiv.Perm (Fin T))
+    (hPre :
+      ∀ c σ,
+        R.target c σ =
+          (activeBlockResidueSpec D).target c σ
+            + (if Φ.color x₀ σ = c then (1 : ZMod m) else 0)
+            - (if Φ.color x₀ (π σ) = c then (1 : ZMod m) else 0)) :
+    ∀ c σ,
+      (Φ.permuteResidueSpec R x₀ π).target c σ =
+        (activeBlockResidueSpec D).target c σ := by
+  intro c σ
+  rw [ActiveHall.Symboling.permuteResidueSpec_target, hPre c σ]
+  abel
+
+/--
 Canonical active-block residue correction by one local permutation, phrased in
 the three cases of the canonical target schedule.
 
@@ -332,6 +361,48 @@ def SuccessorActiveBlockCanonicalPermutationCorrectionGoal : Prop :=
                     -((D.activeBlock c : Nat) : ZMod m)) ∧
                 (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
                   (Φ.permuteResidueSpec R x₀ π).target c σ = 0)
+
+/--
+Successor-scoped pre-correction form of the one-site reservoir.
+
+This is slightly closer to the expected local-trade proof than
+`SuccessorActiveBlockCanonicalPermutationCorrectionGoal`: instead of proving the
+three post-permutation canonical target cases directly, it proves that the
+realized residue target differs from the canonical target by exactly the local
+delta removed and reinserted by a final one-site symbol permutation.
+-/
+def SuccessorActiveBlockCanonicalPreCorrectionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ R : ActiveHall.ResidueSpec m T (Fin (b + T)),
+          ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+            Φ.HasResidues R ∧
+            ∃ x₀ : Shared.TorusVertex (b + 1) m,
+              ∃ π : Equiv.Perm (Fin T),
+                ∀ c : Fin (b + T), ∀ σ : Fin T,
+                  R.target c σ =
+                    (activeBlockResidueSpec D).target c σ
+                      + (if Φ.color x₀ σ = c then
+                          (1 : ZMod m)
+                        else 0)
+                      - (if Φ.color x₀ (π σ) = c then
+                          (1 : ZMod m)
+                        else 0)
 
 /--
 Broader paper-facing finite coactive-site reservoir endpoint.  This version is
@@ -655,11 +726,52 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrecti
     symbolingWithResidues_activeBlockResidueSpec_of_permuteResidueSpec_target_cases
       hBlock hT hΦ x₀ π hZero hOne hTail
 
+theorem successorActiveBlockCanonicalPermutationCorrectionGoal_of_preCorrection
+    (hPreCorrection : SuccessorActiveBlockCanonicalPreCorrectionGoal) :
+    SuccessorActiveBlockCanonicalPermutationCorrectionGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hPreCorrection hb5 hmodd hm3 hsmall hlen htotal
+      hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨R, Φ, hΦ, x₀, π, hPre⟩
+  have hTarget :
+      ∀ c σ,
+        (Φ.permuteResidueSpec R x₀ π).target c σ =
+          (activeBlockResidueSpec hBlock).target c σ :=
+    permuteResidueSpec_target_eq_activeBlockResidueSpec_of_preTarget
+      hBlock x₀ π hPre
+  exact ⟨R, Φ, hΦ, x₀, π,
+    (by
+      intro c
+      rw [hTarget c ⟨0, by omega⟩]
+      exact activeBlockResidueSpec_target_zero hBlock c (by omega)),
+    (by
+      intro c
+      rw [hTarget c ⟨1, by omega⟩]
+      exact activeBlockResidueSpec_target_one hBlock c (by omega)),
+    (by
+      intro c σ hσ
+      rw [hTarget c σ]
+      exact activeBlockResidueSpec_target_of_two_le hBlock c hσ)⟩
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
+    (hPreCorrection : SuccessorActiveBlockCanonicalPreCorrectionGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrection
+    (successorActiveBlockCanonicalPermutationCorrectionGoal_of_preCorrection
+      hPreCorrection)
+
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_permutationCorrection
     (hCorrection : SuccessorActiveBlockCanonicalPermutationCorrectionGoal) :
     SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_permutationCorrection
     hCorrection
+
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_preCorrection
+    (hPreCorrection : SuccessorActiveBlockCanonicalPreCorrectionGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
+    hPreCorrection
 
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_finiteCoactiveSiteReservoir
     (hReservoir : SuccessorActiveBlockFiniteCoactiveSiteReservoirGoal) :
