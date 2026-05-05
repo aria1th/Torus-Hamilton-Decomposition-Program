@@ -5399,6 +5399,47 @@ def OddSuccessorBaseTailActiveBlockCylinderConstructionGoal : Prop :=
       ∃ _D : BaseTail.ActiveBlockData Cyl,
         BaseTail.IsCylinder Cyl
 
+/--
+Raw construction target for the active-block cylinder.
+
+The active block degree formula already implies the `active_degree_mod` field
+of `BaseTail.IsCylinder`; the genuine geometric work is to construct the
+cylinder, prove ordinary directions are unique, prove each compressed color
+step is Hamiltonian, and compute the active block degrees.
+-/
+def OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    ∃ Cyl : BaseTail.Cylinder b m T packets,
+      ∃ _D : BaseTail.ActiveBlockData Cyl,
+        (∀ x : Shared.TorusVertex (b + 1) m,
+          ∀ i : Fin (b + 1), i ≠ BaseTail.activeDir b →
+            ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
+        (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
+
+theorem oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw
+    (hRaw : OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal) :
+    OddSuccessorBaseTailActiveBlockCylinderConstructionGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT
+  rcases hRaw hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT with
+    ⟨Cyl, D, hOrdinary, hHamiltonian⟩
+  refine ⟨Cyl, D, ?_⟩
+  exact D.isCylinder_of_activeBlockData hOrdinary hHamiltonian (by omega)
+
 def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
