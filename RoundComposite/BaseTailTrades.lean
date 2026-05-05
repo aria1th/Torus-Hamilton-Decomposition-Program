@@ -461,6 +461,41 @@ def SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal : Prop :=
                 (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves) = R
 
 /--
+Canonical-only strict reservoir endpoint.
+
+This is the weaker surface actually needed by the successor closure: the
+finite `0 ↔ τ`, `τ ≠ 0`, schedule only has to realize the canonical active-block
+residue target, not every compatible residue matrix.
+-/
+def SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+          ∃ moves :
+            List
+              (ActiveHall.Symboling.NonzeroZeroSwapMove
+                (Shared.TorusVertex (b + 1) m) T),
+            Φ.applySwapResidueSpecs (Φ.residueSpec (m := m))
+              (ActiveHall.Symboling.nonzeroZeroSwapMoves
+                (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves) =
+                  activeBlockResidueSpec D
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -1080,6 +1115,35 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_nonzeroZeroReservoi
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_zeroReservoirSwapSchedule
     (successorActiveBlockZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
       hSchedule)
+
+theorem successorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal_of_nonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases activeBlockResidueSpec_compatible_primitive hCyl hBlock hT with
+    ⟨hRow, hCol, _hPrim⟩
+  exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+    hpacketUnits hPrefix hT_eq hSlack hT (activeBlockResidueSpec hBlock)
+    hCyl hBlock hRow hCol
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_canonicalNonzeroZeroReservoirSwapSchedule
+    (hSchedule :
+      SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨Φ, moves, hMoves⟩
+  let swaps :=
+    ActiveHall.Symboling.nonzeroZeroSwapMoves
+      (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
+  exact ⟨Φ.applySwapMoves swaps, by
+    have hResidues :=
+      Φ.applySwapMoves_hasResidues (Φ.hasResidues_residueSpec (m := m)) swaps
+    simpa [swaps, hMoves] using hResidues⟩
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
     (hTrade : SuccessorActiveBlockLocalSymbolTradeGoal) :
