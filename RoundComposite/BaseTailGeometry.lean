@@ -908,6 +908,36 @@ def IsPrimitiveActiveSymboling {b m T : Nat} [NeZero m]
     (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
       IsUnit (A.R.target c σ - A.R.target c ⟨1, by omega⟩))
 
+def ActiveSymbolingCountsPrimitive {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    (hT : 2 ≤ T) (A : ActiveSymboling Cyl) : Prop :=
+  (∀ c : Fin (b + T),
+    IsUnit (((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m))) ∧
+    (∀ c : Fin (b + T), ∀ σ : Fin T, 2 ≤ σ.val →
+      IsUnit
+        ((((A.Φ.count c σ : Nat) : ZMod m) -
+          ((A.Φ.count c ⟨1, by omega⟩ : Nat) : ZMod m))))
+
+theorem activeSymbolingCountsPrimitive_of_isPrimitive
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ T) :
+    IsPrimitiveActiveSymboling hT A →
+      ActiveSymbolingCountsPrimitive hT A := by
+  intro hA
+  rcases hA with ⟨hValid, hZero, hNumeric⟩
+  refine ⟨?_, ?_⟩
+  · intro c
+    have hres := hValid.has_residues c ⟨0, by omega⟩
+    rw [hres]
+    exact hZero c
+  · intro c σ hσ
+    have hresσ := hValid.has_residues c σ
+    have hresΔ := hValid.has_residues c ⟨1, by omega⟩
+    rw [hresσ, hresΔ]
+    exact hNumeric c σ hσ
+
 /--
 The local geometric assembly theorem still needed for the primitive lift.
 
@@ -924,6 +954,30 @@ def PrimitiveActiveLiftAssemblyGoal : Prop :=
       IsCylinder Cyl →
       IsPrimitiveActiveSymboling hT A →
       Shared.CayleyHamiltonDecomposition (b + T) m
+
+/--
+Primitive lift target in the form matching the v2 base-tail architecture.
+
+The active Hall layer supplies only symbol counts.  Those counts must feed an
+extended prefix-count tail theorem for arbitrary threshold-symbol words; the
+full-vertex lift should consume the count primitiveity stated here, rather than
+the diagnostic `expandedColorDir` Hamiltonian route below.
+-/
+def PrimitiveActivePrefixLiftAssemblyGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ T),
+      IsCylinder Cyl →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      Shared.CayleyHamiltonDecomposition (b + T) m
+
+theorem primitiveActiveLiftAssemblyGoal_of_prefixLiftAssembly
+    (hLift : PrimitiveActivePrefixLiftAssemblyGoal) :
+    PrimitiveActiveLiftAssemblyGoal := by
+  intro b m T _inst packets Cyl A hT hCyl hA
+  exact hLift hT hCyl hA.1
+    (activeSymbolingCountsPrimitive_of_isPrimitive hT hA)
 
 def ExpandedColorDirEdgePartitionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}

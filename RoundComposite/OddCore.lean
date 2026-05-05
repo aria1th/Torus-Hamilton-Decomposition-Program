@@ -5367,6 +5367,12 @@ theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_primitiveActiveLiftAssemb
     Cyl A hCyl hT2 hA
   exact hLift hT2 hCyl hA
 
+theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_prefixLiftAssembly
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorBaseTailPrimitiveActiveLiftGoal :=
+  oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_primitiveActiveLiftAssembly
+    (BaseTail.primitiveActiveLiftAssemblyGoal_of_prefixLiftAssembly hLift)
+
 theorem oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_expandedColorDirHamiltonian
     (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
     OddSuccessorBaseTailPrimitiveActiveLiftGoal :=
@@ -5566,6 +5572,12 @@ theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
   exact hLift hb5 hmodd hm3 hsmall hbase packets
     hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
     hCyl hT2 hA
+
+theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal :=
+  oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_primitiveActiveLift
+    (oddSuccessorBaseTailPrimitiveActiveLiftGoal_of_prefixLiftAssembly hLift)
 
 theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_expandedColorDirHamiltonian
     (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
