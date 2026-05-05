@@ -2241,6 +2241,192 @@ theorem collapseVertex_cayleyColorStep_expandedColorDir
       collapseVertex_add_ordinaryExpandedDir]
     simp [Cylinder.step, y]
 
+/--
+Fiber-dependent active-tail expansion.
+
+This is the common Latin/collapse skeleton needed by the final active
+prefix-count lift.  At an active compressed edge, the symboling gives the
+incoming active symbol, and `tailPerm` may permute the active tail symbols as a
+function of the collapsed base point and collapse fiber.  Any such permutation
+preserves the edge partition and the projection to the compressed cylinder.
+-/
+noncomputable def activePermutedColorDir
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets) (A : ActiveSymboling Cyl)
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1))) :
+    Shared.TorusColor (b + (n + 1)) →
+      Shared.TorusVertex (b + (n + 1)) m →
+      Shared.TorusDirection (b + (n + 1)) :=
+  fun c x =>
+    let y := collapseVertex b m (n + 1) x
+    let z := collapseFiberInit b m n x
+    let i := Cyl.dir c y
+    if hactive : i = activeDir b then
+      tailExpandedDir b
+        ((tailPerm y z)
+          ((A.Φ.equiv y).symm
+            ⟨c, by
+              change c ∈ Cyl.active y
+              exact Finset.mem_filter.mpr
+                ⟨Finset.mem_univ c, hactive⟩⟩))
+    else
+      ordinaryExpandedDir i hactive
+
+theorem collapseVertex_cayleyColorStep_activePermutedColorDir
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets) (A : ActiveSymboling Cyl)
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (c : Fin (b + (n + 1)))
+    (x : Shared.TorusVertex (b + (n + 1)) m) :
+    collapseVertex b m (n + 1)
+        (Shared.cayleyColorStep (activePermutedColorDir Cyl A tailPerm) c x)
+      =
+    Cyl.step c (collapseVertex b m (n + 1) x) := by
+  classical
+  let y := collapseVertex b m (n + 1) x
+  let z := collapseFiberInit b m n x
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · have hdir :
+        activePermutedColorDir Cyl A tailPerm c x =
+          tailExpandedDir b
+            ((tailPerm y (collapseFiberInit b m n x))
+              ((A.Φ.equiv y).symm
+                ⟨c, by
+                  change c ∈ Cyl.active y
+                  exact Finset.mem_filter.mpr
+                    ⟨Finset.mem_univ c, hactive⟩⟩)) := by
+      simp [activePermutedColorDir, y, hactive]
+    rw [Shared.cayleyColorStep, hdir,
+      collapseVertex_add_tailExpandedDir]
+    simp [Cylinder.step, y, hactive]
+  · have hdir :
+        activePermutedColorDir Cyl A tailPerm c x =
+          ordinaryExpandedDir (Cyl.dir c y) hactive := by
+      simp [activePermutedColorDir, y, hactive]
+    rw [Shared.cayleyColorStep, hdir,
+      collapseVertex_add_ordinaryExpandedDir]
+    simp [Cylinder.step, y]
+
+theorem activePermutedColorDirEdgePartition
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) :
+    Shared.IsCayleyEdgePartition
+      (activePermutedColorDir Cyl A tailPerm) := by
+  classical
+  intro x j
+  let y := collapseVertex b m (n + 1) x
+  let z := collapseFiberInit b m n x
+  by_cases hj : j.val < b
+  · let i : Fin (b + 1) := ordinaryBaseDirOfExpandedDir j hj
+    have hi : i ≠ activeDir b :=
+      ordinaryBaseDirOfExpandedDir_ne_active j hj
+    rcases hCyl.ordinary_unique y i hi with ⟨c, hc, huniq⟩
+    refine ⟨c, ?_, ?_⟩
+    · have hnot : Cyl.dir c y ≠ activeDir b := by
+        rw [hc]
+        exact hi
+      apply Fin.ext
+      have hval' :
+          (activePermutedColorDir Cyl A tailPerm c x).val =
+            (Cyl.dir c y).val := by
+        simp [activePermutedColorDir, y, hnot, ordinaryExpandedDir]
+      rw [hval']
+      simp [hc, i, ordinaryBaseDirOfExpandedDir]
+    · intro d hd
+      have hnot : Cyl.dir d y ≠ activeDir b := by
+        intro hactive
+        have hval := congrArg Fin.val hd
+        have hge :
+            b ≤ (activePermutedColorDir Cyl A tailPerm d x).val := by
+          simp [activePermutedColorDir, y, hactive, tailExpandedDir]
+        rw [hval] at hge
+        omega
+      have hdir : Cyl.dir d y = i := by
+        apply Fin.ext
+        have hval := congrArg Fin.val hd
+        have hval' :
+            (activePermutedColorDir Cyl A tailPerm d x).val =
+              (Cyl.dir d y).val := by
+          simp [activePermutedColorDir, y, hnot, ordinaryExpandedDir]
+        rw [hval'] at hval
+        simpa [i, ordinaryBaseDirOfExpandedDir] using hval
+      exact huniq d hdir
+  · have hjge : b ≤ j.val := by omega
+    let σ : Fin (n + 1) := tailSymbolOfExpandedDir j hjge
+    let ρ : Fin (n + 1) := (tailPerm y z).symm σ
+    let p : {c : Fin (b + (n + 1)) //
+        c ∈ (Cyl.incidence).active y} :=
+      A.Φ.equiv y ρ
+    let c : Fin (b + (n + 1)) := p.1
+    have hcActive : Cyl.dir c y = activeDir b := by
+      have hp : c ∈ Cyl.active y := by
+        simp [Cylinder.incidence, c, p]
+      exact (Finset.mem_filter.mp hp).2
+    have hsub :
+        (⟨c, by
+          change c ∈ Cyl.active y
+          exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hcActive⟩⟩ :
+          {c : Fin (b + (n + 1)) // c ∈ (Cyl.incidence).active y}) = p := by
+      apply Subtype.ext
+      rfl
+    have hsymm :
+        (A.Φ.equiv y).symm
+          (⟨c, by
+            change c ∈ Cyl.active y
+            exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hcActive⟩⟩ :
+            {c : Fin (b + (n + 1)) //
+              c ∈ (Cyl.incidence).active y}) = ρ := by
+      rw [hsub]
+      exact (A.Φ.equiv y).symm_apply_apply ρ
+    have hperm : (tailPerm y z) ρ = σ := by
+      simp [ρ]
+    refine ⟨c, ?_, ?_⟩
+    · calc
+        activePermutedColorDir Cyl A tailPerm c x =
+            tailExpandedDir b ((tailPerm y z) ρ) := by
+          simp [activePermutedColorDir, y, z, hcActive, hsymm]
+        _ = tailExpandedDir b σ := by rw [hperm]
+        _ = j := tailExpandedDir_of_tailSymbol j hjge
+    · intro d hd
+      have hactive : Cyl.dir d y = activeDir b := by
+        by_contra hnot
+        have hval := congrArg Fin.val hd
+        have hlt : (activePermutedColorDir Cyl A tailPerm d x).val < b := by
+          simp [activePermutedColorDir, y, hnot, ordinaryExpandedDir_val_lt]
+        rw [hval] at hlt
+        omega
+      have hdmem : d ∈ Cyl.active y :=
+        Finset.mem_filter.mpr ⟨Finset.mem_univ d, hactive⟩
+      let q : {c : Fin (b + (n + 1)) //
+          c ∈ (Cyl.incidence).active y} :=
+        ⟨d, by
+          change d ∈ Cyl.active y
+          exact hdmem⟩
+      have hsymm_d :
+          (tailPerm y z) ((A.Φ.equiv y).symm q) = σ := by
+        apply tailExpandedDir_injective (b := b)
+        calc
+          tailExpandedDir b ((tailPerm y z) ((A.Φ.equiv y).symm q))
+              = activePermutedColorDir Cyl A tailPerm d x := by
+                simp [activePermutedColorDir, y, z, hactive, q]
+          _ = j := hd
+          _ = tailExpandedDir b σ :=
+                (tailExpandedDir_of_tailSymbol j hjge).symm
+      have hsymm_q : (A.Φ.equiv y).symm q = ρ :=
+        (tailPerm y z).injective (by simpa [hperm] using hsymm_d)
+      have hq : q = p := by
+        have happly := congrArg (A.Φ.equiv y) hsymm_q
+        simpa [q, p] using happly
+      exact congrArg Subtype.val hq
+
 structure IsActiveSymboling {b m T : Nat} [NeZero m]
     {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets}
@@ -2419,6 +2605,22 @@ theorem skew_conj {b m n : Nat} [NeZero m]
   · rfl
 
 end PrefixProjectedLiftColorDirCore
+
+noncomputable def activePermutedColorDirCore
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets)
+    (A : ActiveSymboling Cyl)
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (hCyl : IsCylinder Cyl) :
+    PrefixProjectedLiftColorDirCore Cyl where
+  colorDir := activePermutedColorDir Cyl A tailPerm
+  edgePartition := activePermutedColorDirEdgePartition tailPerm hCyl
+  collapse_step := by
+    intro c x
+    exact collapseVertex_cayleyColorStep_activePermutedColorDir
+      Cyl A tailPerm c x
 
 /--
 Lower-triangular monodromy form of the projected primitive lift.

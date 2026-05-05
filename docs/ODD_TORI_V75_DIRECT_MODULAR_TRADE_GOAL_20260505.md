@@ -178,6 +178,24 @@ rule should be the active analogue of the prefix-count `lambda_rho` rule:
 symbol `0` supplies the rank-zero unit count, and symbols `sigma >= 2` supply
 unit cocycles through the primitive differences `count sigma - count 1`.
 
+The common Latin/projection part of this replacement is now separated in Lean:
+
+```lean
+BaseTail.activePermutedColorDir
+BaseTail.collapseVertex_cayleyColorStep_activePermutedColorDir
+BaseTail.activePermutedColorDirEdgePartition
+BaseTail.activePermutedColorDirCore
+```
+
+Here `tailPerm y z : Fin T ≃ Fin T` is an arbitrary permutation depending on
+the collapsed base point `y` and collapse fiber `z`.  The theorem
+`activePermutedColorDirEdgePartition` proves that any such fiber-dependent
+active-tail permutation preserves the Cayley edge partition, and
+`collapseVertex_cayleyColorStep_activePermutedColorDir` proves that it still
+projects to the compressed cylinder step.  Thus the remaining proof is now
+purely the monodromy/cocycle theorem for the specific prefix-count
+`lambda_rho` choice of `tailPerm`.
+
 ### Main Thread: Endpoint Wiring
 
 Owned files:
