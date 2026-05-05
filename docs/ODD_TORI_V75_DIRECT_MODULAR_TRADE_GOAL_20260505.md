@@ -275,13 +275,30 @@ closed:
 
 ```lean
 BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective
+BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+BaseTail.activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
 ```
 
 This proves that every one-step fiber map for the canonical `lambda_rho` active
-tail rule is a permutation.  The remaining Worker B content is therefore no
-longer local invertibility; it is the section-return monodromy theorem showing
-that the iterated canonical active prefix rule supplies the required
-lower-triangular unit cocycles.
+tail rule is a permutation and exposes a smaller return-only residual.  The
+remaining Worker B content is therefore no longer local invertibility; it is the
+section-return theorem showing that the iterated canonical active prefix rule
+supplies the required lower-triangular unit cocycles.
+
+The Lean residual has been narrowed accordingly:
+
+```lean
+BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+BaseTail.activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
+```
+
+This return-data target keeps only `gamma`, `return_lower_triangular`, and
+`return_unit`; the `fiber_bijective` field is now filled automatically from
+`BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective`.
 
 ### Main Thread: Endpoint Wiring
 

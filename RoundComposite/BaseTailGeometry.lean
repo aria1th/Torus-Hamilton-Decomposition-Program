@@ -5106,6 +5106,84 @@ theorem activePrefixPermutedColorDirCore_fiberStep_bijective
     rw [hstep]
     exact Function.bijective_id
 
+/--
+Canonical active-prefix monodromy residual after local fiber invertibility has
+been closed.
+
+The remaining data is the lower-triangular section-return formula and unit carry
+sum over the fixed cylinder base cycle.  One-step fiber bijectivity is supplied
+by `activePrefixPermutedColorDirCore_fiberStep_bijective`.
+-/
+structure ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets}
+    (A : ActiveSymboling Cyl) (hT : 2 ≤ n + 1)
+    (hCyl : IsCylinder Cyl) (B : CylinderBaseCycleData Cyl) where
+  gamma :
+    Fin (b + (n + 1)) →
+      ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m
+  return_lower_triangular :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        Shared.sectionReturn
+            (Shared.skewProductMap
+              (Cyl.step c)
+              ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+            (B.base c) (B.period c) z ⟨k, hk⟩
+          =
+        z ⟨k, hk⟩ +
+          gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  return_unit :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), gamma c k hk z)
+
+namespace ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+
+def toMonodromyData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    {hT : 2 ≤ n + 1} {hCyl : IsCylinder Cyl}
+    {B : CylinderBaseCycleData Cyl}
+    (D :
+      ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+        A hT hCyl B) :
+    ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyData
+      A hT hCyl B where
+  fiber_bijective :=
+    activePrefixPermutedColorDirCore_fiberStep_bijective hT hCyl
+  gamma := D.gamma
+  return_lower_triangular := D.return_lower_triangular
+  return_unit := D.return_unit
+
+end ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+
+def ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal : Prop :=
+  ∀ {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1),
+      (hCyl : IsCylinder Cyl) →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      (B : CylinderBaseCycleData Cyl) →
+      Nonempty
+        (ActivePrefixPermutedColorDirFiberLowerTriangularReturnData
+          A hT hCyl B)
+
+theorem activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
+    (hReturn : ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    ActivePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal := by
+  intro b m n _inst packets Cyl A hT hCyl hA hPrim B
+  rcases hReturn hT hCyl hA hPrim B with ⟨D⟩
+  exact ⟨D.toMonodromyData⟩
+
+theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberReturn
+    (hReturn : ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal) :
+    PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal :=
+  primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePrefixPermutedFiberMonodromy
+    (activePrefixPermutedColorDirFiberLowerTriangularMonodromyGoal_of_return
+      hReturn)
+
 theorem expandedColorDirCore_fiberStep_bijective
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
