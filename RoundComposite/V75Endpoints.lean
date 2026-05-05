@@ -56,6 +56,17 @@ def OddModulusToriV75FeasibleLocalTradeReturnInputsGoal : Prop :=
   BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
 
 /--
+v7.5 input package reducing the canonical feasible-residue side to a concrete
+scaled proper-cut witness, paired with the successor-scoped feasible local
+symboling theorem and Worker B's return-only lift residual.
+-/
+def OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalScaledFeasibleResidueGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal ∧
+  BaseTail.ActivePrefixPermutedColorDirFiberLowerTriangularReturnGoal
+
+/--
 v7.5 direct modular-trade block goal.
 
 This is definitionally the already-wired v7.3 canonical local-trade
@@ -181,6 +192,22 @@ theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeRetu
   oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTrade_return
     h.1 h.2.1 h.2.2.1 h.2.2.2
 
+theorem oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+    (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
+    OddModulusToriV75FeasibleLocalTradeReturnInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalFeasibleResidueGoal_of_scaledFeasibleResidue
+      h.2.1,
+    h.2.2.1,
+    h.2.2.2⟩
+
+theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+    (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
+    OddModulusToriV75PreCorrectionReturnInputsGoal :=
+  oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+      h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_reservoirInputs
     (h : OddModulusToriV75ReservoirInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -212,6 +239,13 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeRetur
     OddModulusToriV75DirectModularTradeBlocksGoal :=
   oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionReturnInputs
     (oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+      h)
+
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTradeReturnInputs
+    (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
       h)
 
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade_return
@@ -275,6 +309,13 @@ theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
     (oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
       h)
 
+theorem oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
+    (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
+      h)
+
 theorem odd_modulus_tori_all_dimensions_of_v75_directModularTrade_blocks
     (hBlocks : OddModulusToriV75DirectModularTradeBlocksGoal)
     {d m : Nat} (hd2 : 2 ≤ d)
@@ -320,6 +361,13 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
     (oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
+    (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_scaledFeasibleLocalTradeReturnInputs
       h)
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalLocalTrade_return
