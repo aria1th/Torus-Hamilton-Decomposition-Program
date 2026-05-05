@@ -6509,6 +6509,34 @@ theorem thresholdMoveList_nonzero_delta_eq_token_foldr
       simp [ih, moveZeroColorOfMove_toNonzeroZeroSwapMove,
         moveRightColorOfMove_toNonzeroZeroSwapMove]
 
+theorem thresholdMoveTokenFinset_toList_foldr_eq_sum
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (quota : ReservoirMoveToken A → ZMod m)
+    (f : ReservoirMoveToken A → ZMod m) :
+    (P.thresholdMoveTokenFinset quota).toList.foldr
+        (fun q acc => f q + acc) 0 =
+      (P.thresholdMoveTokenFinset quota).sum f := by
+  classical
+  let s := P.thresholdMoveTokenFinset quota
+  have hfold :
+      s.toList.foldr (fun q acc => f q + acc) 0 =
+        (s.toList.map f).sum := by
+    induction s.toList with
+    | nil =>
+        simp
+    | cons q qs ih =>
+        simp [ih]
+  change s.toList.foldr (fun q acc => f q + acc) 0 = s.sum f
+  rw [hfold]
+  rw [← Multiset.sum_coe]
+  change (Multiset.map f
+      (s.toList : Multiset (ReservoirMoveToken A))).sum = s.sum f
+  rw [Finset.coe_toList]
+  exact (Finset.sum_eq_multiset_sum s f).symm
+
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
