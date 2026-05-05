@@ -5574,6 +5574,41 @@ def OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal : Prop :=
                   S.card * (∑ c ∈ U, (Cyl.incidence).colorDegree c) +
                     m * (b + T) * min S.card (T - S.card)
 
+/--
+Generic count-matrix rounding boundary for the active Hall layer.
+
+The base-tail data only supplies a concrete incidence structure and the error
+scale `m * #colors`; the rounding theorem itself should not depend on packets,
+cylinders, or Hamiltonian geometry.
+-/
+def ActiveHallControlledResidueRoundingGoal : Prop :=
+  ∀ {m T : Nat} [NeZero m] {X C : Type}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C],
+    (I : ActiveHall.Incidence T X C) →
+    ∀ R : ActiveHall.ResidueSpec m T C,
+      R.RowCompatible I →
+      R.ColCompatible I →
+      ∃ M : ActiveHall.CountMatrix I,
+        M.HasResidues R ∧
+          ∀ U : Finset C, ∀ S : Finset (Fin T),
+            U.Nonempty → U ≠ Finset.univ →
+            S.Nonempty → S ≠ Finset.univ →
+              T * M.cutMass U S ≤
+                S.card * (∑ c ∈ U, I.colorDegree c) +
+                  m * Fintype.card C * min S.card (T - S.card)
+
+theorem oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
+    (hRound : ActiveHallControlledResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal := by
+  intro b m T _inst _hb5 _hmodd _hm3 _hsmall packets _hlen _htotal
+    _hpacketSum _hpacketUnits _hPrefix _hT _hSlack
+    Cyl _hCyl _hBlock _hMix _hT2 R hRow hCol _hZero _hNumeric
+  rcases hRound Cyl.incidence R hRow hCol with ⟨M, hResidues, hScaled⟩
+  refine ⟨M, hResidues, ?_⟩
+  intro U S hUne hUuniv hSne hSuniv
+  simpa [Fintype.card_fin] using
+    hScaled U S hUne hUuniv hSne hSuniv
+
 def OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
