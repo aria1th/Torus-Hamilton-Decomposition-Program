@@ -665,6 +665,34 @@ structure CylinderBaseCycleData {b m T : Nat} [NeZero m]
       ∀ y : Shared.TorusVertex (b + 1) m,
         ∃ k : Nat, k < period c ∧ ((Cyl.step c)^[k]) (base c) = y
 
+theorem CylinderBaseCycleData.sum_orbit_eq_univ
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (B : CylinderBaseCycleData Cyl)
+    (c : Fin (b + T)) (f : Shared.TorusVertex (b + 1) m → ZMod m) :
+    (∑ u : Fin (B.period c),
+        f (((Cyl.step c)^[u.val]) (B.base c))) =
+      ∑ y : Shared.TorusVertex (b + 1) m, f y := by
+  classical
+  let orbit : Fin (B.period c) → Shared.TorusVertex (b + 1) m :=
+    fun u => ((Cyl.step c)^[u.val]) (B.base c)
+  have hsurj : Function.Surjective orbit := by
+    intro y
+    rcases B.base_cover c y with ⟨k, hk, hky⟩
+    exact ⟨⟨k, hk⟩, by simpa [orbit] using hky⟩
+  have hcard :
+      Fintype.card (Fin (B.period c)) =
+        Fintype.card (Shared.TorusVertex (b + 1) m) := by
+    calc
+      Fintype.card (Fin (B.period c)) = B.period c := Fintype.card_fin _
+      _ = m ^ (b + 1) := B.period_eq c
+      _ = Fintype.card (Shared.TorusVertex (b + 1) m) :=
+          (Shared.card_torusVertex (b + 1) m).symm
+  have hbij : Function.Bijective orbit :=
+    (Fintype.bijective_iff_surjective_and_card orbit).2 ⟨hsurj, hcard⟩
+  let e : Fin (B.period c) ≃ Shared.TorusVertex (b + 1) m :=
+    Equiv.ofBijective orbit hbij
+  exact Fintype.sum_equiv e (fun u => f (orbit u)) f (by intro u; rfl)
+
 theorem cylinderBaseCycleData_of_isCylinder
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets} (hCyl : IsCylinder Cyl) :
@@ -2146,6 +2174,16 @@ structure ActiveSymboling {b m T : Nat} [NeZero m]
     (Cyl : Cylinder b m T packets) where
   R : ActiveHall.ResidueSpec m T (Fin (b + T))
   Φ : ActiveHall.Symboling Cyl.incidence
+
+theorem ActiveSymboling.count_cast_eq_sum_indicator
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (A : ActiveSymboling Cyl)
+    (c : Fin (b + T)) (σ : Fin T) :
+    ((A.Φ.count c σ : Nat) : ZMod m) =
+      ∑ y : Shared.TorusVertex (b + 1) m,
+        if A.Φ.color y σ = c then (1 : ZMod m) else 0 := by
+  classical
+  simp [ActiveHall.Symboling.count]
 
 noncomputable def expandedColorDir
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}

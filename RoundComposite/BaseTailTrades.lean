@@ -761,6 +761,37 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
     (successorActiveBlockCanonicalPermutationCorrectionGoal_of_preCorrection
       hPreCorrection)
 
+theorem successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+    (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨Φ, hΦ⟩
+  exact
+    ⟨activeBlockResidueSpec hBlock, Φ, hΦ,
+      (0 : Shared.TorusVertex (b + 1) m), Equiv.refl (Fin T), by
+        intro c σ
+        simp only [Equiv.refl_apply]
+        by_cases hcolor :
+            Φ.color (0 : Shared.TorusVertex (b + 1) m) σ = c
+        · simp [hcolor]
+        · simp [hcolor]⟩
+
+theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
+      SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  ⟨successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection,
+    successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade⟩
+
+theorem successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteReservoir
+    (hReservoir : SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal) :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal :=
+  successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+    (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_finiteCoactiveSiteReservoir
+      hReservoir)
+
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_permutationCorrection
     (hCorrection : SuccessorActiveBlockCanonicalPermutationCorrectionGoal) :
     SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=

@@ -118,18 +118,23 @@ The proof should construct symbolings directly from reserved local trade sites.
 It should not detour through a global count-matrix Hall realization theorem.
 
 The current Lean surface has been reduced to a one-site pre-correction
-reservoir form:
+reservoir form, and the pre-correction/local-trade distinction is now closed:
 
 ```lean
 BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal
 BaseTail.Trades.permuteResidueSpec_target_eq_activeBlockResidueSpec_of_preTarget
 BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
 BaseTail.Trades.successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_preCorrection
+BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade
+BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_finiteCoactiveSiteReservoir
 ```
 
-This is the next Worker A theorem to prove.  It is enough to construct a
-symboling with residue target equal to the canonical active-block target plus the
-single reserved-site delta; the final local permutation is now handled by Lean.
+The identity site permutation turns any canonical local-trade realization into a
+valid pre-correction witness, while the earlier permutation-correction adapter
+returns from pre-correction to canonical local trade.  Worker A's remaining
+mathematical content is therefore the actual finite canonical local/reservoir
+realization, not an extra correction endpoint.
 
 ### Worker B: Base-Tail Prefix Lift
 
@@ -150,6 +155,7 @@ The proof should use the closed compressed base-cycle data:
 ```lean
 BaseTail.CylinderBaseCycleData
 BaseTail.cylinderBaseCycleData_of_isCylinder
+BaseTail.CylinderBaseCycleData.sum_orbit_eq_univ
 ```
 
 and construct the lower-triangular/unit return data needed by the active
@@ -199,6 +205,7 @@ BaseTail.activePermutedColorDir
 BaseTail.collapseVertex_cayleyColorStep_activePermutedColorDir
 BaseTail.activePermutedColorDirEdgePartition
 BaseTail.activePermutedColorDirCore
+BaseTail.ActiveSymboling.count_cast_eq_sum_indicator
 BaseTail.activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
 BaseTail.activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
 ```
