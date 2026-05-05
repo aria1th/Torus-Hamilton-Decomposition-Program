@@ -280,10 +280,14 @@ Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_mixedControll
 Concrete.oddSuccessorBaseTailCanonicalScaledFeasibleResidueGoal_of_largeMarginControlled
 BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
 ActiveHall.Symboling.swapMoveDelta
+ActiveHall.Symboling.localTradeDelta
+ActiveHall.Symboling.swapMoveDelta_eq_localTradeDelta
 ActiveHall.Symboling.swapDeltaSum
 ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
 BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal
 BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe
+BaseTail.Trades.swapDeltaSum_eq_tradeDeltaSum_of_baseline
 BaseTail.Trades.CanonicalNonzeroZeroReservoirScript
 BaseTail.Trades.CanonicalNonzeroZeroReservoirScript.applySwapResidueSpecs_eq
 BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal
@@ -362,9 +366,11 @@ preferred closure-facing surface: it only has to realize `activeBlockResidueSpec
 and directly implies `SuccessorActiveBlockCanonicalLocalSymbolTradeGoal`.  The
 new `CanonicalNonzeroZeroReservoirScript` endpoint exposes the v7.6 proof shape
 below that surface: a baseline symboling, pairwise-distinct nonzero zero-swaps,
-baseline colors at the reserved sites, and a finite `swapDeltaSum` equation.
-Its adapter proves the final `applySwapResidueSpecs` equality from
-`applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex`, so the
+baseline colors at the reserved sites, and the finite sum of the explicit
+`localTradeDelta` terms.  Its adapter first rewrites that sum to
+`swapDeltaSum` by `swapDeltaSum_eq_tradeDeltaSum_of_baseline`, then proves the
+final `applySwapResidueSpecs` equality from
+`applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex`.  The
 sharpest remaining hard content is now the actual script construction:
 selecting enough distinct reservoir sites, choosing the initial symboling with
 the required local baseline positions, and proving the canonical active-block

@@ -3962,6 +3962,37 @@ def swapMoveDelta {m T : Nat} {X C : Type*}
       else
         0)
 
+def localTradeDelta {m T : Nat} {C : Type*} [DecidableEq C]
+    (leftColor rightColor c : C) (left right ρ : Fin T) : ZMod m :=
+  (if leftColor = c then
+      (if ρ = right then (1 : ZMod m)
+       else if ρ = left then -1 else 0)
+    else 0)
+    + (if rightColor = c then
+      (if ρ = left then (1 : ZMod m)
+       else if ρ = right then -1 else 0)
+    else 0)
+
+theorem swapMoveDelta_eq_localTradeDelta {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (move : SwapMove X T) (hSymbols : move.left ≠ move.right)
+    {leftColor rightColor : C}
+    (hLeft : Φ.color move.vertex move.left = leftColor)
+    (hRight : Φ.color move.vertex move.right = rightColor)
+    (c : C) (ρ : Fin T) :
+    Φ.swapMoveDelta (m := m) move c ρ =
+      localTradeDelta (m := m) leftColor rightColor c
+        move.left move.right ρ := by
+  classical
+  let R0 : ResidueSpec m T C := { target := fun _ _ => 0 }
+  have h :=
+    Φ.swapResidueSpec_target_eq_add_localTradeDelta
+      R0 move.vertex (σ := move.left) (τ := move.right) (ρ := ρ)
+      hSymbols c
+  simpa [swapResidueSpec, swapMoveDelta, localTradeDelta, R0,
+    hLeft, hRight, sub_eq_add_neg] using h
+
 def swapDeltaSum {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) :

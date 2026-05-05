@@ -501,6 +501,96 @@ def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
   ActiveHall.Symboling.nonzeroZeroSwapMoves
     (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
 
+def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
+    [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    List (ActiveHall.Symboling.NonzeroZeroSwapMove X T) →
+      C → Fin T → ZMod m
+  | [], _, _ => 0
+  | move :: moves, c, σ =>
+      ActiveHall.Symboling.localTradeDelta (m := m)
+        (zeroColor move) (rightColor move) c
+        ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+        move.right σ +
+      nonzeroZeroTradeDeltaSumOfTwoLe hT zeroColor rightColor moves c σ
+
+theorem swapDeltaSum_eq_tradeDeltaSum_of_baseline
+    {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : ActiveHall.Incidence T X C} (Φ : ActiveHall.Symboling I)
+    (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      (∀ move, move ∈ moves →
+        Φ.color move.vertex
+            ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+          zeroColor move) →
+      (∀ move, move ∈ moves →
+        Φ.color move.vertex move.right = rightColor move) →
+      Φ.swapDeltaSum (m := m) (nonzeroZeroSwapMovesOfTwoLe hT moves) =
+        nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor rightColor
+          moves
+  | [], _hZero, _hRight => by
+      funext c σ
+      simp [nonzeroZeroSwapMovesOfTwoLe, nonzeroZeroTradeDeltaSumOfTwoLe,
+        ActiveHall.Symboling.nonzeroZeroSwapMoves,
+        ActiveHall.Symboling.zeroSwapMoves,
+        ActiveHall.Symboling.swapDeltaSum]
+  | move :: moves, hZero, hRight => by
+      have hTail :=
+        swapDeltaSum_eq_tradeDeltaSum_of_baseline (m := m) Φ hT
+          zeroColor rightColor moves
+          (fun move' hmem => hZero move' (by simp [hmem]))
+          (fun move' hmem => hRight move' (by simp [hmem]))
+      funext c σ
+      have hRightNe :
+          (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+            move.right := by
+        intro h
+        have hval : move.right.val = 0 := by
+          simpa using congrArg Fin.val h.symm
+        exact move.right_ne_zero hval
+      have hHead :
+          Φ.swapMoveDelta (m := m)
+              ({ vertex := move.vertex,
+                 left := ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩,
+                 right := move.right } :
+                ActiveHall.Symboling.SwapMove X T) c σ =
+            ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right σ := by
+        simpa [ActiveHall.Symboling.ZeroSwapMove.toSwapMove,
+          ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove] using
+          Φ.swapMoveDelta_eq_localTradeDelta
+            (ActiveHall.Symboling.ZeroSwapMove.toSwapMove
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT)
+              move.toZeroSwapMove)
+            hRightNe
+            (hZero move (by simp))
+            (hRight move (by simp)) c σ
+      have hTailPoint := congrFun (congrFun hTail c) σ
+      have hTailPoint' :
+          Φ.swapDeltaSum (m := m)
+              (List.map
+                (ActiveHall.Symboling.ZeroSwapMove.toSwapMove
+                    (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) ∘
+                  ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove)
+                moves) c σ =
+            nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+              zeroColor rightColor moves c σ := by
+        simpa [nonzeroZeroSwapMovesOfTwoLe,
+          ActiveHall.Symboling.nonzeroZeroSwapMoves,
+          ActiveHall.Symboling.zeroSwapMoves] using hTailPoint
+      simp [nonzeroZeroSwapMovesOfTwoLe, nonzeroZeroTradeDeltaSumOfTwoLe,
+        ActiveHall.Symboling.nonzeroZeroSwapMoves,
+        ActiveHall.Symboling.zeroSwapMoves,
+        ActiveHall.Symboling.swapDeltaSum,
+        ActiveHall.Symboling.NonzeroZeroSwapMove.toZeroSwapMove,
+        ActiveHall.Symboling.ZeroSwapMove.toSwapMove, hHead, hTailPoint']
+
 /--
 Structured v7.6 reservoir witness for the canonical strict schedule.
 
@@ -542,10 +632,23 @@ structure CanonicalNonzeroZeroReservoirScript
     ∀ c σ,
       (activeBlockResidueSpec D).target c σ =
         (initial.residueSpec (m := m)).target c σ +
-          initial.swapDeltaSum (m := m)
-            (nonzeroZeroSwapMovesOfTwoLe hT moves) c σ
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+            zeroColor rightColor moves c σ
 
 namespace CanonicalNonzeroZeroReservoirScript
+
+theorem swapDeltaSum_eq_tradeDeltaSum
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    (script : CanonicalNonzeroZeroReservoirScript hT D) :
+    script.initial.swapDeltaSum (m := m)
+        (nonzeroZeroSwapMovesOfTwoLe hT script.moves) =
+      nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        script.zeroColor script.rightColor script.moves :=
+  swapDeltaSum_eq_tradeDeltaSum_of_baseline (m := m) script.initial hT
+    script.zeroColor script.rightColor script.moves
+    script.baseline_zero script.baseline_right
 
 theorem applySwapResidueSpecs_eq
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
@@ -564,6 +667,7 @@ theorem applySwapResidueSpecs_eq
     funext c σ
     rw [ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
       script.initial script.swapMoves_pairwise c σ]
+    rw [script.swapDeltaSum_eq_tradeDeltaSum]
     exact (script.target_delta c σ).symm
   cases hleft :
       script.initial.applySwapResidueSpecs
