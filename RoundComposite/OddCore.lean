@@ -5492,7 +5492,7 @@ def OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal :
         BaseTail.IsCylinder Cyl
 
 theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
-    (hSplit : BaseTail.PacketPhaseSplitGoal)
+    (hSplit : BaseTail.SuccessorPacketPhaseSplitGoal)
     (hBuild : OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal) :
     OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal := by
   intro b m T _inst hb5 _hmodd hm3 _hsmall hbase packets
@@ -5504,11 +5504,10 @@ theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
         Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
     intro packet hp
     exact
-      hSplit (N := m ^ b) (m := m) (packet := packet)
+      hSplit (N := m ^ b) (b := b) (m := m) (T := T)
+        (packets := packets)
         (dvd_pow_self m (by omega))
-        (hpacketSum packet hp)
-        (hpacketUnits packet hp)
-        (hPrefix packet hp)
+        hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
       hpacketSum hpacketUnits hPrefix hPacketSplits hT
@@ -5545,7 +5544,7 @@ def OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal : Prop :=
         BaseTail.IsCylinder Cyl
 
 theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
-    (hSplit : BaseTail.PacketPhaseSplitGoal)
+    (hSplit : BaseTail.SuccessorPacketPhaseSplitGoal)
     (hBuild :
       OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal) :
     OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal := by
@@ -5558,11 +5557,10 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSpl
         Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet) := by
     intro packet hp
     exact
-      hSplit (N := m ^ b) (m := m) (packet := packet)
+      hSplit (N := m ^ b) (b := b) (m := m) (T := T)
+        (packets := packets)
         (dvd_pow_self m (by omega))
-        (hpacketSum packet hp)
-        (hpacketUnits packet hp)
-        (hPrefix packet hp)
+        hm3 hT hlen htotal hpacketSum hpacketUnits packet hp
   exact
     hBuild hb5 hm3 Dbase packets hlen htotal
       hpacketSum hpacketUnits hPrefix hPacketSplits hT
@@ -6096,7 +6094,7 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
         hLift)
 
 def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
-  BaseTail.PacketPhaseSplitGoal ∧
+  BaseTail.SuccessorPacketPhaseSplitGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
@@ -6113,7 +6111,7 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResi
         hMix, hRound, hLift⟩
 
 def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
-  BaseTail.PacketPhaseSplitGoal ∧
+  BaseTail.SuccessorPacketPhaseSplitGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal

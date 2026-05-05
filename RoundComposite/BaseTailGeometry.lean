@@ -1813,6 +1813,32 @@ theorem successorPacketProperPrefixUnitsGoal :
   exact packet_proper_prefix_sum_coprime_of_length_two_or_three
     (hpacketSum packet hp) (hunit packet hp) (hlen23 packet hp) hqpos hqproper
 
+def SuccessorPacketPhaseSplitGoal : Prop :=
+  ∀ {N b m T : Nat} [NeZero N] [NeZero m] {packets : List (List Nat)},
+    m ∣ N →
+    3 ≤ m →
+    T = b + 1 →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    ∀ packet, packet ∈ packets →
+      Nonempty (PacketPhaseSplit N m packet)
+
+theorem successorPacketPhaseSplitGoal_of_packetPhaseSplitGoal
+    (hSplit : PacketPhaseSplitGoal) :
+    SuccessorPacketPhaseSplitGoal := by
+  intro N b m T _instN _instM packets hdiv hm3 hT hlen htotal
+    hpacketSum hunit packet hp
+  exact
+    hSplit (N := N) (m := m) (packet := packet)
+      hdiv
+      (hpacketSum packet hp)
+      (hunit packet hp)
+      (successorPacketProperPrefixUnitsGoal
+        hm3 hT hlen htotal hpacketSum hunit packet hp)
+
 def SuccessorPacketProperPrefixRangeGoal : Prop :=
   ∀ {b m T : Nat} {packets : List (List Nat)},
     3 ≤ m →
