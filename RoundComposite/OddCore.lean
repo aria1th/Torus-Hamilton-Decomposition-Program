@@ -5898,6 +5898,18 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlo
     hRound
     hLift
 
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
+    (hCyl : OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedWitnessGoal)
+    (hRound : ActiveHallControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlock_mixedExpansion_activeHallControlled_prefix
+    hCyl
+    (oddSuccessorBaseTailActiveBlockMixedExpansionGoal_of_witness hMix)
+    hRound
+    hLift
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
@@ -5941,6 +5953,16 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_m
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
   oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlock_mixedExpansion_activeHallControlled_prefix
+      hCyl hMix hRound hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
+    (hCyl : OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedWitnessGoal)
+    (hRound : ActiveHallControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
       hCyl hMix hRound hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
