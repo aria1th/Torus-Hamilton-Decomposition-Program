@@ -5965,6 +5965,20 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_m
     (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
       hCyl hMix hRound hLift)
 
+def OddSuccessorBaseTailWorker1ResidualGoal : Prop :=
+  OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
+  ActiveHallControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
+    (h : OddSuccessorBaseTailWorker1ResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hCyl, hMix, hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
+      hCyl hMix hRound hLift
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
     OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
