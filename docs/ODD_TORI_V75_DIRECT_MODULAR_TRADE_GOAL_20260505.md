@@ -257,6 +257,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNo
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionDelta
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionDelta_nonbuffer
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.postNonbufferReservoirResidual
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.postNonbufferReservoirResidual_nonbuffer
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_nonbuffer_copy
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer01_copy
@@ -642,7 +643,8 @@ constant-weight folds, and nonzero symbols have a named predecessor into
 `Fin (T - 1)`.  The non-buffer base-token singleton sum lemma packages the
 unique `(color, nonzero-symbol)` token extraction used by the λ correction,
 and `thresholdNonbufferCorrectionDelta_nonbuffer` proves that this λ
-correction exactly reproduces the baseline residual on non-buffer colors.
+correction exactly reproduces the baseline residual on non-buffer colors; the
+post-correction residual is therefore zero on those colors and nonzero symbols.
 The canonical-quota adapter fixes the previous
 existential quota endpoint to this named quota, leaving only the nonzero
 residual equations for that quota.  The

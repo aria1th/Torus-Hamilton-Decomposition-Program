@@ -7132,6 +7132,28 @@ noncomputable def postNonbufferReservoirResidual
     (initial.residueSpec (m := m))
     (P.thresholdNonbufferCorrectionDelta hT initial)
 
+theorem postNonbufferReservoirResidual_nonbuffer
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (initial : ActiveHall.Symboling A.Cyl.incidence)
+    {c : Fin (b + T)}
+    (hc0 : c ≠ A.buffer.color0 A.slotEquiv)
+    (hc1 : c ≠ A.buffer.color1 A.slotEquiv)
+    (hc2 : c ≠ A.buffer.color2 A.slotEquiv)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) :
+    P.postNonbufferReservoirResidual hT initial c σ = 0 := by
+  have hdelta :=
+    P.thresholdNonbufferCorrectionDelta_nonbuffer
+      hT initial hc0 hc1 hc2 hσ0
+  unfold postNonbufferReservoirResidual
+  simp [BaseTail.Trades.reservoirResidual]
+  rw [hdelta]
+  unfold baselineReservoirResidual
+  simp [BaseTail.Trades.reservoirResidual, zeroReservoirDelta]
+
 noncomputable def thresholdCanonicalQuota
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
