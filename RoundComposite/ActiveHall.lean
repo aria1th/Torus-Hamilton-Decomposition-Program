@@ -3795,6 +3795,44 @@ theorem permuteAt_hasResidues {m T : Nat} {X C : Type*}
   rw [Φ.permuteAt_count_zmod (m := m) x₀ π ρ c, hResidues c ρ]
   rfl
 
+/-- One scheduled local swap in the active-symbol trade list. -/
+structure SwapMove (X : Type*) (T : Nat) where
+  vertex : X
+  left : Fin T
+  right : Fin T
+
+noncomputable def applySwapMoves {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    List (SwapMove X T) → Symboling I
+  | [] => Φ
+  | move :: moves =>
+      (Φ.swapAt move.vertex move.left move.right).applySwapMoves moves
+
+noncomputable def applySwapResidueSpecs {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (R : ResidueSpec m T C) :
+    List (SwapMove X T) → ResidueSpec m T C
+  | [] => R
+  | move :: moves =>
+      (Φ.swapAt move.vertex move.left move.right).applySwapResidueSpecs
+        (Φ.swapResidueSpec R move.vertex move.left move.right) moves
+
+theorem applySwapMoves_hasResidues {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} {Φ : Symboling I}
+    {R : ResidueSpec m T C} (hResidues : Φ.HasResidues R)
+    (moves : List (SwapMove X T)) :
+    (Φ.applySwapMoves moves).HasResidues
+      (Φ.applySwapResidueSpecs R moves) := by
+  induction moves generalizing Φ R with
+  | nil =>
+      simpa [applySwapMoves, applySwapResidueSpecs] using hResidues
+  | cons move moves ih =>
+      simpa [applySwapMoves, applySwapResidueSpecs] using
+        ih (Φ.swapAt_hasResidues hResidues)
+
 theorem hasResidues_of_realizes {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} {Φ : Symboling I} {M : CountMatrix I}
