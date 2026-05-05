@@ -5743,6 +5743,20 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockM
       hRound)
     hLift
 
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
+    (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_activeBlock_mixedExpansion
+      hCyl hMix)
+    hRound
+    (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
+      hLift)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
@@ -5756,6 +5770,17 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
       hm3 hT hlen htotal hpacketSum hpacketUnits
   exact hCore hHall hb5 hmodd hm3 hsmall hbase
     packets hlen htotal hpacketSum hpacketUnits hPrefix hT hSlack
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
+    (hRound :
+      OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+      hCyl hMix hRound hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
