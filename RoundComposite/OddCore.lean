@@ -6180,6 +6180,31 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedPac
         BaseTail.packetPhaseSplitLengthThreePowerGoal,
         hCylMix, hRound, hLift⟩
 
+def OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal : Prop :=
+  OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
+  BaseTail.ExpandedColorDirColorHamiltonianGoal
+
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
+    (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
+  rcases h with ⟨hCylMix, hRound, hHam⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
+      (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
+        BaseTail.successorPacketPhaseSplitPowerGoal
+        hCylMix)
+      hRound
+      (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_expandedColorDirHamiltonian
+        hHam)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
+    (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
+      h)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
     (hLift : OddCoreSmallModulusSlackPacketLiftAddGoal) :
     OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal := by
