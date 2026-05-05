@@ -2831,6 +2831,148 @@ theorem activeTailCanonicalRho_last_iff {m n : Nat}
     · have hlast := activeTailCanonicalRho_eq_last_of_no_hit hT h
       simpa [hlast, Fin.last]
 
+theorem activeTailCanonicalRho_pred_hitNat {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (hρ : (activeTailCanonicalRho hT z).val < n) :
+    activeTailCanonicalRhoHitNat z
+      ((activeTailCanonicalRho hT z).val - 1) := by
+  classical
+  by_cases h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j
+  · have hspec := activeTailCanonicalRhoFirstNat_spec h
+    have hval := activeTailCanonicalRho_val_eq_find_succ hT h
+    have heq :
+        activeTailCanonicalRhoFirstNat z h =
+          (activeTailCanonicalRho hT z).val - 1 := by
+      omega
+    simpa [heq] using hspec
+  · have hlast := activeTailCanonicalRho_eq_last_of_no_hit hT h
+    have hn : (activeTailCanonicalRho hT z).val = n := by
+      simpa [hlast, Fin.last]
+    omega
+
+theorem activeTailCanonicalRho_no_hit_before {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    {j : Nat}
+    (hj : j + 1 < (activeTailCanonicalRho hT z).val) :
+    ¬ activeTailCanonicalRhoHitNat z j := by
+  classical
+  intro hhit
+  by_cases h : ∃ q : Nat, activeTailCanonicalRhoHitNat z q
+  · have hmin := activeTailCanonicalRhoFirstNat_minimal h hhit
+    have hval := activeTailCanonicalRho_val_eq_find_succ hT h
+    omega
+  · exact h ⟨j, hhit⟩
+
+theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (hρ : (activeTailCanonicalRho hT z).val < n)
+    (δ : ZMod m) :
+    activeTailCanonicalRho hT
+        (fun τ : Fin n =>
+          z τ +
+            if τ =
+              ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+            then δ else 0)
+      =
+    activeTailCanonicalRho hT z := by
+  classical
+  let ρ := activeTailCanonicalRho hT z
+  let j0 : Nat := ρ.val - 1
+  have hρnz : ρ.val ≠ 0 := by
+    simpa [ρ] using activeTailCanonicalRho_ne_zero hT z
+  have hj0_lt : j0 < n := by
+    omega
+  have hj0_succ_lt : j0 + 1 < n := by
+    omega
+  have hhit_z : activeTailCanonicalRhoHitNat z j0 := by
+    simpa [ρ, j0] using activeTailCanonicalRho_pred_hitNat hT hρ
+  let w : Fin n → ZMod m := fun τ =>
+    z τ + if τ = ⟨ρ.val, by simpa [ρ] using hρ⟩ then δ else 0
+  have hhit_w : activeTailCanonicalRhoHitNat w j0 := by
+    rcases hhit_z with ⟨hj, hlt, hz⟩
+    refine ⟨hj, hlt, ?_⟩
+    have hne :
+        (⟨j0, hj⟩ : Fin n) ≠
+          ⟨ρ.val, by simpa [ρ] using hρ⟩ := by
+      intro h
+      have hval := congrArg Fin.val h
+      omega
+    simp [w, hne, hz]
+  have hwexists : ∃ j : Nat, activeTailCanonicalRhoHitNat w j :=
+    ⟨j0, hhit_w⟩
+  have hfind_le :
+      activeTailCanonicalRhoFirstNat w hwexists ≤ j0 :=
+    activeTailCanonicalRhoFirstNat_minimal hwexists hhit_w
+  have hfind_ge :
+      j0 ≤ activeTailCanonicalRhoFirstNat w hwexists := by
+    by_contra hnot
+    have hlt : activeTailCanonicalRhoFirstNat w hwexists < j0 := by
+      omega
+    have hspec := activeTailCanonicalRhoFirstNat_spec hwexists
+    rcases hspec with ⟨hj, hpred, hwzero⟩
+    have hne :
+        (⟨activeTailCanonicalRhoFirstNat w hwexists, hj⟩ : Fin n) ≠
+          ⟨ρ.val, by simpa [ρ] using hρ⟩ := by
+      intro h
+      have hval := congrArg Fin.val h
+      omega
+    have hz_hit :
+        activeTailCanonicalRhoHitNat z
+          (activeTailCanonicalRhoFirstNat w hwexists) := by
+      refine ⟨hj, hpred, ?_⟩
+      have hwcoord :
+          w ⟨activeTailCanonicalRhoFirstNat w hwexists, hj⟩ =
+            z ⟨activeTailCanonicalRhoFirstNat w hwexists, hj⟩ := by
+        simp [w, hne]
+      rw [← hwcoord]
+      exact hwzero
+    have hbefore :
+        activeTailCanonicalRhoFirstNat w hwexists + 1 < ρ.val := by
+      omega
+    exact
+      (activeTailCanonicalRho_no_hit_before hT (z := z)
+        (j := activeTailCanonicalRhoFirstNat w hwexists)
+        (by simpa [ρ] using hbefore)) hz_hit
+  have hfind :
+      activeTailCanonicalRhoFirstNat w hwexists = j0 := by
+    omega
+  apply Fin.ext
+  have hval_w := activeTailCanonicalRho_val_eq_find_succ hT hwexists
+  simp [w] at hval_w
+  calc
+    (activeTailCanonicalRho hT w).val
+        = activeTailCanonicalRhoFirstNat w hwexists + 1 := hval_w
+    _ = j0 + 1 := by rw [hfind]
+    _ = ρ.val := by omega
+    _ = (activeTailCanonicalRho hT z).val := rfl
+
+theorem activeTailCanonicalRho_add_at_rho {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (hρ : (activeTailCanonicalRho hT z).val < n) :
+    activeTailCanonicalRho hT
+        (fun τ : Fin n =>
+          z τ +
+            if τ =
+              ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+            then (1 : ZMod m) else 0)
+      =
+    activeTailCanonicalRho hT z :=
+  activeTailCanonicalRho_update_at_rho hT hρ 1
+
+theorem activeTailCanonicalRho_sub_at_rho {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (hρ : (activeTailCanonicalRho hT z).val < n) :
+    activeTailCanonicalRho hT
+        (fun τ : Fin n =>
+          z τ -
+            if τ =
+              ⟨(activeTailCanonicalRho hT z).val, hρ⟩
+            then (1 : ZMod m) else 0)
+      =
+    activeTailCanonicalRho hT z := by
+  simpa [sub_eq_add_neg] using
+    activeTailCanonicalRho_update_at_rho hT hρ (-(1 : ZMod m))
+
 noncomputable def activePrefixTailPerm
     {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1) :
     Shared.TorusVertex (b + 1) m →

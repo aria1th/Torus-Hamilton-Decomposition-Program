@@ -117,6 +117,20 @@ thm:active-realization
 The proof should construct symbolings directly from reserved local trade sites.
 It should not detour through a global count-matrix Hall realization theorem.
 
+The current Lean surface has been reduced to a one-site pre-correction
+reservoir form:
+
+```lean
+BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal
+BaseTail.Trades.permuteResidueSpec_target_eq_activeBlockResidueSpec_of_preTarget
+BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
+BaseTail.Trades.successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_preCorrection
+```
+
+This is the next Worker A theorem to prove.  It is enough to construct a
+symboling with residue target equal to the canonical active-block target plus the
+single reserved-site delta; the final local permutation is now handled by Lean.
+
 ### Worker B: Base-Tail Prefix Lift
 
 Owned file:
@@ -239,6 +253,11 @@ BaseTail.activeTailCanonicalRho_val_lt_congr_of_agree_before
 BaseTail.activeTailCanonicalRho_val_lt_add_single_iff
 BaseTail.activeTailCanonicalRho_val_lt_sub_single_iff
 BaseTail.activeTailCanonicalRho_last_iff
+BaseTail.activeTailCanonicalRho_pred_hitNat
+BaseTail.activeTailCanonicalRho_no_hit_before
+BaseTail.activeTailCanonicalRho_update_at_rho
+BaseTail.activeTailCanonicalRho_add_at_rho
+BaseTail.activeTailCanonicalRho_sub_at_rho
 ```
 
 The reusable fiber-bijection algebra for piecewise single-coordinate
