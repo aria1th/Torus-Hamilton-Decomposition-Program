@@ -693,6 +693,27 @@ theorem CylinderBaseCycleData.sum_orbit_eq_univ
     Equiv.ofBijective orbit hbij
   exact Fintype.sum_equiv e (fun u => f (orbit u)) f (by intro u; rfl)
 
+theorem CylinderBaseCycleData.sum_range_orbit_eq_univ
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (B : CylinderBaseCycleData Cyl)
+    (c : Fin (b + T)) (f : Shared.TorusVertex (b + 1) m → ZMod m) :
+    (∑ u ∈ Finset.range (B.period c),
+        f (((Cyl.step c)^[u]) (B.base c))) =
+      ∑ y : Shared.TorusVertex (b + 1) m, f y := by
+  have hfin := B.sum_orbit_eq_univ c f
+  rw [Finset.sum_fin_eq_sum_range] at hfin
+  calc
+    (∑ u ∈ Finset.range (B.period c),
+        f (((Cyl.step c)^[u]) (B.base c))) =
+        ∑ u ∈ Finset.range (B.period c),
+          (if u < B.period c then
+            f (((Cyl.step c)^[u]) (B.base c))
+          else 0) := by
+            apply Finset.sum_congr rfl
+            intro u hu
+            rw [if_pos (Finset.mem_range.mp hu)]
+    _ = ∑ y : Shared.TorusVertex (b + 1) m, f y := hfin
+
 theorem cylinderBaseCycleData_of_isCylinder
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m T packets} (hCyl : IsCylinder Cyl) :
@@ -3917,6 +3938,68 @@ theorem activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCa
   exact
     activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
       (activePrefixTailPerm hT) hCyl c base period z τ
+
+theorem activePrefixPermutedColorDirCore_sectionReturn_zero_eq_add_count
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (B : CylinderBaseCycleData Cyl)
+    (c : Fin (b + (n + 1))) (z : Fin n → ZMod m) (h0 : 0 < n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+        (B.base c) (B.period c) z ⟨0, h0⟩
+      =
+    z ⟨0, h0⟩ + ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+  classical
+  let zeroTail : Fin (n + 1) := ⟨0, by omega⟩
+  calc
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+        (B.base c) (B.period c) z ⟨0, h0⟩
+        =
+      z ⟨0, h0⟩ +
+        ∑ u ∈ Finset.range (B.period c),
+          activePrefixColorDirCoreDirectCarry A hT c
+            (((Cyl.step c)^[u]) (B.base c))
+            (Shared.skewFiberIterate
+              (Cyl.step c)
+              ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+              u (B.base c) z)
+            ⟨0, h0⟩ := by
+          exact
+            activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+              hT hCyl c (B.base c) (B.period c) z ⟨0, h0⟩
+    _ =
+      z ⟨0, h0⟩ +
+        ∑ u ∈ Finset.range (B.period c),
+          (if A.Φ.color (((Cyl.step c)^[u]) (B.base c)) zeroTail = c then
+            (1 : ZMod m)
+          else 0) := by
+          congr 1
+          apply Finset.sum_congr rfl
+          intro u _hu
+          simpa [zeroTail] using
+            activePrefixColorDirCoreDirectCarry_zero A hT c
+              (((Cyl.step c)^[u]) (B.base c))
+              (Shared.skewFiberIterate
+                (Cyl.step c)
+                ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+                u (B.base c) z)
+              h0
+    _ =
+      z ⟨0, h0⟩ +
+        ∑ y : Shared.TorusVertex (b + 1) m,
+          (if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0) := by
+          rw [B.sum_range_orbit_eq_univ c
+            (fun y : Shared.TorusVertex (b + 1) m =>
+              if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0)]
+    _ =
+      z ⟨0, h0⟩ + ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
+          rw [← A.count_cast_eq_sum_indicator c zeroTail]
 
 /--
 Lower-triangular monodromy form of the projected primitive lift.
