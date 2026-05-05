@@ -231,6 +231,8 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMo
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveList_swapMoves_pairwise
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveList_nonzero_delta_eq_token_foldr
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_toList_foldr_eq_sum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_sum_eq_univ_ite
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset_sum_eq_family_sums
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
@@ -589,7 +591,9 @@ the next proof as token-family counting, and
 fold to a `Finset.sum` over selected tokens for later family partitions.
 `ReservoirMoveToken.equivSum` and
 `ReservoirMoveToken.sum_eq_nonbuffer_add_buffer01_add_buffer02` then split
-unrestricted token sums into the non-buffer, β₀β₁, and β₀β₂ families.  The
+unrestricted token sums into the non-buffer, β₀β₁, and β₀β₂ families, while
+`ReservoirSitePlan.thresholdMoveTokenFinset_sum_eq_family_sums` performs the
+same split with the selected-token membership indicators already inserted.  The
 sharpest remaining hard content is now proving existence of that quota and the
 resulting nonzero-column equations.
 

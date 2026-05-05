@@ -6587,6 +6587,48 @@ theorem thresholdMoveTokenFinset_toList_foldr_eq_sum
   rw [Finset.coe_toList]
   exact (Finset.sum_eq_multiset_sum s f).symm
 
+theorem thresholdMoveTokenFinset_sum_eq_univ_ite
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (quota : ReservoirMoveToken A → ZMod m)
+    (f : ReservoirMoveToken A → ZMod m) :
+    (P.thresholdMoveTokenFinset quota).sum f =
+      ∑ q : ReservoirMoveToken A,
+        if q ∈ P.thresholdMoveTokenFinset quota then f q else 0 := by
+  classical
+  simpa [thresholdMoveTokenFinset] using
+    (Finset.sum_filter
+      (s := (Finset.univ : Finset (ReservoirMoveToken A)))
+      (p := fun q => P.moveCopyIndex q < (quota q).val)
+      (f := f))
+
+theorem thresholdMoveTokenFinset_sum_eq_family_sums
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (quota : ReservoirMoveToken A → ZMod m)
+    (f : ReservoirMoveToken A → ZMod m) :
+    (P.thresholdMoveTokenFinset quota).sum f =
+      (∑ q : A.nonbufferTokens,
+        if ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota
+        then f (ReservoirMoveToken.nonbuffer q) else 0) +
+        ((∑ q : BaseTail.Trades.BufferReservoirToken m T,
+          if ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota
+          then f (ReservoirMoveToken.buffer01 q) else 0) +
+          (∑ q : BaseTail.Trades.BufferReservoirToken m T,
+            if ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota
+            then f (ReservoirMoveToken.buffer02 q) else 0)) := by
+  classical
+  rw [P.thresholdMoveTokenFinset_sum_eq_univ_ite quota f]
+  exact
+    ReservoirMoveToken.sum_eq_nonbuffer_add_buffer01_add_buffer02
+      (A := A)
+      (fun q =>
+        if q ∈ P.thresholdMoveTokenFinset quota then f q else 0)
+
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
