@@ -5683,6 +5683,13 @@ theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_con
     hMix.feasibleWithResidues_of_scaled_error_le_slack
       (by omega : 0 < T) hSlack M hResidues hScaled
 
+theorem oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_activeHallControlled
+    (hRound : ActiveHallControlledResidueRoundingGoal) :
+    OddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal :=
+  oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_controlled
+    (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
+      hRound)
+
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_baseTailPieces
     (hCyl : OddSuccessorBaseTailCylinderConstructionGoal)
     (hRound : OddSuccessorBaseTailResidueRoundingGoal)
@@ -5792,6 +5799,19 @@ theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_
     (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
       hLift)
 
+theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
+    (hRound : ActiveHallControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+    hCyl
+    hMix
+    (oddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal_of_activeHallControlled
+      hRound)
+    hLift
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (hCore : OddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
@@ -5815,6 +5835,16 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixe
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
   oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
     (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+      hCyl hMix hRound hLift)
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
+    (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
+    (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal)
+    (hRound : ActiveHallControlledResidueRoundingGoal)
+    (hLift : BaseTail.PrimitiveActivePrefixLiftAssemblyGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal :=
+  oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+    (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_activeHallControlled_prefix
       hCyl hMix hRound hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_coreAdd
