@@ -2837,15 +2837,15 @@ theorem activeTailCanonicalRho_val_lt_congr_of_take
     {m n k q : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
     (hk : k < n) (hq : q ≤ k + 1)
     (htake :
-      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
-        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w) :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) w) :
     (activeTailCanonicalRho hT z).val < q ↔
       (activeTailCanonicalRho hT w).val < q := by
   refine
     activeTailCanonicalRho_val_lt_congr_of_agree_before
       hT (show q ≤ n by omega) ?_
   intro j hj
-  have hjk : j.val < k + 1 := by omega
+  have hjk : j.val < k := by omega
   have hcoord := congrFun htake ⟨j.val, hjk⟩
   simpa [Shared.zmodVectorTake] using hcoord
 
@@ -2853,8 +2853,8 @@ theorem activeTailCanonicalRho_val_eq_congr_of_take
     {m n k : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
     (hk : k < n)
     (htake :
-      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
-        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w) :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) w) :
     (activeTailCanonicalRho hT z).val = k ↔
       (activeTailCanonicalRho hT w).val = k := by
   have hlt_k :
@@ -2891,8 +2891,8 @@ theorem activeTailLambdaRho_val_eq_pos_congr_of_take
     {m n k : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
     (hk : k < n) (hkpos : 0 < k)
     (htake :
-      Shared.zmodVectorTake (Nat.succ_le_of_lt hk) z =
-        Shared.zmodVectorTake (Nat.succ_le_of_lt hk) w)
+      Shared.zmodVectorTake (Nat.le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) w)
     (s : Fin (n + 1)) :
     (activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT z) s).val = k ↔
       (activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT w) s).val =
@@ -3760,6 +3760,24 @@ noncomputable def activePermutedColorDirCoreDirectCarry
     else 0
   else 0
 
+theorem activePermutedColorDirCoreDirectCarry_eq_of_tailPerm_castSucc_iff
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (tailPerm :
+      Shared.TorusVertex (b + 1) m →
+        (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)))
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    (z w : Fin n → ZMod m) (τ : Fin n)
+    (hperm :
+      ∀ s : Fin (n + 1),
+        tailPerm y z s = τ.castSucc ↔ tailPerm y w s = τ.castSucc) :
+    activePermutedColorDirCoreDirectCarry A tailPerm c y z τ =
+      activePermutedColorDirCoreDirectCarry A tailPerm c y w τ := by
+  classical
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · simp [activePermutedColorDirCoreDirectCarry, hactive, hperm]
+  · simp [activePermutedColorDirCoreDirectCarry, hactive]
+
 theorem activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
@@ -4017,6 +4035,50 @@ theorem activePrefixColorDirCoreDirectCarry_zero
       _ = (if A.Φ.color y zeroTail = c then (1 : ZMod m) else 0) := by
         rw [if_neg hcolor]
 
+theorem activePrefixColorDirCoreDirectCarry_eq_of_take_pos
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (hT : 2 ≤ n + 1)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    {z w : Fin n → ZMod m} {k : Nat} (hk : k < n) (hkpos : 0 < k)
+    (htake :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) w) :
+    activePrefixColorDirCoreDirectCarry A hT c y z ⟨k, hk⟩ =
+      activePrefixColorDirCoreDirectCarry A hT c y w ⟨k, hk⟩ := by
+  classical
+  let τ : Fin n := ⟨k, hk⟩
+  exact
+    activePermutedColorDirCoreDirectCarry_eq_of_tailPerm_castSucc_iff
+      (A := A) (tailPerm := activePrefixTailPerm hT) c y z w τ
+      (by
+        intro s
+        constructor
+        · intro hz
+          apply Fin.ext
+          have hzval :
+              (activeTailLambdaRho (n + 1)
+                  (activeTailCanonicalRho hT z) s).val = k := by
+            simpa [activePrefixTailPerm_apply, τ] using congrArg Fin.val hz
+          have hwval :
+              (activeTailLambdaRho (n + 1)
+                  (activeTailCanonicalRho hT w) s).val = k :=
+            (activeTailLambdaRho_val_eq_pos_congr_of_take
+              hT hk hkpos htake s).mp hzval
+          simpa [activePrefixTailPerm_apply, τ] using hwval
+        · intro hw
+          apply Fin.ext
+          have hwval :
+              (activeTailLambdaRho (n + 1)
+                  (activeTailCanonicalRho hT w) s).val = k := by
+            simpa [activePrefixTailPerm_apply, τ] using congrArg Fin.val hw
+          have hzval :
+              (activeTailLambdaRho (n + 1)
+                  (activeTailCanonicalRho hT z) s).val = k :=
+            (activeTailLambdaRho_val_eq_pos_congr_of_take
+              hT hk hkpos htake s).mpr hwval
+          simpa [activePrefixTailPerm_apply, τ] using hzval)
+
 theorem activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
     {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
@@ -4029,6 +4091,40 @@ theorem activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
   exact
     activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
       (activePrefixTailPerm hT) hCyl c y z τ
+
+theorem activePrefixPermutedColorDirCore_fiberStep_incrementDependsOnTake
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m) :
+    Shared.ZModVectorIncrementDependsOnTake
+      ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y) := by
+  classical
+  intro z w k hk htake
+  let τ : Fin n := ⟨k, hk⟩
+  have hcarry :
+      activePrefixColorDirCoreDirectCarry A hT c y z τ =
+        activePrefixColorDirCoreDirectCarry A hT c y w τ := by
+    by_cases hk0 : k = 0
+    · subst k
+      calc
+        activePrefixColorDirCoreDirectCarry A hT c y z ⟨0, hk⟩ =
+            (if A.Φ.color y ⟨0, by omega⟩ = c then
+              (1 : ZMod m)
+            else 0) := by
+              exact activePrefixColorDirCoreDirectCarry_zero A hT c y z hk
+        _ = activePrefixColorDirCoreDirectCarry A hT c y w ⟨0, hk⟩ := by
+              rw [activePrefixColorDirCoreDirectCarry_zero A hT c y w hk]
+    · have hkpos : 0 < k := Nat.pos_of_ne_zero hk0
+      exact
+        activePrefixColorDirCoreDirectCarry_eq_of_take_pos
+          A hT c y hk hkpos htake
+  rw [activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+        (A := A) hT hCyl c y z τ,
+      activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+        (A := A) hT hCyl c y w τ,
+      hcarry]
+  abel
 
 theorem activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
@@ -4116,6 +4212,94 @@ theorem activePrefixPermutedColorDirCore_sectionReturn_zero_eq_add_count
     _ =
       z ⟨0, h0⟩ + ((A.Φ.count c ⟨0, by omega⟩ : Nat) : ZMod m) := by
           rw [← A.count_cast_eq_sum_indicator c zeroTail]
+
+theorem activePrefixPermutedColorDirCore_sectionReturn_incrementDependsOnTake
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat) :
+    Shared.ZModVectorIncrementDependsOnTake
+      (Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+        base period) := by
+  rw [Shared.sectionReturn_skewProductMap_eq_fiberIterate]
+  exact
+    Shared.zmodVectorIncrementDependsOnTake_skewFiberIterate
+      (Cyl.step c)
+      ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+      (activePrefixPermutedColorDirCore_fiberStep_incrementDependsOnTake
+        hT hCyl c)
+      period base
+
+noncomputable def activePrefixPermutedColorDirCore_returnGamma
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (k : Nat) (hk : k < n) (u : Fin k → ZMod m) : ZMod m :=
+  let z0 := Shared.zmodVectorExtendZero (Nat.le_of_lt hk) u
+  Shared.sectionReturn
+      (Shared.skewProductMap
+        (Cyl.step c)
+        ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+      base period z0 ⟨k, hk⟩ -
+    z0 ⟨k, hk⟩
+
+theorem activePrefixPermutedColorDirCore_sectionReturn_lowerTriangular
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (z : Fin n → ZMod m) (k : Nat) (hk : k < n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+        base period z ⟨k, hk⟩
+      =
+    z ⟨k, hk⟩ +
+      activePrefixPermutedColorDirCore_returnGamma
+        (A := A) hT hCyl c base period k hk
+        (Shared.zmodVectorTake (Nat.le_of_lt hk) z) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    Shared.sectionReturn
+      (Shared.skewProductMap
+        (Cyl.step c)
+        ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+      base period
+  let z0 : Fin n → ZMod m :=
+    Shared.zmodVectorExtendZero (Nat.le_of_lt hk)
+      (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  have htake :
+      Shared.zmodVectorTake (Nat.le_of_lt hk) z =
+        Shared.zmodVectorTake (Nat.le_of_lt hk) z0 := by
+    simp [z0]
+  have hinc :
+      F z ⟨k, hk⟩ - z ⟨k, hk⟩ =
+        F z0 ⟨k, hk⟩ - z0 ⟨k, hk⟩ :=
+    activePrefixPermutedColorDirCore_sectionReturn_incrementDependsOnTake
+      hT hCyl c base period z z0 k hk htake
+  change
+    F z ⟨k, hk⟩ =
+      z ⟨k, hk⟩ +
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c base period k hk
+          (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  have hz0 : z0 ⟨k, hk⟩ = 0 := by
+    simp [z0]
+  have hinc' : F z ⟨k, hk⟩ - z ⟨k, hk⟩ = F z0 ⟨k, hk⟩ := by
+    simpa [hz0] using hinc
+  unfold activePrefixPermutedColorDirCore_returnGamma
+  change F z ⟨k, hk⟩ = z ⟨k, hk⟩ + (F z0 ⟨k, hk⟩ - z0 ⟨k, hk⟩)
+  rw [hz0]
+  rw [← hinc']
+  abel
 
 /--
 Lower-triangular monodromy form of the projected primitive lift.
