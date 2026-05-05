@@ -554,6 +554,24 @@ def packetPhaseSkewStep {N m : Nat} [NeZero N] [NeZero m]
     (S : Finset (ZMod m)) : ZMod m × ZMod N → ZMod m × ZMod N :=
   fun p => (p.1 + 1, if p.1 ∈ S then p.2 + 1 else p.2)
 
+theorem packetPhaseSkewStep_fst_iterate
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    ∀ n : Nat, ∀ p : ZMod m × ZMod N,
+      ((packetPhaseSkewStep S)^[n] p).1 = p.1 + (n : ZMod m)
+  | 0, p => by simp
+  | n + 1, p => by
+      rw [Function.iterate_succ_apply]
+      calc
+        ((packetPhaseSkewStep S)^[n]
+            (packetPhaseSkewStep S p)).1 =
+          (packetPhaseSkewStep S p).1 + (n : ZMod m) :=
+            packetPhaseSkewStep_fst_iterate S n (packetPhaseSkewStep S p)
+        _ = (p.1 + 1) + (n : ZMod m) := rfl
+        _ = p.1 + ((n + 1 : Nat) : ZMod m) := by
+            simp [Nat.cast_add, Nat.cast_one]
+            abel
+
 theorem packetPhaseIntervalStep_conj_skew
     {N m : Nat} [NeZero N] [NeZero m]
     (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length)
