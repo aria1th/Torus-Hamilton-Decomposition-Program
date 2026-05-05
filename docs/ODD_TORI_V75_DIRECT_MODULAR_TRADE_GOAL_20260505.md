@@ -196,6 +196,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.bufferTokenBaseRight_eq_token
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.bufferTokenBaseRight_nonzeroSymbolPred
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBaseRight_nonzeroSymbolPred
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokenBase_sum_single_nonzero
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.bufferTokenBase_sum_single_nonzero
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.nonbufferTokens
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirMoveToken.equivSum
@@ -265,6 +266,14 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCa
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_nonbuffer_family_sum_const
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer01_family_sum_const
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer02_family_sum_const
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdNonbufferCorrectionDelta_eq_canonical_nonbuffer_family_sum
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer01_family_delta_color1
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer02_family_delta_color1_zero
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer01_family_delta_color2_zero
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_buffer02_family_delta_color2
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_nonbuffer
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_buffer1
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdCanonicalQuota_reservoirResidual_buffer2
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
@@ -640,16 +649,24 @@ non-buffer correction, post-nonbuffer residual, and final canonical quota; the
 three constructor-copy simp lemmas show that this quota is copy-index constant
 on each reservoir family.  The canonical quota also has direct family-level
 constant-weight folds, and nonzero symbols have a named predecessor into
-`Fin (T - 1)`.  The non-buffer base-token singleton sum lemma packages the
-unique `(color, nonzero-symbol)` token extraction used by the λ correction,
-and `thresholdNonbufferCorrectionDelta_nonbuffer` proves that this λ
+`Fin (T - 1)`.  The non-buffer and buffer base-token singleton sum lemmas
+package the unique nonzero-symbol token extractions used by the λ and μ
+corrections.  `thresholdNonbufferCorrectionDelta_nonbuffer` proves that the λ
 correction exactly reproduces the baseline residual on non-buffer colors; the
 post-correction residual is therefore zero on those colors and nonzero symbols.
-The canonical-quota adapter fixes the previous
-existential quota endpoint to this named quota, leaving only the nonzero
-residual equations for that quota.  The
-sharpest remaining hard content is now proving existence of that quota and the
-resulting nonzero-column equations.
+The canonical quota now reuses the non-buffer correction verbatim
+(`thresholdNonbufferCorrectionDelta_eq_canonical_nonbuffer_family_sum`) and the
+buffer family lemmas identify the β₀β₁ and β₀β₂ μ contributions: at β₁ and β₂
+they equal the post-nonbuffer residuals, while the opposite buffer family
+contributes zero.  Consequently
+`thresholdCanonicalQuota_reservoirResidual_nonbuffer`,
+`thresholdCanonicalQuota_reservoirResidual_buffer1`, and
+`thresholdCanonicalQuota_reservoirResidual_buffer2` close all nonzero residual
+equations except the β₀ row.  The canonical-quota adapter fixes the previous
+existential quota endpoint to this named quota.  The sharpest remaining hard
+content is now the β₀ nonzero-column equation, expected to follow from column
+compatibility after the non-buffer, β₁, and β₂ residual equations, and then the
+single all-color `nonzeroSolved` adapter for the canonical quota.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
