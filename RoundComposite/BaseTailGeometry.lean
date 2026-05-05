@@ -2493,6 +2493,230 @@ theorem isPrimitiveActiveSymboling_of_countsPrimitive
     exact hNumeric c σ hσ
 
 /--
+Tail-local copy of the prefix-count `lambda_rho` permutation.
+
+It fixes symbol `0`, sends symbol `1` to the positive stop rank `rho`, shifts
+symbols `2,...,rho` down by one, and fixes symbols above `rho`.
+-/
+def activeTailLambdaRho (T : Nat) (rho : Fin T) (s : Fin T) : Fin T :=
+  if _hs0 : s.val = 0 then
+    ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
+  else if _hs1 : s.val = 1 then
+    rho
+  else if _hlt : rho.val < s.val then
+    s
+  else
+    ⟨s.val - 1, by omega⟩
+
+def activeTailLambdaRhoInv (T : Nat) (rho : Fin T) (s : Fin T) : Fin T :=
+  if _hs0 : s.val = 0 then
+    ⟨0, Nat.lt_of_le_of_lt (Nat.zero_le rho.val) rho.isLt⟩
+  else if _hlt : s.val < rho.val then
+    ⟨s.val + 1, by omega⟩
+  else if _heq : s.val = rho.val then
+    ⟨1, by omega⟩
+  else
+    s
+
+theorem activeTailLambdaRhoInv_apply_lambda
+    {T : Nat} (rho : Fin T) (hrho : rho.val ≠ 0) :
+    ∀ s : Fin T,
+      activeTailLambdaRhoInv T rho
+          (activeTailLambdaRho T rho s) = s := by
+  intro s
+  unfold activeTailLambdaRho activeTailLambdaRhoInv
+  by_cases hs0 : s.val = 0
+  · ext
+    simp [hs0]
+  · by_cases hs1 : s.val = 1
+    · ext
+      simp [hs1, hrho]
+    · by_cases hlt : rho.val < s.val
+      · ext
+        have hnot_lt : ¬s.val < rho.val := by omega
+        have hne : s.val ≠ rho.val := by omega
+        simp [hs0, hs1, hlt, hnot_lt, hne]
+      · ext
+        have hpred_ne_zero : s.val - 1 ≠ 0 := by omega
+        have hpred_lt : s.val - 1 < rho.val := by omega
+        simp [hs0, hs1, hlt, hpred_ne_zero, hpred_lt]
+        omega
+
+theorem activeTailLambdaRho_apply_inv
+    {T : Nat} (rho : Fin T) (hrho : rho.val ≠ 0) :
+    ∀ s : Fin T,
+      activeTailLambdaRho T rho
+          (activeTailLambdaRhoInv T rho s) = s := by
+  intro s
+  unfold activeTailLambdaRho activeTailLambdaRhoInv
+  by_cases hs0 : s.val = 0
+  · ext
+    simp [hs0]
+  · by_cases hlt : s.val < rho.val
+    · ext
+      have hnot_rho_lt_succ : ¬rho.val < s.val + 1 := by omega
+      simp [hs0, hlt, hnot_rho_lt_succ]
+    · by_cases heq : s.val = rho.val
+      · ext
+        simp [heq, hrho]
+      · ext
+        have hrho_lt : rho.val < s.val := by omega
+        have hs_ne_one : s.val ≠ 1 := by omega
+        simp [hs0, hlt, heq, hrho_lt, hs_ne_one]
+
+theorem activeTailLambdaRho_val_eq_zero_iff
+    {T : Nat} (rho : Fin T) {s : Fin T}
+    (hrho : rho.val ≠ 0) :
+    (activeTailLambdaRho T rho s).val = 0 ↔ s.val = 0 := by
+  constructor
+  · intro h
+    by_cases hs0 : s.val = 0
+    · exact hs0
+    · by_cases hs1 : s.val = 1
+      · have hval : (activeTailLambdaRho T rho s).val = rho.val := by
+          simp [activeTailLambdaRho, hs1]
+        exact False.elim (hrho (hval ▸ h))
+      · by_cases hlt : rho.val < s.val
+        · have hval : activeTailLambdaRho T rho s = s := by
+            ext
+            simp [activeTailLambdaRho, hs0, hs1, hlt]
+          exact (congrArg Fin.val hval).symm ▸ h
+        · have hval :
+            (activeTailLambdaRho T rho s).val = s.val - 1 := by
+            simp [activeTailLambdaRho, hs0, hs1, hlt]
+          have hsge : 2 ≤ s.val := by omega
+          omega
+  · intro hs
+    simp [activeTailLambdaRho, hs]
+
+theorem activeTailLambdaRho_val_eq_pos_iff
+    {T : Nat} (rho s : Fin T) {l : Nat} (hl : 0 < l) :
+    (activeTailLambdaRho T rho s).val = l ↔
+      (s.val = 1 ∧ rho.val = l) ∨
+        (s.val = l ∧ 1 < s.val ∧ rho.val < s.val) ∨
+        (s.val = l + 1 ∧ ¬rho.val < s.val) := by
+  by_cases hs0 : s.val = 0
+  · have hLambda : (activeTailLambdaRho T rho s).val = 0 := by
+      simp [activeTailLambdaRho, hs0]
+    constructor
+    · intro h
+      omega
+    · intro hcase
+      rcases hcase with ⟨hs, _⟩ | ⟨hs, hspos, _⟩ | ⟨hs, _⟩ <;> omega
+  · by_cases hs1 : s.val = 1
+    · have hLambda : (activeTailLambdaRho T rho s).val = rho.val := by
+        simp [activeTailLambdaRho, hs1]
+      constructor
+      · intro h
+        exact Or.inl ⟨hs1, by omega⟩
+      · intro hcase
+        rcases hcase with ⟨_hs, hrho⟩ | ⟨hs, hspos, _⟩ | ⟨hs, _⟩
+        · omega
+        · omega
+        · omega
+    · by_cases hlt : rho.val < s.val
+      · have hLambda : (activeTailLambdaRho T rho s).val = s.val := by
+          simp [activeTailLambdaRho, hs0, hs1, hlt]
+        constructor
+        · intro h
+          rw [hLambda] at h
+          exact Or.inr (Or.inl ⟨by omega, by omega, hlt⟩)
+        · intro hcase
+          rw [hLambda]
+          rcases hcase with ⟨hs, _⟩ | ⟨hs, _hspos, _hrho⟩ | ⟨hs, _⟩
+          · omega
+          · exact hs
+          · omega
+      · have hLambda : (activeTailLambdaRho T rho s).val = s.val - 1 := by
+          simp [activeTailLambdaRho, hs0, hs1, hlt]
+        constructor
+        · intro h
+          rw [hLambda] at h
+          exact Or.inr (Or.inr ⟨by omega, hlt⟩)
+        · intro hcase
+          rw [hLambda]
+          rcases hcase with ⟨hs, _⟩ | ⟨_hs, _hspos, hrho⟩ | ⟨hs, _hrho⟩
+          · omega
+          · exact False.elim (hlt hrho)
+          · omega
+
+theorem activeTailLambdaRho_bijective
+    {T : Nat} (rho : Fin T) (hrho : rho.val ≠ 0) :
+    Function.Bijective (activeTailLambdaRho T rho) := by
+  constructor
+  · intro a b hab
+    have h := congrArg (activeTailLambdaRhoInv T rho) hab
+    simpa [activeTailLambdaRhoInv_apply_lambda rho hrho] using h
+  · intro s
+    refine ⟨activeTailLambdaRhoInv T rho s, ?_⟩
+    exact activeTailLambdaRho_apply_inv rho hrho s
+
+noncomputable def activeTailLambdaRhoEquiv
+    {T : Nat} (rho : Fin T) (hrho : rho.val ≠ 0) : Fin T ≃ Fin T :=
+  Equiv.ofBijective (activeTailLambdaRho T rho)
+    (activeTailLambdaRho_bijective rho hrho)
+
+@[simp] theorem activeTailLambdaRhoEquiv_apply
+    {T : Nat} (rho : Fin T) (hrho : rho.val ≠ 0) (s : Fin T) :
+    activeTailLambdaRhoEquiv rho hrho s = activeTailLambdaRho T rho s := rfl
+
+def activeTailCanonicalRhoHitNat {m n : Nat}
+    (z : Fin n → ZMod m) (j : Nat) : Prop :=
+  ∃ hj : j < n, j + 1 < n ∧ z ⟨j, hj⟩ = 0
+
+noncomputable def activeTailCanonicalRhoFirstNat {m n : Nat}
+    (z : Fin n → ZMod m)
+    (h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j) : Nat := by
+  classical
+  exact Nat.find h
+
+theorem activeTailCanonicalRhoFirstNat_spec {m n : Nat}
+    {z : Fin n → ZMod m}
+    (h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j) :
+    activeTailCanonicalRhoHitNat z
+      (activeTailCanonicalRhoFirstNat z h) := by
+  classical
+  unfold activeTailCanonicalRhoFirstNat
+  exact Nat.find_spec h
+
+noncomputable def activeTailCanonicalRho {m n : Nat} (_hT : 2 ≤ n + 1)
+    (z : Fin n → ZMod m) : Fin (n + 1) := by
+  classical
+  exact
+    if h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j then
+      ⟨activeTailCanonicalRhoFirstNat z h + 1, by
+        rcases activeTailCanonicalRhoFirstNat_spec h with ⟨hj, hlt, hz⟩
+        omega⟩
+    else
+      Fin.last n
+
+theorem activeTailCanonicalRho_ne_zero {m n : Nat} (hT : 2 ≤ n + 1)
+    (z : Fin n → ZMod m) :
+    (activeTailCanonicalRho hT z).val ≠ 0 := by
+  classical
+  unfold activeTailCanonicalRho
+  by_cases h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j
+  · simp [h]
+  · have hnpos : 0 < n := by omega
+    simpa [h, Fin.last] using hnpos.ne'
+
+noncomputable def activePrefixTailPerm
+    {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1) :
+    Shared.TorusVertex (b + 1) m →
+      (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1)) :=
+  fun _y z =>
+    activeTailLambdaRhoEquiv
+      (activeTailCanonicalRho hT z)
+      (activeTailCanonicalRho_ne_zero hT z)
+
+@[simp] theorem activePrefixTailPerm_apply
+    {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1)
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (s : Fin (n + 1)) :
+    activePrefixTailPerm (b := b) (m := m) hT y z s =
+      activeTailLambdaRho (n + 1) (activeTailCanonicalRho hT z) s := rfl
+
+/--
 The local geometric assembly theorem still needed for the primitive lift.
 
 This deliberately omits packet arithmetic, slack, and the solved base
@@ -3070,6 +3294,60 @@ theorem activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
           tailPerm hCyl c y fiber τ)
       period base z
 
+noncomputable def activePrefixPermutedColorDirCore
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets)
+    (A : ActiveSymboling Cyl)
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl) :
+    PrefixProjectedLiftColorDirCore Cyl :=
+  activePermutedColorDirCore Cyl A (activePrefixTailPerm hT) hCyl
+
+noncomputable def activePrefixColorDirCoreDirectCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (hT : 2 ≤ n + 1)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    (z : Fin n → ZMod m) (τ : Fin n) : ZMod m :=
+  activePermutedColorDirCoreDirectCarry A (activePrefixTailPerm hT) c y z τ
+
+theorem activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1)))
+    (y : Shared.TorusVertex (b + 1) m) (z : Fin n → ZMod m)
+    (τ : Fin n) :
+    (activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c y z τ =
+      z τ + activePrefixColorDirCoreDirectCarry A hT c y z τ := by
+  exact
+    activePermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+      (activePrefixTailPerm hT) hCyl c y z τ
+
+theorem activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (c : Fin (b + (n + 1)))
+    (base : Shared.TorusVertex (b + 1) m) (period : Nat)
+    (z : Fin n → ZMod m) (τ : Fin n) :
+    Shared.sectionReturn
+        (Shared.skewProductMap
+          (Cyl.step c)
+          ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+        base period z τ =
+      z τ +
+        ∑ u ∈ Finset.range period,
+          activePrefixColorDirCoreDirectCarry A hT c
+            (((Cyl.step c)^[u]) base)
+            (Shared.skewFiberIterate
+              (Cyl.step c)
+              ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+              u base z)
+            τ := by
+  exact
+    activePermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+      (activePrefixTailPerm hT) hCyl c base period z τ
+
 /--
 Lower-triangular monodromy form of the projected primitive lift.
 
@@ -3239,6 +3517,168 @@ theorem primitiveActiveLiftAssemblyGoal_of_prefixLiftAssembly
   intro b m T _inst packets Cyl A hT hCyl hA
   exact hLift hT hCyl hA.1
     (activeSymbolingCountsPrimitive_of_isPrimitive hT hA)
+
+abbrev ActiveTailPerm (b m n : Nat) :=
+  Shared.TorusVertex (b + 1) m →
+    (Fin n → ZMod m) → (Fin (n + 1) ≃ Fin (n + 1))
+
+/--
+Lower-triangular monodromy data for a fiber-dependent active-tail
+permutation.
+
+The data chooses the permutation rule itself.  This keeps the generic
+Latin/projection skeleton separate from the final prefix-count `lambda_rho`
+choice of permutation.
+-/
+structure ActivePermutedColorDirLowerTriangularMonodromyData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets}
+    (A : ActiveSymboling Cyl) (hCyl : IsCylinder Cyl) where
+  tailPerm : ActiveTailPerm b m n
+  fiber_bijective :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        Function.Bijective
+          ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y)
+  base : Fin (b + (n + 1)) → Shared.TorusVertex (b + 1) m
+  period : Fin (b + (n + 1)) → Nat
+  return_base :
+    ∀ c : Fin (b + (n + 1)),
+      ((Cyl.step c)^[period c]) (base c) = base c
+  base_cover :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        ∃ k : Nat, k < period c ∧ ((Cyl.step c)^[k]) (base c) = y
+  gamma :
+    Fin (b + (n + 1)) →
+      ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m
+  return_lower_triangular :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        Shared.sectionReturn
+            (Shared.skewProductMap
+              (Cyl.step c)
+              ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c))
+            (base c) (period c) z ⟨k, hk⟩
+          =
+        z ⟨k, hk⟩ +
+          gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  return_unit :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), gamma c k hk z)
+
+structure ActivePermutedColorDirFiberLowerTriangularMonodromyData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets}
+    (A : ActiveSymboling Cyl) (hCyl : IsCylinder Cyl)
+    (B : CylinderBaseCycleData Cyl) where
+  tailPerm : ActiveTailPerm b m n
+  fiber_bijective :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        Function.Bijective
+          ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c y)
+  gamma :
+    Fin (b + (n + 1)) →
+      ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m
+  return_lower_triangular :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        Shared.sectionReturn
+            (Shared.skewProductMap
+              (Cyl.step c)
+              ((activePermutedColorDirCore Cyl A tailPerm hCyl).fiberStep c))
+            (B.base c) (B.period c) z ⟨k, hk⟩
+          =
+        z ⟨k, hk⟩ +
+          gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  return_unit :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), gamma c k hk z)
+
+namespace ActivePermutedColorDirFiberLowerTriangularMonodromyData
+
+def toMonodromyData
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    {hCyl : IsCylinder Cyl} {B : CylinderBaseCycleData Cyl}
+    (D : ActivePermutedColorDirFiberLowerTriangularMonodromyData A hCyl B) :
+    ActivePermutedColorDirLowerTriangularMonodromyData A hCyl where
+  tailPerm := D.tailPerm
+  fiber_bijective := D.fiber_bijective
+  base := B.base
+  period := B.period
+  return_base := B.return_base
+  base_cover := B.base_cover
+  gamma := D.gamma
+  return_lower_triangular := D.return_lower_triangular
+  return_unit := D.return_unit
+
+end ActivePermutedColorDirFiberLowerTriangularMonodromyData
+
+namespace ActivePermutedColorDirLowerTriangularMonodromyData
+
+noncomputable def toLowerTriangularLift
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    {hCyl : IsCylinder Cyl}
+    (D : ActivePermutedColorDirLowerTriangularMonodromyData A hCyl) :
+    PrefixProjectedLowerTriangularLiftColorDir Cyl where
+  core := activePermutedColorDirCore Cyl A D.tailPerm hCyl
+  base := D.base
+  period := D.period
+  fiber_bijective := D.fiber_bijective
+  return_base := D.return_base
+  base_cover := D.base_cover
+  gamma := D.gamma
+  return_lower_triangular := D.return_lower_triangular
+  return_unit := D.return_unit
+
+end ActivePermutedColorDirLowerTriangularMonodromyData
+
+def ActivePermutedColorDirLowerTriangularMonodromyGoal : Prop :=
+  ∀ {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1),
+      (hCyl : IsCylinder Cyl) →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      Nonempty (ActivePermutedColorDirLowerTriangularMonodromyData A hCyl)
+
+def ActivePermutedColorDirFiberLowerTriangularMonodromyGoal : Prop :=
+  ∀ {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1),
+      (hCyl : IsCylinder Cyl) →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      (B : CylinderBaseCycleData Cyl) →
+      Nonempty
+        (ActivePermutedColorDirFiberLowerTriangularMonodromyData A hCyl B)
+
+theorem activePermutedColorDirLowerTriangularMonodromyGoal_of_baseCycle_fiber
+    (hFiber : ActivePermutedColorDirFiberLowerTriangularMonodromyGoal) :
+    ActivePermutedColorDirLowerTriangularMonodromyGoal := by
+  intro b m n _inst packets Cyl A hT hCyl hA hPrim
+  rcases cylinderBaseCycleData_of_isCylinder hCyl with ⟨B⟩
+  rcases hFiber hT hCyl hA hPrim B with ⟨D⟩
+  exact ⟨D.toMonodromyData⟩
+
+theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedMonodromy
+    (hMono : ActivePermutedColorDirLowerTriangularMonodromyGoal) :
+    PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal := by
+  intro b m n _inst packets Cyl A hT hCyl hA hPrim
+  rcases hMono hT hCyl hA hPrim with ⟨D⟩
+  exact ⟨D.toLowerTriangularLift⟩
+
+theorem primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedFiberMonodromy
+    (hFiber : ActivePermutedColorDirFiberLowerTriangularMonodromyGoal) :
+    PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal :=
+  primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedMonodromy
+    (activePermutedColorDirLowerTriangularMonodromyGoal_of_baseCycle_fiber
+      hFiber)
 
 def ExpandedColorDirEdgePartitionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}

@@ -202,6 +202,34 @@ permuted non-last tail coordinate, and the section-return theorem rewrites the
 fiber increment as the sum of those fiber-dependent carries along the base
 orbit.
 
+The canonical prefix-count specialization is also separated from the generic
+permuted-tail skeleton:
+
+```lean
+BaseTail.activeTailLambdaRho
+BaseTail.activeTailCanonicalRho
+BaseTail.activePrefixTailPerm
+BaseTail.activePrefixPermutedColorDirCore
+BaseTail.activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
+BaseTail.activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+```
+
+This keeps `BaseTailGeometry.lean` independent of `OddCore.lean` while making
+the intended prefix-count `lambda_rho` rule explicit at the active-tail level.
+The latest decomposition also isolates the remaining monodromy theorem behind:
+
+```lean
+BaseTail.ActivePermutedColorDirLowerTriangularMonodromyGoal
+BaseTail.ActivePermutedColorDirFiberLowerTriangularMonodromyGoal
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedMonodromy
+BaseTail.primitiveActivePrefixLowerTriangularLiftAssemblyGoal_of_activePermutedFiberMonodromy
+```
+
+Thus `PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal` is reduced to
+constructing lower-triangular section-return data for the canonical active
+prefix permutation, preferably over the already closed `CylinderBaseCycleData`
+base-cycle witness.
+
 ### Main Thread: Endpoint Wiring
 
 Owned files:
