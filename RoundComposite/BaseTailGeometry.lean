@@ -325,10 +325,13 @@ The remaining local packet theorem needed by the active-block cylinder.
 
 This is intentionally isolated from the global torus geometry: unit packet
 entries and unit proper prefix sums should produce a phase splitter on every
-cycle length `N`.
+cycle length `N` divisible by `m`.  This divisibility is necessary for the
+packet counts to close around the `ZMod m` coordinate, and the successor
+cylinder only applies the theorem with `N = m ^ b`.
 -/
 def PacketPhaseSplitGoal : Prop :=
   ∀ {N m : Nat} [NeZero N] [NeZero m] {packet : List Nat},
+    m ∣ N →
     packet.sum = m →
     (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
     (∀ q : Nat, 0 < q → q < packet.length →

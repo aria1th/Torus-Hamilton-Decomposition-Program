@@ -5505,6 +5505,7 @@ theorem oddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal_of_phaseSplit
     intro packet hp
     exact
       hSplit (N := m ^ b) (m := m) (packet := packet)
+        (dvd_pow_self m (by omega))
         (hpacketSum packet hp)
         (hpacketUnits packet hp)
         (hPrefix packet hp)
@@ -5558,6 +5559,7 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSpl
     intro packet hp
     exact
       hSplit (N := m ^ b) (m := m) (packet := packet)
+        (dvd_pow_self m (by omega))
         (hpacketSum packet hp)
         (hpacketUnits packet hp)
         (hPrefix packet hp)
