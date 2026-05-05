@@ -6807,6 +6807,131 @@ theorem activePrefixColorDirCoreDirectCarry_skewFiberIterate_succ_sum
         activePrefixColorDirCoreDirectCarry_extendZero_succ_sum
           A hT c (((Cyl.step c)^[uIter]) base) hk
 
+theorem activePrefixPermutedColorDirCore_returnGamma_sum_succ
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1) (hCyl : IsCylinder Cyl)
+    (B : CylinderBaseCycleData Cyl)
+    (c : Fin (b + (n + 1))) {k : Nat} (hk : k + 1 < n) :
+    (∑ x : Fin (k + 1) → ZMod m,
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c (B.base c) (B.period c)
+          (k + 1) hk x) =
+      ((-1 : ZMod m) ^ (k + 1)) *
+        ((((A.Φ.count c ⟨k + 2, by omega⟩ : Nat) : ZMod m) -
+          ((A.Φ.count c ⟨1, by omega⟩ : Nat) : ZMod m))) := by
+  classical
+  let τ : Fin n := ⟨k + 1, hk⟩
+  let coeff : ZMod m := (-1 : ZMod m) ^ (k + 1)
+  let delta : Fin (n + 1) := ⟨1, by omega⟩
+  let step : Fin (n + 1) := ⟨k + 2, by omega⟩
+  let f : Nat → (Fin (k + 1) → ZMod m) → ZMod m := fun u x =>
+    activePrefixColorDirCoreDirectCarry A hT c
+      (((Cyl.step c)^[u]) (B.base c))
+      (Shared.skewFiberIterate
+        (Cyl.step c)
+        ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c)
+        u (B.base c)
+        (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x))
+      τ
+  calc
+    (∑ x : Fin (k + 1) → ZMod m,
+        activePrefixPermutedColorDirCore_returnGamma
+          (A := A) hT hCyl c (B.base c) (B.period c)
+          (k + 1) hk x)
+        =
+      ∑ x : Fin (k + 1) → ZMod m,
+        ∑ u ∈ Finset.range (B.period c), f u x := by
+        apply Finset.sum_congr rfl
+        intro x _hx
+        unfold activePrefixPermutedColorDirCore_returnGamma
+        let z0 : Fin n → ZMod m :=
+          Shared.zmodVectorExtendZero (Nat.le_of_lt hk) x
+        have hz0 : z0 τ = 0 := by
+          simp [z0, τ]
+        have hsection :=
+          activePrefixPermutedColorDirCore_sectionReturn_coord_eq_add_sum_directCarry
+            (A := A) hT hCyl c (B.base c) (B.period c) z0 τ
+        change
+          Shared.sectionReturn
+              (Shared.skewProductMap
+                (Cyl.step c)
+                ((activePrefixPermutedColorDirCore Cyl A hT hCyl).fiberStep c))
+              (B.base c) (B.period c) z0 τ -
+              z0 τ =
+            ∑ u ∈ Finset.range (B.period c), f u x
+        rw [hsection, hz0]
+        abel
+    _ =
+      ∑ u ∈ Finset.range (B.period c),
+        ∑ x : Fin (k + 1) → ZMod m, f u x := by
+        rw [Finset.sum_comm]
+    _ =
+      ∑ u ∈ Finset.range (B.period c),
+        ((if A.Φ.color (((Cyl.step c)^[u]) (B.base c)) delta = c
+          then -coeff else 0) +
+          (if A.Φ.color (((Cyl.step c)^[u]) (B.base c)) step = c
+            then coeff else 0)) := by
+        apply Finset.sum_congr rfl
+        intro u _hu
+        simpa [f, coeff, delta, step, τ] using
+          activePrefixColorDirCoreDirectCarry_skewFiberIterate_succ_sum
+            hT hCyl c (B.base c) u hk
+    _ =
+      (∑ u ∈ Finset.range (B.period c),
+        (if A.Φ.color (((Cyl.step c)^[u]) (B.base c)) delta = c
+          then -coeff else 0)) +
+        ∑ u ∈ Finset.range (B.period c),
+          (if A.Φ.color (((Cyl.step c)^[u]) (B.base c)) step = c
+            then coeff else 0) := by
+        rw [Finset.sum_add_distrib]
+    _ =
+      (∑ y : Shared.TorusVertex (b + 1) m,
+        (if A.Φ.color y delta = c then -coeff else 0)) +
+        ∑ y : Shared.TorusVertex (b + 1) m,
+          (if A.Φ.color y step = c then coeff else 0) := by
+        rw [B.sum_range_orbit_eq_univ c
+          (fun y : Shared.TorusVertex (b + 1) m =>
+            if A.Φ.color y delta = c then -coeff else 0)]
+        rw [B.sum_range_orbit_eq_univ c
+          (fun y : Shared.TorusVertex (b + 1) m =>
+            if A.Φ.color y step = c then coeff else 0)]
+    _ =
+      (-coeff) * ((A.Φ.count c delta : Nat) : ZMod m) +
+        coeff * ((A.Φ.count c step : Nat) : ZMod m) := by
+        have hdeltaCast := A.count_cast_eq_sum_indicator c delta
+        have hstepCast := A.count_cast_eq_sum_indicator c step
+        have hdeltaSum :
+            (∑ y : Shared.TorusVertex (b + 1) m,
+                (if A.Φ.color y delta = c then -coeff else 0))
+              =
+            (-coeff) *
+              (∑ y : Shared.TorusVertex (b + 1) m,
+                (if A.Φ.color y delta = c then (1 : ZMod m) else 0)) := by
+          rw [Finset.mul_sum]
+          apply Finset.sum_congr rfl
+          intro y _hy
+          by_cases hyc : A.Φ.color y delta = c <;> simp [hyc]
+        have hstepSum :
+            (∑ y : Shared.TorusVertex (b + 1) m,
+                (if A.Φ.color y step = c then coeff else 0))
+              =
+            coeff *
+              (∑ y : Shared.TorusVertex (b + 1) m,
+                (if A.Φ.color y step = c then (1 : ZMod m) else 0)) := by
+          rw [Finset.mul_sum]
+          apply Finset.sum_congr rfl
+          intro y _hy
+          by_cases hyc : A.Φ.color y step = c <;> simp [hyc]
+        rw [hdeltaSum, hstepSum]
+        rw [← hdeltaCast, ← hstepCast]
+    _ =
+      coeff *
+        ((((A.Φ.count c ⟨k + 2, by omega⟩ : Nat) : ZMod m) -
+          ((A.Φ.count c ⟨1, by omega⟩ : Nat) : ZMod m))) := by
+        simp [coeff, delta, step]
+        ring
+
 /--
 Canonical active-prefix monodromy residual after local fiber invertibility has
 been closed.
