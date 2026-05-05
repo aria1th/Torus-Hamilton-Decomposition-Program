@@ -504,8 +504,21 @@ def SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal : Prop :=
       (D : ActiveBlockData Cyl) →
       ActiveHall.FeasibleWithResidues Cyl.incidence
         (activeBlockResidueSpec D) →
-        ActiveHall.SymbolingWithResidues Cyl.incidence
+      ActiveHall.SymbolingWithResidues Cyl.incidence
           (activeBlockResidueSpec D)
+
+/--
+Paper-facing feasible coactive-site reservoir endpoint for the canonical
+successor schedule.
+
+This is the finite reservoir/local-trade layer after the arithmetic residue
+rounding has already supplied `FeasibleWithResidues`.  It is intentionally
+definitionally equal to `SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal`,
+so downstream endpoints can name the reservoir theorem without reintroducing
+the older unrestricted Hall/de Werra surface.
+-/
+def SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal : Prop :=
+  SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
 
 /--
 Combined successor-scoped residue-trade realization endpoint.
@@ -899,6 +912,28 @@ theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLo
   exact hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
 
+theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
+    (hReservoir :
+      SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
+    SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  hReservoir
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_feasibleLocalTrade
+    (hTrade : SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  hTrade
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_canonicalLocalTrade
+    (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
+    hTrade
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_iff_feasibleLocalTrade :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  Iff.rfl
+
 theorem activeBlockResidueTradeRealizationGoal_of_schedule_and_localTrade
     (hSchedule : ActiveBlockResidueScheduleGoal)
     (hTrade : ActiveBlockLocalSymbolTradeGoal) :
@@ -1040,6 +1075,16 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasib
     (hFeasible hb5 hmodd hm3 hsmall hlen htotal hpacketSum
       hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock)
 
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleFiniteCoactiveSiteReservoir
+    (hFeasible : SuccessorActiveBlockCanonicalFeasibleResidueGoal)
+    (hReservoir :
+      SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
+    hFeasible
+    (successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
+      hReservoir)
+
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade :
     SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ↔
       SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
@@ -1053,12 +1098,28 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasi
       successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
         h.1 h.2⟩
 
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleFiniteCoactiveSiteReservoir :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade.trans
+    (Iff.and Iff.rfl
+      successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_iff_feasibleLocalTrade.symm)
+
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_feasible_and_feasibleLocalTrade
     (hFeasible : SuccessorActiveBlockCanonicalFeasibleResidueGoal)
     (hTrade : SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal) :
     SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
   successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
     hFeasible hTrade
+
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_feasible_and_feasibleFiniteCoactiveSiteReservoir
+    (hFeasible : SuccessorActiveBlockCanonicalFeasibleResidueGoal)
+    (hReservoir :
+      SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleFiniteCoactiveSiteReservoir
+    hFeasible hReservoir
 
 theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleLocalTrade :
     SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
@@ -1067,12 +1128,26 @@ theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasible
   successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade.trans
     successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade
 
+theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleFiniteCoactiveSiteReservoir :
+    SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalPreCorrectionGoal_iff_canonicalLocalTrade.trans
+    successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleFiniteCoactiveSiteReservoir
+
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_iff_feasible_and_feasibleLocalTrade :
     SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal ↔
       SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
         SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
   successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir.symm.trans
     successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleLocalTrade
+
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_iff_feasible_and_feasibleFiniteCoactiveSiteReservoir :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir.symm.trans
+    successorActiveBlockCanonicalPreCorrectionGoal_iff_feasible_and_feasibleFiniteCoactiveSiteReservoir
 
 theorem cylinderTradeReservoirGoal :
     CylinderTradeReservoirGoal := by

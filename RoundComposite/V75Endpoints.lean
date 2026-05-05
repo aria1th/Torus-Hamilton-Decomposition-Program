@@ -71,6 +71,25 @@ def OddModulusToriV75FeasibleLocalTradeInputsGoal : Prop :=
   BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal
 
 /--
+v7.5 feasible reservoir package using the paper-facing finite coactive-site
+reservoir theorem name for the feasible local-trade layer.
+-/
+def OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal
+
+/--
+v7.5 feasible reservoir package after the lower-triangular return side is
+closed.
+-/
+def OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal
+
+/--
 v7.5 input package reducing the canonical feasible-residue side to a concrete
 scaled proper-cut witness, paired with the successor-scoped feasible local
 symboling theorem.
@@ -271,6 +290,38 @@ theorem oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleLocalTrad
     OddModulusToriV75FeasibleLocalTradeReturnInputsGoal :=
   h
 
+theorem oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal) :
+    OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal :=
+  h
+
+theorem oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal) :
+    OddModulusToriV75FeasibleLocalTradeReturnInputsGoal :=
+  ⟨h.1, h.2.1,
+    BaseTail.Trades.successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
+      h.2.2⟩
+
+theorem oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal) :
+    OddModulusToriV75FeasibleLocalTradeReturnInputsGoal :=
+  oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+    (oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+      h)
+
+theorem oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+    (h : OddModulusToriV75FeasibleLocalTradeReturnInputsGoal) :
+    OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal :=
+  ⟨h.1, h.2.1,
+    BaseTail.Trades.successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_feasibleLocalTrade
+      h.2.2⟩
+
+theorem oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_iff_feasibleLocalTradeReturnInputs :
+    OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal ↔
+      OddModulusToriV75FeasibleLocalTradeReturnInputsGoal :=
+  ⟨oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs,
+    oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleLocalTradeReturnInputs⟩
+
 theorem oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
     (h : OddModulusToriV75FeasibleLocalTradeReturnInputsGoal) :
     OddModulusToriV75PreCorrectionReturnInputsGoal :=
@@ -404,6 +455,20 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeRetur
     (oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
       h)
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+      h)
+
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+    (oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+      h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_scaledFeasibleLocalTradeReturnInputs
     (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -517,6 +582,20 @@ theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
     (oddModulusToriV75DirectModularTradeBlocksGoal_of_feasibleLocalTradeReturnInputs
       h)
 
+theorem oddSuccessorClosureGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_return_inputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+      h)
+
+theorem oddSuccessorClosureGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_inputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_return_inputs
+    (oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
+      h)
+
 theorem oddSuccessorClosureGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
     (h : OddModulusToriV75ScaledFeasibleLocalTradeReturnInputsGoal) :
     OddSuccessorClosureGoal :=
@@ -611,6 +690,20 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_preCorrection_return_inputs
     (oddModulusToriV75PreCorrectionReturnInputsGoal_of_feasibleLocalTradeReturnInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_return_inputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_feasibleLocalTrade_return_inputs
+    (oddModulusToriV75FeasibleLocalTradeReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirReturnInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_inputs
+    (h : OddModulusToriV75FeasibleFiniteCoactiveSiteReservoirInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_feasibleFiniteCoactiveSiteReservoir_return_inputs
+    (oddModulusToriV75FeasibleFiniteCoactiveSiteReservoirReturnInputsGoal_of_feasibleFiniteCoactiveSiteReservoirInputs
       h)
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_scaledFeasibleLocalTrade_return_inputs
