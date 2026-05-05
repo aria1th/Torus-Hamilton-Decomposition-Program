@@ -3059,6 +3059,19 @@ structure Symboling {T : Nat} {X C : Type*}
 
 namespace Symboling
 
+noncomputable def ofIncidence {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence T X C) : Symboling I where
+  equiv := fun x =>
+    Fintype.equivOfCardEq (by
+      rw [Fintype.card_fin, Fintype.card_subtype]
+      simpa using (I.active_card x).symm)
+
+theorem exists_of_incidence {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    (I : Incidence T X C) : ∃ _ : Symboling I, True :=
+  ⟨ofIncidence I, trivial⟩
+
 def color {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq C] {I : Incidence T X C} (Φ : Symboling I)
     (x : X) (σ : Fin T) : C :=
