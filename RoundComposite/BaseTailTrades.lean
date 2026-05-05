@@ -354,6 +354,42 @@ def SuccessorActiveBlockReservoirSwapScheduleGoal : Prop :=
                 Φ.applySwapResidueSpecs R₀ moves = R
 
 /--
+Reservoir swap-schedule endpoint with the initial residues inferred from the
+initial symboling itself.
+
+This is the form most convenient for the constructive reservoir proof: after
+choosing an initial symboling and a finite swap list, the initial residue
+specification is just `Φ.residueSpec`.
+-/
+def SuccessorActiveBlockInitialReservoirSwapScheduleGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      (R : ActiveHall.ResidueSpec m T (Fin (b + T))) →
+      IsCylinder Cyl →
+      ActiveBlockData Cyl →
+      R.RowCompatible Cyl.incidence →
+      R.ColCompatible Cyl.incidence →
+        ∃ Φ : ActiveHall.Symboling Cyl.incidence,
+          ∃ moves :
+            List
+              (ActiveHall.Symboling.SwapMove
+                (Shared.TorusVertex (b + 1) m) T),
+            Φ.applySwapResidueSpecs (Φ.residueSpec (m := m)) moves = R
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -822,6 +858,18 @@ theorem successorActiveBlockLocalSymbolTradeGoal_of_compatibleResidueScheduling
   exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol
 
+theorem successorActiveBlockReservoirSwapScheduleGoal_of_initialReservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockInitialReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockReservoirSwapScheduleGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock
+    hRow hCol
+  rcases hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol with
+    ⟨Φ, moves, hMoves⟩
+  exact ⟨Φ.residueSpec (m := m), Φ, Φ.hasResidues_residueSpec,
+    moves, hMoves⟩
+
 theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
     (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :
     SuccessorActiveBlockCompatibleResidueSchedulingGoal := by
@@ -834,6 +882,13 @@ theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSche
   exact ⟨Φ.applySwapMoves moves, by
     have hResidues := Φ.applySwapMoves_hasResidues hΦ moves
     simpa [hMoves] using hResidues⟩
+
+theorem successorActiveBlockCompatibleResidueSchedulingGoal_of_initialReservoirSwapSchedule
+    (hSchedule : SuccessorActiveBlockInitialReservoirSwapScheduleGoal) :
+    SuccessorActiveBlockCompatibleResidueSchedulingGoal :=
+  successorActiveBlockCompatibleResidueSchedulingGoal_of_reservoirSwapSchedule
+    (successorActiveBlockReservoirSwapScheduleGoal_of_initialReservoirSwapSchedule
+      hSchedule)
 
 theorem successorActiveBlockLocalSymbolTradeGoal_of_reservoirSwapSchedule
     (hSchedule : SuccessorActiveBlockReservoirSwapScheduleGoal) :

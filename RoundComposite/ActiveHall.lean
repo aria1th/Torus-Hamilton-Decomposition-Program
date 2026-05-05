@@ -3774,6 +3774,26 @@ def HasResidues {m T : Nat} {X C : Type*}
     (R : ResidueSpec m T C) : Prop :=
   ∀ c σ, (Φ.count c σ : ZMod m) = R.target c σ
 
+def residueSpec {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    ResidueSpec m T C where
+  target := fun c σ => (Φ.count c σ : ZMod m)
+
+@[simp] theorem residueSpec_target {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) (c : C) (σ : Fin T) :
+    (Φ.residueSpec (m := m)).target c σ =
+      (Φ.count c σ : ZMod m) := by
+  rfl
+
+theorem hasResidues_residueSpec {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    Φ.HasResidues (Φ.residueSpec (m := m)) := by
+  intro c σ
+  rfl
+
 theorem swapAt_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} {Φ : Symboling I}
