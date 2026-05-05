@@ -281,6 +281,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thre
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_canonicalQuota_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_canonicalReservoirScript_of_reservoirSitePlan
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_mem_moveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveList_pairwise_vertex
@@ -679,7 +680,10 @@ nonzero residual certificate for the canonical quota.  The canonical-quota
 adapter fixes the previous existential quota endpoint to this named quota, and
 `exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota`
 closes the selected canonical reservoir script endpoint for a fixed
-`ReservoirSitePlan`.
+`ReservoirSitePlan`.  Combining this fixed-plan endpoint with the large-margin
+site allocator `reservoirSitePlan` gives
+`OddSuccessorPhaseSplitBufferReservoirData.exists_canonicalReservoirScript_of_reservoirSitePlan`,
+the direct script adapter for a concrete phase-split buffer reservoir.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

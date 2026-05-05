@@ -8364,6 +8364,20 @@ noncomputable def reservoirSitePlan
       buffer02_card := hcard02
     }
 
+theorem exists_canonicalReservoirScript_of_reservoirSitePlan
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets)
+    (hLarge : m ^ b > m * (b + T) * T)
+    (hT : 2 ≤ T) :
+    ∃ _script :
+      BaseTail.Trades.CanonicalNonzeroZeroReservoirScript hT A.D, True := by
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  exact
+    (reservoirSitePlan A hLarge hTpos).exists_thresholdMoveCanonicalReservoirScript_of_thresholdCanonicalQuota
+      hT
+
 end OddSuccessorPhaseSplitBufferReservoirData
 
 def OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal :
