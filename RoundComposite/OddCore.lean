@@ -5656,6 +5656,15 @@ theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSpl
     hBuild hb5 hm3 Dbase packets hlen htotal
       hpacketSum hpacketUnits hPrefix hPacketSplits hT
 
+theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_coordinatized_phaseSplit
+    (hBuild :
+      OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal) :
+    OddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal :=
+  oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
+    BaseTail.successorPacketPhaseSplitPowerGoal
+    (oddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal_of_coordinatized_activeBlock
+      hBuild)
+
 def OddSuccessorBaseTailActiveBlockMixedExpansionGoal : Prop :=
   ∀ {b m T : Nat} [NeZero m],
     5 ≤ b →
