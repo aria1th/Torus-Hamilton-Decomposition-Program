@@ -526,6 +526,99 @@ theorem collapseVertex_add_tailExpandedDir {b m T : Nat}
           Shared.torusBasis (b + 1) m (activeDir b)) (activeDir b) := by
           simp [collapseVertex, activeDir, Shared.torusBasis, Pi.add_apply]
 
+theorem collapseFiberInit_add_ordinaryExpandedDir {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m)
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) :
+    collapseFiberInit b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (ordinaryExpandedDir (T := n + 1) i hi))
+      =
+    collapseFiberInit b m n x := by
+  funext σ
+  have hne :
+      tailExpandedDir b σ.castSucc ≠
+        ordinaryExpandedDir (T := n + 1) i hi :=
+    (ordinaryExpandedDir_ne_tailExpandedDir i hi σ.castSucc).symm
+  simp [collapseFiberInit, Shared.torusBasis, hne]
+
+theorem collapseVertexFiberEquiv_add_ordinaryExpandedDir {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m)
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) :
+    collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (ordinaryExpandedDir (T := n + 1) i hi))
+      =
+    (collapseVertex b m (n + 1) x +
+        Shared.torusBasis (b + 1) m i,
+      collapseFiberInit b m n x) := by
+  apply Prod.ext
+  · exact collapseVertex_add_ordinaryExpandedDir x i hi
+  · exact collapseFiberInit_add_ordinaryExpandedDir x i hi
+
+theorem collapseFiberInit_add_tailExpandedDir_castSucc {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m) (σ : Fin n) :
+    collapseFiberInit b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b σ.castSucc))
+      =
+    fun τ : Fin n =>
+      collapseFiberInit b m n x τ + if τ = σ then (1 : ZMod m) else 0 := by
+  funext τ
+  by_cases hτσ : τ = σ
+  · subst τ
+    simp [collapseFiberInit, Shared.torusBasis]
+  · have hne :
+        tailExpandedDir b τ.castSucc ≠ tailExpandedDir b σ.castSucc := by
+      intro h
+      exact hτσ (Fin.ext (by
+        have hv := congrArg Fin.val (tailExpandedDir_injective h)
+        simpa using hv))
+    simp [collapseFiberInit, Shared.torusBasis, hτσ, hne]
+
+theorem collapseVertexFiberEquiv_add_tailExpandedDir_castSucc {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m) (σ : Fin n) :
+    collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b σ.castSucc))
+      =
+    (collapseVertex b m (n + 1) x +
+        Shared.torusBasis (b + 1) m (activeDir b),
+      fun τ : Fin n =>
+        collapseFiberInit b m n x τ +
+          if τ = σ then (1 : ZMod m) else 0) := by
+  apply Prod.ext
+  · exact collapseVertex_add_tailExpandedDir x σ.castSucc
+  · exact collapseFiberInit_add_tailExpandedDir_castSucc x σ
+
+theorem collapseFiberInit_add_tailExpandedDir_last {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m) :
+    collapseFiberInit b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b (Fin.last n)))
+      =
+    collapseFiberInit b m n x := by
+  funext σ
+  have hne :
+      tailExpandedDir b σ.castSucc ≠ tailExpandedDir b (Fin.last n) := by
+    intro h
+    have hv := congrArg Fin.val h
+    simp [tailExpandedDir] at hv
+    omega
+  simp [collapseFiberInit, Shared.torusBasis, hne]
+
+theorem collapseVertexFiberEquiv_add_tailExpandedDir_last {b m n : Nat}
+    (x : Shared.TorusVertex (b + (n + 1)) m) :
+    collapseVertexFiberEquiv b m n
+        (x + Shared.torusBasis (b + (n + 1)) m
+          (tailExpandedDir b (Fin.last n)))
+      =
+    (collapseVertex b m (n + 1) x +
+        Shared.torusBasis (b + 1) m (activeDir b),
+      collapseFiberInit b m n x) := by
+  apply Prod.ext
+  · exact collapseVertex_add_tailExpandedDir x (Fin.last n)
+  · exact collapseFiberInit_add_tailExpandedDir_last x
+
 structure IsCylinder {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     (Cyl : Cylinder b m T packets) : Prop where
   ordinary_unique :
