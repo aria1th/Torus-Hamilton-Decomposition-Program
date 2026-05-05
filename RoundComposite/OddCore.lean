@@ -6076,6 +6076,229 @@ theorem toNonzeroZeroSwapMove_injective
   apply P.moveSite_injective
   exact congrArg ActiveHall.Symboling.NonzeroZeroSwapMove.vertex h
 
+def moveCopyIndex
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (_P : ReservoirSitePlan A) :
+    ReservoirMoveToken A → Nat
+  | ReservoirMoveToken.nonbuffer q => q.2.val
+  | ReservoirMoveToken.buffer01 q => q.1.val
+  | ReservoirMoveToken.buffer02 q => q.1.val
+
+def thresholdMoveTokenFinset
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m) :
+    Finset (ReservoirMoveToken A) :=
+  (Finset.univ : Finset (ReservoirMoveToken A)).filter
+    (fun q => P.moveCopyIndex q < (quota q).val)
+
+noncomputable def moveZeroColorOfMove
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (move :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T) :
+    Fin (b + T) := by
+  classical
+  exact
+    if h : ∃ q : ReservoirMoveToken A,
+        P.toNonzeroZeroSwapMove hTpos q = move then
+      P.moveZeroColor (Classical.choose h)
+    else
+      A.buffer.color0 A.slotEquiv
+
+noncomputable def moveRightColorOfMove
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (move :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T) :
+    Fin (b + T) := by
+  classical
+  exact
+    if h : ∃ q : ReservoirMoveToken A,
+        P.toNonzeroZeroSwapMove hTpos q = move then
+      P.moveRightColor (Classical.choose h)
+    else
+      A.buffer.color0 A.slotEquiv
+
+theorem moveZeroColorOfMove_toNonzeroZeroSwapMove
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    P.moveZeroColorOfMove hTpos (P.toNonzeroZeroSwapMove hTpos q) =
+      P.moveZeroColor q := by
+  classical
+  unfold moveZeroColorOfMove
+  let hex : ∃ r : ReservoirMoveToken A,
+      P.toNonzeroZeroSwapMove hTpos r =
+        P.toNonzeroZeroSwapMove hTpos q := ⟨q, rfl⟩
+  rw [dif_pos hex]
+  have hchoose :
+      Classical.choose hex = q :=
+    P.toNonzeroZeroSwapMove_injective hTpos (Classical.choose_spec hex)
+  rw [hchoose]
+
+theorem moveRightColorOfMove_toNonzeroZeroSwapMove
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (q : ReservoirMoveToken A) :
+    P.moveRightColorOfMove hTpos (P.toNonzeroZeroSwapMove hTpos q) =
+      P.moveRightColor q := by
+  classical
+  unfold moveRightColorOfMove
+  let hex : ∃ r : ReservoirMoveToken A,
+      P.toNonzeroZeroSwapMove hTpos r =
+        P.toNonzeroZeroSwapMove hTpos q := ⟨q, rfl⟩
+  rw [dif_pos hex]
+  have hchoose :
+      Classical.choose hex = q :=
+    P.toNonzeroZeroSwapMove_injective hTpos (Classical.choose_spec hex)
+  rw [hchoose]
+
+noncomputable def thresholdMoveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m) :
+    List
+      (ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T) :=
+  (P.thresholdMoveTokenFinset quota).toList.map
+    (P.toNonzeroZeroSwapMove hTpos)
+
+theorem toNonzeroZeroSwapMove_mem_thresholdMoveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m)
+    {q : ReservoirMoveToken A}
+    (hq : q ∈ P.thresholdMoveTokenFinset quota) :
+    P.toNonzeroZeroSwapMove hTpos q ∈ P.thresholdMoveList hTpos quota := by
+  classical
+  have hqList : q ∈ (P.thresholdMoveTokenFinset quota).toList := by
+    simpa using hq
+  exact List.mem_map.mpr ⟨q, hqList, rfl⟩
+
+theorem thresholdMoveList_pairwise_vertex
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m) :
+    (P.thresholdMoveList hTpos quota).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) := by
+  classical
+  let tokens : List (ReservoirMoveToken A) :=
+    (P.thresholdMoveTokenFinset quota).toList
+  have htokens :
+      tokens.Pairwise (fun q r => P.moveSite q ≠ P.moveSite r) := by
+    dsimp [tokens]
+    refine (Finset.nodup_toList _).pairwise_of_forall_ne ?_
+    intro q _hq r _hr hne hsite
+    exact hne (P.moveSite_injective hsite)
+  change (tokens.map (P.toNonzeroZeroSwapMove hTpos)).Pairwise
+    (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)
+  revert htokens
+  induction tokens with
+  | nil =>
+      intro _htokens
+      simp
+  | cons q tokens ih =>
+      intro htokens
+      rcases List.pairwise_cons.mp htokens with ⟨hhead, htail⟩
+      change List.Pairwise
+        (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)
+        (P.toNonzeroZeroSwapMove hTpos q ::
+          tokens.map (P.toNonzeroZeroSwapMove hTpos))
+      rw [List.pairwise_cons]
+      constructor
+      · intro move hmem hEq
+        rcases List.mem_map.mp hmem with ⟨r, hrmem, rfl⟩
+        exact hhead r hrmem (by
+          simpa [toNonzeroZeroSwapMove] using hEq)
+      · exact ih htail
+
+theorem thresholdMoveList_swapMoves_pairwise
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (quota : ReservoirMoveToken A → ZMod m) :
+    (BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe hT
+      (P.thresholdMoveList
+        (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota)).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) :=
+  BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe_pairwise_vertex hT
+    (P.thresholdMoveList (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT)
+      quota)
+    (P.thresholdMoveList_pairwise_vertex
+      (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota)
+
+theorem exists_thresholdMoveBaselineMoveList
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T)
+    (quota : ReservoirMoveToken A → ZMod m) :
+    ∃ Φ : ActiveHall.Symboling A.Cyl.incidence,
+      (BaseTail.Trades.nonzeroZeroSwapMovesOfTwoLe hT
+        (P.thresholdMoveList
+          (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota)).Pairwise
+        (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex) ∧
+      (∀ move, move ∈
+          P.thresholdMoveList
+            (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota →
+        Φ.color move.vertex
+            ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+          P.moveZeroColorOfMove
+            (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) move) ∧
+        (∀ move, move ∈
+            P.thresholdMoveList
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota →
+          Φ.color move.vertex move.right =
+            P.moveRightColorOfMove
+              (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) move) := by
+  classical
+  let hTpos : 0 < T := Nat.lt_of_lt_of_le (by omega : 0 < 2) hT
+  rcases P.exists_moveBaselineSymboling hTpos with
+    ⟨Φ, hzero, hright⟩
+  refine ⟨Φ, ?_, ?_, ?_⟩
+  · exact P.thresholdMoveList_swapMoves_pairwise hT quota
+  · intro move hmem
+    rcases List.mem_map.mp hmem with ⟨q, _hqmem, rfl⟩
+    simpa [hTpos, moveZeroColorOfMove_toNonzeroZeroSwapMove] using
+      hzero q
+  · intro move hmem
+    rcases List.mem_map.mp hmem with ⟨q, _hqmem, rfl⟩
+    simpa [hTpos, moveRightColorOfMove_toNonzeroZeroSwapMove] using
+      hright q
+
 noncomputable def moveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}

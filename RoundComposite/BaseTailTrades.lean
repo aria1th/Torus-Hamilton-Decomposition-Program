@@ -548,6 +548,26 @@ theorem BufferReservoirToken.card {m T : Nat} :
       successorReservoirColorQuota m T := by
   simp [BufferReservoirToken, successorReservoirColorQuota]
 
+theorem zmod_sum_fin_one_if_val_lt_val {m n : Nat} [NeZero m]
+    (z : ZMod m) (hzn : z.val ≤ n) :
+    (∑ k : Fin n, if k.val < z.val then (1 : ZMod m) else 0) = z := by
+  classical
+  have hsum :
+      (∑ k : Fin n, if k.val < z.val then (1 : ZMod m) else 0) =
+        (((Finset.univ : Finset (Fin n)).filter
+          (fun k => k.val < z.val)).card : ZMod m) := by
+    simp
+  rw [hsum]
+  have hcard :
+      ((Finset.univ : Finset (Fin n)).filter
+          (fun k => k.val < z.val)).card = z.val := by
+    calc
+      ((Finset.univ : Finset (Fin n)).filter
+          (fun k => k.val < z.val)).card = min n z.val := by
+            simpa using (Fin.card_filter_val_lt (n := n) (m := z.val))
+      _ = z.val := by simp [Nat.min_eq_right hzn]
+  rw [hcard, ZMod.natCast_zmod_val]
+
 theorem successorReservoirColorQuota_mul_le_pow {b m T : Nat}
     (hLarge : m ^ b > m * (b + T) * T) :
     T * successorReservoirColorQuota m T ≤ m ^ b := by
