@@ -554,6 +554,43 @@ def packetPhaseSkewStep {N m : Nat} [NeZero N] [NeZero m]
     (S : Finset (ZMod m)) : ZMod m × ZMod N → ZMod m × ZMod N :=
   fun p => (p.1 + 1, if p.1 ∈ S then p.2 + 1 else p.2)
 
+def packetPhaseSkewStepInv {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) : ZMod m × ZMod N → ZMod m × ZMod N :=
+  fun p =>
+    let φ := p.1 - 1
+    (φ, if φ ∈ S then p.2 - 1 else p.2)
+
+theorem packetPhaseSkewStep_leftInverse
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    Function.LeftInverse
+      (packetPhaseSkewStepInv (N := N) (m := m) S)
+      (packetPhaseSkewStep (N := N) (m := m) S) := by
+  intro p
+  rcases p with ⟨φ, x⟩
+  by_cases hφ : φ ∈ S
+  · ext <;> simp [packetPhaseSkewStep, packetPhaseSkewStepInv, hφ]
+  · ext <;> simp [packetPhaseSkewStep, packetPhaseSkewStepInv, hφ]
+
+theorem packetPhaseSkewStep_rightInverse
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    Function.RightInverse
+      (packetPhaseSkewStepInv (N := N) (m := m) S)
+      (packetPhaseSkewStep (N := N) (m := m) S) := by
+  intro p
+  rcases p with ⟨φ, x⟩
+  by_cases hφ : φ - 1 ∈ S
+  · ext <;> simp [packetPhaseSkewStep, packetPhaseSkewStepInv, hφ]
+  · ext <;> simp [packetPhaseSkewStep, packetPhaseSkewStepInv, hφ]
+
+theorem packetPhaseSkewStep_bijective
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    Function.Bijective (packetPhaseSkewStep (N := N) S) :=
+  ⟨(packetPhaseSkewStep_leftInverse (N := N) (m := m) S).injective,
+    (packetPhaseSkewStep_rightInverse (N := N) (m := m) S).surjective⟩
+
 theorem packetPhaseSkewStep_fst_iterate
     {N m : Nat} [NeZero N] [NeZero m]
     (S : Finset (ZMod m)) :
