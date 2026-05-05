@@ -139,6 +139,17 @@ thm:active-residue-scheduling
 thm:active-realization
 ```
 
+Current Lean helper names for `lem:local-symbol-trade` and finite swap
+schedules:
+
+```lean
+ActiveHall.Symboling.swapResidueSpec_target_eq_add_localTradeDelta
+ActiveHall.Symboling.SwapMove
+ActiveHall.Symboling.applySwapMoves
+ActiveHall.Symboling.applySwapResidueSpecs
+ActiveHall.Symboling.applySwapMoves_hasResidues
+```
+
 The proof should construct symbolings directly from reserved local trade sites.
 It should not detour through a global count-matrix Hall realization theorem.
 
@@ -256,7 +267,10 @@ still avoids the unrestricted Hall/de Werra/count-matrix targets listed above.
 In the v7.6 organization, `SuccessorActiveBlockCompatibleResidueSchedulingGoal`
 is the direct paper-facing theorem for `thm:active-residue-scheduling`; the
 feasible local-trade and finite-reservoir names are compatibility adapters, not
-the preferred proof shape.
+the preferred proof shape.  The generic `ActiveHall.Symboling` swap-list
+lemmas now cover the algebraic part of applying a finite reservoir schedule;
+the remaining hard content is selecting enough distinct reservoir sites and
+turning the row/column-compatible residue matrix into that concrete swap list.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
