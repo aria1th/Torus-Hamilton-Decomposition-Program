@@ -3952,6 +3952,106 @@ noncomputable def applySwapResidueSpecs {m T : Nat} {X C : Type*}
       (Φ.swapAt move.vertex move.left move.right).applySwapResidueSpecs
         (Φ.swapResidueSpec R move.vertex move.left move.right) moves
 
+def swapMoveDelta {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (move : SwapMove X T) (c : C) (ρ : Fin T) : ZMod m :=
+  - (if Φ.color move.vertex ρ = c then 1 else 0)
+    + (if Φ.color move.vertex ((Equiv.swap move.left move.right) ρ) = c then
+        1
+      else
+        0)
+
+def swapDeltaSum {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I) :
+    List (SwapMove X T) → C → Fin T → ZMod m
+  | [], _, _ => 0
+  | move :: moves, c, ρ =>
+      Φ.swapMoveDelta move c ρ + Φ.swapDeltaSum moves c ρ
+
+theorem swapMoveDelta_swapAt_of_vertex_ne {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {x₀ : X} {σ τ : Fin T} {move : SwapMove X T}
+    (hvertex : move.vertex ≠ x₀) (c : C) (ρ : Fin T) :
+    (Φ.swapAt x₀ σ τ).swapMoveDelta (m := m) move c ρ =
+      Φ.swapMoveDelta (m := m) move c ρ := by
+  simp [swapMoveDelta, swapAt_color_ne Φ hvertex σ τ]
+
+theorem swapDeltaSum_swapAt_of_forall_vertex_ne {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {x₀ : X} {σ τ : Fin T}
+    (moves : List (SwapMove X T))
+    (hvertex : ∀ move, move ∈ moves → move.vertex ≠ x₀)
+    (c : C) (ρ : Fin T) :
+    (Φ.swapAt x₀ σ τ).swapDeltaSum (m := m) moves c ρ =
+      Φ.swapDeltaSum (m := m) moves c ρ := by
+  induction moves with
+  | nil =>
+      simp [swapDeltaSum]
+  | cons move moves ih =>
+      have hmove : move.vertex ≠ x₀ := hvertex move (by simp)
+      have hmoves : ∀ move', move' ∈ moves → move'.vertex ≠ x₀ := by
+        intro move' hmem
+        exact hvertex move' (by simp [hmem])
+      simp [swapDeltaSum,
+        Φ.swapMoveDelta_swapAt_of_vertex_ne (m := m) hmove c ρ,
+        ih hmoves]
+
+theorem applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
+    {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {R : ResidueSpec m T C} {moves : List (SwapMove X T)}
+    (hPairwise : moves.Pairwise (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex))
+    (c : C) (ρ : Fin T) :
+    (Φ.applySwapResidueSpecs R moves).target c ρ =
+      R.target c ρ + Φ.swapDeltaSum (m := m) moves c ρ := by
+  induction moves generalizing Φ R with
+  | nil =>
+      simp [applySwapResidueSpecs, swapDeltaSum]
+  | cons move moves ih =>
+      rcases List.pairwise_cons.mp hPairwise with ⟨hHead, hTail⟩
+      have hNoHead :
+          ∀ move', move' ∈ moves → move'.vertex ≠ move.vertex := by
+        intro move' hmem hEq
+        exact hHead move' hmem hEq.symm
+      have hTailDelta :
+          (Φ.swapAt move.vertex move.left move.right).swapDeltaSum
+              (m := m) moves c ρ =
+            Φ.swapDeltaSum (m := m) moves c ρ :=
+        Φ.swapDeltaSum_swapAt_of_forall_vertex_ne
+          (m := m) moves hNoHead c ρ
+      calc
+        (Φ.applySwapResidueSpecs R (move :: moves)).target c ρ
+            =
+              (Φ.swapResidueSpec R move.vertex move.left move.right).target c ρ
+                +
+              (Φ.swapAt move.vertex move.left move.right).swapDeltaSum
+                (m := m) moves c ρ := by
+                simpa [applySwapResidueSpecs] using
+                  ih (Φ := Φ.swapAt move.vertex move.left move.right)
+                    (R := Φ.swapResidueSpec R move.vertex move.left move.right)
+                    hTail
+        _ =
+              R.target c ρ + Φ.swapMoveDelta (m := m) move c ρ
+                +
+              (Φ.swapAt move.vertex move.left move.right).swapDeltaSum
+                (m := m) moves c ρ := by
+                simp [swapResidueSpec, swapMoveDelta, sub_eq_add_neg,
+                  add_assoc]
+        _ =
+              R.target c ρ +
+                (Φ.swapMoveDelta (m := m) move c ρ +
+                  Φ.swapDeltaSum (m := m) moves c ρ) := by
+                rw [hTailDelta]
+                abel
+        _ = R.target c ρ +
+              Φ.swapDeltaSum (m := m) (move :: moves) c ρ := by
+                rfl
+
 theorem applySwapMoves_hasResidues {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} {Φ : Symboling I}

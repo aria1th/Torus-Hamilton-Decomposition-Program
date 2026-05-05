@@ -70,6 +70,16 @@ def OddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal :
   BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal
 
 /--
+v7.6 canonical reservoir-script package.  This is the constructive witness
+surface below the canonical strict schedule: a baseline symboling, distinct
+`0 ↔ τ` toggles, and the finite residue-delta equation.
+-/
+def OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal :
+    Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal
+
+/--
 v7.5 input package using the one-site pre-correction reservoir surface.
 -/
 def OddModulusToriV75PreCorrectionInputsGoal : Prop :=
@@ -305,6 +315,27 @@ theorem oddModulusToriV75ReservoirInputsGoal_of_canonicalNonzeroZeroReservoirSwa
     OddModulusToriV75ReservoirInputsGoal :=
   oddModulusToriV75ReservoirInputsGoal_of_directInputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
+      h)
+
+theorem oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal_of_script
+      h.2⟩
+
+theorem oddModulusToriV75DirectModularTradeInputsGoal_of_canonicalNonzeroZeroReservoirScriptInputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddModulusToriV75DirectModularTradeInputsGoal :=
+  oddModulusToriV75DirectModularTradeInputsGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
+    (oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
+      h)
+
+theorem oddModulusToriV75ReservoirInputsGoal_of_canonicalNonzeroZeroReservoirScriptInputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddModulusToriV75ReservoirInputsGoal :=
+  oddModulusToriV75ReservoirInputsGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
+    (oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
       h)
 
 theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
@@ -606,6 +637,13 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroRes
     (oddModulusToriV75DirectModularTradeInputsGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
       h)
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroReservoirScriptInputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
+    (oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
+      h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -753,6 +791,14 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroRes
   oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroReservoirSwapScheduleInputs
     ⟨hHigh, hSchedule⟩
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroReservoirScript
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hScript :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalNonzeroZeroReservoirScriptInputs
+    ⟨hHigh, hScript⟩
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
     (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
@@ -869,6 +915,21 @@ theorem oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirSwapSchedule
     OddSuccessorClosureGoal :=
   oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirSwapSchedule_inputs
     ⟨hHigh, hSchedule⟩
+
+theorem oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirScript_inputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirSwapSchedule_inputs
+    (oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
+      h)
+
+theorem oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirScript
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hScript :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_canonicalNonzeroZeroReservoirScript_inputs
+    ⟨hHigh, hScript⟩
 
 theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
     (h : OddModulusToriV75FeasibleLocalTradeReturnInputsGoal) :
@@ -1042,6 +1103,21 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirSwap
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirSwapSchedule_inputs
     ⟨hHigh, hSchedule⟩
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirScript_inputs
+    (h : OddModulusToriV75CanonicalNonzeroZeroReservoirScriptInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirSwapSchedule_inputs
+    (oddModulusToriV75CanonicalNonzeroZeroReservoirSwapScheduleInputsGoal_of_scriptInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirScript
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hScript :
+      BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_canonicalNonzeroZeroReservoirScript_inputs
+    ⟨hHigh, hScript⟩
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :

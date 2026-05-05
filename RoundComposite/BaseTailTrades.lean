@@ -495,6 +495,117 @@ def SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal : Prop :=
                 (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves) =
                   activeBlockResidueSpec D
 
+def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
+    (moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T)) :
+    List (ActiveHall.Symboling.SwapMove X T) :=
+  ActiveHall.Symboling.nonzeroZeroSwapMoves
+    (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
+
+/--
+Structured v7.6 reservoir witness for the canonical strict schedule.
+
+The current closure only needs the final equality in
+`SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal`, but the
+paper constructs it through an initial symboling, pairwise distinct `0 ↔ τ`
+reservoir toggles, baseline colors at every reserved site, and an arithmetic
+delta equation.  This record exposes that intermediate proof surface.
+-/
+structure CanonicalNonzeroZeroReservoirScript
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    (hT : 2 ≤ T) (D : ActiveBlockData Cyl) where
+  initial : ActiveHall.Symboling Cyl.incidence
+  moves :
+    List
+      (ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T)
+  swapMoves_pairwise :
+    (nonzeroZeroSwapMovesOfTwoLe hT moves).Pairwise
+      (fun move₁ move₂ => move₁.vertex ≠ move₂.vertex)
+  zeroColor :
+    ActiveHall.Symboling.NonzeroZeroSwapMove
+      (Shared.TorusVertex (b + 1) m) T →
+      Fin (b + T)
+  rightColor :
+    ActiveHall.Symboling.NonzeroZeroSwapMove
+      (Shared.TorusVertex (b + 1) m) T →
+      Fin (b + T)
+  baseline_zero :
+    ∀ move, move ∈ moves →
+      initial.color move.vertex
+          ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ =
+        zeroColor move
+  baseline_right :
+    ∀ move, move ∈ moves →
+      initial.color move.vertex move.right = rightColor move
+  target_delta :
+    ∀ c σ,
+      (activeBlockResidueSpec D).target c σ =
+        (initial.residueSpec (m := m)).target c σ +
+          initial.swapDeltaSum (m := m)
+            (nonzeroZeroSwapMovesOfTwoLe hT moves) c σ
+
+namespace CanonicalNonzeroZeroReservoirScript
+
+theorem applySwapResidueSpecs_eq
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    (script : CanonicalNonzeroZeroReservoirScript hT D) :
+    script.initial.applySwapResidueSpecs
+        (script.initial.residueSpec (m := m))
+        (nonzeroZeroSwapMovesOfTwoLe hT script.moves) =
+      activeBlockResidueSpec D := by
+  have htarget :
+      (script.initial.applySwapResidueSpecs
+          (script.initial.residueSpec (m := m))
+          (nonzeroZeroSwapMovesOfTwoLe hT script.moves)).target =
+        (activeBlockResidueSpec D).target := by
+    funext c σ
+    rw [ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
+      script.initial script.swapMoves_pairwise c σ]
+    exact (script.target_delta c σ).symm
+  cases hleft :
+      script.initial.applySwapResidueSpecs
+        (script.initial.residueSpec (m := m))
+        (nonzeroZeroSwapMovesOfTwoLe hT script.moves) with
+  | mk leftTarget =>
+      cases hright : activeBlockResidueSpec D with
+      | mk rightTarget =>
+          have htarget' : leftTarget = rightTarget := by
+            rw [hleft, hright] at htarget
+            exact htarget
+          cases htarget'
+          rfl
+
+end CanonicalNonzeroZeroReservoirScript
+
+/--
+Successor-scoped script endpoint for the v7.6 canonical reservoir proof.
+
+This is the next constructive target below the strict reservoir schedule: it
+asks for the concrete baseline/toggle script whose finite delta is canonical.
+-/
+def SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      IsCylinder Cyl →
+      (D : ActiveBlockData Cyl) →
+        ∃ _script : CanonicalNonzeroZeroReservoirScript hT D, True
+
 /--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
@@ -1127,6 +1238,19 @@ theorem successorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal_of_non
   exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT (activeBlockResidueSpec hBlock)
     hCyl hBlock hRow hCol
+
+theorem successorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal_of_script
+    (hScript :
+      SuccessorActiveBlockCanonicalNonzeroZeroReservoirScriptGoal) :
+    SuccessorActiveBlockCanonicalNonzeroZeroReservoirSwapScheduleGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases hScript hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+      hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock with
+    ⟨script, _hScript⟩
+  exact ⟨script.initial, script.moves, by
+    simpa [nonzeroZeroSwapMovesOfTwoLe] using
+      script.applySwapResidueSpecs_eq⟩
 
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_canonicalNonzeroZeroReservoirSwapSchedule
     (hSchedule :
