@@ -288,6 +288,9 @@ preserve the final adapters:
 ```lean
 Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
 Concrete.oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
+Concrete.OddModulusToriV75PreCorrectionInputsGoal
+Concrete.oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
+Concrete.oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
 ```
 
 ## More Efficient Workflow In Retrospect

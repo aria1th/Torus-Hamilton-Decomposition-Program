@@ -27,6 +27,14 @@ def OddModulusToriV75ReservoirInputsGoal : Prop :=
   BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
 
 /--
+v7.5 input package using the one-site pre-correction reservoir surface.
+-/
+def OddModulusToriV75PreCorrectionInputsGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCanonicalPreCorrectionGoal ∧
+  BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+
+/--
 v7.5 direct modular-trade block goal.
 
 This is definitionally the already-wired v7.3 canonical local-trade
@@ -50,11 +58,25 @@ theorem oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs
       h.2.1,
     h.2.2⟩
 
+theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
+    (h : OddModulusToriV75PreCorrectionInputsGoal) :
+    OddModulusToriV75DirectModularTradeInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
+      h.2.1,
+    h.2.2⟩
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_reservoirInputs
     (h : OddModulusToriV75ReservoirInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
   oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs h)
+
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
+    (h : OddModulusToriV75PreCorrectionInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
+    (oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs h)
 
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
@@ -120,6 +142,12 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_reservoir_inputs
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
+    (h : OddModulusToriV75PreCorrectionInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
+    (oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs h)
 
 end Concrete
 end RoundComposite
