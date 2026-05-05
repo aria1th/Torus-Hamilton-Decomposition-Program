@@ -217,6 +217,7 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMo
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_mem_thresholdMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveList_pairwise_vertex
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveList_swapMoves_pairwise
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveList_nonzero_delta_eq_token_foldr
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveBaselineMoveList
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved
@@ -558,9 +559,11 @@ then inserts such a selected list into the canonical reservoir script once the
 nonzero residual equations are supplied.  The baseline-first variant
 `ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_exists_quota_nonzeroSolved`
 matches the paper order more closely: build the full reservoir baseline first,
-then choose the λ/μ quota from that baseline's residual matrix.  The sharpest
-remaining hard content is now proving existence of that quota and the resulting
-nonzero-column equations.
+then choose the λ/μ quota from that baseline's residual matrix.
+`ReservoirSitePlan.thresholdMoveList_nonzero_delta_eq_token_foldr` rewrites the
+selected-list nonzero delta as a fold over selected reservoir tokens, exposing
+the next proof as token-family counting.  The sharpest remaining hard content is
+now proving existence of that quota and the resulting nonzero-column equations.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

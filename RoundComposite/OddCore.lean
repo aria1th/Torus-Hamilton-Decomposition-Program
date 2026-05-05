@@ -6259,6 +6259,56 @@ theorem thresholdMoveList_swapMoves_pairwise
     (P.thresholdMoveList_pairwise_vertex
       (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) quota)
 
+theorem thresholdMoveList_nonzero_delta_eq_token_foldr
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (hT : 2 ≤ T) (hTpos : 0 < T)
+    (quota : ReservoirMoveToken A → ZMod m)
+    {σ : Fin T} (hσ0 : σ.val ≠ 0) (c : Fin (b + T)) :
+    BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+        (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+        (P.thresholdMoveList hTpos quota) c σ =
+      (P.thresholdMoveTokenFinset quota).toList.foldr
+        (fun q acc =>
+          ((if σ = P.moveRight hTpos q then
+              (if P.moveZeroColor q = c then (1 : ZMod m) else 0) -
+                (if P.moveRightColor q = c then (1 : ZMod m) else 0)
+            else 0) + acc))
+        0 := by
+  classical
+  have hdelta :=
+    BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero (m := m) hT
+      (P.moveZeroColorOfMove hTpos) (P.moveRightColorOfMove hTpos)
+      hσ0 (P.thresholdMoveList hTpos quota) c
+  rw [hdelta]
+  let tokens : List (ReservoirMoveToken A) :=
+    (P.thresholdMoveTokenFinset quota).toList
+  change
+    (tokens.map (P.toNonzeroZeroSwapMove hTpos)).foldr
+        (fun move acc =>
+          ((if σ = move.right then
+              (if P.moveZeroColorOfMove hTpos move = c then
+                  (1 : ZMod m) else 0) -
+                (if P.moveRightColorOfMove hTpos move = c then
+                  (1 : ZMod m) else 0)
+            else 0) + acc))
+        0 =
+      tokens.foldr
+        (fun q acc =>
+          ((if σ = P.moveRight hTpos q then
+              (if P.moveZeroColor q = c then (1 : ZMod m) else 0) -
+                (if P.moveRightColor q = c then (1 : ZMod m) else 0)
+            else 0) + acc))
+        0
+  induction tokens with
+  | nil =>
+      simp
+  | cons q tokens ih =>
+      simp [ih, moveZeroColorOfMove_toNonzeroZeroSwapMove,
+        moveRightColorOfMove_toNonzeroZeroSwapMove]
+
 theorem exists_thresholdMoveBaselineMoveList
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
