@@ -68,6 +68,17 @@ theorem oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs
       h.2.1,
     h.2.2⟩
 
+theorem oddModulusToriV75ReservoirInputsGoal_of_directInputs
+    (h : OddModulusToriV75DirectModularTradeInputsGoal) :
+    OddModulusToriV75ReservoirInputsGoal :=
+  ⟨h.1, h.2.1, h.2.2⟩
+
+theorem oddModulusToriV75ReservoirInputsGoal_iff_directInputs :
+    OddModulusToriV75ReservoirInputsGoal ↔
+      OddModulusToriV75DirectModularTradeInputsGoal :=
+  ⟨oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs,
+    oddModulusToriV75ReservoirInputsGoal_of_directInputs⟩
+
 theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
     OddModulusToriV75DirectModularTradeInputsGoal :=
@@ -75,6 +86,20 @@ theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
     BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_preCorrection
       h.2.1,
     h.2.2⟩
+
+theorem oddModulusToriV75PreCorrectionInputsGoal_of_directInputs
+    (h : OddModulusToriV75DirectModularTradeInputsGoal) :
+    OddModulusToriV75PreCorrectionInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalPreCorrectionGoal_of_canonicalLocalTrade
+      h.2.1,
+    h.2.2⟩
+
+theorem oddModulusToriV75PreCorrectionInputsGoal_iff_directInputs :
+    OddModulusToriV75PreCorrectionInputsGoal ↔
+      OddModulusToriV75DirectModularTradeInputsGoal :=
+  ⟨oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs,
+    oddModulusToriV75PreCorrectionInputsGoal_of_directInputs⟩
 
 theorem oddModulusToriV75PreCorrectionInputsGoal_of_preCorrectionReturnInputs
     (h : OddModulusToriV75PreCorrectionReturnInputsGoal) :
