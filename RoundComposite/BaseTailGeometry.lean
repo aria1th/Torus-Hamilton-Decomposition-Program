@@ -2206,6 +2206,21 @@ theorem ActiveSymboling.count_cast_eq_sum_indicator
   classical
   simp [ActiveHall.Symboling.count]
 
+theorem ActiveSymboling.color_eq_of_same_color
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} (A : ActiveSymboling Cyl)
+    {y : Shared.TorusVertex (b + 1) m} {σ τ : Fin T}
+    {c : Fin (b + T)}
+    (hσ : A.Φ.color y σ = c) (hτ : A.Φ.color y τ = c) :
+    σ = τ := by
+  have hσ' : (A.Φ.equiv y σ).1 = c := by
+    simpa [ActiveHall.Symboling.color] using hσ
+  have hτ' : (A.Φ.equiv y τ).1 = c := by
+    simpa [ActiveHall.Symboling.color] using hτ
+  apply (A.Φ.equiv y).injective
+  apply Subtype.ext
+  exact hσ'.trans hτ'.symm
+
 noncomputable def expandedColorDir
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     (Cyl : Cylinder b m T packets) (A : ActiveSymboling Cyl) :
@@ -4870,6 +4885,249 @@ theorem activePrefixColorDirCoreDirectCarry_extendZero_succ
       · exact hcolor_ne ⟨k + 2, by omega⟩ h.1
     simp [activePrefixColorDirCoreDirectCarry,
       activePermutedColorDirCoreDirectCarry, hactive, hP]
+
+theorem activePrefixColorDirCoreDirectCarry_extendZero_succ_sum
+    {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} (A : ActiveSymboling Cyl)
+    (hT : 2 ≤ n + 1)
+    (c : Fin (b + (n + 1))) (y : Shared.TorusVertex (b + 1) m)
+    {k : Nat} (hk : k + 1 < n) :
+    (∑ u : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c y
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) u)
+          ⟨k + 1, hk⟩) =
+      (if A.Φ.color y ⟨1, by omega⟩ = c
+        then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if A.Φ.color y ⟨k + 2, by omega⟩ = c
+          then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+  classical
+  let delta : Fin (n + 1) := ⟨1, by omega⟩
+  let middle : Fin (n + 1) := ⟨k + 1, by omega⟩
+  let step : Fin (n + 1) := ⟨k + 2, by omega⟩
+  calc
+    (∑ u : Fin (k + 1) → ZMod m,
+        activePrefixColorDirCoreDirectCarry A hT c y
+          (Shared.zmodVectorExtendZero (Nat.le_of_lt hk) u)
+          ⟨k + 1, hk⟩)
+        =
+        ∑ u : Fin (k + 1) → ZMod m,
+          if
+            (A.Φ.color y delta = c ∧
+              activePrefixExactLastZero u) ∨
+              (A.Φ.color y middle = c ∧
+                0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+              (A.Φ.color y step = c ∧ activePrefixNoZero u)
+          then (1 : ZMod m) else 0 := by
+          apply Finset.sum_congr rfl
+          intro u _hu
+          simpa [delta, middle, step] using
+            activePrefixColorDirCoreDirectCarry_extendZero_succ
+              A hT c y hk u
+    _ =
+      (if A.Φ.color y delta = c
+        then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if A.Φ.color y step = c
+          then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+      by_cases hDelta : A.Φ.color y delta = c
+      · have hNotStep : A.Φ.color y step ≠ c := by
+          intro hStep
+          have hEq :=
+            ActiveSymboling.color_eq_of_same_color A hDelta hStep
+          have hval := congrArg Fin.val hEq
+          simp [delta, step] at hval
+        have hNotMiddle :
+            ¬ (A.Φ.color y middle = c ∧ 0 < k) := by
+          intro hMid
+          have hEq :=
+            ActiveSymboling.color_eq_of_same_color A hDelta hMid.1
+          have hval := congrArg Fin.val hEq
+          simp [delta, middle] at hval
+          omega
+        calc
+          (∑ u : Fin (k + 1) → ZMod m,
+            if
+              (A.Φ.color y delta = c ∧
+                activePrefixExactLastZero u) ∨
+                (A.Φ.color y middle = c ∧
+                  0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                (A.Φ.color y step = c ∧ activePrefixNoZero u)
+            then (1 : ZMod m) else 0)
+              =
+            ∑ u : Fin (k + 1) → ZMod m,
+              if activePrefixExactLastZero u then (1 : ZMod m) else 0 := by
+              apply Finset.sum_congr rfl
+              intro u _hu
+              have hiff :
+                  ((A.Φ.color y delta = c ∧
+                      activePrefixExactLastZero u) ∨
+                    (A.Φ.color y middle = c ∧
+                      0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                    (A.Φ.color y step = c ∧ activePrefixNoZero u)) ↔
+                    activePrefixExactLastZero u := by
+                constructor
+                · intro h
+                  rcases h with h | h | h
+                  · exact h.2
+                  · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                  · exact False.elim (hNotStep h.1)
+                · intro hu
+                  exact Or.inl ⟨hDelta, hu⟩
+              by_cases hP :
+                  (A.Φ.color y delta = c ∧
+                      activePrefixExactLastZero u) ∨
+                    (A.Φ.color y middle = c ∧
+                      0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                    (A.Φ.color y step = c ∧ activePrefixNoZero u)
+              · have hu : activePrefixExactLastZero u := hiff.mp hP
+                rw [if_pos hP, if_pos hu]
+              · have hu : ¬ activePrefixExactLastZero u := by
+                  intro hu
+                  exact hP (hiff.mpr hu)
+                rw [if_neg hP, if_neg hu]
+          _ =
+            (if A.Φ.color y delta = c
+              then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+              (if A.Φ.color y step = c
+                then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+            rw [activePrefixExactLastZeroIndicatorSum]
+            simp [hDelta, hNotStep]
+      · by_cases hStep : A.Φ.color y step = c
+        · have hNotMiddle :
+            ¬ (A.Φ.color y middle = c ∧ 0 < k) := by
+            intro hMid
+            have hEq :=
+              ActiveSymboling.color_eq_of_same_color A hStep hMid.1
+            have hval := congrArg Fin.val hEq
+            simp [step, middle] at hval
+          calc
+            (∑ u : Fin (k + 1) → ZMod m,
+              if
+                (A.Φ.color y delta = c ∧
+                  activePrefixExactLastZero u) ∨
+                  (A.Φ.color y middle = c ∧
+                    0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                  (A.Φ.color y step = c ∧ activePrefixNoZero u)
+              then (1 : ZMod m) else 0)
+                =
+              ∑ u : Fin (k + 1) → ZMod m,
+                if activePrefixNoZero u then (1 : ZMod m) else 0 := by
+                apply Finset.sum_congr rfl
+                intro u _hu
+                have hiff :
+                    ((A.Φ.color y delta = c ∧
+                        activePrefixExactLastZero u) ∨
+                      (A.Φ.color y middle = c ∧
+                        0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                      (A.Φ.color y step = c ∧ activePrefixNoZero u)) ↔
+                      activePrefixNoZero u := by
+                  constructor
+                  · intro h
+                    rcases h with h | h | h
+                    · exact False.elim (hDelta h.1)
+                    · exact False.elim (hNotMiddle ⟨h.1, h.2.1⟩)
+                    · exact h.2
+                  · intro hu
+                    exact Or.inr (Or.inr ⟨hStep, hu⟩)
+                by_cases hP :
+                    (A.Φ.color y delta = c ∧
+                        activePrefixExactLastZero u) ∨
+                      (A.Φ.color y middle = c ∧
+                        0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                      (A.Φ.color y step = c ∧ activePrefixNoZero u)
+                · have hu : activePrefixNoZero u := hiff.mp hP
+                  rw [if_pos hP, if_pos hu]
+                · have hu : ¬ activePrefixNoZero u := by
+                    intro hu
+                    exact hP (hiff.mpr hu)
+                  rw [if_neg hP, if_neg hu]
+            _ =
+              (if A.Φ.color y delta = c
+                then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+                (if A.Φ.color y step = c
+                  then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+              rw [activePrefixNoZeroIndicatorSum]
+              simp [hDelta, hStep]
+        · by_cases hMiddle : A.Φ.color y middle = c ∧ 0 < k
+          · calc
+              (∑ u : Fin (k + 1) → ZMod m,
+                if
+                  (A.Φ.color y delta = c ∧
+                    activePrefixExactLastZero u) ∨
+                    (A.Φ.color y middle = c ∧
+                      0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                    (A.Φ.color y step = c ∧ activePrefixNoZero u)
+                then (1 : ZMod m) else 0)
+                  =
+                ∑ u : Fin (k + 1) → ZMod m,
+                  if activePrefixHitBeforeLastZero u
+                  then (1 : ZMod m) else 0 := by
+                  apply Finset.sum_congr rfl
+                  intro u _hu
+                  have hiff :
+                      ((A.Φ.color y delta = c ∧
+                          activePrefixExactLastZero u) ∨
+                        (A.Φ.color y middle = c ∧
+                          0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                        (A.Φ.color y step = c ∧ activePrefixNoZero u)) ↔
+                        activePrefixHitBeforeLastZero u := by
+                    constructor
+                    · intro h
+                      rcases h with h | h | h
+                      · exact False.elim (hDelta h.1)
+                      · exact h.2.2
+                      · exact False.elim (hStep h.1)
+                    · intro hu
+                      exact Or.inr (Or.inl ⟨hMiddle.1, hMiddle.2, hu⟩)
+                  by_cases hP :
+                      (A.Φ.color y delta = c ∧
+                          activePrefixExactLastZero u) ∨
+                        (A.Φ.color y middle = c ∧
+                          0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                        (A.Φ.color y step = c ∧ activePrefixNoZero u)
+                  · have hu : activePrefixHitBeforeLastZero u := hiff.mp hP
+                    rw [if_pos hP, if_pos hu]
+                  · have hu : ¬ activePrefixHitBeforeLastZero u := by
+                      intro hu
+                      exact hP (hiff.mpr hu)
+                    rw [if_neg hP, if_neg hu]
+              _ =
+                (if A.Φ.color y delta = c
+                  then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+                  (if A.Φ.color y step = c
+                    then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+                rw [activePrefixHitBeforeLastZeroIndicatorSum]
+                simp [hDelta, hStep]
+          · calc
+              (∑ u : Fin (k + 1) → ZMod m,
+                if
+                  (A.Φ.color y delta = c ∧
+                    activePrefixExactLastZero u) ∨
+                    (A.Φ.color y middle = c ∧
+                      0 < k ∧ activePrefixHitBeforeLastZero u) ∨
+                    (A.Φ.color y step = c ∧ activePrefixNoZero u)
+                then (1 : ZMod m) else 0)
+                  =
+                ∑ _u : Fin (k + 1) → ZMod m, 0 := by
+                  apply Finset.sum_congr rfl
+                  intro u _hu
+                  have hNoMiddle :
+                      ¬ (A.Φ.color y middle = c ∧
+                        0 < k ∧ activePrefixHitBeforeLastZero u) := by
+                    intro h
+                    exact hMiddle ⟨h.1, h.2.1⟩
+                  simp [hDelta, hStep, hNoMiddle]
+              _ =
+                (if A.Φ.color y delta = c
+                  then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+                  (if A.Φ.color y step = c
+                    then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+                simp [hDelta, hStep]
+    _ =
+      (if A.Φ.color y ⟨1, by omega⟩ = c
+        then -((-1 : ZMod m) ^ (k + 1)) else 0) +
+        (if A.Φ.color y ⟨k + 2, by omega⟩ = c
+          then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
+      simp [delta, step]
 
 theorem activePrefixPermutedColorDirCore_fiberStep_coord_eq_add_directCarry
     {b m n : Nat} [NeZero m] {packets : List (List Nat)}
