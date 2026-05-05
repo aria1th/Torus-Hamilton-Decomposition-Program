@@ -3140,6 +3140,65 @@ theorem swapAt_count_of_ne {T : Nat} {X C : Type*}
     simp [hswap]
   · simp [swapAt_color_ne Φ hx σ τ ρ]
 
+theorem swapAt_count_zmod {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ ρ : Fin T) (c : C) :
+    ((Φ.swapAt x₀ σ τ).count c ρ : ZMod m) =
+      (Φ.count c ρ : ZMod m)
+        - (if Φ.color x₀ ρ = c then 1 else 0)
+        + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0) := by
+  classical
+  unfold count
+  let f : X → Nat := fun x => if Φ.color x ρ = c then 1 else 0
+  let g : X → Nat :=
+    fun x => if (Φ.swapAt x₀ σ τ).color x ρ = c then 1 else 0
+  have hfg :
+      ∀ x : X, x ∈ ((Finset.univ : Finset X).erase x₀) → g x = f x := by
+    intro x hx
+    exact by
+      have hxne : x ≠ x₀ := Finset.ne_of_mem_erase hx
+      simp [f, g, swapAt_color_ne Φ hxne σ τ ρ]
+  have hsum_erase :
+      ((Finset.univ : Finset X).erase x₀).sum g =
+        ((Finset.univ : Finset X).erase x₀).sum f := by
+    apply Finset.sum_congr rfl
+    intro x hx
+    exact hfg x hx
+  rw [show
+      (∑ x : X,
+        if (Φ.swapAt x₀ σ τ).color x ρ = c then 1 else 0) =
+        ∑ x : X, g x by rfl]
+  rw [show
+      (∑ x : X, if Φ.color x ρ = c then 1 else 0) =
+        ∑ x : X, f x by rfl]
+  rw [← Finset.sum_erase_add (Finset.univ : Finset X) g (Finset.mem_univ x₀),
+    hsum_erase,
+    ← Finset.sum_erase_add (Finset.univ : Finset X) f (Finset.mem_univ x₀)]
+  simp [f, g, add_comm]
+
+theorem swapAt_count_left_zmod {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ : Fin T) (c : C) :
+    ((Φ.swapAt x₀ σ τ).count c σ : ZMod m) =
+      (Φ.count c σ : ZMod m)
+        - (if Φ.color x₀ σ = c then 1 else 0)
+        + (if Φ.color x₀ τ = c then 1 else 0) := by
+  simpa using
+    (Φ.swapAt_count_zmod (m := m) x₀ σ τ σ c)
+
+theorem swapAt_count_right_zmod {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    (x₀ : X) (σ τ : Fin T) (c : C) :
+    ((Φ.swapAt x₀ σ τ).count c τ : ZMod m) =
+      (Φ.count c τ : ZMod m)
+        - (if Φ.color x₀ τ = c then 1 else 0)
+        + (if Φ.color x₀ σ = c then 1 else 0) := by
+  simpa [add_comm] using
+    (Φ.swapAt_count_zmod (m := m) x₀ σ τ τ c)
+
 theorem count_eq_choiceDegree {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) (c : C) (σ : Fin T) :
