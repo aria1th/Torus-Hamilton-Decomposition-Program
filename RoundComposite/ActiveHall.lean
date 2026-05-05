@@ -3199,6 +3199,65 @@ noncomputable def permuteAt {T : Nat} {X C : Type*}
     (Φ.permuteAt x₀ π).color x ρ = Φ.color x ρ := by
   simp [permuteAt, color, h]
 
+theorem exists_perm_apply_two {T : Nat}
+    {σ τ a b : Fin T} (hστ : σ ≠ τ) (hab : a ≠ b) :
+    ∃ π : Equiv.Perm (Fin T), π σ = a ∧ π τ = b := by
+  classical
+  let f : Fin 2 → Fin T := fun i => if i = 0 then σ else τ
+  let g : Fin 2 → Fin T := fun i => if i = 0 then a else b
+  have hf : Function.Injective f := by
+    intro i j hij
+    fin_cases i <;> fin_cases j
+    · rfl
+    · have h : σ = τ := by
+        simpa [f] using hij
+      exact False.elim (hστ h)
+    · have h : τ = σ := by
+        simpa [f] using hij
+      exact False.elim (hστ h.symm)
+    · rfl
+  have hg : Function.Injective g := by
+    intro i j hij
+    fin_cases i <;> fin_cases j
+    · rfl
+    · have h : a = b := by
+        simpa [g] using hij
+      exact False.elim (hab h)
+    · have h : b = a := by
+        simpa [g] using hij
+      exact False.elim (hab h.symm)
+    · rfl
+  rcases Equiv.Perm.exists_extending_pair f g hf hg with ⟨π, hπ⟩
+  refine ⟨π, ?_, ?_⟩
+  · simpa [f, g] using hπ 0
+  · simpa [f, g] using hπ 1
+
+theorem exists_with_prescribed_two_at {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq C]
+    {I : Incidence T X C} (x₀ : X) {σ τ : Fin T} {c d : C}
+    (hστ : σ ≠ τ) (hc : c ∈ I.active x₀) (hd : d ∈ I.active x₀)
+    (hcd : c ≠ d) :
+    ∃ Φ : Symboling I, Φ.color x₀ σ = c ∧ Φ.color x₀ τ = d := by
+  classical
+  let base : Symboling I := ofIncidence I
+  let a : Fin T := (base.equiv x₀).symm ⟨c, hc⟩
+  let b : Fin T := (base.equiv x₀).symm ⟨d, hd⟩
+  have hab : a ≠ b := by
+    intro hab'
+    have ha : base.equiv x₀ a = ⟨c, hc⟩ := by
+      simp [a]
+    have hb : base.equiv x₀ b = ⟨d, hd⟩ := by
+      simp [b]
+    have hsub : (⟨c, hc⟩ : {e : C // e ∈ I.active x₀}) = ⟨d, hd⟩ := by
+      rw [← ha, ← hb, hab']
+    exact hcd (congrArg Subtype.val hsub)
+  rcases exists_perm_apply_two hστ hab with ⟨π, hπσ, hπτ⟩
+  refine ⟨base.permuteAt x₀ π, ?_, ?_⟩
+  · rw [permuteAt_color_self, hπσ]
+    simp [color, a]
+  · rw [permuteAt_color_self, hπτ]
+    simp [color, b]
+
 def count {T : Nat} {X C : Type*} [Fintype X] [Fintype C]
     [DecidableEq X] [DecidableEq C] {I : Incidence T X C}
     (Φ : Symboling I) (c : C) (σ : Fin T) : Nat :=

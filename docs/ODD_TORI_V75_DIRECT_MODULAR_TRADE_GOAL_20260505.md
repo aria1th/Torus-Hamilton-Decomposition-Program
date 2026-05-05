@@ -188,6 +188,8 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
+ActiveHall.Symboling.exists_perm_apply_two
+ActiveHall.Symboling.exists_with_prescribed_two_at
 ActiveHall.Symboling.residueSpec
 ActiveHall.Symboling.hasResidues_residueSpec
 ActiveHall.Symboling.residueSpec_rowCompatible
@@ -246,7 +248,11 @@ using the generic two-family helper
 new `Concrete.OddSuccessorPhaseSplitBufferReservoirData.reservoirSitePlan`
 packages all three finite choices at once: injective non-buffer reservoir
 sites with an active partner buffer color, plus disjoint β₀β₁ and β₀β₂ site
-families of size `successorReservoirColorQuota m T`.
+families of size `successorReservoirColorQuota m T`.  On the symboling side,
+`ActiveHall.Symboling.exists_perm_apply_two` and
+`ActiveHall.Symboling.exists_with_prescribed_two_at` provide the local baseline
+constructor needed at each reserved site: two distinct active colors can be
+placed at two distinct symbols without changing the global incidence data.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
@@ -474,9 +480,8 @@ then inserts that certificate into the existing script endpoint.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-choosing the initial symboling with the required local baseline positions on
-the reserved site plan, then constructing the three-buffer arithmetic
-certificate.
+lifting the one-site baseline constructor over the pairwise reserved site plan,
+then constructing the three-buffer arithmetic certificate.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter
