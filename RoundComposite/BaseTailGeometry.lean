@@ -747,6 +747,79 @@ theorem packetPhaseSkewStep_fst_iterate
             simp [Nat.cast_add, Nat.cast_one]
             abel
 
+theorem packetPhaseSkewStep_snd_iterate
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    ∀ n : Nat, ∀ p : ZMod m × ZMod N,
+      ((packetPhaseSkewStep S)^[n] p).2 =
+        p.2 + Finset.sum (Finset.range n)
+          (fun k =>
+            if p.1 + (k : ZMod m) ∈ S then (1 : ZMod N) else 0)
+  | 0, p => by simp
+  | n + 1, p => by
+      rw [Function.iterate_succ_apply']
+      have ih := packetPhaseSkewStep_snd_iterate S n p
+      have hfst := packetPhaseSkewStep_fst_iterate S n p
+      by_cases hmem : p.1 + (n : ZMod m) ∈ S
+      · have hmem' : ((packetPhaseSkewStep S)^[n] p).1 ∈ S := by
+          simpa [hfst] using hmem
+        have hsum :
+            (∑ k ∈ Finset.range (n + 1),
+                if p.1 + (k : ZMod m) ∈ S then (1 : ZMod N) else 0) =
+              (∑ k ∈ Finset.range n,
+                if p.1 + (k : ZMod m) ∈ S then (1 : ZMod N) else 0) + 1 := by
+          rw [Finset.sum_range_succ]
+          simp [hmem]
+        simp [packetPhaseSkewStep, hmem', ih, hsum, add_assoc]
+      · have hmem' : ((packetPhaseSkewStep S)^[n] p).1 ∉ S := by
+          simpa [hfst] using hmem
+        have hsum :
+            (∑ k ∈ Finset.range (n + 1),
+                if p.1 + (k : ZMod m) ∈ S then (1 : ZMod N) else 0) =
+              (∑ k ∈ Finset.range n,
+                if p.1 + (k : ZMod m) ∈ S then (1 : ZMod N) else 0) := by
+          rw [Finset.sum_range_succ]
+          simp [hmem]
+        simp [packetPhaseSkewStep, hmem', ih, hsum]
+
+theorem packetPhaseSkewStep_zero_phase_cover
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) :
+    ∀ p : ZMod m × ZMod N, ∃ x : ZMod N, ∃ k : Nat,
+      k < m ∧ (packetPhaseSkewStep S)^[k] (0, x) = p := by
+  intro p
+  let hitSum : ZMod N :=
+    Finset.sum (Finset.range p.1.val)
+      (fun k =>
+        if (0 : ZMod m) + (k : ZMod m) ∈ S then (1 : ZMod N) else 0)
+  refine ⟨p.2 - hitSum, p.1.val, ZMod.val_lt p.1, ?_⟩
+  apply Prod.ext
+  · rw [packetPhaseSkewStep_fst_iterate]
+    simp
+  · rw [packetPhaseSkewStep_snd_iterate]
+    simp [hitSum]
+
+theorem packetPhaseSkewStep_singleCycle_of_return
+    {N m : Nat} [NeZero N] [NeZero m]
+    (S : Finset (ZMod m)) (R : ZMod N → ZMod N)
+    (hreturn :
+      ∀ x : ZMod N, (packetPhaseSkewStep S)^[m] (0, x) = (0, R x))
+    (hR : Shared.IsSingleCycleMap R) :
+    Shared.IsSingleCycleMap (packetPhaseSkewStep (N := N) S) := by
+  refine
+    Shared.single_cycle_of_periodic_return_cover
+      (packetPhaseSkewStep (N := N) S)
+      (fun x : ZMod N => ((0 : ZMod m), x))
+      R m
+      (packetPhaseSkewStep_bijective (N := N) (m := m) S)
+      hreturn
+      hR
+      ?_
+  intro p
+  rcases packetPhaseSkewStep_zero_phase_cover (N := N) (m := m) S p with
+    ⟨x, k, hk, hp⟩
+  exact ⟨x, k, hk, hp⟩
+
 theorem packetPhaseIntervalStep_conj_skew
     {N m : Nat} [NeZero N] [NeZero m]
     (hdiv : m ∣ N) (packet : List Nat) (r : Fin packet.length)
@@ -2410,14 +2483,42 @@ def PacketPhaseIntervalPowerConstructionGoal : Prop :=
     Nonempty (PacketPhaseSplit (m ^ b) m packet)
 
 def PacketPhaseSkewSingleCycleConstructionGoal : Prop :=
-  ∀ {N m : Nat} [NeZero N] [NeZero m] (_hdiv : m ∣ N)
-    {packet : List Nat},
+  ∀ {b m : Nat} [NeZero m] [NeZero (m ^ b)] {packet : List Nat},
+    0 < b →
     packet.sum = m →
     (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
     ∀ r : Fin packet.length,
       Shared.IsSingleCycleMap
-        (packetPhaseSkewStep (N := N)
+        (packetPhaseSkewStep (N := m ^ b)
           (packetPrefixPhaseSet m packet r))
+
+def PacketPhaseSkewPeriodReturnConstructionGoal : Prop :=
+  ∀ {b m : Nat} [NeZero m] [NeZero (m ^ b)] {packet : List Nat},
+    0 < b →
+    packet.sum = m →
+    (∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    ∀ r : Fin packet.length, ∀ x : ZMod (m ^ b),
+      (packetPhaseSkewStep (N := m ^ b)
+        (packetPrefixPhaseSet m packet r))^[m] (0, x) =
+        (0, x + (packet.get r : ZMod (m ^ b)))
+
+theorem packetPhaseSkewSingleCycleConstructionGoal_of_periodReturn
+    (hReturn : PacketPhaseSkewPeriodReturnConstructionGoal) :
+    PacketPhaseSkewSingleCycleConstructionGoal := by
+  intro b m _instM _instPow packet hbpos hsum hunit r
+  refine
+    packetPhaseSkewStep_singleCycle_of_return
+      (N := m ^ b)
+      (packetPrefixPhaseSet m packet r)
+      (fun x : ZMod (m ^ b) => x + (packet.get r : ZMod (m ^ b)))
+      ?_
+      ?_
+  · intro x
+    exact hReturn hbpos hsum hunit r x
+  · exact
+      Shared.zmod_add_single_cycle_of_coprime
+        (m := m ^ b) (a := packet.get r)
+        ((hunit (packet.get r) (List.get_mem packet r)).2.2.pow_right b)
 
 theorem packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
     (hSkew : PacketPhaseSkewSingleCycleConstructionGoal) :
@@ -2440,7 +2541,7 @@ theorem packetPhaseIntervalPowerConstructionGoal_of_skewSingleCycle
         intro r
         exact
           packetPhaseIntervalStep_singleCycle_of_skew
-            hdiv packet r (hSkew hdiv hsum hunit r)
+            hdiv packet r (hSkew hbpos hsum hunit r)
     }⟩
 
 theorem zmodPower_add_singleCycle_of_base_coprime
