@@ -5480,6 +5480,39 @@ def OddSuccessorBaseTailActiveBlockMixedExpansionGoal : Prop :=
       BaseTail.ActiveBlockData Cyl →
       BaseTail.MixedExpansionData Cyl
 
+def OddSuccessorBaseTailActiveBlockMixedWitnessGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m],
+    5 ≤ b →
+    Odd m → 3 ≤ m → m < b + T →
+    StandardCayleySolved b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    T = b + 1 →
+    ∀ {Cyl : BaseTail.Cylinder b m T packets},
+      BaseTail.IsCylinder Cyl →
+      BaseTail.ActiveBlockData Cyl →
+      Nonempty (BaseTail.MixedLowerWitnessData Cyl)
+
+theorem oddSuccessorBaseTailActiveBlockMixedExpansionGoal_of_witness
+    (hWitness : OddSuccessorBaseTailActiveBlockMixedWitnessGoal) :
+    OddSuccessorBaseTailActiveBlockMixedExpansionGoal := by
+  intro b m T _inst hb5 hmodd hm3 hsmall hbase packets
+    hlen htotal hpacketSum hpacketUnits hPrefix hT
+    Cyl hCyl hBlock
+  rcases hWitness hb5 hmodd hm3 hsmall hbase packets
+      hlen htotal hpacketSum hpacketUnits hPrefix hT
+      hCyl hBlock with
+    ⟨W⟩
+  exact BaseTail.mixedExpansionData_of_mixedLowerWitnessData
+    W
+
 theorem oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_activeBlock_mixedExpansion
     (hCyl : OddSuccessorBaseTailActiveBlockCylinderConstructionGoal)
     (hMix : OddSuccessorBaseTailActiveBlockMixedExpansionGoal) :

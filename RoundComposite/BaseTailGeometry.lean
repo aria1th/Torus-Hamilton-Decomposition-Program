@@ -280,6 +280,49 @@ structure MixedExpansionData {b m T : Nat} [NeZero m]
       U.Nonempty → U ≠ Finset.univ →
         m ^ b ≤ (Cyl.incidence).mixedCount U
 
+structure MixedLowerWitnessData {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    (Cyl : Cylinder b m T packets) where
+  witness :
+    ∀ U : Finset (Fin (b + T)),
+      U.Nonempty → U ≠ Finset.univ →
+        Finset (Shared.TorusVertex (b + 1) m)
+  witness_card :
+    ∀ U hUne hUuniv, (witness U hUne hUuniv).card = m ^ b
+  witness_mixed :
+    ∀ U hUne hUuniv,
+      ∀ x, x ∈ witness U hUne hUuniv →
+        0 < (Cyl.incidence.active x ∩ U).card ∧
+          (Cyl.incidence.active x ∩ U).card < T
+
+theorem mixedExpansionData_of_mixedLowerWitnessData
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets}
+    (W : MixedLowerWitnessData Cyl) :
+    MixedExpansionData Cyl where
+  mixed_lower := by
+    intro U hUne hUuniv
+    let E := W.witness U hUne hUuniv
+    have hsubset :
+        E ⊆
+          ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+            (fun x =>
+              0 < (Cyl.incidence.active x ∩ U).card ∧
+                (Cyl.incidence.active x ∩ U).card < T)) := by
+      intro x hx
+      exact Finset.mem_filter.mpr
+        ⟨Finset.mem_univ x, W.witness_mixed U hUne hUuniv x hx⟩
+    have hcard :
+        E.card ≤
+          ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+            (fun x =>
+              0 < (Cyl.incidence.active x ∩ U).card ∧
+                (Cyl.incidence.active x ∩ U).card < T)).card :=
+      Finset.card_le_card hsubset
+    rw [W.witness_card U hUne hUuniv] at hcard
+    rw [Cyl.incidence.mixedCount_eq_card_filter U]
+    exact hcard
+
 namespace MixedExpansionData
 
 theorem mixed_lower_compl
