@@ -6201,6 +6201,13 @@ theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_projectedPrefixLift
   oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
     (BaseTail.primitiveActivePrefixLiftAssemblyGoal_of_projectedLift hLift)
 
+theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_lowerTriangular
+    (hLift : BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal :=
+  oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_projectedPrefixLift
+    (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
+      hLift)
+
 theorem oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_expandedColorDirHamiltonian
     (hHam : BaseTail.ExpandedColorDirColorHamiltonianGoal) :
     OddSuccessorBaseTailActiveBlockPrimitiveLiftGoal :=
@@ -6611,6 +6618,10 @@ def OddSuccessorBaseTailWorker1ProjectedLargeMarginResidualGoal : Prop :=
   ActiveHallLargeMarginControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixProjectedLiftAssemblyGoal
 
+def OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal : Prop :=
+  ActiveHallLargeMarginControlledResidueRoundingGoal ∧
+  BaseTail.PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal
+
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1ClosedCylinderResiduals
     (h : OddSuccessorBaseTailWorker1ClosedCylinderResidualGoal) :
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
@@ -6634,6 +6645,16 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Projected
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_projectedPrefix
       hRound hLift
+
+theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1LowerTriangularLargeMarginResiduals
+    (h : OddSuccessorBaseTailWorker1LowerTriangularLargeMarginResidualGoal) :
+    OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
+  rcases h with ⟨hRound, hLift⟩
+  exact
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_largeMarginControlled_projectedPrefix
+      hRound
+      (BaseTail.primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
+        hLift)
 
 theorem oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_worker1ClosedPacketMixedHamiltonianResiduals
     (h : OddSuccessorBaseTailWorker1ClosedPacketMixedHamiltonianResidualGoal) :

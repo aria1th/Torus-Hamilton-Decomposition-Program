@@ -2196,6 +2196,177 @@ structure PrefixProjectedLiftColorDir {b m T : Nat} [NeZero m]
         Cyl.step c (collapseVertex b m T x)
 
 /--
+Projected lift data before Hamiltonicity is proved.
+
+The useful primitive-lift interface is not just an expanded edge selector: the
+expanded step must be a skew product over the compressed cylinder after the
+collapse/fiber coordinate split.  Hamiltonicity can then be proved from the
+section return on the fiber.
+-/
+structure PrefixProjectedLiftColorDirCore {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets) where
+  colorDir :
+    Shared.TorusColor (b + (n + 1)) →
+      Shared.TorusVertex (b + (n + 1)) m →
+        Shared.TorusDirection (b + (n + 1))
+  edgePartition : Shared.IsCayleyEdgePartition colorDir
+  collapse_step :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ x : Shared.TorusVertex (b + (n + 1)) m,
+        collapseVertex b m (n + 1) (Shared.cayleyColorStep colorDir c x) =
+          Cyl.step c (collapseVertex b m (n + 1) x)
+
+namespace PrefixProjectedLiftColorDirCore
+
+noncomputable def fiberStep {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLiftColorDirCore Cyl)
+    (c : Fin (b + (n + 1))) :
+    Shared.TorusVertex (b + 1) m →
+      (Fin n → ZMod m) → (Fin n → ZMod m) :=
+  fun y z =>
+    (collapseVertexFiberEquiv b m n
+      (Shared.cayleyColorStep D.colorDir c
+        ((collapseVertexFiberEquiv b m n).symm (y, z)))).2
+
+theorem skew_conj {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLiftColorDirCore Cyl)
+    (c : Fin (b + (n + 1)))
+    (p : Shared.TorusVertex (b + 1) m × (Fin n → ZMod m)) :
+    collapseVertexFiberEquiv b m n
+        (Shared.cayleyColorStep D.colorDir c
+          ((collapseVertexFiberEquiv b m n).symm p))
+      =
+    Shared.skewProductMap (Cyl.step c) (D.fiberStep c) p := by
+  rcases p with ⟨y, z⟩
+  apply Prod.ext
+  · dsimp [Shared.skewProductMap, fiberStep]
+    change
+      collapseVertex b m (n + 1)
+          (Shared.cayleyColorStep D.colorDir c
+            ((collapseVertexFiberEquiv b m n).symm (y, z))) =
+        Cyl.step c y
+    rw [D.collapse_step]
+    have hy :
+        collapseVertex b m (n + 1)
+          ((collapseVertexFiberEquiv b m n).symm (y, z)) = y := by
+      have h :=
+        congrArg Prod.fst
+          ((collapseVertexFiberEquiv b m n).right_inv (y, z))
+      exact h
+    rw [hy]
+  · rfl
+
+end PrefixProjectedLiftColorDirCore
+
+/--
+Lower-triangular monodromy form of the projected primitive lift.
+
+For each color, the expanded step is conjugate to a skew product over the
+cylinder color cycle.  The section return on the collapse fiber is required to
+be a lower-triangular `ZMod` vector map with unit total carries, exactly the
+shape consumed by `Shared.zmodVectorLowerTriangularUnitCycleCoordinate`.
+-/
+structure PrefixProjectedLowerTriangularLiftColorDir {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)}
+    (Cyl : Cylinder b m (n + 1) packets) where
+  core : PrefixProjectedLiftColorDirCore Cyl
+  base : Fin (b + (n + 1)) → Shared.TorusVertex (b + 1) m
+  period : Fin (b + (n + 1)) → Nat
+  fiber_bijective :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        Function.Bijective (core.fiberStep c y)
+  return_base :
+    ∀ c : Fin (b + (n + 1)),
+      ((Cyl.step c)^[period c]) (base c) = base c
+  base_cover :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ y : Shared.TorusVertex (b + 1) m,
+        ∃ k : Nat, k < period c ∧ ((Cyl.step c)^[k]) (base c) = y
+  gamma :
+    Fin (b + (n + 1)) →
+      ∀ k : Nat, k < n → (Fin k → ZMod m) → ZMod m
+  return_lower_triangular :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        Shared.sectionReturn
+            (Shared.skewProductMap (Cyl.step c) (core.fiberStep c))
+            (base c) (period c) z ⟨k, hk⟩
+          =
+        z ⟨k, hk⟩ +
+          gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z)
+  return_unit :
+    ∀ c : Fin (b + (n + 1)),
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), gamma c k hk z)
+
+namespace PrefixProjectedLowerTriangularLiftColorDir
+
+theorem colorHamiltonian {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLowerTriangularLiftColorDir Cyl)
+    (hCyl : IsCylinder Cyl) :
+    Shared.IsCayleyColorHamiltonian D.core.colorDir := by
+  intro c
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    Shared.sectionReturn
+      (Shared.skewProductMap (Cyl.step c) (D.core.fiberStep c))
+      (D.base c) (D.period c)
+  have htri :
+      ∀ z : Fin n → ZMod m, ∀ k : Nat, ∀ hk : k < n,
+        F z ⟨k, hk⟩ =
+          z ⟨k, hk⟩ +
+            D.gamma c k hk (Shared.zmodVectorTake (Nat.le_of_lt hk) z) := by
+    intro z k hk
+    exact D.return_lower_triangular c z k hk
+  have hunit :
+      ∀ k : Nat, ∀ hk : k < n,
+        IsUnit (∑ z : (Fin k → ZMod m), D.gamma c k hk z) := by
+    intro k hk
+    exact D.return_unit c k hk
+  rcases
+      Shared.zmodVectorLowerTriangularUnitCycleCoordinate
+        (m := m) (r := n) F (D.gamma c) htri hunit
+    with ⟨rank, hrank⟩
+  have hmonodromy :
+      Shared.IsSingleCycleMap F :=
+    (Shared.CycleCoordinate.ofRankEquiv rank hrank).singleCycle
+  have hskew :
+      Shared.IsSingleCycleMap
+        (Shared.skewProductMap (Cyl.step c) (D.core.fiberStep c)) :=
+    Shared.single_cycle_of_skewProduct_base_orbit_monodromy
+      (Cyl.step c) (D.core.fiberStep c)
+      (D.base c) (D.period c)
+      (hCyl.color_hamiltonian c).1
+      (D.fiber_bijective c)
+      (D.return_base c)
+      (D.base_cover c)
+      hmonodromy
+  exact
+    Shared.single_cycle_of_equiv_conj
+      (collapseVertexFiberEquiv b m n).symm
+      (Shared.cayleyColorStep D.core.colorDir c)
+      (Shared.skewProductMap (Cyl.step c) (D.core.fiberStep c))
+      hskew
+      (fun p => by
+        simpa using D.core.skew_conj c p)
+
+noncomputable def toProjected {b m n : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m (n + 1) packets}
+    (D : PrefixProjectedLowerTriangularLiftColorDir Cyl)
+    (hCyl : IsCylinder Cyl) :
+    PrefixProjectedLiftColorDir Cyl where
+  colorDir := D.core.colorDir
+  edgePartition := D.core.edgePartition
+  colorHamiltonian := D.colorHamiltonian hCyl
+  collapse_step := D.core.collapse_step
+
+end PrefixProjectedLowerTriangularLiftColorDir
+
+/--
 Concrete primitive prefix-lift target.
 
 This asks for an actual expanded Cayley direction selector whose steps project
@@ -2211,6 +2382,36 @@ def PrimitiveActivePrefixProjectedLiftAssemblyGoal : Prop :=
       IsActiveSymboling A →
       ActiveSymbolingCountsPrimitive hT A →
       Nonempty (PrefixProjectedLiftColorDir Cyl)
+
+/--
+Primitive prefix-lift target reduced to lower-triangular fiber monodromy.
+
+This is the sharper residual expected by the prefix-tail proof: build a
+projected expanded selector and prove its fiber section return has unit
+lower-triangular carries.  The generic skew-product and triangular-cycle
+machinery then supplies Hamiltonicity.
+-/
+def PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal : Prop :=
+  ∀ {b m n : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m (n + 1) packets} {A : ActiveSymboling Cyl}
+    (hT : 2 ≤ n + 1),
+      IsCylinder Cyl →
+      IsActiveSymboling A →
+      ActiveSymbolingCountsPrimitive hT A →
+      Nonempty (PrefixProjectedLowerTriangularLiftColorDir Cyl)
+
+theorem primitiveActivePrefixProjectedLiftAssemblyGoal_of_lowerTriangular
+    (hLift : PrimitiveActivePrefixLowerTriangularLiftAssemblyGoal) :
+    PrimitiveActivePrefixProjectedLiftAssemblyGoal := by
+  intro b m T _inst packets Cyl A hT hCyl hA hPrim
+  cases T with
+  | zero =>
+      omega
+  | succ n =>
+      rcases hLift (b := b) (m := m) (n := n)
+          (packets := packets) (Cyl := Cyl) (A := A)
+          hT hCyl hA hPrim with ⟨D⟩
+      exact ⟨D.toProjected hCyl⟩
 
 theorem primitiveActivePrefixLiftAssemblyGoal_of_projectedLift
     (hLift : PrimitiveActivePrefixProjectedLiftAssemblyGoal) :
