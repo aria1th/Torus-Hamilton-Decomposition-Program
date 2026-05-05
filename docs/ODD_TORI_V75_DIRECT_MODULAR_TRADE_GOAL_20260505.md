@@ -154,11 +154,15 @@ schedules:
 ```lean
 ActiveHall.Symboling.residueSpec
 ActiveHall.Symboling.hasResidues_residueSpec
+ActiveHall.Symboling.residueSpec_rowCompatible
+ActiveHall.Symboling.residueSpec_colCompatible
 ActiveHall.Symboling.swapResidueSpec_target_eq_add_localTradeDelta
 ActiveHall.Symboling.SwapMove
 ActiveHall.Symboling.applySwapMoves
 ActiveHall.Symboling.applySwapResidueSpecs
 ActiveHall.Symboling.applySwapMoves_hasResidues
+ActiveHall.Symboling.applySwapResidueSpecs_rowCompatible
+ActiveHall.Symboling.applySwapResidueSpecs_colCompatible
 ```
 
 The proof should construct symbolings directly from reserved local trade sites.
