@@ -128,6 +128,127 @@ def collapseVertex (b m T : Nat)
     else
       ∑ σ : Fin T, x (tailExpandedDir b σ)
 
+theorem collapseVertex_add_ordinaryExpandedDir {b m T : Nat}
+    (x : Shared.TorusVertex (b + T) m)
+    (i : Fin (b + 1)) (hi : i ≠ activeDir b) :
+    collapseVertex b m T
+        (x + Shared.torusBasis (b + T) m (ordinaryExpandedDir i hi))
+      =
+    collapseVertex b m T x + Shared.torusBasis (b + 1) m i := by
+  classical
+  funext j
+  by_cases hj : j.val < b
+  · by_cases hji : j = i
+    · subst i
+      simp [collapseVertex, hj, Shared.torusBasis, ordinaryExpandedDir]
+    · have hne :
+          (⟨j.val, by omega⟩ : Fin (b + T)) ≠
+            ordinaryExpandedDir i hi := by
+        intro h
+        exact hji (by
+          apply Fin.ext
+          simpa [ordinaryExpandedDir] using congrArg Fin.val h)
+      simp [collapseVertex, hj, Shared.torusBasis, hji, hne]
+  · have hjval : j.val = b := by omega
+    have hji : j ≠ i := by
+      intro h
+      have hv : i.val = b := by
+        rw [← congrArg Fin.val h]
+        exact hjval
+      exact hi (by
+        apply Fin.ext
+        simp [activeDir, hv])
+    have hzero :
+        (∑ σ : Fin T,
+          Shared.torusBasis (b + T) m
+            (ordinaryExpandedDir i hi) (tailExpandedDir b σ)) = 0 := by
+      apply Finset.sum_eq_zero
+      intro σ _hσ
+      have hne :
+          tailExpandedDir b σ ≠ ordinaryExpandedDir i hi := by
+        exact (ordinaryExpandedDir_ne_tailExpandedDir i hi σ).symm
+      simp [Shared.torusBasis, hne]
+    calc
+      collapseVertex b m T
+          (x + Shared.torusBasis (b + T) m (ordinaryExpandedDir i hi)) j
+          =
+        ∑ σ : Fin T,
+          (x + Shared.torusBasis (b + T) m
+            (ordinaryExpandedDir i hi)) (tailExpandedDir b σ) := by
+          simp [collapseVertex, hj]
+      _ =
+        (∑ σ : Fin T, x (tailExpandedDir b σ)) +
+          ∑ σ : Fin T,
+            Shared.torusBasis (b + T) m
+              (ordinaryExpandedDir i hi) (tailExpandedDir b σ) := by
+          simp [Pi.add_apply, Finset.sum_add_distrib]
+      _ = ∑ σ : Fin T, x (tailExpandedDir b σ) := by
+          rw [hzero, add_zero]
+      _ =
+        (collapseVertex b m T x + Shared.torusBasis (b + 1) m i) j := by
+          simp [collapseVertex, hj, Shared.torusBasis, hji, Pi.add_apply]
+
+theorem collapseVertex_add_tailExpandedDir {b m T : Nat}
+    (x : Shared.TorusVertex (b + T) m) (σ : Fin T) :
+    collapseVertex b m T
+        (x + Shared.torusBasis (b + T) m (tailExpandedDir b σ))
+      =
+    collapseVertex b m T x + Shared.torusBasis (b + 1) m (activeDir b) := by
+  classical
+  funext j
+  by_cases hj : j.val < b
+  · have hne :
+        (⟨j.val, by omega⟩ : Fin (b + T)) ≠ tailExpandedDir b σ := by
+      intro h
+      have hv := congrArg Fin.val h
+      simp [tailExpandedDir] at hv
+      omega
+    have hnotActive : j ≠ activeDir b := by
+      intro h
+      have hv := congrArg Fin.val h
+      simp [activeDir] at hv
+      omega
+    simp [collapseVertex, hj, Shared.torusBasis, hne, hnotActive]
+  · have hjActive : j = activeDir b := by
+      apply Fin.ext
+      simp [activeDir]
+      omega
+    have hsum :
+        (∑ τ : Fin T,
+          Shared.torusBasis (b + T) m
+            (tailExpandedDir b σ) (tailExpandedDir b τ)) = 1 := by
+      rw [Finset.sum_eq_single σ]
+      · simp [Shared.torusBasis]
+      · intro τ _hτ hτσ
+        have hne : tailExpandedDir b τ ≠ tailExpandedDir b σ := by
+          intro h
+          exact hτσ (tailExpandedDir_injective h)
+        simp [Shared.torusBasis, hne]
+      · intro hnot
+        exact False.elim (hnot (Finset.mem_univ σ))
+    subst j
+    calc
+      collapseVertex b m T
+          (x + Shared.torusBasis (b + T) m (tailExpandedDir b σ))
+          (activeDir b)
+          =
+        ∑ τ : Fin T,
+          (x + Shared.torusBasis (b + T) m
+            (tailExpandedDir b σ)) (tailExpandedDir b τ) := by
+          simp [collapseVertex, activeDir]
+      _ =
+        (∑ τ : Fin T, x (tailExpandedDir b τ)) +
+          ∑ τ : Fin T,
+            Shared.torusBasis (b + T) m
+              (tailExpandedDir b σ) (tailExpandedDir b τ) := by
+          simp [Pi.add_apply, Finset.sum_add_distrib]
+      _ = (∑ τ : Fin T, x (tailExpandedDir b τ)) + 1 := by
+          rw [hsum]
+      _ =
+        (collapseVertex b m T x +
+          Shared.torusBasis (b + 1) m (activeDir b)) (activeDir b) := by
+          simp [collapseVertex, activeDir, Shared.torusBasis, Pi.add_apply]
+
 structure IsCylinder {b m T : Nat} [NeZero m] {packets : List (List Nat)}
     (Cyl : Cylinder b m T packets) : Prop where
   ordinary_unique :
@@ -740,6 +861,37 @@ noncomputable def expandedColorDir
             exact Finset.mem_filter.mpr ⟨Finset.mem_univ c, hactive⟩⟩)
     else
       ordinaryExpandedDir i hactive
+
+theorem collapseVertex_cayleyColorStep_expandedColorDir
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    (Cyl : Cylinder b m T packets) (A : ActiveSymboling Cyl)
+    (c : Fin (b + T)) (x : Shared.TorusVertex (b + T) m) :
+    collapseVertex b m T
+        (Shared.cayleyColorStep (expandedColorDir Cyl A) c x)
+      =
+    Cyl.step c (collapseVertex b m T x) := by
+  classical
+  let y := collapseVertex b m T x
+  by_cases hactive : Cyl.dir c y = activeDir b
+  · have hdir :
+        expandedColorDir Cyl A c x =
+          tailExpandedDir b
+            ((A.Φ.equiv y).symm
+              ⟨c, by
+                change c ∈ Cyl.active y
+                exact Finset.mem_filter.mpr
+                  ⟨Finset.mem_univ c, hactive⟩⟩) := by
+      simp [expandedColorDir, y, hactive]
+    rw [Shared.cayleyColorStep, hdir,
+      collapseVertex_add_tailExpandedDir]
+    simp [Cylinder.step, y, hactive]
+  · have hdir :
+        expandedColorDir Cyl A c x =
+          ordinaryExpandedDir (Cyl.dir c y) hactive := by
+      simp [expandedColorDir, y, hactive]
+    rw [Shared.cayleyColorStep, hdir,
+      collapseVertex_add_ordinaryExpandedDir]
+    simp [Cylinder.step, y]
 
 structure IsActiveSymboling {b m T : Nat} [NeZero m]
     {packets : List (List Nat)}
