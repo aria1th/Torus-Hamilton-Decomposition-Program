@@ -5759,6 +5759,11 @@ Generic count-matrix rounding boundary for the active Hall layer.
 The base-tail data only supplies a concrete incidence structure and the error
 scale `m * #colors`; the rounding theorem itself should not depend on packets,
 cylinders, or Hamiltonian geometry.
+
+This is retained only as an optional stronger interface.  The Worker-1
+base-tail residuals below use the specialized mixed-cylinder controlled
+rounding goal, since row/column residue compatibility alone is not enough to
+construct a nonnegative count matrix with prescribed residues.
 -/
 def ActiveHallControlledResidueRoundingGoal : Prop :=
   ∀ {m T : Nat} [NeZero m] {X C : Type}
@@ -6073,7 +6078,7 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_m
 def OddSuccessorBaseTailWorker1ResidualGoal : Prop :=
   OddSuccessorBaseTailRawActiveBlockCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
-  ActiveHallControlledResidueRoundingGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
@@ -6081,14 +6086,18 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1Residuals
     OddSuccessorSmallModulusBaseTailGeometryFromHallGoal := by
   rcases h with ⟨hCyl, hMix, hRound, hLift⟩
   exact
-    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_rawActiveBlock_mixedWitness_activeHallControlled_prefix
-      hCyl hMix hRound hLift
+    oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
+      (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlock_mixedExpansion_controlled_prefix
+        (oddSuccessorBaseTailActiveBlockCylinderConstructionGoal_of_raw hCyl)
+        (oddSuccessorBaseTailActiveBlockMixedExpansionGoal_of_witness hMix)
+        hRound
+        hLift)
 
 def OddSuccessorBaseTailWorker1PhaseResidualGoal : Prop :=
   BaseTail.PacketPhaseSplitGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockCylinderConstructionGoal ∧
   OddSuccessorBaseTailActiveBlockMixedWitnessGoal ∧
-  ActiveHallControlledResidueRoundingGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResiduals
@@ -6104,7 +6113,7 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseResi
 def OddSuccessorBaseTailWorker1PhaseMixedResidualGoal : Prop :=
   BaseTail.PacketPhaseSplitGoal ∧
   OddSuccessorBaseTailPhaseSplitActiveBlockMixedCylinderConstructionGoal ∧
-  ActiveHallControlledResidueRoundingGoal ∧
+  OddSuccessorBaseTailActiveBlockMixedControlledResidueRoundingGoal ∧
   BaseTail.PrimitiveActivePrefixLiftAssemblyGoal
 
 theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixedResiduals
@@ -6113,11 +6122,10 @@ theorem oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_worker1PhaseMixe
   rcases h with ⟨hSplit, hCylMix, hRound, hLift⟩
   exact
     oddSuccessorSmallModulusBaseTailGeometryFromHallGoal_of_core
-      (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedCompatiblePieces
+      (oddSuccessorSmallModulusBaseTailGeometryCoreFromHallGoal_of_activeBlockMixedControlledPieces
         (oddSuccessorBaseTailActiveBlockMixedCylinderConstructionGoal_of_phaseSplit
           hSplit hCylMix)
-        (oddSuccessorBaseTailActiveBlockMixedCompatibleResidueRoundingGoal_of_activeHallControlled
-          hRound)
+        hRound
         (oddSuccessorBaseTailActiveBlockPrimitiveLiftGoal_of_prefixLiftAssembly
           hLift))
 

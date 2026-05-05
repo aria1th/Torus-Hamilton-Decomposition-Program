@@ -1856,6 +1856,85 @@ lemma list_sum_map_eq_sum_get {α : Type*} (f : α → Nat) :
       rw [Fin.sum_univ_succ]
       simp
 
+def PacketPartSlot (packets : List (List Nat)) : Type :=
+  Sigma fun i : Fin packets.length => Fin (packets.get i).length
+
+instance (packets : List (List Nat)) : Fintype (PacketPartSlot packets) := by
+  unfold PacketPartSlot
+  infer_instance
+
+def packetPartSlotPacket (packets : List (List Nat))
+    (slot : PacketPartSlot packets) : List Nat :=
+  packets.get slot.1
+
+def packetPartSlotValue (packets : List (List Nat))
+    (slot : PacketPartSlot packets) : Nat :=
+  (packets.get slot.1).get slot.2
+
+theorem packetPartSlotValue_mem (packets : List (List Nat))
+    (slot : PacketPartSlot packets) :
+    packetPartSlotValue packets slot ∈ packetPartSlotPacket packets slot := by
+  exact List.get_mem (packets.get slot.1) slot.2
+
+theorem packetPartSlot_card_eq_sum (packets : List (List Nat)) :
+    Fintype.card (PacketPartSlot packets) =
+      (packets.map List.length).sum := by
+  change
+    Fintype.card
+      (Sigma fun i : Fin packets.length => Fin (packets.get i).length) =
+        (packets.map List.length).sum
+  rw [Fintype.card_sigma]
+  simpa only [Fintype.card_fin] using
+    list_sum_map_eq_sum_get (fun packet : List Nat => packet.length)
+      packets
+
+def SuccessorPacketPartSlotCardGoal : Prop :=
+  ∀ {b T : Nat} {packets : List (List Nat)},
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    Fintype.card (PacketPartSlot packets) = b + T
+
+theorem successorPacketPartSlotCardGoal :
+    SuccessorPacketPartSlotCardGoal := by
+  intro b T packets _hlen htotal
+  rw [packetPartSlot_card_eq_sum, htotal]
+
+def SuccessorPacketPartSlotEquivGoal : Prop :=
+  ∀ {b T : Nat} {packets : List (List Nat)},
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    Nonempty (PacketPartSlot packets ≃ Fin (b + T))
+
+theorem successorPacketPartSlotEquivGoal :
+    SuccessorPacketPartSlotEquivGoal := by
+  intro b T packets hlen htotal
+  have hcard :
+      Fintype.card (PacketPartSlot packets) =
+        Fintype.card (Fin (b + T)) := by
+    rw [successorPacketPartSlotCardGoal hlen htotal]
+    simp
+  exact ⟨Fintype.equivOfCardEq hcard⟩
+
+def SuccessorPacketPartSlotUnitsGoal : Prop :=
+  ∀ {b m T : Nat} {packets : List (List Nat)},
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    ∀ slot : PacketPartSlot packets,
+      0 < packetPartSlotValue packets slot ∧
+        packetPartSlotValue packets slot < m ∧
+        Nat.Coprime (packetPartSlotValue packets slot) m
+
+theorem successorPacketPartSlotUnitsGoal :
+    SuccessorPacketPartSlotUnitsGoal := by
+  intro _b _m _T packets _hlen _htotal hunit slot
+  exact hunit
+    (packetPartSlotPacket packets slot)
+    (List.get_mem packets slot.1)
+    (packetPartSlotValue packets slot)
+    (packetPartSlotValue_mem packets slot)
+
 def PacketPrefixSlot (packets : List (List Nat)) : Type :=
   Sigma fun i : Fin packets.length => Fin ((packets.get i).length - 1)
 
