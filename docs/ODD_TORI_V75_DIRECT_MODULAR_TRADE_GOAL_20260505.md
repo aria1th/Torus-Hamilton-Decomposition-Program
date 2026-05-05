@@ -160,6 +160,7 @@ BaseTail.Trades.successorReservoirColorQuota_mul_le_pow
 BaseTail.Trades.exists_injective_color_quota_matching_of_activeBlockData
 BaseTail.Trades.exists_injective_successorReservoirColorQuota_matching_of_activeBlockData
 BaseTail.Trades.exists_disjoint_subset_card_eq_of_card_add_le
+BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le
 BaseTail.SuccessorPacketBuffer
 BaseTail.SuccessorPacketBufferGoal
 BaseTail.successorPacketBufferGoal
@@ -170,6 +171,9 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData
 Concrete.OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
 Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
 Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer01Candidates
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.buffer02Candidates
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
@@ -219,7 +223,11 @@ phase-split cylinder construction internals: the slot-color equivalence, packet
 splitters, active-block slot values, and the two `m ^ b` buffer-buffer coactive
 lower bounds.  The ordinary cylinder-construction theorem is folded through
 this data, so the reservoir proof no longer has to rediscover the packet
-geometry from an opaque `Cyl`.
+geometry from an opaque `Cyl`.  The two buffer-pair candidate families can now
+be carved into disjoint finite site subsets by
+`Concrete.OddSuccessorPhaseSplitBufferReservoirData.exists_disjoint_buffer_pair_subsets`,
+using the generic two-family helper
+`BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le`.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:

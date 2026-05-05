@@ -5548,6 +5548,69 @@ structure OddSuccessorPhaseSplitBufferReservoirData
           buffer.color0 slotEquiv ∈ (Cyl.incidence).active x ∧
             buffer.color2 slotEquiv ∈ (Cyl.incidence).active x)).card
 
+namespace OddSuccessorPhaseSplitBufferReservoirData
+
+noncomputable def buffer01Candidates
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) :
+    Finset (Shared.TorusVertex (b + 1) m) :=
+  (Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+    (fun x =>
+      A.buffer.color0 A.slotEquiv ∈ (A.Cyl.incidence).active x ∧
+        A.buffer.color1 A.slotEquiv ∈ (A.Cyl.incidence).active x)
+
+noncomputable def buffer02Candidates
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) :
+    Finset (Shared.TorusVertex (b + 1) m) :=
+  (Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+    (fun x =>
+      A.buffer.color0 A.slotEquiv ∈ (A.Cyl.incidence).active x ∧
+        A.buffer.color2 A.slotEquiv ∈ (A.Cyl.incidence).active x)
+
+theorem buffer01Candidates_card_lower
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) :
+    m ^ b ≤ A.buffer01Candidates.card := by
+  exact A.buffer01_pair_lower
+
+theorem buffer02Candidates_card_lower
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets) :
+    m ^ b ≤ A.buffer02Candidates.card := by
+  exact A.buffer02_pair_lower
+
+theorem exists_disjoint_buffer_pair_subsets
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    (A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets)
+    {used : Finset (Shared.TorusVertex (b + 1) m)}
+    {n01 n02 : Nat}
+    (hbudget : used.card + n01 + n02 ≤ m ^ b) :
+    ∃ chosen01 chosen02 : Finset (Shared.TorusVertex (b + 1) m),
+      chosen01 ⊆ A.buffer01Candidates ∧
+        chosen02 ⊆ A.buffer02Candidates ∧
+        Disjoint chosen01 used ∧
+        Disjoint chosen02 used ∧
+        Disjoint chosen01 chosen02 ∧
+        chosen01.card = n01 ∧
+        chosen02.card = n02 := by
+  exact
+    BaseTail.Trades.exists_two_disjoint_subsets_card_eq_of_card_add_le
+      A.buffer01Candidates_card_lower A.buffer02Candidates_card_lower
+      hbudget
+
+end OddSuccessorPhaseSplitBufferReservoirData
+
 def OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal :
     Prop :=
   ∀ {b m T : Nat} [NeZero m] [NeZero (m ^ b)],

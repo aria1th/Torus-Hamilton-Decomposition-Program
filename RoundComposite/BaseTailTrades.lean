@@ -577,6 +577,50 @@ theorem exists_disjoint_subset_card_eq_of_card_add_le
     intro x hx hused
     exact (Finset.mem_sdiff.mp (hchosen hx)).2 hused
 
+theorem exists_two_disjoint_subsets_card_eq_of_card_add_le
+    {X : Type*} {used candidates₁ candidates₂ : Finset X}
+    {n₁ n₂ M : Nat}
+    (hcard₁ : M ≤ candidates₁.card)
+    (hcard₂ : M ≤ candidates₂.card)
+    (hbudget : used.card + n₁ + n₂ ≤ M) :
+    ∃ chosen₁ chosen₂ : Finset X,
+      chosen₁ ⊆ candidates₁ ∧
+        chosen₂ ⊆ candidates₂ ∧
+        Disjoint chosen₁ used ∧
+        Disjoint chosen₂ used ∧
+        Disjoint chosen₁ chosen₂ ∧
+        chosen₁.card = n₁ ∧
+        chosen₂.card = n₂ := by
+  classical
+  have hfirst : used.card + n₁ ≤ candidates₁.card := by
+    exact (by omega : used.card + n₁ ≤ M).trans hcard₁
+  rcases exists_disjoint_subset_card_eq_of_card_add_le
+      (used := used) (candidates := candidates₁) (n := n₁) hfirst with
+    ⟨chosen₁, hsub₁, hdisj₁, hchosen₁Card⟩
+  have hunionCard :
+      (used ∪ chosen₁).card ≤ used.card + n₁ := by
+    calc
+      (used ∪ chosen₁).card ≤ used.card + chosen₁.card :=
+        Finset.card_union_le used chosen₁
+      _ = used.card + n₁ := by rw [hchosen₁Card]
+  have hsecond : (used ∪ chosen₁).card + n₂ ≤ candidates₂.card := by
+    exact (by omega : (used ∪ chosen₁).card + n₂ ≤ M).trans hcard₂
+  rcases exists_disjoint_subset_card_eq_of_card_add_le
+      (used := used ∪ chosen₁) (candidates := candidates₂) (n := n₂)
+      hsecond with
+    ⟨chosen₂, hsub₂, hdisj₂, hchosen₂Card⟩
+  have hdisj₂_used : Disjoint chosen₂ used := by
+    rw [Finset.disjoint_left] at hdisj₂ ⊢
+    intro x hx hused
+    exact hdisj₂ hx (Finset.mem_union.mpr (Or.inl hused))
+  have hdisj₁₂ : Disjoint chosen₁ chosen₂ := by
+    rw [Finset.disjoint_left] at hdisj₂ ⊢
+    intro x hx₁ hx₂
+    exact hdisj₂ hx₂ (Finset.mem_union.mpr (Or.inr hx₁))
+  exact
+    ⟨chosen₁, chosen₂, hsub₁, hsub₂, hdisj₁, hdisj₂_used,
+      hdisj₁₂, hchosen₁Card, hchosen₂Card⟩
+
 def nonzeroZeroTradeDeltaSumOfTwoLe {m T : Nat} {X C : Type*}
     [DecidableEq C] (hT : 2 ≤ T)
     (zeroColor rightColor :
