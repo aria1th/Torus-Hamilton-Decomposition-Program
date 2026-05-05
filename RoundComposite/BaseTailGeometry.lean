@@ -952,6 +952,44 @@ theorem ordinary_false_card_of_equiv
   rw [← hα, Fintype.card_congr eSub, hy]
   exact S.ordinary_false_card r hgetle
 
+theorem ordinary_true_card_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α]
+    {packet : List Nat} (S : PacketPhaseSplit N m packet)
+    (e : α ≃ ZMod N × ZMod m)
+    (r : Fin packet.length) :
+    ((Finset.univ : Finset α).filter
+      (fun x => S.ordinary r (e x) = true)).card =
+        packet.get r * N := by
+  classical
+  let eSub :
+      {x : α // S.ordinary r (e x) = true} ≃
+        {y : ZMod N × ZMod m // S.ordinary r y = true} :=
+  {
+    toFun := fun x => ⟨e x.1, x.2⟩
+    invFun := fun y => ⟨e.symm y.1, by simpa using y.2⟩
+    left_inv := by
+      intro x
+      apply Subtype.ext
+      simp
+    right_inv := by
+      intro y
+      apply Subtype.ext
+      simp
+  }
+  have hα :
+      Fintype.card {x : α // S.ordinary r (e x) = true} =
+      ((Finset.univ : Finset α).filter
+        (fun x => S.ordinary r (e x) = true)).card := by
+    exact Fintype.card_subtype _
+  have hy :
+      Fintype.card {y : ZMod N × ZMod m // S.ordinary r y = true} =
+      ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+        (fun y => S.ordinary r y = true)).card := by
+    exact Fintype.card_subtype _
+  rw [← hα, Fintype.card_congr eSub, hy]
+  exact S.ordinary_card r
+
 end PacketPhaseSplit
 
 def packetPhase {N m : Nat} [NeZero N] [NeZero m] (hdiv : m ∣ N) :
@@ -8632,6 +8670,174 @@ theorem color1_ne_color2 {b T : Nat} {packets : List (List Nat)}
     B.color1 e ≠ B.color2 e := by
   intro h
   exact B.slot1_ne_slot2 (e.injective h)
+
+theorem pair01_false_iff_slot2_true
+    {N m : Nat} [NeZero N] [NeZero m] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (y : ZMod N × ZMod m) :
+    S.ordinary B.slot0.2 y = false ∧
+        S.ordinary B.slot1.2 y = false ↔
+      S.ordinary B.slot2.2 y = true := by
+  constructor
+  · intro hfalse
+    rcases S.ordinary_unique y with ⟨r, hr, huniq⟩
+    have hrval : r.val = 0 ∨ r.val = 1 ∨ r.val = 2 := by
+      have hltLen := r.isLt
+      have hlen : (packets.get B.packetIndex).length = 3 := B.packet_length
+      omega
+    rcases hrval with hr0 | hr1 | hr2
+    · have hrslot : r = B.slot0.2 := Fin.ext hr0
+      have htrue : S.ordinary B.slot0.2 y = true := by simpa [hrslot] using hr
+      rw [hfalse.1] at htrue
+      simp at htrue
+    · have hrslot : r = B.slot1.2 := Fin.ext hr1
+      have htrue : S.ordinary B.slot1.2 y = true := by simpa [hrslot] using hr
+      rw [hfalse.2] at htrue
+      simp at htrue
+    · have hrslot : r = B.slot2.2 := Fin.ext hr2
+      simpa [hrslot] using hr
+  · intro htrue
+    constructor
+    · by_cases h0 : S.ordinary B.slot0.2 y
+      · rcases S.ordinary_unique y with ⟨_r, _hr, huniq⟩
+        have heq := huniq B.slot0.2 h0
+        have heq2 := huniq B.slot2.2 htrue
+        have hslots : B.slot0.2 = B.slot2.2 := heq.trans heq2.symm
+        have hval := congrArg Fin.val hslots
+        simp [slot0, slot2] at hval
+      · simpa using h0
+    · by_cases h1 : S.ordinary B.slot1.2 y
+      · rcases S.ordinary_unique y with ⟨_r, _hr, huniq⟩
+        have heq := huniq B.slot1.2 h1
+        have heq2 := huniq B.slot2.2 htrue
+        have hslots : B.slot1.2 = B.slot2.2 := heq.trans heq2.symm
+        have hval := congrArg Fin.val hslots
+        simp [slot1, slot2] at hval
+      · simpa using h1
+
+theorem pair02_false_iff_slot1_true
+    {N m : Nat} [NeZero N] [NeZero m] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (y : ZMod N × ZMod m) :
+    S.ordinary B.slot0.2 y = false ∧
+        S.ordinary B.slot2.2 y = false ↔
+      S.ordinary B.slot1.2 y = true := by
+  constructor
+  · intro hfalse
+    rcases S.ordinary_unique y with ⟨r, hr, huniq⟩
+    have hrval : r.val = 0 ∨ r.val = 1 ∨ r.val = 2 := by
+      have hltLen := r.isLt
+      have hlen : (packets.get B.packetIndex).length = 3 := B.packet_length
+      omega
+    rcases hrval with hr0 | hr1 | hr2
+    · have hrslot : r = B.slot0.2 := Fin.ext hr0
+      have htrue : S.ordinary B.slot0.2 y = true := by simpa [hrslot] using hr
+      rw [hfalse.1] at htrue
+      simp at htrue
+    · have hrslot : r = B.slot1.2 := Fin.ext hr1
+      simpa [hrslot] using hr
+    · have hrslot : r = B.slot2.2 := Fin.ext hr2
+      have htrue : S.ordinary B.slot2.2 y = true := by simpa [hrslot] using hr
+      rw [hfalse.2] at htrue
+      simp at htrue
+  · intro htrue
+    constructor
+    · by_cases h0 : S.ordinary B.slot0.2 y
+      · rcases S.ordinary_unique y with ⟨_r, _hr, huniq⟩
+        have heq := huniq B.slot0.2 h0
+        have heq1 := huniq B.slot1.2 htrue
+        have hslots : B.slot0.2 = B.slot1.2 := heq.trans heq1.symm
+        have hval := congrArg Fin.val hslots
+        simp [slot0, slot1] at hval
+      · simpa using h0
+    · by_cases h2 : S.ordinary B.slot2.2 y
+      · rcases S.ordinary_unique y with ⟨_r, _hr, huniq⟩
+        have heq := huniq B.slot2.2 h2
+        have heq1 := huniq B.slot1.2 htrue
+        have hslots : B.slot2.2 = B.slot1.2 := heq.trans heq1.symm
+        have hval := congrArg Fin.val hslots
+        simp [slot1, slot2] at hval
+      · simpa using h2
+
+theorem pair01_false_card_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (e : α ≃ ZMod N × ZMod m) :
+    ((Finset.univ : Finset α).filter
+      (fun x =>
+        S.ordinary B.slot0.2 (e x) = false ∧
+          S.ordinary B.slot1.2 (e x) = false)).card =
+        packetPartSlotValue packets B.slot2 * N := by
+  have hfilter :
+      ((Finset.univ : Finset α).filter
+        (fun x =>
+          S.ordinary B.slot0.2 (e x) = false ∧
+            S.ordinary B.slot1.2 (e x) = false)) =
+      ((Finset.univ : Finset α).filter
+        (fun x => S.ordinary B.slot2.2 (e x) = true)) := by
+    ext x
+    simp [B.pair01_false_iff_slot2_true S (e x)]
+  rw [hfilter]
+  simpa [packetPartSlotValue, slot2] using
+    S.ordinary_true_card_of_equiv e B.slot2.2
+
+theorem pair02_false_card_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (e : α ≃ ZMod N × ZMod m) :
+    ((Finset.univ : Finset α).filter
+      (fun x =>
+        S.ordinary B.slot0.2 (e x) = false ∧
+          S.ordinary B.slot2.2 (e x) = false)).card =
+        packetPartSlotValue packets B.slot1 * N := by
+  have hfilter :
+      ((Finset.univ : Finset α).filter
+        (fun x =>
+          S.ordinary B.slot0.2 (e x) = false ∧
+            S.ordinary B.slot2.2 (e x) = false)) =
+      ((Finset.univ : Finset α).filter
+        (fun x => S.ordinary B.slot1.2 (e x) = true)) := by
+    ext x
+    simp [B.pair02_false_iff_slot1_true S (e x)]
+  rw [hfilter]
+  simpa [packetPartSlotValue, slot1] using
+    S.ordinary_true_card_of_equiv e B.slot1.2
+
+theorem pair01_false_card_lower_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (e : α ≃ ZMod N × ZMod m)
+    (hpos : 0 < packetPartSlotValue packets B.slot2) :
+    N ≤
+      ((Finset.univ : Finset α).filter
+        (fun x =>
+          S.ordinary B.slot0.2 (e x) = false ∧
+            S.ordinary B.slot1.2 (e x) = false)).card := by
+  rw [B.pair01_false_card_of_equiv S e]
+  exact Nat.le_mul_of_pos_left N hpos
+
+theorem pair02_false_card_lower_of_equiv
+    {N m : Nat} [NeZero N] [NeZero m]
+    {α : Type*} [Fintype α] {packets : List (List Nat)}
+    (B : SuccessorPacketBuffer packets)
+    (S : PacketPhaseSplit N m (packets.get B.packetIndex))
+    (e : α ≃ ZMod N × ZMod m)
+    (hpos : 0 < packetPartSlotValue packets B.slot1) :
+    N ≤
+      ((Finset.univ : Finset α).filter
+        (fun x =>
+          S.ordinary B.slot0.2 (e x) = false ∧
+            S.ordinary B.slot2.2 (e x) = false)).card := by
+  rw [B.pair02_false_card_of_equiv S e]
+  exact Nat.le_mul_of_pos_left N hpos
 
 end SuccessorPacketBuffer
 

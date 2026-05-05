@@ -163,6 +163,9 @@ BaseTail.Trades.exists_disjoint_subset_card_eq_of_card_add_le
 BaseTail.SuccessorPacketBuffer
 BaseTail.SuccessorPacketBufferGoal
 BaseTail.successorPacketBufferGoal
+BaseTail.PacketPhaseSplit.ordinary_true_card_of_equiv
+BaseTail.SuccessorPacketBuffer.pair01_false_card_lower_of_equiv
+BaseTail.SuccessorPacketBuffer.pair02_false_card_lower_of_equiv
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
@@ -203,7 +206,10 @@ three buffer colors and the two buffer-buffer site families.  The packet-side
 buffer witness `BaseTail.successorPacketBufferGoal` now supplies the unique
 successor length-three packet as three distinct candidate buffer slots; the next
 geometric step is to connect those slots to same-packet coactivity in the
-constructed cylinder.
+constructed cylinder.  The phase-split side of that connection is isolated by
+`BaseTail.SuccessorPacketBuffer.pair01_false_card_lower_of_equiv` and
+`BaseTail.SuccessorPacketBuffer.pair02_false_card_lower_of_equiv`, which count
+the two buffer-buffer candidate families inside the length-three packet.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
