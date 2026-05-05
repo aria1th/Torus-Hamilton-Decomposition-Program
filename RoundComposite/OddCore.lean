@@ -5512,11 +5512,87 @@ def OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGo
             ∃! c : Fin (b + T), Cyl.dir c x = i) ∧
         (∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c))
 
-theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal :
-    OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal := by
+/--
+Constructive data retained from the phase-split successor cylinder build.
+
+The ordinary construction theorem only exposes `Cyl` and its active-block
+certificate.  The reservoir proof also needs the packet-slot parametrization and
+the length-three packet whose two buffer-buffer coactive families have at least
+`m ^ b` candidate sites.
+-/
+structure OddSuccessorPhaseSplitBufferReservoirData
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    (packets : List (List Nat)) where
+  Cyl : BaseTail.Cylinder b m T packets
+  D : BaseTail.ActiveBlockData Cyl
+  isCylinder : BaseTail.IsCylinder Cyl
+  slotEquiv : BaseTail.PacketPartSlot packets ≃ Fin (b + T)
+  splitter :
+    ∀ i : Fin packets.length,
+      BaseTail.PacketPhaseSplit (m ^ b) m (packets.get i)
+  buffer : BaseTail.SuccessorPacketBuffer packets
+  activeBlock_eq_slotValue :
+    ∀ c : Fin (b + T),
+      D.activeBlock c =
+        BaseTail.packetPartSlotValue packets (slotEquiv.symm c)
+  buffer01_pair_lower :
+    m ^ b ≤
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          buffer.color0 slotEquiv ∈ (Cyl.incidence).active x ∧
+            buffer.color1 slotEquiv ∈ (Cyl.incidence).active x)).card
+  buffer02_pair_lower :
+    m ^ b ≤
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          buffer.color0 slotEquiv ∈ (Cyl.incidence).active x ∧
+            buffer.color2 slotEquiv ∈ (Cyl.incidence).active x)).card
+
+def OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal :
+    Prop :=
+  ∀ {b m T : Nat} [NeZero m] [NeZero (m ^ b)],
+    5 ≤ b →
+    3 ≤ m →
+    Shared.CoordinatizedCayleyDecomposition b m →
+    (packets : List (List Nat)) →
+    packets.length = b →
+    (packets.map List.length).sum = b + T →
+    (∀ packet, packet ∈ packets → packet.sum = m) →
+    (∀ packet, packet ∈ packets →
+      ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+    (∀ packet, packet ∈ packets →
+      ∀ q : Nat, 0 < q → q < packet.length →
+        Nat.Coprime (packet.take q).sum m) →
+    (∀ packet, packet ∈ packets →
+      Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet)) →
+    T = b + 1 →
+    ∃ _A : OddSuccessorPhaseSplitBufferReservoirData
+        (b := b) (m := m) (T := T) packets,
+      True
+
+noncomputable def oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    (hb5 : 5 ≤ b)
+    (hm3 : 3 ≤ m)
+    (Dbase : Shared.CoordinatizedCayleyDecomposition b m)
+    (packets : List (List Nat))
+    (hlen : packets.length = b)
+    (htotal : (packets.map List.length).sum = b + T)
+    (hpacketSum : ∀ packet, packet ∈ packets → packet.sum = m)
+    (hpacketUnits :
+      ∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m)
+    (_hPrefix :
+      ∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m)
+    (hPacketSplits :
+      ∀ packet, packet ∈ packets →
+        Nonempty (BaseTail.PacketPhaseSplit (m ^ b) m packet))
+    (hT : T = b + 1) :
+    OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets := by
   classical
-  intro b m T _instM _instPow _hb5 hm3 Dbase packets hlen htotal
-    hpacketSum hpacketUnits _hPrefix hPacketSplits _hT
   let slotEquiv : BaseTail.PacketPartSlot packets ≃ Fin (b + T) :=
     Classical.choice (BaseTail.successorPacketPartSlotEquivGoal hlen htotal)
   let S : ∀ i : Fin packets.length,
@@ -5589,8 +5665,11 @@ theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructi
           BaseTail.baseActiveRankEquiv_apply, BaseTail.castSucc_ne_activeDir]
           using hfalse
     }
-  refine ⟨Cyl, D, ?_, ?_⟩
-  · intro x i hi
+  have hOrdinary :
+      ∀ x : Shared.TorusVertex (b + 1) m,
+        ∀ i : Fin (b + 1), i ≠ BaseTail.activeDir b →
+          ∃! c : Fin (b + T), Cyl.dir c x = i := by
+    intro x i hi
     have hiv : i.val < b := by
       by_contra hnot
       have hlast : i = BaseTail.activeDir b := by
@@ -5667,7 +5746,9 @@ theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructi
       calc
         c = slotEquiv (slotEquiv.symm c) := by simp
         _ = slotEquiv slot := by rw [hslotEq]
-  · intro c
+  have hHamiltonian :
+      ∀ c : Fin (b + T), Shared.IsSingleCycleMap (Cyl.step c) := by
+    intro c
     let slot : BaseTail.PacketPartSlot packets := slotEquiv.symm c
     let baseColor : Fin b := baseColorOfSlot slot
     let C := Dbase.cycleCoordinate baseColor
@@ -5699,6 +5780,140 @@ theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructi
     · simpa [Cyl, BaseTail.Cylinder.step, dir, ordinaryAt, rankAt,
         baseColorOfSlot, slot, baseColor, C, g, hord] using
         BaseTail.baseActiveRankEquiv_add_activeDir C (C.equiv z) a
+  have hCyl : BaseTail.IsCylinder Cyl :=
+    D.isCylinder_of_activeBlockData hOrdinary hHamiltonian (by omega)
+  let B : BaseTail.SuccessorPacketBuffer packets :=
+    Classical.choice
+      (BaseTail.successorPacketBufferGoal
+        hm3 hT hlen htotal hpacketSum hpacketUnits)
+  have hActiveSlot :
+      ∀ slot : BaseTail.PacketPartSlot packets,
+        ∀ x : Shared.TorusVertex (b + 1) m,
+          slotEquiv slot ∈ (Cyl.incidence).active x ↔
+            (S slot.1).ordinary slot.2
+              (rankAt x slot.1, BaseTail.activeCoord x) = false := by
+    intro slot x
+    by_cases hord :
+        (S slot.1).ordinary slot.2
+          (rankAt x slot.1, BaseTail.activeCoord x)
+    · have hnot :
+          slotEquiv slot ∉ (Cyl.incidence).active x := by
+        have hordAt : ordinaryAt (slotEquiv slot) x = true := by
+          change
+            (S (slotEquiv.symm (slotEquiv slot)).1).ordinary
+              (slotEquiv.symm (slotEquiv slot)).2
+              (rankAt x (slotEquiv.symm (slotEquiv slot)).1,
+                BaseTail.activeCoord x) = true
+          rw [Equiv.symm_apply_apply]
+          simpa using hord
+        simp [BaseTail.Cylinder.incidence, BaseTail.Cylinder.active, Cyl,
+          dir, hordAt, BaseTail.castSucc_ne_activeDir]
+      constructor
+      · intro hmem
+        exact False.elim (hnot hmem)
+      · intro hfalse
+        rw [hord] at hfalse
+        simp at hfalse
+    · constructor
+      · intro _hmem
+        exact Bool.eq_false_iff.mpr hord
+      · intro _hfalse
+        have hordAt : ordinaryAt (slotEquiv slot) x = false := by
+          change
+            (S (slotEquiv.symm (slotEquiv slot)).1).ordinary
+              (slotEquiv.symm (slotEquiv slot)).2
+              (rankAt x (slotEquiv.symm (slotEquiv slot)).1,
+                BaseTail.activeCoord x) = false
+          rw [Equiv.symm_apply_apply]
+          exact Bool.eq_false_iff.mpr hord
+        simp [BaseTail.Cylinder.incidence, BaseTail.Cylinder.active, Cyl,
+          dir, hordAt]
+  let Cbuf := Dbase.cycleCoordinate (baseColorOfSlot B.slot0)
+  let ebuf :
+      Shared.TorusVertex (b + 1) m ≃ ZMod (m ^ b) × ZMod m :=
+    BaseTail.baseActiveRankEquiv Cbuf
+  have hEbuf :
+      ∀ x : Shared.TorusVertex (b + 1) m,
+        ebuf x = (rankAt x B.packetIndex, BaseTail.activeCoord x) := by
+    intro x
+    simp [ebuf, Cbuf, rankAt, baseColorOfSlot,
+      BaseTail.SuccessorPacketBuffer.slot0]
+  have hslot1pos :
+      0 < BaseTail.packetPartSlotValue packets B.slot1 :=
+    (BaseTail.successorPacketPartSlotUnitsGoal
+      hlen htotal hpacketUnits B.slot1).1
+  have hslot2pos :
+      0 < BaseTail.packetPartSlotValue packets B.slot2 :=
+    (BaseTail.successorPacketPartSlotUnitsGoal
+      hlen htotal hpacketUnits B.slot2).1
+  have hfilter01 :
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          B.color0 slotEquiv ∈ (Cyl.incidence).active x ∧
+            B.color1 slotEquiv ∈ (Cyl.incidence).active x)) =
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          (S B.packetIndex).ordinary B.slot0.2 (ebuf x) = false ∧
+            (S B.packetIndex).ordinary B.slot1.2 (ebuf x) = false)) := by
+    ext x
+    simp [BaseTail.SuccessorPacketBuffer.color0,
+      BaseTail.SuccessorPacketBuffer.color1,
+      hActiveSlot, hEbuf]
+  have hfilter02 :
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          B.color0 slotEquiv ∈ (Cyl.incidence).active x ∧
+            B.color2 slotEquiv ∈ (Cyl.incidence).active x)) =
+      ((Finset.univ : Finset (Shared.TorusVertex (b + 1) m)).filter
+        (fun x =>
+          (S B.packetIndex).ordinary B.slot0.2 (ebuf x) = false ∧
+            (S B.packetIndex).ordinary B.slot2.2 (ebuf x) = false)) := by
+    ext x
+    simp [BaseTail.SuccessorPacketBuffer.color0,
+      BaseTail.SuccessorPacketBuffer.color2,
+      hActiveSlot, hEbuf]
+  refine
+    {
+      Cyl := Cyl
+      D := D
+      isCylinder := hCyl
+      slotEquiv := slotEquiv
+      splitter := S
+      buffer := B
+      activeBlock_eq_slotValue := ?_
+      buffer01_pair_lower := ?_
+      buffer02_pair_lower := ?_
+    }
+  · intro c
+    rfl
+  · rw [hfilter01]
+    exact B.pair01_false_card_lower_of_equiv (S B.packetIndex) ebuf
+      hslot2pos
+  · rw [hfilter02]
+    exact B.pair02_false_card_lower_of_equiv (S B.packetIndex) ebuf
+      hslot1pos
+
+theorem oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal :
+    OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal := by
+  intro b m T _instM _instPow hb5 hm3 Dbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hPacketSplits hT
+  exact
+    ⟨oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
+      hb5 hm3 Dbase packets hlen htotal hpacketSum hpacketUnits
+      hPrefix hPacketSplits hT,
+      trivial⟩
+
+theorem oddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal :
+    OddSuccessorBaseTailCoordinatizedPhaseSplitActiveBlockCylinderConstructionGoal := by
+  intro b m T _instM _instPow hb5 hm3 Dbase packets hlen htotal
+    hpacketSum hpacketUnits hPrefix hPacketSplits hT
+  let A :=
+    oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
+      hb5 hm3 Dbase packets hlen htotal hpacketSum hpacketUnits
+      hPrefix hPacketSplits hT
+  exact
+    ⟨A.Cyl, A.D, A.isCylinder.ordinary_unique,
+      A.isCylinder.color_hamiltonian⟩
 
 /--
 Phase-split construction target for the full mixed active-block cylinder.

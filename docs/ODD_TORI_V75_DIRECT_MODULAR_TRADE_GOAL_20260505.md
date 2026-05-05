@@ -166,6 +166,10 @@ BaseTail.successorPacketBufferGoal
 BaseTail.PacketPhaseSplit.ordinary_true_card_of_equiv
 BaseTail.SuccessorPacketBuffer.pair01_false_card_lower_of_equiv
 BaseTail.SuccessorPacketBuffer.pair02_false_card_lower_of_equiv
+Concrete.OddSuccessorPhaseSplitBufferReservoirData
+Concrete.OddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
+Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirData
+Concrete.oddSuccessorBaseTailCoordinatizedPhaseSplitBufferReservoirDataGoal
 ActiveHall.Symboling.ofIncidence
 ActiveHall.Symboling.exists_of_incidence
 ActiveHall.Symboling.residueSpec
@@ -210,6 +214,12 @@ constructed cylinder.  The phase-split side of that connection is isolated by
 `BaseTail.SuccessorPacketBuffer.pair01_false_card_lower_of_equiv` and
 `BaseTail.SuccessorPacketBuffer.pair02_false_card_lower_of_equiv`, which count
 the two buffer-buffer candidate families inside the length-three packet.
+`Concrete.OddSuccessorPhaseSplitBufferReservoirData` now preserves the actual
+phase-split cylinder construction internals: the slot-color equivalence, packet
+splitters, active-block slot values, and the two `m ^ b` buffer-buffer coactive
+lower bounds.  The ordinary cylinder-construction theorem is folded through
+this data, so the reservoir proof no longer has to rediscover the packet
+geometry from an opaque `Cyl`.
 
 The current Lean surface has been reduced to a one-site pre-correction
 reservoir form, and the pre-correction/local-trade distinction is now closed:
