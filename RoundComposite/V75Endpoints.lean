@@ -26,6 +26,15 @@ def OddModulusToriV75ReservoirInputsGoal : Prop :=
   BaseTail.Trades.SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal
 
 /--
+v7.5/v7.6 input package using the paper-facing active residue scheduling
+theorem: compatible residue targets on the successor active cylinder are
+realized directly by local symbol trades.
+-/
+def OddModulusToriV75CompatibleResidueSchedulingInputsGoal : Prop :=
+  OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal ∧
+  BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal
+
+/--
 v7.5 input package using the one-site pre-correction reservoir surface.
 -/
 def OddModulusToriV75PreCorrectionInputsGoal : Prop :=
@@ -163,6 +172,20 @@ theorem oddModulusToriV75ReservoirInputsGoal_iff_directInputs :
       OddModulusToriV75DirectModularTradeInputsGoal :=
   ⟨oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs,
     oddModulusToriV75ReservoirInputsGoal_of_directInputs⟩
+
+theorem oddModulusToriV75DirectModularTradeInputsGoal_of_compatibleResidueSchedulingInputs
+    (h : OddModulusToriV75CompatibleResidueSchedulingInputsGoal) :
+    OddModulusToriV75DirectModularTradeInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+      h.2⟩
+
+theorem oddModulusToriV75ReservoirInputsGoal_of_compatibleResidueSchedulingInputs
+    (h : OddModulusToriV75CompatibleResidueSchedulingInputsGoal) :
+    OddModulusToriV75ReservoirInputsGoal :=
+  ⟨h.1,
+    BaseTail.Trades.successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_compatibleResidueScheduling
+      h.2⟩
 
 theorem oddModulusToriV75DirectModularTradeInputsGoal_of_preCorrectionInputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
@@ -428,6 +451,13 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_reservoirInputs
   oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs h)
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_compatibleResidueSchedulingInputs
+    (h : OddModulusToriV75CompatibleResidueSchedulingInputsGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_inputs
+    (oddModulusToriV75DirectModularTradeInputsGoal_of_compatibleResidueSchedulingInputs
+      h)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_preCorrectionInputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
     OddModulusToriV75DirectModularTradeBlocksGoal :=
@@ -533,6 +563,16 @@ theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade
   oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade_return
     hHigh hTrade
 
+theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_compatibleResidueScheduling
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    OddModulusToriV75DirectModularTradeBlocksGoal :=
+  oddModulusToriV75DirectModularTradeBlocksGoal_of_canonicalLocalTrade
+    hHigh
+    (BaseTail.Trades.successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+      hSchedule)
+
 theorem oddModulusToriV75DirectModularTradeBlocksGoal_of_localTrade_lowerTriangular
     (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
     (hTrade : BaseTail.Trades.SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
@@ -574,6 +614,21 @@ theorem oddSuccessorClosureGoal_of_v75_worker1PreCorrectionReturnResiduals
   oddSuccessorClosureGoal_of_v75_directModularTrade_blocks
     (oddModulusToriV75DirectModularTradeBlocksGoal_of_worker1Residuals
       hHigh h)
+
+theorem oddSuccessorClosureGoal_of_v75_compatibleResidueScheduling_inputs
+    (h : OddModulusToriV75CompatibleResidueSchedulingInputsGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_directModularTrade_blocks
+    (oddModulusToriV75DirectModularTradeBlocksGoal_of_compatibleResidueSchedulingInputs
+      h)
+
+theorem oddSuccessorClosureGoal_of_v75_compatibleResidueScheduling
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    OddSuccessorClosureGoal :=
+  oddSuccessorClosureGoal_of_v75_compatibleResidueScheduling_inputs
+    ⟨hHigh, hSchedule⟩
 
 theorem oddSuccessorClosureGoal_of_v75_feasibleLocalTrade_return_inputs
     (h : OddModulusToriV75FeasibleLocalTradeReturnInputsGoal) :
@@ -672,6 +727,21 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_reservoir_inputs
     OddModulusToriAllDimensionsGoal :=
   oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
     (oddModulusToriV75DirectModularTradeInputsGoal_of_reservoirInputs h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_compatibleResidueScheduling_inputs
+    (h : OddModulusToriV75CompatibleResidueSchedulingInputsGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
+    (oddModulusToriV75DirectModularTradeInputsGoal_of_compatibleResidueSchedulingInputs
+      h)
+
+theorem oddModulusToriAllDimensionsGoal_of_v75_compatibleResidueScheduling
+    (hHigh : OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal)
+    (hSchedule :
+      BaseTail.Trades.SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_compatibleResidueScheduling_inputs
+    ⟨hHigh, hSchedule⟩
 
 theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :

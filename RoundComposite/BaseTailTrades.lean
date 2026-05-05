@@ -284,6 +284,38 @@ def SuccessorActiveBlockLocalSymbolTradeGoal : Prop :=
         ActiveHall.SymbolingWithResidues Cyl.incidence R
 
 /--
+Paper-facing active residue scheduling theorem for successor cylinders.
+
+This is the Lean endpoint corresponding to the v7.6 active-residue scheduling
+statement: every row/column compatible residue target on the successor
+active-incidence cylinder is realized directly by local symbol trades.  The
+older `SuccessorActiveBlockLocalSymbolTradeGoal` is the primitive-residue
+specialization consumed by the prefix-count tail.
+-/
+def SuccessorActiveBlockCompatibleResidueSchedulingGoal : Prop :=
+  ∀ {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets},
+      5 ≤ b →
+      Odd m → 3 ≤ m → m < b + T →
+      packets.length = b →
+      (packets.map List.length).sum = b + T →
+      (∀ packet, packet ∈ packets → packet.sum = m) →
+      (∀ packet, packet ∈ packets →
+        ∀ a, a ∈ packet → 0 < a ∧ a < m ∧ Nat.Coprime a m) →
+      (∀ packet, packet ∈ packets →
+        ∀ q : Nat, 0 < q → q < packet.length →
+          Nat.Coprime (packet.take q).sum m) →
+      T = b + 1 →
+      m ^ b > m * (b + T) * T →
+      (hT : 2 ≤ T) →
+      (R : ActiveHall.ResidueSpec m T (Fin (b + T))) →
+      IsCylinder Cyl →
+      ActiveBlockData Cyl →
+      R.RowCompatible Cyl.incidence →
+      R.ColCompatible Cyl.incidence →
+        ActiveHall.SymbolingWithResidues Cyl.incidence R
+
+/--
 Successor-scoped local-symbol trade for the canonical active-block schedule.
 
 This is the narrowest v7.3 local-trade surface used by the current closure
@@ -743,6 +775,26 @@ theorem successorActiveBlockResidueScheduleGoal :
     _hpacketSum _hpacketUnits _hPrefix _hT_eq _hSlack hCyl hBlock hT
   exact activeBlockResidueScheduleGoal hCyl hBlock hT
 
+theorem successorActiveBlockLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    SuccessorActiveBlockLocalSymbolTradeGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow
+    hCol _hPrim
+  exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+    hpacketUnits hPrefix hT_eq hSlack hT R hCyl hBlock hRow hCol
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+  rcases activeBlockResidueSpec_compatible_primitive hCyl hBlock hT with
+    ⟨hRow, hCol, _hPrim⟩
+  exact hSchedule hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+    hpacketUnits hPrefix hT_eq hSlack hT (activeBlockResidueSpec hBlock)
+    hCyl hBlock hRow hCol
+
 theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_successorLocalTrade
     (hTrade : SuccessorActiveBlockLocalSymbolTradeGoal) :
     SuccessorActiveBlockCanonicalLocalSymbolTradeGoal := by
@@ -874,6 +926,12 @@ theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_finiteCo
     (successorActiveBlockLocalSymbolTradeGoal_of_finiteCoactiveSiteReservoir
       hReservoir)
 
+theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_compatibleResidueScheduling
+    (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    hSchedule
+
 theorem successorActiveBlockCanonicalPreCorrectionGoal_iff_finiteCoactiveSiteReservoir :
     SuccessorActiveBlockCanonicalPreCorrectionGoal ↔
       SuccessorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal :=
@@ -912,6 +970,13 @@ theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLo
   exact hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
     hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
 
+theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
+    (successorActiveBlockCanonicalLocalSymbolTradeGoal_of_compatibleResidueScheduling
+      hSchedule)
+
 theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_feasibleFiniteCoactiveSiteReservoir
     (hReservoir :
       SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal) :
@@ -928,6 +993,12 @@ theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_
     SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
   successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
     hTrade
+
+theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_of_compatibleResidueScheduling
+    (hSchedule : SuccessorActiveBlockCompatibleResidueSchedulingGoal) :
+    SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal :=
+  successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_compatibleResidueScheduling
+    hSchedule
 
 theorem successorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal_iff_feasibleLocalTrade :
     SuccessorActiveBlockCanonicalFeasibleFiniteCoactiveSiteReservoirGoal ↔
