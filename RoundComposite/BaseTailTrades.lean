@@ -840,6 +840,15 @@ theorem successorActiveBlockCanonicalFeasibleResidueGoal_of_canonicalLocalTrade
       (hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
         hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock)
 
+theorem successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
+    (hTrade : SuccessorActiveBlockCanonicalLocalSymbolTradeGoal) :
+    SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal := by
+  intro b m T _inst packets Cyl hb5 hmodd hm3 hsmall hlen htotal
+    hpacketSum hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+    _hFeasible
+  exact hTrade hb5 hmodd hm3 hsmall hlen htotal hpacketSum
+    hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
+
 theorem activeBlockResidueTradeRealizationGoal_of_schedule_and_localTrade
     (hSchedule : ActiveBlockResidueScheduleGoal)
     (hTrade : ActiveBlockLocalSymbolTradeGoal) :
@@ -980,6 +989,19 @@ theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasib
     hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock
     (hFeasible hb5 hmodd hm3 hsmall hlen htotal hpacketSum
       hpacketUnits hPrefix hT_eq hSlack hT hCyl hBlock)
+
+theorem successorActiveBlockCanonicalLocalSymbolTradeGoal_iff_feasible_and_feasibleLocalTrade :
+    SuccessorActiveBlockCanonicalLocalSymbolTradeGoal ↔
+      SuccessorActiveBlockCanonicalFeasibleResidueGoal ∧
+        SuccessorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal :=
+  ⟨fun hTrade =>
+      ⟨successorActiveBlockCanonicalFeasibleResidueGoal_of_canonicalLocalTrade
+          hTrade,
+        successorActiveBlockCanonicalFeasibleLocalSymbolTradeGoal_of_canonicalLocalTrade
+          hTrade⟩,
+    fun h =>
+      successorActiveBlockCanonicalLocalSymbolTradeGoal_of_feasible_and_feasibleLocalTrade
+        h.1 h.2⟩
 
 theorem successorActiveBlockCanonicalFiniteCoactiveSiteReservoirGoal_of_feasible_and_feasibleLocalTrade
     (hFeasible : SuccessorActiveBlockCanonicalFeasibleResidueGoal)
