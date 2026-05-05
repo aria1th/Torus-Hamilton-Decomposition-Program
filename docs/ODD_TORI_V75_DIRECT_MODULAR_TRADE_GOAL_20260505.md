@@ -208,6 +208,10 @@ Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.exists_move
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.toNonzeroZeroSwapMove_injective
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveCopyIndex
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.mem_thresholdMoveTokenFinset
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.nonbuffer_mem_thresholdMoveTokenFinset
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer01_mem_thresholdMoveTokenFinset
+Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.buffer02_mem_thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.thresholdMoveTokenFinset
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveZeroColorOfMove
 Concrete.OddSuccessorPhaseSplitBufferReservoirData.ReservoirSitePlan.moveRightColorOfMove
@@ -552,8 +556,12 @@ certificate once the nonzero columns are solved.  The
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 threshold-selection infrastructure is now explicit:
 `BaseTail.Trades.zmod_sum_fin_one_if_val_lt_val` records the basic residue
-counting identity, and `ReservoirSitePlan.thresholdMoveList` packages the
-selected reservoir moves with pairwise and baseline-color witnesses.
+counting identity; its specialized
+`BaseTail.Trades.zmod_sum_fin_m_sub_one_one_if_val_lt_val` form removes the
+routine `ZMod.val ≤ m - 1` side condition.  `ReservoirSitePlan.thresholdMoveList`
+packages the selected reservoir moves with pairwise and baseline-color
+witnesses, and its constructor-specific membership lemmas expose threshold
+selection as `k < quota.val` on each token family.
 `ReservoirSitePlan.exists_thresholdMoveCanonicalReservoirScript_of_nonzeroSolved`
 then inserts such a selected list into the canonical reservoir script once the
 nonzero residual equations are supplied.  The baseline-first variant

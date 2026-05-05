@@ -568,6 +568,14 @@ theorem zmod_sum_fin_one_if_val_lt_val {m n : Nat} [NeZero m]
       _ = z.val := by simp [Nat.min_eq_right hzn]
   rw [hcard, ZMod.natCast_zmod_val]
 
+theorem zmod_sum_fin_m_sub_one_one_if_val_lt_val {m : Nat} [NeZero m]
+    (z : ZMod m) :
+    (∑ k : Fin (m - 1), if k.val < z.val then (1 : ZMod m) else 0) =
+      z := by
+  exact zmod_sum_fin_one_if_val_lt_val z (by
+    have hlt := ZMod.val_lt z
+    omega)
+
 theorem successorReservoirColorQuota_mul_le_pow {b m T : Nat}
     (hLarge : m ^ b > m * (b + T) * T) :
     T * successorReservoirColorQuota m T ≤ m ^ b := by

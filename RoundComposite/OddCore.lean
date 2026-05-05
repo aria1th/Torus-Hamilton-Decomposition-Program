@@ -6087,6 +6087,30 @@ def moveCopyIndex
   | ReservoirMoveToken.buffer01 q => q.1.val
   | ReservoirMoveToken.buffer02 q => q.1.val
 
+@[simp] theorem moveCopyIndex_nonbuffer
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (q : A.nonbufferTokens) :
+    P.moveCopyIndex (ReservoirMoveToken.nonbuffer q) = q.2.val := rfl
+
+@[simp] theorem moveCopyIndex_buffer01
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.moveCopyIndex (ReservoirMoveToken.buffer01 q) = q.1.val := rfl
+
+@[simp] theorem moveCopyIndex_buffer02
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A) (q : BaseTail.Trades.BufferReservoirToken m T) :
+    P.moveCopyIndex (ReservoirMoveToken.buffer02 q) = q.1.val := rfl
+
 def thresholdMoveTokenFinset
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
     {packets : List (List Nat)}
@@ -6097,6 +6121,52 @@ def thresholdMoveTokenFinset
     Finset (ReservoirMoveToken A) :=
   (Finset.univ : Finset (ReservoirMoveToken A)).filter
     (fun q => P.moveCopyIndex q < (quota q).val)
+
+@[simp] theorem mem_thresholdMoveTokenFinset
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m) (q : ReservoirMoveToken A) :
+    q ∈ P.thresholdMoveTokenFinset quota ↔
+      P.moveCopyIndex q < (quota q).val := by
+  simp [thresholdMoveTokenFinset]
+
+@[simp] theorem nonbuffer_mem_thresholdMoveTokenFinset
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m) (q : A.nonbufferTokens) :
+    ReservoirMoveToken.nonbuffer q ∈ P.thresholdMoveTokenFinset quota ↔
+      q.2.val < (quota (ReservoirMoveToken.nonbuffer q)).val := by
+  simp
+
+@[simp] theorem buffer01_mem_thresholdMoveTokenFinset
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    ReservoirMoveToken.buffer01 q ∈ P.thresholdMoveTokenFinset quota ↔
+      q.1.val < (quota (ReservoirMoveToken.buffer01 q)).val := by
+  simp
+
+@[simp] theorem buffer02_mem_thresholdMoveTokenFinset
+    {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
+    {packets : List (List Nat)}
+    {A : OddSuccessorPhaseSplitBufferReservoirData
+      (b := b) (m := m) (T := T) packets}
+    (P : ReservoirSitePlan A)
+    (quota : ReservoirMoveToken A → ZMod m)
+    (q : BaseTail.Trades.BufferReservoirToken m T) :
+    ReservoirMoveToken.buffer02 q ∈ P.thresholdMoveTokenFinset quota ↔
+      q.1.val < (quota (ReservoirMoveToken.buffer02 q)).val := by
+  simp
 
 noncomputable def moveZeroColorOfMove
     {b m T : Nat} [NeZero m] [NeZero (m ^ b)]
