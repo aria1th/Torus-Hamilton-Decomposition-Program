@@ -3876,6 +3876,31 @@ structure SwapMove (X : Type*) (T : Nat) where
   left : Fin T
   right : Fin T
 
+/--
+One scheduled paper-style trade swapping the zero symbol with a target symbol.
+
+The v7.6 reservoir proof only uses local trades of the form `0 ↔ τ`.
+This structure records that smaller datum before it is expanded to a generic
+`SwapMove`.
+-/
+structure ZeroSwapMove (X : Type*) (T : Nat) where
+  vertex : X
+  right : Fin T
+
+namespace ZeroSwapMove
+
+def toSwapMove {X : Type*} {T : Nat} (hTpos : 0 < T)
+    (move : ZeroSwapMove X T) : SwapMove X T where
+  vertex := move.vertex
+  left := ⟨0, hTpos⟩
+  right := move.right
+
+end ZeroSwapMove
+
+def zeroSwapMoves {X : Type*} {T : Nat} (hTpos : 0 < T)
+    (moves : List (ZeroSwapMove X T)) : List (SwapMove X T) :=
+  moves.map (ZeroSwapMove.toSwapMove hTpos)
+
 noncomputable def applySwapMoves {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) :
