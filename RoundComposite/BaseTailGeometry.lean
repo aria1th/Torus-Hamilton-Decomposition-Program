@@ -321,6 +321,89 @@ structure PacketPhaseSplit (N m : Nat) [NeZero N] [NeZero m]
         (fun y : ZMod N × ZMod m =>
           if ordinary r y then (y.1 + 1, y.2) else (y.1, y.2 + 1))
 
+namespace PacketPhaseSplit
+
+theorem ordinary_true_card_at_state {N m : Nat} [NeZero N] [NeZero m]
+    {packet : List Nat} (S : PacketPhaseSplit N m packet)
+    (y : ZMod N × ZMod m) :
+    ((Finset.univ : Finset (Fin packet.length)).filter
+      (fun r => S.ordinary r y = true)).card = 1 := by
+  classical
+  rcases S.ordinary_unique y with ⟨r, hr, huniq⟩
+  rw [Finset.card_eq_one]
+  refine ⟨r, ?_⟩
+  ext s
+  constructor
+  · intro hs
+    simpa using huniq s (Finset.mem_filter.mp hs).2
+  · intro hs
+    have hs' : s = r := by simpa using Finset.mem_singleton.mp hs
+    subst s
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ r, hr⟩
+
+theorem ordinary_false_card_at_state {N m : Nat} [NeZero N] [NeZero m]
+    {packet : List Nat} (S : PacketPhaseSplit N m packet)
+    (y : ZMod N × ZMod m) :
+    ((Finset.univ : Finset (Fin packet.length)).filter
+      (fun r => S.ordinary r y = false)).card = packet.length - 1 := by
+  classical
+  have hnot :
+      ((Finset.univ : Finset (Fin packet.length)).filter
+        (fun r => ¬ S.ordinary r y = true)).card =
+      ((Finset.univ : Finset (Fin packet.length)).filter
+        (fun r => S.ordinary r y = false)).card := by
+    apply congrArg Finset.card
+    ext r
+    by_cases h : S.ordinary r y <;> simp [h]
+  have hsum :=
+    Finset.card_filter_add_card_filter_not
+      (s := (Finset.univ : Finset (Fin packet.length)))
+      (p := fun r => S.ordinary r y = true)
+  rw [hnot, S.ordinary_true_card_at_state y] at hsum
+  have hlenpos : 0 < packet.length := by
+    rcases S.ordinary_unique y with ⟨r, _hr, _huniq⟩
+    exact Nat.lt_of_le_of_lt (Nat.zero_le r.val) r.2
+  have hsum' :
+      1 +
+        ((Finset.univ : Finset (Fin packet.length)).filter
+          (fun r => S.ordinary r y = false)).card =
+        packet.length := by
+    simpa using hsum
+  have htarget : 1 + (packet.length - 1) = packet.length := by
+    omega
+  exact Nat.add_left_cancel (hsum'.trans htarget.symm)
+
+theorem ordinary_false_card {N m : Nat} [NeZero N] [NeZero m]
+    {packet : List Nat} (S : PacketPhaseSplit N m packet)
+    (r : Fin packet.length) (hgetle : packet.get r ≤ m) :
+    ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+      (fun y => S.ordinary r y = false)).card =
+        (m - packet.get r) * N := by
+  classical
+  have hnot :
+      ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+        (fun y => ¬ S.ordinary r y = true)).card =
+      ((Finset.univ : Finset (ZMod N × ZMod m)).filter
+        (fun y => S.ordinary r y = false)).card := by
+    apply congrArg Finset.card
+    ext y
+    by_cases h : S.ordinary r y <;> simp [h]
+  have hsum :=
+    Finset.card_filter_add_card_filter_not
+      (s := (Finset.univ : Finset (ZMod N × ZMod m)))
+      (p := fun y => S.ordinary r y = true)
+  have htotal :
+      (Finset.univ : Finset (ZMod N × ZMod m)).card = m * N := by
+    simp [Fintype.card_prod, ZMod.card, Nat.mul_comm]
+  rw [hnot, S.ordinary_card r, htotal] at hsum
+  have hdecomp :
+      packet.get r * N + (m - packet.get r) * N = m * N := by
+    rw [← Nat.add_mul, Nat.add_sub_of_le hgetle]
+  rw [← hdecomp] at hsum
+  exact Nat.add_left_cancel hsum
+
+end PacketPhaseSplit
+
 def packetPhase {N m : Nat} [NeZero N] [NeZero m] (hdiv : m ∣ N) :
     ZMod N × ZMod m → ZMod m :=
   fun y => ZMod.castHom hdiv (ZMod m) y.1 + y.2
@@ -1041,6 +1124,27 @@ theorem feasibleWithResidues_of_scaled_error_le_slack
 
 end MixedExpansionData
 
+theorem incidence_colorDegree_le_mixedCount_of_mem_of_card_lt
+    {T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    (I : ActiveHall.Incidence T X C) {U : Finset C} {c : C}
+    (hc : c ∈ U) (hcard : U.card < T) :
+    I.colorDegree c ≤ I.mixedCount U := by
+  classical
+  rw [ActiveHall.Incidence.colorDegree, I.mixedCount_eq_card_filter U]
+  apply Finset.card_le_card
+  intro x hx
+  have hcx : c ∈ I.active x := (Finset.mem_filter.mp hx).2
+  have hhit : (I.active x ∩ U).Nonempty :=
+    ⟨c, Finset.mem_inter.mpr ⟨hcx, hc⟩⟩
+  have hlt : (I.active x ∩ U).card < T := by
+    have hsub : I.active x ∩ U ⊆ U := by
+      intro d hd
+      exact (Finset.mem_inter.mp hd).2
+    exact (Finset.card_le_card hsub).trans_lt hcard
+  exact Finset.mem_filter.mpr
+    ⟨Finset.mem_univ x, hhit.card_pos, hlt⟩
+
 namespace ActiveBlockData
 
 theorem active_complement_pos {b m T : Nat} [NeZero m]
@@ -1085,6 +1189,41 @@ theorem active_degree_lower_bound {b m T : Nat} [NeZero m]
   have hfactor : 1 ≤ m - (D.activeBlock c) := by
     exact D.active_complement_pos c
   simpa using Nat.mul_le_mul_right (m ^ b) hfactor
+
+theorem mixed_lower_of_card_lt {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : ActiveBlockData Cyl) {U : Finset (Fin (b + T))}
+    (hUne : U.Nonempty) (hcard : U.card < T) :
+    m ^ b ≤ (Cyl.incidence).mixedCount U := by
+  rcases hUne with ⟨c, hc⟩
+  exact (D.active_degree_lower_bound c).trans
+    (incidence_colorDegree_le_mixedCount_of_mem_of_card_lt
+      Cyl.incidence hc hcard)
+
+theorem mixedExpansionData_of_successor {b m T : Nat} [NeZero m]
+    {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
+    (D : ActiveBlockData Cyl) (hT : T = b + 1) :
+    MixedExpansionData Cyl := by
+  classical
+  refine ⟨?_⟩
+  intro U hUne hUuniv
+  by_cases hcard : U.card < T
+  · exact D.mixed_lower_of_card_lt hUne hcard
+  · have hcomp_ne : Uᶜ.Nonempty := by
+      rw [Finset.nonempty_iff_ne_empty]
+      intro hEmpty
+      exact hUuniv ((Finset.compl_eq_empty_iff U).mp hEmpty)
+    have hcard_ge : T ≤ U.card := Nat.le_of_not_gt hcard
+    have htotal :
+        U.card + Uᶜ.card = b + T := by
+      simpa using
+        (Finset.card_add_card_compl U :
+          U.card + Uᶜ.card = Fintype.card (Fin (b + T)))
+    have hcomp_card : Uᶜ.card < T := by
+      omega
+    have hmix := D.mixed_lower_of_card_lt hcomp_ne hcomp_card
+    rw [Cyl.incidence.mixedCount_compl U] at hmix
+    exact hmix
 
 theorem active_degree_upper_bound {b m T : Nat} [NeZero m]
     {packets : List (List Nat)} {Cyl : Cylinder b m T packets}
