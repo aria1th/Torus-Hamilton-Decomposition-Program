@@ -1075,10 +1075,67 @@ theorem nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne
           (c := c) hσleft (hRight move (by simp))
       simp [nonzeroZeroTradeDeltaSumOfTwoLe, hHead, hTail]
 
+theorem nonzeroZeroTradeDeltaSumOfTwoLe_row_sum
+    {m T : Nat} {X C : Type*} [DecidableEq C] (hT : 2 ≤ T)
+    (zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove X T → C) :
+    ∀ moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T),
+      ∀ c : C,
+        (∑ σ : Fin T,
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+            rightColor moves c σ) = 0 := by
+  intro moves
+  induction moves with
+  | nil =>
+      intro c
+      simp [nonzeroZeroTradeDeltaSumOfTwoLe]
+  | cons move moves ih =>
+      intro c
+      have hLeftNe :
+          (⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩ : Fin T) ≠
+            move.right := by
+        intro h
+        have hval : move.right.val = 0 := by
+          simpa using congrArg Fin.val h.symm
+        exact move.right_ne_zero hval
+      calc
+        (∑ σ : Fin T,
+          nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+            rightColor (move :: moves) c σ)
+            =
+          (∑ σ : Fin T,
+            ActiveHall.Symboling.localTradeDelta (m := m)
+              (zeroColor move) (rightColor move) c
+              ⟨0, Nat.lt_of_lt_of_le (by omega : 0 < 2) hT⟩
+              move.right σ) +
+            ∑ σ : Fin T,
+              nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT zeroColor
+                rightColor moves c σ := by
+              simp [nonzeroZeroTradeDeltaSumOfTwoLe,
+                Finset.sum_add_distrib]
+        _ = 0 := by
+          rw [ActiveHall.Symboling.localTradeDelta_row_sum hLeftNe, ih c]
+          simp
+
 def reservoirResidual {m T : Nat} {C : Type*} [Fintype C]
     (target initial : ActiveHall.ResidueSpec m T C)
     (delta : C → Fin T → ZMod m) : C → Fin T → ZMod m :=
   fun c σ => target.target c σ - (initial.target c σ + delta c σ)
+
+theorem reservoirResidual_row_zero_of_rowCompatible
+    {m T : Nat} {X C : Type*} [Fintype X] [Fintype C]
+    [DecidableEq X] [DecidableEq C] {I : ActiveHall.Incidence T X C}
+    {target initial : ActiveHall.ResidueSpec m T C}
+    {delta : C → Fin T → ZMod m}
+    (hTargetRow : target.RowCompatible I)
+    (hInitialRow : initial.RowCompatible I)
+    (hDeltaRow : ∀ c : C, (∑ σ : Fin T, delta c σ) = 0) :
+    ∀ c : C, (∑ σ : Fin T,
+      reservoirResidual target initial delta c σ) = 0 := by
+  intro c
+  simp [reservoirResidual, Finset.sum_sub_distrib,
+    Finset.sum_add_distrib, ← hTargetRow c, ← hInitialRow c,
+    hDeltaRow c]
 
 /--
 Arithmetic certificate for the final residual step of the v7.6 three-buffer
@@ -1170,6 +1227,50 @@ structure CanonicalNonzeroZeroReservoirArithmetic
         zeroColor rightColor moves)
 
 namespace CanonicalNonzeroZeroReservoirArithmetic
+
+def ofNonzeroSolved
+    {b m T : Nat} [NeZero m] {packets : List (List Nat)}
+    {Cyl : Cylinder b m T packets} {hT : 2 ≤ T}
+    {D : ActiveBlockData Cyl}
+    {initial : ActiveHall.Symboling Cyl.incidence}
+    {moves :
+      List
+        (ActiveHall.Symboling.NonzeroZeroSwapMove
+          (Shared.TorusVertex (b + 1) m) T)}
+    {zeroColor rightColor :
+      ActiveHall.Symboling.NonzeroZeroSwapMove
+        (Shared.TorusVertex (b + 1) m) T →
+        Fin (b + T)}
+    (beta0 beta1 beta2 : Fin (b + T))
+    (h01 : beta0 ≠ beta1) (h02 : beta0 ≠ beta2)
+    (h12 : beta1 ≠ beta2)
+    (hTargetRow :
+      (activeBlockResidueSpec D).RowCompatible Cyl.incidence)
+    (hInitialRow :
+      (initial.residueSpec (m := m)).RowCompatible Cyl.incidence)
+    (hNonzeroSolved :
+      ∀ c : Fin (b + T), ∀ σ : Fin T, σ.val ≠ 0 →
+        reservoirResidual (activeBlockResidueSpec D)
+          (initial.residueSpec (m := m))
+          (nonzeroZeroTradeDeltaSumOfTwoLe (m := m) hT
+            zeroColor rightColor moves) c σ = 0) :
+    CanonicalNonzeroZeroReservoirArithmetic hT D initial moves
+      zeroColor rightColor where
+  arithmetic :=
+    {
+      beta0 := beta0
+      beta1 := beta1
+      beta2 := beta2
+      beta01 := h01
+      beta02 := h02
+      beta12 := h12
+      row_zero :=
+        reservoirResidual_row_zero_of_rowCompatible
+          hTargetRow hInitialRow
+          (nonzeroZeroTradeDeltaSumOfTwoLe_row_sum hT zeroColor rightColor
+            moves)
+      nonzero_solved := hNonzeroSolved
+    }
 
 theorem target_delta
     {b m T : Nat} [NeZero m] {packets : List (List Nat)}

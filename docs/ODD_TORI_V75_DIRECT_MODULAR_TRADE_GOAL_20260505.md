@@ -402,6 +402,7 @@ ActiveHall.Symboling.localTradeDelta
 ActiveHall.Symboling.localTradeDelta_left
 ActiveHall.Symboling.localTradeDelta_right
 ActiveHall.Symboling.localTradeDelta_of_ne
+ActiveHall.Symboling.localTradeDelta_row_sum
 ActiveHall.Symboling.swapMoveDelta_eq_localTradeDelta
 ActiveHall.Symboling.swapDeltaSum
 ActiveHall.Symboling.applySwapResidueSpecs_target_eq_add_swapDeltaSum_of_pairwise_vertex
@@ -413,11 +414,14 @@ BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_zero
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_eq
 BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_nonzero_of_forall_right_ne
+BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_row_sum
 BaseTail.Trades.reservoirResidual
+BaseTail.Trades.reservoirResidual_row_zero_of_rowCompatible
 BaseTail.Trades.ThreeBufferReservoirArithmetic
 BaseTail.Trades.ThreeBufferReservoirArithmetic.residual_eq_zero
 BaseTail.Trades.ThreeBufferReservoirArithmetic.target_delta
 BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic
+BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic.ofNonzeroSolved
 BaseTail.Trades.CanonicalNonzeroZeroReservoirArithmetic.target_delta
 BaseTail.Trades.swapDeltaSum_eq_tradeDeltaSum_of_baseline
 BaseTail.Trades.CanonicalNonzeroZeroReservoirScript
@@ -523,11 +527,18 @@ manually expanding the recursive delta each time.  The new
 step after the λ/μ toggles: all nonzero columns are solved, and the zero column
 is forced by zero row residuals.  `CanonicalNonzeroZeroReservoirScript.ofArithmetic`
 then inserts that certificate into the existing script endpoint.  The
+row-zero side of the certificate is now automatic:
+`ActiveHall.Symboling.localTradeDelta_row_sum`,
+`BaseTail.Trades.nonzeroZeroTradeDeltaSumOfTwoLe_row_sum`, and
+`BaseTail.Trades.reservoirResidual_row_zero_of_rowCompatible` show that local
+trades preserve row sums, while
+`CanonicalNonzeroZeroReservoirArithmetic.ofNonzeroSolved` builds the arithmetic
+certificate once the nonzero columns are solved.  The
 `SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal` endpoint and
 matching `V75Endpoints` wrappers make this the preferred current cut.  The
 sharpest remaining hard content is now the actual arithmetic-site construction:
-constructing the three-buffer arithmetic certificate from the combined
-reservoir move list.
+selecting the λ/μ sublists from the combined reservoir move list and proving
+the nonzero-column residual equations.
 
 The identity site permutation turns any canonical local-trade realization into a
 valid pre-correction witness, while the earlier permutation-correction adapter

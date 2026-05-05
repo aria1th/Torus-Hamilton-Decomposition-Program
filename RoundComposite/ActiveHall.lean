@@ -4195,6 +4195,45 @@ theorem localTradeDelta_of_ne {m T : Nat} {C : Type*} [DecidableEq C]
     localTradeDelta (m := m) leftColor rightColor c left right ρ = 0 := by
   simp [localTradeDelta, hρleft, hρright]
 
+theorem localTradeDelta_row_sum {m T : Nat} {C : Type*} [DecidableEq C]
+    {leftColor rightColor c : C} {left right : Fin T}
+    (h : left ≠ right) :
+    (∑ ρ : Fin T,
+      localTradeDelta (m := m) leftColor rightColor c left right ρ) = 0 := by
+  have hsum_pos_neg :
+      ∀ a b : Fin T, a ≠ b →
+        (∑ ρ : Fin T,
+          if ρ = a then (1 : ZMod m)
+          else if ρ = b then -1 else 0) = 0 := by
+    intro a b hab
+    have hsplit :
+        (∑ ρ : Fin T,
+          if ρ = a then (1 : ZMod m)
+          else if ρ = b then -1 else 0) =
+            (∑ ρ : Fin T, if ρ = a then (1 : ZMod m) else 0) +
+              (∑ ρ : Fin T, if ρ = b then (-1 : ZMod m) else 0) := by
+      rw [← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro ρ _hρ
+      by_cases hρa : ρ = a
+      · have hρb : ρ ≠ b := by
+          intro hb
+          exact hab (hρa.symm.trans hb)
+        simp [hρa, hab]
+      · simp [hρa]
+    rw [hsplit]
+    simp
+  by_cases hleft : leftColor = c
+  · by_cases hright : rightColor = c
+    · simp [localTradeDelta, hleft, hright, Finset.sum_add_distrib,
+        hsum_pos_neg right left h.symm, hsum_pos_neg left right h]
+    · simpa [localTradeDelta, hleft, hright] using
+        hsum_pos_neg right left h.symm
+  · by_cases hright : rightColor = c
+    · simpa [localTradeDelta, hleft, hright] using
+        hsum_pos_neg left right h
+    · simp [localTradeDelta, hleft, hright]
+
 theorem swapMoveDelta_eq_localTradeDelta {m T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I)
