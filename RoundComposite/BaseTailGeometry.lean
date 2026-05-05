@@ -2679,6 +2679,15 @@ theorem activeTailCanonicalRhoFirstNat_spec {m n : Nat}
   unfold activeTailCanonicalRhoFirstNat
   exact Nat.find_spec h
 
+theorem activeTailCanonicalRhoFirstNat_minimal {m n : Nat}
+    {z : Fin n → ZMod m}
+    (h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j)
+    {j : Nat} (hj : activeTailCanonicalRhoHitNat z j) :
+    activeTailCanonicalRhoFirstNat z h ≤ j := by
+  classical
+  unfold activeTailCanonicalRhoFirstNat
+  exact Nat.find_min' h hj
+
 noncomputable def activeTailCanonicalRho {m n : Nat} (_hT : 2 ≤ n + 1)
     (z : Fin n → ZMod m) : Fin (n + 1) := by
   classical
@@ -2699,6 +2708,128 @@ theorem activeTailCanonicalRho_ne_zero {m n : Nat} (hT : 2 ≤ n + 1)
   · simp [h]
   · have hnpos : 0 < n := by omega
     simpa [h, Fin.last] using hnpos.ne'
+
+theorem activeTailCanonicalRho_val_eq_find_succ {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j) :
+    (activeTailCanonicalRho hT z).val =
+      activeTailCanonicalRhoFirstNat z h + 1 := by
+  classical
+  unfold activeTailCanonicalRho
+  simp [h]
+
+theorem activeTailCanonicalRho_eq_last_of_no_hit {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    (h : ¬ ∃ j : Nat, activeTailCanonicalRhoHitNat z j) :
+    activeTailCanonicalRho hT z = Fin.last n := by
+  classical
+  unfold activeTailCanonicalRho
+  simp [h]
+
+theorem activeTailCanonicalRho_val_lt_iff_exists_hit_before {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m} {q : Nat}
+    (hq : q ≤ n) :
+    (activeTailCanonicalRho hT z).val < q ↔
+      ∃ j : Nat, j + 1 < q ∧ activeTailCanonicalRhoHitNat z j := by
+  classical
+  by_cases h : ∃ j : Nat, activeTailCanonicalRhoHitNat z j
+  · rw [activeTailCanonicalRho_val_eq_find_succ hT h]
+    constructor
+    · intro hrho
+      exact ⟨activeTailCanonicalRhoFirstNat z h, hrho,
+        activeTailCanonicalRhoFirstNat_spec h⟩
+    · intro hex
+      rcases hex with ⟨j, hjlt, hj⟩
+      have hmin := activeTailCanonicalRhoFirstNat_minimal h hj
+      omega
+  · have hlast := activeTailCanonicalRho_eq_last_of_no_hit hT h
+    constructor
+    · intro hrho
+      have hnlt : ¬ n < q := by omega
+      exact False.elim (hnlt (by simpa [hlast, Fin.last] using hrho))
+    · intro hex
+      rcases hex with ⟨j, _hjlt, hj⟩
+      exact False.elim (h ⟨j, hj⟩)
+
+theorem activeTailCanonicalRho_val_lt_congr_of_agree_before
+    {m n : Nat} (hT : 2 ≤ n + 1) {z w : Fin n → ZMod m}
+    {q : Nat} (hq : q ≤ n)
+    (hagree : ∀ j : Fin n, j.val + 1 < q → z j = w j) :
+    (activeTailCanonicalRho hT z).val < q ↔
+      (activeTailCanonicalRho hT w).val < q := by
+  classical
+  rw [activeTailCanonicalRho_val_lt_iff_exists_hit_before hT hq,
+    activeTailCanonicalRho_val_lt_iff_exists_hit_before hT hq]
+  constructor
+  · intro hex
+    rcases hex with ⟨j, hjlt, hj⟩
+    rcases hj with ⟨hjn, hjpred, hz⟩
+    exact ⟨j, hjlt, ⟨hjn, hjpred, by
+      rw [← hagree ⟨j, hjn⟩ hjlt]
+      exact hz⟩⟩
+  · intro hex
+    rcases hex with ⟨j, hjlt, hj⟩
+    rcases hj with ⟨hjn, hjpred, hw⟩
+    exact ⟨j, hjlt, ⟨hjn, hjpred, by
+      rw [hagree ⟨j, hjn⟩ hjlt]
+      exact hw⟩⟩
+
+theorem activeTailCanonicalRho_val_lt_add_single_iff
+    {m n : Nat} (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    {q : Nat} (hq : q ≤ n) {σ : Fin n} (hσ : q ≤ σ.val + 1) :
+    (activeTailCanonicalRho hT
+        (fun τ : Fin n => z τ + if τ = σ then (1 : ZMod m) else 0)).val < q
+      ↔
+    (activeTailCanonicalRho hT z).val < q := by
+  refine
+    activeTailCanonicalRho_val_lt_congr_of_agree_before
+      hT hq ?_
+  intro j hj
+  have hne : j ≠ σ := by
+    intro h
+    have : σ.val + 1 < q := by
+      simpa [h] using hj
+    omega
+  simp [hne]
+
+theorem activeTailCanonicalRho_val_lt_sub_single_iff
+    {m n : Nat} (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
+    {q : Nat} (hq : q ≤ n) {σ : Fin n} (hσ : q ≤ σ.val + 1) :
+    (activeTailCanonicalRho hT
+        (fun τ : Fin n => z τ - if τ = σ then (1 : ZMod m) else 0)).val < q
+      ↔
+    (activeTailCanonicalRho hT z).val < q := by
+  refine
+    activeTailCanonicalRho_val_lt_congr_of_agree_before
+      hT hq ?_
+  intro j hj
+  have hne : j ≠ σ := by
+    intro h
+    have : σ.val + 1 < q := by
+      simpa [h] using hj
+    omega
+  simp [hne]
+
+theorem activeTailCanonicalRho_last_iff {m n : Nat}
+    (hT : 2 ≤ n + 1) {z : Fin n → ZMod m} :
+    (activeTailCanonicalRho hT z).val = n ↔
+      ∀ j : Fin n, j.val + 1 < n → z j ≠ 0 := by
+  classical
+  constructor
+  · intro hrho j hjlt hz
+    have hhit : activeTailCanonicalRhoHitNat z j.val :=
+      ⟨j.isLt, hjlt, hz⟩
+    by_cases h : ∃ q : Nat, activeTailCanonicalRhoHitNat z q
+    · have hmin := activeTailCanonicalRhoFirstNat_minimal h hhit
+      have hval := activeTailCanonicalRho_val_eq_find_succ hT h
+      omega
+    · exact h ⟨j.val, hhit⟩
+  · intro hno
+    by_cases h : ∃ q : Nat, activeTailCanonicalRhoHitNat z q
+    · rcases activeTailCanonicalRhoFirstNat_spec h with ⟨hj, hlt, hz⟩
+      exact False.elim (hno ⟨activeTailCanonicalRhoFirstNat z h, hj⟩ hlt hz)
+    · have hlast := activeTailCanonicalRho_eq_last_of_no_hit hT h
+      simpa [hlast, Fin.last]
 
 noncomputable def activePrefixTailPerm
     {b m n : Nat} [NeZero m] (hT : 2 ≤ n + 1) :
@@ -4186,6 +4317,257 @@ theorem zmodVector_add_single_bijective {m n : Nat} (σ : Fin n) :
     intro z
     funext τ
     simp [F, G, sub_eq_add_neg, add_comm, add_left_comm]
+  exact ⟨hleft.injective, hright.surjective⟩
+
+theorem zmodVector_piecewise_add_single_id_bijective {m n : Nat}
+    (P : (Fin n → ZMod m) → Prop) [DecidablePred P] (σ : Fin n)
+    (hPadd :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ + if τ = σ then (1 : ZMod m) else 0) ↔ P z)
+    (hPsub :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ - if τ = σ then (1 : ZMod m) else 0) ↔ P z) :
+    Function.Bijective
+      (fun z : Fin n → ZMod m =>
+        fun τ : Fin n =>
+          if P z then z τ + if τ = σ then (1 : ZMod m) else 0
+          else z τ) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ + if τ = σ then (1 : ZMod m) else 0
+      else z τ
+  let G : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ - if τ = σ then (1 : ZMod m) else 0
+      else z τ
+  have hleft : Function.LeftInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hF : P (F z) := by
+        have h := (hPadd z).mpr hz
+        simpa [F, hz] using h
+      have hFτ :
+          F z τ = z τ + if τ = σ then (1 : ZMod m) else 0 := by
+        simp [F, hz]
+      calc
+        G (F z) τ =
+            F z τ - if τ = σ then (1 : ZMod m) else 0 := by
+              simp [G, hF]
+        _ = z τ := by
+              rw [hFτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hF : ¬ P (F z) := by
+        simpa [F, hz] using hz
+      calc
+        G (F z) τ = F z τ := by
+          simp [G, hF]
+        _ = z τ := by
+          simp [F, hz]
+  have hright : Function.RightInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hG : P (G z) := by
+        have h := (hPsub z).mpr hz
+        simpa [G, hz] using h
+      have hGτ :
+          G z τ = z τ - if τ = σ then (1 : ZMod m) else 0 := by
+        simp [G, hz]
+      calc
+        F (G z) τ =
+            G z τ + if τ = σ then (1 : ZMod m) else 0 := by
+              simp [F, hG]
+        _ = z τ := by
+              rw [hGτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hG : ¬ P (G z) := by
+        simpa [G, hz] using hz
+      calc
+        F (G z) τ = G z τ := by
+          simp [F, hG]
+        _ = z τ := by
+          simp [G, hz]
+  exact ⟨hleft.injective, hright.surjective⟩
+
+theorem zmodVector_piecewise_id_add_single_bijective {m n : Nat}
+    (P : (Fin n → ZMod m) → Prop) [DecidablePred P] (σ : Fin n)
+    (hPadd :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ + if τ = σ then (1 : ZMod m) else 0) ↔ P z)
+    (hPsub :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ - if τ = σ then (1 : ZMod m) else 0) ↔ P z) :
+    Function.Bijective
+      (fun z : Fin n → ZMod m =>
+        fun τ : Fin n =>
+          if P z then z τ
+          else z τ + if τ = σ then (1 : ZMod m) else 0) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ
+      else z τ + if τ = σ then (1 : ZMod m) else 0
+  let G : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ
+      else z τ - if τ = σ then (1 : ZMod m) else 0
+  have hleft : Function.LeftInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hF : P (F z) := by
+        simpa [F, hz] using hz
+      calc
+        G (F z) τ = F z τ := by
+          simp [G, hF]
+        _ = z τ := by
+          simp [F, hz]
+    · have hF : ¬ P (F z) := by
+        intro hp
+        exact hz ((hPadd z).mp (by simpa [F, hz] using hp))
+      have hFτ :
+          F z τ = z τ + if τ = σ then (1 : ZMod m) else 0 := by
+        simp [F, hz]
+      calc
+        G (F z) τ =
+            F z τ - if τ = σ then (1 : ZMod m) else 0 := by
+              simp [G, hF]
+        _ = z τ := by
+              rw [hFτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+  have hright : Function.RightInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hG : P (G z) := by
+        simpa [G, hz] using hz
+      calc
+        F (G z) τ = G z τ := by
+          simp [F, hG]
+        _ = z τ := by
+          simp [G, hz]
+    · have hG : ¬ P (G z) := by
+        intro hp
+        exact hz ((hPsub z).mp (by simpa [G, hz] using hp))
+      have hGτ :
+          G z τ = z τ - if τ = σ then (1 : ZMod m) else 0 := by
+        simp [G, hz]
+      calc
+        F (G z) τ =
+            G z τ + if τ = σ then (1 : ZMod m) else 0 := by
+              simp [F, hG]
+        _ = z τ := by
+              rw [hGτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+  exact ⟨hleft.injective, hright.surjective⟩
+
+theorem zmodVector_piecewise_add_single_add_single_bijective {m n : Nat}
+    (P : (Fin n → ZMod m) → Prop) [DecidablePred P]
+    (σ υ : Fin n)
+    (hPaddσ :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ + if τ = σ then (1 : ZMod m) else 0) ↔ P z)
+    (hPsubσ :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ - if τ = σ then (1 : ZMod m) else 0) ↔ P z)
+    (hPaddυ :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ + if τ = υ then (1 : ZMod m) else 0) ↔ P z)
+    (hPsubυ :
+      ∀ z : Fin n → ZMod m,
+        P (fun τ : Fin n =>
+          z τ - if τ = υ then (1 : ZMod m) else 0) ↔ P z) :
+    Function.Bijective
+      (fun z : Fin n → ZMod m =>
+        fun τ : Fin n =>
+          if P z then z τ + if τ = σ then (1 : ZMod m) else 0
+          else z τ + if τ = υ then (1 : ZMod m) else 0) := by
+  classical
+  let F : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ + if τ = σ then (1 : ZMod m) else 0
+      else z τ + if τ = υ then (1 : ZMod m) else 0
+  let G : (Fin n → ZMod m) → (Fin n → ZMod m) :=
+    fun z τ =>
+      if P z then z τ - if τ = σ then (1 : ZMod m) else 0
+      else z τ - if τ = υ then (1 : ZMod m) else 0
+  have hleft : Function.LeftInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hF : P (F z) := by
+        have h := (hPaddσ z).mpr hz
+        simpa [F, hz] using h
+      have hFτ :
+          F z τ = z τ + if τ = σ then (1 : ZMod m) else 0 := by
+        simp [F, hz]
+      calc
+        G (F z) τ =
+            F z τ - if τ = σ then (1 : ZMod m) else 0 := by
+              simp [G, hF]
+        _ = z τ := by
+              rw [hFτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hF : ¬ P (F z) := by
+        intro hp
+        exact hz ((hPaddυ z).mp (by simpa [F, hz] using hp))
+      have hFτ :
+          F z τ = z τ + if τ = υ then (1 : ZMod m) else 0 := by
+        simp [F, hz]
+      calc
+        G (F z) τ =
+            F z τ - if τ = υ then (1 : ZMod m) else 0 := by
+              simp [G, hF]
+        _ = z τ := by
+              rw [hFτ]
+              by_cases hτ : τ = υ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+  have hright : Function.RightInverse G F := by
+    intro z
+    funext τ
+    by_cases hz : P z
+    · have hG : P (G z) := by
+        have h := (hPsubσ z).mpr hz
+        simpa [G, hz] using h
+      have hGτ :
+          G z τ = z τ - if τ = σ then (1 : ZMod m) else 0 := by
+        simp [G, hz]
+      calc
+        F (G z) τ =
+            G z τ + if τ = σ then (1 : ZMod m) else 0 := by
+              simp [F, hG]
+        _ = z τ := by
+              rw [hGτ]
+              by_cases hτ : τ = σ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
+    · have hG : ¬ P (G z) := by
+        intro hp
+        exact hz ((hPsubυ z).mp (by simpa [G, hz] using hp))
+      have hGτ :
+          G z τ = z τ - if τ = υ then (1 : ZMod m) else 0 := by
+        simp [G, hz]
+      calc
+        F (G z) τ =
+            G z τ + if τ = υ then (1 : ZMod m) else 0 := by
+              simp [F, hG]
+        _ = z τ := by
+              rw [hGτ]
+              by_cases hτ : τ = υ <;>
+                simp [hτ, sub_eq_add_neg, add_assoc]
   exact ⟨hleft.injective, hright.surjective⟩
 
 theorem expandedColorDirCore_fiberStep_bijective

@@ -230,6 +230,29 @@ constructing lower-triangular section-return data for the canonical active
 prefix permutation, preferably over the already closed `CylinderBaseCycleData`
 base-cycle witness.
 
+The first canonical-rho layer is now closed in Lean:
+
+```lean
+BaseTail.activeTailCanonicalRhoFirstNat_minimal
+BaseTail.activeTailCanonicalRho_val_lt_iff_exists_hit_before
+BaseTail.activeTailCanonicalRho_val_lt_congr_of_agree_before
+BaseTail.activeTailCanonicalRho_val_lt_add_single_iff
+BaseTail.activeTailCanonicalRho_val_lt_sub_single_iff
+BaseTail.activeTailCanonicalRho_last_iff
+```
+
+The reusable fiber-bijection algebra for piecewise single-coordinate
+translations is also available:
+
+```lean
+BaseTail.zmodVector_piecewise_add_single_id_bijective
+BaseTail.zmodVector_piecewise_id_add_single_bijective
+BaseTail.zmodVector_piecewise_add_single_add_single_bijective
+```
+
+These lemmas are the immediate support layer for the next target,
+`BaseTail.activePrefixPermutedColorDirCore_fiberStep_bijective`.
+
 ### Main Thread: Endpoint Wiring
 
 Owned files:
