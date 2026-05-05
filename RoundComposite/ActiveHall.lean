@@ -3219,6 +3219,80 @@ noncomputable def swapResidueSpec {m T : Nat} {X C : Type*}
         + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0) := by
   rfl
 
+theorem swapResidueSpec_rowCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {R : ResidueSpec m T C} {x₀ : X} {σ τ : Fin T}
+    (hRow : R.RowCompatible I) :
+    (Φ.swapResidueSpec R x₀ σ τ).RowCompatible I := by
+  intro c
+  rw [hRow c]
+  symm
+  have hperm :
+      (∑ ρ : Fin T,
+        (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then (1 : ZMod m) else 0)) =
+        ∑ ρ : Fin T,
+          (if Φ.color x₀ ρ = c then (1 : ZMod m) else 0) := by
+    simpa using
+      (Equiv.sum_comp (Equiv.swap σ τ)
+        (fun ρ : Fin T =>
+          if Φ.color x₀ ρ = c then (1 : ZMod m) else 0))
+  calc
+    (∑ ρ : Fin T, (Φ.swapResidueSpec R x₀ σ τ).target c ρ)
+        = ∑ ρ : Fin T,
+            (R.target c ρ
+              - (if Φ.color x₀ ρ = c then (1 : ZMod m) else 0)
+              + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0)) := by
+            rfl
+    _ = (∑ ρ : Fin T, R.target c ρ)
+          - (∑ ρ : Fin T,
+              if Φ.color x₀ ρ = c then (1 : ZMod m) else 0)
+          + (∑ ρ : Fin T,
+              if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then
+                (1 : ZMod m)
+              else 0) := by
+            simp [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    _ = ∑ ρ : Fin T, R.target c ρ := by
+            rw [hperm]
+            abel
+
+theorem swapResidueSpec_colCompatible {m T : Nat} {X C : Type*}
+    [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
+    {I : Incidence T X C} (Φ : Symboling I)
+    {R : ResidueSpec m T C} {x₀ : X} {σ τ : Fin T}
+    (hCol : R.ColCompatible I) :
+    (Φ.swapResidueSpec R x₀ σ τ).ColCompatible I := by
+  intro ρ
+  rw [hCol ρ]
+  symm
+  have hOld :
+      (∑ c : C, if Φ.color x₀ ρ = c then (1 : ZMod m) else 0) = 1 := by
+    simp
+  have hNew :
+      (∑ c : C,
+        if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then
+          (1 : ZMod m)
+        else 0) = 1 := by
+    simp
+  calc
+    (∑ c : C, (Φ.swapResidueSpec R x₀ σ τ).target c ρ)
+        = ∑ c : C,
+            (R.target c ρ
+              - (if Φ.color x₀ ρ = c then (1 : ZMod m) else 0)
+              + (if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then 1 else 0)) := by
+            rfl
+    _ = (∑ c : C, R.target c ρ)
+          - (∑ c : C,
+              if Φ.color x₀ ρ = c then (1 : ZMod m) else 0)
+          + (∑ c : C,
+              if Φ.color x₀ ((Equiv.swap σ τ) ρ) = c then
+                (1 : ZMod m)
+              else 0) := by
+            simp [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    _ = ∑ c : C, R.target c ρ := by
+            rw [hOld, hNew]
+            abel
+
 theorem count_eq_choiceDegree {T : Nat} {X C : Type*}
     [Fintype X] [Fintype C] [DecidableEq X] [DecidableEq C]
     {I : Incidence T X C} (Φ : Symboling I) (c : C) (σ : Fin T) :
