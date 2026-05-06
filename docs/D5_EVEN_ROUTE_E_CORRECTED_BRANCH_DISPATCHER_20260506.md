@@ -500,3 +500,13 @@ python3 scripts/summarize_routeE_allpair_portfolio.py \
 This portfolio is useful branch-mining evidence, but it is deliberately kept
 separate from `routeE_typeA_residue_coverage.json`: a sample is not a symbolic
 branch theorem.
+
+The portfolio fit scan is:
+
+```bash
+python3 scripts/analyze_routeE_allpair_portfolio_fits.py \
+  --json-out certs/routeE_allpair_portfolio_fit_summary.json
+```
+
+It reports that the only portfolio-only residue with a simple affine `x=z`
+fit is `42 mod 48`, with observed law `m=48q+42`, `x=z=6q+5`.

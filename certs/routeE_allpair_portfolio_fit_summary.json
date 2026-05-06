@@ -1,0 +1,2343 @@
+{
+  "affine_xz_residues": [
+    14,
+    16,
+    20,
+    40,
+    42,
+    44
+  ],
+  "interpretation": "Residues with xz_affine=true have sample parameters compatible with a simple affine x/z law.  They still need branch formulas, first-return equations, no-early proofs, and time identities.",
+  "next_symbolic_candidate": 42,
+  "portfolio_only_affine_xz_residues": [
+    42
+  ],
+  "proof_facing_typeA_residues": [
+    14,
+    16,
+    20,
+    40,
+    44
+  ],
+  "residue_count": 24,
+  "residue_modulus": 48,
+  "rows": [
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q - 9",
+        "intercept": {
+          "den": 1,
+          "num": -9
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "20",
+          "got": 17,
+          "m": 96,
+          "q": 2
+        },
+        "formula_from_endpoints": "-3*q + 26",
+        "intercept": {
+          "den": 1,
+          "num": 26
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -3
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "20",
+          "got": 17,
+          "m": 96,
+          "q": 2
+        },
+        "formula_from_endpoints": "-3*q + 26",
+        "intercept": {
+          "den": 1,
+          "num": 26
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -3
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        48,
+        96,
+        144
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 0,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 48,
+          "nodes": 471,
+          "q": 1,
+          "tag": "sym",
+          "x": 23,
+          "z": 23
+        },
+        {
+          "m": 96,
+          "nodes": 951,
+          "q": 2,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        },
+        {
+          "m": 144,
+          "nodes": 1431,
+          "q": 3,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 11",
+        "intercept": {
+          "den": 1,
+          "num": 11
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "6",
+          "got": 15,
+          "m": 98,
+          "q": 2
+        },
+        "formula_from_endpoints": "-3*q + 12",
+        "intercept": {
+          "den": 1,
+          "num": 12
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -3
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "6",
+          "got": 15,
+          "m": 98,
+          "q": 2
+        },
+        "formula_from_endpoints": "-3*q + 12",
+        "intercept": {
+          "den": 1,
+          "num": 12
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -3
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        50,
+        98,
+        146
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 2,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 50,
+          "nodes": 491,
+          "q": 1,
+          "tag": "sym",
+          "x": 9,
+          "z": 9
+        },
+        {
+          "m": 98,
+          "nodes": 971,
+          "q": 2,
+          "tag": "sym",
+          "x": 15,
+          "z": 15
+        },
+        {
+          "m": 146,
+          "nodes": 1451,
+          "q": 3,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 31",
+        "intercept": {
+          "den": 1,
+          "num": 31
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "6",
+          "got": 21,
+          "m": 100,
+          "q": 2
+        },
+        "formula_from_endpoints": "-q + 8",
+        "intercept": {
+          "den": 1,
+          "num": 8
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -1
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "6",
+          "got": 21,
+          "m": 100,
+          "q": 2
+        },
+        "formula_from_endpoints": "-q + 8",
+        "intercept": {
+          "den": 1,
+          "num": 8
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        52,
+        100,
+        148
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 4,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 52,
+          "nodes": 511,
+          "q": 1,
+          "tag": "sym",
+          "x": 7,
+          "z": 7
+        },
+        {
+          "m": 100,
+          "nodes": 991,
+          "q": 2,
+          "tag": "sym",
+          "x": 21,
+          "z": 21
+        },
+        {
+          "m": 148,
+          "nodes": 1471,
+          "q": 3,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 51",
+        "intercept": {
+          "den": 1,
+          "num": 51
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "8",
+          "got": 23,
+          "m": 102,
+          "q": 2
+        },
+        "formula_from_endpoints": "3*q + 2",
+        "intercept": {
+          "den": 1,
+          "num": 2
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 3
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "8",
+          "got": 23,
+          "m": 102,
+          "q": 2
+        },
+        "formula_from_endpoints": "3*q + 2",
+        "intercept": {
+          "den": 1,
+          "num": 2
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 3
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        54,
+        102,
+        150
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 6,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 54,
+          "nodes": 531,
+          "q": 1,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 102,
+          "nodes": 1011,
+          "q": 2,
+          "tag": "sym",
+          "x": 23,
+          "z": 23
+        },
+        {
+          "m": 150,
+          "nodes": 1491,
+          "q": 3,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 71",
+        "intercept": {
+          "den": 1,
+          "num": 71
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "4",
+          "got": 7,
+          "m": 104,
+          "q": 2
+        },
+        "formula_from_endpoints": "-q + 6",
+        "intercept": {
+          "den": 1,
+          "num": 6
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -1
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "4",
+          "got": 7,
+          "m": 104,
+          "q": 2
+        },
+        "formula_from_endpoints": "-q + 6",
+        "intercept": {
+          "den": 1,
+          "num": 6
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        56,
+        104,
+        152
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 8,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 56,
+          "nodes": 551,
+          "q": 1,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 104,
+          "nodes": 1031,
+          "q": 2,
+          "tag": "sym",
+          "x": 7,
+          "z": 7
+        },
+        {
+          "m": 152,
+          "nodes": 1511,
+          "q": 3,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 91",
+        "intercept": {
+          "den": 1,
+          "num": 91
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "8",
+          "got": 3,
+          "m": 106,
+          "q": 2
+        },
+        "formula_from_endpoints": "5*q - 2",
+        "intercept": {
+          "den": 1,
+          "num": -2
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 5
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "8",
+          "got": 3,
+          "m": 106,
+          "q": 2
+        },
+        "formula_from_endpoints": "5*q - 2",
+        "intercept": {
+          "den": 1,
+          "num": -2
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 5
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        58,
+        106,
+        154
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 10,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 58,
+          "nodes": 571,
+          "q": 1,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 106,
+          "nodes": 1051,
+          "q": 2,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 154,
+          "nodes": 1531,
+          "q": 3,
+          "tag": "sym",
+          "x": 13,
+          "z": 13
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 111",
+        "intercept": {
+          "den": 1,
+          "num": 111
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "3",
+          "got": 5,
+          "m": 108,
+          "q": 2
+        },
+        "formula_from_endpoints": "2*q - 1",
+        "intercept": {
+          "den": 1,
+          "num": -1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 2
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "73",
+          "got": 5,
+          "m": 108,
+          "q": 2
+        },
+        "formula_from_endpoints": "24*q + 25",
+        "intercept": {
+          "den": 1,
+          "num": 25
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 24
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        60,
+        108,
+        156
+      ],
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "residue": 12,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 60,
+          "nodes": 591,
+          "q": 1,
+          "tag": "R12-old",
+          "x": 1,
+          "z": 49
+        },
+        {
+          "m": 108,
+          "nodes": 1071,
+          "q": 2,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 156,
+          "nodes": 1551,
+          "q": 3,
+          "tag": "R12-x5",
+          "x": 5,
+          "z": 97
+        }
+      ],
+      "tags": [
+        "R12-old",
+        "R12-x5",
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 131",
+        "intercept": {
+          "den": 1,
+          "num": 131
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "slope": {
+          "den": 1,
+          "num": 0
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "24*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "slope": {
+          "den": 1,
+          "num": 24
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        14,
+        62,
+        110,
+        158
+      ],
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 14,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 14,
+          "nodes": 131,
+          "q": 0,
+          "tag": "R14e",
+          "x": 1,
+          "z": 5
+        },
+        {
+          "m": 62,
+          "nodes": 611,
+          "q": 1,
+          "tag": "R14e",
+          "x": 1,
+          "z": 29
+        },
+        {
+          "m": 110,
+          "nodes": 1091,
+          "q": 2,
+          "tag": "R14e",
+          "x": 1,
+          "z": 53
+        },
+        {
+          "m": 158,
+          "nodes": 1571,
+          "q": 3,
+          "tag": "R14e",
+          "x": 1,
+          "z": 77
+        }
+      ],
+      "tags": [
+        "R14e"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 151",
+        "intercept": {
+          "den": 1,
+          "num": 151
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "slope": {
+          "den": 1,
+          "num": 0
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "24*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "slope": {
+          "den": 1,
+          "num": 24
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        16,
+        64,
+        112,
+        160
+      ],
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 16,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 16,
+          "nodes": 151,
+          "q": 0,
+          "tag": "B16/direct",
+          "x": 1,
+          "z": 5
+        },
+        {
+          "m": 64,
+          "nodes": 631,
+          "q": 1,
+          "tag": "B16",
+          "x": 1,
+          "z": 29
+        },
+        {
+          "m": 112,
+          "nodes": 1111,
+          "q": 2,
+          "tag": "B16",
+          "x": 1,
+          "z": 53
+        },
+        {
+          "m": 160,
+          "nodes": 1591,
+          "q": 3,
+          "tag": "B16",
+          "x": 1,
+          "z": 77
+        }
+      ],
+      "tags": [
+        "B16",
+        "B16/direct"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 171",
+        "intercept": {
+          "den": 1,
+          "num": 171
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "5",
+          "got": 17,
+          "m": 66,
+          "q": 1
+        },
+        "formula_from_endpoints": "5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 0
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "5",
+          "got": 17,
+          "m": 66,
+          "q": 1
+        },
+        "formula_from_endpoints": "5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 0
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        18,
+        66,
+        114,
+        162
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 18,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 18,
+          "nodes": 171,
+          "q": 0,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 66,
+          "nodes": 651,
+          "q": 1,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        },
+        {
+          "m": 114,
+          "nodes": 1131,
+          "q": 2,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 162,
+          "nodes": 1611,
+          "q": 3,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 191",
+        "intercept": {
+          "den": 1,
+          "num": 191
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "8*q + 3",
+        "intercept": {
+          "den": 1,
+          "num": 3
+        },
+        "slope": {
+          "den": 1,
+          "num": 8
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "8*q + 3",
+        "intercept": {
+          "den": 1,
+          "num": 3
+        },
+        "slope": {
+          "den": 1,
+          "num": 8
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        20,
+        68,
+        116,
+        164
+      ],
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 20,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 20,
+          "nodes": 191,
+          "q": 0,
+          "tag": "B20sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 68,
+          "nodes": 671,
+          "q": 1,
+          "tag": "B20sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 116,
+          "nodes": 1151,
+          "q": 2,
+          "tag": "B20sym",
+          "x": 19,
+          "z": 19
+        },
+        {
+          "m": 164,
+          "nodes": 1631,
+          "q": 3,
+          "tag": "B20sym",
+          "x": 27,
+          "z": 27
+        }
+      ],
+      "tags": [
+        "B20sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 211",
+        "intercept": {
+          "den": 1,
+          "num": 211
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "7/3",
+          "got": 9,
+          "m": 70,
+          "q": 1
+        },
+        "formula_from_endpoints": "4/3*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 3,
+          "num": 4
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "7/3",
+          "got": 9,
+          "m": 70,
+          "q": 1
+        },
+        "formula_from_endpoints": "4/3*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 3,
+          "num": 4
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        22,
+        70,
+        118,
+        166
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 22,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 22,
+          "nodes": 211,
+          "q": 0,
+          "tag": "sym",
+          "x": 1,
+          "z": 1
+        },
+        {
+          "m": 70,
+          "nodes": 691,
+          "q": 1,
+          "tag": "sym",
+          "x": 9,
+          "z": 9
+        },
+        {
+          "m": 118,
+          "nodes": 1171,
+          "q": 2,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 166,
+          "nodes": 1651,
+          "q": 3,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 231",
+        "intercept": {
+          "den": 1,
+          "num": 231
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "7",
+          "got": 17,
+          "m": 72,
+          "q": 1
+        },
+        "formula_from_endpoints": "2*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 2
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "7",
+          "got": 17,
+          "m": 72,
+          "q": 1
+        },
+        "formula_from_endpoints": "2*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 2
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        24,
+        72,
+        120,
+        168
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 24,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 24,
+          "nodes": 231,
+          "q": 0,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 72,
+          "nodes": 711,
+          "q": 1,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        },
+        {
+          "m": 120,
+          "nodes": 1191,
+          "q": 2,
+          "tag": "sym",
+          "x": 23,
+          "z": 23
+        },
+        {
+          "m": 168,
+          "nodes": 1671,
+          "q": 3,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 251",
+        "intercept": {
+          "den": 1,
+          "num": 251
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "23/3",
+          "got": 3,
+          "m": 74,
+          "q": 1
+        },
+        "formula_from_endpoints": "20/3*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 3,
+          "num": 20
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "23/3",
+          "got": 3,
+          "m": 74,
+          "q": 1
+        },
+        "formula_from_endpoints": "20/3*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 3,
+          "num": 20
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        26,
+        74,
+        122,
+        170
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 26,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 26,
+          "nodes": 251,
+          "q": 0,
+          "tag": "sym",
+          "x": 1,
+          "z": 1
+        },
+        {
+          "m": 74,
+          "nodes": 731,
+          "q": 1,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 122,
+          "nodes": 1211,
+          "q": 2,
+          "tag": "sym",
+          "x": 15,
+          "z": 15
+        },
+        {
+          "m": 170,
+          "nodes": 1691,
+          "q": 3,
+          "tag": "sym",
+          "x": 21,
+          "z": 21
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 271",
+        "intercept": {
+          "den": 1,
+          "num": 271
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "5",
+          "got": 21,
+          "m": 124,
+          "q": 2
+        },
+        "formula_from_endpoints": "2*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 2
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "5",
+          "got": 21,
+          "m": 124,
+          "q": 2
+        },
+        "formula_from_endpoints": "2*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 2
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        28,
+        76,
+        124,
+        172
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 28,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 28,
+          "nodes": 271,
+          "q": 0,
+          "tag": "sym",
+          "x": 1,
+          "z": 1
+        },
+        {
+          "m": 76,
+          "nodes": 751,
+          "q": 1,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 124,
+          "nodes": 1231,
+          "q": 2,
+          "tag": "sym",
+          "x": 21,
+          "z": 21
+        },
+        {
+          "m": 172,
+          "nodes": 1711,
+          "q": 3,
+          "tag": "sym",
+          "x": 7,
+          "z": 7
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 291",
+        "intercept": {
+          "den": 1,
+          "num": 291
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "9",
+          "got": 5,
+          "m": 78,
+          "q": 1
+        },
+        "formula_from_endpoints": "-2*q + 11",
+        "intercept": {
+          "den": 1,
+          "num": 11
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -2
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "9",
+          "got": 5,
+          "m": 78,
+          "q": 1
+        },
+        "formula_from_endpoints": "-2*q + 11",
+        "intercept": {
+          "den": 1,
+          "num": 11
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -2
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        30,
+        78,
+        126,
+        174
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "residue": 30,
+      "sample_count": 4,
+      "samples": [
+        {
+          "m": 30,
+          "nodes": 291,
+          "q": 0,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 78,
+          "nodes": 771,
+          "q": 1,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 126,
+          "nodes": 1251,
+          "q": 2,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 174,
+          "nodes": 1731,
+          "q": 3,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 311",
+        "intercept": {
+          "den": 1,
+          "num": 311
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "2",
+          "got": 29,
+          "m": 80,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "2",
+          "got": 29,
+          "m": 80,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        32,
+        80,
+        128
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 32,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 32,
+          "nodes": 311,
+          "q": 0,
+          "tag": "sym",
+          "x": 1,
+          "z": 1
+        },
+        {
+          "m": 80,
+          "nodes": 791,
+          "q": 1,
+          "tag": "sym",
+          "x": 29,
+          "z": 29
+        },
+        {
+          "m": 128,
+          "nodes": 1271,
+          "q": 2,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 331",
+        "intercept": {
+          "den": 1,
+          "num": 331
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "10",
+          "got": 5,
+          "m": 82,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 9",
+        "intercept": {
+          "den": 1,
+          "num": 9
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "10",
+          "got": 5,
+          "m": 82,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 9",
+        "intercept": {
+          "den": 1,
+          "num": 9
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        34,
+        82,
+        130
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 34,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 34,
+          "nodes": 331,
+          "q": 0,
+          "tag": "sym",
+          "x": 9,
+          "z": 9
+        },
+        {
+          "m": 82,
+          "nodes": 811,
+          "q": 1,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 130,
+          "nodes": 1291,
+          "q": 2,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 351",
+        "intercept": {
+          "den": 1,
+          "num": 351
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "12",
+          "got": 11,
+          "m": 84,
+          "q": 1
+        },
+        "formula_from_endpoints": "11*q + 1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 11
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "24",
+          "got": 11,
+          "m": 84,
+          "q": 1
+        },
+        "formula_from_endpoints": "-q + 25",
+        "intercept": {
+          "den": 1,
+          "num": 25
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        36,
+        84,
+        132
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 36,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 36,
+          "nodes": 351,
+          "q": 0,
+          "tag": "R12-old",
+          "x": 1,
+          "z": 25
+        },
+        {
+          "m": 84,
+          "nodes": 831,
+          "q": 1,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 132,
+          "nodes": 1311,
+          "q": 2,
+          "tag": "sym",
+          "x": 23,
+          "z": 23
+        }
+      ],
+      "tags": [
+        "R12-old",
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 371",
+        "intercept": {
+          "den": 1,
+          "num": 371
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "4",
+          "got": 11,
+          "m": 86,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 3",
+        "intercept": {
+          "den": 1,
+          "num": 3
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "4",
+          "got": 11,
+          "m": 86,
+          "q": 1
+        },
+        "formula_from_endpoints": "q + 3",
+        "intercept": {
+          "den": 1,
+          "num": 3
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": 1
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        38,
+        86,
+        134
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 38,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 38,
+          "nodes": 371,
+          "q": 0,
+          "tag": "sym",
+          "x": 3,
+          "z": 3
+        },
+        {
+          "m": 86,
+          "nodes": 851,
+          "q": 1,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 134,
+          "nodes": 1331,
+          "q": 2,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 391",
+        "intercept": {
+          "den": 1,
+          "num": 391
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "1",
+        "intercept": {
+          "den": 1,
+          "num": 1
+        },
+        "slope": {
+          "den": 1,
+          "num": 0
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "24*q + 17",
+        "intercept": {
+          "den": 1,
+          "num": 17
+        },
+        "slope": {
+          "den": 1,
+          "num": 24
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        40,
+        88,
+        136
+      ],
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 40,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 40,
+          "nodes": 391,
+          "q": 0,
+          "tag": "B16",
+          "x": 1,
+          "z": 17
+        },
+        {
+          "m": 88,
+          "nodes": 871,
+          "q": 1,
+          "tag": "B16",
+          "x": 1,
+          "z": 41
+        },
+        {
+          "m": 136,
+          "nodes": 1351,
+          "q": 2,
+          "tag": "B16",
+          "x": 1,
+          "z": 65
+        }
+      ],
+      "tags": [
+        "B16"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 411",
+        "intercept": {
+          "den": 1,
+          "num": 411
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "6*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "slope": {
+          "den": 1,
+          "num": 6
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "6*q + 5",
+        "intercept": {
+          "den": 1,
+          "num": 5
+        },
+        "slope": {
+          "den": 1,
+          "num": 6
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        42,
+        90,
+        138
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 42,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 42,
+          "nodes": 411,
+          "q": 0,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 90,
+          "nodes": 891,
+          "q": 1,
+          "tag": "sym",
+          "x": 11,
+          "z": 11
+        },
+        {
+          "m": 138,
+          "nodes": 1371,
+          "q": 2,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 431",
+        "intercept": {
+          "den": 1,
+          "num": 431
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "formula": "8*q + 7",
+        "intercept": {
+          "den": 1,
+          "num": 7
+        },
+        "slope": {
+          "den": 1,
+          "num": 8
+        },
+        "status": "ok"
+      },
+      "fit_z": {
+        "formula": "8*q + 7",
+        "intercept": {
+          "den": 1,
+          "num": 7
+        },
+        "slope": {
+          "den": 1,
+          "num": 8
+        },
+        "status": "ok"
+      },
+      "moduli": [
+        44,
+        92,
+        140
+      ],
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 44,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 44,
+          "nodes": 431,
+          "q": 0,
+          "tag": "B20sym",
+          "x": 7,
+          "z": 7
+        },
+        {
+          "m": 92,
+          "nodes": 911,
+          "q": 1,
+          "tag": "B20sym",
+          "x": 15,
+          "z": 15
+        },
+        {
+          "m": 140,
+          "nodes": 1391,
+          "q": 2,
+          "tag": "B20sym",
+          "x": 23,
+          "z": 23
+        }
+      ],
+      "tags": [
+        "B20sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "all_count_admissible": true,
+      "fit_nodes": {
+        "formula": "480*q + 451",
+        "intercept": {
+          "den": 1,
+          "num": 451
+        },
+        "slope": {
+          "den": 1,
+          "num": 480
+        },
+        "status": "ok"
+      },
+      "fit_x": {
+        "first_bad": {
+          "expected": "11",
+          "got": 5,
+          "m": 94,
+          "q": 1
+        },
+        "formula_from_endpoints": "-6*q + 17",
+        "intercept": {
+          "den": 1,
+          "num": 17
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -6
+        },
+        "status": "bad"
+      },
+      "fit_z": {
+        "first_bad": {
+          "expected": "11",
+          "got": 5,
+          "m": 94,
+          "q": 1
+        },
+        "formula_from_endpoints": "-6*q + 17",
+        "intercept": {
+          "den": 1,
+          "num": 17
+        },
+        "reason": "non_affine",
+        "slope": {
+          "den": 1,
+          "num": -6
+        },
+        "status": "bad"
+      },
+      "moduli": [
+        46,
+        94,
+        142
+      ],
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "residue": 46,
+      "sample_count": 3,
+      "samples": [
+        {
+          "m": 46,
+          "nodes": 451,
+          "q": 0,
+          "tag": "sym",
+          "x": 17,
+          "z": 17
+        },
+        {
+          "m": 94,
+          "nodes": 931,
+          "q": 1,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        },
+        {
+          "m": 142,
+          "nodes": 1411,
+          "q": 2,
+          "tag": "sym",
+          "x": 5,
+          "z": 5
+        }
+      ],
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    }
+  ],
+  "sample_count": 81,
+  "schema": "routeE_allpair_portfolio_fit_summary_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_samples_v1_1.json"
+}

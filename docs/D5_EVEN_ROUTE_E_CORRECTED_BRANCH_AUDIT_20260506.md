@@ -34,6 +34,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Preserve all-pair portfolio sample coverage | `certs/routeE_allpair_portfolio_samples_v1_1.json`, `scripts/summarize_routeE_allpair_portfolio.py`, `certs/routeE_allpair_portfolio_summary.json` | done, samples cover all even residues but are not proofs |
+| Fit all-pair portfolio samples by residue | `scripts/analyze_routeE_allpair_portfolio_fits.py`, `certs/routeE_allpair_portfolio_fit_summary.json` | done, `42 mod 48` is next affine portfolio-only candidate |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -196,6 +197,23 @@ portfolio_only_residues=19
 These are zero-event checked all-pair candidates, not symbolic branch theorems.
 The audit keeps this evidence separate from proof-facing Type-A coverage.
 
+Portfolio affine-fit scan:
+
+```bash
+python3 scripts/analyze_routeE_allpair_portfolio_fits.py \
+  --json-out certs/routeE_allpair_portfolio_fit_summary.json
+```
+
+Result:
+
+```text
+affine_xz_residues=[14,16,20,40,42,44]
+portfolio_only_affine_xz_residues=[42]
+```
+
+Thus the next simple symbolic-promotion candidate from the portfolio is
+`m = 48q + 42` with the observed symmetric affine law `x = z = 6q + 5`.
+
 R38 symmetric recheck:
 
 ```bash
@@ -342,6 +360,7 @@ python3 -m py_compile scripts/summarize_d5_routeE_corrected_branches.py
 python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
 python3 -m py_compile scripts/summarize_routeE_typeA_residue_coverage.py
 python3 -m py_compile scripts/summarize_routeE_allpair_portfolio.py
+python3 -m py_compile scripts/analyze_routeE_allpair_portfolio_fits.py
 python3 -m py_compile scripts/verify_routeE_typeA_symbolic_skeleton.py
 python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
