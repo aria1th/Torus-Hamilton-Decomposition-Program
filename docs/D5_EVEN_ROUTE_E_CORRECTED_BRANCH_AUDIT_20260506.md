@@ -998,6 +998,41 @@ The R38 symmetric recheck strengthens that caution.  It reproduces early hits,
 but it does not produce a branch theorem and it shows that the tempting
 `x=5/23` continuation already fails to give a simple law.
 
+## R42 Mod-96 Edge-Partition Diagnostic
+
+R42 now has one more verified diagnostic artifact:
+
+```text
+python3 scripts/summarize_routeE_r42_mod96_edge_partitions.py \
+  --q-values 2:6 \
+  --json-out certs/routeE_r42_mod96_edge_partitions.json
+
+python3 scripts/verify_routeE_r42_mod96_edge_partitions.py \
+  --json-out certs/routeE_r42_mod96_edge_partitions_verification.json
+```
+
+This refines the 69-edge boundary-block transducer on the two generic mod-96
+subbranches.  It verifies that the edge support is still 69 on both branches,
+that every edge-source condition has affine-in-`s` count/min/max/interval-count
+data, and that the `qsteps` affine coefficients are affine in `s`.
+
+The artifact also records the remaining obstruction honestly.  Target maps are
+not stable as literal maps, and on the even-`q` subbranch 7 edge target
+coefficient pairs are not affine in `s`.  The `qtime` side is weaker still:
+22 edges have no affine-in-source-parameter coefficient record on each
+subbranch, and the even-`q` branch has 35 further non-affine coefficient cases.
+
+Thus this is useful packet-grammar evidence, not branch closure.  It does not
+prove pointwise first-return equations and it does not prove no-early
+minimality.  The R42 promotion audit now counts 16 verified evidence items but
+keeps the same three theorem blockers:
+
+```text
+1. pointwise first-return equations;
+2. no-early/minimality;
+3. Lean-facing endpoint theorem.
+```
+
 ## Conclusion
 
 The corrected dispatcher is now executable and evidence-preserving.  The

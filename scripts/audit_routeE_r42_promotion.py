@@ -49,6 +49,15 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     mod96_split_ver = record.get("mod96_branch_split_verification_summary", {})
     mod96_edges = record.get("mod96_edge_formulas_summary", {}).get("summary", {})
     mod96_edges_ver = record.get("mod96_edge_formulas_verification_summary", {})
+    mod96_edge_partitions = record.get("mod96_edge_partitions_summary", {}).get(
+        "summary", {}
+    )
+    mod96_edge_partitions_branches = record.get(
+        "mod96_edge_partitions_summary", {}
+    ).get("generic_subbranches", [])
+    mod96_edge_partitions_ver = record.get(
+        "mod96_edge_partitions_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -150,6 +159,25 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and mod96_edges.get("all_odd_branch_formulas_affine_in_s") is True,
             "certs/routeE_r42_mod96_edge_formulas.json and certs/routeE_r42_mod96_edge_formulas_verification.json",
             "branch dispatcher refinement",
+        ),
+        item(
+            "R42 mod-96 edge-partition diagnostic is verified",
+            mod96_edge_partitions_ver.get("schema")
+            == "routeE_r42_mod96_edge_partitions_verification_v1"
+            and mod96_edge_partitions_ver.get("ok") is True
+            and mod96_edge_partitions_ver.get("q_values") == [2, 3, 4, 5, 6]
+            and mod96_edge_partitions_ver.get("error_count") == 0
+            and mod96_edge_partitions.get("all_branch_edge_counts_69") is True
+            and mod96_edge_partitions.get("all_count_formulas_affine_in_s") is True
+            and mod96_edge_partitions.get("all_condition_bounds_affine_in_s") is True
+            and mod96_edge_partitions.get("all_target_affine_maps_stable") is False
+            and mod96_edge_partitions.get("all_qtime_affine_coeffs_affine_in_s")
+            is False
+            and mod96_edge_partitions.get("all_qsteps_affine_coeffs_affine_in_s")
+            is True
+            and len(mod96_edge_partitions_branches) == 2,
+            "certs/routeE_r42_mod96_edge_partitions.json and certs/routeE_r42_mod96_edge_partitions_verification.json",
+            "edge-partition diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

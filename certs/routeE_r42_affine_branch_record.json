@@ -502,6 +502,85 @@
     "ok": true,
     "schema": "routeE_r42_mod96_edge_formulas_verification_v1"
   },
+  "mod96_edge_partitions_summary": {
+    "generic_subbranches": [
+      {
+        "diagnostic_counts": {
+          "qsteps_coeffs_missing_edges": 0,
+          "qsteps_coeffs_nonaffine_edges": 0,
+          "qtime_coeffs_missing_edges": 22,
+          "qtime_coeffs_nonaffine_edges": 35,
+          "target_coeffs_missing_edges": 0,
+          "target_coeffs_nonaffine_edges": 7
+        },
+        "edge_count": 69,
+        "name": "R42-even-q",
+        "sample_q_values": [
+          2,
+          4,
+          6
+        ]
+      },
+      {
+        "diagnostic_counts": {
+          "qsteps_coeffs_missing_edges": 0,
+          "qsteps_coeffs_nonaffine_edges": 0,
+          "qtime_coeffs_missing_edges": 22,
+          "qtime_coeffs_nonaffine_edges": 0,
+          "target_coeffs_missing_edges": 0,
+          "target_coeffs_nonaffine_edges": 0
+        },
+        "edge_count": 69,
+        "name": "R42-odd-q",
+        "sample_q_values": [
+          3,
+          5
+        ]
+      }
+    ],
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "This records candidate per-edge source-condition and target/time maps on the two mod-96 R42 subbranches.  It is still sampled symbolic evidence and does not prove no-early.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "schema": "routeE_r42_mod96_edge_partitions_v1",
+    "summary": {
+      "all_branch_edge_counts_69": true,
+      "all_condition_bounds_affine_in_s": true,
+      "all_count_formulas_affine_in_s": true,
+      "all_qsteps_affine_coeffs_affine_in_s": true,
+      "all_qsteps_affine_maps_stable": false,
+      "all_qtime_affine_coeffs_affine_in_s": false,
+      "all_qtime_affine_maps_stable": false,
+      "all_samples_ok": true,
+      "all_target_affine_coeffs_affine_in_s": false,
+      "all_target_affine_maps_stable": false,
+      "q_values": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  },
+  "mod96_edge_partitions_verification_summary": {
+    "branch_edge_counts": {
+      "R42-even-q": 69,
+      "R42-odd-q": 69
+    },
+    "error_count": 0,
+    "ok": true,
+    "q_values": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "schema": "routeE_r42_mod96_edge_partitions_verification_v1"
+  },
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -754,6 +833,8 @@
     "mod96_branch_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split_verification.json",
     "mod96_edge_formulas": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas.json",
     "mod96_edge_formulas_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas_verification.json",
+    "mod96_edge_partitions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_partitions.json",
+    "mod96_edge_partitions_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_partitions_verification.json",
     "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
     "pointwise_law_mining": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json",
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",

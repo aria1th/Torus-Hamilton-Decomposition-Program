@@ -65,6 +65,13 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_mod96_edge_partitions.json and certs/routeE_r42_mod96_edge_partitions_verification.json",
+      "level": "edge-partition diagnostic",
+      "missing": null,
+      "name": "R42 mod-96 edge-partition diagnostic is verified",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_finite_boundary_cases.json and certs/routeE_r42_finite_boundary_cases_verification.json",
       "level": "finite boundary evidence",
       "missing": null,
@@ -129,7 +136,7 @@
     }
   ],
   "conclusion": "R42 has strong finite/symbolic-support evidence, but it is not promotion-ready until pointwise first-return, no-early, and Lean-facing endpoint artifacts exist.",
-  "evidence_items_ok": 15,
+  "evidence_items_ok": 16,
   "promotion_ready": false,
   "record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_branch_record.json",
   "required_theorem_items_missing": [

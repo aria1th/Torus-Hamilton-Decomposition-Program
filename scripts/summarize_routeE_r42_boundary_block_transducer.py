@@ -132,6 +132,8 @@ def block_rows(rows: list[dict[str, Any]], m: int) -> list[dict[str, Any]]:
                     "src_a": item["src_a"],
                     "dst_label": item["dst_label"],
                     "dst_a": item["dst_a"],
+                    "qtime": item["qtime"],
+                    "qsteps": item["qsteps"],
                     "path": item["path"],
                 }
                 for item in group
@@ -157,6 +159,8 @@ def block_rows(rows: list[dict[str, Any]], m: int) -> list[dict[str, Any]]:
                     "src_a": item["src_a"],
                     "dst_label": item["dst_label"],
                     "dst_a": item["dst_a"],
+                    "qtime": item["qtime"],
+                    "qsteps": item["qsteps"],
                     "path": item["path"],
                 }
                 for item in members

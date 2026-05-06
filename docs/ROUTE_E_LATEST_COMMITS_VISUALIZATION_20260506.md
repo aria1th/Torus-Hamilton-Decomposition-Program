@@ -244,7 +244,13 @@ q=0..6 samples and have strongly connected support.
     residue-affine modulus among `2,3,4,5,6,8,10,12,16,24,32,48`.
     A global section-index affine partition is smaller but still reaches 1051
     blocks by `q=4`, so aggregate transition/time fits are still not enough.
-17. The open residue queue is now explicit: R42 remains the active affine
+17. R42 mod-96 edge partitions are now preserved as a verified diagnostic.
+    On both generic subbranches, the 69 boundary-block edges have
+    affine-in-`s` source-condition count/bound data, and the `qsteps`
+    coefficient laws are affine in `s`.  The same artifact records why this is
+    still not a theorem: target maps and `qtime` maps remain incomplete, so it
+    does not close pointwise first-return or no-early.
+18. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

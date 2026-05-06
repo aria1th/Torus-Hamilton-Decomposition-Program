@@ -1,0 +1,42 @@
+{
+  "branch_edge_counts": {
+    "R42-even-q": 69,
+    "R42-odd-q": 69
+  },
+  "diagnostic_counts": {
+    "R42-even-q": {
+      "qsteps_coeffs_missing_edges": 0,
+      "qsteps_coeffs_nonaffine_edges": 0,
+      "qtime_coeffs_missing_edges": 22,
+      "qtime_coeffs_nonaffine_edges": 35,
+      "target_coeffs_missing_edges": 0,
+      "target_coeffs_nonaffine_edges": 7
+    },
+    "R42-odd-q": {
+      "qsteps_coeffs_missing_edges": 0,
+      "qsteps_coeffs_nonaffine_edges": 0,
+      "qtime_coeffs_missing_edges": 22,
+      "qtime_coeffs_nonaffine_edges": 0,
+      "target_coeffs_missing_edges": 0,
+      "target_coeffs_nonaffine_edges": 0
+    }
+  },
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "This records candidate per-edge source-condition and target/time maps on the two mod-96 R42 subbranches.  It is still sampled symbolic evidence and does not prove no-early.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "schema": "routeE_r42_mod96_edge_partitions_verification_v1",
+  "summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_partitions.json"
+}

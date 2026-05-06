@@ -42,6 +42,12 @@ DEFAULT_MOD96_EDGE_FORMULAS = ROOT / "certs" / "routeE_r42_mod96_edge_formulas.j
 DEFAULT_MOD96_EDGE_FORMULAS_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_mod96_edge_formulas_verification.json"
 )
+DEFAULT_MOD96_EDGE_PARTITIONS = (
+    ROOT / "certs" / "routeE_r42_mod96_edge_partitions.json"
+)
+DEFAULT_MOD96_EDGE_PARTITIONS_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_mod96_edge_partitions_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -88,6 +94,8 @@ def build_record(
     mod96_branch_split_verification_path: Path,
     mod96_edge_formulas_path: Path,
     mod96_edge_formulas_verification_path: Path,
+    mod96_edge_partitions_path: Path,
+    mod96_edge_partitions_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -148,6 +156,16 @@ def build_record(
     mod96_edge_formulas_verification = (
         load_json(mod96_edge_formulas_verification_path)
         if mod96_edge_formulas_verification_path.exists()
+        else {}
+    )
+    mod96_edge_partitions = (
+        load_json(mod96_edge_partitions_path)
+        if mod96_edge_partitions_path.exists()
+        else {}
+    )
+    mod96_edge_partitions_verification = (
+        load_json(mod96_edge_partitions_verification_path)
+        if mod96_edge_partitions_verification_path.exists()
         else {}
     )
     finite_boundary_cases = (
@@ -246,6 +264,10 @@ def build_record(
             "mod96_edge_formulas": str(mod96_edge_formulas_path),
             "mod96_edge_formulas_verification": str(
                 mod96_edge_formulas_verification_path
+            ),
+            "mod96_edge_partitions": str(mod96_edge_partitions_path),
+            "mod96_edge_partitions_verification": str(
+                mod96_edge_partitions_verification_path
             ),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
@@ -383,6 +405,29 @@ def build_record(
             "edge_count": mod96_edge_formulas_verification.get("edge_count"),
             "error_count": mod96_edge_formulas_verification.get("error_count"),
         },
+        "mod96_edge_partitions_summary": {
+            "schema": mod96_edge_partitions.get("schema"),
+            "summary": mod96_edge_partitions.get("summary"),
+            "generic_subbranches": [
+                {
+                    "name": branch.get("name"),
+                    "sample_q_values": branch.get("sample_q_values"),
+                    "edge_count": branch.get("edge_count"),
+                    "diagnostic_counts": branch.get("diagnostic_counts"),
+                }
+                for branch in mod96_edge_partitions.get("generic_subbranches", [])
+            ],
+            "promotion_impact": mod96_edge_partitions.get("promotion_impact"),
+        },
+        "mod96_edge_partitions_verification_summary": {
+            "schema": mod96_edge_partitions_verification.get("schema"),
+            "ok": mod96_edge_partitions_verification.get("ok"),
+            "q_values": mod96_edge_partitions_verification.get("q_values"),
+            "branch_edge_counts": mod96_edge_partitions_verification.get(
+                "branch_edge_counts"
+            ),
+            "error_count": mod96_edge_partitions_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -515,6 +560,16 @@ def main() -> None:
         default=DEFAULT_MOD96_EDGE_FORMULAS_VERIFICATION,
     )
     parser.add_argument(
+        "--mod96-edge-partitions",
+        type=Path,
+        default=DEFAULT_MOD96_EDGE_PARTITIONS,
+    )
+    parser.add_argument(
+        "--mod96-edge-partitions-verification",
+        type=Path,
+        default=DEFAULT_MOD96_EDGE_PARTITIONS_VERIFICATION,
+    )
+    parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
         default=DEFAULT_FINITE_BOUNDARY_CASES,
@@ -575,6 +630,8 @@ def main() -> None:
         args.mod96_branch_split_verification,
         args.mod96_edge_formulas,
         args.mod96_edge_formulas_verification,
+        args.mod96_edge_partitions,
+        args.mod96_edge_partitions_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,
