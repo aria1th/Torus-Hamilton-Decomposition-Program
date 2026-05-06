@@ -413,7 +413,8 @@
       "moduli": [
         20,
         44,
-        68
+        68,
+        92
       ],
       "open_fields": [
         "ThetaPointwiseTraceTarget.firstReturn_equation",
@@ -437,6 +438,13 @@
         {
           "blocks_ok": true,
           "m": 68,
+          "return_time_formula_ok": true,
+          "sum_ok": true,
+          "time_distribution_ok": true
+        },
+        {
+          "blocks_ok": true,
+          "m": 92,
           "return_time_formula_ok": true,
           "sum_ok": true,
           "time_distribution_ok": true

@@ -3,7 +3,8 @@
   "moduli": [
     20,
     44,
-    68
+    68,
+    92
   ],
   "results": [
     {
@@ -698,6 +699,238 @@
           "end": 67,
           "length": 35,
           "start": 33
+        }
+      ],
+      "translation_blocks_ok": true
+    },
+    {
+      "counts": [
+        15,
+        0,
+        0,
+        61,
+        15
+      ],
+      "cycle_lengths": [
+        91
+      ],
+      "expected_distribution_sum": 71639296,
+      "expected_distribution_sum_ok": true,
+      "expected_return_time_runs": [
+        {
+          "end": 14,
+          "length": 14,
+          "start": 1,
+          "time": 783110
+        },
+        {
+          "end": 15,
+          "length": 1,
+          "start": 15,
+          "time": 783018
+        },
+        {
+          "end": 29,
+          "length": 14,
+          "start": 16,
+          "time": 783110
+        },
+        {
+          "end": 30,
+          "length": 1,
+          "start": 30,
+          "time": 783018
+        },
+        {
+          "end": 44,
+          "length": 14,
+          "start": 31,
+          "time": 783110
+        },
+        {
+          "end": 45,
+          "length": 1,
+          "start": 45,
+          "time": 1164042
+        },
+        {
+          "end": 46,
+          "length": 1,
+          "start": 46,
+          "time": 783018
+        },
+        {
+          "end": 60,
+          "length": 14,
+          "start": 47,
+          "time": 774554
+        },
+        {
+          "end": 61,
+          "length": 1,
+          "start": 61,
+          "time": 774462
+        },
+        {
+          "end": 75,
+          "length": 14,
+          "start": 62,
+          "time": 774554
+        },
+        {
+          "end": 76,
+          "length": 1,
+          "start": 76,
+          "time": 774462
+        },
+        {
+          "end": 90,
+          "length": 14,
+          "start": 77,
+          "time": 774554
+        },
+        {
+          "end": 91,
+          "length": 1,
+          "start": 91,
+          "time": 1155388
+        }
+      ],
+      "expected_return_time_sum": 71639296,
+      "expected_time_distribution": {
+        "774462": 2,
+        "774554": 42,
+        "783018": 3,
+        "783110": 42,
+        "1155388": 1,
+        "1164042": 1
+      },
+      "expected_translation_blocks": [
+        {
+          "delta": 47,
+          "end": 44,
+          "length": 44,
+          "start": 1
+        },
+        {
+          "delta": 48,
+          "end": 91,
+          "length": 47,
+          "start": 45
+        }
+      ],
+      "h": 46,
+      "m": 92,
+      "ok": true,
+      "q": 3,
+      "r": 15,
+      "return_time_formula_mismatches": [],
+      "return_time_formula_ok": true,
+      "return_time_runs": [
+        {
+          "end": 14,
+          "length": 14,
+          "start": 1,
+          "time": 783110
+        },
+        {
+          "end": 15,
+          "length": 1,
+          "start": 15,
+          "time": 783018
+        },
+        {
+          "end": 29,
+          "length": 14,
+          "start": 16,
+          "time": 783110
+        },
+        {
+          "end": 30,
+          "length": 1,
+          "start": 30,
+          "time": 783018
+        },
+        {
+          "end": 44,
+          "length": 14,
+          "start": 31,
+          "time": 783110
+        },
+        {
+          "end": 45,
+          "length": 1,
+          "start": 45,
+          "time": 1164042
+        },
+        {
+          "end": 46,
+          "length": 1,
+          "start": 46,
+          "time": 783018
+        },
+        {
+          "end": 60,
+          "length": 14,
+          "start": 47,
+          "time": 774554
+        },
+        {
+          "end": 61,
+          "length": 1,
+          "start": 61,
+          "time": 774462
+        },
+        {
+          "end": 75,
+          "length": 14,
+          "start": 62,
+          "time": 774554
+        },
+        {
+          "end": 76,
+          "length": 1,
+          "start": 76,
+          "time": 774462
+        },
+        {
+          "end": 90,
+          "length": 14,
+          "start": 77,
+          "time": 774554
+        },
+        {
+          "end": 91,
+          "length": 1,
+          "start": 91,
+          "time": 1155388
+        }
+      ],
+      "return_time_sum": 71639296,
+      "return_time_sum_ok": true,
+      "slot": 0,
+      "small_seam_ok": true,
+      "time_distribution": {
+        "774462": 2,
+        "774554": 42,
+        "783018": 3,
+        "783110": 42,
+        "1155388": 1,
+        "1164042": 1
+      },
+      "time_distribution_ok": true,
+      "translation_blocks": [
+        {
+          "delta": 47,
+          "end": 44,
+          "length": 44,
+          "start": 1
+        },
+        {
+          "delta": 48,
+          "end": 91,
+          "length": 47,
+          "start": 45
         }
       ],
       "translation_blocks_ok": true
