@@ -52,6 +52,39 @@ ModuleNotFoundError: No module named 'sympy'
 This checkout's current Python environment therefore cannot rerun the verifier
 scripts as-is.
 
+After installing `sympy` in a temporary virtual environment, the same rerun was
+attempted from a fresh extraction under `/tmp/routee_closure_reaudit_20260506`.
+The scripts execute, but the missing-data issue remains.
+
+B16 output:
+
+```text
+poly_bad_count = 0
+label_total_equals_m4 = true
+label_dst_total_equals_m4 = true
+bad_macro_cases = []
+case_summary = []
+```
+
+The empty `case_summary` is the key point: the script found no finite
+`map_B16_*.csv` inputs, so it checked polynomial identities but did not rerun
+any concrete branch map.
+
+R14e output:
+
+```text
+cases = [{ k = 4, m = 206, complete = true, single_cycle = true,
+           total_equals_m4 = true, boundary_step_sum_ok = true }]
+label_total_equals_m4 = false
+dst_total_equals_m4 = false
+label_dst_count_equals_allpair_size = false
+insertion_weighted_equals_allpair_size = true
+```
+
+Thus the included `m=206` R14e CSV still gives positive finite cycle evidence,
+but the package does not contain enough cases for the recorded interpolation
+aggregate to rerun successfully.
+
 ## Self-Containment Check
 
 Even with `sympy` installed, the packages are not fully self-contained rerun
