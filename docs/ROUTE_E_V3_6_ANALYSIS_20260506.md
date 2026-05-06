@@ -228,6 +228,9 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEAllPairLabelFiber`
 - `RouteEAllPairCanonicalRow`
 - `card_routeEAllPairCanonicalRow`
+- `RouteEAllPairCanonicalLabelTraceTarget`
+- `RouteEAllPairCanonicalLabelTraceTarget.toLabelTraceTarget`
+- `RouteEAllPairCanonicalLabelTraceTarget.toSectionCertificate`
 - `RouteEAllPairCanonicalLabelDstTraceTarget`
 - `RouteEAllPairCanonicalLabelDstTraceTarget.toLabelDstTraceTarget`
 - `RouteEAllPairCanonicalLabelDstTraceTarget.toSectionCertificate`
@@ -264,9 +267,10 @@ variants match verifier rows (`idx`, `dst_idx`, labels, `time`) through a
 bijection to `RouteEAllPairSection`.  The canonical-row variant fixes the
 verifier row shape as `{Z} union labels x nonzero seam`, proves cardinal
 `1 + 10*(m-1)`, and then transports a branch-supplied row-to-section bijection
-to the same label-destination certificate surface.  B20 keeps its original
-branch-local target names, while B16/R14e now reuse the generic adapters with
-their own count vectors and time-mass polynomials.
+to either the source-label or label-destination certificate surface.  B20 now
+has a branch-local canonical source-label target for the closure-package row
+order, while B16/R14e have branch-local canonical label-destination targets
+with their own count vectors and time-mass polynomials.
 
 B16 and R14e branch surfaces are now also named in Lean:
 
