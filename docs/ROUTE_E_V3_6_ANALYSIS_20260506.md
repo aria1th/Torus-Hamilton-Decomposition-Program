@@ -225,6 +225,12 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEAllPairIndexedLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate`
+- `RouteEAllPairLabelFiber`
+- `RouteEAllPairCanonicalRow`
+- `card_routeEAllPairCanonicalRow`
+- `RouteEAllPairCanonicalLabelDstTraceTarget`
+- `RouteEAllPairCanonicalLabelDstTraceTarget.toLabelDstTraceTarget`
+- `RouteEAllPairCanonicalLabelDstTraceTarget.toSectionCertificate`
 - `RouteEBoundaryFirstReturnTarget`
 - `RouteEBoundaryFirstReturnTarget.boundaryMap_singleCycle`
 - `RouteEB20.AllPairLabelTraceTarget`
@@ -255,9 +261,12 @@ D5 even Hamilton, torus, and Cayley endpoints.  The branch-independent
 fiber sums.  `RouteEAllPairLabelDstTraceTarget` refines this to the
 `src_label -> dst_label` sums emitted by the closure verifiers, and the indexed
 variants match verifier rows (`idx`, `dst_idx`, labels, `time`) through a
-bijection to `RouteEAllPairSection`.  B20 keeps its original branch-local
-target names, while B16/R14e now reuse the generic adapters with their own
-count vectors and time-mass polynomials.
+bijection to `RouteEAllPairSection`.  The canonical-row variant fixes the
+verifier row shape as `{Z} union labels x nonzero seam`, proves cardinal
+`1 + 10*(m-1)`, and then transports a branch-supplied row-to-section bijection
+to the same label-destination certificate surface.  B20 keeps its original
+branch-local target names, while B16/R14e now reuse the generic adapters with
+their own count vectors and time-mass polynomials.
 
 B16 and R14e branch surfaces are now also named in Lean:
 

@@ -43,6 +43,7 @@ remaining gaps.
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | Generic label/indexed all-pair adapter | `RouteEAllPairLabelTraceTarget`, `RouteEAllPairLabelTraceTarget.returnTime_sum`, `RouteEAllPairLabelTraceTarget.toSectionCertificate`, `RouteEAllPairIndexedLabelTraceTarget`, `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate` | reusable proof-facing target added |
 | Generic label-destination all-pair adapter | `RouteEAllPairLabelDstTraceTarget`, `RouteEAllPairLabelDstTraceTarget.toLabelTraceTarget`, `RouteEAllPairLabelDstTraceTarget.toSectionCertificate`, `RouteEAllPairIndexedLabelDstTraceTarget`, `RouteEAllPairIndexedLabelDstTraceTarget.toLabelDstTraceTarget`, `RouteEAllPairIndexedLabelDstTraceTarget.toSectionCertificate` | verifier `src_label -> dst_label` target added |
+| Canonical all-pair row adapter | `RouteEAllPairLabelFiber`, `RouteEAllPairCanonicalRow`, `card_routeEAllPairCanonicalRow`, `RouteEAllPairCanonicalLabelDstTraceTarget`, `RouteEAllPairCanonicalLabelDstTraceTarget.toLabelDstTraceTarget`, `RouteEAllPairCanonicalLabelDstTraceTarget.toSectionCertificate` | verifier row shape `{Z} union labels x nonzero seam` and its `1 + 10*(m-1)` cardinal are Lean-facing |
 | B20 label-fiber all-pair adapter | `RouteEB20.AllPairLabelTraceTarget`, `RouteEB20.AllPairLabelTraceTarget.returnTime_sum`, `RouteEB20.allPairSectionCertificateOfLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_labelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_labelTraceTarget`, `RouteEB20.allPairBranchTarget_of_labelTraceTargets`, `RouteEB20.hamiltonTarget_of_labelTraceTargets`, `RouteEB20.torusTarget_of_labelTraceTargets`, `RouteEB20.cayleyTarget_of_labelTraceTargets` | CSV/verifier-shaped target added |
 | B20 indexed all-pair adapter | `RouteEB20.AllPairIndexedLabelTraceTarget`, `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`, `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets`, `RouteEB20.hamiltonTarget_of_indexedLabelTraceTargets`, `RouteEB20.torusTarget_of_indexedLabelTraceTargets`, `RouteEB20.cayleyTarget_of_indexedLabelTraceTargets` | row-indexed package target added |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
@@ -99,11 +100,13 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    `m=20` certificate.
 
 2. No branch currently instantiates `RouteEAllPairSectionCertificate`.  The
-   adapter now includes generic label/indexed and label-destination targets plus
-   B20/B16/R14e branch-local aliases.  These derive certificate-level time
-   exhaustion from per-label or `src_label -> dst_label` fiber sums and can
-   match the package `idx`/`dst_idx` row format.  Exact all-pair first-return
-   equations, no-early minimality, a section one-cycle proof, and the concrete
+   adapter now includes generic label/indexed, label-destination, and canonical
+   row targets plus B20/B16/R14e branch-local aliases.  These derive
+   certificate-level time exhaustion from per-label or `src_label -> dst_label`
+   fiber sums and can match either the package `idx`/`dst_idx` row format or
+   the canonical `{Z} union labels x nonzero seam` row format.  Exact all-pair
+   first-return equations, no-early minimality, a section one-cycle proof, the
+   concrete row-to-section bijection, and the concrete
    return-time/label/destination functions still need to be supplied.
 
 3. B20 has the boundary quotient map candidate `RouteEB20.boundaryQuotient`,
@@ -150,12 +153,15 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
 The next best Lean implementation slice for the v3.6 closure track is concrete
 branch instantiation:
 
-1. instantiate `RouteEB20.AllPairIndexedLabelTraceTarget` or
+1. instantiate `RouteEAllPairCanonicalLabelDstTraceTarget`,
+   `RouteEB20.AllPairIndexedLabelTraceTarget`, or
    `RouteEB20.AllPairLabelTraceTarget` from the B20 closure package;
-2. instantiate `RouteEB16.AllPairIndexedLabelDstTraceTarget` from the B16
-   closure package, keeping symbolic `q > 0` separate from finite `m = 16`;
-3. instantiate `RouteER14e.AllPairIndexedLabelDstTraceTarget` from the R14e
-   closure package, keeping symbolic `k > 0` separate from finite `m = 14`;
+2. instantiate `RouteEAllPairCanonicalLabelDstTraceTarget` or
+   `RouteEB16.AllPairIndexedLabelDstTraceTarget` from the B16 closure package,
+   keeping symbolic `q > 0` separate from finite `m = 16`;
+3. instantiate `RouteEAllPairCanonicalLabelDstTraceTarget` or
+   `RouteER14e.AllPairIndexedLabelDstTraceTarget` from the R14e closure
+   package, keeping symbolic `k > 0` separate from finite `m = 14`;
 4. start the R38/symmetric mining slice only after the three proof-facing
    branches above have concrete Lean certificate instances or precise blockers.
 

@@ -1302,6 +1302,54 @@ noncomputable def indexEquiv {m : Nat} [NeZero m] :
 
 end RouteENonzeroSeam
 
+/--
+Canonical row shape for the Route-E all-pair section verifiers.
+
+The all-pair section has one zero row and, for each nonzero pair label,
+one row for every nonzero seam parameter.  This is the Lean-side type counted
+by the closure packages' `1 + 10 * (m - 1)` row total before a branch supplies
+the concrete bijection into `RouteEAllPairSection`.
+-/
+def RouteEAllPairLabelFiber (m : Nat) : RouteEB20.AllPairLabel → Type
+  | .Z => Unit
+  | _ => RouteENonzeroSeam m
+
+noncomputable instance routeEAllPairLabelFiberFintype
+    (m : Nat) [NeZero m] (label : RouteEB20.AllPairLabel) :
+    Fintype (RouteEAllPairLabelFiber m label) := by
+  cases label <;> simp only [RouteEAllPairLabelFiber] <;> infer_instance
+
+abbrev RouteEAllPairCanonicalRow (m : Nat) :=
+  Σ label : RouteEB20.AllPairLabel, RouteEAllPairLabelFiber m label
+
+noncomputable instance routeEAllPairCanonicalRowFintype
+    (m : Nat) [NeZero m] :
+    Fintype (RouteEAllPairCanonicalRow m) := by
+  classical
+  infer_instance
+
+def RouteEAllPairCanonicalRow.label {m : Nat}
+    (row : RouteEAllPairCanonicalRow m) : RouteEB20.AllPairLabel :=
+  row.1
+
+theorem card_routeEAllPairCanonicalRow (m : Nat) [NeZero m] :
+    Fintype.card (RouteEAllPairCanonicalRow m) = 1 + 10 * (m - 1) := by
+  classical
+  rw [Fintype.card_sigma]
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [RouteEAllPairLabelFiber]
+  omega
+
 inductive RouteEBoundaryLabel where
   | L03
   | L04
@@ -8425,6 +8473,173 @@ noncomputable def toSectionCertificate {m : Nat} [NeZero m]
   target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
 
 end RouteEAllPairIndexedLabelDstTraceTarget
+
+/--
+Canonical-row version of the source/destination-label all-pair target.  This
+is the verifier-facing shape after replacing arbitrary CSV indices by the
+canonical row type `{Z} ∪ ({10 nonzero labels} × {a ≠ 0})`.
+-/
+structure RouteEAllPairCanonicalLabelDstTraceTarget (m : Nat) [NeZero m]
+    (labelTimeMass : RouteEB20.AllPairLabel → Nat)
+    (labelDstTimeMass : RouteEAllPairLabelDst → Nat) where
+  data : D5EvenSeamData m
+  point : RouteEAllPairCanonicalRow m → RouteEAllPairSection m
+  point_bijective : Function.Bijective point
+  rowReturn :
+    Color → RouteEAllPairCanonicalRow m → RouteEAllPairCanonicalRow m
+  returnTime : Color → RouteEAllPairCanonicalRow m → Nat
+  returnTime_pos : ∀ c row, 0 < returnTime c row
+  firstReturn_equation :
+    ∀ c row,
+      (seamRootReturn data c)^[returnTime c row] (point row).1 =
+        (point (rowReturn c row)).1
+  firstReturn_minimal :
+    ∀ c row k, 0 < k → k < returnTime c row →
+      ¬ ∃ nextRow : RouteEAllPairCanonicalRow m,
+        (seamRootReturn data c)^[k] (point row).1 = (point nextRow).1
+  rowReturn_single : ∀ c, IsSingleCycleMap (rowReturn c)
+  dstLabelOfRow : RouteEAllPairCanonicalRow m → RouteEB20.AllPairLabel
+  label_dst_time_sum :
+    ∀ c src dst,
+      ((Finset.univ : Finset (RouteEAllPairCanonicalRow m)).filter
+          fun row => row.label = src ∧ dstLabelOfRow row = dst).sum
+            (fun row => returnTime c row) =
+        labelDstTimeMass (src, dst)
+  labelDst_sum_by_src :
+    ∀ src,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        labelDstTimeMass (src, dst)) = labelTimeMass src
+
+namespace RouteEAllPairCanonicalLabelDstTraceTarget
+
+noncomputable def pointEquiv {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass) :
+    RouteEAllPairCanonicalRow m ≃ RouteEAllPairSection m :=
+  Equiv.ofBijective target.point target.point_bijective
+
+noncomputable def sectionRow {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass)
+    (a : RouteEAllPairSection m) : RouteEAllPairCanonicalRow m :=
+  (target.pointEquiv).symm a
+
+@[simp] theorem point_sectionRow {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass)
+    (a : RouteEAllPairSection m) :
+    target.point (target.sectionRow a) = a := by
+  exact target.pointEquiv.apply_symm_apply a
+
+@[simp] theorem sectionRow_point {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass)
+    (row : RouteEAllPairCanonicalRow m) :
+    target.sectionRow (target.point row) = row := by
+  exact target.pointEquiv.symm_apply_apply row
+
+noncomputable def toLabelDstTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass) :
+    RouteEAllPairLabelDstTraceTarget m labelTimeMass labelDstTimeMass where
+  data := target.data
+  sectionReturn := fun c a =>
+    target.point (target.rowReturn c (target.sectionRow a))
+  returnTime := fun c a => target.returnTime c (target.sectionRow a)
+  returnTime_pos := by
+    intro c a
+    exact target.returnTime_pos c (target.sectionRow a)
+  firstReturn_equation := by
+    intro c a
+    simpa using target.firstReturn_equation c (target.sectionRow a)
+  firstReturn_minimal := by
+    intro c a k hkpos hklt hhit
+    apply target.firstReturn_minimal c (target.sectionRow a) k hkpos
+      (by simpa using hklt)
+    rcases hhit with ⟨b, hb⟩
+    exact ⟨target.sectionRow b, by simpa using hb⟩
+  sectionReturn_single := by
+    intro c
+    exact single_cycle_of_bijective_semiconj
+      (f := target.rowReturn c)
+      (g := fun a =>
+        target.point (target.rowReturn c (target.sectionRow a)))
+      (phi := target.point)
+      target.point_bijective
+      (by
+        intro row
+        simp)
+      (target.rowReturn_single c)
+  labelOf := fun a => (target.sectionRow a).label
+  dstLabelOf := fun a => target.dstLabelOfRow (target.sectionRow a)
+  label_dst_time_sum := by
+    intro c src dst
+    let sRow : Finset (RouteEAllPairCanonicalRow m) :=
+      (Finset.univ.filter fun row =>
+        row.label = src ∧ target.dstLabelOfRow row = dst)
+    let sSec : Finset (RouteEAllPairSection m) :=
+      (Finset.univ.filter fun a =>
+        (target.sectionRow a).label = src ∧
+          target.dstLabelOfRow (target.sectionRow a) = dst)
+    have hsum :
+        sRow.sum (fun row => target.returnTime c row) =
+          sSec.sum (fun a => target.returnTime c (target.sectionRow a)) := by
+      exact Finset.sum_bijective
+        (s := sRow)
+        (t := sSec)
+        (f := fun row => target.returnTime c row)
+        (g := fun a => target.returnTime c (target.sectionRow a))
+        target.point
+        target.point_bijective
+        (by
+          intro row
+          simp [sRow, sSec])
+        (by
+          intro row _hrow
+          simp)
+    calc
+      sSec.sum (fun a => target.returnTime c (target.sectionRow a)) =
+          sRow.sum (fun row => target.returnTime c row) := hsum.symm
+      _ = labelDstTimeMass (src, dst) :=
+        target.label_dst_time_sum c src dst
+  labelDst_sum_by_src := target.labelDst_sum_by_src
+
+noncomputable def toLabelTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass) :
+    RouteEAllPairLabelTraceTarget m labelTimeMass :=
+  target.toLabelDstTraceTarget.toLabelTraceTarget
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairCanonicalLabelDstTraceTarget m labelTimeMass
+        labelDstTimeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum labelTimeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m :=
+  target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
+
+end RouteEAllPairCanonicalLabelDstTraceTarget
 
 namespace RouteEB16
 
