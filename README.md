@@ -106,8 +106,8 @@ Seed endpoints:
 ```lean
 Shared.D2.shared_cayley_uniform
 Shared.D3.shared_cayley_uniform
-D5Odd.D5_odd_cayley_unconditional
-D7Odd.D7_odd_cayley_unconditional
+D5Odd.D5_odd_shared_cayley_uniform
+D7Odd.D7_odd_shared_cayley_uniform
 ```
 
 All-dimensional endpoint shape:
@@ -131,6 +131,80 @@ The final reservoir construction interface closed by the V75 route:
 ```lean
 RoundComposite.BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal
 ```
+
+## Formalization Audit
+
+The `0.0.3-allodd` release was audited on the pinned toolchain
+`leanprover/lean4:v4.30.0-rc2` with mathlib revision
+`5450b53e5ddc75d46418fabb605edbf36bd0beb6`.
+
+The main endpoint has the following Lean type:
+
+```lean
+RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75
+  {d m : Nat} (hd2 : 2 ≤ d) (hmodd : Odd m) (hm3 : 3 ≤ m) :
+  Shared.CayleyHamiltonDecomposition d m
+```
+
+Here
+
+```lean
+Shared.TorusVertex d m := Fin d → ZMod m
+Shared.torusBasis d m i := e_i
+Shared.CayleyHamiltonDecomposition d m :=
+  Nonempty (Shared.CayleyDecomposition d m)
+```
+
+and a `Shared.CayleyDecomposition` consists of a color-to-direction selector,
+the local edge-partition/Latin condition, and the assertion that each colored
+Cayley step is a single cycle.  Thus the endpoint is the formal statement that
+the directed basis Cayley torus `Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` has a
+Hamilton decomposition for every `d >= 2` and every odd `m >= 3`.
+
+The seed endpoints used by the final dispatcher check as:
+
+```lean
+Shared.D2.shared_cayley_uniform :
+  ∀ {m : Nat}, 3 ≤ m → Odd m → Shared.CayleyHamiltonDecomposition 2 m
+
+Shared.D3.shared_cayley_uniform :
+  ∀ {m : Nat}, 3 ≤ m → Odd m → Shared.CayleyHamiltonDecomposition 3 m
+
+D5Odd.D5_odd_shared_cayley_uniform :
+  ∀ {m : Nat}, 3 ≤ m → Odd m → Shared.CayleyHamiltonDecomposition 5 m
+
+D7Odd.D7_odd_shared_cayley_uniform :
+  ∀ {m : Nat}, 3 ≤ m → Odd m → Shared.CayleyHamiltonDecomposition 7 m
+```
+
+`#print axioms` on the D2 and D3 endpoints reports only Lean's standard
+axioms:
+
+```text
+propext, Classical.choice, Quot.sound
+```
+
+`#print axioms` on the main endpoint, D5 endpoint, and D7 endpoint reports
+those standard axioms plus Lean-generated `native_decide` axioms for finite
+certificate checks in D5, D7, and two prefix-count finite tables.  These are not
+author-declared mathematical axioms for the D5/D7 theorems; they are the trusted
+native-computation certificates emitted by Lean for finite decidable goals.
+
+A small-definition sanity check gives:
+
+```lean
+Fintype.card (Shared.TorusVertex 3 3) = 27
+Fintype.card (Shared.TorusDirection 3) = 3
+Fintype.card ((Shared.TorusVertex 3 3) × Shared.TorusDirection 3) = 81
+```
+
+so the formal `D_3(3)` object has the expected 27 vertices and 81 directed
+basis arcs.
+
+Tracked Lean sources in the release are free of `sorry`, `admit`,
+author-declared `axiom`, and `constant` declarations.  Historical documents,
+untracked draft directories, and dependency test files are not part of this
+release audit.
 
 ## Repository Layout
 
