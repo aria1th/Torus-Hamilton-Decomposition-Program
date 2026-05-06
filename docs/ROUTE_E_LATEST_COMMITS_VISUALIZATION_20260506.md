@@ -221,7 +221,9 @@ q=0..6 samples and have strongly connected support.
     endpoint theorem are still missing.
 11. R42 pointwise law mining now quantifies the missing trace grammar: the
     naive source-label/source-parameter interval-affine partition reaches
-    1492 blocks by `q=4`, so aggregate transition/time fits are not enough.
+    1492 blocks by `q=4`, and no nontrivial label has a common passing
+    residue-affine modulus among `2,3,4,5,6,8,10,12,16,24,32,48`.
+    Aggregate transition/time fits are therefore not enough.
 12. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.

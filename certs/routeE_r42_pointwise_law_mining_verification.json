@@ -102,6 +102,79 @@
     3,
     4
   ],
+  "residue_affine_summary": {
+    "labels_without_uniform_residue_modulus": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "12",
+      "13",
+      "14",
+      "23",
+      "24",
+      "34"
+    ],
+    "uniform_residue_moduli_by_label": {
+      "01": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "02": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "03": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "04": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "12": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "13": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "14": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "23": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "24": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "34": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "Z": {
+        "common_passing_moduli": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          24,
+          32,
+          48
+        ],
+        "first_common_passing_modulus": 2
+      }
+    }
+  },
   "sample_count": 5,
   "schema": "routeE_r42_pointwise_law_mining_verification_v1",
   "summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json"

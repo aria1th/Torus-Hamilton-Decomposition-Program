@@ -2225,6 +2225,88 @@
         ]
       },
       "q": 0,
+      "residue_affine_tests_by_label": {
+        "01": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "02": {
+          "first_passing_modulus": 24,
+          "passing_moduli": [
+            24,
+            32,
+            48
+          ]
+        },
+        "03": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "04": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "12": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "13": {
+          "first_passing_modulus": 24,
+          "passing_moduli": [
+            24,
+            48
+          ]
+        },
+        "14": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "23": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "24": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "34": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "Z": {
+          "first_passing_modulus": 2,
+          "passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ]
+        }
+      },
       "rows_by_label": {
         "01": 41,
         "02": 41,
@@ -2253,7 +2335,7 @@
         "Z": 1
       },
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-pointwise-law-bw5ddh9k/r42_pointwise_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+        "wrote /tmp/routeE-r42-pointwise-law-ktf07whe/r42_pointwise_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
       ],
       "time_total": 3111696,
       "time_total_ok": true,
@@ -4169,6 +4251,69 @@
         ]
       },
       "q": 1,
+      "residue_affine_tests_by_label": {
+        "01": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "02": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "03": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "04": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "12": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "13": {
+          "first_passing_modulus": 48,
+          "passing_moduli": [
+            48
+          ]
+        },
+        "14": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "23": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "24": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "34": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "Z": {
+          "first_passing_modulus": 2,
+          "passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ]
+        }
+      },
       "rows_by_label": {
         "01": 89,
         "02": 89,
@@ -4197,7 +4342,7 @@
         "Z": 1
       },
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-pointwise-law-bw5ddh9k/r42_pointwise_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+        "wrote /tmp/routeE-r42-pointwise-law-ktf07whe/r42_pointwise_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
       ],
       "time_total": 65610000,
       "time_total_ok": true,
@@ -6113,6 +6258,65 @@
         ]
       },
       "q": 2,
+      "residue_affine_tests_by_label": {
+        "01": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "02": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "03": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "04": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "12": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "13": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "14": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "23": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "24": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "34": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "Z": {
+          "first_passing_modulus": 2,
+          "passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ]
+        }
+      },
       "rows_by_label": {
         "01": 137,
         "02": 137,
@@ -6141,7 +6345,7 @@
         "Z": 1
       },
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-pointwise-law-bw5ddh9k/r42_pointwise_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+        "wrote /tmp/routeE-r42-pointwise-law-ktf07whe/r42_pointwise_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
       ],
       "time_total": 362673936,
       "time_total_ok": true,
@@ -8057,6 +8261,65 @@
         ]
       },
       "q": 3,
+      "residue_affine_tests_by_label": {
+        "01": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "02": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "03": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "04": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "12": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "13": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "14": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "23": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "24": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "34": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "Z": {
+          "first_passing_modulus": 2,
+          "passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ]
+        }
+      },
       "rows_by_label": {
         "01": 185,
         "02": 185,
@@ -8085,7 +8348,7 @@
         "Z": 1
       },
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-pointwise-law-bw5ddh9k/r42_pointwise_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+        "wrote /tmp/routeE-r42-pointwise-law-ktf07whe/r42_pointwise_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
       ],
       "time_total": 1196883216,
       "time_total_ok": true,
@@ -9998,6 +10261,65 @@
         ]
       },
       "q": 4,
+      "residue_affine_tests_by_label": {
+        "01": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "02": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "03": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "04": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "12": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "13": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "14": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "23": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "24": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "34": {
+          "first_passing_modulus": null,
+          "passing_moduli": []
+        },
+        "Z": {
+          "first_passing_modulus": 2,
+          "passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ]
+        }
+      },
       "rows_by_label": {
         "01": 233,
         "02": 233,
@@ -10026,7 +10348,7 @@
         "Z": 1
       },
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-pointwise-law-bw5ddh9k/r42_pointwise_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+        "wrote /tmp/routeE-r42-pointwise-law-ktf07whe/r42_pointwise_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
       ],
       "time_total": 2998219536,
       "time_total_ok": true,
@@ -10043,6 +10365,18 @@
     "all_samples_ok": true,
     "all_single_cycle": true,
     "all_time_total_ok": true,
+    "labels_without_uniform_residue_modulus": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "12",
+      "13",
+      "14",
+      "23",
+      "24",
+      "34"
+    ],
     "max_singleton_blocks": 885,
     "max_total_blocks": 1492,
     "q_values": [
@@ -10054,6 +10388,65 @@
     ],
     "representative_q": 1,
     "total_block_formula": "260 + (929/3)*q - (29/12)*q^2 + (5/6)*q^3 - (1/12)*q^4",
-    "total_singleton_block_formula": "147 + (1115/6)*q - q^2 + (1/6)*q^3"
+    "total_singleton_block_formula": "147 + (1115/6)*q - q^2 + (1/6)*q^3",
+    "uniform_residue_moduli_by_label": {
+      "01": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "02": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "03": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "04": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "12": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "13": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "14": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "23": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "24": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "34": {
+        "common_passing_moduli": [],
+        "first_common_passing_modulus": null
+      },
+      "Z": {
+        "common_passing_moduli": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          24,
+          32,
+          48
+        ],
+        "first_common_passing_modulus": 2
+      }
+    }
   }
 }

@@ -35,6 +35,7 @@ from summarize_routeE_r42_allpair_time_fits import (
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BIN = Path(tempfile.gettempdir()) / "routeE_allpair_cpp_v1_2"
 FIELDS = ["dst_a", "time", "events"]
+RESIDUE_MODULI = [2, 3, 4, 5, 6, 8, 10, 12, 16, 24, 32, 48]
 
 
 def is_affine_on_a(rows: list[dict[str, Any]], field: str) -> bool:
@@ -45,6 +46,24 @@ def is_affine_on_a(rows: list[dict[str, Any]], field: str) -> bool:
         for i in range(len(rows) - 1)
     ]
     return len(set(differences)) == 1
+
+
+def is_affine_on_sparse_a(rows: list[dict[str, Any]], field: str) -> bool:
+    if len(rows) <= 2:
+        return True
+    ordered = sorted(rows, key=lambda row: row["src_a"])
+    a0 = ordered[0]["src_a"]
+    v0 = ordered[0][field]
+    a1 = ordered[1]["src_a"]
+    v1 = ordered[1][field]
+    da0 = a1 - a0
+    dv0 = v1 - v0
+    for row in ordered[2:]:
+        da = row["src_a"] - a0
+        dv = row[field] - v0
+        if dv * da0 != dv0 * da:
+            return False
+    return True
 
 
 def affine_formula(rows: list[dict[str, Any]], field: str) -> dict[str, Any]:
@@ -109,6 +128,36 @@ def block_summary(block: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def residue_affine_test(rows: list[dict[str, Any]], modulus: int) -> bool:
+    classes: dict[int, list[dict[str, Any]]] = {}
+    for row in rows:
+        classes.setdefault(row["src_a"] % modulus, []).append(row)
+    for part in classes.values():
+        if len({row["dst_label"] for row in part}) > 1:
+            return False
+        for field in FIELDS:
+            if not is_affine_on_sparse_a(part, field):
+                return False
+    return True
+
+
+def residue_affine_tests_by_label(
+    by_label: dict[str, list[dict[str, Any]]]
+) -> dict[str, Any]:
+    out = {}
+    for label in LABELS:
+        passing = [
+            modulus
+            for modulus in RESIDUE_MODULI
+            if residue_affine_test(by_label[label], modulus)
+        ]
+        out[label] = {
+            "passing_moduli": passing,
+            "first_passing_modulus": passing[0] if passing else None,
+        }
+    return out
+
+
 def summarize_q(binary: Path, q: int, workdir: Path, preview_limit: int) -> dict[str, Any]:
     m = 48 * q + 42
     x = 6 * q + 5
@@ -141,6 +190,7 @@ def summarize_q(binary: Path, q: int, workdir: Path, preview_limit: int) -> dict
         label: partition_label(by_label[label])
         for label in LABELS
     }
+    residue_tests = residue_affine_tests_by_label(by_label)
     block_counts = {
         label: len(blocks_by_label[label])
         for label in LABELS
@@ -181,6 +231,7 @@ def summarize_q(binary: Path, q: int, workdir: Path, preview_limit: int) -> dict
         "singleton_blocks_by_label": singleton_counts,
         "max_block_length_by_label": max_block_lengths,
         "rows_by_label": {label: len(by_label[label]) for label in LABELS},
+        "residue_affine_tests_by_label": residue_tests,
         "preview_blocks_by_label": preview,
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
     }
@@ -220,6 +271,17 @@ def build_summary(
         (sample["q"], sample["total_singleton_blocks"])
         for sample in ok_samples
     ]
+    uniform_residue_moduli_by_label = {}
+    for label in LABELS:
+        passing_sets = [
+            set(sample["residue_affine_tests_by_label"][label]["passing_moduli"])
+            for sample in ok_samples
+        ]
+        common = sorted(set.intersection(*passing_sets)) if passing_sets else []
+        uniform_residue_moduli_by_label[label] = {
+            "common_passing_moduli": common,
+            "first_common_passing_modulus": common[0] if common else None,
+        }
     return {
         "schema": "routeE_r42_pointwise_law_mining_v1",
         "branch": "R42",
@@ -259,6 +321,12 @@ def build_summary(
                 (sample["total_singleton_blocks"] for sample in ok_samples), default=0
             ),
             "representative_q": ok_samples[1]["q"] if len(ok_samples) > 1 else None,
+            "uniform_residue_moduli_by_label": uniform_residue_moduli_by_label,
+            "labels_without_uniform_residue_modulus": [
+                label
+                for label, info in uniform_residue_moduli_by_label.items()
+                if not info["common_passing_moduli"]
+            ],
         },
         "promotion_impact": {
             "pointwise_equations_closed": False,

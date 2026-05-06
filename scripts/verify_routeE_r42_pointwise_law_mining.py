@@ -119,6 +119,8 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
         and payload.get("promotion_impact", {}).get("pointwise_equations_closed")
         is False
         and payload.get("promotion_impact", {}).get("no_early_closed") is False
+        and payload.get("summary", {}).get("labels_without_uniform_residue_modulus")
+        == ["01", "02", "03", "04", "12", "13", "14", "23", "24", "34"]
     )
     return {
         "schema": "routeE_r42_pointwise_law_mining_verification_v1",
@@ -137,6 +139,14 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
             "block_counts_by_label": label_block_fit_ok,
             "singleton_blocks_by_label": label_singleton_fit_ok,
             "max_block_length_by_label": label_max_block_fit_ok,
+        },
+        "residue_affine_summary": {
+            "uniform_residue_moduli_by_label": payload.get("summary", {}).get(
+                "uniform_residue_moduli_by_label"
+            ),
+            "labels_without_uniform_residue_modulus": payload.get("summary", {}).get(
+                "labels_without_uniform_residue_modulus"
+            ),
         },
         "promotion_impact": payload.get("promotion_impact"),
     }

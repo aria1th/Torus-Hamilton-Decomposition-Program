@@ -300,6 +300,18 @@
       "all_samples_ok": true,
       "all_single_cycle": true,
       "all_time_total_ok": true,
+      "labels_without_uniform_residue_modulus": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "12",
+        "13",
+        "14",
+        "23",
+        "24",
+        "34"
+      ],
       "max_singleton_blocks": 885,
       "max_total_blocks": 1492,
       "q_values": [
@@ -311,7 +323,66 @@
       ],
       "representative_q": 1,
       "total_block_formula": "260 + (929/3)*q - (29/12)*q^2 + (5/6)*q^3 - (1/12)*q^4",
-      "total_singleton_block_formula": "147 + (1115/6)*q - q^2 + (1/6)*q^3"
+      "total_singleton_block_formula": "147 + (1115/6)*q - q^2 + (1/6)*q^3",
+      "uniform_residue_moduli_by_label": {
+        "01": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "02": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "03": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "04": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "12": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "13": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "14": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "23": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "24": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "34": {
+          "common_passing_moduli": [],
+          "first_common_passing_modulus": null
+        },
+        "Z": {
+          "common_passing_moduli": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            12,
+            16,
+            24,
+            32,
+            48
+          ],
+          "first_common_passing_modulus": 2
+        }
+      }
     }
   },
   "pointwise_law_mining_verification_summary": {

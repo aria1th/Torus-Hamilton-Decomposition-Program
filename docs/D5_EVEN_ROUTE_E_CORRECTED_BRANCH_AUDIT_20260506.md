@@ -523,6 +523,8 @@ all_time_total_ok True
 max_total_blocks 1492
 max_singleton_blocks 885
 total_block_formula 260 + (929/3)q - (29/12)q^2 + (5/6)q^3 - (1/12)q^4
+labels_without_uniform_residue_modulus:
+  01,02,03,04,12,13,14,23,24,34
 ```
 
 The partition rule is deliberately naive: for each source label, split
@@ -532,6 +534,12 @@ show that this naive pointwise law is not a clean symbolic proof route by
 itself.  This artifact is a diagnostic: it narrows the R42 obstruction to the
 missing trace grammar/no-early proof rather than aggregate time or transition
 mass.
+
+The same diagnostic also tests residue-class affine partitions for moduli
+`2,3,4,5,6,8,10,12,16,24,32,48`.  Across the q=0..4 samples, no nontrivial
+all-pair label has a common passing residue modulus.  Thus a R42 pointwise
+proof probably needs a boundary/transducer-style trace grammar rather than a
+simple source-label/source-parameter residue table.
 
 R42 promotion-readiness audit:
 
