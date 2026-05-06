@@ -54,9 +54,11 @@ Both commands completed successfully after the current Lean edits.
 
 ## Current Blockers
 
-1. B20 `T_03` and `T_04` are still target polynomials, not boundary-clock
-   derivations.  The corrected sum is now Lean-checked, but the first-principles
-   derivation remains open.
+1. B20 `T_03` and `T_04` now have Lean arithmetic branch-mass endpoints and
+   proof-facing clock formula surfaces.  They are still not first-principles
+   boundary-clock derivations inside Lean.  The closure package states the
+   symbolic clock formulas for `q >= 1` and separates the finite `m=20`
+   certificate.
 
 2. No branch currently instantiates `RouteEAllPairSectionCertificate`.  The
    adapter exists, but exact all-pair first-return equations, no-early
@@ -80,17 +82,16 @@ Both commands completed successfully after the current Lean edits.
    bundle explicitly says a closed node-level boundary formula analogous to
    B20/B16 remains to be extracted.
 
-6. The bundle reproduction scripts for the B20 time passes expect CSV inputs
-   under `/mnt/data`; the zip extraction alone does not contain those CSVs.
-   This blocks script-level reproduction unless the dumps are restored or the
-   scripts are adapted.
+6. The v3.6 bundle reproduction scripts for the B20 time passes expect CSV
+   inputs under `/mnt/data`; the B20 closure package includes the C++ dumper and
+   compact verifier scripts, so exact maps can be regenerated locally.
 
 ## Next Concrete Slice
 
-The next best Lean implementation slice is the remaining B20 all-pair section
-closure:
+The next best Lean implementation slice is the B20 symbolic/finite split:
 
-1. derive `T_03` and `T_04` from the boundary-clock formulas using the
-   corrected combined coefficient `19179`;
-2. turn the no-early package into Lean-level hypotheses or lemmas;
-3. instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
+1. promote the recovered `T_03` pointwise clock formulas and `T_04` stabilized
+   mod-class recurrences to Lean boundary-clock lemmas for `q >= 1`;
+2. add or connect a finite all-pair table certificate for `m=20`;
+3. turn the no-early package into Lean-level hypotheses or lemmas;
+4. instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
