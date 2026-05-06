@@ -510,3 +510,13 @@ python3 scripts/analyze_routeE_allpair_portfolio_fits.py \
 
 It reports that the only portfolio-only residue with a simple affine `x=z`
 fit is `42 mod 48`, with observed law `m=48q+42`, `x=z=6q+5`.
+That candidate is recorded by:
+
+```bash
+python3 scripts/init_routeE_r42_affine_branch_record.py \
+  --json-out certs/routeE_r42_affine_branch_record.json
+```
+
+The record is intentionally open: `R42` still needs a closed branch formula,
+first-return equations, no-early proof, splice/quotient one-cycle proof, and
+time identity before it can be added to proof-facing Type-A coverage.

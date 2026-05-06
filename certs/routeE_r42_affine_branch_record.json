@@ -1,0 +1,92 @@
+{
+  "branch": "R42",
+  "coverage_snapshot": {
+    "open_residues_mod_48": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      18,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      42,
+      46
+    ],
+    "proof_facing_typeA_residues_mod_48": [
+      14,
+      16,
+      20,
+      40,
+      44
+    ],
+    "r42_is_open": true
+  },
+  "interpretation": "R42 is the next simple portfolio-only symbolic-promotion target. The affine sample law is evidence only and does not close the residue until the required branch data are proved.",
+  "modulus_family": "m == 42 mod 48",
+  "observed_law": {
+    "nodes": "480*q + 411",
+    "symmetric": true,
+    "x": "6*q + 5",
+    "z": "6*q + 5"
+  },
+  "parameter": "m = 48*q + 42",
+  "required_branch_data": [
+    "closed count/packet law for all q >= 0",
+    "RF1/RF2 one-layer validity or an adapter to existing all-pair data",
+    "product_t Lambda_t = -1 sign proof",
+    "pointwise first-return equations",
+    "no-early/minimality proof",
+    "quotient or splice one-cycle proof",
+    "sum tau = m^4 time identity",
+    "finite boundary case q = 0 integration",
+    "Lean-facing theorem endpoint and theorem-name synchronization"
+  ],
+  "sample_moduli": [
+    42,
+    90,
+    138
+  ],
+  "samples": [
+    {
+      "m": 42,
+      "nodes": 411,
+      "q": 0,
+      "tag": "sym",
+      "x": 5,
+      "z": 5
+    },
+    {
+      "m": 90,
+      "nodes": 891,
+      "q": 1,
+      "tag": "sym",
+      "x": 11,
+      "z": 11
+    },
+    {
+      "m": 138,
+      "nodes": 1371,
+      "q": 2,
+      "tag": "sym",
+      "x": 17,
+      "z": 17
+    }
+  ],
+  "schema": "routeE_r42_affine_branch_record_v1",
+  "source_artifacts": {
+    "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
+    "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
+    "typeA_coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json"
+  },
+  "status": "open_affine_symbolic_candidate"
+}
