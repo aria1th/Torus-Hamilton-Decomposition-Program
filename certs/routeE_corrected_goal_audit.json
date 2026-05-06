@@ -115,6 +115,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_affine_branch_record.json",
+      "missing": null,
+      "name": "R42 branch record indexes current verification and sign artifacts",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
       "name": "R42 affine q=0..4 samples verify with all-pair checker",

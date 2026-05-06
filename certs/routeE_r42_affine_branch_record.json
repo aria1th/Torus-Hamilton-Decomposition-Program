@@ -1,6 +1,10 @@
 {
   "boundary_summary": {
     "q_ge_1_block_formula_fits_summary": {
+      "block24_q_ge_2_tail": {
+        "terminal_affine_alpha_q_ge_2": "4*q + 3",
+        "terminal_affine_beta_q_ge_2": "12*q + 10"
+      },
       "block_count": 29,
       "fit_block_count": 29,
       "stable_structural_keys": true
@@ -55,7 +59,37 @@
     "schema": "routeE_r42_boundary_quotient_summary_v1",
     "status": "boundary_summary_not_symbolic_proof"
   },
+  "boundary_verification_summary": {
+    "ok": true,
+    "schema": "routeE_r42_boundary_summary_verification_v1",
+    "summary": {
+      "q1_null_fields_have_q_ge_2_tail_formulas": true,
+      "q1_representative_block_formulas_verified": true,
+      "q1_representative_null_formula_field_count": 2,
+      "q_ge_1_transition_fits_verified": true,
+      "sample_q_values": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "stability_verified": true
+    }
+  },
   "branch": "R42",
+  "color_sign_screen_summary": {
+    "all_r42_color_sign_vectors_ok": true,
+    "r42_moduli": [
+      42,
+      90,
+      138,
+      186,
+      234
+    ],
+    "r42_record_count": 5,
+    "schema": "routeE_color_sign_screen_audit_v1"
+  },
   "coverage_snapshot": {
     "open_residues_mod_48": [
       0,
@@ -87,7 +121,7 @@
     ],
     "r42_is_open": true
   },
-  "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0..4 samples now have reproducible all-pair checker verification, but this is still evidence only and does not close the residue until the required symbolic branch data are proved.",
+  "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0..4 samples have reproducible all-pair checker verification, pass the color sign vector screen, and have an internally verified compact boundary summary.  This is still evidence only and does not close the residue until the required symbolic branch data are proved.",
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -111,7 +145,9 @@
   "sample_moduli": [
     42,
     90,
-    138
+    138,
+    186,
+    234
   ],
   "sample_verification_summary": {
     "all_passed": true,
@@ -154,6 +190,8 @@
   "schema": "routeE_r42_affine_branch_record_v1",
   "source_artifacts": {
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+    "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
+    "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",

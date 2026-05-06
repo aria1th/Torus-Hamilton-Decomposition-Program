@@ -247,6 +247,26 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_affine_branch_record.json",
         ),
         item(
+            "R42 branch record indexes current verification and sign artifacts",
+            r42.get("sample_moduli") == [42, 90, 138, 186, 234]
+            and r42.get("boundary_verification_summary", {}).get("ok") is True
+            and r42.get("boundary_summary", {})
+            .get("q_ge_1_block_formula_fits_summary", {})
+            .get("block24_q_ge_2_tail", {})
+            .get("terminal_affine_alpha_q_ge_2")
+            == "4*q + 3"
+            and r42.get("boundary_summary", {})
+            .get("q_ge_1_block_formula_fits_summary", {})
+            .get("block24_q_ge_2_tail", {})
+            .get("terminal_affine_beta_q_ge_2")
+            == "12*q + 10"
+            and r42.get("color_sign_screen_summary", {}).get(
+                "all_r42_color_sign_vectors_ok"
+            )
+            is True,
+            "certs/routeE_r42_affine_branch_record.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"

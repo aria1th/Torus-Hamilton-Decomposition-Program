@@ -275,6 +275,10 @@ Result:
 ```text
 branch R42 status sample_verified_open_symbolic_candidate
 law x=z=6*q+5
+sample_moduli=[42,90,138,186,234]
+boundary_verification_ok=True
+color_sign_screen_ok=True
+block24 q>=2 tail alpha=4*q+3 beta=12*q+10
 ```
 
 R42 sample verification:

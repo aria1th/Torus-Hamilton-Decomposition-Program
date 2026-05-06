@@ -22,6 +22,10 @@ DEFAULT_SAMPLE_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_affine_samples_verification.json"
 )
 DEFAULT_BOUNDARY_SUMMARY = ROOT / "certs" / "routeE_r42_boundary_quotient_summary.json"
+DEFAULT_BOUNDARY_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_boundary_summary_verification.json"
+)
+DEFAULT_COLOR_SIGN_SCREEN = ROOT / "certs" / "routeE_color_sign_screen_audit.json"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -33,6 +37,8 @@ def build_record(
     coverage_path: Path,
     sample_verification_path: Path,
     boundary_summary_path: Path,
+    boundary_verification_path: Path,
+    color_sign_screen_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
     coverage = load_json(coverage_path) if coverage_path.exists() else {}
@@ -44,8 +50,26 @@ def build_record(
     boundary_summary = (
         load_json(boundary_summary_path) if boundary_summary_path.exists() else {}
     )
+    boundary_verification = (
+        load_json(boundary_verification_path)
+        if boundary_verification_path.exists()
+        else {}
+    )
+    color_sign_screen = (
+        load_json(color_sign_screen_path) if color_sign_screen_path.exists() else {}
+    )
     rows = {int(row["residue"]): row for row in fits.get("rows", [])}
     row = rows[42]
+    verified_samples = [
+        sample
+        for sample in sample_verification.get("samples", [])
+        if sample.get("passed")
+    ]
+    r42_color_sign_records = [
+        record
+        for record in color_sign_screen.get("one_lambda_E_branch_records", [])
+        if record.get("name") == "R42"
+    ]
     return {
         "schema": "routeE_r42_affine_branch_record_v1",
         "branch": "R42",
@@ -58,13 +82,16 @@ def build_record(
             "nodes": row["fit_nodes"].get("formula"),
             "symmetric": row["fit_x"].get("formula") == row["fit_z"].get("formula"),
         },
-        "sample_moduli": row.get("moduli"),
+        "sample_moduli": [sample.get("m") for sample in verified_samples]
+        or row.get("moduli"),
         "samples": row.get("samples"),
         "source_artifacts": {
             "portfolio_fits": str(fits_path),
             "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
             "sample_verification": str(sample_verification_path),
             "boundary_summary": str(boundary_summary_path),
+            "boundary_verification": str(boundary_verification_path),
+            "color_sign_screen": str(color_sign_screen_path),
             "typeA_coverage": str(coverage_path),
         },
         "sample_verification_summary": {
@@ -97,7 +124,45 @@ def build_record(
                         "blocks", []
                     )
                 ),
+                "block24_q_ge_2_tail": {
+                    "terminal_affine_alpha_q_ge_2": (
+                        boundary_summary.get("q_ge_1_block_formula_fits", {})
+                        .get("blocks", [{}] * 25)[24]
+                        .get("terminal_affine_alpha_q_ge_2")
+                        if len(
+                            boundary_summary.get(
+                                "q_ge_1_block_formula_fits", {}
+                            ).get("blocks", [])
+                        )
+                        > 24
+                        else None
+                    ),
+                    "terminal_affine_beta_q_ge_2": (
+                        boundary_summary.get("q_ge_1_block_formula_fits", {})
+                        .get("blocks", [{}] * 25)[24]
+                        .get("terminal_affine_beta_q_ge_2")
+                        if len(
+                            boundary_summary.get(
+                                "q_ge_1_block_formula_fits", {}
+                            ).get("blocks", [])
+                        )
+                        > 24
+                        else None
+                    ),
+                },
             },
+        },
+        "boundary_verification_summary": {
+            "schema": boundary_verification.get("schema"),
+            "ok": boundary_verification.get("ok"),
+            "summary": boundary_verification.get("summary"),
+        },
+        "color_sign_screen_summary": {
+            "schema": color_sign_screen.get("schema"),
+            "r42_record_count": len(r42_color_sign_records),
+            "all_r42_color_sign_vectors_ok": bool(r42_color_sign_records)
+            and all(record.get("color_sign_vector_ok") for record in r42_color_sign_records),
+            "r42_moduli": [record.get("m") for record in r42_color_sign_records],
         },
         "coverage_snapshot": {
             "proof_facing_typeA_residues_mod_48": coverage.get(
@@ -120,9 +185,10 @@ def build_record(
         ],
         "interpretation": (
             "R42 is the next simple symbolic-promotion target.  The q=0..4 "
-            "samples now have reproducible all-pair checker verification, but "
-            "this is still evidence only and does not close the residue until "
-            "the required symbolic branch data are proved."
+            "samples have reproducible all-pair checker verification, pass the "
+            "color sign vector screen, and have an internally verified compact "
+            "boundary summary.  This is still evidence only and does not close "
+            "the residue until the required symbolic branch data are proved."
         ),
     }
 
@@ -135,11 +201,20 @@ def main() -> None:
         "--sample-verification", type=Path, default=DEFAULT_SAMPLE_VERIFICATION
     )
     parser.add_argument("--boundary-summary", type=Path, default=DEFAULT_BOUNDARY_SUMMARY)
+    parser.add_argument(
+        "--boundary-verification", type=Path, default=DEFAULT_BOUNDARY_VERIFICATION
+    )
+    parser.add_argument("--color-sign-screen", type=Path, default=DEFAULT_COLOR_SIGN_SCREEN)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
     record = build_record(
-        args.fits, args.coverage, args.sample_verification, args.boundary_summary
+        args.fits,
+        args.coverage,
+        args.sample_verification,
+        args.boundary_summary,
+        args.boundary_verification,
+        args.color_sign_screen,
     )
     print(
         "branch",
