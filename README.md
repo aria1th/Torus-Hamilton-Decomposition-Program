@@ -132,6 +132,173 @@ The final reservoir construction interface closed by the V75 route:
 RoundComposite.BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal
 ```
 
+## Leftover Lean Theorem Targets
+
+The all-odd endpoint is closed, but the current proof exposes two reusable
+general theorems that should be separated and formalized as standalone
+certificate-calculus components.
+
+### 1. Local-symbol trade span
+
+This is the linear algebra behind the active modular-trade step in Section 9 of
+the manuscript.
+
+Setup:
+
+```text
+R = ZMod m
+C = finite color set
+S = finite symbol set with a base symbol 0
+X = finite set of base sites
+A(x) ⊆ C = active colors at x
+```
+
+The co-active graph has vertex set `C` and an edge `{c,c'}` whenever some
+`x : X` has `c,c' ∈ A(x)`.  For each co-active pair and each nonzero symbol
+`τ`, the elementary local swap contributes
+
+```text
+(e_c - e_c') ⊗ (e_τ - e_0)
+```
+
+to the residue matrix in `R^(C × S)`.
+
+Target theorem:
+
+```text
+If the co-active graph is connected, then the span of these local-symbol
+trades is exactly the subspace of matrices with every row sum zero and every
+column sum zero.
+```
+
+Componentwise variant:
+
+```text
+If the co-active graph has connected components K, then the image consists
+exactly of matrices M satisfying:
+
+  row sums:              ∑_σ M(c,σ) = 0        for every c
+  component column sums: ∑_{c∈K} M(c,σ) = 0    for every component K and symbol σ.
+```
+
+Proof sketch to formalize:
+
+```text
+1. Each generator has zero row sums and zero column sums.
+2. In a connected component, choose a root color c_*.
+3. Any zero-row/zero-column matrix expands as
+
+     M = ∑_{c≠c_*, τ≠0} M(c,τ)
+           (e_c - e_c_*) ⊗ (e_τ - e_0).
+
+4. A path c = c_0, ..., c_l = c_* in the co-active graph telescopes
+
+     ∑_i (e_{c_i} - e_{c_{i+1}}) ⊗ (e_τ - e_0)
+       = (e_c - e_c_*) ⊗ (e_τ - e_0).
+
+5. Apply the same argument componentwise for the disconnected case.
+```
+
+Suggested Lean location:
+
+```text
+RoundComposite/BaseTailTrades.lean
+```
+
+Suggested endpoint names:
+
+```lean
+RoundComposite.BaseTail.Trades.localSymbolTradeSpan_connected
+RoundComposite.BaseTail.Trades.localSymbolTradeSpan_components
+```
+
+### 2. Cyclic-layered/root-flat certificate soundness
+
+This abstracts Theorem 2.2 of the manuscript away from equal-side tori.  It is
+the proof that a primitive local-Latin root-flat certificate is already enough
+to produce a Hamilton decomposition.
+
+Group-free cyclic-layered version:
+
+```text
+V = ZMod m × K
+Λ = finite label set
+C = finite color set, |C| = |Λ|
+
+For each layer t and label λ, a directed labeled arc map is
+
+  (t,u) ↦ (t+1, F(t,λ,u)).
+
+A certificate is δ(t,u,c) ∈ Λ.
+```
+
+Target theorem:
+
+```text
+Assume:
+
+1. Local Latin:
+   for every (t,u), c ↦ δ(t,u,c) is a bijection C ≃ Λ.
+
+2. Primitive return:
+   for each color c, define P_t,c(u) = F(t, δ(t,u,c), u).
+   The return map
+
+     R_c = P_{m-1,c} ∘ ... ∘ P_{0,c}
+
+   is a single cycle on K.
+
+Then the colored labeled arcs form a Hamilton decomposition of ZMod m × K.
+```
+
+Key proof point:
+
+```text
+Since R_c is a single cycle, it is bijective.  On a finite set, if a product
+P_{m-1} ... P_0 is bijective, then each factor P_t is bijective.  Therefore the
+full color map T_c(t,u) = (t+1, P_t,c(u)) is a permutation.  Its m-step return
+on layer 0 is R_c, so T_c is a single cycle on all m|K| vertices.
+```
+
+Height-one abelian Cayley specialization:
+
+```text
+G finite abelian
+Ω = labeled generator multiset
+χ : G → ZMod m with χ(ω) = 1 for every generator ω
+K = ker χ
+
+Choose representatives r_t with χ(r_t)=t.  Then
+
+  q(t,ω) = r_t + ω - r_{t+1} ∈ K
+
+and each Cayley step is
+
+  (t,k) ↦ (t+1, k + q(t,ω)).
+```
+
+Target theorem:
+
+```text
+For any finite height-one abelian Cayley digraph, a local-Latin root-flat
+certificate whose color returns are single cycles on ker χ yields a Hamilton
+decomposition of the labeled Cayley digraph.
+```
+
+Suggested Lean locations:
+
+```text
+Shared/RootFlat.lean
+Shared/CyclicLayered.lean        (new file, if the group-free theorem is split out)
+```
+
+Suggested endpoint names:
+
+```lean
+Shared.cyclicLayeredHamiltonDecomposition_of_localLatinReturn
+Shared.heightOneCayleyHamiltonDecomposition_of_rootFlatCertificate
+```
+
 ## Repository Layout
 
 ```text
