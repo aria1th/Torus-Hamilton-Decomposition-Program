@@ -29,13 +29,14 @@ flowchart LR
   RT[R42 time fits<br/>sum tau = m^4 polynomial]
   RM[R42 transition matrix<br/>28 nonzero edges]
   RA[R42 promotion audit<br/>3 theorem blockers]
+  RP[R42 pointwise mining<br/>naive law complexity]
   Q[Open residue queue<br/>R42, R38, portfolio-only split]
   NG[No-go audit<br/>X1 parity and X2 sign contradictions]
   OPEN[Open theorem work<br/>Type-A coverage + E-gen symbolic]
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> RG --> RT --> RM --> RA --> Q --> NG --> OPEN
+  P --> R42 --> BQ --> RG --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -60,7 +61,7 @@ flowchart LR
 The machine audit still reports 2 missing structural items.
 
 ```text
-Artifacts/audits:  [###################################--] 35/37
+Artifacts/audits:  [####################################--] 36/38
 Closed theorem:    [---------------------------] incomplete
 ```
 
@@ -217,7 +218,10 @@ q=0..6 samples and have strongly connected support.
 10. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
     pointwise first-return equations, no-early/minimality, and a Lean-facing
     endpoint theorem are still missing.
-11. The open residue queue is now explicit: R42 remains the active affine
+11. R42 pointwise law mining now quantifies the missing trace grammar: the
+    naive source-label/source-parameter interval-affine partition reaches
+    1492 blocks by `q=4`, so aggregate transition/time fits are not enough.
+12. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

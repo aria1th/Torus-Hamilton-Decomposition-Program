@@ -1,0 +1,108 @@
+{
+  "fit_checks": {
+    "block_counts_by_label": {
+      "01": true,
+      "02": true,
+      "03": true,
+      "04": true,
+      "12": true,
+      "13": true,
+      "14": true,
+      "23": true,
+      "24": true,
+      "34": true,
+      "Z": true
+    },
+    "max_block_length_by_label": {
+      "01": true,
+      "02": true,
+      "03": true,
+      "04": true,
+      "12": true,
+      "13": true,
+      "14": true,
+      "23": true,
+      "24": true,
+      "34": true,
+      "Z": true
+    },
+    "singleton_blocks_by_label": {
+      "01": true,
+      "02": true,
+      "03": true,
+      "04": true,
+      "12": true,
+      "13": true,
+      "14": true,
+      "23": true,
+      "24": true,
+      "34": true,
+      "Z": true
+    },
+    "total_blocks": true,
+    "total_singleton_blocks": true
+  },
+  "ok": true,
+  "per_sample_checks": [
+    {
+      "block_sum_ok": true,
+      "node_count_ok": true,
+      "q": 0,
+      "rows_sum_ok": true,
+      "single_cycle": true,
+      "singleton_sum_ok": true,
+      "time_total_ok": true
+    },
+    {
+      "block_sum_ok": true,
+      "node_count_ok": true,
+      "q": 1,
+      "rows_sum_ok": true,
+      "single_cycle": true,
+      "singleton_sum_ok": true,
+      "time_total_ok": true
+    },
+    {
+      "block_sum_ok": true,
+      "node_count_ok": true,
+      "q": 2,
+      "rows_sum_ok": true,
+      "single_cycle": true,
+      "singleton_sum_ok": true,
+      "time_total_ok": true
+    },
+    {
+      "block_sum_ok": true,
+      "node_count_ok": true,
+      "q": 3,
+      "rows_sum_ok": true,
+      "single_cycle": true,
+      "singleton_sum_ok": true,
+      "time_total_ok": true
+    },
+    {
+      "block_sum_ok": true,
+      "node_count_ok": true,
+      "q": 4,
+      "rows_sum_ok": true,
+      "single_cycle": true,
+      "singleton_sum_ok": true,
+      "time_total_ok": true
+    }
+  ],
+  "promotion_impact": {
+    "diagnosis": "The naive source-label/src_a interval-affine partition is only a formula-mining diagnostic.  It does not prove the first-return equation or no-early condition.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "sample_count": 5,
+  "schema": "routeE_r42_pointwise_law_mining_verification_v1",
+  "summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json"
+}

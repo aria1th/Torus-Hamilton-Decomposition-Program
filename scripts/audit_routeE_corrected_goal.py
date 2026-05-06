@@ -65,6 +65,10 @@ FILES = {
     "r42_allpair_transition_verification": ROOT
     / "certs"
     / "routeE_r42_allpair_transition_fit_verification.json",
+    "r42_pointwise_law_mining": ROOT / "certs" / "routeE_r42_pointwise_law_mining.json",
+    "r42_pointwise_law_mining_verification": ROOT
+    / "certs"
+    / "routeE_r42_pointwise_law_mining_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -123,6 +127,10 @@ def build_audit() -> dict[str, Any]:
     r42_allpair_transition_fits = load_json(FILES["r42_allpair_transition_fits"])
     r42_allpair_transition_verification = load_json(
         FILES["r42_allpair_transition_verification"]
+    )
+    r42_pointwise_law_mining = load_json(FILES["r42_pointwise_law_mining"])
+    r42_pointwise_law_mining_verification = load_json(
+        FILES["r42_pointwise_law_mining_verification"]
     )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
@@ -321,6 +329,29 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_r42_affine_branch_record.json",
+        ),
+        item(
+            "R42 pointwise law-mining diagnostic is recorded and verified",
+            r42_pointwise_law_mining.get("schema")
+            == "routeE_r42_pointwise_law_mining_v1"
+            and r42_pointwise_law_mining.get("summary", {}).get("q_values")
+            == [0, 1, 2, 3, 4]
+            and r42_pointwise_law_mining.get("summary", {}).get(
+                "all_samples_ok"
+            )
+            is True
+            and r42_pointwise_law_mining.get("summary", {}).get(
+                "max_total_blocks"
+            )
+            == 1492
+            and r42_pointwise_law_mining.get("promotion_impact", {}).get(
+                "pointwise_equations_closed"
+            )
+            is False
+            and r42_pointwise_law_mining_verification.get("schema")
+            == "routeE_r42_pointwise_law_mining_verification_v1"
+            and r42_pointwise_law_mining_verification.get("ok") is True,
+            "certs/routeE_r42_pointwise_law_mining.json and certs/routeE_r42_pointwise_law_mining_verification.json",
         ),
         item(
             "R42 affine q=0..4 samples verify with all-pair checker",
@@ -534,6 +565,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
+            and r42_promotion_audit.get("evidence_items_ok") == 10
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

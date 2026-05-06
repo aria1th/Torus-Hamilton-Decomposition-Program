@@ -42,6 +42,13 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     tails = record.get("open_tail_formula_suggestions_summary", {}).get("summary", {})
     time_ver = record.get("allpair_time_fit_verification_summary", {}).get("summary", {})
     transition_ver = record.get("allpair_transition_fit_verification_summary", {}).get("summary", {})
+    pointwise_mining = record.get("pointwise_law_mining_summary", {}).get("summary", {})
+    pointwise_mining_impact = record.get("pointwise_law_mining_summary", {}).get(
+        "promotion_impact", {}
+    )
+    pointwise_mining_ver = record.get(
+        "pointwise_law_mining_verification_summary", {}
+    )
     coverage = record.get("coverage_snapshot", {})
 
     checklist = [
@@ -109,6 +116,19 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and transition_ver.get("transition_count_support_strongly_connected") is True,
             "certs/routeE_r42_allpair_transition_fit_verification.json",
             "transition evidence",
+        ),
+        item(
+            "R42 pointwise law-mining diagnostic is verified",
+            pointwise_mining_ver.get("ok") is True
+            and pointwise_mining_ver.get("q_values") == [0, 1, 2, 3, 4]
+            and pointwise_mining.get("all_samples_ok") is True
+            and pointwise_mining.get("all_single_cycle") is True
+            and pointwise_mining.get("all_time_total_ok") is True
+            and pointwise_mining.get("max_total_blocks") == 1492
+            and pointwise_mining_impact.get("pointwise_equations_closed") is False
+            and pointwise_mining_impact.get("no_early_closed") is False,
+            "certs/routeE_r42_pointwise_law_mining.json and certs/routeE_r42_pointwise_law_mining_verification.json",
+            "pointwise-law mining diagnostic",
         ),
         item(
             "R42 is still open in proof-facing coverage",

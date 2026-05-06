@@ -49,6 +49,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 all-pair time fit artifact | `scripts/verify_routeE_r42_allpair_time_fits.py`, `certs/routeE_r42_allpair_time_fit_verification.json` | done |
 | Preserve R42 all-pair transition matrix evidence | `scripts/summarize_routeE_r42_allpair_transition_fits.py`, `certs/routeE_r42_allpair_transition_fit_summary.json` | done, 28 nonzero edges |
 | Verify R42 all-pair transition matrix artifact | `scripts/verify_routeE_r42_allpair_transition_fits.py`, `certs/routeE_r42_allpair_transition_fit_verification.json` | done |
+| Mine R42 pointwise first-return law complexity | `scripts/summarize_routeE_r42_pointwise_law_mining.py`, `certs/routeE_r42_pointwise_law_mining.json` | done, diagnostic only |
+| Verify R42 pointwise law-mining artifact | `scripts/verify_routeE_r42_pointwise_law_mining.py`, `certs/routeE_r42_pointwise_law_mining_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -501,6 +503,36 @@ checks sample values, row/column count sums, time totals, and strong
 connectivity of the nonzero support.  It is still evidence, not a replacement
 for pointwise no-early.
 
+R42 pointwise law-mining diagnostic:
+
+```bash
+python3 scripts/summarize_routeE_r42_pointwise_law_mining.py \
+  --q-values 0:4 \
+  --json-out certs/routeE_r42_pointwise_law_mining.json
+
+python3 scripts/verify_routeE_r42_pointwise_law_mining.py \
+  --json-out certs/routeE_r42_pointwise_law_mining_verification.json
+```
+
+Result:
+
+```text
+all_samples_ok True
+all_single_cycle True
+all_time_total_ok True
+max_total_blocks 1492
+max_singleton_blocks 885
+total_block_formula 260 + (929/3)q - (29/12)q^2 + (5/6)q^3 - (1/12)q^4
+```
+
+The partition rule is deliberately naive: for each source label, split
+consecutive `src_a` intervals maximally so that `dst_label` is constant and
+`dst_a`, `time`, and `events` are affine in `src_a`.  The large block counts
+show that this naive pointwise law is not a clean symbolic proof route by
+itself.  This artifact is a diagnostic: it narrows the R42 obstruction to the
+missing trace grammar/no-early proof rather than aggregate time or transition
+mass.
+
 R42 promotion-readiness audit:
 
 ```bash
@@ -512,7 +544,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 9
+evidence_items_ok 10
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

@@ -288,6 +288,87 @@
     }
   },
   "parameter": "m = 48*q + 42",
+  "pointwise_law_mining_summary": {
+    "promotion_impact": {
+      "diagnosis": "The naive source-label/src_a interval-affine partition is only a formula-mining diagnostic.  It does not prove the first-return equation or no-early condition.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "schema": "routeE_r42_pointwise_law_mining_v1",
+    "summary": {
+      "all_node_count_ok": true,
+      "all_samples_ok": true,
+      "all_single_cycle": true,
+      "all_time_total_ok": true,
+      "max_singleton_blocks": 885,
+      "max_total_blocks": 1492,
+      "q_values": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "representative_q": 1,
+      "total_block_formula": "260 + (929/3)*q - (29/12)*q^2 + (5/6)*q^3 - (1/12)*q^4",
+      "total_singleton_block_formula": "147 + (1115/6)*q - q^2 + (1/6)*q^3"
+    }
+  },
+  "pointwise_law_mining_verification_summary": {
+    "fit_checks": {
+      "block_counts_by_label": {
+        "01": true,
+        "02": true,
+        "03": true,
+        "04": true,
+        "12": true,
+        "13": true,
+        "14": true,
+        "23": true,
+        "24": true,
+        "34": true,
+        "Z": true
+      },
+      "max_block_length_by_label": {
+        "01": true,
+        "02": true,
+        "03": true,
+        "04": true,
+        "12": true,
+        "13": true,
+        "14": true,
+        "23": true,
+        "24": true,
+        "34": true,
+        "Z": true
+      },
+      "singleton_blocks_by_label": {
+        "01": true,
+        "02": true,
+        "03": true,
+        "04": true,
+        "12": true,
+        "13": true,
+        "14": true,
+        "23": true,
+        "24": true,
+        "34": true,
+        "Z": true
+      },
+      "total_blocks": true,
+      "total_singleton_blocks": true
+    },
+    "ok": true,
+    "q_values": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "sample_count": 5,
+    "schema": "routeE_r42_pointwise_law_mining_verification_v1"
+  },
   "required_branch_data": [
     "closed count/packet law for all q >= 0",
     "RF1/RF2 one-layer validity or an adapter to existing all-pair data",
@@ -356,6 +437,8 @@
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
     "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
+    "pointwise_law_mining": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json",
+    "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",

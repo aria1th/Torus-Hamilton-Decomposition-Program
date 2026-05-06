@@ -41,6 +41,12 @@ DEFAULT_ALLPAIR_TRANSITION_FITS = (
 DEFAULT_ALLPAIR_TRANSITION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_allpair_transition_fit_verification.json"
 )
+DEFAULT_POINTWISE_LAW_MINING = (
+    ROOT / "certs" / "routeE_r42_pointwise_law_mining.json"
+)
+DEFAULT_POINTWISE_LAW_MINING_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_pointwise_law_mining_verification.json"
+)
 DEFAULT_COLOR_SIGN_SCREEN = ROOT / "certs" / "routeE_color_sign_screen_audit.json"
 
 
@@ -60,6 +66,8 @@ def build_record(
     allpair_time_verification_path: Path,
     allpair_transition_fits_path: Path,
     allpair_transition_verification_path: Path,
+    pointwise_law_mining_path: Path,
+    pointwise_law_mining_verification_path: Path,
     color_sign_screen_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
@@ -103,6 +111,16 @@ def build_record(
     allpair_transition_verification = (
         load_json(allpair_transition_verification_path)
         if allpair_transition_verification_path.exists()
+        else {}
+    )
+    pointwise_law_mining = (
+        load_json(pointwise_law_mining_path)
+        if pointwise_law_mining_path.exists()
+        else {}
+    )
+    pointwise_law_mining_verification = (
+        load_json(pointwise_law_mining_verification_path)
+        if pointwise_law_mining_verification_path.exists()
         else {}
     )
     color_sign_screen = (
@@ -150,6 +168,10 @@ def build_record(
             "allpair_transition_fits": str(allpair_transition_fits_path),
             "allpair_transition_verification": str(
                 allpair_transition_verification_path
+            ),
+            "pointwise_law_mining": str(pointwise_law_mining_path),
+            "pointwise_law_mining_verification": str(
+                pointwise_law_mining_verification_path
             ),
             "color_sign_screen": str(color_sign_screen_path),
             "typeA_coverage": str(coverage_path),
@@ -244,6 +266,18 @@ def build_record(
             "ok": allpair_transition_verification.get("ok"),
             "summary": allpair_transition_verification.get("summary"),
         },
+        "pointwise_law_mining_summary": {
+            "schema": pointwise_law_mining.get("schema"),
+            "summary": pointwise_law_mining.get("summary"),
+            "promotion_impact": pointwise_law_mining.get("promotion_impact"),
+        },
+        "pointwise_law_mining_verification_summary": {
+            "schema": pointwise_law_mining_verification.get("schema"),
+            "ok": pointwise_law_mining_verification.get("ok"),
+            "sample_count": pointwise_law_mining_verification.get("sample_count"),
+            "q_values": pointwise_law_mining_verification.get("q_values"),
+            "fit_checks": pointwise_law_mining_verification.get("fit_checks"),
+        },
         "color_sign_screen_summary": {
             "schema": color_sign_screen.get("schema"),
             "r42_record_count": len(r42_color_sign_records),
@@ -315,6 +349,16 @@ def main() -> None:
         type=Path,
         default=DEFAULT_ALLPAIR_TRANSITION_VERIFICATION,
     )
+    parser.add_argument(
+        "--pointwise-law-mining",
+        type=Path,
+        default=DEFAULT_POINTWISE_LAW_MINING,
+    )
+    parser.add_argument(
+        "--pointwise-law-mining-verification",
+        type=Path,
+        default=DEFAULT_POINTWISE_LAW_MINING_VERIFICATION,
+    )
     parser.add_argument("--color-sign-screen", type=Path, default=DEFAULT_COLOR_SIGN_SCREEN)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -331,6 +375,8 @@ def main() -> None:
         args.allpair_time_verification,
         args.allpair_transition_fits,
         args.allpair_transition_verification,
+        args.pointwise_law_mining,
+        args.pointwise_law_mining_verification,
         args.color_sign_screen,
     )
     print(
