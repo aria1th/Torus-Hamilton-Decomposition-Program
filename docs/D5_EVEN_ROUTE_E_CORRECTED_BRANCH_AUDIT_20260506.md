@@ -377,6 +377,8 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+7cb945b Summarize Route E all-pair portfolio coverage
+045cdec Refresh Route E audit ledger after B20 audit
 ee7a2e6 Audit B20 Route E branch verifier
 1bfa4a2 Verify Route E small-seam family scan
 5b7d8c3 Record Route E open-residue smoke screen
