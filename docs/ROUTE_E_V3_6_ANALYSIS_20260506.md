@@ -101,6 +101,7 @@ New arithmetic names include:
 - `boundaryCycleSpine_step_one`
 - `boundaryCycleSpine_step_two`
 - `boundaryCycleSpine_step_three`
+- `boundaryCycleSpine_step_four`
 - `boundaryCycleSpineNode_C_run`
 - `boundaryCycleSpine_step_C_run`
 - `boundaryCycleSpine_step_C_last`
@@ -144,6 +145,7 @@ New arithmetic names include:
 - `boundaryCycleSecondOddFinal_to_secondEvenTail`
 - `boundaryCycleSecondEvenTail_to_zero`
 - `boundarySecondEvenParam_shift_succ`
+- `boundaryCycleNode`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`

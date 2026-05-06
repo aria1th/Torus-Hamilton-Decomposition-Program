@@ -1568,6 +1568,49 @@ theorem boundaryCycleSpine_step_three (q : Nat)
   exact boundaryQuotient_B_last q (boundaryParamLast q) (by
     simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val])
 
+theorem boundaryParamPenultimate_pred_eq_spine_five (q : Nat)
+    (hnot_one : (boundaryParamPenultimate q).1.val ≠ 1) :
+    boundaryPredParam q (boundaryParamPenultimate q) hnot_one =
+      boundarySpineCParam q 5 (by omega) (by simp [half]) := by
+  apply Subtype.ext
+  rw [boundaryPredParam_val]
+  change (((modulus q - 2 : Nat) : ZMod (modulus q)) - 1) =
+    ((boundarySpineCValue q 5 : Nat) : ZMod (modulus q))
+  have hval :
+      boundarySpineCValue q 5 = (modulus q - 2) - 1 := by
+    simp [boundarySpineCValue, modulus]
+  rw [hval]
+  rw [Nat.cast_pred (R := ZMod (modulus q)) (by simp [modulus])]
+
+set_option linter.flexible false in
+theorem boundaryCycleSpine_step_four (q : Nat)
+    (h4 : 4 < boundaryCycleSpineCount q)
+    (h5 : 5 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q 4 h4) =
+      boundaryCycleSpineNode q 5 h5 := by
+  rw [boundaryCycleSpineNode_four q h4,
+    boundaryCycleSpineNode_C_run q 5 (by omega) (by simp [half]) h5]
+  let a := boundaryParamPenultimate q
+  have hnot_one : a.1.val ≠ 1 := by
+    dsimp [a]
+    simp [boundaryParamPenultimate, RouteENonzeroSeam.ofNat_val, modulus]
+  have hnot_h : a.1.val ≠ half q := by
+    dsimp [a]
+    simp [boundaryParamPenultimate, RouteENonzeroSeam.ofNat_val, half,
+      modulus]
+    omega
+  have hnot_last : a.1.val ≠ modulus q - 1 := by
+    dsimp [a]
+    simp [boundaryParamPenultimate, RouteENonzeroSeam.ofNat_val, modulus]
+  calc
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+        routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundaryPredParam q a hnot_one) :=
+      boundaryQuotient_C_generic q a hnot_one hnot_h hnot_last
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundarySpineCParam q 5 (by omega) (by simp [half])) := by
+      rw [boundaryParamPenultimate_pred_eq_spine_five q hnot_one]
+
 theorem boundaryCycleSpine_step_C_run (q i : Nat)
     (hlo : 5 ≤ i) (hnext : i + 1 ≤ half q + 2)
     (hi : i < boundaryCycleSpineCount q)
@@ -3232,6 +3275,85 @@ theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
     boundaryCycleFirstEvenStart, boundaryCycleB2BridgeStart,
     boundaryCycleFirstOddStart, boundaryCycleALastBridgeStart,
     boundaryCycleSecondOddStart, boundaryCycleSecondEvenStart]
+
+def boundaryCycleFirstOddBSubOneStart (q : Nat) : Nat :=
+  boundaryCycleFirstOddStart q + boundaryCycleFirstOddLaneCount q
+
+def boundaryCycleFirstOddCRunStart (q : Nat) : Nat :=
+  boundaryCycleFirstOddBSubOneStart q + boundaryCycleFirstOddBSubOneCount q
+
+def boundaryCycleSecondOddFinalStart (q : Nat) : Nat :=
+  boundaryCycleSecondOddStart q + boundaryCycleSecondOddLaneCount q
+
+noncomputable def boundaryCycleNode (q : Nat)
+    (i : Fin (boundaryCycleLength q)) :
+    RouteEBoundaryNode (modulus q) :=
+  let n := i.val
+  if hsp : n < boundaryCycleSpineCount q then
+    boundaryCycleSpineNode q n hsp
+  else if hfe : n < boundaryCycleB2BridgeStart q then
+    boundaryCycleFirstEvenTailNode q
+      (n - boundaryCycleFirstEvenStart q) (by
+        simp_all [boundaryCycleFirstEvenStart, boundaryCycleB2BridgeStart]
+        omega)
+  else if hb2 : n < boundaryCycleFirstOddStart q then
+    boundaryCycleB2BridgeNode q
+      (n - boundaryCycleB2BridgeStart q) (by
+        simp_all [boundaryCycleB2BridgeStart, boundaryCycleFirstOddStart,
+          boundaryCycleB2BridgeCount])
+  else if hfo : n < boundaryCycleFirstOddBSubOneStart q then
+    boundaryCycleFirstOddLaneNode q
+      (n - boundaryCycleFirstOddStart q) (by
+        simp_all [boundaryCycleFirstOddBSubOneStart]
+        omega)
+  else if hfb : n < boundaryCycleFirstOddCRunStart q then
+    boundaryCycleFirstOddBSubOneNode q
+      (n - boundaryCycleFirstOddBSubOneStart q) (by
+        simp_all [boundaryCycleFirstOddCRunStart,
+          boundaryCycleFirstOddBSubOneCount])
+  else if hfc : n < boundaryCycleALastBridgeStart q then
+    boundaryCycleFirstOddCRunNode q
+      (n - boundaryCycleFirstOddCRunStart q) (by
+        simp_all [boundaryCycleFirstOddCRunStart,
+          boundaryCycleFirstOddBSubOneStart, boundaryCycleFirstOddStart,
+          boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+          boundaryCycleFirstOddLaneCount, boundaryCycleFirstOddBSubOneCount,
+          boundaryCycleFirstOddCRunCount, quarter, half]
+        omega)
+  else if ha : n < boundaryCycleSecondOddStart q then
+    boundaryCycleALastBridgeNode q
+      (n - boundaryCycleALastBridgeStart q) (by
+        simp_all [boundaryCycleALastBridgeStart, boundaryCycleSecondOddStart,
+          boundaryCycleALastBridgeCount])
+  else if hso : n < boundaryCycleSecondOddFinalStart q then
+    boundaryCycleSecondOddLaneNode q
+      (n - boundaryCycleSecondOddStart q) (by
+        simp_all [boundaryCycleSecondOddFinalStart]
+        omega)
+  else if hsf : n < boundaryCycleSecondEvenStart q then
+    boundaryCycleSecondOddFinalNode q
+      (n - boundaryCycleSecondOddFinalStart q) (by
+        simp_all [boundaryCycleSecondOddFinalStart,
+          boundaryCycleSecondEvenStart, boundaryCycleSecondOddTailCount,
+          boundaryCycleSecondOddLaneCount, boundaryCycleSecondOddFinalCount]
+        omega)
+  else
+    boundaryCycleSecondEvenTailNode q
+      (n - boundaryCycleSecondEvenStart q) (by
+        have hi : n < boundaryCycleSecondEvenStart q +
+            boundaryCycleSecondEvenTailCount q := by
+          have hilen : n < boundaryCycleLength q := by
+            exact i.2
+          simp [boundaryCycleLength, boundaryCycleSecondEvenStart,
+            boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+            boundaryCycleFirstOddStart, boundaryCycleB2BridgeStart,
+            boundaryCycleFirstEvenStart, boundaryCycleSpineCount,
+            boundaryCycleFirstEvenTailCount, boundaryCycleB2BridgeCount,
+            boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+            boundaryCycleSecondOddTailCount, boundaryCycleSecondEvenTailCount,
+            quarter, half, modulus] at hilen ⊢
+          omega
+        omega)
 
 structure BoundaryQuotientCycleEnumeration (q : Nat) where
   node :
