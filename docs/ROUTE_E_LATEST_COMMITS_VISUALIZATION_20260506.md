@@ -27,12 +27,13 @@ flowchart LR
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
   RT[R42 time fits<br/>sum tau = m^4 polynomial]
+  RM[R42 transition matrix<br/>28 nonzero edges]
   NG[No-go audit<br/>X1 parity and X2 sign contradictions]
   OPEN[Open theorem work<br/>Type-A coverage + E-gen symbolic]
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> RG --> RT --> NG --> OPEN
+  P --> R42 --> BQ --> RG --> RT --> RM --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -164,6 +165,9 @@ The all-pair time artifact additionally fits the sample return-time total as
 It also records source/destination label count and time-total fits.
 The verifier checks that source/destination count fits sum to `480q+411`, and
 source/destination time fits sum to `(48q+42)^4`.
+The all-pair transition artifact records a 28-edge nonzero transition support
+on the 11 section labels; the count/time transition matrices verify against
+q=0..6 samples and have strongly connected support.
 
 ## Mathematical Findings
 
@@ -192,6 +196,9 @@ source/destination time fits sum to `(48q+42)^4`.
 8. R42 all-pair time evidence now has a compact polynomial artifact: the total
    return-time fit is exactly `(48q+42)^4`, with label-wise count/time fits
    verified against q=0..6 samples.
+9. R42 all-pair transition evidence is compacted into polynomial matrices with
+   28 nonzero support edges, verified row/column sums, and strongly connected
+   count/time support.
 
 ## Remaining Proof Route
 

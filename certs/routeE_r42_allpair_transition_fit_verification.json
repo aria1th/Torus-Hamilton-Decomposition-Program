@@ -1,0 +1,30 @@
+{
+  "bad_examples": [],
+  "ok": true,
+  "schema": "routeE_r42_allpair_transition_fit_verification_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_summary.json",
+  "summary": {
+    "count_column_sums_match_dst_counts": true,
+    "count_row_sums_match_label_counts": true,
+    "count_total_is_node_count": true,
+    "sample_q_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "time_column_sums_match_dst_times_on_samples": true,
+    "time_row_sums_match_label_times_on_samples": true,
+    "time_total_is_m4": true,
+    "transition_count_nonzero_edge_count": 28,
+    "transition_count_support_strongly_connected": true,
+    "transition_count_values_verified": true,
+    "transition_time_nonzero_edge_count": 28,
+    "transition_time_support_strongly_connected": true,
+    "transition_time_values_verified": true
+  },
+  "warning": "This verifies the committed transition-fit artifact. It does not regenerate CSV witnesses and does not prove no-early returns."
+}

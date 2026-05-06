@@ -58,6 +58,12 @@ FILES = {
     "r42_allpair_time_verification": ROOT
     / "certs"
     / "routeE_r42_allpair_time_fit_verification.json",
+    "r42_allpair_transition_fits": ROOT
+    / "certs"
+    / "routeE_r42_allpair_transition_fit_summary.json",
+    "r42_allpair_transition_verification": ROOT
+    / "certs"
+    / "routeE_r42_allpair_transition_fit_verification.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -111,6 +117,10 @@ def build_audit() -> dict[str, Any]:
     r42_open_tail_suggestions = load_json(FILES["r42_open_tail_suggestions"])
     r42_allpair_time_fits = load_json(FILES["r42_allpair_time_fits"])
     r42_allpair_time_verification = load_json(FILES["r42_allpair_time_verification"])
+    r42_allpair_transition_fits = load_json(FILES["r42_allpair_transition_fits"])
+    r42_allpair_transition_verification = load_json(
+        FILES["r42_allpair_transition_verification"]
+    )
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -458,6 +468,37 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_r42_allpair_time_fit_summary.json and certs/routeE_r42_allpair_time_fit_verification.json",
+        ),
+        item(
+            "R42 all-pair transition polynomial matrices are recorded and verified",
+            r42_allpair_transition_fits.get("schema")
+            == "routeE_r42_allpair_transition_fit_summary_v1"
+            and r42_allpair_transition_fits.get("summary", {}).get("all_samples_ok")
+            is True
+            and r42_allpair_transition_fits.get("summary", {}).get(
+                "transition_count_nonzero_edge_count"
+            )
+            == 28
+            and r42_allpair_transition_verification.get("schema")
+            == "routeE_r42_allpair_transition_fit_verification_v1"
+            and r42_allpair_transition_verification.get("ok") is True
+            and r42_allpair_transition_verification.get("summary", {}).get(
+                "count_row_sums_match_label_counts"
+            )
+            is True
+            and r42_allpair_transition_verification.get("summary", {}).get(
+                "count_column_sums_match_dst_counts"
+            )
+            is True
+            and r42_allpair_transition_verification.get("summary", {}).get(
+                "time_total_is_m4"
+            )
+            is True
+            and r42_allpair_transition_verification.get("summary", {}).get(
+                "transition_count_support_strongly_connected"
+            )
+            is True,
+            "certs/routeE_r42_allpair_transition_fit_summary.json and certs/routeE_r42_allpair_transition_fit_verification.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

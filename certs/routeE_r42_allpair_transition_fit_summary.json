@@ -1,0 +1,4660 @@
+{
+  "branch": "R42",
+  "family": "m = 48*q + 42, x = z = 6*q + 5",
+  "fits": {
+    "transition_count": {
+      "01": {
+        "01": {
+          "coefficients_ascending": [
+            "28",
+            "32"
+          ],
+          "degree": 1,
+          "formula": "28 + 32*q",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "6",
+            "8"
+          ],
+          "degree": 1,
+          "formula": "6 + 8*q",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "6",
+            "8"
+          ],
+          "degree": 1,
+          "formula": "6 + 8*q",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "1"
+          ],
+          "degree": 0,
+          "formula": "1",
+          "status": "polynomial_fit"
+        }
+      },
+      "02": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "41",
+            "48"
+          ],
+          "degree": 1,
+          "formula": "41 + 48*q",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "03": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "5",
+            "6"
+          ],
+          "degree": 1,
+          "formula": "5 + 6*q",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "21",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "21 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "15",
+            "18"
+          ],
+          "degree": 1,
+          "formula": "15 + 18*q",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "04": {
+        "01": {
+          "coefficients_ascending": [
+            "2",
+            "2"
+          ],
+          "degree": 1,
+          "formula": "2 + 2*q",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "3",
+            "4"
+          ],
+          "degree": 1,
+          "formula": "3 + 4*q",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "20",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "20 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "16",
+            "18"
+          ],
+          "degree": 1,
+          "formula": "16 + 18*q",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "12": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "1"
+          ],
+          "degree": 0,
+          "formula": "1",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "40",
+            "48"
+          ],
+          "degree": 1,
+          "formula": "40 + 48*q",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "13": {
+        "01": {
+          "coefficients_ascending": [
+            "7",
+            "8"
+          ],
+          "degree": 1,
+          "formula": "7 + 8*q",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "34",
+            "40"
+          ],
+          "degree": 1,
+          "formula": "34 + 40*q",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "14": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "20",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "20 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "21",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "21 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "23": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "21",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "21 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "20",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "20 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "24": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "20",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "20 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "1"
+          ],
+          "degree": 0,
+          "formula": "1",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "20",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "20 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "34": {
+        "01": {
+          "coefficients_ascending": [
+            "4",
+            "6"
+          ],
+          "degree": 1,
+          "formula": "4 + 6*q",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "16",
+            "18"
+          ],
+          "degree": 1,
+          "formula": "16 + 18*q",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "11",
+            "12"
+          ],
+          "degree": 1,
+          "formula": "11 + 12*q",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "10",
+            "12"
+          ],
+          "degree": 1,
+          "formula": "10 + 12*q",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "Z": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "1"
+          ],
+          "degree": 0,
+          "formula": "1",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      }
+    },
+    "transition_time": {
+      "01": {
+        "01": {
+          "coefficients_ascending": [
+            "196",
+            "448",
+            "256"
+          ],
+          "degree": 2,
+          "formula": "196 + 448*q + 256*q^2",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "21",
+            "52",
+            "32"
+          ],
+          "degree": 2,
+          "formula": "21 + 52*q + 32*q^2",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "21",
+            "52",
+            "32"
+          ],
+          "degree": 2,
+          "formula": "21 + 52*q + 32*q^2",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "7",
+            "8"
+          ],
+          "degree": 1,
+          "formula": "7 + 8*q",
+          "status": "polynomial_fit"
+        }
+      },
+      "02": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "36162",
+            "124992",
+            "144000",
+            "55296"
+          ],
+          "degree": 3,
+          "formula": "36162 + 124992*q + 144000*q^2 + 55296*q^3",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "03": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "1320",
+            "4344",
+            "4752",
+            "1728"
+          ],
+          "degree": 3,
+          "formula": "1320 + 4344*q + 4752*q^2 + 1728*q^3",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "9261",
+            "31752",
+            "36288",
+            "13824"
+          ],
+          "degree": 3,
+          "formula": "9261 + 31752*q + 36288*q^2 + 13824*q^3",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "5751",
+            "19740",
+            "22608",
+            "8640"
+          ],
+          "degree": 3,
+          "formula": "5751 + 19740*q + 22608*q^2 + 8640*q^3",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "04": {
+        "01": {
+          "coefficients_ascending": [
+            "318",
+            "1190",
+            "1448",
+            "576"
+          ],
+          "degree": 3,
+          "formula": "318 + 1190*q + 1448*q^2 + 576*q^3",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "731",
+            "2516",
+            "2928",
+            "1152"
+          ],
+          "degree": 3,
+          "formula": "731 + 2516*q + 2928*q^2 + 1152*q^3",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "8820",
+            "30744",
+            "35712",
+            "13824"
+          ],
+          "degree": 3,
+          "formula": "8820 + 30744*q + 35712*q^2 + 13824*q^3",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "6831",
+            "23556",
+            "27072",
+            "10368"
+          ],
+          "degree": 3,
+          "formula": "6831 + 23556*q + 27072*q^2 + 10368*q^3",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "12": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "23",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "23 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "1680",
+            "3936",
+            "2304"
+          ],
+          "degree": 2,
+          "formula": "1680 + 3936*q + 2304*q^2",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "13": {
+        "01": {
+          "coefficients_ascending": [
+            "28",
+            "60",
+            "32"
+          ],
+          "degree": 2,
+          "formula": "28 + 60*q + 32*q^2",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "712",
+            "1656",
+            "960"
+          ],
+          "degree": 2,
+          "formula": "712 + 1656*q + 960*q^2",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "14": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "352800",
+            "1653120",
+            "2904192",
+            "2267136",
+            "663552"
+          ],
+          "degree": 4,
+          "formula": "352800 + 1653120*q + 2904192*q^2 + 2267136*q^3 + 663552*q^4",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "407085",
+            "1840656",
+            "3120192",
+            "2350080",
+            "663552"
+          ],
+          "degree": 4,
+          "formula": "407085 + 1840656*q + 3120192*q^2 + 2350080*q^3 + 663552*q^4",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "23": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "758919",
+            "3491664",
+            "6023232",
+            "4617216",
+            "1327104"
+          ],
+          "degree": 4,
+          "formula": "758919 + 3491664*q + 6023232*q^2 + 4617216*q^3 + 1327104*q^4",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "378878",
+            "1744416",
+            "3010752",
+            "2308608",
+            "663552"
+          ],
+          "degree": 4,
+          "formula": "378878 + 1744416*q + 3010752*q^2 + 2308608*q^3 + 663552*q^4",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "24": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "388920",
+            "1778064",
+            "3048192",
+            "2322432",
+            "663552"
+          ],
+          "degree": 4,
+          "formula": "388920 + 1778064*q + 3048192*q^2 + 2322432*q^3 + 663552*q^4",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "42",
+            "48"
+          ],
+          "degree": 1,
+          "formula": "42 + 48*q",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "731598",
+            "3397440",
+            "5914944",
+            "4575744",
+            "1327104"
+          ],
+          "degree": 4,
+          "formula": "731598 + 3397440*q + 5914944*q^2 + 4575744*q^3 + 1327104*q^4",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "34": {
+        "01": {
+          "coefficients_ascending": [
+            "1402",
+            "5382",
+            "6840",
+            "2880"
+          ],
+          "degree": 3,
+          "formula": "1402 + 5382*q + 6840*q^2 + 2880*q^3",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "6642",
+            "23088",
+            "26784",
+            "10368"
+          ],
+          "degree": 3,
+          "formula": "6642 + 23088*q + 26784*q^2 + 10368*q^3",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "4725",
+            "15228",
+            "16272",
+            "5760"
+          ],
+          "degree": 3,
+          "formula": "4725 + 15228*q + 16272*q^2 + 5760*q^3",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "8778",
+            "30696",
+            "35712",
+            "13824"
+          ],
+          "degree": 3,
+          "formula": "8778 + 30696*q + 35712*q^2 + 13824*q^3",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      },
+      "Z": {
+        "01": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "02": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "03": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "04": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "12": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "13": {
+          "coefficients_ascending": [
+            "25",
+            "24"
+          ],
+          "degree": 1,
+          "formula": "25 + 24*q",
+          "status": "polynomial_fit"
+        },
+        "14": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "23": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "24": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "34": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        },
+        "Z": {
+          "coefficients_ascending": [
+            "0"
+          ],
+          "degree": 0,
+          "formula": "0",
+          "status": "polynomial_fit"
+        }
+      }
+    }
+  },
+  "raw_csv_preserved": false,
+  "samples": [
+    {
+      "allpair_nodes": 411,
+      "cycle_lengths": [
+        411
+      ],
+      "dst_count": {
+        "01": 41,
+        "02": 41,
+        "03": 41,
+        "04": 41,
+        "12": 41,
+        "13": 41,
+        "14": 41,
+        "23": 41,
+        "24": 41,
+        "34": 41,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 1944,
+        "02": 1111719,
+        "03": 756,
+        "04": 396882,
+        "12": 1722,
+        "13": 384380,
+        "14": 18081,
+        "23": 1138683,
+        "24": 36162,
+        "34": 21360,
+        "Z": 7
+      },
+      "expected_nodes": 411,
+      "label_count": {
+        "01": 41,
+        "02": 41,
+        "03": 41,
+        "04": 41,
+        "12": 41,
+        "13": 41,
+        "14": 41,
+        "23": 41,
+        "24": 41,
+        "34": 41,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 245,
+        "02": 36162,
+        "03": 16332,
+        "04": 16700,
+        "12": 1703,
+        "13": 740,
+        "14": 759885,
+        "23": 1137797,
+        "24": 1120560,
+        "34": 21547,
+        "Z": 25
+      },
+      "m": 42,
+      "m4": 3111696,
+      "max_events": 9916,
+      "max_return_time": 72257,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 0,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+      ],
+      "time_total": 3111696,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 28,
+          "02": 0,
+          "03": 6,
+          "04": 0,
+          "12": 0,
+          "13": 6,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 41,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 5,
+          "12": 0,
+          "13": 0,
+          "14": 21,
+          "23": 0,
+          "24": 0,
+          "34": 15,
+          "Z": 0
+        },
+        "04": {
+          "01": 2,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 3,
+          "14": 20,
+          "23": 0,
+          "24": 0,
+          "34": 16,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 40,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 7,
+          "02": 0,
+          "03": 34,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 20,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 21,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 21,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 20,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 20,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 20,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 4,
+          "02": 0,
+          "03": 0,
+          "04": 16,
+          "12": 0,
+          "13": 11,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 10,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 196,
+          "02": 0,
+          "03": 21,
+          "04": 0,
+          "12": 0,
+          "13": 21,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 7
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 36162,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 1320,
+          "12": 0,
+          "13": 0,
+          "14": 9261,
+          "23": 0,
+          "24": 0,
+          "34": 5751,
+          "Z": 0
+        },
+        "04": {
+          "01": 318,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 731,
+          "14": 8820,
+          "23": 0,
+          "24": 0,
+          "34": 6831,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 23,
+          "04": 0,
+          "12": 1680,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 28,
+          "02": 0,
+          "03": 712,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 352800,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 407085,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 758919,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 378878,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 388920,
+          "12": 42,
+          "13": 0,
+          "14": 0,
+          "23": 731598,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 1402,
+          "02": 0,
+          "03": 0,
+          "04": 6642,
+          "12": 0,
+          "13": 4725,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 8778,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 25,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 5,
+      "z": 5
+    },
+    {
+      "allpair_nodes": 891,
+      "cycle_lengths": [
+        891
+      ],
+      "dst_count": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 21056,
+        "02": 24058935,
+        "03": 3480,
+        "04": 8280186,
+        "12": 8010,
+        "13": 8155672,
+        "14": 180225,
+        "23": 24328395,
+        "24": 360450,
+        "34": 213576,
+        "Z": 15
+      },
+      "expected_nodes": 891,
+      "label_count": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 1125,
+        "02": 360450,
+        "03": 160008,
+        "04": 167786,
+        "12": 7967,
+        "13": 3448,
+        "14": 16222365,
+        "23": 24324341,
+        "24": 24148080,
+        "34": 214381,
+        "Z": 49
+      },
+      "m": 90,
+      "m4": 65610000,
+      "max_events": 47164,
+      "max_return_time": 720761,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 1,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+      ],
+      "time_total": 65610000,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 60,
+          "02": 0,
+          "03": 14,
+          "04": 0,
+          "12": 0,
+          "13": 14,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 89,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 11,
+          "12": 0,
+          "13": 0,
+          "14": 45,
+          "23": 0,
+          "24": 0,
+          "34": 33,
+          "Z": 0
+        },
+        "04": {
+          "01": 4,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 7,
+          "14": 44,
+          "23": 0,
+          "24": 0,
+          "34": 34,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 88,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 15,
+          "02": 0,
+          "03": 74,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 44,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 45,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 45,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 44,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 44,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 44,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 10,
+          "02": 0,
+          "03": 0,
+          "04": 34,
+          "12": 0,
+          "13": 23,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 22,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 900,
+          "02": 0,
+          "03": 105,
+          "04": 0,
+          "12": 0,
+          "13": 105,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 15
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 360450,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 12144,
+          "12": 0,
+          "13": 0,
+          "14": 91125,
+          "23": 0,
+          "24": 0,
+          "34": 56739,
+          "Z": 0
+        },
+        "04": {
+          "01": 3532,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 7327,
+          "14": 89100,
+          "23": 0,
+          "24": 0,
+          "34": 67827,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 47,
+          "04": 0,
+          "12": 7920,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 120,
+          "02": 0,
+          "03": 3328,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 7840800,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 8381565,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 16218135,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 8106206,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 8201160,
+          "12": 90,
+          "13": 0,
+          "14": 0,
+          "23": 15946830,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 16504,
+          "02": 0,
+          "03": 0,
+          "04": 66882,
+          "12": 0,
+          "13": 41985,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 89010,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 49,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 11,
+      "z": 11
+    },
+    {
+      "allpair_nodes": 1371,
+      "cycle_lengths": [
+        1371
+      ],
+      "dst_count": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 78056,
+        "02": 134036295,
+        "03": 8188,
+        "04": 45619842,
+        "12": 18906,
+        "13": 45169780,
+        "14": 652257,
+        "23": 135012507,
+        "24": 1304514,
+        "34": 773568,
+        "Z": 23
+      },
+      "expected_nodes": 1371,
+      "label_count": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 2645,
+        "02": 1304514,
+        "03": 576132,
+        "04": 608712,
+        "12": 18839,
+        "13": 8140,
+        "14": 90016365,
+        "23": 135002981,
+        "24": 134360112,
+        "34": 775423,
+        "Z": 73
+      },
+      "m": 138,
+      "m4": 362673936,
+      "max_events": 112060,
+      "max_return_time": 2608817,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 2,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+      ],
+      "time_total": 362673936,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 92,
+          "02": 0,
+          "03": 22,
+          "04": 0,
+          "12": 0,
+          "13": 22,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 137,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 17,
+          "12": 0,
+          "13": 0,
+          "14": 69,
+          "23": 0,
+          "24": 0,
+          "34": 51,
+          "Z": 0
+        },
+        "04": {
+          "01": 6,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 11,
+          "14": 68,
+          "23": 0,
+          "24": 0,
+          "34": 52,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 136,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 23,
+          "02": 0,
+          "03": 114,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 68,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 69,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 69,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 68,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 68,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 68,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 16,
+          "02": 0,
+          "03": 0,
+          "04": 52,
+          "12": 0,
+          "13": 35,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 34,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 2116,
+          "02": 0,
+          "03": 253,
+          "04": 0,
+          "12": 0,
+          "13": 253,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 23
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 1304514,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 42840,
+          "12": 0,
+          "13": 0,
+          "14": 328509,
+          "23": 0,
+          "24": 0,
+          "34": 204783,
+          "Z": 0
+        },
+        "04": {
+          "01": 13098,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 26691,
+          "14": 323748,
+          "23": 0,
+          "24": 0,
+          "34": 245175,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 71,
+          "04": 0,
+          "12": 18768,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 276,
+          "02": 0,
+          "03": 7864,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 44029728,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 45986637,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 90006567,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 44996414,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 45334104,
+          "12": 138,
+          "13": 0,
+          "14": 0,
+          "23": 89025870,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 62566,
+          "02": 0,
+          "03": 0,
+          "04": 242898,
+          "12": 0,
+          "13": 146349,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 323610,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 73,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 17,
+      "z": 17
+    },
+    {
+      "allpair_nodes": 1851,
+      "cycle_lengths": [
+        1851
+      ],
+      "dst_count": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 193680,
+        "02": 444013527,
+        "03": 14880,
+        "04": 150310890,
+        "12": 34410,
+        "13": 149207696,
+        "14": 1600065,
+        "23": 446409579,
+        "24": 3200130,
+        "34": 1898328,
+        "Z": 31
+      },
+      "expected_nodes": 1851,
+      "label_count": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 4805,
+        "02": 3200130,
+        "03": 1409856,
+        "04": 1494998,
+        "12": 34319,
+        "13": 14816,
+        "14": 297620925,
+        "23": 446392277,
+        "24": 444809328,
+        "34": 1901665,
+        "Z": 97
+      },
+      "m": 186,
+      "m4": 1196883216,
+      "max_events": 204604,
+      "max_return_time": 6399977,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 3,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+      ],
+      "time_total": 1196883216,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 124,
+          "02": 0,
+          "03": 30,
+          "04": 0,
+          "12": 0,
+          "13": 30,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 185,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 23,
+          "12": 0,
+          "13": 0,
+          "14": 93,
+          "23": 0,
+          "24": 0,
+          "34": 69,
+          "Z": 0
+        },
+        "04": {
+          "01": 8,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 15,
+          "14": 92,
+          "23": 0,
+          "24": 0,
+          "34": 70,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 184,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 31,
+          "02": 0,
+          "03": 154,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 92,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 93,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 93,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 92,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 92,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 92,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 22,
+          "02": 0,
+          "03": 0,
+          "04": 70,
+          "12": 0,
+          "13": 47,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 46,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 3844,
+          "02": 0,
+          "03": 465,
+          "04": 0,
+          "12": 0,
+          "13": 465,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 31
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 3200130,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 103776,
+          "12": 0,
+          "13": 0,
+          "14": 804357,
+          "23": 0,
+          "24": 0,
+          "34": 501723,
+          "Z": 0
+        },
+        "04": {
+          "01": 32472,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 65735,
+          "14": 795708,
+          "23": 0,
+          "24": 0,
+          "34": 601083,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 95,
+          "04": 0,
+          "12": 34224,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 496,
+          "02": 0,
+          "03": 14320,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 146410272,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 151210653,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 297603255,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 148789022,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 149610216,
+          "12": 186,
+          "13": 0,
+          "14": 0,
+          "23": 295198926,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 156868,
+          "02": 0,
+          "03": 0,
+          "04": 596898,
+          "12": 0,
+          "13": 352377,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 795522,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 97,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 23,
+      "z": 23
+    },
+    {
+      "allpair_nodes": 2331,
+      "cycle_lengths": [
+        2331
+      ],
+      "dst_count": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 388664,
+        "02": 1114736103,
+        "03": 23556,
+        "04": 376173618,
+        "12": 54522,
+        "13": 373975660,
+        "14": 3189537,
+        "23": 1119513915,
+        "24": 6379074,
+        "34": 3784848,
+        "Z": 39
+      },
+      "expected_nodes": 2331,
+      "label_count": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 7605,
+        "02": 6379074,
+        "03": 2806332,
+        "04": 2982164,
+        "12": 54407,
+        "13": 23476,
+        "14": 746365581,
+        "23": 1119486533,
+        "24": 1116324144,
+        "34": 3790099,
+        "Z": 121
+      },
+      "m": 234,
+      "m4": 2998219536,
+      "max_events": 324796,
+      "max_return_time": 12757793,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 4,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+      ],
+      "time_total": 2998219536,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 156,
+          "02": 0,
+          "03": 38,
+          "04": 0,
+          "12": 0,
+          "13": 38,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 233,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 29,
+          "12": 0,
+          "13": 0,
+          "14": 117,
+          "23": 0,
+          "24": 0,
+          "34": 87,
+          "Z": 0
+        },
+        "04": {
+          "01": 10,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 19,
+          "14": 116,
+          "23": 0,
+          "24": 0,
+          "34": 88,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 232,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 39,
+          "02": 0,
+          "03": 194,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 116,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 117,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 117,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 116,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 116,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 116,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 28,
+          "02": 0,
+          "03": 0,
+          "04": 88,
+          "12": 0,
+          "13": 59,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 58,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 6084,
+          "02": 0,
+          "03": 741,
+          "04": 0,
+          "12": 0,
+          "13": 741,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 39
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 6379074,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 205320,
+          "12": 0,
+          "13": 0,
+          "14": 1601613,
+          "23": 0,
+          "24": 0,
+          "34": 999399,
+          "Z": 0
+        },
+        "04": {
+          "01": 65110,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 131371,
+          "14": 1587924,
+          "23": 0,
+          "24": 0,
+          "34": 1197759,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 119,
+          "04": 0,
+          "12": 54288,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 780,
+          "02": 0,
+          "03": 22696,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 368398368,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 377967213,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 746337735,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 373148798,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 374777208,
+          "12": 234,
+          "13": 0,
+          "14": 0,
+          "23": 741546702,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 316690,
+          "02": 0,
+          "03": 0,
+          "04": 1191090,
+          "12": 0,
+          "13": 694629,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 1587690,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 121,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 29,
+      "z": 29
+    },
+    {
+      "allpair_nodes": 2811,
+      "cycle_lengths": [
+        2811
+      ],
+      "dst_count": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 683744,
+        "02": 2354725239,
+        "03": 34216,
+        "04": 792953562,
+        "12": 79242,
+        "13": 789105160,
+        "14": 5586561,
+        "23": 2363095563,
+        "24": 11173122,
+        "34": 6630120,
+        "Z": 47
+      },
+      "expected_nodes": 2811,
+      "label_count": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 11045,
+        "02": 11173122,
+        "03": 4910712,
+        "04": 5225730,
+        "12": 79103,
+        "13": 34120,
+        "14": 1575430365,
+        "23": 2363055797,
+        "24": 2357508720,
+        "34": 6637717,
+        "Z": 145
+      },
+      "m": 282,
+      "m4": 6324066576,
+      "max_events": 472636,
+      "max_return_time": 22345817,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 5,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q5.csv N=2811 total=6324066576 m4=6324066576 max_events=472636"
+      ],
+      "time_total": 6324066576,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 188,
+          "02": 0,
+          "03": 46,
+          "04": 0,
+          "12": 0,
+          "13": 46,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 281,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 35,
+          "12": 0,
+          "13": 0,
+          "14": 141,
+          "23": 0,
+          "24": 0,
+          "34": 105,
+          "Z": 0
+        },
+        "04": {
+          "01": 12,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 23,
+          "14": 140,
+          "23": 0,
+          "24": 0,
+          "34": 106,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 280,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 47,
+          "02": 0,
+          "03": 234,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 140,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 141,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 141,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 140,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 140,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 140,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 34,
+          "02": 0,
+          "03": 0,
+          "04": 106,
+          "12": 0,
+          "13": 71,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 70,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 8836,
+          "02": 0,
+          "03": 1081,
+          "04": 0,
+          "12": 0,
+          "13": 1081,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 47
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 11173122,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 357840,
+          "12": 0,
+          "13": 0,
+          "14": 2803221,
+          "23": 0,
+          "24": 0,
+          "34": 1749651,
+          "Z": 0
+        },
+        "04": {
+          "01": 114468,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 230511,
+          "14": 2783340,
+          "23": 0,
+          "24": 0,
+          "34": 2097411,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 143,
+          "04": 0,
+          "12": 78960,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 1128,
+          "02": 0,
+          "03": 32992,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 779335200,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 796095165,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 1575390039,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 787665758,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 790508040,
+          "12": 282,
+          "13": 0,
+          "14": 0,
+          "23": 1567000398,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 559312,
+          "02": 0,
+          "03": 0,
+          "04": 2087682,
+          "12": 0,
+          "13": 1207665,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 2783058,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 145,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 35,
+      "z": 35
+    },
+    {
+      "allpair_nodes": 3291,
+      "cycle_lengths": [
+        3291
+      ],
+      "dst_count": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 1099656,
+        "02": 4420277895,
+        "03": 46860,
+        "04": 1486321506,
+        "12": 108570,
+        "13": 1480152932,
+        "14": 8957025,
+        "23": 4433700315,
+        "24": 17914050,
+        "34": 10631136,
+        "Z": 55
+      },
+      "expected_nodes": 3291,
+      "label_count": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 15125,
+        "02": 17914050,
+        "03": 7868148,
+        "04": 8381216,
+        "12": 108407,
+        "13": 46748,
+        "14": 2955845805,
+        "23": 4433645861,
+        "24": 4424742960,
+        "34": 10641511,
+        "Z": 169
+      },
+      "m": 330,
+      "m4": 11859210000,
+      "max_events": 648124,
+      "max_return_time": 35827601,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 6,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-transition-edfzby_1/r42_allpair_transition_q6.csv N=3291 total=11859210000 m4=11859210000 max_events=648124"
+      ],
+      "time_total": 11859210000,
+      "time_total_ok": true,
+      "transition_count": {
+        "01": {
+          "01": 220,
+          "02": 0,
+          "03": 54,
+          "04": 0,
+          "12": 0,
+          "13": 54,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 1
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 329,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 41,
+          "12": 0,
+          "13": 0,
+          "14": 165,
+          "23": 0,
+          "24": 0,
+          "34": 123,
+          "Z": 0
+        },
+        "04": {
+          "01": 14,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 27,
+          "14": 164,
+          "23": 0,
+          "24": 0,
+          "34": 124,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 1,
+          "04": 0,
+          "12": 328,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 55,
+          "02": 0,
+          "03": 274,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 164,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 165,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 165,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 164,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 164,
+          "12": 1,
+          "13": 0,
+          "14": 0,
+          "23": 164,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 40,
+          "02": 0,
+          "03": 0,
+          "04": 124,
+          "12": 0,
+          "13": 83,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 82,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "transition_time": {
+        "01": {
+          "01": 12100,
+          "02": 0,
+          "03": 1485,
+          "04": 0,
+          "12": 0,
+          "13": 1485,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 55
+        },
+        "02": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 17914050,
+          "34": 0,
+          "Z": 0
+        },
+        "03": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 571704,
+          "12": 0,
+          "13": 0,
+          "14": 4492125,
+          "23": 0,
+          "24": 0,
+          "34": 2804319,
+          "Z": 0
+        },
+        "04": {
+          "01": 184002,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 370067,
+          "14": 4464900,
+          "23": 0,
+          "24": 0,
+          "34": 3362247,
+          "Z": 0
+        },
+        "12": {
+          "01": 0,
+          "02": 0,
+          "03": 167,
+          "04": 0,
+          "12": 108240,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "13": {
+          "01": 1540,
+          "02": 0,
+          "03": 45208,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "14": {
+          "01": 0,
+          "02": 1464487200,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "23": 1491358605,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "23": {
+          "01": 0,
+          "02": 2955790695,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 1477855166,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "24": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 1482400920,
+          "12": 330,
+          "13": 0,
+          "14": 0,
+          "23": 2942341710,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        },
+        "34": {
+          "01": 902014,
+          "02": 0,
+          "03": 0,
+          "04": 3348882,
+          "12": 0,
+          "13": 1926045,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 4464570,
+          "Z": 0
+        },
+        "Z": {
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "12": 0,
+          "13": 169,
+          "14": 0,
+          "23": 0,
+          "24": 0,
+          "34": 0,
+          "Z": 0
+        }
+      },
+      "x": 41,
+      "z": 41
+    }
+  ],
+  "schema": "routeE_r42_allpair_transition_fit_summary_v1",
+  "source_checker": "scripts/routeE_allpair_cpp_v1_2.cpp",
+  "summary": {
+    "all_samples_ok": true,
+    "all_single_cycle": true,
+    "all_time_total_ok": true,
+    "q_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "transition_count_nonzero_edge_count": 28,
+    "transition_time_nonzero_edge_count": 28
+  },
+  "warning": "Transition fits are sample-derived.  They support the R42 proof plan but do not replace the pointwise first-return/no-early proof."
+}

@@ -169,6 +169,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_allpair_transition_fit_summary.json and certs/routeE_r42_allpair_transition_fit_verification.json",
+      "missing": null,
+      "name": "R42 all-pair transition polynomial matrices are recorded and verified",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
       "missing": null,
       "name": "R38 symmetric probe negative controls are preserved",
