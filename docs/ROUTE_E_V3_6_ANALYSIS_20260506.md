@@ -295,6 +295,11 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
 - `RouteER14e.BoundaryMacroNode`
+- `RouteER14e.BoundaryQuotientFormulaTarget`
+- `RouteER14e.BoundaryQuotientOneCycleTarget`
+- `RouteER14e.SymbolicBoundaryQuotientOneCycleTarget`
+- `RouteER14e.boundaryQuotientOneCycleTarget_of_formula_and_macro`
+- `RouteER14e.symbolicBoundaryQuotientOneCycleTarget_of_formula_and_macro`
 - `RouteER14e.BoundaryMacroReturnTarget`
 - `RouteER14e.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`
 - `RouteER14e.SymbolicBoundaryMacroReturnTarget`
@@ -463,13 +468,15 @@ R14e:
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, insertion distribution, label-wise
   time masses, and finite `m = 14` two-node macro target;
-- Lean now has R14e boundary macro-return, insertion-count arithmetic, and
-  label/indexed all-pair adapters.  The insertion weighted count is connected
-  to the verifier row count target by
+- Lean now has R14e closed boundary formula and boundary macro-return targets,
+  insertion-count arithmetic, and label/indexed all-pair adapters.  The
+  formula+macro adapter is
+  `RouteER14e.boundaryQuotientOneCycleTarget_of_formula_and_macro`; the
+  insertion weighted count is connected to the verifier row count target by
   `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`;
-- remaining Lean work is to derive/instantiate the closed boundary formula,
-  insertion distribution, all-pair first-return/no-early equations, and the
-  finite `m = 14` table.
+- remaining Lean work is to instantiate the concrete boundary quotient map and
+  macro-return data, then derive/instantiate the insertion distribution,
+  all-pair first-return/no-early equations, and the finite `m = 14` table.
 
 ## Reproduction Caveat
 
