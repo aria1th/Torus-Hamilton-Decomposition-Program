@@ -25,6 +25,9 @@ DEFAULT_BOUNDARY_SUMMARY = ROOT / "certs" / "routeE_r42_boundary_quotient_summar
 DEFAULT_BOUNDARY_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_boundary_summary_verification.json"
 )
+DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
+)
 DEFAULT_COLOR_SIGN_SCREEN = ROOT / "certs" / "routeE_color_sign_screen_audit.json"
 
 
@@ -38,6 +41,7 @@ def build_record(
     sample_verification_path: Path,
     boundary_summary_path: Path,
     boundary_verification_path: Path,
+    block_regeneration_verification_path: Path,
     color_sign_screen_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
@@ -53,6 +57,11 @@ def build_record(
     boundary_verification = (
         load_json(boundary_verification_path)
         if boundary_verification_path.exists()
+        else {}
+    )
+    block_regeneration_verification = (
+        load_json(block_regeneration_verification_path)
+        if block_regeneration_verification_path.exists()
         else {}
     )
     color_sign_screen = (
@@ -91,6 +100,9 @@ def build_record(
             "sample_verification": str(sample_verification_path),
             "boundary_summary": str(boundary_summary_path),
             "boundary_verification": str(boundary_verification_path),
+            "block_regeneration_verification": str(
+                block_regeneration_verification_path
+            ),
             "color_sign_screen": str(color_sign_screen_path),
             "typeA_coverage": str(coverage_path),
         },
@@ -157,6 +169,11 @@ def build_record(
             "ok": boundary_verification.get("ok"),
             "summary": boundary_verification.get("summary"),
         },
+        "block_regeneration_verification_summary": {
+            "schema": block_regeneration_verification.get("schema"),
+            "ok": block_regeneration_verification.get("ok"),
+            "summary": block_regeneration_verification.get("summary"),
+        },
         "color_sign_screen_summary": {
             "schema": color_sign_screen.get("schema"),
             "r42_record_count": len(r42_color_sign_records),
@@ -204,6 +221,11 @@ def main() -> None:
     parser.add_argument(
         "--boundary-verification", type=Path, default=DEFAULT_BOUNDARY_VERIFICATION
     )
+    parser.add_argument(
+        "--block-regeneration-verification",
+        type=Path,
+        default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
+    )
     parser.add_argument("--color-sign-screen", type=Path, default=DEFAULT_COLOR_SIGN_SCREEN)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -214,6 +236,7 @@ def main() -> None:
         args.sample_verification,
         args.boundary_summary,
         args.boundary_verification,
+        args.block_regeneration_verification,
         args.color_sign_screen,
     )
     print(

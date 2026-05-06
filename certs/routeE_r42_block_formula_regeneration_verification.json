@@ -1,0 +1,259 @@
+{
+  "ok": true,
+  "q_values": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "raw_csv_preserved": false,
+  "rows": [
+    {
+      "bad_examples": [],
+      "block_count": 29,
+      "boundary_cycle_lengths": [
+        268
+      ],
+      "boundary_nodes": 268,
+      "m": 90,
+      "ok": true,
+      "open_null_formula_field_count": 2,
+      "open_null_formula_fields": [
+        {
+          "actual": 0,
+          "field": "terminal_affine_alpha",
+          "index": 24,
+          "q": 1
+        },
+        {
+          "actual": 25,
+          "field": "terminal_affine_beta",
+          "index": 24,
+          "q": 1
+        }
+      ],
+      "q": 1,
+      "x": 11,
+      "z": 11
+    },
+    {
+      "bad_examples": [],
+      "block_count": 29,
+      "boundary_cycle_lengths": [
+        412
+      ],
+      "boundary_nodes": 412,
+      "m": 138,
+      "ok": true,
+      "open_null_formula_field_count": 2,
+      "open_null_formula_fields": [
+        {
+          "actual": 9,
+          "field": "condition_interval_count",
+          "index": 7,
+          "q": 2
+        },
+        {
+          "actual": 11,
+          "field": "condition_interval_count",
+          "index": 11,
+          "q": 2
+        }
+      ],
+      "q": 2,
+      "x": 17,
+      "z": 17
+    },
+    {
+      "bad_examples": [],
+      "block_count": 29,
+      "boundary_cycle_lengths": [
+        556
+      ],
+      "boundary_nodes": 556,
+      "m": 186,
+      "ok": true,
+      "open_null_formula_field_count": 3,
+      "open_null_formula_fields": [
+        {
+          "actual": 11,
+          "field": "condition_interval_count",
+          "index": 5,
+          "q": 3
+        },
+        {
+          "actual": 12,
+          "field": "condition_interval_count",
+          "index": 7,
+          "q": 3
+        },
+        {
+          "actual": 15,
+          "field": "condition_interval_count",
+          "index": 11,
+          "q": 3
+        }
+      ],
+      "q": 3,
+      "x": 23,
+      "z": 23
+    },
+    {
+      "bad_examples": [],
+      "block_count": 29,
+      "boundary_cycle_lengths": [
+        700
+      ],
+      "boundary_nodes": 700,
+      "m": 234,
+      "ok": true,
+      "open_null_formula_field_count": 9,
+      "open_null_formula_fields": [
+        {
+          "actual": 14,
+          "field": "condition_interval_count",
+          "index": 5,
+          "q": 4
+        },
+        {
+          "actual": 15,
+          "field": "condition_interval_count",
+          "index": 7,
+          "q": 4
+        },
+        {
+          "actual": 19,
+          "field": "condition_interval_count",
+          "index": 11,
+          "q": 4
+        },
+        {
+          "actual": 9,
+          "field": "condition_interval_count",
+          "index": 14,
+          "q": 4
+        },
+        {
+          "actual": 10,
+          "field": "condition_interval_count",
+          "index": 15,
+          "q": 4
+        },
+        {
+          "actual": 10,
+          "field": "condition_interval_count",
+          "index": 16,
+          "q": 4
+        },
+        {
+          "actual": 9,
+          "field": "condition_interval_count",
+          "index": 17,
+          "q": 4
+        },
+        {
+          "actual": 9,
+          "field": "condition_interval_count",
+          "index": 21,
+          "q": 4
+        },
+        {
+          "actual": 10,
+          "field": "condition_interval_count",
+          "index": 22,
+          "q": 4
+        }
+      ],
+      "q": 4,
+      "x": 29,
+      "z": 29
+    },
+    {
+      "bad_examples": [],
+      "block_count": 29,
+      "boundary_cycle_lengths": [
+        844
+      ],
+      "boundary_nodes": 844,
+      "m": 282,
+      "ok": true,
+      "open_null_formula_field_count": 9,
+      "open_null_formula_fields": [
+        {
+          "actual": 17,
+          "field": "condition_interval_count",
+          "index": 5,
+          "q": 5
+        },
+        {
+          "actual": 18,
+          "field": "condition_interval_count",
+          "index": 7,
+          "q": 5
+        },
+        {
+          "actual": 23,
+          "field": "condition_interval_count",
+          "index": 11,
+          "q": 5
+        },
+        {
+          "actual": 11,
+          "field": "condition_interval_count",
+          "index": 14,
+          "q": 5
+        },
+        {
+          "actual": 12,
+          "field": "condition_interval_count",
+          "index": 15,
+          "q": 5
+        },
+        {
+          "actual": 12,
+          "field": "condition_interval_count",
+          "index": 16,
+          "q": 5
+        },
+        {
+          "actual": 11,
+          "field": "condition_interval_count",
+          "index": 17,
+          "q": 5
+        },
+        {
+          "actual": 11,
+          "field": "condition_interval_count",
+          "index": 21,
+          "q": 5
+        },
+        {
+          "actual": 12,
+          "field": "condition_interval_count",
+          "index": 22,
+          "q": 5
+        }
+      ],
+      "q": 5,
+      "x": 35,
+      "z": 35
+    }
+  ],
+  "schema": "routeE_r42_block_formula_regeneration_verification_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+  "summary": {
+    "all_block_formulas_match_regeneration": true,
+    "all_boundary_single_cycle": true,
+    "block_count": 29,
+    "open_null_formula_field_count": 25,
+    "verified_q_values": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "warning": "This verifies regenerated finite R42 block tables against stored formulas.  It still does not prove no-early returns for all q."
+}

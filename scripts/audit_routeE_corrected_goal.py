@@ -48,6 +48,9 @@ FILES = {
     "r42_boundary_verification": ROOT
     / "certs"
     / "routeE_r42_boundary_summary_verification.json",
+    "r42_block_regeneration_verification": ROOT
+    / "certs"
+    / "routeE_r42_block_formula_regeneration_verification.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -95,6 +98,9 @@ def build_audit() -> dict[str, Any]:
     r42_sample_verification = load_json(FILES["r42_sample_verification"])
     r42_boundary_summary = load_json(FILES["r42_boundary_summary"])
     r42_boundary_verification = load_json(FILES["r42_boundary_verification"])
+    r42_block_regeneration_verification = load_json(
+        FILES["r42_block_regeneration_verification"]
+    )
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -360,6 +366,29 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_r42_boundary_summary_verification.json",
+        ),
+        item(
+            "R42 block formulas match freshly regenerated finite witnesses",
+            r42_block_regeneration_verification.get("schema")
+            == "routeE_r42_block_formula_regeneration_verification_v1"
+            and r42_block_regeneration_verification.get("ok") is True
+            and r42_block_regeneration_verification.get("summary", {}).get(
+                "verified_q_values"
+            )
+            == [1, 2, 3, 4, 5]
+            and r42_block_regeneration_verification.get("summary", {}).get(
+                "all_block_formulas_match_regeneration"
+            )
+            is True
+            and r42_block_regeneration_verification.get("summary", {}).get(
+                "all_boundary_single_cycle"
+            )
+            is True
+            and r42_block_regeneration_verification.get("summary", {}).get(
+                "block_count"
+            )
+            == 29,
+            "certs/routeE_r42_block_formula_regeneration_verification.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

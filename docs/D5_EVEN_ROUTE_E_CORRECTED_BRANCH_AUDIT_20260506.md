@@ -41,6 +41,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
 | Verify R42 compact boundary summary | `scripts/verify_routeE_r42_boundary_summary.py`, `certs/routeE_r42_boundary_summary_verification.json` | done, internal affine/block consistency verified |
+| Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..5 regenerated |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -347,6 +348,31 @@ The two remaining null formula fields are terminal affine fields in the
 representative block table.  They are recorded as q=1 boundary compression
 debt, not as a mismatch; both now have q>=2 tail affine formulas in the compact
 summary.
+
+R42 regenerated block-formula verification:
+
+```bash
+python3 scripts/verify_routeE_r42_block_formulas_by_regeneration.py \
+  --q-values 1:5 \
+  --json-out certs/routeE_r42_block_formula_regeneration_verification.json
+```
+
+Result:
+
+```text
+ok True
+verified_q_values [1, 2, 3, 4, 5]
+block_count 29
+all_block_formulas_match_regeneration True
+all_boundary_single_cycle True
+open_null_formula_field_count 25
+```
+
+This check recompiles/runs the all-pair C++ checker, rebuilds temporary R42
+boundary block tables, and compares the stored 29 block formulas against fresh
+finite witnesses.  The open null fields are optional `condition_interval_count`
+compression debt and q=1 boundary exceptions; they are not transition-mass
+mismatches.
 
 R38 symmetric recheck:
 
