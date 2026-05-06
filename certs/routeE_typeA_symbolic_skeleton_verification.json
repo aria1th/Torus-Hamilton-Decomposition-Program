@@ -1,0 +1,30 @@
+{
+  "all_ok": true,
+  "b16": {
+    "label_dst_entry_count": 29,
+    "label_dst_total_equals_m4": true,
+    "label_dst_total_matches_recorded": true,
+    "label_entry_count": 11,
+    "label_total_equals_m4": true,
+    "label_total_matches_recorded": true,
+    "recorded_flags_true": true
+  },
+  "r14e": {
+    "insertion_count_equals_boundary_size": true,
+    "insertion_entry_count": 16,
+    "insertion_weighted_equals_allpair_size": true,
+    "insertion_weighted_matches_recorded": true,
+    "label_dst_count_equals_allpair_size": true,
+    "label_dst_count_matches_recorded": true,
+    "label_dst_entry_count": 33,
+    "label_dst_total_equals_m4": true,
+    "label_dst_total_matches_recorded": true,
+    "label_entry_count": 11,
+    "label_total_equals_m4": true,
+    "label_total_matches_recorded": true,
+    "macro_symbolics_match": true,
+    "recorded_flags_true": true
+  },
+  "schema": "routeE_typeA_symbolic_skeleton_verification_v1",
+  "skeleton": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_symbolic_skeleton.json"
+}

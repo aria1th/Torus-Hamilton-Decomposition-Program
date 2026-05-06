@@ -29,6 +29,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py` and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
+| Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -112,6 +113,24 @@ B16: 11 label-polynomial entries and 29 destination-label polynomial entries;
 R14e: 11 label-polynomial entries, 33 destination-label polynomial entries,
       and insertion macro identities.
 ```
+
+Type-A symbolic skeleton verification without `sympy`:
+
+```bash
+python3 scripts/verify_routeE_typeA_symbolic_skeleton.py \
+  --json-out certs/routeE_typeA_symbolic_skeleton_verification.json
+```
+
+Result:
+
+```text
+all_ok True
+```
+
+The checker uses a small standard-library one-variable polynomial parser.  It
+verifies the B16/R14e label totals, destination-label totals, R14e
+destination-count total, insertion boundary count, insertion weighted count,
+and `m^4` identities.
 
 Type-A residue coverage:
 
@@ -218,6 +237,7 @@ Hygiene:
 python3 -m py_compile scripts/summarize_d5_routeE_corrected_branches.py
 python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
 python3 -m py_compile scripts/summarize_routeE_typeA_residue_coverage.py
+python3 -m py_compile scripts/verify_routeE_typeA_symbolic_skeleton.py
 python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
 python3 -m py_compile scripts/audit_routeE_corrected_goal.py

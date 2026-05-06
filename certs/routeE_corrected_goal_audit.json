@@ -43,6 +43,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_typeA_symbolic_skeleton_verification.json",
+      "missing": null,
+      "name": "B16/R14e symbolic polynomial skeleton identities verify locally",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_typeA_residue_coverage.json",
       "missing": null,
       "name": "Type-A residue coverage is explicitly tracked",

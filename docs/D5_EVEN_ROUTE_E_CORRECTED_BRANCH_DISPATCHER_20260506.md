@@ -345,6 +345,15 @@ artifact for moving those branches into a paper appendix or Lean statement,
 because it avoids storing raw all-pair CSV maps while retaining the algebraic
 mass formulas.
 
+Those identities can be checked locally without `sympy`:
+
+```bash
+python3 scripts/verify_routeE_typeA_symbolic_skeleton.py \
+  --json-out certs/routeE_typeA_symbolic_skeleton_verification.json
+```
+
+The current verification output has `all_ok = true`.
+
 The residue coverage of the promoted Type-A branches is summarized by:
 
 ```bash

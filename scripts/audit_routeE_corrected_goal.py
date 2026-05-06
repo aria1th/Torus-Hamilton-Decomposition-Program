@@ -24,6 +24,9 @@ FILES = {
     "branch_summary": ROOT / "certs" / "d5_routeE_corrected_branch_summary.json",
     "typea_summary": ROOT / "certs" / "routeE_typeA_closure_package_summary.json",
     "typea_skeleton": ROOT / "certs" / "routeE_typeA_symbolic_skeleton.json",
+    "typea_skeleton_verification": ROOT
+    / "certs"
+    / "routeE_typeA_symbolic_skeleton_verification.json",
     "coverage": ROOT / "certs" / "routeE_typeA_residue_coverage.json",
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
@@ -48,6 +51,7 @@ def build_audit() -> dict[str, Any]:
     branch = load_json(FILES["branch_summary"])
     typea = load_json(FILES["typea_summary"])
     skeleton = load_json(FILES["typea_skeleton"])
+    skeleton_verification = load_json(FILES["typea_skeleton_verification"])
     coverage = load_json(FILES["coverage"])
     r38 = load_json(FILES["r38_record"])
     probe = load_json(FILES["r38_probe"])
@@ -99,6 +103,13 @@ def build_audit() -> dict[str, Any]:
             and len(skeleton.get("r14e", {}).get("label_sum_polynomials", [])) == 11
             and len(skeleton.get("r14e", {}).get("label_dst_sum_polynomials", [])) == 33,
             "certs/routeE_typeA_symbolic_skeleton.json",
+        ),
+        item(
+            "B16/R14e symbolic polynomial skeleton identities verify locally",
+            skeleton_verification.get("schema")
+            == "routeE_typeA_symbolic_skeleton_verification_v1"
+            and skeleton_verification.get("all_ok") is True,
+            "certs/routeE_typeA_symbolic_skeleton_verification.json",
         ),
         item(
             "Type-A residue coverage is explicitly tracked",
