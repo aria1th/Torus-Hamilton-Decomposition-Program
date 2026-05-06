@@ -60,6 +60,8 @@ New arithmetic names include:
 - `allPairTime23`
 - `allPairTime24`
 - `allPairTime34`
+- `AllPairLabel`
+- `allPairTimeMass`
 - `allPairTimeMassTotal`
 - `allPairTime01_eq_three_quarter_sq`
 - `allPairTimeZ_eq_half_add_three`
@@ -69,6 +71,7 @@ New arithmetic names include:
 - `allPairTime34_boundary_defect_eq`
 - `allPairTime03Target_add_allPairTime04Target`
 - `allPairTimeMassTotal_eq_modulus_pow_four`
+- `allPairTimeMass_sum_eq_modulus_pow_four`
 
 The same Lean file also now exposes an all-pair adapter surface:
 

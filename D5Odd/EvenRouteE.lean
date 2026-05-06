@@ -143,6 +143,33 @@ def allPairTime24 (q : Nat) : Nat :=
 def allPairTime34 (q : Nat) : Nat :=
   1152 * q ^ 2 + 1860 * q + 732
 
+inductive AllPairLabel where
+  | Z
+  | L01
+  | L02
+  | L03
+  | L04
+  | L12
+  | L13
+  | L14
+  | L23
+  | L24
+  | L34
+deriving DecidableEq, Fintype
+
+def allPairTimeMass (q : Nat) : AllPairLabel → Nat
+  | AllPairLabel.Z => allPairTimeZ q
+  | AllPairLabel.L01 => allPairTime01 q
+  | AllPairLabel.L02 => allPairTime02 q
+  | AllPairLabel.L03 => allPairTime03Target q
+  | AllPairLabel.L04 => allPairTime04Target q
+  | AllPairLabel.L12 => allPairTime12 q
+  | AllPairLabel.L13 => allPairTime13 q
+  | AllPairLabel.L14 => allPairTime14 q
+  | AllPairLabel.L23 => allPairTime23 q
+  | AllPairLabel.L24 => allPairTime24 q
+  | AllPairLabel.L34 => allPairTime34 q
+
 def allPairTimeMassTotal (q : Nat) : Nat :=
   allPairTimeZ q +
   allPairTime01 q +
@@ -213,6 +240,23 @@ theorem allPairTimeMassTotal_eq_modulus_pow_four (q : Nat) :
     allPairTime02, allPairTime03Target, allPairTime04Target,
     allPairTime12, allPairTime13, allPairTime14, allPairTime23,
     allPairTime24, allPairTime34, modulus]
+  ring
+
+theorem allPairTimeMass_sum_eq_modulus_pow_four (q : Nat) :
+    Finset.univ.sum (allPairTimeMass q) = modulus q ^ 4 := by
+  have huniv :
+      (Finset.univ : Finset AllPairLabel) =
+        ({ AllPairLabel.Z, AllPairLabel.L01, AllPairLabel.L02,
+          AllPairLabel.L03, AllPairLabel.L04, AllPairLabel.L12,
+          AllPairLabel.L13, AllPairLabel.L14, AllPairLabel.L23,
+          AllPairLabel.L24, AllPairLabel.L34 } : Finset AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [allPairTimeMass, allPairTimeZ, allPairTime01, allPairTime02,
+    allPairTime03Target, allPairTime04Target, allPairTime12,
+    allPairTime13, allPairTime14, allPairTime23, allPairTime24,
+    allPairTime34, modulus]
   ring
 
 end RouteEB20
