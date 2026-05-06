@@ -72,16 +72,30 @@ def build_summary(b20_path: Path, typea_path: Path) -> dict[str, Any]:
         "even_residue_count": len(even_residues),
         "coverage_complete": len(open_residues) == 0,
         "next_target": {
-            "name": "R38 / symmetric or near-symmetric family",
-            "target_residues_mod_48": [38],
+            "name": "R42 affine all-pair/boundary family",
+            "target_residues_mod_48": [42],
             "reason": (
-                "RouteE_three_branch_status_package_20260506.zip records "
-                "preliminary observations for m=38,86,134 and recommends "
-                "mining this family next.  The naive symmetric theorem is "
-                "known false, so this is a gate-transducer target, not a "
-                "simple x=z law."
+                "The portfolio fit scan identifies 42 mod 48 as the only "
+                "portfolio-only residue with a simple affine x=z law.  The "
+                "R42 artifacts now include q=0..4 all-pair verification, a "
+                "q>=1 stable 29-block boundary quotient summary, and a compact "
+                "boundary-summary verifier.  It remains open because pointwise "
+                "first-return/no-early formulas and the full branch theorem are "
+                "not proved."
             ),
         },
+        "secondary_targets": [
+            {
+                "name": "R38 / gate-transducer family",
+                "target_residues_mod_48": [38],
+                "reason": (
+                    "R38 remains useful evidence, but the naive symmetric "
+                    "theorem has negative controls; it should stay a "
+                    "gate-transducer target until a primitiveity invariant is "
+                    "found."
+                ),
+            }
+        ],
         "warning": (
             "Residue coverage is only a branch-planning artifact.  Covered "
             "residues are proof-facing evidence, not closed Lean theorems."
