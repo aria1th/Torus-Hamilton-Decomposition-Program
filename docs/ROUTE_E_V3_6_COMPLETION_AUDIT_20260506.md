@@ -37,13 +37,16 @@ remaining gaps.
 | B20 boundary residue chains | `RouteEB20.boundaryFirstEvenValue_range`, `RouteEB20.boundaryFirstEvenParam_shift_succ`, `RouteEB20.boundaryCycleFirstEvenTail_step_even`, `RouteEB20.boundaryCycleFirstEvenTail_step_odd`, `RouteEB20.boundaryCycleSpine_to_firstEvenTail`, `RouteEB20.boundaryCycleFirstEvenTail_to_B2Bridge`, `RouteEB20.boundaryFirstOddParam_shift_succ`, `RouteEB20.boundaryCycleFirstOddLane_step_even`, `RouteEB20.boundaryCycleFirstOddLane_step_odd`, `RouteEB20.boundaryCycleB2Bridge_to_firstOddLane`, `RouteEB20.boundaryCycleFirstOddLane_to_BSubOne`, `RouteEB20.boundaryCycleFirstOddBSubOne_to_CRun`, `RouteEB20.boundaryCycleFirstOddCRun_step`, `RouteEB20.boundaryCycleFirstOddCRun_to_ALast`, `RouteEB20.boundarySecondOddParam_shift_succ`, `RouteEB20.boundaryCycleALastBridge_to_secondOddLane`, `RouteEB20.boundaryCycleSecondOddLane_step_even`, `RouteEB20.boundaryCycleSecondOddLane_step_odd`, `RouteEB20.boundaryCycleSecondOddLane_to_final`, `RouteEB20.boundarySecondEvenParam_shift_succ`, `RouteEB20.boundaryCycleSecondOddFinal_to_secondEvenTail`, `RouteEB20.boundaryCycleSecondEvenTail_step_even`, `RouteEB20.boundaryCycleSecondEvenTail_step_odd`, `RouteEB20.boundaryCycleSecondEvenTail_to_zero` | all listed B20 boundary successor segments from zero back to zero are Lean-checked |
 | B20 boundary one-cycle adapter | `RouteEB20.boundaryCycleNodeAt`, `RouteEB20.boundaryCycleNode`, `RouteEB20.boundaryCycleNode_last_to_zero`, `RouteEB20.boundaryCycleNodeAt_succ`, `RouteEB20.boundaryCycleNode_step`, `RouteEB20.boundaryCycleNode_injective`, `RouteEB20.boundaryCycleNode_bijective`, `RouteEB20.boundaryQuotientCycleEnumeration`, `RouteEB20.boundaryQuotient_singleCycle`, `RouteEB20.boundaryQuotient_oneCycleTarget`, `RouteEB20.BoundaryQuotientCycleEnumeration.singleCycle`, `RouteEB20.BoundaryQuotientCycleEnumeration.oneCycleTarget` | combined enumeration, global successor semiconjugacy, injectivity, bijectivity, and one-cycle target closed |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
+| Generic label/indexed all-pair adapter | `RouteEAllPairLabelTraceTarget`, `RouteEAllPairLabelTraceTarget.returnTime_sum`, `RouteEAllPairLabelTraceTarget.toSectionCertificate`, `RouteEAllPairIndexedLabelTraceTarget`, `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate` | reusable proof-facing target added |
 | B20 label-fiber all-pair adapter | `RouteEB20.AllPairLabelTraceTarget`, `RouteEB20.AllPairLabelTraceTarget.returnTime_sum`, `RouteEB20.allPairSectionCertificateOfLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_labelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_labelTraceTarget`, `RouteEB20.allPairBranchTarget_of_labelTraceTargets`, `RouteEB20.hamiltonTarget_of_labelTraceTargets`, `RouteEB20.torusTarget_of_labelTraceTargets`, `RouteEB20.cayleyTarget_of_labelTraceTargets` | CSV/verifier-shaped target added |
 | B20 indexed all-pair adapter | `RouteEB20.AllPairIndexedLabelTraceTarget`, `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`, `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets`, `RouteEB20.hamiltonTarget_of_indexedLabelTraceTargets`, `RouteEB20.torusTarget_of_indexedLabelTraceTargets`, `RouteEB20.cayleyTarget_of_indexedLabelTraceTargets` | row-indexed package target added |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
+| B16 label/indexed all-pair adapter | `RouteEB16.AllPairLabelTraceTarget`, `RouteEB16.AllPairIndexedLabelTraceTarget`, `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`, `RouteEB16.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB16.SymbolicAllPairBranchTarget`, `RouteEB16.FiniteM16AllPairTarget`, `RouteEB16.AllPairBranchTarget`, and Hamilton/torus/Cayley projections from label or indexed targets | proof-facing endpoint split added |
 | R14e count surface | `RouteER14e.routeCounts`, `RouteER14e.counts_sum` | done |
 | R14e time target | `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
-| Stable Lean verification | `lake env lean D5Odd/EvenRouteE.lean`; `lake env lean D5Odd/EvenRouteEM4.lean` | done |
+| R14e label/indexed all-pair adapter | `RouteER14e.AllPairLabelTraceTarget`, `RouteER14e.AllPairIndexedLabelTraceTarget`, `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`, `RouteER14e.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteER14e.SymbolicAllPairBranchTarget`, `RouteER14e.FiniteM14AllPairTarget`, `RouteER14e.AllPairBranchTarget`, and Hamilton/torus/Cayley projections from label or indexed targets | proof-facing endpoint split added |
+| Stable Lean verification | `lake env lean D5Odd/EvenRouteE.lean`; `lake env lean D5Odd/EvenRouteEM4.lean`; `lake build D5Odd.EvenRouteE` | done |
 | Branch closure theorem | No `RouteEAllPairSectionCertificate` instance for B20/B16/R14e yet | open |
 | Final all-even theorem | No new all-even dispatcher theorem from Route E v3.6 branches | open |
 
@@ -52,9 +55,11 @@ remaining gaps.
 ```bash
 lake env lean D5Odd/EvenRouteE.lean
 lake env lean D5Odd/EvenRouteEM4.lean
+lake build D5Odd.EvenRouteE
 ```
 
-Both commands completed successfully after the current Lean edits.
+All three commands completed successfully after the current Lean edits.  The
+build still replays pre-existing `D5Odd.ReturnCycle.lean` linter warnings.
 
 The B20 closure package dumper was also regenerated locally under
 `/tmp/b20_closure_repro` for
@@ -83,12 +88,12 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    `m=20` certificate.
 
 2. No branch currently instantiates `RouteEAllPairSectionCertificate`.  The
-   adapter now includes `RouteEB20.AllPairLabelTraceTarget` and
-   `RouteEB20.AllPairIndexedLabelTraceTarget`, which derive certificate-level
-   time exhaustion from per-label fiber sums and can match the package
-   `idx`/`dst_idx` row format.  Exact all-pair first-return equations,
-   no-early minimality, a section one-cycle proof, and the concrete
-   return-time/label function still need to be supplied.
+   adapter now includes generic label/indexed targets plus B20/B16/R14e
+   branch-local aliases.  These derive certificate-level time exhaustion from
+   per-label fiber sums and can match the package `idx`/`dst_idx` row format.
+   Exact all-pair first-return equations, no-early minimality, a section
+   one-cycle proof, and the concrete return-time/label function still need to be
+   supplied.
 
 3. B20 has the boundary quotient map candidate `RouteEB20.boundaryQuotient`,
    and `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` is now supplied
@@ -99,13 +104,20 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    range lemmas are Lean-checked.  The boundary one-cycle target is now closed
    by `RouteEB20.boundaryQuotient_oneCycleTarget`.
 
-4. B16 has a boundary quotient formula and time target in the bundle, but the
-   boundary formula, formula-induced one-cycle proof, and lane/core time
-   derivation are not Lean proofs.
+4. B16 is promoted to proof-facing closure by
+   `B16_closure_package_20260506.zip` and
+   `RouteE_three_branch_status_package_20260506.zip`.  Lean now has the
+   branch-local all-pair adapter endpoints, but the boundary formula,
+   macro-return one-cycle, boundary insertion compression, all-pair
+   first-return/no-early equations, and finite `m = 16` certificate are not Lean
+   instances.
 
-5. R14e has only transition-count and time-mass evidence at this stage.  The
-   bundle explicitly says a closed node-level boundary formula analogous to
-   B20/B16 remains to be extracted.
+5. R14e is promoted to proof-facing closure by
+   `R14e_closure_package_20260506.zip` and
+   `RouteE_three_branch_status_package_20260506.zip`.  Lean now has the
+   branch-local all-pair adapter endpoints, but the closed boundary formula,
+   insertion distribution, all-pair first-return/no-early equations, and finite
+   `m = 14` two-node macro certificate are not Lean instances.
 
 6. The v3.6 bundle reproduction scripts for the B20 time passes expect CSV
    inputs under `/mnt/data`; the B20 closure package includes the C++ dumper and
@@ -113,10 +125,13 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
 
 ## Next Concrete Slice
 
-The next best Lean implementation slice is the B20 symbolic/finite split:
+The next best Lean implementation slice is concrete branch instantiation:
 
-1. promote the recovered `T_03` pointwise clock formulas and `T_04` stabilized
-   mod-class recurrences to Lean boundary-clock lemmas for `q >= 1`;
-2. add or connect a finite all-pair table certificate for `m=20`;
-3. turn the no-early package into Lean-level hypotheses or lemmas;
-4. instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
+1. instantiate `RouteEB20.AllPairIndexedLabelTraceTarget` or
+   `RouteEB20.AllPairLabelTraceTarget` from the B20 closure package;
+2. instantiate `RouteEB16.AllPairIndexedLabelTraceTarget` from the B16 closure
+   package, keeping symbolic `q > 0` separate from finite `m = 16`;
+3. instantiate `RouteER14e.AllPairIndexedLabelTraceTarget` from the R14e
+   closure package, keeping symbolic `k > 0` separate from finite `m = 14`;
+4. start the R38/symmetric mining slice only after the three proof-facing
+   branches above have concrete Lean certificate instances or precise blockers.

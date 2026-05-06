@@ -216,6 +216,12 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEAllPairSectionCertificate.toHamiltonDecomposition`
 - `RouteEAllPairSectionCertificate.toTorusHamiltonDecomposition`
 - `RouteEAllPairSectionCertificate.toCayleyHamiltonDecomposition`
+- `RouteEAllPairLabelTraceTarget`
+- `RouteEAllPairLabelTraceTarget.returnTime_sum`
+- `RouteEAllPairLabelTraceTarget.toSectionCertificate`
+- `RouteEAllPairIndexedLabelTraceTarget`
+- `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`
+- `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate`
 - `RouteEB20.AllPairLabelTraceTarget`
 - `RouteEB20.AllPairLabelTraceTarget.returnTime_sum`
 - `RouteEB20.allPairSectionCertificateOfLabelTraceTarget`
@@ -239,11 +245,12 @@ This is the root-flat / prefix-count return adapter for the all-pair proof
 route: once a branch supplies exact all-pair first-return equations,
 minimality/no-early witnesses, a one-cycle section map, and time exhaustion,
 the existing `RouteESmallSeamCertificate` machinery carries it to the current
-D5 even Hamilton, torus, and Cayley endpoints.  For the B20 CSV/verifier shape,
-the `AllPairLabelTraceTarget` adapter reduces time exhaustion to per-label
-fiber sums against `RouteEB20.allPairTimeMass`; the indexed variant additionally
-matches the package row format (`idx`, `dst_idx`, `src_label`, `time`) through
-a bijection to `RouteEAllPairSection`.
+D5 even Hamilton, torus, and Cayley endpoints.  The branch-independent
+`RouteEAllPairLabelTraceTarget` adapter reduces time exhaustion to per-label
+fiber sums; the indexed variant matches verifier rows (`idx`, `dst_idx`,
+`src_label`, `time`) through a bijection to `RouteEAllPairSection`.  B20 keeps
+its original branch-local target names, while B16/R14e now reuse the generic
+adapter with their own count vectors and time-mass polynomials.
 
 B16 and R14e branch surfaces are now also named in Lean:
 
@@ -254,6 +261,19 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.allPairTimeMassTarget_sum_eq_total`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
+- `RouteEB16.AllPairLabelTraceTarget`
+- `RouteEB16.AllPairIndexedLabelTraceTarget`
+- `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`
+- `RouteEB16.allPairSectionCertificateOfIndexedLabelTraceTarget`
+- `RouteEB16.SymbolicAllPairBranchTarget`
+- `RouteEB16.FiniteM16AllPairTarget`
+- `RouteEB16.AllPairBranchTarget`
+- `RouteEB16.hamiltonTarget_of_labelTraceTargets`
+- `RouteEB16.torusTarget_of_labelTraceTargets`
+- `RouteEB16.cayleyTarget_of_labelTraceTargets`
+- `RouteEB16.hamiltonTarget_of_indexedLabelTraceTargets`
+- `RouteEB16.torusTarget_of_indexedLabelTraceTargets`
+- `RouteEB16.cayleyTarget_of_indexedLabelTraceTargets`
 - `RouteER14e.modulus`
 - `RouteER14e.counts_sum`
 - `RouteER14e.routeCounts`
@@ -261,13 +281,28 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.allPairTimeMassTarget_sum_eq_total`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
+- `RouteER14e.AllPairLabelTraceTarget`
+- `RouteER14e.AllPairIndexedLabelTraceTarget`
+- `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`
+- `RouteER14e.allPairSectionCertificateOfIndexedLabelTraceTarget`
+- `RouteER14e.SymbolicAllPairBranchTarget`
+- `RouteER14e.FiniteM14AllPairTarget`
+- `RouteER14e.AllPairBranchTarget`
+- `RouteER14e.hamiltonTarget_of_labelTraceTargets`
+- `RouteER14e.torusTarget_of_labelTraceTargets`
+- `RouteER14e.cayleyTarget_of_labelTraceTargets`
+- `RouteER14e.hamiltonTarget_of_indexedLabelTraceTargets`
+- `RouteER14e.torusTarget_of_indexedLabelTraceTargets`
+- `RouteER14e.cayleyTarget_of_indexedLabelTraceTargets`
 
-These theorem names intentionally stop at count admissibility and symbolic
-time-mass target identities.  The label-indexed mass functions package the
-same target polynomials over `RouteEB20.AllPairLabel`; they are not
-first-return theorems.  The bundle still marks the B16 boundary one-cycle
-proof and the R14e boundary formula/one-cycle proof as not yet fully
-symbolic.
+These theorem names still do not instantiate the branch maps.  They provide the
+same proof-facing endpoint as B20: a concrete label or indexed trace target,
+plus the finite exceptional case (`m = 16` or `m = 14`), yields a
+`RouteEAllPairSectionCertificate` and then Hamilton/torus/Cayley endpoints.
+The `RouteE_three_branch_status_package_20260506.zip` package promotes B16 and
+R14e to proof-facing closure on paper/verifier evidence, but the boundary
+quotient derivations, all-pair first-return equations, no-early facts, and
+finite exceptional tables are not yet Lean instances.
 
 The file checks with:
 
@@ -385,15 +420,27 @@ Remaining B20 obligations:
 B16:
 
 - direct count-admissible;
-- boundary quotient formula and time-mass evidence are extracted and
-  sample-verified;
-- residual-core symbolic depth is still behind B20.
+- `B16_closure_package_20260506.zip` and
+  `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
+  boundary quotient, macro-return one-cycle, boundary insertion compression,
+  label-wise time masses, and finite `m = 16` exceptional target;
+- Lean now has B16 label/indexed all-pair adapters and Hamilton/torus/Cayley
+  projections from those targets;
+- remaining Lean work is to derive/instantiate the boundary quotient formula,
+  all-pair first-return/no-early equations, and the finite `m = 16` table.
 
 R14e:
 
 - direct count-admissible;
-- 03/04/34 boundary formulas are extracted and sample-verified;
-- symbolic one-cycle proof and time-mass derivation remain pending.
+- `R14e_closure_package_20260506.zip` and
+  `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
+  boundary quotient, macro-return one-cycle, insertion distribution, label-wise
+  time masses, and finite `m = 14` two-node macro target;
+- Lean now has R14e label/indexed all-pair adapters and Hamilton/torus/Cayley
+  projections from those targets;
+- remaining Lean work is to derive/instantiate the closed boundary formula,
+  insertion distribution, all-pair first-return/no-early equations, and the
+  finite `m = 14` table.
 
 ## Reproduction Caveat
 
@@ -419,7 +466,14 @@ reproduction needs either the missing CSV dumps or a small path/input adapter.
    and `24`, separating entrance lemmas, macro transitions, exit
    classification, and calendar sums.
 
-4. Branch-menu slice:
-   compare B16/R14e branch data against the B20 interfaces and decide whether
-   the final all-even route should be a finite branch menu or a unified direct
-   core-certificate theorem.
+4. B16/R14e instantiation slice:
+   turn the new closure packages into concrete
+   `RouteEB16.AllPairIndexedLabelTraceTarget` and
+   `RouteER14e.AllPairIndexedLabelTraceTarget` instances, separating symbolic
+   `q/k > 0` derivations from finite `m = 16` and `m = 14` table witnesses.
+
+5. Branch-menu slice:
+   after B20/B16/R14e target instances exist, decide whether the final all-even
+   route should be a finite branch menu or a unified direct core-certificate
+   theorem.  The next package-recommended search target is the R38/symmetric
+   family, since the naive symmetric theorem is known false.

@@ -7522,6 +7522,606 @@ theorem cayleyTarget_of_indexedLabelTraceTargets
 
 end RouteEB20
 
+/--
+Branch-independent all-pair label target.  A branch supplies the modulus,
+Route-E counts, and label-wise time mass polynomial; this target supplies the
+actual section map, first-return facts, one-cycle proof, and label fibers.
+-/
+structure RouteEAllPairLabelTraceTarget (m : Nat) [NeZero m]
+    (timeMass : RouteEB20.AllPairLabel → Nat) where
+  data : D5EvenSeamData m
+  sectionReturn :
+    Color → RouteEAllPairSection m → RouteEAllPairSection m
+  returnTime :
+    Color → RouteEAllPairSection m → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] a.1 =
+        (sectionReturn c a).1
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b : RouteEAllPairSection m,
+        (seamRootReturn data c)^[k] a.1 = b.1
+  sectionReturn_single :
+    ∀ c, IsSingleCycleMap (sectionReturn c)
+  labelOf : RouteEAllPairSection m → RouteEB20.AllPairLabel
+  label_time_sum :
+    ∀ c label,
+      ((Finset.univ : Finset (RouteEAllPairSection m)).filter
+          fun a => labelOf a = label).sum (fun a => returnTime c a) =
+        timeMass label
+
+namespace RouteEAllPairLabelTraceTarget
+
+theorem returnTime_sum {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairLabelTraceTarget m timeMass)
+    (timeMass_sum : Finset.univ.sum timeMass = m ^ 4) (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection m => target.returnTime c a) =
+      m ^ 4 := by
+  rw [← timeMass_sum]
+  rw [← Finset.sum_fiberwise
+    (s := (Finset.univ : Finset (RouteEAllPairSection m)))
+    (g := target.labelOf)
+    (f := fun a => target.returnTime c a)]
+  apply Finset.sum_congr rfl
+  intro label _hlabel
+  simpa using target.label_time_sum c label
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairLabelTraceTarget m timeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum timeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m where
+  data := target.data
+  routeCounts := routeCounts
+  sectionReturn := target.sectionReturn
+  returnTime := target.returnTime
+  returnTime_pos := target.returnTime_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  sectionReturn_single := target.sectionReturn_single
+  returnTime_sum := fun c => target.returnTime_sum timeMass_sum c
+
+end RouteEAllPairLabelTraceTarget
+
+/--
+Branch-independent row-indexed version of `RouteEAllPairLabelTraceTarget`.
+The verifier/CSV row index can be transported to the canonical all-pair section
+through the supplied bijection.
+-/
+structure RouteEAllPairIndexedLabelTraceTarget (m : Nat) [NeZero m]
+    (timeMass : RouteEB20.AllPairLabel → Nat) where
+  N : Nat
+  data : D5EvenSeamData m
+  point : Fin N → RouteEAllPairSection m
+  point_bijective : Function.Bijective point
+  indexReturn : Color → Fin N → Fin N
+  returnTime : Color → Fin N → Nat
+  returnTime_pos : ∀ c i, 0 < returnTime c i
+  firstReturn_equation :
+    ∀ c i,
+      (seamRootReturn data c)^[returnTime c i] (point i).1 =
+        (point (indexReturn c i)).1
+  firstReturn_minimal :
+    ∀ c i k, 0 < k → k < returnTime c i →
+      ¬ ∃ j : Fin N,
+        (seamRootReturn data c)^[k] (point i).1 = (point j).1
+  indexReturn_single :
+    ∀ c, IsSingleCycleMap (indexReturn c)
+  labelOfIndex : Fin N → RouteEB20.AllPairLabel
+  label_time_sum :
+    ∀ c label,
+      ((Finset.univ : Finset (Fin N)).filter
+          fun i => labelOfIndex i = label).sum (fun i => returnTime c i) =
+        timeMass label
+
+namespace RouteEAllPairIndexedLabelTraceTarget
+
+noncomputable def pointEquiv {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass) :
+    Fin target.N ≃ RouteEAllPairSection m :=
+  Equiv.ofBijective target.point target.point_bijective
+
+noncomputable def pointIndex {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass)
+    (a : RouteEAllPairSection m) : Fin target.N :=
+  (target.pointEquiv).symm a
+
+@[simp] theorem point_pointIndex {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass)
+    (a : RouteEAllPairSection m) :
+    target.point (target.pointIndex a) = a := by
+  exact target.pointEquiv.apply_symm_apply a
+
+@[simp] theorem pointIndex_point {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass)
+    (i : Fin target.N) :
+    target.pointIndex (target.point i) = i := by
+  exact target.pointEquiv.symm_apply_apply i
+
+noncomputable def toLabelTraceTarget {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass) :
+    RouteEAllPairLabelTraceTarget m timeMass where
+  data := target.data
+  sectionReturn := fun c a =>
+    target.point (target.indexReturn c (target.pointIndex a))
+  returnTime := fun c a => target.returnTime c (target.pointIndex a)
+  returnTime_pos := by
+    intro c a
+    exact target.returnTime_pos c (target.pointIndex a)
+  firstReturn_equation := by
+    intro c a
+    simpa using target.firstReturn_equation c (target.pointIndex a)
+  firstReturn_minimal := by
+    intro c a k hkpos hklt hhit
+    apply target.firstReturn_minimal c (target.pointIndex a) k hkpos
+      (by simpa using hklt)
+    rcases hhit with ⟨b, hb⟩
+    exact ⟨target.pointIndex b, by simpa using hb⟩
+  sectionReturn_single := by
+    intro c
+    exact single_cycle_of_bijective_semiconj
+      (f := target.indexReturn c)
+      (g := fun a =>
+        target.point (target.indexReturn c (target.pointIndex a)))
+      (phi := target.point)
+      target.point_bijective
+      (by
+        intro i
+        simp)
+      (target.indexReturn_single c)
+  labelOf := fun a => target.labelOfIndex (target.pointIndex a)
+  label_time_sum := by
+    intro c label
+    let sIdx : Finset (Fin target.N) :=
+      (Finset.univ.filter fun i => target.labelOfIndex i = label)
+    let sSec : Finset (RouteEAllPairSection m) :=
+      (Finset.univ.filter fun a =>
+        target.labelOfIndex (target.pointIndex a) = label)
+    have hsum :
+        sIdx.sum (fun i => target.returnTime c i) =
+          sSec.sum (fun a => target.returnTime c (target.pointIndex a)) := by
+      exact Finset.sum_bijective
+        (s := sIdx)
+        (t := sSec)
+        (f := fun i => target.returnTime c i)
+        (g := fun a => target.returnTime c (target.pointIndex a))
+        target.point
+        target.point_bijective
+        (by
+          intro i
+          simp [sIdx, sSec])
+        (by
+          intro i _hi
+          simp)
+    calc
+      sSec.sum (fun a => target.returnTime c (target.pointIndex a)) =
+          sIdx.sum (fun i => target.returnTime c i) := hsum.symm
+      _ = timeMass label := target.label_time_sum c label
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {timeMass : RouteEB20.AllPairLabel → Nat}
+    (target : RouteEAllPairIndexedLabelTraceTarget m timeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum timeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m :=
+  target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
+
+end RouteEAllPairIndexedLabelTraceTarget
+
+namespace RouteEB16
+
+instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
+  ⟨by simp [modulus]⟩
+
+abbrev AllPairLabelTraceTarget (q : Nat) :=
+  RouteEAllPairLabelTraceTarget (modulus q) (allPairTimeMassTarget q)
+
+abbrev AllPairIndexedLabelTraceTarget (q : Nat) :=
+  RouteEAllPairIndexedLabelTraceTarget (modulus q) (allPairTimeMassTarget q)
+
+namespace AllPairLabelTraceTarget
+
+theorem returnTime_sum {q : Nat} (target : AllPairLabelTraceTarget q)
+    (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection (modulus q) =>
+          target.returnTime c a) =
+      modulus q ^ 4 :=
+  RouteEAllPairLabelTraceTarget.returnTime_sum target
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q) c
+
+end AllPairLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfLabelTraceTarget (q : Nat)
+    (target : AllPairLabelTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  target.toSectionCertificate (routeCounts q)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
+
+namespace AllPairIndexedLabelTraceTarget
+
+noncomputable def toLabelTraceTarget {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q) :
+    AllPairLabelTraceTarget q :=
+  RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget target
+
+end AllPairIndexedLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfIndexedLabelTraceTarget
+    (q : Nat) (target : AllPairIndexedLabelTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  target.toSectionCertificate (routeCounts q)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
+
+def SymbolicAllPairBranchTarget : Prop :=
+  ∀ q, 0 < q → Nonempty (RouteEAllPairSectionCertificate (modulus q))
+
+def FiniteM16AllPairTarget : Prop :=
+  Nonempty (RouteEAllPairSectionCertificate (modulus 0))
+
+def AllPairBranchTarget : Prop :=
+  ∀ q, Nonempty (RouteEAllPairSectionCertificate (modulus q))
+
+theorem symbolicAllPairBranchTarget_of_labelTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q)) :
+    SymbolicAllPairBranchTarget := by
+  intro q hq
+  rcases h q hq with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget q target⟩
+
+theorem finiteM16AllPairTarget_of_labelTraceTarget
+    (h : Nonempty (AllPairLabelTraceTarget 0)) :
+    FiniteM16AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget 0 target⟩
+
+theorem allPairBranchTarget_of_labelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairLabelTraceTarget 0)) :
+    AllPairBranchTarget := by
+  intro q
+  cases q with
+  | zero =>
+      exact finiteM16AllPairTarget_of_labelTraceTarget hm16
+  | succ q =>
+      exact symbolicAllPairBranchTarget_of_labelTraceTarget hsymbolic
+        (Nat.succ q) (Nat.succ_pos q)
+
+theorem symbolicAllPairBranchTarget_of_indexedLabelTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro q hq
+      rcases h q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM16AllPairTarget_of_indexedLabelTraceTarget
+    (h : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    FiniteM16AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM16AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro q hq
+      rcases hsymbolic q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm16 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem allPairBranchTarget_of_symbolic_and_m16
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm16 : FiniteM16AllPairTarget) :
+    AllPairBranchTarget := by
+  intro q
+  cases q with
+  | zero =>
+      simpa [FiniteM16AllPairTarget] using hm16
+  | succ q =>
+      exact hsymbolic (Nat.succ q) (Nat.succ_pos q)
+
+theorem hamiltonTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toHamiltonDecomposition⟩
+
+theorem torusTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toTorusHamiltonDecomposition⟩
+
+theorem cayleyTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toCayleyHamiltonDecomposition⟩
+
+theorem hamiltonTarget_of_symbolic_and_m16
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm16 : FiniteM16AllPairTarget) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m16 hsymbolic hm16) q
+
+theorem torusTarget_of_symbolic_and_m16
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm16 : FiniteM16AllPairTarget) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m16 hsymbolic hm16) q
+
+theorem cayleyTarget_of_symbolic_and_m16
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm16 : FiniteM16AllPairTarget) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m16 hsymbolic hm16) q
+
+theorem hamiltonTarget_of_labelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm16) q
+
+theorem torusTarget_of_labelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm16) q
+
+theorem cayleyTarget_of_labelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm16) q
+
+theorem hamiltonTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm16) q
+
+theorem torusTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm16) q
+
+theorem cayleyTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
+    (hm16 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm16) q
+
+end RouteEB16
+
+namespace RouteER14e
+
+instance modulus_neZero (k : Nat) : NeZero (modulus k) :=
+  ⟨by simp [modulus]⟩
+
+abbrev AllPairLabelTraceTarget (k : Nat) :=
+  RouteEAllPairLabelTraceTarget (modulus k) (allPairTimeMassTarget k)
+
+abbrev AllPairIndexedLabelTraceTarget (k : Nat) :=
+  RouteEAllPairIndexedLabelTraceTarget (modulus k) (allPairTimeMassTarget k)
+
+namespace AllPairLabelTraceTarget
+
+theorem returnTime_sum {k : Nat} (target : AllPairLabelTraceTarget k)
+    (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection (modulus k) =>
+          target.returnTime c a) =
+      modulus k ^ 4 :=
+  RouteEAllPairLabelTraceTarget.returnTime_sum target
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k) c
+
+end AllPairLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfLabelTraceTarget (k : Nat)
+    (target : AllPairLabelTraceTarget k) :
+    RouteEAllPairSectionCertificate (modulus k) :=
+  target.toSectionCertificate (routeCounts k)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
+
+namespace AllPairIndexedLabelTraceTarget
+
+noncomputable def toLabelTraceTarget {k : Nat}
+    (target : AllPairIndexedLabelTraceTarget k) :
+    AllPairLabelTraceTarget k :=
+  RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget target
+
+end AllPairIndexedLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfIndexedLabelTraceTarget
+    (k : Nat) (target : AllPairIndexedLabelTraceTarget k) :
+    RouteEAllPairSectionCertificate (modulus k) :=
+  target.toSectionCertificate (routeCounts k)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
+
+def SymbolicAllPairBranchTarget : Prop :=
+  ∀ k, 0 < k → Nonempty (RouteEAllPairSectionCertificate (modulus k))
+
+def FiniteM14AllPairTarget : Prop :=
+  Nonempty (RouteEAllPairSectionCertificate (modulus 0))
+
+def AllPairBranchTarget : Prop :=
+  ∀ k, Nonempty (RouteEAllPairSectionCertificate (modulus k))
+
+theorem symbolicAllPairBranchTarget_of_labelTraceTarget
+    (h : ∀ k, 0 < k → Nonempty (AllPairLabelTraceTarget k)) :
+    SymbolicAllPairBranchTarget := by
+  intro k hk
+  rcases h k hk with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget k target⟩
+
+theorem finiteM14AllPairTarget_of_labelTraceTarget
+    (h : Nonempty (AllPairLabelTraceTarget 0)) :
+    FiniteM14AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget 0 target⟩
+
+theorem allPairBranchTarget_of_labelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairLabelTraceTarget 0)) :
+    AllPairBranchTarget := by
+  intro k
+  cases k with
+  | zero =>
+      exact finiteM14AllPairTarget_of_labelTraceTarget hm14
+  | succ k =>
+      exact symbolicAllPairBranchTarget_of_labelTraceTarget hsymbolic
+        (Nat.succ k) (Nat.succ_pos k)
+
+theorem symbolicAllPairBranchTarget_of_indexedLabelTraceTarget
+    (h : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro k hk
+      rcases h k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM14AllPairTarget_of_indexedLabelTraceTarget
+    (h : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    FiniteM14AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM14AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro k hk
+      rcases hsymbolic k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm14 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem allPairBranchTarget_of_symbolic_and_m14
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm14 : FiniteM14AllPairTarget) :
+    AllPairBranchTarget := by
+  intro k
+  cases k with
+  | zero =>
+      simpa [FiniteM14AllPairTarget] using hm14
+  | succ k =>
+      exact hsymbolic (Nat.succ k) (Nat.succ_pos k)
+
+theorem hamiltonTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (k : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus k)) := by
+  rcases h k with ⟨cert⟩
+  exact ⟨cert.toHamiltonDecomposition⟩
+
+theorem torusTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (k : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus k)) := by
+  rcases h k with ⟨cert⟩
+  exact ⟨cert.toTorusHamiltonDecomposition⟩
+
+theorem cayleyTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (k : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus k)) := by
+  rcases h k with ⟨cert⟩
+  exact ⟨cert.toCayleyHamiltonDecomposition⟩
+
+theorem hamiltonTarget_of_symbolic_and_m14
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm14 : FiniteM14AllPairTarget) (k : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus k)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m14 hsymbolic hm14) k
+
+theorem torusTarget_of_symbolic_and_m14
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm14 : FiniteM14AllPairTarget) (k : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus k)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m14 hsymbolic hm14) k
+
+theorem cayleyTarget_of_symbolic_and_m14
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm14 : FiniteM14AllPairTarget) (k : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus k)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m14 hsymbolic hm14) k
+
+theorem hamiltonTarget_of_labelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus k)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm14) k
+
+theorem torusTarget_of_labelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus k)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm14) k
+
+theorem cayleyTarget_of_labelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus k)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_labelTraceTargets hsymbolic hm14) k
+
+theorem hamiltonTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus k)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm14) k
+
+theorem torusTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus k)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm14) k
+
+theorem cayleyTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k))
+    (hm14 : Nonempty (AllPairIndexedLabelTraceTarget 0)) (k : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus k)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_indexedLabelTraceTargets hsymbolic hm14) k
+
+end RouteER14e
+
 def D5EvenRouteEAllLargeEvenTarget : Prop :=
   ∀ (m : Nat) [NeZero m], Even m → 6 ≤ m →
     Nonempty (RouteESmallSeamCertificate m)
