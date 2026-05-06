@@ -1,0 +1,23 @@
+{
+  "bad_examples": [],
+  "ok": true,
+  "schema": "routeE_r42_allpair_time_fit_verification_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_time_fit_summary.json",
+  "summary": {
+    "dst_count_fits_verified": true,
+    "dst_time_fits_verified": true,
+    "label_count_fits_verified": true,
+    "label_time_fits_verified": true,
+    "sample_q_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "time_total_is_m4_polynomial": true
+  },
+  "warning": "This verifies the committed time-fit artifact. It does not regenerate CSV witnesses and does not prove no-early returns."
+}

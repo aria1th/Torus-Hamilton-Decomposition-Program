@@ -54,6 +54,10 @@ FILES = {
     "r42_open_tail_suggestions": ROOT
     / "certs"
     / "routeE_r42_open_tail_formula_suggestions.json",
+    "r42_allpair_time_fits": ROOT / "certs" / "routeE_r42_allpair_time_fit_summary.json",
+    "r42_allpair_time_verification": ROOT
+    / "certs"
+    / "routeE_r42_allpair_time_fit_verification.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -105,6 +109,8 @@ def build_audit() -> dict[str, Any]:
         FILES["r42_block_regeneration_verification"]
     )
     r42_open_tail_suggestions = load_json(FILES["r42_open_tail_suggestions"])
+    r42_allpair_time_fits = load_json(FILES["r42_allpair_time_fits"])
+    r42_allpair_time_verification = load_json(FILES["r42_allpair_time_verification"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -415,6 +421,27 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_r42_open_tail_formula_suggestions.json",
+        ),
+        item(
+            "R42 all-pair time polynomial fits are recorded and verified",
+            r42_allpair_time_fits.get("schema")
+            == "routeE_r42_allpair_time_fit_summary_v1"
+            and r42_allpair_time_fits.get("summary", {}).get("all_samples_ok")
+            is True
+            and r42_allpair_time_fits.get("summary", {}).get("all_single_cycle")
+            is True
+            and r42_allpair_time_fits.get("summary", {}).get("all_time_total_ok")
+            is True
+            and r42_allpair_time_fits.get("summary", {}).get("time_total_degree")
+            == 4
+            and r42_allpair_time_verification.get("schema")
+            == "routeE_r42_allpair_time_fit_verification_v1"
+            and r42_allpair_time_verification.get("ok") is True
+            and r42_allpair_time_verification.get("summary", {}).get(
+                "time_total_is_m4_polynomial"
+            )
+            is True,
+            "certs/routeE_r42_allpair_time_fit_summary.json and certs/routeE_r42_allpair_time_fit_verification.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

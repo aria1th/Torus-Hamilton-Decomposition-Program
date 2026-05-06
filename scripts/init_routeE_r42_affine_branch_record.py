@@ -31,6 +31,10 @@ DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
 DEFAULT_OPEN_TAIL_SUGGESTIONS = (
     ROOT / "certs" / "routeE_r42_open_tail_formula_suggestions.json"
 )
+DEFAULT_ALLPAIR_TIME_FITS = ROOT / "certs" / "routeE_r42_allpair_time_fit_summary.json"
+DEFAULT_ALLPAIR_TIME_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_allpair_time_fit_verification.json"
+)
 DEFAULT_COLOR_SIGN_SCREEN = ROOT / "certs" / "routeE_color_sign_screen_audit.json"
 
 
@@ -46,6 +50,8 @@ def build_record(
     boundary_verification_path: Path,
     block_regeneration_verification_path: Path,
     open_tail_suggestions_path: Path,
+    allpair_time_fits_path: Path,
+    allpair_time_verification_path: Path,
     color_sign_screen_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
@@ -71,6 +77,14 @@ def build_record(
     open_tail_suggestions = (
         load_json(open_tail_suggestions_path)
         if open_tail_suggestions_path.exists()
+        else {}
+    )
+    allpair_time_fits = (
+        load_json(allpair_time_fits_path) if allpair_time_fits_path.exists() else {}
+    )
+    allpair_time_verification = (
+        load_json(allpair_time_verification_path)
+        if allpair_time_verification_path.exists()
         else {}
     )
     color_sign_screen = (
@@ -113,6 +127,8 @@ def build_record(
                 block_regeneration_verification_path
             ),
             "open_tail_suggestions": str(open_tail_suggestions_path),
+            "allpair_time_fits": str(allpair_time_fits_path),
+            "allpair_time_verification": str(allpair_time_verification_path),
             "color_sign_screen": str(color_sign_screen_path),
             "typeA_coverage": str(coverage_path),
         },
@@ -188,6 +204,15 @@ def build_record(
             "schema": open_tail_suggestions.get("schema"),
             "summary": open_tail_suggestions.get("summary"),
         },
+        "allpair_time_fit_summary": {
+            "schema": allpair_time_fits.get("schema"),
+            "summary": allpair_time_fits.get("summary"),
+        },
+        "allpair_time_fit_verification_summary": {
+            "schema": allpair_time_verification.get("schema"),
+            "ok": allpair_time_verification.get("ok"),
+            "summary": allpair_time_verification.get("summary"),
+        },
         "color_sign_screen_summary": {
             "schema": color_sign_screen.get("schema"),
             "r42_record_count": len(r42_color_sign_records),
@@ -243,6 +268,12 @@ def main() -> None:
     parser.add_argument(
         "--open-tail-suggestions", type=Path, default=DEFAULT_OPEN_TAIL_SUGGESTIONS
     )
+    parser.add_argument("--allpair-time-fits", type=Path, default=DEFAULT_ALLPAIR_TIME_FITS)
+    parser.add_argument(
+        "--allpair-time-verification",
+        type=Path,
+        default=DEFAULT_ALLPAIR_TIME_VERIFICATION,
+    )
     parser.add_argument("--color-sign-screen", type=Path, default=DEFAULT_COLOR_SIGN_SCREEN)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -255,6 +286,8 @@ def main() -> None:
         args.boundary_verification,
         args.block_regeneration_verification,
         args.open_tail_suggestions,
+        args.allpair_time_fits,
+        args.allpair_time_verification,
         args.color_sign_screen,
     )
     print(

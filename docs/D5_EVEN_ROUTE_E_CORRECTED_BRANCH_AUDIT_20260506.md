@@ -44,6 +44,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..6 regenerated |
 | Store R42 open tail formulas in compact summary | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, interval-count tails recorded |
 | Record remaining R42 open tail fields | `scripts/suggest_routeE_r42_open_tail_formulas.py`, `certs/routeE_r42_open_tail_formula_suggestions.json` | done, only q=1 boundary exception remains |
+| Preserve R42 all-pair time polynomial evidence | `scripts/summarize_routeE_r42_allpair_time_fits.py`, `certs/routeE_r42_allpair_time_fit_summary.json` | done, q=0..6 |
+| Verify R42 all-pair time fit artifact | `scripts/verify_routeE_r42_allpair_time_fits.py`, `certs/routeE_r42_allpair_time_fit_verification.json` | done |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -409,6 +411,33 @@ block 22: condition_interval_count = 2*q + 2   for q >= 4
 
 The two single-sample fields are the q=1 terminal affine boundary exception
 already covered by the q>=2 tail formulas in the compact summary.
+
+R42 all-pair time polynomial evidence:
+
+```bash
+python3 scripts/summarize_routeE_r42_allpair_time_fits.py \
+  --q-values 0:6 \
+  --json-out certs/routeE_r42_allpair_time_fit_summary.json
+
+python3 scripts/verify_routeE_r42_allpair_time_fits.py \
+  --json-out certs/routeE_r42_allpair_time_fit_verification.json
+```
+
+Result:
+
+```text
+all_samples_ok True
+all_single_cycle True
+all_time_total_ok True
+time_total_formula 3111696 + 14224896*q + 24385536*q^2 + 18579456*q^3 + 5308416*q^4
+time_total_is_m4_polynomial True
+```
+
+The total formula is exactly `(48*q+42)^4`.  The artifact also records and
+checks polynomial fits for source-label counts, source-label time totals,
+destination-label counts, and destination-label time totals.  This supports the
+R42 time-exhaustion branch plan, but it still does not prove pointwise
+first-return/no-early for all q.
 
 R38 symmetric recheck:
 

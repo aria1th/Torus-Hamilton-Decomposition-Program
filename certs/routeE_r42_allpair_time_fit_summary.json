@@ -1,0 +1,1003 @@
+{
+  "branch": "R42",
+  "family": "m = 48*q + 42, x = z = 6*q + 5",
+  "fits": {
+    "dst_count": {
+      "01": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "02": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "03": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "04": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "12": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "13": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "14": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "23": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "24": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "34": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "Z": {
+        "coefficients_ascending": [
+          "1"
+        ],
+        "degree": 0,
+        "formula": "1",
+        "status": "polynomial_fit"
+      }
+    },
+    "dst_time": {
+      "01": {
+        "coefficients_ascending": [
+          "1944",
+          "7080",
+          "8576",
+          "3456"
+        ],
+        "degree": 3,
+        "formula": "1944 + 7080*q + 8576*q^2 + 3456*q^3",
+        "status": "polynomial_fit"
+      },
+      "02": {
+        "coefficients_ascending": [
+          "1111719",
+          "5144784",
+          "8927424",
+          "6884352",
+          "1990656"
+        ],
+        "degree": 4,
+        "formula": "1111719 + 5144784*q + 8927424*q^2 + 6884352*q^3 + 1990656*q^4",
+        "status": "polynomial_fit"
+      },
+      "03": {
+        "coefficients_ascending": [
+          "756",
+          "1732",
+          "992"
+        ],
+        "degree": 2,
+        "formula": "756 + 1732*q + 992*q^2",
+        "status": "polynomial_fit"
+      },
+      "04": {
+        "coefficients_ascending": [
+          "396882",
+          "1805496",
+          "3079728",
+          "2334528",
+          "663552"
+        ],
+        "degree": 4,
+        "formula": "396882 + 1805496*q + 3079728*q^2 + 2334528*q^3 + 663552*q^4",
+        "status": "polynomial_fit"
+      },
+      "12": {
+        "coefficients_ascending": [
+          "1722",
+          "3984",
+          "2304"
+        ],
+        "degree": 2,
+        "formula": "1722 + 3984*q + 2304*q^2",
+        "status": "polynomial_fit"
+      },
+      "13": {
+        "coefficients_ascending": [
+          "384380",
+          "1762236",
+          "3029984",
+          "2315520",
+          "663552"
+        ],
+        "degree": 4,
+        "formula": "384380 + 1762236*q + 3029984*q^2 + 2315520*q^3 + 663552*q^4",
+        "status": "polynomial_fit"
+      },
+      "14": {
+        "coefficients_ascending": [
+          "18081",
+          "62496",
+          "72000",
+          "27648"
+        ],
+        "degree": 3,
+        "formula": "18081 + 62496*q + 72000*q^2 + 27648*q^3",
+        "status": "polynomial_fit"
+      },
+      "23": {
+        "coefficients_ascending": [
+          "1138683",
+          "5238096",
+          "9035136",
+          "6925824",
+          "1990656"
+        ],
+        "degree": 4,
+        "formula": "1138683 + 5238096*q + 9035136*q^2 + 6925824*q^3 + 1990656*q^4",
+        "status": "polynomial_fit"
+      },
+      "24": {
+        "coefficients_ascending": [
+          "36162",
+          "124992",
+          "144000",
+          "55296"
+        ],
+        "degree": 3,
+        "formula": "36162 + 124992*q + 144000*q^2 + 55296*q^3",
+        "status": "polynomial_fit"
+      },
+      "34": {
+        "coefficients_ascending": [
+          "21360",
+          "73992",
+          "85392",
+          "32832"
+        ],
+        "degree": 3,
+        "formula": "21360 + 73992*q + 85392*q^2 + 32832*q^3",
+        "status": "polynomial_fit"
+      },
+      "Z": {
+        "coefficients_ascending": [
+          "7",
+          "8"
+        ],
+        "degree": 1,
+        "formula": "7 + 8*q",
+        "status": "polynomial_fit"
+      }
+    },
+    "label_count": {
+      "01": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "02": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "03": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "04": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "12": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "13": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "14": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "23": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "24": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "34": {
+        "coefficients_ascending": [
+          "41",
+          "48"
+        ],
+        "degree": 1,
+        "formula": "41 + 48*q",
+        "status": "polynomial_fit"
+      },
+      "Z": {
+        "coefficients_ascending": [
+          "1"
+        ],
+        "degree": 0,
+        "formula": "1",
+        "status": "polynomial_fit"
+      }
+    },
+    "label_time": {
+      "01": {
+        "coefficients_ascending": [
+          "245",
+          "560",
+          "320"
+        ],
+        "degree": 2,
+        "formula": "245 + 560*q + 320*q^2",
+        "status": "polynomial_fit"
+      },
+      "02": {
+        "coefficients_ascending": [
+          "36162",
+          "124992",
+          "144000",
+          "55296"
+        ],
+        "degree": 3,
+        "formula": "36162 + 124992*q + 144000*q^2 + 55296*q^3",
+        "status": "polynomial_fit"
+      },
+      "03": {
+        "coefficients_ascending": [
+          "16332",
+          "55836",
+          "63648",
+          "24192"
+        ],
+        "degree": 3,
+        "formula": "16332 + 55836*q + 63648*q^2 + 24192*q^3",
+        "status": "polynomial_fit"
+      },
+      "04": {
+        "coefficients_ascending": [
+          "16700",
+          "58006",
+          "67160",
+          "25920"
+        ],
+        "degree": 3,
+        "formula": "16700 + 58006*q + 67160*q^2 + 25920*q^3",
+        "status": "polynomial_fit"
+      },
+      "12": {
+        "coefficients_ascending": [
+          "1703",
+          "3960",
+          "2304"
+        ],
+        "degree": 2,
+        "formula": "1703 + 3960*q + 2304*q^2",
+        "status": "polynomial_fit"
+      },
+      "13": {
+        "coefficients_ascending": [
+          "740",
+          "1716",
+          "992"
+        ],
+        "degree": 2,
+        "formula": "740 + 1716*q + 992*q^2",
+        "status": "polynomial_fit"
+      },
+      "14": {
+        "coefficients_ascending": [
+          "759885",
+          "3493776",
+          "6024384",
+          "4617216",
+          "1327104"
+        ],
+        "degree": 4,
+        "formula": "759885 + 3493776*q + 6024384*q^2 + 4617216*q^3 + 1327104*q^4",
+        "status": "polynomial_fit"
+      },
+      "23": {
+        "coefficients_ascending": [
+          "1137797",
+          "5236080",
+          "9033984",
+          "6925824",
+          "1990656"
+        ],
+        "degree": 4,
+        "formula": "1137797 + 5236080*q + 9033984*q^2 + 6925824*q^3 + 1990656*q^4",
+        "status": "polynomial_fit"
+      },
+      "24": {
+        "coefficients_ascending": [
+          "1120560",
+          "5175552",
+          "8963136",
+          "6898176",
+          "1990656"
+        ],
+        "degree": 4,
+        "formula": "1120560 + 5175552*q + 8963136*q^2 + 6898176*q^3 + 1990656*q^4",
+        "status": "polynomial_fit"
+      },
+      "34": {
+        "coefficients_ascending": [
+          "21547",
+          "74394",
+          "85608",
+          "32832"
+        ],
+        "degree": 3,
+        "formula": "21547 + 74394*q + 85608*q^2 + 32832*q^3",
+        "status": "polynomial_fit"
+      },
+      "Z": {
+        "coefficients_ascending": [
+          "25",
+          "24"
+        ],
+        "degree": 1,
+        "formula": "25 + 24*q",
+        "status": "polynomial_fit"
+      }
+    },
+    "time_total": {
+      "coefficients_ascending": [
+        "3111696",
+        "14224896",
+        "24385536",
+        "18579456",
+        "5308416"
+      ],
+      "degree": 4,
+      "formula": "3111696 + 14224896*q + 24385536*q^2 + 18579456*q^3 + 5308416*q^4",
+      "status": "polynomial_fit"
+    }
+  },
+  "raw_csv_preserved": false,
+  "samples": [
+    {
+      "allpair_nodes": 411,
+      "cycle_lengths": [
+        411
+      ],
+      "dst_count": {
+        "01": 41,
+        "02": 41,
+        "03": 41,
+        "04": 41,
+        "12": 41,
+        "13": 41,
+        "14": 41,
+        "23": 41,
+        "24": 41,
+        "34": 41,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 1944,
+        "02": 1111719,
+        "03": 756,
+        "04": 396882,
+        "12": 1722,
+        "13": 384380,
+        "14": 18081,
+        "23": 1138683,
+        "24": 36162,
+        "34": 21360,
+        "Z": 7
+      },
+      "expected_nodes": 411,
+      "label_count": {
+        "01": 41,
+        "02": 41,
+        "03": 41,
+        "04": 41,
+        "12": 41,
+        "13": 41,
+        "14": 41,
+        "23": 41,
+        "24": 41,
+        "34": 41,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 245,
+        "02": 36162,
+        "03": 16332,
+        "04": 16700,
+        "12": 1703,
+        "13": 740,
+        "14": 759885,
+        "23": 1137797,
+        "24": 1120560,
+        "34": 21547,
+        "Z": 25
+      },
+      "m": 42,
+      "m4": 3111696,
+      "max_events": 9916,
+      "max_return_time": 72257,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 0,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+      ],
+      "time_total": 3111696,
+      "time_total_ok": true,
+      "x": 5,
+      "z": 5
+    },
+    {
+      "allpair_nodes": 891,
+      "cycle_lengths": [
+        891
+      ],
+      "dst_count": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 21056,
+        "02": 24058935,
+        "03": 3480,
+        "04": 8280186,
+        "12": 8010,
+        "13": 8155672,
+        "14": 180225,
+        "23": 24328395,
+        "24": 360450,
+        "34": 213576,
+        "Z": 15
+      },
+      "expected_nodes": 891,
+      "label_count": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 1125,
+        "02": 360450,
+        "03": 160008,
+        "04": 167786,
+        "12": 7967,
+        "13": 3448,
+        "14": 16222365,
+        "23": 24324341,
+        "24": 24148080,
+        "34": 214381,
+        "Z": 49
+      },
+      "m": 90,
+      "m4": 65610000,
+      "max_events": 47164,
+      "max_return_time": 720761,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 1,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+      ],
+      "time_total": 65610000,
+      "time_total_ok": true,
+      "x": 11,
+      "z": 11
+    },
+    {
+      "allpair_nodes": 1371,
+      "cycle_lengths": [
+        1371
+      ],
+      "dst_count": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 78056,
+        "02": 134036295,
+        "03": 8188,
+        "04": 45619842,
+        "12": 18906,
+        "13": 45169780,
+        "14": 652257,
+        "23": 135012507,
+        "24": 1304514,
+        "34": 773568,
+        "Z": 23
+      },
+      "expected_nodes": 1371,
+      "label_count": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 2645,
+        "02": 1304514,
+        "03": 576132,
+        "04": 608712,
+        "12": 18839,
+        "13": 8140,
+        "14": 90016365,
+        "23": 135002981,
+        "24": 134360112,
+        "34": 775423,
+        "Z": 73
+      },
+      "m": 138,
+      "m4": 362673936,
+      "max_events": 112060,
+      "max_return_time": 2608817,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 2,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+      ],
+      "time_total": 362673936,
+      "time_total_ok": true,
+      "x": 17,
+      "z": 17
+    },
+    {
+      "allpair_nodes": 1851,
+      "cycle_lengths": [
+        1851
+      ],
+      "dst_count": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 193680,
+        "02": 444013527,
+        "03": 14880,
+        "04": 150310890,
+        "12": 34410,
+        "13": 149207696,
+        "14": 1600065,
+        "23": 446409579,
+        "24": 3200130,
+        "34": 1898328,
+        "Z": 31
+      },
+      "expected_nodes": 1851,
+      "label_count": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 4805,
+        "02": 3200130,
+        "03": 1409856,
+        "04": 1494998,
+        "12": 34319,
+        "13": 14816,
+        "14": 297620925,
+        "23": 446392277,
+        "24": 444809328,
+        "34": 1901665,
+        "Z": 97
+      },
+      "m": 186,
+      "m4": 1196883216,
+      "max_events": 204604,
+      "max_return_time": 6399977,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 3,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+      ],
+      "time_total": 1196883216,
+      "time_total_ok": true,
+      "x": 23,
+      "z": 23
+    },
+    {
+      "allpair_nodes": 2331,
+      "cycle_lengths": [
+        2331
+      ],
+      "dst_count": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 388664,
+        "02": 1114736103,
+        "03": 23556,
+        "04": 376173618,
+        "12": 54522,
+        "13": 373975660,
+        "14": 3189537,
+        "23": 1119513915,
+        "24": 6379074,
+        "34": 3784848,
+        "Z": 39
+      },
+      "expected_nodes": 2331,
+      "label_count": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 7605,
+        "02": 6379074,
+        "03": 2806332,
+        "04": 2982164,
+        "12": 54407,
+        "13": 23476,
+        "14": 746365581,
+        "23": 1119486533,
+        "24": 1116324144,
+        "34": 3790099,
+        "Z": 121
+      },
+      "m": 234,
+      "m4": 2998219536,
+      "max_events": 324796,
+      "max_return_time": 12757793,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 4,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+      ],
+      "time_total": 2998219536,
+      "time_total_ok": true,
+      "x": 29,
+      "z": 29
+    },
+    {
+      "allpair_nodes": 2811,
+      "cycle_lengths": [
+        2811
+      ],
+      "dst_count": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 683744,
+        "02": 2354725239,
+        "03": 34216,
+        "04": 792953562,
+        "12": 79242,
+        "13": 789105160,
+        "14": 5586561,
+        "23": 2363095563,
+        "24": 11173122,
+        "34": 6630120,
+        "Z": 47
+      },
+      "expected_nodes": 2811,
+      "label_count": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 11045,
+        "02": 11173122,
+        "03": 4910712,
+        "04": 5225730,
+        "12": 79103,
+        "13": 34120,
+        "14": 1575430365,
+        "23": 2363055797,
+        "24": 2357508720,
+        "34": 6637717,
+        "Z": 145
+      },
+      "m": 282,
+      "m4": 6324066576,
+      "max_events": 472636,
+      "max_return_time": 22345817,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 5,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q5.csv N=2811 total=6324066576 m4=6324066576 max_events=472636"
+      ],
+      "time_total": 6324066576,
+      "time_total_ok": true,
+      "x": 35,
+      "z": 35
+    },
+    {
+      "allpair_nodes": 3291,
+      "cycle_lengths": [
+        3291
+      ],
+      "dst_count": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "dst_time": {
+        "01": 1099656,
+        "02": 4420277895,
+        "03": 46860,
+        "04": 1486321506,
+        "12": 108570,
+        "13": 1480152932,
+        "14": 8957025,
+        "23": 4433700315,
+        "24": 17914050,
+        "34": 10631136,
+        "Z": 55
+      },
+      "expected_nodes": 3291,
+      "label_count": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "label_time": {
+        "01": 15125,
+        "02": 17914050,
+        "03": 7868148,
+        "04": 8381216,
+        "12": 108407,
+        "13": 46748,
+        "14": 2955845805,
+        "23": 4433645861,
+        "24": 4424742960,
+        "34": 10641511,
+        "Z": 169
+      },
+      "m": 330,
+      "m4": 11859210000,
+      "max_events": 648124,
+      "max_return_time": 35827601,
+      "node_count_ok": true,
+      "ok": true,
+      "q": 6,
+      "single_cycle": true,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-allpair-time-uv3aoh7r/r42_allpair_q6.csv N=3291 total=11859210000 m4=11859210000 max_events=648124"
+      ],
+      "time_total": 11859210000,
+      "time_total_ok": true,
+      "x": 41,
+      "z": 41
+    }
+  ],
+  "schema": "routeE_r42_allpair_time_fit_summary_v1",
+  "source_checker": "scripts/routeE_allpair_cpp_v1_2.cpp",
+  "summary": {
+    "all_node_count_ok": true,
+    "all_samples_ok": true,
+    "all_single_cycle": true,
+    "all_time_total_ok": true,
+    "q_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "time_total_degree": 4,
+    "time_total_formula": "3111696 + 14224896*q + 24385536*q^2 + 18579456*q^3 + 5308416*q^4"
+  },
+  "warning": "Polynomial fits are sample-derived.  They support the R42 proof plan but do not replace the pointwise first-return/no-early proof."
+}
