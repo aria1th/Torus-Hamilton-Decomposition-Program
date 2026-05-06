@@ -222,6 +222,12 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEB20.symbolicAllPairBranchTarget_of_labelTraceTarget`
 - `RouteEB20.finiteM20AllPairTarget_of_labelTraceTarget`
 - `RouteEB20.allPairBranchTarget_of_labelTraceTargets`
+- `RouteEB20.AllPairIndexedLabelTraceTarget`
+- `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`
+- `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`
+- `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`
+- `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`
+- `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets`
 
 This is the root-flat / prefix-count return adapter for the all-pair proof
 route: once a branch supplies exact all-pair first-return equations,
@@ -229,7 +235,9 @@ minimality/no-early witnesses, a one-cycle section map, and time exhaustion,
 the existing `RouteESmallSeamCertificate` machinery carries it to the current
 D5 even Hamilton, torus, and Cayley endpoints.  For the B20 CSV/verifier shape,
 the `AllPairLabelTraceTarget` adapter reduces time exhaustion to per-label
-fiber sums against `RouteEB20.allPairTimeMass`.
+fiber sums against `RouteEB20.allPairTimeMass`; the indexed variant additionally
+matches the package row format (`idx`, `dst_idx`, `src_label`, `time`) through
+a bijection to `RouteEAllPairSection`.
 
 B16 and R14e branch surfaces are now also named in Lean:
 
@@ -339,8 +347,9 @@ Closed or proof-facing in the bundle:
   `RouteEB20.FiniteM20AllPairTarget`,
   `RouteEB20.AllPairBranchTarget`,
   `RouteEB20.allPairBranchTarget_of_symbolic_and_m20`, the
-  `RouteEB20.AllPairLabelTraceTarget` adapters, and the Hamilton/Torus/Cayley
-  projection theorems from that branch target.
+  `RouteEB20.AllPairLabelTraceTarget` and
+  `RouteEB20.AllPairIndexedLabelTraceTarget` adapters, and the Hamilton/Torus/
+  Cayley projection theorems from that branch target.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
@@ -361,8 +370,9 @@ Remaining B20 obligations:
   `RouteEB20.BoundaryClockPointwiseFormulaTarget` to boundary-clock proofs;
 - add or connect the finite `m = 20` all-pair table certificate;
 - turn the no-early package into Lean-level hypotheses or lemmas;
-- instantiate `RouteEB20.AllPairLabelTraceTarget` for the B20 section map,
-  which then yields `RouteEAllPairSectionCertificate`.
+- instantiate `RouteEB20.AllPairIndexedLabelTraceTarget` or
+  `RouteEB20.AllPairLabelTraceTarget` for the B20 section map, which then
+  yields `RouteEAllPairSectionCertificate`.
 
 ## B16 and R14e Status
 

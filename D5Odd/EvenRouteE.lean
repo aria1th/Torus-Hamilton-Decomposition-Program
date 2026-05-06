@@ -7244,6 +7244,127 @@ noncomputable def allPairSectionCertificateOfLabelTraceTarget (q : Nat)
   sectionReturn_single := target.sectionReturn_single
   returnTime_sum := fun c => target.returnTime_sum c
 
+/--
+Index-level version of `AllPairLabelTraceTarget`, matching the package CSV
+rows (`idx`, `dst_idx`, `src_label`, `time`).  A bijection from indices to
+`RouteEAllPairSection` transports the indexed return map and label-fiber time
+sums to the certificate-facing section type.
+-/
+structure AllPairIndexedLabelTraceTarget (q : Nat) where
+  N : Nat
+  data : D5EvenSeamData (modulus q)
+  point : Fin N → RouteEAllPairSection (modulus q)
+  point_bijective : Function.Bijective point
+  indexReturn : Color → Fin N → Fin N
+  returnTime : Color → Fin N → Nat
+  returnTime_pos : ∀ c i, 0 < returnTime c i
+  firstReturn_equation :
+    ∀ c i,
+      (seamRootReturn data c)^[returnTime c i] (point i).1 =
+        (point (indexReturn c i)).1
+  firstReturn_minimal :
+    ∀ c i k, 0 < k → k < returnTime c i →
+      ¬ ∃ j : Fin N,
+        (seamRootReturn data c)^[k] (point i).1 = (point j).1
+  indexReturn_single :
+    ∀ c, IsSingleCycleMap (indexReturn c)
+  labelOfIndex : Fin N → AllPairLabel
+  label_time_sum :
+    ∀ c label,
+      ((Finset.univ : Finset (Fin N)).filter
+          fun i => labelOfIndex i = label).sum (fun i => returnTime c i) =
+        allPairTimeMass q label
+
+namespace AllPairIndexedLabelTraceTarget
+
+noncomputable def pointEquiv {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q) :
+    Fin target.N ≃ RouteEAllPairSection (modulus q) :=
+  Equiv.ofBijective target.point target.point_bijective
+
+noncomputable def pointIndex {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q)
+    (a : RouteEAllPairSection (modulus q)) : Fin target.N :=
+  (target.pointEquiv).symm a
+
+@[simp] theorem point_pointIndex {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q)
+    (a : RouteEAllPairSection (modulus q)) :
+    target.point (target.pointIndex a) = a := by
+  exact target.pointEquiv.apply_symm_apply a
+
+@[simp] theorem pointIndex_point {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q) (i : Fin target.N) :
+    target.pointIndex (target.point i) = i := by
+  exact target.pointEquiv.symm_apply_apply i
+
+noncomputable def toLabelTraceTarget {q : Nat}
+    (target : AllPairIndexedLabelTraceTarget q) :
+    AllPairLabelTraceTarget q where
+  data := target.data
+  sectionReturn := fun c a =>
+    target.point (target.indexReturn c (target.pointIndex a))
+  returnTime := fun c a => target.returnTime c (target.pointIndex a)
+  returnTime_pos := by
+    intro c a
+    exact target.returnTime_pos c (target.pointIndex a)
+  firstReturn_equation := by
+    intro c a
+    simpa using target.firstReturn_equation c (target.pointIndex a)
+  firstReturn_minimal := by
+    intro c a k hkpos hklt hhit
+    apply target.firstReturn_minimal c (target.pointIndex a) k hkpos
+      (by simpa using hklt)
+    rcases hhit with ⟨b, hb⟩
+    exact ⟨target.pointIndex b, by simpa using hb⟩
+  sectionReturn_single := by
+    intro c
+    exact single_cycle_of_bijective_semiconj
+      (f := target.indexReturn c)
+      (g := fun a =>
+        target.point (target.indexReturn c (target.pointIndex a)))
+      (phi := target.point)
+      target.point_bijective
+      (by
+        intro i
+        simp)
+      (target.indexReturn_single c)
+  labelOf := fun a => target.labelOfIndex (target.pointIndex a)
+  label_time_sum := by
+    intro c label
+    let sIdx : Finset (Fin target.N) :=
+      (Finset.univ.filter fun i => target.labelOfIndex i = label)
+    let sSec : Finset (RouteEAllPairSection (modulus q)) :=
+      (Finset.univ.filter fun a =>
+        target.labelOfIndex (target.pointIndex a) = label)
+    have hsum :
+        sIdx.sum (fun i => target.returnTime c i) =
+          sSec.sum (fun a => target.returnTime c (target.pointIndex a)) := by
+      exact Finset.sum_bijective
+        (s := sIdx)
+        (t := sSec)
+        (f := fun i => target.returnTime c i)
+        (g := fun a => target.returnTime c (target.pointIndex a))
+        target.point
+        target.point_bijective
+        (by
+          intro i
+          simp [sIdx, sSec])
+        (by
+          intro i _hi
+          simp)
+    calc
+      sSec.sum (fun a => target.returnTime c (target.pointIndex a)) =
+          sIdx.sum (fun i => target.returnTime c i) := hsum.symm
+      _ = allPairTimeMass q label := target.label_time_sum c label
+
+end AllPairIndexedLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfIndexedLabelTraceTarget
+    (q : Nat) (target : AllPairIndexedLabelTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  allPairSectionCertificateOfLabelTraceTarget q target.toLabelTraceTarget
+
 def SymbolicAllPairBranchTarget : Prop :=
   ∀ q, 0 < q → Nonempty (RouteEAllPairSectionCertificate (modulus q))
 
@@ -7277,6 +7398,35 @@ theorem allPairBranchTarget_of_labelTraceTargets
   | succ q =>
       exact symbolicAllPairBranchTarget_of_labelTraceTarget hsymbolic
         (Nat.succ q) (Nat.succ_pos q)
+
+theorem symbolicAllPairBranchTarget_of_indexedLabelTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro q hq
+      rcases h q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM20AllPairTarget_of_indexedLabelTraceTarget
+    (h : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    FiniteM20AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM20AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_indexedLabelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
+    (hm20 : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro q hq
+      rcases hsymbolic q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm20 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
 
 theorem allPairBranchTarget_of_symbolic_and_m20
     (hsymbolic : SymbolicAllPairBranchTarget)

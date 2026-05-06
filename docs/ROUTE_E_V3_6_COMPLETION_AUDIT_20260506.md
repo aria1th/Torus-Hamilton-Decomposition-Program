@@ -38,6 +38,7 @@ remaining gaps.
 | B20 boundary one-cycle adapter | `RouteEB20.boundaryCycleNodeAt`, `RouteEB20.boundaryCycleNode`, `RouteEB20.boundaryCycleNode_last_to_zero`, `RouteEB20.boundaryCycleNodeAt_succ`, `RouteEB20.boundaryCycleNode_step`, `RouteEB20.boundaryCycleNode_injective`, `RouteEB20.boundaryCycleNode_bijective`, `RouteEB20.boundaryQuotientCycleEnumeration`, `RouteEB20.boundaryQuotient_singleCycle`, `RouteEB20.boundaryQuotient_oneCycleTarget`, `RouteEB20.BoundaryQuotientCycleEnumeration.singleCycle`, `RouteEB20.BoundaryQuotientCycleEnumeration.oneCycleTarget` | combined enumeration, global successor semiconjugacy, injectivity, bijectivity, and one-cycle target closed |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B20 label-fiber all-pair adapter | `RouteEB20.AllPairLabelTraceTarget`, `RouteEB20.AllPairLabelTraceTarget.returnTime_sum`, `RouteEB20.allPairSectionCertificateOfLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_labelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_labelTraceTarget`, `RouteEB20.allPairBranchTarget_of_labelTraceTargets` | CSV/verifier-shaped target added |
+| B20 indexed all-pair adapter | `RouteEB20.AllPairIndexedLabelTraceTarget`, `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`, `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets` | row-indexed package target added |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
 | R14e count surface | `RouteER14e.routeCounts`, `RouteER14e.counts_sum` | done |
@@ -82,10 +83,12 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    `m=20` certificate.
 
 2. No branch currently instantiates `RouteEAllPairSectionCertificate`.  The
-   adapter now includes `RouteEB20.AllPairLabelTraceTarget`, which derives
-   certificate-level time exhaustion from per-label fiber sums.  Exact all-pair
-   first-return equations, no-early minimality, a section one-cycle proof, and
-   the concrete return-time/label function still need to be supplied.
+   adapter now includes `RouteEB20.AllPairLabelTraceTarget` and
+   `RouteEB20.AllPairIndexedLabelTraceTarget`, which derive certificate-level
+   time exhaustion from per-label fiber sums and can match the package
+   `idx`/`dst_idx` row format.  Exact all-pair first-return equations,
+   no-early minimality, a section one-cycle proof, and the concrete
+   return-time/label function still need to be supplied.
 
 3. B20 has the boundary quotient map candidate `RouteEB20.boundaryQuotient`,
    and `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` is now supplied
