@@ -156,6 +156,25 @@ m=10:
   rank_totals={0:3069, 1:3150, 2:2961, 3:1980}
 ```
 
+The polynomial checker:
+
+```bash
+python3 scripts/verify_d5_routeE_defect_switch_polynomials.py \
+  --moduli 6,8,10,12,14,16,18,20
+```
+
+verifies the stable one-defect-layer formulas:
+
+```text
+modal_count    = m^4 - 5*m^3 + 10*m^2 - 10*m + 5
+nonmodal_count = 5*(m - 1)*(m^2 - m + 1)
+
+rank 0 total = (m - 1)*(m + 1)*(3*m + 1)
+rank 1 total = m*(m - 1)*(3*m + 5)
+rank 2 total = (m - 1)*(3*m^2 + 3*m - 1)
+rank 3 total = 2*m*(m - 1)*(m + 1)
+```
+
 Thus the `m >= 6` finite witnesses are consistent with a proof-facing shape:
 
 ```text
@@ -165,6 +184,23 @@ constant bulk layers + one finite Lambda_E defect layer.
 By contrast, the `m=2` full-layered SAT witness has two non-stationary defect
 layers and should be treated as a boundary certificate rather than as the
 generic template.
+
+Important caveat: expressing local rows as adjacent-switch words is only a
+local decomposition in the symmetric group `S_5`.  It is not by itself an
+RF2-preserving Kempe-switch construction.  In fact, if one starts from cyclic
+bulk and allows only RF2-preserving adjacent-rank switch supports, the layer
+sign product stays `+1`, contradicting the even D5 requirement that the global
+return-sign product be `-1`.  The known one-`Lambda_E` witnesses avoid this
+restricted ansatz by using a parity-changing global defect layer:
+
+```text
+all constant bulk layers have layer_sign=+1;
+the Lambda_E defect layer has layer_sign=-1 and color_signs=[-1,-1,-1,-1,-1].
+```
+
+Thus the current viable proof target is not "cyclic bulk plus local
+RF2-preserving adjacent repairs"; it is "cyclic bulk plus one globally designed
+parity-changing Lambda_E layer".
 
 ## B20 Trace Profile Diagnostic
 

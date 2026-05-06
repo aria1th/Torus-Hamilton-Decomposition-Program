@@ -80,6 +80,13 @@ def main() -> None:
         max_len = max(len(words[row]) for row in counts)
         rank_totals: Counter[int] = Counter()
         nonmodal = len(layer) - modal_count
+        color_signs = [
+            nested.permutation_sign(nested.layer_map(m, layers, t, color))
+            for color in range(5)
+        ]
+        layer_sign = 1
+        for sign in color_signs:
+            layer_sign *= sign
         for row, count in counts.items():
             for rank, _ in words[row]:
                 rank_totals[rank] += count
@@ -93,7 +100,8 @@ def main() -> None:
         print(
             f"layer={t} distinct_rows={len(counts)} modal={modal} "
             f"modal_count={modal_count} nonmodal={nonmodal} max_word_len={max_len} "
-            f"rank_totals={dict(sorted(rank_totals.items()))}"
+            f"rank_totals={dict(sorted(rank_totals.items()))} "
+            f"layer_sign={layer_sign} color_signs={color_signs}"
         )
         shown = 0
         for row, count in sorted(

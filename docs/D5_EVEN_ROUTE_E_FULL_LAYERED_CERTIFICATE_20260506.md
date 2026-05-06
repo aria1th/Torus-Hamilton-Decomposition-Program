@@ -170,3 +170,14 @@ one-`Lambda_E` witnesses for `m >= 6`, it isolates exactly one defect layer
 with 26 distinct rows.  On the `m=2` SAT witness, both layers are nonstationary
 and locally more fragmented, reinforcing that `m=2` should be handled as a
 boundary certificate unless a separate uniform formula is found.
+
+The adjacent-switch output must be interpreted carefully.  A shortest word in
+`S_5` is only a local row factorization.  It does not mean that the layer was
+constructed from RF2-preserving adjacent Kempe trades.  This distinction is
+essential in even modulus: RF2-preserving adjacent-rank switch supports keep
+the layer sign product unchanged, so a construction using only such repairs
+from cyclic bulk cannot supply the required global sign `-1`.
+
+Known one-`Lambda_E` witnesses instead contain a parity-changing global defect
+layer.  The analyzer reports that the defect layer has `layer_sign=-1`, while
+the constant bulk layers have `layer_sign=+1`.
