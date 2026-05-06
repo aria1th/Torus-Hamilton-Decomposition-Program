@@ -463,6 +463,9 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+0993311 Fit R42 run-normalized boundary blocks
+19c9990 Refresh Route E ledger after progress visualization
+0cd8204 Refresh Route E ledger after R42 stability note
 da0916c Add Route E progress visualization
 8ea8eea Record R42 block table stability limits
 2d2b6cb Preserve R42 representative boundary block table
