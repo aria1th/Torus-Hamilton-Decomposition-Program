@@ -593,6 +593,8 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+f7b0506 Promote R42 interval tail formulas into summary
+793957c Refresh Route E ledger after tail suggestions
 10e8561 Record R42 open tail formula suggestions
 f7fb848 Refresh Route E visualization after R42 regeneration
 a72d8d4 Refresh Route E ledger after R42 regeneration check
