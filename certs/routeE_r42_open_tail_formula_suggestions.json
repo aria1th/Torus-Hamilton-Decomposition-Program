@@ -1,4 +1,6 @@
 {
+  "promoted_tail_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+  "promoted_tail_threshold_count": 11,
   "schema": "routeE_r42_open_tail_formula_suggestions_v1",
   "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_block_formula_regeneration_verification.json",
   "source_q_values": [

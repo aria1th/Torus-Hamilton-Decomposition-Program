@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REGENERATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
+DEFAULT_SUMMARY = ROOT / "certs" / "routeE_r42_boundary_quotient_summary.json"
 
 
 def formula_text(a: Fraction, b: Fraction) -> str:
@@ -67,20 +68,46 @@ def fit_linear(points: list[tuple[int, int]]) -> dict[str, Any]:
     }
 
 
-def collect_open_fields(data: dict[str, Any]) -> dict[tuple[int, str], list[tuple[int, int]]]:
+def promoted_tail_thresholds(summary_path: Path) -> dict[tuple[int, str], int]:
+    if not summary_path.exists():
+        return {}
+    data = json.loads(summary_path.read_text())
+    out: dict[tuple[int, str], int] = {}
+    blocks = data.get("q_ge_1_block_formula_fits", {}).get("blocks", [])
+    for row in blocks:
+        index = int(row["index"])
+        for key, value in row.items():
+            marker = "_q_ge_"
+            if marker not in key or value is None:
+                continue
+            field, _, threshold_text = key.partition(marker)
+            out[(index, field)] = int(threshold_text)
+    return out
+
+
+def collect_open_fields(
+    data: dict[str, Any],
+    promoted_thresholds: dict[tuple[int, str], int],
+) -> dict[tuple[int, str], list[tuple[int, int]]]:
     out: dict[tuple[int, str], list[tuple[int, int]]] = {}
     for row in data.get("rows", []):
         q = int(row["q"])
         for field in row.get("open_null_formula_fields", []):
             key = (int(field["index"]), str(field["field"]))
+            threshold = promoted_thresholds.get(key)
+            if threshold is not None and q >= threshold:
+                continue
             out.setdefault(key, []).append((q, int(field["actual"])))
     return out
 
 
-def build_suggestions(regeneration_path: Path) -> dict[str, Any]:
+def build_suggestions(regeneration_path: Path, summary_path: Path) -> dict[str, Any]:
     data = json.loads(regeneration_path.read_text())
+    promoted_thresholds = promoted_tail_thresholds(summary_path)
     suggestions = []
-    for (index, field), points in sorted(collect_open_fields(data).items()):
+    for (index, field), points in sorted(
+        collect_open_fields(data, promoted_thresholds).items()
+    ):
         points = sorted(points)
         fit = fit_linear(points)
         suggestions.append(
@@ -97,6 +124,8 @@ def build_suggestions(regeneration_path: Path) -> dict[str, Any]:
     return {
         "schema": "routeE_r42_open_tail_formula_suggestions_v1",
         "source": str(regeneration_path),
+        "promoted_tail_summary": str(summary_path),
+        "promoted_tail_threshold_count": len(promoted_thresholds),
         "source_q_values": data.get("summary", {}).get("verified_q_values"),
         "suggestions": suggestions,
         "summary": {
@@ -119,10 +148,11 @@ def build_suggestions(regeneration_path: Path) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--regeneration", type=Path, default=DEFAULT_REGENERATION)
+    parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
-    payload = build_suggestions(args.regeneration)
+    payload = build_suggestions(args.regeneration, args.summary)
     print("schema", payload["schema"])
     print("suggestion_count", payload["summary"]["suggestion_count"])
     print("linear_tail_count", payload["summary"]["linear_tail_count"])

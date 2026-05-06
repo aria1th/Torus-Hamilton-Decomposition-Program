@@ -249,7 +249,11 @@ def block_table(rows: list[dict[str, Any]], m: int) -> list[dict[str, Any]]:
     for src_label in ["Z", "03", "04", "34"]:
         sub = [row for row in rows if row["src_label"] == src_label]
         if src_label == "Z":
-            table.extend(block_detail(sub, m, {"src_label": src_label, "path": "Z"}))
+            groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+            for row in sub:
+                groups[row["path"]].append(row)
+            for path, group in sorted(groups.items()):
+                table.extend(block_detail(group, m, {"src_label": src_label, "path": path}))
             continue
         groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
         for row in sub:

@@ -103,30 +103,21 @@ def build_verification(
     for q_value in q_values:
         expanded = expand_boundary_blocks(blocks, q_value)
         expected = expected_label_counts(allpair_time, q_value)
-        missing = {
-            label: expected[label] - expanded.get(label, 0)
-            for label in LABELS
-            if expected[label] != expanded.get(label, 0)
-        }
-        z_path_compression_correction = (
-            missing == {"13": 1}
-        )
-        corrected = dict(expanded)
-        if z_path_compression_correction:
-            corrected["13"] += 1
         rows.append(
             {
                 "q": q_value,
                 "m": 48 * q_value + 42,
-                "expanded_label_counts_uncorrected": expanded,
-                "z_path_compression_correction": z_path_compression_correction,
-                "expanded_label_counts": corrected,
+                "expanded_label_counts": expanded,
                 "expected_label_counts": expected,
-                "label_counts_match": corrected == expected,
-                "uncorrected_difference_expected_minus_expanded": missing,
-                "expanded_total": sum(corrected.values()),
+                "label_counts_match": expanded == expected,
+                "difference_expected_minus_expanded": {
+                    label: expected[label] - expanded.get(label, 0)
+                    for label in LABELS
+                    if expected[label] != expanded.get(label, 0)
+                },
+                "expanded_total": sum(expanded.values()),
                 "expected_total": 10 * ((48 * q_value + 42) - 1) + 1,
-                "total_matches": sum(corrected.values())
+                "total_matches": sum(expanded.values())
                 == 10 * ((48 * q_value + 42) - 1) + 1,
             }
         )
@@ -146,10 +137,9 @@ def build_verification(
             and all(row["label_counts_match"] and row["total_matches"] for row in rows)
         ),
         "note": (
-            "The committed boundary summary compresses the unique Z block path "
-            "as 'Z'.  Fresh all-pair traces show the corresponding boundary "
-            "segment is Z>13, so the verifier records and applies the one L13 "
-            "insertion correction before comparing to all-pair label counts."
+            "The boundary summary preserves boundary segment path-run counts, "
+            "including the unique Z>13 path, so expansion to all-pair "
+            "source-label counts is direct."
         ),
         "promotion_impact": {
             "supports_boundary_transducer_route": True,

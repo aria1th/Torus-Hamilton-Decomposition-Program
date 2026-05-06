@@ -144,7 +144,7 @@
   },
   "boundary_expansion_verification_summary": {
     "block_count": 29,
-    "note": "The committed boundary summary compresses the unique Z block path as 'Z'.  Fresh all-pair traces show the corresponding boundary segment is Z>13, so the verifier records and applies the one L13 insertion correction before comparing to all-pair label counts.",
+    "note": "The boundary summary preserves boundary segment path-run counts, including the unique Z>13 path, so expansion to all-pair source-label counts is direct.",
     "ok": true,
     "q_values": [
       1,

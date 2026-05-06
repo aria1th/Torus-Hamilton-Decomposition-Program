@@ -400,11 +400,10 @@ q_values [1,2,3,4,5,6]
 
 This verifies that the 29 boundary block formulas, expanded by their path-run
 counts, reproduce the all-pair source-label counts from the all-pair time-fit
-artifact.  The verifier records one explicit correction: the compact boundary
-summary stores the unique `Z` block path as `Z`, while the fresh all-pair trace
-has a hidden `Z>13` insertion.  After adding this one `L13` insertion, the
-expanded counts match for q=1..6.  This supports the boundary/transducer route
-but still does not prove pointwise first-return or no-early.
+artifact.  The compact boundary summary now preserves the unique `Z>13` path
+directly, so the expansion matches for q=1..6 without an auxiliary correction.
+This supports the boundary/transducer route but still does not prove pointwise
+first-return or no-early.
 
 R42 regenerated block-formula verification:
 

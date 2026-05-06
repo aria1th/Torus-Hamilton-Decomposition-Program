@@ -171,9 +171,10 @@ Later commits add q>=2 tail formulas for the q=1 boundary exception and verify
 the transition/block mass formulas symbolically.  A regeneration checker now
 rebuilds temporary R42 finite witnesses for `q=1,2,3,4,5,6` and confirms that the
 stored 29 block formulas still match the fresh block tables.  The multi-sample
-open interval-count fields have been promoted into q>=N tail formulas, leaving
-only the q=1 block-24 boundary exception open.  The R42 boundary quotient is now a stronger compact
-symbolic-promotion map, but it is still not a proof of the R42 residue.
+open interval-count fields have been promoted into q>=N tail formulas, and the
+compact summary now preserves the unique `Z>13` boundary path directly.  The R42
+boundary quotient is now a stronger compact symbolic-promotion map, but it is
+still not a proof of the R42 residue.
 
 The all-pair time artifact additionally fits the sample return-time total as
 
@@ -218,9 +219,9 @@ q=0..6 samples and have strongly connected support.
 9. R42 all-pair transition evidence is compacted into polynomial matrices with
    28 nonzero support edges, verified row/column sums, and strongly connected
    count/time support.
-10. R42 boundary expansion is verified: the 29 boundary blocks expand to the
-    all-pair source-label counts for q=1..6, modulo the recorded single `Z>13`
-    insertion hidden by the compact `Z` block path.
+10. R42 boundary expansion is verified: the 29 boundary blocks expand directly
+    to the all-pair source-label counts for q=1..6, with the unique `Z>13`
+    boundary path preserved in the compact summary.
 11. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
     pointwise first-return equations, no-early/minimality, and a Lean-facing
     endpoint theorem are still missing.
