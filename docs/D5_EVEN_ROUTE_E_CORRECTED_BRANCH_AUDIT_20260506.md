@@ -529,6 +529,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+b860772 Verify R42 transition mass symbolics
 0c3d0a0 Index R42 verification artifacts in branch record
 090d7ae Update Type-A next target to R42
 a700cc9 Record R42 qge2 tail block fit
