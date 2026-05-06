@@ -582,7 +582,15 @@ def routeEBoundaryNode {m : Nat} (label : RouteEBoundaryLabel)
 
 theorem card_routeEBoundaryLabel :
     Fintype.card RouteEBoundaryLabel = 3 := by
-  native_decide
+  change (Finset.univ : Finset RouteEBoundaryLabel).card = 3
+  have huniv :
+      (Finset.univ : Finset RouteEBoundaryLabel) =
+        ({ RouteEBoundaryLabel.L03, RouteEBoundaryLabel.L04,
+          RouteEBoundaryLabel.L34 } : Finset RouteEBoundaryLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp
 
 theorem card_routeEBoundaryNode (m : Nat) [NeZero m] :
     Fintype.card (RouteEBoundaryNode m) = 1 + 3 * (m - 1) := by
