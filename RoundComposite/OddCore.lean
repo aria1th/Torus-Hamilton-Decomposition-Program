@@ -1,5 +1,6 @@
 import RoundComposite.BaseTailTrades
 import RoundComposite.FiniteHoffman.EdgeColoring
+import RoundComposite.FiniteHoffman.SignedTrellis
 import RoundComposite.SeedSemigroup
 
 namespace RoundComposite
@@ -13133,6 +13134,11 @@ def OddCoreHighModulusReturnTailClosedTrellisBlocksGoal : Prop :=
 def OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedFullSupportTrellisGoal ∧
   PrefixCount.OrdinaryQge2IndicatorToFullSupportGoal
+
+theorem oddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal :
+    OddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal :=
+  ⟨PrefixCount.ordinaryQge2SignedFullSupportTrellisGoal,
+    PrefixCount.ordinaryQge2IndicatorToFullSupportGoal⟩
 
 def OddCoreHighModulusReturnTailTriangularBlocksGoal : Prop :=
   PrefixCount.OrdinaryQge2SignedSeedProperCutClosureGoal ∧

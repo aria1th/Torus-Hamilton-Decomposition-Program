@@ -18,7 +18,7 @@ paper-facing endpoint cuts for the all-dimensional theorem.
 
 ## Current Status
 
-Snapshot: 2026-05-05.
+Snapshot: 2026-05-06.
 
 Latest stable release:
 [`0.0.2-d7`](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.0.2-d7).
@@ -48,17 +48,19 @@ All odd m, all d >= 2
    ├─ primitive active-prefix lift          [done]
    ├─ local swap/residue algebra            [done]
    ├─ reservoir quota matching              [done]
-   └─ canonical reservoir construction      [active target]
+   └─ canonical reservoir construction      [done]
 ```
 
-The current sharp remaining Lean cut is:
+The current V75 endpoint is closed in Lean:
 
 ```lean
-BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal
+RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75
+RoundComposite.Concrete.oddModulusToriAllDimensionsGoal_v75
 ```
 
-Once that construction is supplied, the existing V75 endpoint wrappers route it
-to the full all-dimensional theorem.
+Cleanup work now focuses on reducing obsolete route noise, synchronizing the
+paper-facing theorem names, and keeping historical branches clearly separated
+from the current proof path.
 
 ## Proof Map
 
@@ -117,12 +119,14 @@ RoundComposite.Concrete.OddModulusToriAllDimensionsGoal
 Current paper-facing V75 adapters:
 
 ```lean
+RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75
+RoundComposite.Concrete.oddModulusToriAllDimensionsGoal_v75
 RoundComposite.Concrete.odd_modulus_tori_all_dimensions_of_v75_directModularTrade_blocks
 RoundComposite.Concrete.oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_blocks
 RoundComposite.Concrete.oddModulusToriAllDimensionsGoal_of_v75_directModularTrade_inputs
 ```
 
-Current preferred open construction interface:
+The final reservoir construction interface closed by the V75 route:
 
 ```lean
 RoundComposite.BaseTail.Trades.SuccessorActiveBlockCanonicalNonzeroZeroReservoirArithmeticGoal
@@ -221,8 +225,9 @@ Recommended order:
   abstract de Werra/Hall endpoint.
 - Avoid treating every `*Goal : Prop` as an unfinished theorem.  Many are
   named interfaces or adapters used to keep the proof graph readable.
-- The active mathematical task is the final canonical reservoir construction
-  under the already-exposed arithmetic and quota-matching interfaces.
+- The active cleanup task is to keep obsolete branches quarantined, preserve
+  reusable certificate-calculus components, and synchronize the manuscript with
+  the closed V75 endpoint.
 
 ## AI Disclosure
 

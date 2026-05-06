@@ -1236,6 +1236,27 @@ theorem oddModulusToriAllDimensionsGoal_of_v75_phaseSplitBufferReservoir
     odd_modulus_tori_all_dimensions_of_v75_phaseSplitBufferReservoir
       hHigh hd2 hmodd hm3
 
+/--
+Closed v7.6 all-dimensional endpoint.
+
+The high-modulus branch is supplied by
+`oddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal`, and the
+small-modulus successor branch is supplied by the phase-split buffer reservoir
+script.
+-/
+theorem odd_modulus_tori_all_dimensions_v75
+    {d m : Nat} (hd2 : 2 ≤ d)
+    (hmodd : Odd m) (hm3 : 3 ≤ m) :
+    Shared.CayleyHamiltonDecomposition d m :=
+  odd_modulus_tori_all_dimensions_of_v75_phaseSplitBufferReservoir
+    oddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal
+    hd2 hmodd hm3
+
+theorem oddModulusToriAllDimensionsGoal_v75 :
+    OddModulusToriAllDimensionsGoal :=
+  oddModulusToriAllDimensionsGoal_of_v75_phaseSplitBufferReservoir
+    oddCoreHighModulusReturnTailClosedFullSupportTrellisBlocksGoal
+
 theorem oddModulusToriAllDimensionsGoal_of_v75_preCorrection_inputs
     (h : OddModulusToriV75PreCorrectionInputsGoal) :
     OddModulusToriAllDimensionsGoal :=
