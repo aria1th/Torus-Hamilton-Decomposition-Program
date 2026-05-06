@@ -77,6 +77,31 @@ def summarize_b16(path: Path) -> dict[str, Any]:
     }
 
 
+def b16_symbolic_skeleton(path: Path) -> dict[str, Any]:
+    data = read_zip_json(path, "b16_complete_verifier_output.json")
+    return {
+        "source": str(path),
+        "sha256": sha256_file(path),
+        "schema": data.get("schema"),
+        "family": data.get("family"),
+        "parameter": "m = 24*q + 16",
+        "sample_moduli": [case["m"] for case in data.get("complete_case_summary", [])],
+        "label_sum_polynomials": data.get("label_sum_polynomials"),
+        "label_dst_sum_polynomials": data.get("label_dst_sum_polynomials"),
+        "total_poly_from_labels": data.get("total_poly_from_labels"),
+        "total_poly_from_label_dst": data.get("total_poly_from_label_dst"),
+        "m4_poly": data.get("m4_poly"),
+        "label_total_equals_m4": data.get("label_total_equals_m4"),
+        "label_dst_total_equals_m4": data.get("label_dst_total_equals_m4"),
+        "macro_checked_q_range": "0..200",
+        "macro_formula_status": (
+            "The package verifier records Q_formula/pred_R/pred_len in "
+            "b16_complete_verifier.py and checks them on q=0..200; this "
+            "skeleton preserves the polynomial mass identities."
+        ),
+    }
+
+
 def summarize_r14e(path: Path) -> dict[str, Any]:
     data = read_zip_json(path, "r14e_complete_verifier_output.json")
     insertion = read_zip_json(path, "r14e_insertion_macro_verifier_output.json")
@@ -118,11 +143,52 @@ def summarize_r14e(path: Path) -> dict[str, Any]:
     }
 
 
+def r14e_symbolic_skeleton(path: Path) -> dict[str, Any]:
+    data = read_zip_json(path, "r14e_complete_verifier_output.json")
+    insertion = read_zip_json(path, "r14e_insertion_macro_verifier_output.json")
+    return {
+        "source": str(path),
+        "sha256": sha256_file(path),
+        "schema": data.get("schema"),
+        "family": data.get("family"),
+        "parameter": "m = 48*k + 14",
+        "sample_moduli": [case["m"] for case in data.get("complete_case_summary", [])],
+        "used_k_values": data.get("used_k_values"),
+        "label_sum_polynomials": data.get("label_sum_polynomials"),
+        "label_dst_sum_polynomials": data.get("label_dst_sum_polynomials"),
+        "expected_insertion_bylabel": data.get("expected_insertion_bylabel"),
+        "expected_insertion_boundary_count": data.get("expected_insertion_boundary_count"),
+        "expected_boundary_size": data.get("expected_boundary_size"),
+        "expected_insertion_weighted_sum": data.get("expected_insertion_weighted_sum"),
+        "expected_allpair_size": data.get("expected_allpair_size"),
+        "expected_insertion_weighted_equals_allpair_size": data.get(
+            "expected_insertion_weighted_equals_allpair_size"
+        ),
+        "total_poly_from_labels": data.get("total_poly_from_labels"),
+        "total_poly_from_label_dst": data.get("total_poly_from_label_dst"),
+        "m4_poly": data.get("m4_poly"),
+        "label_total_equals_m4": data.get("label_total_equals_m4"),
+        "label_dst_total_equals_m4": data.get("label_dst_total_equals_m4"),
+        "label_dst_count_total": data.get("label_dst_count_total"),
+        "label_dst_count_equals_allpair_size": data.get(
+            "label_dst_count_equals_allpair_size"
+        ),
+        "insertion_macro_schema": insertion.get("schema"),
+        "insertion_macro_symbolic": {
+            "boundary_count": insertion.get("symbolic_boundary_count"),
+            "boundary_size": insertion.get("symbolic_boundary_size"),
+            "weighted_steps": insertion.get("symbolic_weighted_steps"),
+            "allpair_size": insertion.get("symbolic_allpair_size"),
+        },
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--b16-package", type=Path, default=DEFAULT_B16)
     parser.add_argument("--r14e-package", type=Path, default=DEFAULT_R14E)
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument("--symbolic-out", type=Path)
     args = parser.parse_args()
 
     payload = {
@@ -164,6 +230,21 @@ def main() -> None:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
         print(f"wrote {args.json_out}")
+    if args.symbolic_out is not None:
+        symbolic = {
+            "schema": "routeE_typeA_symbolic_skeleton_v1",
+            "b16": b16_symbolic_skeleton(args.b16_package),
+            "r14e": r14e_symbolic_skeleton(args.r14e_package),
+            "status": (
+                "Symbolic mass/insertion skeleton extracted from package "
+                "verifier outputs.  This is still not a Lean theorem."
+            ),
+        }
+        args.symbolic_out.parent.mkdir(parents=True, exist_ok=True)
+        args.symbolic_out.write_text(
+            json.dumps(symbolic, indent=2, sort_keys=True) + "\n"
+        )
+        print(f"wrote {args.symbolic_out}")
     if not payload["all_recorded_flags_ok"]:
         raise SystemExit(1)
 

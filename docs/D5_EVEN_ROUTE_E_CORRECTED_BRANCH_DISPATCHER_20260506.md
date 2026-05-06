@@ -260,7 +260,8 @@ CSV tables:
 
 ```bash
 python3 scripts/summarize_routeE_typeA_closure_packages.py \
-  --json-out certs/routeE_typeA_closure_package_summary.json
+  --json-out certs/routeE_typeA_closure_package_summary.json \
+  --symbolic-out certs/routeE_typeA_symbolic_skeleton.json
 ```
 
 As of this note, the verified summary is:
@@ -321,6 +322,7 @@ The `B16` and `R14e` closure packages are summarized at:
 
 ```text
 certs/routeE_typeA_closure_package_summary.json
+certs/routeE_typeA_symbolic_skeleton.json
 ```
 
 The summary records the source package hashes and proof-facing verifier flags
@@ -335,3 +337,10 @@ All recorded package flags are currently `true`, including B16 macro checks and
 R14e insertion/macro comparisons.  This is still evidence for Type-A symbolic
 branches, not a closed Lean theorem: it preserves the finite verifier outputs
 and identifies the same missing Lean-facing first-return/minimality obligations.
+
+The symbolic skeleton additionally preserves the B16/R14e label-time
+polynomial tables, the destination-label polynomial tables, the `m^4` total
+identities, and the R14e insertion macro identities.  This is the preferred
+artifact for moving those branches into a paper appendix or Lean statement,
+because it avoids storing raw all-pair CSV maps while retaining the algebraic
+mass formulas.

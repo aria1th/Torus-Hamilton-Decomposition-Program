@@ -28,7 +28,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Distinguish seam recomputation from rank cert verification | `--verify-small-seam` and `--verify-rank-certs` options | done |
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py` and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
-| Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json` | done |
+| Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -90,13 +90,22 @@ Type-A package summary:
 
 ```bash
 python3 scripts/summarize_routeE_typeA_closure_packages.py \
-  --json-out certs/routeE_typeA_closure_package_summary.json
+  --json-out certs/routeE_typeA_closure_package_summary.json \
+  --symbolic-out certs/routeE_typeA_symbolic_skeleton.json
 ```
 
 Result:
 
 ```text
 b16 [16, 40, 64, 88, 112, 136, 160] macro_all_ok True r14e [14, 62, 110, 158, 206] all_recorded_flags_ok True
+```
+
+The symbolic skeleton preserves:
+
+```text
+B16: 11 label-polynomial entries and 29 destination-label polynomial entries;
+R14e: 11 label-polynomial entries, 33 destination-label polynomial entries,
+      and insertion macro identities.
 ```
 
 Hygiene:
@@ -184,9 +193,10 @@ R14e: m=48k+14, k=0..4, package flags all true.
 ```
 
 The package hashes are stored in
-`certs/routeE_typeA_closure_package_summary.json` so the evidence can be
-checked against the original zip artifacts without preserving large CSV files
-in the repository.
+`certs/routeE_typeA_closure_package_summary.json`, and the symbolic polynomial
+skeleton is stored in `certs/routeE_typeA_symbolic_skeleton.json`, so the
+evidence can be checked against the original zip artifacts without preserving
+large CSV files in the repository.
 
 ## Conclusion
 

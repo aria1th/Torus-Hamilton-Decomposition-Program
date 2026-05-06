@@ -1,0 +1,353 @@
+{
+  "b16": {
+    "family": "B16: m=24q+16, x=1, z=12q+5, nu=(1,12q+9,0,12q+5,0)",
+    "label_dst_sum_polynomials": {
+      "01->01": "72*q**2 + 96*q + 32",
+      "01->03": "45*q**2 + 54*q + 16",
+      "01->13": "45*q**2 + 54*q + 16",
+      "01->Z": "12*q + 8",
+      "02->24": "6912*q**3 + 13536*q**2 + 8832*q + 1920",
+      "03->04": "1728*q**3 + 3528*q**2 + 2400*q + 544",
+      "03->14": "1728*q**3 + 3456*q**2 + 2304*q + 512",
+      "03->34": "432*q**3 + 786*q**2 + 467*q + 90",
+      "04->01": "1008*q**3 + 1827*q**2 + 1091*q + 214",
+      "04->13": "720*q**3 + 1440*q**2 + 967*q + 218",
+      "04->14": "1728*q**3 + 3312*q**2 + 2112*q + 448",
+      "04->34": "432*q**3 + 882*q**2 + 597*q + 134",
+      "12->03": "12*q + 7",
+      "12->12": "576*q**2 + 720*q + 224",
+      "13->01": "45*q**2 + 66*q + 24",
+      "13->03": "162*q**2 + 204*q + 65",
+      "14->02": "54144*q**4 + 142368*q**3 + 140832*q**2 + 62112*q + 10304",
+      "14->23": "58752*q**4 + 153408*q**3 + 149986*q**2 + 65078*q + 10574",
+      "23->02": "52992*q**4 + 139680*q**3 + 137726*q**2 + 60202*q + 9842",
+      "23->04": "8640*q**4 + 19416*q**3 + 15633*q**2 + 5206*q + 569",
+      "23->13": "50112*q**4 + 128808*q**3 + 123861*q**2 + 52803*q + 8420",
+      "24->04": "27072*q**4 + 74640*q**3 + 77256*q**2 + 35544*q + 6128",
+      "24->12": "24*q + 16",
+      "24->13": "27072*q**4 + 74112*q**3 + 75876*q**2 + 34429*q + 5842",
+      "24->23": "52992*q**4 + 135024*q**3 + 128718*q**2 + 54406*q + 8602",
+      "34->01": "432*q**3 + 822*q**2 + 509*q + 102",
+      "34->04": "432*q**3 + 882*q**2 + 603*q + 138",
+      "34->34": "1728*q**3 + 3432*q**2 + 2288*q + 512",
+      "Z->13": "24*q + 15"
+    },
+    "label_dst_total_equals_m4": true,
+    "label_sum_polynomials": {
+      "01": "162*q**2 + 216*q + 72",
+      "02": "6912*q**3 + 13536*q**2 + 8832*q + 1920",
+      "03": "3888*q**3 + 7770*q**2 + 5171*q + 1146",
+      "04": "3888*q**3 + 7461*q**2 + 4767*q + 1014",
+      "12": "576*q**2 + 732*q + 231",
+      "13": "207*q**2 + 270*q + 89",
+      "14": "112896*q**4 + 295776*q**3 + 290818*q**2 + 127190*q + 20878",
+      "23": "111744*q**4 + 287904*q**3 + 277220*q**2 + 118211*q + 18831",
+      "24": "107136*q**4 + 283776*q**3 + 281850*q**2 + 124403*q + 20588",
+      "34": "2592*q**3 + 5136*q**2 + 3400*q + 752",
+      "Z": "24*q + 15"
+    },
+    "label_total_equals_m4": true,
+    "m4_poly": "331776*q**4 + 884736*q**3 + 884736*q**2 + 393216*q + 65536",
+    "macro_checked_q_range": "0..200",
+    "macro_formula_status": "The package verifier records Q_formula/pred_R/pred_len in b16_complete_verifier.py and checks them on q=0..200; this skeleton preserves the polynomial mass identities.",
+    "parameter": "m = 24*q + 16",
+    "sample_moduli": [
+      16,
+      40,
+      64,
+      88,
+      112,
+      136,
+      160
+    ],
+    "schema": "b16_complete_verifier_20260506",
+    "sha256": "9efb26e87847c7915d04cc362bef4f033cd8a7e05198daa3e911f2daf3ffb04a",
+    "source": "/data/angel/repos/etc/RouteE/B16_closure_package_20260506.zip",
+    "total_poly_from_label_dst": "331776*q**4 + 884736*q**3 + 884736*q**2 + 393216*q + 65536",
+    "total_poly_from_labels": "331776*q**4 + 884736*q**3 + 884736*q**2 + 393216*q + 65536"
+  },
+  "r14e": {
+    "expected_allpair_size": "480*k + 131",
+    "expected_boundary_size": "144*k + 40",
+    "expected_insertion_boundary_count": "144*k + 40",
+    "expected_insertion_bylabel": {
+      "03:1": "32*k + 8",
+      "03:4": "3*k + 1",
+      "03:5": "10*k + 2",
+      "03:6": "3*k + 2",
+      "04:1": "24*k + 7",
+      "04:4": "6*k + 1",
+      "04:5": "12*k + 3",
+      "04:6": "6*k + 1",
+      "04:96*k + 29": "1",
+      "34:1": "40*k + 9",
+      "34:2": "1",
+      "34:4": "3*k",
+      "34:48*k + 14": "1",
+      "34:5": "2*k + 2",
+      "34:6": "3*k",
+      "Z:1": "1"
+    },
+    "expected_insertion_weighted_equals_allpair_size": true,
+    "expected_insertion_weighted_sum": "480*k + 131",
+    "family": "R14e: m=48k+14, x=1, z=24k+5, nu=(1,24k+7,0,24k+5,0)",
+    "insertion_macro_schema": "r14e_insertion_macro_verifier",
+    "insertion_macro_symbolic": {
+      "allpair_size": "480*k + 131",
+      "boundary_count": "144*k + 40",
+      "boundary_size": "144*k + 40",
+      "weighted_steps": "480*k + 131"
+    },
+    "label_dst_count_equals_allpair_size": true,
+    "label_dst_count_total": "480*k + 131",
+    "label_dst_sum_polynomials": [
+      {
+        "count_poly": "24*k + 6",
+        "key": "01->01",
+        "time_poly": "576*k**2 + 312*k + 42"
+      },
+      {
+        "count_poly": "1",
+        "key": "01->03",
+        "time_poly": "1"
+      },
+      {
+        "count_poly": "24*k + 6",
+        "key": "01->13",
+        "time_poly": "288*k**2 + 156*k + 21"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "key": "02->24",
+        "time_poly": "55296*k**3 + 47232*k**2 + 13440*k + 1274"
+      },
+      {
+        "count_poly": "20*k + 5",
+        "key": "03->04",
+        "time_poly": "432*k**2 + 236*k + 32"
+      },
+      {
+        "count_poly": "16*k + 5",
+        "key": "03->14",
+        "time_poly": "10944*k**3 + 9360*k**2 + 2680*k + 257"
+      },
+      {
+        "count_poly": "12*k + 3",
+        "key": "03->34",
+        "time_poly": "224*k**2 + 120*k + 16"
+      },
+      {
+        "count_poly": "12*k + 3",
+        "key": "04->03",
+        "time_poly": "27648*k**3 + 22704*k**2 + 6220*k + 568"
+      },
+      {
+        "count_poly": "24*k + 6",
+        "key": "04->14",
+        "time_poly": "13824*k**3 + 11520*k**2 + 3192*k + 294"
+      },
+      {
+        "count_poly": "12*k + 4",
+        "key": "04->34",
+        "time_poly": "18432*k**3 + 16208*k**2 + 4740*k + 461"
+      },
+      {
+        "count_poly": "48*k + 12",
+        "key": "12->12",
+        "time_poly": "2304*k**2 + 1248*k + 168"
+      },
+      {
+        "count_poly": "1",
+        "key": "12->13",
+        "time_poly": "48*k + 14"
+      },
+      {
+        "count_poly": "24*k + 6",
+        "key": "13->01",
+        "time_poly": "288*k**2 + 156*k + 21"
+      },
+      {
+        "count_poly": "2",
+        "key": "13->03",
+        "time_poly": "3"
+      },
+      {
+        "count_poly": "24*k + 5",
+        "key": "13->13",
+        "time_poly": "1152*k**2 + 576*k + 70"
+      },
+      {
+        "count_poly": "24*k + 6",
+        "key": "14->02",
+        "time_poly": "829440*k**4 + 905472*k**3 + 368640*k**2 + 66240*k + 4424"
+      },
+      {
+        "count_poly": "24*k + 7",
+        "key": "14->23",
+        "time_poly": "995328*k**4 + 1137024*k**3 + 487368*k**2 + 92952*k + 6660"
+      },
+      {
+        "count_poly": "24*k + 7",
+        "key": "23->02",
+        "time_poly": "829440*k**4 + 998784*k**3 + 450360*k**2 + 90120*k + 6752"
+      },
+      {
+        "count_poly": "13*k + 4",
+        "key": "23->03",
+        "time_poly": "677376*k**4 + 725184*k**3 + 284313*k**2 + 47989*k + 2902"
+      },
+      {
+        "count_poly": "2*k",
+        "key": "23->04",
+        "time_poly": "55296*k**4 + 55296*k**3 + 18372*k**2 + 2028*k"
+      },
+      {
+        "count_poly": "9*k + 2",
+        "key": "23->34",
+        "time_poly": "262656*k**4 + 318528*k**3 + 149595*k**2 + 32275*k + 2692"
+      },
+      {
+        "count_poly": "3*k",
+        "key": "24->03",
+        "time_poly": "214272*k**4 + 183456*k**3 + 52038*k**2 + 4893*k"
+      },
+      {
+        "count_poly": "6*k + 2",
+        "key": "24->04",
+        "time_poly": "138240*k**4 + 183168*k**3 + 90336*k**2 + 19668*k + 1596"
+      },
+      {
+        "count_poly": "1",
+        "key": "24->12",
+        "time_poly": "48*k + 14"
+      },
+      {
+        "count_poly": "24*k + 6",
+        "key": "24->23",
+        "time_poly": "829440*k**4 + 960768*k**3 + 417384*k**2 + 80592*k + 5835"
+      },
+      {
+        "count_poly": "15*k + 4",
+        "key": "24->34",
+        "time_poly": "476928*k**4 + 587232*k**3 + 267866*k**2 + 53555*k + 3951"
+      },
+      {
+        "count_poly": "1",
+        "key": "34->01",
+        "time_poly": "16*k + 5"
+      },
+      {
+        "count_poly": "20*k + 2",
+        "key": "34->03",
+        "time_poly": "9216*k**3 + 6752*k**2 + 1584*k + 111"
+      },
+      {
+        "count_poly": "20*k + 6",
+        "key": "34->04",
+        "time_poly": "464*k**2 + 300*k + 48"
+      },
+      {
+        "count_poly": "1",
+        "key": "34->13",
+        "time_poly": "1152*k**2 + 672*k + 98"
+      },
+      {
+        "count_poly": "8*k + 2",
+        "key": "34->14",
+        "time_poly": "2880*k**3 + 2576*k**2 + 760*k + 74"
+      },
+      {
+        "count_poly": "1",
+        "key": "34->Z",
+        "time_poly": "32*k + 10"
+      },
+      {
+        "count_poly": "1",
+        "key": "Z->03",
+        "time_poly": "2"
+      }
+    ],
+    "label_dst_total_equals_m4": true,
+    "label_sum_polynomials": [
+      {
+        "count_poly": "1",
+        "label": "Z",
+        "time_poly": "2"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "01",
+        "time_poly": "864*k**2 + 468*k + 64"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "02",
+        "time_poly": "55296*k**3 + 47232*k**2 + 13440*k + 1274"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "03",
+        "time_poly": "10944*k**3 + 10016*k**2 + 3036*k + 305"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "04",
+        "time_poly": "59904*k**3 + 50432*k**2 + 14152*k + 1323"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "12",
+        "time_poly": "2304*k**2 + 1296*k + 182"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "13",
+        "time_poly": "1440*k**2 + 732*k + 94"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "14",
+        "time_poly": "1824768*k**4 + 2042496*k**3 + 856008*k**2 + 159192*k + 11084"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "23",
+        "time_poly": "1824768*k**4 + 2097792*k**3 + 902640*k**2 + 172412*k + 12346"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "24",
+        "time_poly": "1658880*k**4 + 1914624*k**3 + 827624*k**2 + 158756*k + 11396"
+      },
+      {
+        "count_poly": "48*k + 13",
+        "label": "34",
+        "time_poly": "12096*k**3 + 10944*k**2 + 3364*k + 346"
+      }
+    ],
+    "label_total_equals_m4": true,
+    "m4_poly": "5308416*k**4 + 6193152*k**3 + 2709504*k**2 + 526848*k + 38416",
+    "parameter": "m = 48*k + 14",
+    "sample_moduli": [
+      14,
+      62,
+      110,
+      158,
+      206
+    ],
+    "schema": "r14e_complete_verifier_20260506",
+    "sha256": "5fec93c3d177485b6ede4115aec79b548d765761c996c12e8383c2c726b00d08",
+    "source": "/data/angel/repos/etc/RouteE/R14e_closure_package_20260506.zip",
+    "total_poly_from_label_dst": "5308416*k**4 + 6193152*k**3 + 2709504*k**2 + 526848*k + 38416",
+    "total_poly_from_labels": "5308416*k**4 + 6193152*k**3 + 2709504*k**2 + 526848*k + 38416",
+    "used_k_values": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "schema": "routeE_typeA_symbolic_skeleton_v1",
+  "status": "Symbolic mass/insertion skeleton extracted from package verifier outputs.  This is still not a Lean theorem."
+}
