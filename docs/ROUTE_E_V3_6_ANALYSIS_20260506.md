@@ -145,7 +145,10 @@ New arithmetic names include:
 - `boundaryCycleSecondOddFinal_to_secondEvenTail`
 - `boundaryCycleSecondEvenTail_to_zero`
 - `boundarySecondEvenParam_shift_succ`
+- `boundaryCycleNodeAt`
 - `boundaryCycleNode`
+- `boundaryCycleNodeAt_last`
+- `boundaryCycleNode_last_to_zero`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`
