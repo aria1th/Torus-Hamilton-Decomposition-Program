@@ -7,13 +7,14 @@ adjacent-switch Route-E ansatz.
 
 ## Corrected Verdict
 
-The following restricted branch is removed:
+The following restricted branches are removed:
 
 ```text
+even pure prefix-count branch;
 cyclic bulk + RF2-preserving adjacent-rank Kempe repairs only.
 ```
 
-It cannot prove even-modulus `D_5`.  The viable even branch is instead:
+They cannot prove even-modulus `D_5`.  The viable even branch is instead:
 
 ```text
 full layered parity-changing one-layer coloring
@@ -143,26 +144,74 @@ global sign requirement.
 Thus the old adjacent-switch-only branch is not a proof branch.  Adjacent words
 remain useful only as local `S_5` descriptions of a defect layer.
 
+## Even Prefix-Count Branch Removal
+
+The pure prefix-count branch is also impossible for even `D_5`.  In the
+prefix-count primitivity criterion every color row would need `N_0` to be a
+unit modulo `m`.  When `m` is even, every unit is odd, so five color rows force
+
+```text
+sum_kappa N_{kappa,0} = odd + odd + odd + odd + odd = odd.
+```
+
+But local Latin column balance requires the stop-0 column sum to be exactly
+`m`, which is even.  This contradiction removes the even prefix-count branch
+before any return-map analysis.
+
 ## Remaining Even Branches
 
-The corrected finite dispatcher is:
+The corrected dispatcher is:
 
 ```text
 Branch O:
   m odd.  Use the existing odd-modulus branch/input.
 
+Branch X1:
+  even pure prefix-count.
+  Removed by the stop-0 column parity obstruction.
+
+Branch X2:
+  cyclic bulk + RF2-preserving adjacent-rank switches only.
+  Removed by the layer-sign obstruction.
+
 Branch E0:
   m = 2.  Use a full layered boundary certificate.
   Stationary seam certificates are excluded by sign/square obstructions.
+
+Branch E-small:
+  4 <= m < M.  Use finite full-layered certificates.
+  Currently m=4 is filled by the embedded C/E/O schedule.
 
 Branch E-gen:
   m even and m >= M.  Use a full layered parity-changing one-layer coloring
   template.  The template must verify RF1, RF2, product_t Lambda_t = -1, and
   the four-level nested first-return/splice certificate for RF3.
+```
 
-Branch X:
-  cyclic bulk + RF2-preserving adjacent-rank switches only.
-  Removed by the sign obstruction.
+Within E-gen there are two proof styles:
+
+```text
+Type A:
+  all-pair / boundary / macro quotient certificate.
+  This is the B20/B16/R14e style and matches the Lean adapter shape.
+
+Type B:
+  four-level nested root-flat first-return certificate.
+  This is valid only as a full-layered parity-changing coloring proof, not as
+  an adjacent-switch-only proof.
+```
+
+Every concrete E-gen branch record should include:
+
+```text
+BranchHeader:  m >= M and m mod L = ell, or a finite m=m0.
+LayerData:     closed formulas for layer colorings and RF1/RF2 proofs.
+SignData:      product_t Lambda_t = -1.
+ReturnData:    all-pair or nested first-return equations.
+NoEarlyData:   minimality/no-early return proof.
+PrimitiveData: quotient or splice graph one-cycle proof.
+TimeData:      sum tau = m^4.
+Exceptions:    finite boundary cases.
 ```
 
 ## Finite Template Reduction
@@ -185,3 +234,48 @@ branch, the return-time sums become polynomial or quasi-polynomial identities.
 The next extraction target from SAT/finite witnesses is therefore not an
 adjacent-switch slab list.  It is a parity-changing layer type list, its layer
 parity table, the generic residue modulus `L`, and the RF3 splice tables.
+
+## Current Filled Artifacts
+
+The current branch table can be regenerated with:
+
+```bash
+python3 scripts/summarize_d5_routeE_corrected_branches.py
+```
+
+For the slower recomputation of the recorded `m=6..60` small-seam window:
+
+```bash
+python3 scripts/summarize_d5_routeE_corrected_branches.py --verify-small-seam
+```
+
+As of this note, the verified summary is:
+
+```text
+| branch | range | status | check |
+| --- | --- | --- | --- |
+| O | odd m | external_existing_odd_branch | existing odd branch |
+| X1 | even prefix-count | removed_by_column_parity_obstruction | discarded branch |
+| X2 | adjacent-Kempe only | removed_by_sign_obstruction | discarded branch |
+| E0 | m=2 | filled_boundary_certificate | RF1=True RF2=True sign=True colors=True |
+| E-small | m=4 | filled_finite_C_E_O_schedule | RF1=True RF2=True sign=True colors=True |
+| E-gen-window | 6..60 even | finite_small_seam_evidence_window | cases=28 rank_cert=True moduli_match=True verified=True |
+| E-gen-symbolic | all large even m | open | uniform full layered parity-changing template needed |
+```
+
+The `m=2` full-layered boundary certificate is stored at:
+
+```text
+certs/d5_routeE_m2_full_layered_boundary.json
+```
+
+The `m=6..60` small-seam rank certificates are stored at:
+
+```text
+certs/d5_routeE_small_seam_rank_certs.json
+```
+
+This fills the boundary/window evidence branches but does not close the generic
+all-even theorem.  The remaining symbolic proof obligation is a uniform
+count/slot/splice law for the parity-changing full layered branch beyond the
+recorded finite window.

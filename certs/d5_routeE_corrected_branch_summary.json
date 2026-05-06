@@ -1,0 +1,431 @@
+{
+  "branch_E0_m2": {
+    "all_colors_ok": true,
+    "colors": [
+      {
+        "color": 0,
+        "level_cycles": [
+          [
+            8
+          ],
+          [
+            4
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          16
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 1,
+        "level_cycles": [
+          [
+            8
+          ],
+          [
+            4
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          16
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 2,
+        "level_cycles": [
+          [
+            8
+          ],
+          [
+            4
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          16
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 3,
+        "level_cycles": [
+          [
+            8
+          ],
+          [
+            4
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          16
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 4,
+        "level_cycles": [
+          [
+            8
+          ],
+          [
+            4
+          ],
+          [
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          16
+        ],
+        "return_perm": true
+      }
+    ],
+    "m": 2,
+    "rf1_ok": true,
+    "rf2_ok": true,
+    "sign_ok": true,
+    "sign_product": -1,
+    "sign_target": -1,
+    "status": "filled_boundary_certificate"
+  },
+  "branch_E4_m4": {
+    "all_colors_ok": true,
+    "colors": [
+      {
+        "color": 0,
+        "level_cycles": [
+          [
+            64
+          ],
+          [
+            16
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          256
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 1,
+        "level_cycles": [
+          [
+            64
+          ],
+          [
+            16
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          256
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 2,
+        "level_cycles": [
+          [
+            64
+          ],
+          [
+            16
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          256
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 3,
+        "level_cycles": [
+          [
+            64
+          ],
+          [
+            16
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          256
+        ],
+        "return_perm": true
+      },
+      {
+        "color": 4,
+        "level_cycles": [
+          [
+            64
+          ],
+          [
+            16
+          ],
+          [
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        "level_perm_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "level_time_ok": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "ok": true,
+        "return_cycles": [
+          256
+        ],
+        "return_perm": true
+      }
+    ],
+    "m": 4,
+    "rf1_ok": true,
+    "rf2_ok": true,
+    "sign_ok": true,
+    "sign_product": -1,
+    "sign_target": -1,
+    "status": "filled_finite_C_E_O_schedule"
+  },
+  "branch_Egen_m6_to_m60": {
+    "case_count": 28,
+    "max_m": 60,
+    "min_m": 6,
+    "moduli": [
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46,
+      48,
+      50,
+      52,
+      54,
+      56,
+      58,
+      60
+    ],
+    "rank_cert_case_count": 28,
+    "rank_cert_loaded": true,
+    "rank_cert_moduli_match": true,
+    "status": "finite_small_seam_evidence_window",
+    "symbolic_status": "Lambda_E local mask counts are symbolic; full all-even counts/splice law is still open.",
+    "verified_all_ok": true
+  },
+  "branch_Egen_symbolic": {
+    "needed": [
+      "full layered parity-changing one-layer coloring template",
+      "RF1/RF2 closed verification",
+      "product_t Lambda_t = -1 sign proof",
+      "uniform count/slot/splice law beyond finite window",
+      "no-early/minimality proof",
+      "time exhaustion identity"
+    ],
+    "status": "open"
+  },
+  "branch_O_odd": {
+    "note": "Use existing odd-modulus D5 input / odd machinery.",
+    "status": "external_existing_odd_branch"
+  },
+  "branch_X1_even_prefix_count": {
+    "reason": "Even m has only odd units.  Five primitive prefix-count rows would force five odd N_0 entries, so the stop-0 column sum would be odd, contradicting the local-Latin column sum m.",
+    "status": "removed_by_column_parity_obstruction"
+  },
+  "branch_X2_adjacent_kempe_only": {
+    "reason": "RF2-preserving adjacent-rank Kempe repairs preserve layer sign from cyclic bulk, but even D5 needs product_t Lambda_t = -1.",
+    "status": "removed_by_sign_obstruction"
+  },
+  "schema": "d5_routeE_corrected_branch_summary_v1"
+}
