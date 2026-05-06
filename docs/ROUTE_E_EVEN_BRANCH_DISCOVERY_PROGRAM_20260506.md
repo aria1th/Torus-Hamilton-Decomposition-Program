@@ -137,6 +137,7 @@ Negative controls:
 | `m=86`, `x=5` | total time is `m^4`, but the section map splits into cycles `7,7,71` |
 | `m=230`, `x=5` | section map splits and total time is not `m^4` |
 | `m=230`, `x=11` | invalidates the fixed `R38-sym11` extrapolation |
+| `m=162`, `x=9` | residue `18`; section map splits into cycles `3,3,11,11,133` and total time is not `m^4` |
 
 These controls prevent the false extrapolation that every small symmetric
 constant on a residue class gives a branch.
@@ -207,6 +208,8 @@ In the current run, fixed-constant symmetric packets show fragmentation:
 ```text
 m = 48*k + 38, x = 11 succeeds for k = 0,1,2,3
 m = 48*k + 38, x = 11 fails for k = 4
+
+m = 48*k + 18, x = 9 is not a branch candidate at k = 3
 ```
 
 This does not refute all Route-E even branches, but it refutes the simple
