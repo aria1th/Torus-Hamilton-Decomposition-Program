@@ -158,3 +158,15 @@ The script is a diagnostic only; passing it does not prove Route E.  Its role is
 to prevent accidentally promoting a stationary seam artifact as a full layered
 proof.
 
+For local adjacent-switch extraction, use:
+
+```bash
+python3 scripts/analyze_d5_routeE_layer_switches.py candidate.json
+```
+
+This chooses each layer's modal local row as bulk and expresses every distinct
+local row as a shortest word in adjacent stop-rank swaps.  On known
+one-`Lambda_E` witnesses for `m >= 6`, it isolates exactly one defect layer
+with 26 distinct rows.  On the `m=2` SAT witness, both layers are nonstationary
+and locally more fragmented, reinforcing that `m=2` should be handled as a
+boundary certificate unless a separate uniform formula is found.

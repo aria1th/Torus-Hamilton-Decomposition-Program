@@ -133,6 +133,39 @@ layer is built from adjacent stop-rank swaps.  What remains is to prove that
 the resulting global return has a stable symbolic nested first-return formula
 for a covering set of residue branches.
 
+The more general layer-switch analyzer:
+
+```bash
+python3 scripts/analyze_d5_routeE_layer_switches.py \
+  /tmp/d5_routeE_layers_m10_20260506.json
+```
+
+chooses the modal row in each layer as the bulk row and expresses every
+distinct local row by shortest adjacent stop-rank swaps.  On the known
+one-`Lambda_E` witnesses it reports a single defect layer:
+
+```text
+m=6:
+  layer=5 distinct_rows=26 modal=(4,3,2,1,0)
+  nonmodal=775 max_word_len=9
+  rank_totals={0:665, 1:690, 2:625, 3:420}
+
+m=10:
+  layer=9 distinct_rows=26 modal=(4,3,2,1,0)
+  nonmodal=4095 max_word_len=9
+  rank_totals={0:3069, 1:3150, 2:2961, 3:1980}
+```
+
+Thus the `m >= 6` finite witnesses are consistent with a proof-facing shape:
+
+```text
+constant bulk layers + one finite Lambda_E defect layer.
+```
+
+By contrast, the `m=2` full-layered SAT witness has two non-stationary defect
+layers and should be treated as a boundary certificate rather than as the
+generic template.
+
 ## B20 Trace Profile Diagnostic
 
 The B20 trace-profile analyzer:
