@@ -29,6 +29,7 @@ remaining gaps.
 | Boundary quotient type | `RouteEBoundaryLabel`, `RouteEBoundaryNode`, `card_routeEBoundaryNode` formalize `{Z} union {03,04,34} x {1,...,m-1}` and cardinal `3m-2` | done |
 | B20 boundary quotient formula | `RouteEB20.boundaryQuotient` encodes the v1.8 map candidate; special-gate and generic rewrite lemmas are proved; `RouteEB20.boundaryQuotient_formulaTarget` proves `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` | formula closed, one-cycle open |
 | B20 boundary one-cycle hand count | `RouteEB20.boundaryCycleLength_eq_card`, `RouteEB20.boundaryCycleSecondEvenEnd_eq_length`, `RouteEB20.boundaryCycleHandCountTotal_eq_card` | count and segment endpoints closed, rank/orbit proof open |
+| B20 boundary spine prefix | `RouteEB20.boundaryCycleSpineNode`, `RouteEB20.boundaryCycleSpine_step_zero`, `RouteEB20.boundaryCycleSpine_step_one`, `RouteEB20.boundaryCycleSpine_step_two`, `RouteEB20.boundaryCycleSpine_step_three` | first four successors closed, remaining orbit open |
 | B20 boundary residue chains | `RouteEB20.boundaryFirstEvenValue_range`, `RouteEB20.boundaryFirstOddValue_range`, `RouteEB20.boundarySecondOddValue_range`, `RouteEB20.boundarySecondEvenValue_range` | range lemmas closed, successor/bijection proof open |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
@@ -62,8 +63,9 @@ Both commands completed successfully after the current Lean edits.
 3. B20 has the boundary quotient map candidate `RouteEB20.boundaryQuotient`,
    and `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` is now supplied
    by `RouteEB20.boundaryQuotient_formulaTarget`.  The hand proof's segment
-   count, segment endpoints, and residue-chain range lemmas are Lean-checked,
-   but the successor and bijection parts of the rank/orbit proof remain open.
+   count, segment endpoints, the initial spine successors, and residue-chain
+   range lemmas are Lean-checked, but the remaining successor and bijection
+   parts of the rank/orbit proof remain open.
 
 4. B16 has a boundary quotient formula and time target in the bundle, but the
    boundary formula, formula-induced one-cycle proof, and lane/core time
@@ -83,9 +85,10 @@ Both commands completed successfully after the current Lean edits.
 The next best Lean implementation slice is B20 boundary one-cycle:
 
 1. define `boundaryCycleNode q : Fin (boundaryCycleLength q) →
-   RouteEBoundaryNode (modulus q)` using the checked segment starts and
-   residue-chain constructors;
-2. prove the successor compatibility with `RouteEB20.boundaryQuotient`;
+   RouteEBoundaryNode (modulus q)` by extending the checked spine prefix across
+   the remaining C-run and residue-chain segments;
+2. prove the remaining successor compatibility with
+   `RouteEB20.boundaryQuotient`;
 3. prove the enumeration is bijective, then conjugate to `finRotate`;
 4. after the quotient cycle is closed, return to the boundary-clock derivation
    of `T_03` and `T_04` using the corrected combined coefficient `19179`.

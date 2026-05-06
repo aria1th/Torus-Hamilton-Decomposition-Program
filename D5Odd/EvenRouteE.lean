@@ -1404,6 +1404,117 @@ theorem boundaryCycleSecondEvenEnd_eq_length (q : Nat) :
     quarter, half, modulus]
   omega
 
+def boundarySpineCValue (q i : Nat) : Nat :=
+  modulus q - (i - 2)
+
+theorem boundarySpineCValue_range (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i ≤ half q + 2) :
+    0 < boundarySpineCValue q i ∧
+      boundarySpineCValue q i < modulus q := by
+  simp [boundarySpineCValue, half, modulus] at hhi ⊢
+  omega
+
+def boundarySpineCParam (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i ≤ half q + 2) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundarySpineCValue q i)
+    (boundarySpineCValue_range q i hlo hhi).1
+    (boundarySpineCValue_range q i hlo hhi).2
+
+theorem boundarySpineCParam_val (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i ≤ half q + 2) :
+    (boundarySpineCParam q i hlo hhi).1.val =
+      boundarySpineCValue q i := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
+
+noncomputable def boundaryCycleSpineNode (q i : Nat)
+    (hi : i < boundaryCycleSpineCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  if h0 : i = 0 then
+    routeEBoundaryZero
+  else if h1 : i = 1 then
+    routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalf q)
+  else if h2 : i = 2 then
+    routeEBoundaryNode RouteEBoundaryLabel.L34 (boundaryParamLast q)
+  else if h3 : i = 3 then
+    routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamLast q)
+  else if h4 : i = 4 then
+    routeEBoundaryNode RouteEBoundaryLabel.L34 (boundaryParamPenultimate q)
+  else if hlast : i = half q + 3 then
+    routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamHalf q)
+  else
+    have hlo : 5 ≤ i := by omega
+    have hhi : i ≤ half q + 2 := by
+      simp [boundaryCycleSpineCount] at hi
+      omega
+    routeEBoundaryNode RouteEBoundaryLabel.L34
+      (boundarySpineCParam q i hlo hhi)
+
+theorem boundaryCycleSpineNode_zero (q : Nat)
+    (hi : 0 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q 0 hi = routeEBoundaryZero := by
+  simp [boundaryCycleSpineNode]
+
+theorem boundaryCycleSpineNode_one (q : Nat)
+    (hi : 1 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q 1 hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalf q) := by
+  simp [boundaryCycleSpineNode]
+
+theorem boundaryCycleSpineNode_two (q : Nat)
+    (hi : 2 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q 2 hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L34 (boundaryParamLast q) := by
+  simp [boundaryCycleSpineNode]
+
+theorem boundaryCycleSpineNode_three (q : Nat)
+    (hi : 3 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q 3 hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamLast q) := by
+  simp [boundaryCycleSpineNode]
+
+theorem boundaryCycleSpineNode_four (q : Nat)
+    (hi : 4 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q 4 hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L34
+        (boundaryParamPenultimate q) := by
+  simp [boundaryCycleSpineNode]
+
+theorem boundaryCycleSpine_step_zero (q : Nat)
+    (h0 : 0 < boundaryCycleSpineCount q)
+    (h1 : 1 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q 0 h0) =
+      boundaryCycleSpineNode q 1 h1 := by
+  rw [boundaryCycleSpineNode_zero q h0, boundaryCycleSpineNode_one q h1]
+  exact boundaryQuotient_zero q
+
+theorem boundaryCycleSpine_step_one (q : Nat)
+    (h1 : 1 < boundaryCycleSpineCount q)
+    (h2 : 2 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q 1 h1) =
+      boundaryCycleSpineNode q 2 h2 := by
+  rw [boundaryCycleSpineNode_one q h1, boundaryCycleSpineNode_two q h2]
+  exact boundaryQuotient_A_h q (boundaryParamHalf q) (by
+    simp [boundaryParamHalf, RouteENonzeroSeam.ofNat_val])
+
+theorem boundaryCycleSpine_step_two (q : Nat)
+    (h2 : 2 < boundaryCycleSpineCount q)
+    (h3 : 3 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q 2 h2) =
+      boundaryCycleSpineNode q 3 h3 := by
+  rw [boundaryCycleSpineNode_two q h2, boundaryCycleSpineNode_three q h3]
+  exact boundaryQuotient_C_last q (boundaryParamLast q) (by
+    simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val])
+
+theorem boundaryCycleSpine_step_three (q : Nat)
+    (h3 : 3 < boundaryCycleSpineCount q)
+    (h4 : 4 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q 3 h3) =
+      boundaryCycleSpineNode q 4 h4 := by
+  rw [boundaryCycleSpineNode_three q h3, boundaryCycleSpineNode_four q h4]
+  exact boundaryQuotient_B_last q (boundaryParamLast q) (by
+    simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val])
+
 def boundaryFirstEvenValue (q j : Nat) : Nat :=
   if j % 2 = 0 then half q - 2 * j else modulus q - 2 * j
 
