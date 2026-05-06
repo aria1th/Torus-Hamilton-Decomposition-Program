@@ -1074,6 +1074,147 @@ theorem LambdaE_cyclic :
         fin5AddNat (LambdaE S a) c.val := by
   native_decide
 
+/-!
+Route-E master-field quotient interface.
+
+The RoundY branch notes separate the next search from the B20/B16/R14e
+all-pair witnesses: instead of another color-by-color rule table, the new
+target is a finite phase quotient carrying a permutation-valued local field.
+The structures below record the Lean-facing conditional endpoint.  A search
+may supply `Phase`, `phaseOf`, and `dir`; once outgoing Latin, incoming Latin
+and Hamiltonicity are proved for the induced schedule, the existing D5
+Hamilton/Torus/Cayley endpoints are immediate.
+-/
+
+structure RouteEMasterFieldShape (m : Nat) where
+  Phase : Type
+  phaseDecidableEq : DecidableEq Phase
+  phaseFintype : Fintype Phase
+  phaseOf : Fin m → Vec5 m → Phase
+  dir : Phase → Color → Direction
+
+namespace RouteEMasterFieldShape
+
+def toSchedule {m : Nat} (shape : RouteEMasterFieldShape m) :
+    LayerSchedule m where
+  dir := fun t c w => shape.dir (shape.phaseOf t w) c
+
+def PhaseLatin {m : Nat} (shape : RouteEMasterFieldShape m) : Prop :=
+  ∀ θ : shape.Phase, Function.Bijective fun c : Color => shape.dir θ c
+
+def IncomingLatin {m : Nat} (shape : RouteEMasterFieldShape m) : Prop :=
+  ∀ (t : Fin m) (c : Color) (y : ARoot5 m),
+    ∃! i : Direction, shape.dir (shape.phaseOf t (y.1 - q5 m i)) c = i
+
+theorem toSchedule_latin_of_phase_latin {m : Nat}
+    (shape : RouteEMasterFieldShape m) (h : shape.PhaseLatin) :
+    IsScheduleLatin shape.toSchedule := by
+  intro t w
+  exact h (shape.phaseOf t w)
+
+theorem toSchedule_exactCover_of_incoming {m : Nat}
+    (shape : RouteEMasterFieldShape m) (h : shape.IncomingLatin) :
+    IsLayerExactCover shape.toSchedule := by
+  intro t c y
+  exact h t c y
+
+structure CyclicEquivariance {m : Nat}
+    (shape : RouteEMasterFieldShape m) where
+  rotatePhase : Color → shape.Phase → shape.Phase
+  phase_rotVec :
+    ∀ (r : Color) (t : Fin m) (w : Vec5 m),
+      rotatePhase r (shape.phaseOf t w) = shape.phaseOf t (rotVec r w)
+  dir_rotVec :
+    ∀ (r : Color) (θ : shape.Phase) (c : Color),
+      shape.dir (rotatePhase r θ) (fin5AddNat c r.val) =
+        fin5AddNat (shape.dir θ c) r.val
+
+end RouteEMasterFieldShape
+
+structure RouteEMasterFieldTarget (m : Nat) where
+  shape : RouteEMasterFieldShape m
+  exactCover : IsLayerExactCover shape.toSchedule
+  latin : IsScheduleLatin shape.toSchedule
+  hamiltonian : AllColorHamiltonian shape.toSchedule
+
+namespace RouteEMasterFieldTarget
+
+theorem toHamiltonDecomposition {m : Nat}
+    (target : RouteEMasterFieldTarget m) :
+    HamiltonDecompositionD5 m :=
+  ⟨target.shape.toSchedule, target.exactCover, target.latin,
+    target.hamiltonian⟩
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldTarget m) :
+    TorusHamiltonDecompositionD5 m :=
+  torusHamiltonDecomposition_of_model target.toHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldTarget m) :
+    CayleyHamiltonDecompositionD5 m :=
+  cayleyHamiltonDecomposition_of_torus target.toTorusHamiltonDecomposition
+
+end RouteEMasterFieldTarget
+
+structure RouteEMasterFieldLocalTarget (m : Nat) where
+  shape : RouteEMasterFieldShape m
+  phase_latin : shape.PhaseLatin
+  incoming_latin : shape.IncomingLatin
+  hamiltonian : AllColorHamiltonian shape.toSchedule
+
+namespace RouteEMasterFieldLocalTarget
+
+def toMasterFieldTarget {m : Nat}
+    (target : RouteEMasterFieldLocalTarget m) :
+    RouteEMasterFieldTarget m where
+  shape := target.shape
+  exactCover :=
+    target.shape.toSchedule_exactCover_of_incoming target.incoming_latin
+  latin :=
+    target.shape.toSchedule_latin_of_phase_latin target.phase_latin
+  hamiltonian := target.hamiltonian
+
+theorem toHamiltonDecomposition {m : Nat}
+    (target : RouteEMasterFieldLocalTarget m) :
+    HamiltonDecompositionD5 m :=
+  target.toMasterFieldTarget.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldLocalTarget m) :
+    TorusHamiltonDecompositionD5 m :=
+  target.toMasterFieldTarget.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldLocalTarget m) :
+    CayleyHamiltonDecompositionD5 m :=
+  target.toMasterFieldTarget.toCayleyHamiltonDecomposition
+
+end RouteEMasterFieldLocalTarget
+
+structure RouteECyclicMasterFieldLocalTarget (m : Nat) where
+  target : RouteEMasterFieldLocalTarget m
+  cyclic : target.shape.CyclicEquivariance
+
+namespace RouteECyclicMasterFieldLocalTarget
+
+theorem toHamiltonDecomposition {m : Nat}
+    (target : RouteECyclicMasterFieldLocalTarget m) :
+    HamiltonDecompositionD5 m :=
+  target.target.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteECyclicMasterFieldLocalTarget m) :
+    TorusHamiltonDecompositionD5 m :=
+  target.target.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteECyclicMasterFieldLocalTarget m) :
+    CayleyHamiltonDecompositionD5 m :=
+  target.target.toCayleyHamiltonDecomposition
+
+end RouteECyclicMasterFieldLocalTarget
+
 theorem card_vec4 (m : Nat) [NeZero m] :
     Fintype.card (Vec4 m) = m ^ 4 := by
   calc

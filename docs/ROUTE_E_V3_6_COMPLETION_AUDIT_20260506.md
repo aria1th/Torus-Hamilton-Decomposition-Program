@@ -19,8 +19,10 @@ remaining gaps.
 
 | Requirement | Current evidence | Status |
 | --- | --- | --- |
-| Isolated branch | `route-e-v3-6-20260506`; latest Route-E adapter slice commit `52ac237` | done |
+| Isolated branch | `route-e-v3-6-20260506`; latest committed v3.6 all-pair adapter slice before RoundY triage was `52ac237` | done |
 | Bundle read and compared | `docs/ROUTE_E_V3_6_ANALYSIS_20260506.md` records bundle scope, B20/B16/R14e status, and reproduction caveat | done |
+| RoundY branch notes triaged | `docs/ROUTE_E_ROUNDY_BRANCH_TRIAGE_20260506.md` separates `joined quotient`, `fresh cyclic`, and `master field` from the B20/B16/R14e all-pair closure witnesses | done |
+| Master-field conditional endpoint | `RouteEMasterFieldShape`, `RouteEMasterFieldLocalTarget`, and `RouteECyclicMasterFieldLocalTarget` carry finite quotient fields to the existing Hamilton/Torus/Cayley endpoints once Latin/exact-cover/Hamiltonian hypotheses are supplied | conditional endpoint added |
 | B20 count surface | `RouteEB20.routeCounts`, existing `RouteEB20.counts_sum` | done |
 | B20 small-seam surface | Existing `RouteEB20.returnTimeFormula`, `RouteEB20.seamMap`, `RouteEB20.ThetaPointwiseTraceTarget` | pre-existing, still useful |
 | B20 all-pair time target | `RouteEB20.allPairTimeMassTotal_eq_modulus_pow_four` and `RouteEB20.allPairTimeMass_sum_eq_modulus_pow_four` | done as arithmetic target |
@@ -135,9 +137,18 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    inputs under `/mnt/data`; the B20 closure package includes the C++ dumper and
    compact verifier scripts, so exact maps can be regenerated locally.
 
+7. The three RoundY branch notes are not direct all-pair certificate instances.
+   They define a separate quotient/master-field exploration track.  Lean now has
+   a conservative conditional interface for that track, but no finite phase
+   table or solver artifact has been supplied as a
+   `RouteEMasterFieldLocalTarget`/`RouteECyclicMasterFieldLocalTarget` instance.
+   The local Python environment also lacks `ortools`, so the CP-SAT scripts in
+   the reference tree need dependency preparation before live searches.
+
 ## Next Concrete Slice
 
-The next best Lean implementation slice is concrete branch instantiation:
+The next best Lean implementation slice for the v3.6 closure track is concrete
+branch instantiation:
 
 1. instantiate `RouteEB20.AllPairIndexedLabelTraceTarget` or
    `RouteEB20.AllPairLabelTraceTarget` from the B20 closure package;
@@ -147,3 +158,8 @@ The next best Lean implementation slice is concrete branch instantiation:
    closure package, keeping symbolic `k > 0` separate from finite `m = 14`;
 4. start the R38/symmetric mining slice only after the three proof-facing
    branches above have concrete Lean certificate instances or precise blockers.
+
+The independent RoundY track should proceed only from deterministic solver
+artifacts: first import a finite phase table and its Latin/return diagnostics,
+then package it as `RouteEMasterFieldLocalTarget` or
+`RouteECyclicMasterFieldLocalTarget`.
