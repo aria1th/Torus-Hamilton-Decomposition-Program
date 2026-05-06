@@ -3233,6 +3233,32 @@ theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
     boundaryCycleFirstOddStart, boundaryCycleALastBridgeStart,
     boundaryCycleSecondOddStart, boundaryCycleSecondEvenStart]
 
+structure BoundaryQuotientCycleEnumeration (q : Nat) where
+  node :
+    Fin (boundaryCycleLength q) → RouteEBoundaryNode (modulus q)
+  step :
+    ∀ i : Fin (boundaryCycleLength q),
+      node (finRotate (boundaryCycleLength q) i) =
+        boundaryQuotient q (node i)
+  bijective : Function.Bijective node
+
+theorem BoundaryQuotientCycleEnumeration.singleCycle {q : Nat}
+    (cert : BoundaryQuotientCycleEnumeration q) :
+    IsSingleCycleMap (boundaryQuotient q) := by
+  exact single_cycle_of_bijective_semiconj
+    (f := finRotate (boundaryCycleLength q))
+    (g := boundaryQuotient q)
+    (phi := cert.node)
+    cert.bijective
+    (by intro i; exact cert.step i)
+    (finRotate_single_cycle (boundaryCycleLength q))
+
+theorem BoundaryQuotientCycleEnumeration.oneCycleTarget {q : Nat}
+    (cert : BoundaryQuotientCycleEnumeration q) :
+    BoundaryQuotientOneCycleTarget q := by
+  exact ⟨boundaryQuotient q, boundaryQuotient_formulaTarget q,
+    cert.singleCycle⟩
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and
