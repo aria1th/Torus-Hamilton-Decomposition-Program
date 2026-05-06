@@ -592,11 +592,19 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+10e8561 Record R42 open tail formula suggestions
+f7fb848 Refresh Route E visualization after R42 regeneration
+a72d8d4 Refresh Route E ledger after R42 regeneration check
 a359c20 Verify R42 block formulas by regeneration
+9cf5ccf Refresh Route E ledger after R42 block masses
 b9d4b28 Verify R42 block mass symbolics
+ee95d1d Refresh Route E ledger after R42 transition symbolics
 b860772 Verify R42 transition mass symbolics
+a44ee23 Refresh Route E ledger after R42 record indexing
 0c3d0a0 Index R42 verification artifacts in branch record
+adcad76 Refresh Route E ledger after target update
 090d7ae Update Type-A next target to R42
+7b66645 Refresh Route E ledger after R42 tail fit
 a700cc9 Record R42 qge2 tail block fit
 965bf91 Verify R42 compact boundary summary
 b7760a9 Add Route E color sign screen audit

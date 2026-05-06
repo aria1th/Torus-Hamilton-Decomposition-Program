@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `a72d8d4`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `10e8561`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 78 commits ahead of origin.  Those commits add 73 files and
-33,740 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 80 commits ahead of origin.  Those commits add 75 files and
+34,329 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
