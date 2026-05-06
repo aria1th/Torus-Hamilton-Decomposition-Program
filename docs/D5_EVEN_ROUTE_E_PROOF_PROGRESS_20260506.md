@@ -175,6 +175,31 @@ rank 2 total = (m - 1)*(3*m^2 + 3*m - 1)
 rank 3 total = 2*m*(m - 1)*(m + 1)
 ```
 
+These formulas are not only sample-fitted.  They can be derived directly from
+the shifted-zero mask arrangement.  The five predicates form the equality
+edges of a 5-cycle with one fixed zero vertex:
+
+```text
+z4=z3, z3=z2, z2=z1, z1=0, z4=0.
+```
+
+For a required equality set `S`, the number of assignments is
+`m^(components(S)-1)`, since the component containing the fixed zero value is
+not free and every other component contributes one free `ZMod m` coordinate.
+Inclusion-exclusion over supersets of a mask gives the exact polynomial for
+the points with exactly that shifted-zero mask.  The script:
+
+```bash
+python3 scripts/derive_d5_lambdaE_mask_polynomials.py \
+  > /tmp/d5_lambdaE_mask_polynomials_20260506.csv
+```
+
+prints the 32 exact mask polynomials, marks the five impossible four-bit masks
+as zero, groups the reachable masks through the `Lambda_E` local row rule, and
+recovers the same modal/nonmodal/rank-total formulas above.  Thus the local
+defect-layer counts have a symbolic inclusion-exclusion proof; they are not
+merely extrapolated from `m=6,8,...,20`.
+
 Thus the `m >= 6` finite witnesses are consistent with a proof-facing shape:
 
 ```text
