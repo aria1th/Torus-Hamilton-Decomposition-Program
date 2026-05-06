@@ -109,6 +109,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_boundary_quotient_summary.json",
+      "missing": null,
+      "name": "R42 boundary quotient summary is compact and stable for q>=1",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
       "missing": null,
       "name": "R38 symmetric probe negative controls are preserved",

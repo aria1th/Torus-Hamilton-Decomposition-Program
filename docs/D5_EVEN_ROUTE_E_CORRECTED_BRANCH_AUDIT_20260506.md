@@ -37,6 +37,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Fit all-pair portfolio samples by residue | `scripts/analyze_routeE_allpair_portfolio_fits.py`, `certs/routeE_allpair_portfolio_fit_summary.json` | done, `42 mod 48` is next affine portfolio-only candidate |
 | Initialize R42 affine branch record | `scripts/init_routeE_r42_affine_branch_record.py`, `certs/routeE_r42_affine_branch_record.json` | done, branch remains open |
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
+| Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -244,6 +245,21 @@ all_passed=True
 q=0,1,2,3,4 verified by scripts/routeE_allpair_cpp_v1_2.cpp
 ```
 
+R42 boundary quotient summary:
+
+```bash
+python3 scripts/summarize_routeE_r42_boundary_quotient.py \
+  --json-out certs/routeE_r42_boundary_quotient_summary.json
+```
+
+Result:
+
+```text
+q>=1: boundary_nodes = 3*m - 2, one boundary cycle, 29 blocks
+block_count_by_label = {Z:1, 03:7, 04:13, 34:8}
+raw_csv_preserved=False
+```
+
 R38 symmetric recheck:
 
 ```bash
@@ -427,6 +443,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+<pending> Summarize Route E R42 boundary quotient
 5ac3ac1 Extend Route E R42 sample verification
 327fe6c Verify Route E R42 affine samples
 1538fa5 Initialize Route E R42 affine branch record

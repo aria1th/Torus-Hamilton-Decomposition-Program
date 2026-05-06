@@ -21,6 +21,7 @@ DEFAULT_COVERAGE = ROOT / "certs" / "routeE_typeA_residue_coverage.json"
 DEFAULT_SAMPLE_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_affine_samples_verification.json"
 )
+DEFAULT_BOUNDARY_SUMMARY = ROOT / "certs" / "routeE_r42_boundary_quotient_summary.json"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -28,7 +29,10 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def build_record(
-    fits_path: Path, coverage_path: Path, sample_verification_path: Path
+    fits_path: Path,
+    coverage_path: Path,
+    sample_verification_path: Path,
+    boundary_summary_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
     coverage = load_json(coverage_path) if coverage_path.exists() else {}
@@ -36,6 +40,9 @@ def build_record(
         load_json(sample_verification_path)
         if sample_verification_path.exists()
         else {}
+    )
+    boundary_summary = (
+        load_json(boundary_summary_path) if boundary_summary_path.exists() else {}
     )
     rows = {int(row["residue"]): row for row in fits.get("rows", [])}
     row = rows[42]
@@ -57,6 +64,7 @@ def build_record(
             "portfolio_fits": str(fits_path),
             "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
             "sample_verification": str(sample_verification_path),
+            "boundary_summary": str(boundary_summary_path),
             "typeA_coverage": str(coverage_path),
         },
         "sample_verification_summary": {
@@ -68,6 +76,12 @@ def build_record(
                 for sample in sample_verification.get("samples", [])
                 if sample.get("passed")
             ],
+        },
+        "boundary_summary": {
+            "schema": boundary_summary.get("schema"),
+            "status": boundary_summary.get("status"),
+            "raw_csv_preserved": boundary_summary.get("raw_csv_preserved"),
+            "q_ge_1_stability": boundary_summary.get("q_ge_1_stability"),
         },
         "coverage_snapshot": {
             "proof_facing_typeA_residues_mod_48": coverage.get(
@@ -88,7 +102,7 @@ def build_record(
             "Lean-facing theorem endpoint and theorem-name synchronization",
         ],
         "interpretation": (
-            "R42 is the next simple symbolic-promotion target.  The q=0,1,2 "
+            "R42 is the next simple symbolic-promotion target.  The q=0..4 "
             "samples now have reproducible all-pair checker verification, but "
             "this is still evidence only and does not close the residue until "
             "the required symbolic branch data are proved."
@@ -103,10 +117,13 @@ def main() -> None:
     parser.add_argument(
         "--sample-verification", type=Path, default=DEFAULT_SAMPLE_VERIFICATION
     )
+    parser.add_argument("--boundary-summary", type=Path, default=DEFAULT_BOUNDARY_SUMMARY)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
-    record = build_record(args.fits, args.coverage, args.sample_verification)
+    record = build_record(
+        args.fits, args.coverage, args.sample_verification, args.boundary_summary
+    )
     print(
         "branch",
         record["branch"],

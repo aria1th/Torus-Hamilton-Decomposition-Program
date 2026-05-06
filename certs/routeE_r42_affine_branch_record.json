@@ -1,4 +1,28 @@
 {
+  "boundary_summary": {
+    "q_ge_1_stability": {
+      "all_boundary_nodes_formula_ok": true,
+      "all_boundary_single_cycle": true,
+      "block_count": 29,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "sample_q_values": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "stable_block_count": true,
+      "stable_block_count_by_label": true
+    },
+    "raw_csv_preserved": false,
+    "schema": "routeE_r42_boundary_quotient_summary_v1",
+    "status": "boundary_summary_not_symbolic_proof"
+  },
   "branch": "R42",
   "coverage_snapshot": {
     "open_residues_mod_48": [
@@ -31,7 +55,7 @@
     ],
     "r42_is_open": true
   },
-  "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0,1,2 samples now have reproducible all-pair checker verification, but this is still evidence only and does not close the residue until the required symbolic branch data are proved.",
+  "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0..4 samples now have reproducible all-pair checker verification, but this is still evidence only and does not close the residue until the required symbolic branch data are proved.",
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -96,6 +120,7 @@
   ],
   "schema": "routeE_r42_affine_branch_record_v1",
   "source_artifacts": {
+    "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",

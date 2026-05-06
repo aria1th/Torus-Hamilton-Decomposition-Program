@@ -103,6 +103,17 @@ string node_label(int idx,i64 m){
     int t=idx-1; int p=t/(m-1); int a=t%(m-1)+1;
     return "("+to_string(PI_[p])+","+to_string(PJ_[p])+","+to_string(a)+")";
 }
+string skeleton_label(int idx,i64 m){
+    static vector<string> labels={"Z","01","02","03","04","12","13","14","23","24","34"};
+    if(idx<0) return "null";
+    if(idx==0) return "Z";
+    int p=(idx-1)/(m-1);
+    return labels[1+p];
+}
+int node_a_value(int idx,i64 m){
+    if(idx<=0) return 0;
+    return (idx-1)%(m-1)+1;
+}
 struct FirstRet { int dst; i128 time; int events; };
 FirstRet allpair_first_return(i64 m,i64 x,i64 z,int idx,int cap_events,i128 max_time){
     array<i64,5> w=idx_to_w(idx,m);
@@ -240,13 +251,38 @@ void cmd_enum_small(int argc,char**argv){
     }
     os<<"\n ]\n}\n"; string res=os.str(); ofstream f(outpath); f<<res; cout<<res;
 }
+void cmd_dump_csv(int argc,char**argv){
+    if(argc<7){ cerr<<"usage: dump-csv m x z cap_events out.csv\n"; exit(2); }
+    i64 m=stoll(argv[2]), x=stoll(argv[3]), z=stoll(argv[4]);
+    int cap=stoi(argv[5]);
+    string outpath=argv[6];
+    int N=1+10*(m-1);
+    ofstream f(outpath);
+    f<<"idx,src_label,src_a,dst_idx,dst_label,dst_a,time,events\n";
+    i128 total=0; int max_events=0;
+    for(int idx=0; idx<N; idx++){
+        auto fr=allpair_first_return(m,x,z,idx,cap,(i128)LLONG_MAX*LLONG_MAX);
+        if(fr.dst<0){
+            cerr<<"fail idx "<<idx<<" status "<<fr.dst<<"\n";
+            exit(1);
+        }
+        total += fr.time;
+        max_events=max(max_events, fr.events);
+        f<<idx<<","<<skeleton_label(idx,m)<<","<<node_a_value(idx,m)<<","
+         <<fr.dst<<","<<skeleton_label(fr.dst,m)<<","<<node_a_value(fr.dst,m)<<","
+         <<i128_to_string(fr.time)<<","<<fr.events<<"\n";
+    }
+    cerr<<"wrote "<<outpath<<" N="<<N<<" total="<<i128_to_string(total)
+        <<" m4="<<i128_to_string((i128)m*m*m*m)<<" max_events="<<max_events<<"\n";
+}
 int main(int argc,char**argv){
     ios::sync_with_stdio(false); cin.tie(nullptr); init();
-    if(argc<2){ cerr<<"commands: check, search-range, symmetric, enum-small\n"; return 2; }
+    if(argc<2){ cerr<<"commands: check, search-range, symmetric, enum-small, dump-csv\n"; return 2; }
     string cmd=argv[1];
     if(cmd=="check") cmd_check(argc,argv);
     else if(cmd=="search-range") cmd_search_range(argc,argv);
     else if(cmd=="symmetric") cmd_symmetric(argc,argv);
     else if(cmd=="enum-small") cmd_enum_small(argc,argv);
+    else if(cmd=="dump-csv") cmd_dump_csv(argc,argv);
     else { cerr<<"unknown command\n"; return 2; }
 }

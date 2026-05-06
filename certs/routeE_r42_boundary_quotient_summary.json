@@ -1,0 +1,160 @@
+{
+  "branch": "R42",
+  "family": "m = 48*q + 42, x = z = 6*q + 5",
+  "interpretation": "The boundary quotient is a single cycle for the checked R42 samples and has stable block counts for q>=1.  This is a symbolic-promotion guide, not a proof of the R42 residue.",
+  "q_ge_1_stability": {
+    "all_boundary_nodes_formula_ok": true,
+    "all_boundary_single_cycle": true,
+    "block_count": 29,
+    "block_count_by_label": {
+      "03": 7,
+      "04": 13,
+      "34": 8,
+      "Z": 1
+    },
+    "sample_q_values": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "stable_block_count": true,
+    "stable_block_count_by_label": true
+  },
+  "raw_csv_preserved": false,
+  "samples": [
+    {
+      "allpair_nodes": 411,
+      "block_count": 47,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 22,
+        "34": 17,
+        "Z": 1
+      },
+      "boundary_cycle_lengths": [
+        124
+      ],
+      "boundary_nodes": 124,
+      "boundary_nodes_formula_ok": true,
+      "boundary_single_cycle": true,
+      "cap_events": 17640,
+      "m": 42,
+      "ok": true,
+      "q": 0,
+      "returncode": 0,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-boundary-1o1zgv8l/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+      ],
+      "x": 5,
+      "z": 5
+    },
+    {
+      "allpair_nodes": 891,
+      "block_count": 29,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "boundary_cycle_lengths": [
+        268
+      ],
+      "boundary_nodes": 268,
+      "boundary_nodes_formula_ok": true,
+      "boundary_single_cycle": true,
+      "cap_events": 81000,
+      "m": 90,
+      "ok": true,
+      "q": 1,
+      "returncode": 0,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-boundary-1o1zgv8l/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+      ],
+      "x": 11,
+      "z": 11
+    },
+    {
+      "allpair_nodes": 1371,
+      "block_count": 29,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "boundary_cycle_lengths": [
+        412
+      ],
+      "boundary_nodes": 412,
+      "boundary_nodes_formula_ok": true,
+      "boundary_single_cycle": true,
+      "cap_events": 190440,
+      "m": 138,
+      "ok": true,
+      "q": 2,
+      "returncode": 0,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-boundary-1o1zgv8l/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+      ],
+      "x": 17,
+      "z": 17
+    },
+    {
+      "allpair_nodes": 1851,
+      "block_count": 29,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "boundary_cycle_lengths": [
+        556
+      ],
+      "boundary_nodes": 556,
+      "boundary_nodes_formula_ok": true,
+      "boundary_single_cycle": true,
+      "cap_events": 345960,
+      "m": 186,
+      "ok": true,
+      "q": 3,
+      "returncode": 0,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-boundary-1o1zgv8l/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+      ],
+      "x": 23,
+      "z": 23
+    },
+    {
+      "allpair_nodes": 2331,
+      "block_count": 29,
+      "block_count_by_label": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "boundary_cycle_lengths": [
+        700
+      ],
+      "boundary_nodes": 700,
+      "boundary_nodes_formula_ok": true,
+      "boundary_single_cycle": true,
+      "cap_events": 547560,
+      "m": 234,
+      "ok": true,
+      "q": 4,
+      "returncode": 0,
+      "stderr_tail": [
+        "wrote /tmp/routeE-r42-boundary-1o1zgv8l/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+      ],
+      "x": 29,
+      "z": 29
+    }
+  ],
+  "schema": "routeE_r42_boundary_quotient_summary_v1",
+  "source_checker": "scripts/routeE_allpair_cpp_v1_2.cpp",
+  "status": "boundary_summary_not_symbolic_proof"
+}

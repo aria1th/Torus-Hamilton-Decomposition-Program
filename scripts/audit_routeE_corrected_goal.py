@@ -38,6 +38,9 @@ FILES = {
     "r42_sample_verification": ROOT
     / "certs"
     / "routeE_r42_affine_samples_verification.json",
+    "r42_boundary_summary": ROOT
+    / "certs"
+    / "routeE_r42_boundary_quotient_summary.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -81,6 +84,7 @@ def build_audit() -> dict[str, Any]:
     r38 = load_json(FILES["r38_record"])
     r42 = load_json(FILES["r42_record"])
     r42_sample_verification = load_json(FILES["r42_sample_verification"])
+    r42_boundary_summary = load_json(FILES["r42_boundary_summary"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -216,6 +220,25 @@ def build_audit() -> dict[str, Any]:
             ]
             == [0, 1, 2, 3, 4],
             "certs/routeE_r42_affine_samples_verification.json",
+        ),
+        item(
+            "R42 boundary quotient summary is compact and stable for q>=1",
+            r42_boundary_summary.get("schema")
+            == "routeE_r42_boundary_quotient_summary_v1"
+            and r42_boundary_summary.get("raw_csv_preserved") is False
+            and r42_boundary_summary.get("q_ge_1_stability", {}).get(
+                "stable_block_count"
+            )
+            is True
+            and r42_boundary_summary.get("q_ge_1_stability", {}).get(
+                "stable_block_count_by_label"
+            )
+            is True
+            and r42_boundary_summary.get("q_ge_1_stability", {}).get(
+                "all_boundary_single_cycle"
+            )
+            is True,
+            "certs/routeE_r42_boundary_quotient_summary.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

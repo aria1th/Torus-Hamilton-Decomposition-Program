@@ -531,3 +531,20 @@ This verifies the portfolio samples and two additional affine continuations
 intentionally open: `R42` still needs a closed branch formula,
 first-return equations, no-early proof, splice/quotient one-cycle proof, and
 time identity before it can be added to proof-facing Type-A coverage.
+
+The next compression step is recorded by:
+
+```bash
+python3 scripts/summarize_routeE_r42_boundary_quotient.py \
+  --json-out certs/routeE_r42_boundary_quotient_summary.json
+```
+
+For `q=1,2,3,4`, the boundary quotient has size `3m-2`, is a single cycle,
+and has stable mined block counts:
+
+```text
+Z: 1, 03: 7, 04: 13, 34: 8
+```
+
+The finite boundary case `q=0` is still valid but has a larger exceptional
+block profile.  Raw all-pair CSV is not preserved.
