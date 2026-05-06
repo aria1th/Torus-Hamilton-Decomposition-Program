@@ -33,6 +33,39 @@ def expected_m4_coeffs() -> list[str]:
     ]
 
 
+def expected_node_count_coeffs() -> list[str]:
+    # 10*(m - 1) + 1 with m = 48*q + 42.
+    return [str(10 * (42 - 1) + 1), str(10 * 48)]
+
+
+def parse_coeffs(coeffs: list[str]) -> list[Fraction]:
+    return [Fraction(coeff) for coeff in coeffs]
+
+
+def coeffs_to_strings(coeffs: list[Fraction]) -> list[str]:
+    return [str(coeff.numerator) if coeff.denominator == 1 else str(coeff) for coeff in coeffs]
+
+
+def sum_fit_coeffs(fits: dict[str, Any]) -> list[str] | None:
+    max_len = 0
+    parsed = []
+    for label in LABELS:
+        fit = fits.get(label, {})
+        coeffs = fit.get("coefficients_ascending", [])
+        if fit.get("status") != "polynomial_fit" or not coeffs:
+            return None
+        row = parse_coeffs(coeffs)
+        parsed.append(row)
+        max_len = max(max_len, len(row))
+    total = [Fraction(0) for _ in range(max_len)]
+    for row in parsed:
+        for index, coeff in enumerate(row):
+            total[index] += coeff
+    while len(total) > 1 and total[-1] == 0:
+        total.pop()
+    return coeffs_to_strings(total)
+
+
 def check_fit_table(
     samples: list[dict[str, Any]], fits: dict[str, Any], sample_key: str
 ) -> list[dict[str, Any]]:
@@ -70,6 +103,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
     if data.get("schema") != "routeE_r42_allpair_time_fit_summary_v1":
         bad.append({"check": "schema", "actual": data.get("schema")})
     expected_total_coeffs = expected_m4_coeffs()
+    expected_count_coeffs = expected_node_count_coeffs()
     total_fit = fits.get("time_total", {})
     if total_fit.get("coefficients_ascending") != expected_total_coeffs:
         bad.append(
@@ -79,6 +113,28 @@ def build_verification(cert: Path) -> dict[str, Any]:
                 "actual": total_fit.get("coefficients_ascending"),
             }
         )
+    fit_sums = {
+        "label_count": sum_fit_coeffs(fits.get("label_count", {})),
+        "dst_count": sum_fit_coeffs(fits.get("dst_count", {})),
+        "label_time": sum_fit_coeffs(fits.get("label_time", {})),
+        "dst_time": sum_fit_coeffs(fits.get("dst_time", {})),
+    }
+    expected_fit_sums = {
+        "label_count": expected_count_coeffs,
+        "dst_count": expected_count_coeffs,
+        "label_time": expected_total_coeffs,
+        "dst_time": expected_total_coeffs,
+    }
+    for key, expected in expected_fit_sums.items():
+        if fit_sums.get(key) != expected:
+            bad.append(
+                {
+                    "check": "symbolic_fit_sum",
+                    "key": key,
+                    "expected": expected,
+                    "actual": fit_sums.get(key),
+                }
+            )
     for sample in samples:
         q = int(sample["q"])
         if sample.get("time_total") != sample.get("m4"):
@@ -104,10 +160,19 @@ def build_verification(cert: Path) -> dict[str, Any]:
             "sample_q_values": [sample.get("q") for sample in samples],
             "time_total_is_m4_polynomial": total_fit.get("coefficients_ascending")
             == expected_total_coeffs,
+            "expected_node_count_coefficients": expected_count_coeffs,
+            "expected_m4_coefficients": expected_total_coeffs,
             "label_count_fits_verified": not check_fit_table(samples, fits.get("label_count", {}), "label_count"),
             "label_time_fits_verified": not check_fit_table(samples, fits.get("label_time", {}), "label_time"),
             "dst_count_fits_verified": not check_fit_table(samples, fits.get("dst_count", {}), "dst_count"),
             "dst_time_fits_verified": not check_fit_table(samples, fits.get("dst_time", {}), "dst_time"),
+            "symbolic_fit_sums": fit_sums,
+            "label_count_fit_sum_is_node_count": fit_sums["label_count"]
+            == expected_count_coeffs,
+            "dst_count_fit_sum_is_node_count": fit_sums["dst_count"]
+            == expected_count_coeffs,
+            "label_time_fit_sum_is_m4": fit_sums["label_time"] == expected_total_coeffs,
+            "dst_time_fit_sum_is_m4": fit_sums["dst_time"] == expected_total_coeffs,
         },
         "warning": (
             "This verifies the committed time-fit artifact. It does not "

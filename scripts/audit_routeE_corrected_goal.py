@@ -440,6 +440,22 @@ def build_audit() -> dict[str, Any]:
             and r42_allpair_time_verification.get("summary", {}).get(
                 "time_total_is_m4_polynomial"
             )
+            is True
+            and r42_allpair_time_verification.get("summary", {}).get(
+                "label_count_fit_sum_is_node_count"
+            )
+            is True
+            and r42_allpair_time_verification.get("summary", {}).get(
+                "dst_count_fit_sum_is_node_count"
+            )
+            is True
+            and r42_allpair_time_verification.get("summary", {}).get(
+                "label_time_fit_sum_is_m4"
+            )
+            is True
+            and r42_allpair_time_verification.get("summary", {}).get(
+                "dst_time_fit_sum_is_m4"
+            )
             is True,
             "certs/routeE_r42_allpair_time_fit_summary.json and certs/routeE_r42_allpair_time_fit_verification.json",
         ),

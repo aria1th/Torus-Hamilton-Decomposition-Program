@@ -431,13 +431,19 @@ all_single_cycle True
 all_time_total_ok True
 time_total_formula 3111696 + 14224896*q + 24385536*q^2 + 18579456*q^3 + 5308416*q^4
 time_total_is_m4_polynomial True
+label_count_fit_sum_is_node_count True
+dst_count_fit_sum_is_node_count True
+label_time_fit_sum_is_m4 True
+dst_time_fit_sum_is_m4 True
 ```
 
 The total formula is exactly `(48*q+42)^4`.  The artifact also records and
 checks polynomial fits for source-label counts, source-label time totals,
-destination-label counts, and destination-label time totals.  This supports the
-R42 time-exhaustion branch plan, but it still does not prove pointwise
-first-return/no-early for all q.
+destination-label counts, and destination-label time totals.  The verifier also
+checks that the source/destination count fits sum symbolically to
+`10(m-1)+1 = 480q+411`, and that the source/destination time fits sum
+symbolically to `(48q+42)^4`.  This supports the R42 time-exhaustion branch
+plan, but it still does not prove pointwise first-return/no-early for all q.
 
 R38 symmetric recheck:
 
