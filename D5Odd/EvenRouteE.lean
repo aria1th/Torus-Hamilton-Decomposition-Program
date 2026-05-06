@@ -7181,6 +7181,69 @@ theorem thetaPiecewiseTarget_of_pointwiseTraceTarget (q : Nat)
   exact ⟨thetaPiecewiseCertificateOfTraceTarget q
     (thetaTraceTargetOfPointwise q target)⟩
 
+/--
+All-pair B20 target in the same shape as the complete CSV/verifier package:
+each section point has an all-pair label, and every label fiber has the
+expected time mass.  The fiber sums imply the certificate-level total time
+sum, while first-return, no-early, and section-cycle proofs remain explicit.
+-/
+structure AllPairLabelTraceTarget (q : Nat) where
+  data : D5EvenSeamData (modulus q)
+  sectionReturn :
+    Color → RouteEAllPairSection (modulus q) →
+      RouteEAllPairSection (modulus q)
+  returnTime :
+    Color → RouteEAllPairSection (modulus q) → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] a.1 =
+        (sectionReturn c a).1
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b : RouteEAllPairSection (modulus q),
+        (seamRootReturn data c)^[k] a.1 = b.1
+  sectionReturn_single :
+    ∀ c, IsSingleCycleMap (sectionReturn c)
+  labelOf : RouteEAllPairSection (modulus q) → AllPairLabel
+  label_time_sum :
+    ∀ c label,
+      ((Finset.univ : Finset (RouteEAllPairSection (modulus q))).filter
+          fun a => labelOf a = label).sum (fun a => returnTime c a) =
+        allPairTimeMass q label
+
+namespace AllPairLabelTraceTarget
+
+theorem returnTime_sum {q : Nat} (target : AllPairLabelTraceTarget q)
+    (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection (modulus q) =>
+          target.returnTime c a) =
+      modulus q ^ 4 := by
+  rw [← allPairTimeMass_sum_eq_modulus_pow_four q]
+  rw [← Finset.sum_fiberwise
+    (s := (Finset.univ : Finset (RouteEAllPairSection (modulus q))))
+    (g := target.labelOf)
+    (f := fun a => target.returnTime c a)]
+  apply Finset.sum_congr rfl
+  intro label _hlabel
+  simpa using target.label_time_sum c label
+
+end AllPairLabelTraceTarget
+
+noncomputable def allPairSectionCertificateOfLabelTraceTarget (q : Nat)
+    (target : AllPairLabelTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) where
+  data := target.data
+  routeCounts := routeCounts q
+  sectionReturn := target.sectionReturn
+  returnTime := target.returnTime
+  returnTime_pos := target.returnTime_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  sectionReturn_single := target.sectionReturn_single
+  returnTime_sum := fun c => target.returnTime_sum c
+
 def SymbolicAllPairBranchTarget : Prop :=
   ∀ q, 0 < q → Nonempty (RouteEAllPairSectionCertificate (modulus q))
 
@@ -7189,6 +7252,31 @@ def FiniteM20AllPairTarget : Prop :=
 
 def AllPairBranchTarget : Prop :=
   ∀ q, Nonempty (RouteEAllPairSectionCertificate (modulus q))
+
+theorem symbolicAllPairBranchTarget_of_labelTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q)) :
+    SymbolicAllPairBranchTarget := by
+  intro q hq
+  rcases h q hq with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget q target⟩
+
+theorem finiteM20AllPairTarget_of_labelTraceTarget
+    (h : Nonempty (AllPairLabelTraceTarget 0)) :
+    FiniteM20AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact ⟨allPairSectionCertificateOfLabelTraceTarget 0 target⟩
+
+theorem allPairBranchTarget_of_labelTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelTraceTarget q))
+    (hm20 : Nonempty (AllPairLabelTraceTarget 0)) :
+    AllPairBranchTarget := by
+  intro q
+  cases q with
+  | zero =>
+      exact finiteM20AllPairTarget_of_labelTraceTarget hm20
+  | succ q =>
+      exact symbolicAllPairBranchTarget_of_labelTraceTarget hsymbolic
+        (Nat.succ q) (Nat.succ_pos q)
 
 theorem allPairBranchTarget_of_symbolic_and_m20
     (hsymbolic : SymbolicAllPairBranchTarget)
