@@ -19,7 +19,7 @@ remaining gaps.
 
 | Requirement | Current evidence | Status |
 | --- | --- | --- |
-| Isolated branch | `route-e-v3-6-20260506`; latest Route-E adapter slice commit `c530d49` | done |
+| Isolated branch | `route-e-v3-6-20260506`; latest Route-E adapter slice commit `52ac237` | done |
 | Bundle read and compared | `docs/ROUTE_E_V3_6_ANALYSIS_20260506.md` records bundle scope, B20/B16/R14e status, and reproduction caveat | done |
 | B20 count surface | `RouteEB20.routeCounts`, existing `RouteEB20.counts_sum` | done |
 | B20 small-seam surface | Existing `RouteEB20.returnTimeFormula`, `RouteEB20.seamMap`, `RouteEB20.ThetaPointwiseTraceTarget` | pre-existing, still useful |
