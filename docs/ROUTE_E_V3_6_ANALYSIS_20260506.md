@@ -62,7 +62,11 @@ New arithmetic names include:
 - `allPairTime34`
 - `allPairTimeMassTotal`
 - `allPairTime01_eq_three_quarter_sq`
+- `allPairTimeZ_eq_half_add_three`
+- `allPairTime02_lane_sum_eq`
+- `allPairTime12_lane_sum_eq`
 - `allPairTime13_two_clock_eq`
+- `allPairTime34_boundary_defect_eq`
 - `allPairTime03Target_add_allPairTime04Target`
 - `allPairTimeMassTotal_eq_modulus_pow_four`
 
@@ -165,4 +169,3 @@ reproduction needs either the missing CSV dumps or a small path/input adapter.
    compare B16/R14e branch data against the B20 interfaces and decide whether
    the final all-even route should be a finite branch menu or a unified direct
    core-certificate theorem.
-

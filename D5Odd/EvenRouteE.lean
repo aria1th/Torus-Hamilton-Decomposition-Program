@@ -161,9 +161,42 @@ theorem allPairTime01_eq_three_quarter_sq (q : Nat) :
   simp [allPairTime01, quarter]
   ring
 
+theorem allPairTimeZ_eq_half_add_three (q : Nat) :
+    allPairTimeZ q = half q + 3 := by
+  simp [allPairTimeZ, half]
+
+theorem allPairTime02_lane_sum_eq (q : Nat) :
+    2 * allPairTime02 q = modulus q ^ 2 * (modulus q - 1) := by
+  have hpred : modulus q - 1 = 24 * q + 19 := by
+    simp [modulus]
+  rw [hpred]
+  simp [allPairTime02, modulus]
+  ring
+
+theorem allPairTime12_lane_sum_eq (q : Nat) :
+    allPairTime12 q = (modulus q - 2) * modulus q + 3 := by
+  have hsub : modulus q - 2 = 24 * q + 18 := by
+    simp [modulus]
+  rw [hsub]
+  simp [allPairTime12, modulus]
+  ring
+
 theorem allPairTime13_two_clock_eq (q : Nat) :
     2 * (allPairTime13 q + 3) = 13 * quarter q ^ 2 + quarter q := by
   simp [allPairTime13, quarter]
+  ring
+
+theorem allPairTime34_boundary_defect_eq (q : Nat) :
+    allPairTime34 q =
+      (modulus q - 8) * (2 * modulus q + 6) +
+      4 * (modulus q + 6) +
+      (modulus q + half q + 3) +
+      (modulus q + 3) +
+      modulus q := by
+  have hsub : modulus q - 8 = 24 * q + 12 := by
+    simp [modulus]
+  rw [hsub]
+  simp [allPairTime34, modulus, half]
   ring
 
 -- The v3.6 draft displays the `q` coefficient as `19079`; adding the two
