@@ -306,6 +306,12 @@ Closed or proof-facing in the bundle:
   `RouteEB20.allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four`.
   This lets a future pointwise derivation of the `03` and `04` clock functions
   close the all-pair time exhaustion without changing the endpoint theorem.
+- recovered `03` and `04` boundary-clock aggregate masses:
+  `RouteEB20.allPairTime03BoundaryClockBranchMassTotal_eq_target`,
+  `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`, and
+  `RouteEB20.allPairTime0304BoundaryClockBranchMassTotal_eq_target_sum`.
+  These encode the branch-mass decomposition found by exact all-pair samples
+  for `q = 0..9`.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
@@ -321,8 +327,9 @@ Closed or proof-facing in the bundle:
 
 Remaining B20 obligations:
 
-- derive `T_03` and `T_04` from the boundary-clock formulas, not only from
-  sample-verified target polynomials;
+- promote the recovered `T_03` pointwise formula and `T_04` odd aggregate
+  destination-class formulas from sample-backed targets to boundary-clock
+  proofs;
 - turn the no-early package into Lean-level hypotheses or lemmas;
 - instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
 

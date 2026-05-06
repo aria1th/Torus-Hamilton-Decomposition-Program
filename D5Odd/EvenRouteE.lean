@@ -226,6 +226,89 @@ theorem allPairTime34_boundary_defect_eq (q : Nat) :
   simp [allPairTime34, modulus, half]
   ring
 
+/-!
+`03` boundary-clock branch masses recovered from the v3.6 all-pair dumper.
+These are aggregate targets for the five calendar branches:
+low/high even lanes, the special even tie `a = h`, and low/high odd lanes.
+They do not by themselves prove the pointwise clock formula.
+-/
+
+def allPairTime03LowEvenBranchMass (q : Nat) : Nat :=
+  2592 * q ^ 3 + 6132 * q ^ 2 + 4798 * q + 1240
+
+def allPairTime03SpecialEvenBranchMass (q : Nat) : Nat :=
+  24 * q + 23
+
+def allPairTime03HighEvenBranchMass (q : Nat) : Nat :=
+  864 * q ^ 3 + 2076 * q ^ 2 + 1658 * q + 440
+
+def allPairTime03LowOddBranchMass (q : Nat) : Nat :=
+  432 * q ^ 3 + 1068 * q ^ 2 + 872 * q + 235
+
+def allPairTime03HighOddBranchMass (q : Nat) : Nat :=
+  1296 * q ^ 3 + 3252 * q ^ 2 + 2728 * q + 765
+
+def allPairTime03BoundaryClockBranchMassTotal (q : Nat) : Nat :=
+  allPairTime03LowEvenBranchMass q +
+  allPairTime03SpecialEvenBranchMass q +
+  allPairTime03HighEvenBranchMass q +
+  allPairTime03LowOddBranchMass q +
+  allPairTime03HighOddBranchMass q
+
+theorem allPairTime03BoundaryClockBranchMassTotal_eq_target (q : Nat) :
+    allPairTime03BoundaryClockBranchMassTotal q = allPairTime03Target q := by
+  simp [allPairTime03BoundaryClockBranchMassTotal,
+    allPairTime03LowEvenBranchMass, allPairTime03SpecialEvenBranchMass,
+    allPairTime03HighEvenBranchMass, allPairTime03LowOddBranchMass,
+    allPairTime03HighOddBranchMass, allPairTime03Target]
+  ring
+
+/-!
+`04` boundary-clock branch masses recovered from the same exact all-pair
+samples.  The even lane has a pointwise clock formula `m * a / 2`; the odd
+lanes are currently recorded by destination class (`01`, `13`, and the two
+`34` ties).  These remain aggregate clock targets until the odd pointwise
+derivation is formalized.
+-/
+
+def allPairTime04EvenBranchMass (q : Nat) : Nat :=
+  1728 * q ^ 3 + 4176 * q ^ 2 + 3360 * q + 900
+
+def allPairTime04OddTo01BranchMass (q : Nat) : Nat :=
+  1728 * q ^ 3 + 3834 * q ^ 2 + 2829 * q + 698
+
+def allPairTime04OddTo13BranchMass (q : Nat) : Nat :=
+  1728 * q ^ 3 + 3888 * q ^ 2 + 2886 * q + 708
+
+def allPairTime04OddTo34BranchMass (q : Nat) : Nat :=
+  24 * q + 29
+
+def allPairTime04BoundaryClockBranchMassTotal (q : Nat) : Nat :=
+  allPairTime04EvenBranchMass q +
+  allPairTime04OddTo01BranchMass q +
+  allPairTime04OddTo13BranchMass q +
+  allPairTime04OddTo34BranchMass q
+
+theorem allPairTime04BoundaryClockBranchMassTotal_eq_target (q : Nat) :
+    allPairTime04BoundaryClockBranchMassTotal q = allPairTime04Target q := by
+  simp [allPairTime04BoundaryClockBranchMassTotal,
+    allPairTime04EvenBranchMass, allPairTime04OddTo01BranchMass,
+    allPairTime04OddTo13BranchMass, allPairTime04OddTo34BranchMass,
+    allPairTime04Target]
+  ring
+
+def allPairTime0304BoundaryClockBranchMassTotal (q : Nat) : Nat :=
+  allPairTime03BoundaryClockBranchMassTotal q +
+  allPairTime04BoundaryClockBranchMassTotal q
+
+theorem allPairTime0304BoundaryClockBranchMassTotal_eq_target_sum
+    (q : Nat) :
+    allPairTime0304BoundaryClockBranchMassTotal q =
+      allPairTime03Target q + allPairTime04Target q := by
+  simp [allPairTime0304BoundaryClockBranchMassTotal,
+    allPairTime03BoundaryClockBranchMassTotal_eq_target,
+    allPairTime04BoundaryClockBranchMassTotal_eq_target]
+
 -- The v3.6 draft displays the `q` coefficient as `19079`; adding the two
 -- target polynomials gives `19179`, which is also forced by total time mass.
 theorem allPairTime03Target_add_allPairTime04Target (q : Nat) :
