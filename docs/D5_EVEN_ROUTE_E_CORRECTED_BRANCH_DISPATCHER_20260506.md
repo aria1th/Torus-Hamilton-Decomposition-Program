@@ -517,6 +517,16 @@ python3 scripts/init_routeE_r42_affine_branch_record.py \
   --json-out certs/routeE_r42_affine_branch_record.json
 ```
 
-The record is intentionally open: `R42` still needs a closed branch formula,
+The recorded `q=0,1,2` samples are reproducibly checked by the compact
+all-pair verifier:
+
+```bash
+python3 scripts/verify_routeE_r42_affine_samples.py \
+  --json-out certs/routeE_r42_affine_samples_verification.json
+```
+
+This verifies the portfolio samples `m=42,90,138`, `x=z=5,11,17` for
+all-pair returns, `sum tau = m^4`, and one-cycle section dynamics.  The record
+is still intentionally open: `R42` still needs a closed branch formula,
 first-return equations, no-early proof, splice/quotient one-cycle proof, and
 time identity before it can be added to proof-facing Type-A coverage.

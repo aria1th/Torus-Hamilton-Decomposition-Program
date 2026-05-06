@@ -1,0 +1,110 @@
+{
+  "all_passed": true,
+  "branch": "R42",
+  "family": "m = 48*q + 42, x = z = 6*q + 5",
+  "remaining_symbolic_obligations": [
+    "closed branch formula for all q >= 0",
+    "RF1/RF2 one-layer validity or adapter-level derivation",
+    "product_t Lambda_t = -1 sign proof",
+    "pointwise first-return equations",
+    "no-early/minimality proof",
+    "quotient or splice one-cycle proof",
+    "sum tau = m^4 time identity",
+    "Lean-facing theorem endpoint"
+  ],
+  "samples": [
+    {
+      "cap_events": 17640,
+      "checker": {
+        "count_admissible": true,
+        "cycle_lengths_top": [
+          411
+        ],
+        "fail_idx": -1,
+        "fail_label": "null",
+        "m": 42,
+        "m4": 3111696,
+        "max_events": 9916,
+        "max_return_time": 72257,
+        "ok_returns": true,
+        "schema": "routeE_allpair_cpp_check_v1_2",
+        "single_cycle": true,
+        "sum_ok": true,
+        "time_sum": 3111696,
+        "unit_pair": true,
+        "x": 5,
+        "z": 5
+      },
+      "m": 42,
+      "passed": true,
+      "q": 0,
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 5,
+      "z": 5
+    },
+    {
+      "cap_events": 81000,
+      "checker": {
+        "count_admissible": true,
+        "cycle_lengths_top": [
+          891
+        ],
+        "fail_idx": -1,
+        "fail_label": "null",
+        "m": 90,
+        "m4": 65610000,
+        "max_events": 47164,
+        "max_return_time": 720761,
+        "ok_returns": true,
+        "schema": "routeE_allpair_cpp_check_v1_2",
+        "single_cycle": true,
+        "sum_ok": true,
+        "time_sum": 65610000,
+        "unit_pair": true,
+        "x": 11,
+        "z": 11
+      },
+      "m": 90,
+      "passed": true,
+      "q": 1,
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 11,
+      "z": 11
+    },
+    {
+      "cap_events": 190440,
+      "checker": {
+        "count_admissible": true,
+        "cycle_lengths_top": [
+          1371
+        ],
+        "fail_idx": -1,
+        "fail_label": "null",
+        "m": 138,
+        "m4": 362673936,
+        "max_events": 112060,
+        "max_return_time": 2608817,
+        "ok_returns": true,
+        "schema": "routeE_allpair_cpp_check_v1_2",
+        "single_cycle": true,
+        "sum_ok": true,
+        "time_sum": 362673936,
+        "unit_pair": true,
+        "x": 17,
+        "z": 17
+      },
+      "m": 138,
+      "passed": true,
+      "q": 2,
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 17,
+      "z": 17
+    }
+  ],
+  "schema": "routeE_r42_affine_samples_verification_v1",
+  "source_checker": "scripts/routeE_allpair_cpp_v1_2.cpp",
+  "status": "sample_verified_not_symbolic_proof"
+}

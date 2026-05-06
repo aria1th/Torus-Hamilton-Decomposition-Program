@@ -35,6 +35,9 @@ FILES = {
     / "routeE_allpair_portfolio_fit_summary.json",
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r42_record": ROOT / "certs" / "routeE_r42_affine_branch_record.json",
+    "r42_sample_verification": ROOT
+    / "certs"
+    / "routeE_r42_affine_samples_verification.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -77,6 +80,7 @@ def build_audit() -> dict[str, Any]:
     portfolio_fits = load_json(FILES["allpair_portfolio_fits"])
     r38 = load_json(FILES["r38_record"])
     r42 = load_json(FILES["r42_record"])
+    r42_sample_verification = load_json(FILES["r42_sample_verification"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -196,10 +200,22 @@ def build_audit() -> dict[str, Any]:
         item(
             "R42 affine next-target record exists and is marked open",
             r42.get("schema") == "routeE_r42_affine_branch_record_v1"
-            and r42.get("status") == "open_affine_symbolic_candidate"
+            and r42.get("status") == "sample_verified_open_symbolic_candidate"
             and r42.get("observed_law", {}).get("x") == "6*q + 5"
             and r42.get("coverage_snapshot", {}).get("r42_is_open") is True,
             "certs/routeE_r42_affine_branch_record.json",
+        ),
+        item(
+            "R42 affine q=0,1,2 samples verify with all-pair checker",
+            r42_sample_verification.get("schema")
+            == "routeE_r42_affine_samples_verification_v1"
+            and r42_sample_verification.get("all_passed") is True
+            and [
+                sample.get("q")
+                for sample in r42_sample_verification.get("samples", [])
+            ]
+            == [0, 1, 2],
+            "certs/routeE_r42_affine_samples_verification.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

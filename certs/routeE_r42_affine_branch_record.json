@@ -31,7 +31,7 @@
     ],
     "r42_is_open": true
   },
-  "interpretation": "R42 is the next simple portfolio-only symbolic-promotion target. The affine sample law is evidence only and does not close the residue until the required branch data are proved.",
+  "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0,1,2 samples now have reproducible all-pair checker verification, but this is still evidence only and does not close the residue until the required symbolic branch data are proved.",
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -56,6 +56,16 @@
     90,
     138
   ],
+  "sample_verification_summary": {
+    "all_passed": true,
+    "schema": "routeE_r42_affine_samples_verification_v1",
+    "source_checker": "scripts/routeE_allpair_cpp_v1_2.cpp",
+    "verified_q_values": [
+      0,
+      1,
+      2
+    ]
+  },
   "samples": [
     {
       "m": 42,
@@ -86,7 +96,8 @@
   "source_artifacts": {
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
+    "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",
     "typeA_coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json"
   },
-  "status": "open_affine_symbolic_candidate"
+  "status": "sample_verified_open_symbolic_candidate"
 }
