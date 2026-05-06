@@ -264,6 +264,9 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.allPairTimeMassTarget`
 - `RouteEB16.allPairLabelDstTimeMassTarget`
 - `RouteEB16.allPairLabelDstTimeMassTarget_sum_by_src`
+- `RouteEB16.allPairLabelDstCountTarget`
+- `RouteEB16.allPairLabelDstCountTarget_sum_by_src`
+- `RouteEB16.allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_total`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
@@ -482,7 +485,9 @@ B16:
   checked macro length identity is
   `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`; the
   label-destination mass check is
-  `RouteEB16.allPairLabelDstTimeMassTarget_sum_by_src`;
+  `RouteEB16.allPairLabelDstTimeMassTarget_sum_by_src`, and the
+  label-destination row-count check extracted from the case count table is
+  `RouteEB16.allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget`;
 - remaining Lean work is to instantiate the concrete boundary quotient map and
   macro-return data, then supply all-pair first-return/no-early equations and
   the finite `m = 16` table.

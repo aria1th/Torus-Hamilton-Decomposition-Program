@@ -714,6 +714,87 @@ theorem allPairLabelDstTimeMassTarget_sum_by_src (q : Nat) :
       allPairTime24Target, allPairTime34Target] <;>
     ring
 
+def allPairRowCountTarget (q : Nat) : Nat :=
+  1 + 10 * (modulus q - 1)
+
+def allPairLabelDstCountTarget (q : Nat) :
+    RouteEB20.AllPairLabel × RouteEB20.AllPairLabel → Nat
+  | (.Z, .L13) => 1
+  | (.L01, .L01) => 6 * q + 4
+  | (.L01, .L03) => 9 * q + 5
+  | (.L01, .L13) => 9 * q + 5
+  | (.L01, .Z) => 1
+  | (.L02, .L24) => 24 * q + 15
+  | (.L03, .L04) => 6 * q + 4
+  | (.L03, .L14) => 12 * q + 8
+  | (.L03, .L34) => 6 * q + 3
+  | (.L04, .L01) => 3 * q + 2
+  | (.L04, .L13) => 3 * q + 2
+  | (.L04, .L14) => 12 * q + 7
+  | (.L04, .L34) => 6 * q + 4
+  | (.L12, .L03) => 1
+  | (.L12, .L12) => 24 * q + 14
+  | (.L13, .L01) => 9 * q + 6
+  | (.L13, .L03) => 15 * q + 9
+  | (.L14, .L02) => 12 * q + 7
+  | (.L14, .L23) => 12 * q + 8
+  | (.L23, .L02) => 12 * q + 8
+  | (.L23, .L04) => 3 * q + 2
+  | (.L23, .L13) => 9 * q + 5
+  | (.L24, .L04) => 9 * q + 5
+  | (.L24, .L12) => 1
+  | (.L24, .L13) => 3 * q + 2
+  | (.L24, .L23) => 12 * q + 7
+  | (.L34, .L01) => 6 * q + 3
+  | (.L34, .L04) => 6 * q + 4
+  | (.L34, .L34) => 12 * q + 8
+  | _ => 0
+
+def allPairLabelDstCountBySrcTarget (q : Nat) :
+    RouteEB20.AllPairLabel → Nat
+  | .Z => 1
+  | _ => modulus q - 1
+
+theorem allPairLabelDstCountTarget_sum_by_src (q : Nat) :
+    ∀ src : RouteEB20.AllPairLabel,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        allPairLabelDstCountTarget q (src, dst)) =
+          allPairLabelDstCountBySrcTarget q src := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  intro src
+  rw [huniv]
+  fin_cases src <;>
+    simp [allPairLabelDstCountTarget, allPairLabelDstCountBySrcTarget,
+      modulus] <;>
+    ring
+
+theorem allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget
+    (q : Nat) :
+    Finset.univ.sum (allPairLabelDstCountBySrcTarget q) =
+      allPairRowCountTarget q := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [allPairLabelDstCountBySrcTarget, allPairRowCountTarget, modulus]
+  ring
+
 end RouteEB16
 
 namespace RouteER14e
