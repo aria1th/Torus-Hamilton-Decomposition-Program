@@ -1,0 +1,329 @@
+{
+  "allpair_time_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_time_fit_summary.json",
+  "block_count": 29,
+  "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+  "note": "The committed boundary summary compresses the unique Z block path as 'Z'.  Fresh all-pair traces show the corresponding boundary segment is Z>13, so the verifier records and applies the one L13 insertion correction before comparing to all-pair label counts.",
+  "ok": true,
+  "promotion_impact": {
+    "no_early_closed": false,
+    "pointwise_equations_closed": false,
+    "supports_boundary_transducer_route": true
+  },
+  "q_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "rows": [
+    {
+      "expanded_label_counts": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 88,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "expanded_total": 891,
+      "expected_label_counts": {
+        "01": 89,
+        "02": 89,
+        "03": 89,
+        "04": 89,
+        "12": 89,
+        "13": 89,
+        "14": 89,
+        "23": 89,
+        "24": 89,
+        "34": 89,
+        "Z": 1
+      },
+      "expected_total": 891,
+      "label_counts_match": true,
+      "m": 90,
+      "q": 1,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    },
+    {
+      "expanded_label_counts": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 136,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "expanded_total": 1371,
+      "expected_label_counts": {
+        "01": 137,
+        "02": 137,
+        "03": 137,
+        "04": 137,
+        "12": 137,
+        "13": 137,
+        "14": 137,
+        "23": 137,
+        "24": 137,
+        "34": 137,
+        "Z": 1
+      },
+      "expected_total": 1371,
+      "label_counts_match": true,
+      "m": 138,
+      "q": 2,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    },
+    {
+      "expanded_label_counts": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 184,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "expanded_total": 1851,
+      "expected_label_counts": {
+        "01": 185,
+        "02": 185,
+        "03": 185,
+        "04": 185,
+        "12": 185,
+        "13": 185,
+        "14": 185,
+        "23": 185,
+        "24": 185,
+        "34": 185,
+        "Z": 1
+      },
+      "expected_total": 1851,
+      "label_counts_match": true,
+      "m": 186,
+      "q": 3,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    },
+    {
+      "expanded_label_counts": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 232,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "expanded_total": 2331,
+      "expected_label_counts": {
+        "01": 233,
+        "02": 233,
+        "03": 233,
+        "04": 233,
+        "12": 233,
+        "13": 233,
+        "14": 233,
+        "23": 233,
+        "24": 233,
+        "34": 233,
+        "Z": 1
+      },
+      "expected_total": 2331,
+      "label_counts_match": true,
+      "m": 234,
+      "q": 4,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    },
+    {
+      "expanded_label_counts": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 280,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "expanded_total": 2811,
+      "expected_label_counts": {
+        "01": 281,
+        "02": 281,
+        "03": 281,
+        "04": 281,
+        "12": 281,
+        "13": 281,
+        "14": 281,
+        "23": 281,
+        "24": 281,
+        "34": 281,
+        "Z": 1
+      },
+      "expected_total": 2811,
+      "label_counts_match": true,
+      "m": 282,
+      "q": 5,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    },
+    {
+      "expanded_label_counts": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "expanded_label_counts_uncorrected": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 328,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "expanded_total": 3291,
+      "expected_label_counts": {
+        "01": 329,
+        "02": 329,
+        "03": 329,
+        "04": 329,
+        "12": 329,
+        "13": 329,
+        "14": 329,
+        "23": 329,
+        "24": 329,
+        "34": 329,
+        "Z": 1
+      },
+      "expected_total": 3291,
+      "label_counts_match": true,
+      "m": 330,
+      "q": 6,
+      "total_matches": true,
+      "uncorrected_difference_expected_minus_expanded": {
+        "13": 1
+      },
+      "z_path_compression_correction": true
+    }
+  ],
+  "schema": "routeE_r42_boundary_expansion_verification_v1"
+}

@@ -38,6 +38,7 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     sample = record.get("sample_verification_summary", {})
     color = record.get("color_sign_screen_summary", {})
     boundary_ver = record.get("boundary_verification_summary", {}).get("summary", {})
+    boundary_expansion_ver = record.get("boundary_expansion_verification_summary", {})
     block_regen = record.get("block_regeneration_verification_summary", {}).get("summary", {})
     tails = record.get("open_tail_formula_suggestions_summary", {}).get("summary", {})
     time_ver = record.get("allpair_time_fit_verification_summary", {}).get("summary", {})
@@ -81,6 +82,16 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and boundary_ver.get("q1_representative_block_formulas_verified") is True,
             "certs/routeE_r42_boundary_summary_verification.json",
             "supporting quotient artifact",
+        ),
+        item(
+            "R42 boundary blocks expand to all-pair label counts",
+            boundary_expansion_ver.get("schema")
+            == "routeE_r42_boundary_expansion_verification_v1"
+            and boundary_expansion_ver.get("ok") is True
+            and boundary_expansion_ver.get("q_values") == [1, 2, 3, 4, 5, 6]
+            and boundary_expansion_ver.get("block_count") == 29,
+            "certs/routeE_r42_boundary_expansion_verification.json",
+            "boundary-to-all-pair expansion evidence",
         ),
         item(
             "R42 block formulas match regenerated witnesses",

@@ -49,6 +49,9 @@ FILES = {
     "r42_boundary_verification": ROOT
     / "certs"
     / "routeE_r42_boundary_summary_verification.json",
+    "r42_boundary_expansion_verification": ROOT
+    / "certs"
+    / "routeE_r42_boundary_expansion_verification.json",
     "r42_block_regeneration_verification": ROOT
     / "certs"
     / "routeE_r42_block_formula_regeneration_verification.json",
@@ -118,6 +121,9 @@ def build_audit() -> dict[str, Any]:
     r42_sample_verification = load_json(FILES["r42_sample_verification"])
     r42_boundary_summary = load_json(FILES["r42_boundary_summary"])
     r42_boundary_verification = load_json(FILES["r42_boundary_verification"])
+    r42_boundary_expansion_verification = load_json(
+        FILES["r42_boundary_expansion_verification"]
+    )
     r42_block_regeneration_verification = load_json(
         FILES["r42_block_regeneration_verification"]
     )
@@ -449,6 +455,16 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_boundary_summary_verification.json",
         ),
         item(
+            "R42 boundary expansion matches all-pair label counts",
+            r42_boundary_expansion_verification.get("schema")
+            == "routeE_r42_boundary_expansion_verification_v1"
+            and r42_boundary_expansion_verification.get("ok") is True
+            and r42_boundary_expansion_verification.get("block_count") == 29
+            and r42_boundary_expansion_verification.get("q_values")
+            == [1, 2, 3, 4, 5, 6],
+            "certs/routeE_r42_boundary_expansion_verification.json",
+        ),
+        item(
             "R42 block formulas match freshly regenerated finite witnesses",
             r42_block_regeneration_verification.get("schema")
             == "routeE_r42_block_formula_regeneration_verification_v1"
@@ -565,7 +581,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 10
+            and r42_promotion_audit.get("evidence_items_ok") == 11
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

@@ -163,6 +163,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_boundary_expansion_verification.json",
+      "missing": null,
+      "name": "R42 boundary expansion matches all-pair label counts",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_block_formula_regeneration_verification.json",
       "missing": null,
       "name": "R42 block formulas match freshly regenerated finite witnesses",

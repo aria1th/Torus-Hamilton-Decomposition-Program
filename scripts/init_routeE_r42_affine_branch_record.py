@@ -25,6 +25,9 @@ DEFAULT_BOUNDARY_SUMMARY = ROOT / "certs" / "routeE_r42_boundary_quotient_summar
 DEFAULT_BOUNDARY_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_boundary_summary_verification.json"
 )
+DEFAULT_BOUNDARY_EXPANSION_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_boundary_expansion_verification.json"
+)
 DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
@@ -60,6 +63,7 @@ def build_record(
     sample_verification_path: Path,
     boundary_summary_path: Path,
     boundary_verification_path: Path,
+    boundary_expansion_verification_path: Path,
     block_regeneration_verification_path: Path,
     open_tail_suggestions_path: Path,
     allpair_time_fits_path: Path,
@@ -83,6 +87,11 @@ def build_record(
     boundary_verification = (
         load_json(boundary_verification_path)
         if boundary_verification_path.exists()
+        else {}
+    )
+    boundary_expansion_verification = (
+        load_json(boundary_expansion_verification_path)
+        if boundary_expansion_verification_path.exists()
         else {}
     )
     block_regeneration_verification = (
@@ -159,6 +168,7 @@ def build_record(
             "sample_verification": str(sample_verification_path),
             "boundary_summary": str(boundary_summary_path),
             "boundary_verification": str(boundary_verification_path),
+            "boundary_expansion_verification": str(boundary_expansion_verification_path),
             "block_regeneration_verification": str(
                 block_regeneration_verification_path
             ),
@@ -238,6 +248,13 @@ def build_record(
             "schema": boundary_verification.get("schema"),
             "ok": boundary_verification.get("ok"),
             "summary": boundary_verification.get("summary"),
+        },
+        "boundary_expansion_verification_summary": {
+            "schema": boundary_expansion_verification.get("schema"),
+            "ok": boundary_expansion_verification.get("ok"),
+            "q_values": boundary_expansion_verification.get("q_values"),
+            "block_count": boundary_expansion_verification.get("block_count"),
+            "note": boundary_expansion_verification.get("note"),
         },
         "block_regeneration_verification_summary": {
             "schema": block_regeneration_verification.get("schema"),
@@ -326,6 +343,11 @@ def main() -> None:
         "--boundary-verification", type=Path, default=DEFAULT_BOUNDARY_VERIFICATION
     )
     parser.add_argument(
+        "--boundary-expansion-verification",
+        type=Path,
+        default=DEFAULT_BOUNDARY_EXPANSION_VERIFICATION,
+    )
+    parser.add_argument(
         "--block-regeneration-verification",
         type=Path,
         default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
@@ -369,6 +391,7 @@ def main() -> None:
         args.sample_verification,
         args.boundary_summary,
         args.boundary_verification,
+        args.boundary_expansion_verification,
         args.block_regeneration_verification,
         args.open_tail_suggestions,
         args.allpair_time_fits,

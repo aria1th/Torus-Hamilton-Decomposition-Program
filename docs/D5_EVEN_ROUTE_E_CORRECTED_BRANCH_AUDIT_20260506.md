@@ -42,6 +42,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
 | Verify R42 compact boundary summary | `scripts/verify_routeE_r42_boundary_summary.py`, `certs/routeE_r42_boundary_summary_verification.json` | done, internal affine/block consistency verified |
+| Verify R42 boundary-to-all-pair expansion | `scripts/verify_routeE_r42_boundary_expansion.py`, `certs/routeE_r42_boundary_expansion_verification.json` | done, q=1..6 label counts match |
 | Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..6 regenerated |
 | Store R42 open tail formulas in compact summary | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, interval-count tails recorded |
 | Record remaining R42 open tail fields | `scripts/suggest_routeE_r42_open_tail_formulas.py`, `certs/routeE_r42_open_tail_formula_suggestions.json` | done, only q=1 boundary exception remains |
@@ -381,6 +382,30 @@ representative block table.  They are recorded as q=1 boundary compression
 debt, not as a mismatch; both now have q>=2 tail affine formulas in the compact
 summary.
 
+R42 boundary-to-all-pair expansion verification:
+
+```bash
+python3 scripts/verify_routeE_r42_boundary_expansion.py \
+  --q-values 1:6 \
+  --json-out certs/routeE_r42_boundary_expansion_verification.json
+```
+
+Result:
+
+```text
+ok True
+block_count 29
+q_values [1,2,3,4,5,6]
+```
+
+This verifies that the 29 boundary block formulas, expanded by their path-run
+counts, reproduce the all-pair source-label counts from the all-pair time-fit
+artifact.  The verifier records one explicit correction: the compact boundary
+summary stores the unique `Z` block path as `Z`, while the fresh all-pair trace
+has a hidden `Z>13` insertion.  After adding this one `L13` insertion, the
+expanded counts match for q=1..6.  This supports the boundary/transducer route
+but still does not prove pointwise first-return or no-early.
+
 R42 regenerated block-formula verification:
 
 ```bash
@@ -552,7 +577,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 10
+evidence_items_ok 11
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

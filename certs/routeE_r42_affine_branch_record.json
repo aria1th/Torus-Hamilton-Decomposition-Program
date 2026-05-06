@@ -142,6 +142,20 @@
       ]
     }
   },
+  "boundary_expansion_verification_summary": {
+    "block_count": 29,
+    "note": "The committed boundary summary compresses the unique Z block path as 'Z'.  Fresh all-pair traces show the corresponding boundary segment is Z>13, so the verifier records and applies the one L13 insertion correction before comparing to all-pair label counts.",
+    "ok": true,
+    "q_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "schema": "routeE_r42_boundary_expansion_verification_v1"
+  },
   "boundary_summary": {
     "q_ge_1_block_formula_fits_summary": {
       "block24_q_ge_2_tail": {
@@ -504,6 +518,7 @@
     "allpair_transition_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_summary.json",
     "allpair_transition_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_verification.json",
     "block_regeneration_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_block_formula_regeneration_verification.json",
+    "boundary_expansion_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_expansion_verification.json",
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
