@@ -91,6 +91,16 @@ New arithmetic names include:
 - `boundaryCycleSecondOddStart_eq_two_modulus_add_two`
 - `boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one`
 - `boundaryCycleSecondEvenEnd_eq_length`
+- `RouteENonzeroSeam.ofNat_val`
+- `routeEBoundaryNodeOfNat`
+- `boundaryFirstEvenValue_range`
+- `boundaryFirstOddValue_range`
+- `boundarySecondOddValue_range`
+- `boundarySecondEvenValue_range`
+- `boundaryFirstEvenParam_val`
+- `boundaryFirstOddParam_val`
+- `boundarySecondOddParam_val`
+- `boundarySecondEvenParam_val`
 - `boundaryCycleHandCountTotal_eq_card`
 - `boundaryShiftParam`
 - `boundaryPredParam`
@@ -207,6 +217,8 @@ Closed or proof-facing in the bundle:
 - boundary quotient formula target for the B20 v1.8 candidate.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
+- numeric nonzero seam constructors and range lemmas for the four modular
+  residue chains used by the explicit boundary-cycle orbit enumeration.
 
 Remaining B20 obligations:
 

@@ -598,6 +598,11 @@ def ofNat {m : Nat} [NeZero m] (k : Nat) (hpos : 0 < k)
     (hlt : k < m) : RouteENonzeroSeam m :=
   ⟨((k : Nat) : ZMod m), zmod_nat_ne_zero (m := m) (k := k) hpos hlt⟩
 
+theorem ofNat_val {m : Nat} [NeZero m] (k : Nat) (hpos : 0 < k)
+    (hlt : k < m) :
+    ((ofNat k hpos hlt).1).val = k := by
+  exact ZMod.val_natCast_of_lt hlt
+
 set_option linter.flexible false in
 theorem ofIndex_toIndex {m : Nat} [NeZero m] (a : RouteENonzeroSeam m) :
     ofIndex (toIndex a) = a := by
@@ -653,6 +658,17 @@ def routeEBoundaryZero {m : Nat} : RouteEBoundaryNode m :=
 def routeEBoundaryNode {m : Nat} (label : RouteEBoundaryLabel)
     (a : RouteENonzeroSeam m) : RouteEBoundaryNode m :=
   Sum.inr (label, a)
+
+def routeEBoundaryNodeOfNat {m : Nat} [NeZero m]
+    (label : RouteEBoundaryLabel) (k : Nat) (hpos : 0 < k)
+    (hlt : k < m) : RouteEBoundaryNode m :=
+  routeEBoundaryNode label (RouteENonzeroSeam.ofNat k hpos hlt)
+
+theorem routeEBoundaryNodeOfNat_val {m : Nat} [NeZero m]
+    (_label : RouteEBoundaryLabel) (k : Nat) (hpos : 0 < k)
+    (hlt : k < m) :
+    (RouteENonzeroSeam.ofNat k hpos hlt).1.val = k :=
+  RouteENonzeroSeam.ofNat_val k hpos hlt
 
 theorem card_routeEBoundaryLabel :
     Fintype.card RouteEBoundaryLabel = 3 := by
@@ -1387,6 +1403,150 @@ theorem boundaryCycleSecondEvenEnd_eq_length (q : Nat) :
   simp [boundaryCycleSecondEvenTailCount, boundaryCycleLength,
     quarter, half, modulus]
   omega
+
+def boundaryFirstEvenValue (q j : Nat) : Nat :=
+  if j % 2 = 0 then half q - 2 * j else modulus q - 2 * j
+
+def boundaryFirstOddValue (q j : Nat) : Nat :=
+  if j % 2 = 0 then half q - 1 - 2 * j else modulus q - 1 - 2 * j
+
+def boundarySecondOddValue (q j : Nat) : Nat :=
+  if j % 2 = 0 then modulus q - 1 - 2 * j else half q - 1 - 2 * j
+
+def boundarySecondEvenValue (q j : Nat) : Nat :=
+  if j % 2 = 0 then half q - 2 - 2 * j else modulus q - 2 - 2 * j
+
+theorem boundaryFirstEvenValue_range (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    0 < boundaryFirstEvenValue q j ∧
+      boundaryFirstEvenValue q j < modulus q := by
+  have hhalf_pos : 0 < half q - 2 * j := by
+    simp [half, quarter] at hjlt ⊢
+    omega
+  have hhalf_lt : half q - 2 * j < modulus q := by
+    simp [half, modulus]
+    omega
+  have hmod_pos : 0 < modulus q - 2 * j := by
+    simp [modulus, quarter] at hjlt ⊢
+    omega
+  have hmod_lt : modulus q - 2 * j < modulus q := by
+    simp [modulus]
+    omega
+  by_cases hpar : j % 2 = 0
+  · simpa [boundaryFirstEvenValue, hpar] using And.intro hhalf_pos hhalf_lt
+  · simpa [boundaryFirstEvenValue, hpar] using And.intro hmod_pos hmod_lt
+
+theorem boundaryFirstOddValue_range (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    0 < boundaryFirstOddValue q j ∧
+      boundaryFirstOddValue q j < modulus q := by
+  have hhalf_pos : 0 < half q - 1 - 2 * j := by
+    simp [half, quarter] at hjlt ⊢
+    omega
+  have hhalf_lt : half q - 1 - 2 * j < modulus q := by
+    simp [half, modulus]
+    omega
+  have hmod_pos : 0 < modulus q - 1 - 2 * j := by
+    simp [modulus, quarter] at hjlt ⊢
+    omega
+  have hmod_lt : modulus q - 1 - 2 * j < modulus q := by
+    simp [modulus]
+    omega
+  by_cases hpar : j % 2 = 0
+  · simpa [boundaryFirstOddValue, hpar] using And.intro hhalf_pos hhalf_lt
+  · simpa [boundaryFirstOddValue, hpar] using And.intro hmod_pos hmod_lt
+
+theorem boundarySecondOddValue_range (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    0 < boundarySecondOddValue q j ∧
+      boundarySecondOddValue q j < modulus q := by
+  have hhalf_pos : 0 < half q - 1 - 2 * j := by
+    simp [half, quarter] at hjlt ⊢
+    omega
+  have hhalf_lt : half q - 1 - 2 * j < modulus q := by
+    simp [half, modulus]
+    omega
+  have hmod_pos : 0 < modulus q - 1 - 2 * j := by
+    simp [modulus, quarter] at hjlt ⊢
+    omega
+  have hmod_lt : modulus q - 1 - 2 * j < modulus q := by
+    simp [modulus]
+    omega
+  by_cases hpar : j % 2 = 0
+  · simpa [boundarySecondOddValue, hpar] using And.intro hmod_pos hmod_lt
+  · simpa [boundarySecondOddValue, hpar] using And.intro hhalf_pos hhalf_lt
+
+theorem boundarySecondEvenValue_range (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    0 < boundarySecondEvenValue q j ∧
+      boundarySecondEvenValue q j < modulus q := by
+  have hhalf_pos : 0 < half q - 2 - 2 * j := by
+    simp [half, quarter] at hjlt ⊢
+    omega
+  have hhalf_lt : half q - 2 - 2 * j < modulus q := by
+    simp [half, modulus]
+    omega
+  have hmod_pos : 0 < modulus q - 2 - 2 * j := by
+    simp [modulus, quarter] at hjlt ⊢
+    omega
+  have hmod_lt : modulus q - 2 - 2 * j < modulus q := by
+    simp [modulus]
+    omega
+  by_cases hpar : j % 2 = 0
+  · simpa [boundarySecondEvenValue, hpar] using And.intro hhalf_pos hhalf_lt
+  · simpa [boundarySecondEvenValue, hpar] using And.intro hmod_pos hmod_lt
+
+def boundaryFirstEvenParam (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundaryFirstEvenValue q j)
+    (boundaryFirstEvenValue_range q j hjpos hjlt).1
+    (boundaryFirstEvenValue_range q j hjpos hjlt).2
+
+theorem boundaryFirstEvenParam_val (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundaryFirstEvenParam q j hjpos hjlt).1.val =
+      boundaryFirstEvenValue q j := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
+
+def boundaryFirstOddParam (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundaryFirstOddValue q j)
+    (boundaryFirstOddValue_range q j hjpos hjlt).1
+    (boundaryFirstOddValue_range q j hjpos hjlt).2
+
+theorem boundaryFirstOddParam_val (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundaryFirstOddParam q j hjpos hjlt).1.val =
+      boundaryFirstOddValue q j := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
+
+def boundarySecondOddParam (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundarySecondOddValue q j)
+    (boundarySecondOddValue_range q j hjpos hjlt).1
+    (boundarySecondOddValue_range q j hjpos hjlt).2
+
+theorem boundarySecondOddParam_val (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundarySecondOddParam q j hjpos hjlt).1.val =
+      boundarySecondOddValue q j := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
+
+def boundarySecondEvenParam (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundarySecondEvenValue q j)
+    (boundarySecondEvenValue_range q j hjlt).1
+    (boundarySecondEvenValue_range q j hjlt).2
+
+theorem boundarySecondEvenParam_val (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    (boundarySecondEvenParam q j hjlt).1.val =
+      boundarySecondEvenValue q j := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
 
 theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
     boundaryCycleHandCountTotal q =
