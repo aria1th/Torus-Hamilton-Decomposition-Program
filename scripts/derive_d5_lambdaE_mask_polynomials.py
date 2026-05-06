@@ -21,8 +21,11 @@ coefficient dictionaries in the variable `m`.
 
 from __future__ import annotations
 
+import argparse
+import json
 from collections import Counter, deque
 from functools import lru_cache
+from pathlib import Path
 
 import analyze_d5_routeE_layer_switches as switches
 import analyze_d5_routeE_defect_layer as defect
@@ -81,6 +84,10 @@ def poly_text(a: Poly) -> str:
     return text
 
 
+def poly_json(a: Poly) -> dict[str, int]:
+    return {str(deg): coeff for deg, coeff in sorted(a.items())}
+
+
 def popcount(mask: int) -> int:
     return mask.bit_count()
 
@@ -133,17 +140,27 @@ def exact_poly(mask: int) -> Poly:
     return dict(exact_mask_poly(mask))
 
 
-def main() -> None:
+def derive_payload() -> dict:
     words = switches.shortest_words_from(defect.BULK_ROW)
     row_polys: dict[switches.Row, Poly] = {}
     rank_totals: dict[int, Poly] = {0: {}, 1: {}, 2: {}, 3: {}}
     modal_poly: Poly = {}
+    mask_entries: list[dict] = []
 
-    print("mask,poly,row,word")
     for mask in range(32):
         poly = exact_poly(mask)
         if not poly:
-            print(f"{mask:05b},0,unreachable,unreachable")
+            mask_entries.append(
+                {
+                    "mask": f"{mask:05b}",
+                    "mask_int": mask,
+                    "polynomial": "0",
+                    "coefficients": {},
+                    "row": None,
+                    "word": None,
+                    "reachable": False,
+                }
+            )
             continue
         if mask not in defect.routee.CANON:
             raise RuntimeError(
@@ -157,25 +174,106 @@ def main() -> None:
             modal_poly = poly_add(modal_poly, poly)
         for rank, _ in word:
             rank_totals[rank] = poly_add(rank_totals[rank], poly)
-        print(
-            f"{mask:05b},{poly_text(poly)},\"{row}\",\"{switches.word_text(word)}\""
+        mask_entries.append(
+            {
+                "mask": f"{mask:05b}",
+                "mask_int": mask,
+                "polynomial": poly_text(poly),
+                "coefficients": poly_json(poly),
+                "row": list(row),
+                "word": switches.word_text(word),
+                "word_ranks": [rank for rank, _ in word],
+                "reachable": True,
+            }
         )
 
     total_nonmodal: Poly = {4: 1}
     total_nonmodal = poly_add(total_nonmodal, modal_poly, sign=-1)
-    print()
-    print(f"modal_count={poly_text(modal_poly)}")
-    print(f"nonmodal_count={poly_text(total_nonmodal)}")
-    for rank in range(4):
-        print(f"rank_{rank}_total={poly_text(rank_totals[rank])}")
+    sample_moduli = [6, 8, 10, 12, 14, 16, 18, 20]
+    checks = []
+    for m in sample_moduli:
+        checks.append(
+            {
+                "m": m,
+                "modal": poly_eval(modal_poly, m),
+                "nonmodal": poly_eval(total_nonmodal, m),
+                "rank_totals": {
+                    str(rank): poly_eval(rank_totals[rank], m) for rank in range(4)
+                },
+            }
+        )
+    return {
+        "schema": "d5_lambdaE_mask_polynomials_v1",
+        "description": (
+            "Exact shifted-zero mask count polynomials for the D5 Route-E "
+            "Lambda_E defect layer, derived by inclusion-exclusion over the "
+            "5-cycle equality arrangement."
+        ),
+        "edges": EDGES,
+        "bulk_row": list(defect.BULK_ROW),
+        "mask_entries": mask_entries,
+        "modal_count": {
+            "polynomial": poly_text(modal_poly),
+            "coefficients": poly_json(modal_poly),
+        },
+        "nonmodal_count": {
+            "polynomial": poly_text(total_nonmodal),
+            "coefficients": poly_json(total_nonmodal),
+        },
+        "rank_totals": {
+            str(rank): {
+                "polynomial": poly_text(rank_totals[rank]),
+                "coefficients": poly_json(rank_totals[rank]),
+            }
+            for rank in range(4)
+        },
+        "sample_checks": checks,
+    }
 
-    for m in [6, 8, 10, 12, 14, 16, 18, 20]:
+
+def print_payload(payload: dict) -> None:
+    print("mask,poly,row,word")
+    for entry in payload["mask_entries"]:
+        if not entry["reachable"]:
+            print(f"{entry['mask']},0,unreachable,unreachable")
+            continue
+        print(
+            f"{entry['mask']},{entry['polynomial']},"
+            f"\"{tuple(entry['row'])}\",\"{entry['word']}\""
+        )
+
+    print()
+    print(f"modal_count={payload['modal_count']['polynomial']}")
+    print(f"nonmodal_count={payload['nonmodal_count']['polynomial']}")
+    for rank in range(4):
+        print(
+            f"rank_{rank}_total="
+            f"{payload['rank_totals'][str(rank)]['polynomial']}"
+        )
+
+    for check in payload["sample_checks"]:
         values = {
-            "modal": poly_eval(modal_poly, m),
-            "nonmodal": poly_eval(total_nonmodal, m),
-            **{f"rank{rank}": poly_eval(rank_totals[rank], m) for rank in range(4)},
+            "modal": check["modal"],
+            "nonmodal": check["nonmodal"],
+            **{
+                f"rank{rank}": check["rank_totals"][str(rank)]
+                for rank in range(4)
+            },
         }
-        print(f"check m={m} {values}")
+        print(f"check m={check['m']} {values}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json-out", type=Path, help="write symbolic derivation JSON")
+    args = parser.parse_args()
+
+    payload = derive_payload()
+    print_payload(payload)
+    if args.json_out is not None:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        args.json_out.write_text(json.dumps(payload, indent=2) + "\n")
+        print(f"wrote {args.json_out}")
 
 
 if __name__ == "__main__":

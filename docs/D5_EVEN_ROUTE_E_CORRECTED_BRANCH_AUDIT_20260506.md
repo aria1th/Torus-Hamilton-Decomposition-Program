@@ -26,7 +26,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Preserve `m=6..60` small-seam evidence window | `certs/d5_routeE_small_seam_rank_certs.json` and branch summary cert | done |
 | Distinguish rank/block verification from table presence | `scripts/summarize_d5_routeE_corrected_branches.py --verify-rank-certs` | done |
 | Distinguish seam recomputation from rank cert verification | `--verify-small-seam` and `--verify-rank-certs` options | done |
-| Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py` and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
+| Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py`, `certs/d5_lambdaE_mask_polynomials.json`, and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
@@ -72,12 +72,24 @@ cases 28 all_ok True missing [] extra []
 Lambda_E symbolic mask counts:
 
 ```bash
-python3 scripts/derive_d5_lambdaE_mask_polynomials.py
+python3 scripts/derive_d5_lambdaE_mask_polynomials.py \
+  --json-out certs/d5_lambdaE_mask_polynomials.json
 ```
 
 The script derives exact shifted-zero mask polynomials by inclusion-exclusion
 over the 5-cycle equality arrangement and recovers the modal/nonmodal/rank
 totals used by the finite witnesses.
+
+The recorded symbolic totals are:
+
+```text
+modal_count    = m^4 - 5*m^3 + 10*m^2 - 10*m + 5
+nonmodal_count = 5*m^3 - 10*m^2 + 10*m - 5
+rank_0_total   = 3*m^3 + m^2 - 3*m - 1
+rank_1_total   = 3*m^3 + 2*m^2 - 5*m
+rank_2_total   = 3*m^3 - 4*m + 1
+rank_3_total   = 2*m^3 - 2*m
+```
 
 B20 branch verifier:
 

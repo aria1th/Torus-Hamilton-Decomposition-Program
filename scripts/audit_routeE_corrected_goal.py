@@ -31,6 +31,7 @@ FILES = {
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
+    "lambdaE_polynomials": ROOT / "certs" / "d5_lambdaE_mask_polynomials.json",
     "small_seam_family_manifest": ROOT
     / "certs"
     / "routeE_small_seam_family_scan_manifest.json",
@@ -59,6 +60,7 @@ def build_audit() -> dict[str, Any]:
     r38 = load_json(FILES["r38_record"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
+    lambdae = load_json(FILES["lambdaE_polynomials"])
     family_manifest = load_json(FILES["small_seam_family_manifest"])
 
     checklist = [
@@ -93,6 +95,14 @@ def build_audit() -> dict[str, Any]:
             branch.get("branch_Egen_m6_to_m60", {}).get("rank_cert_verified_all_ok")
             and branch.get("branch_Egen_m6_to_m60", {}).get("verified_all_ok"),
             "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_m6_to_m60",
+        ),
+        item(
+            "Lambda_E symbolic mask-count polynomials are recorded",
+            lambdae.get("schema") == "d5_lambdaE_mask_polynomials_v1"
+            and len(lambdae.get("mask_entries", [])) == 32
+            and lambdae.get("modal_count", {}).get("polynomial")
+            == "m^4 - 5*m^3 + 10*m^2 - 10*m + 5",
+            "certs/d5_lambdaE_mask_polynomials.json",
         ),
         item(
             "B20/B16/R14e Type-A package flags are preserved and true",

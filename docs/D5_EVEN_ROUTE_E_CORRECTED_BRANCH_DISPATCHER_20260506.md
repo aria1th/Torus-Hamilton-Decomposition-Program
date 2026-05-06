@@ -463,3 +463,15 @@ The current manifest says that periods `6,8,12,16,24` have bad affine residue
 classes, while period `48` is nonrobust: it has no bad non-singleton classes,
 but `20` of `24` even residue classes are singleton in the `m=6..60` window.
 This prevents the finite window from being treated as a uniform count law.
+
+The local `Lambda_E` defect-layer counts are preserved in machine-readable
+form by:
+
+```bash
+python3 scripts/derive_d5_lambdaE_mask_polynomials.py \
+  --json-out certs/d5_lambdaE_mask_polynomials.json
+```
+
+This records the inclusion-exclusion mask polynomials and the adjacent-rank
+switch totals for the parity-changing layer.  It is symbolic local data, not a
+global all-even branch theorem.

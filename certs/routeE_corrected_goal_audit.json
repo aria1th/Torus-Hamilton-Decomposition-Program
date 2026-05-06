@@ -31,6 +31,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/d5_lambdaE_mask_polynomials.json",
+      "missing": null,
+      "name": "Lambda_E symbolic mask-count polynomials are recorded",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_typeA_closure_package_summary.json",
       "missing": null,
       "name": "B20/B16/R14e Type-A package flags are preserved and true",
