@@ -174,6 +174,7 @@ RoundComposite/BaseTailGeometry.lean
 RoundComposite/PrefixCountHalfSlack.lean
 RoundComposite/FiniteHoffman/SignedTrellis.lean
 docs/ODD_TORI_V75_DIRECT_MODULAR_TRADE_GOAL_20260505.md
+docs/ODD_TORI_RELEASE_CLEANUP_AND_PAPER_SYNC_20260506.md
 ```
 
 ## Build
@@ -228,6 +229,8 @@ Recommended order:
 - The active cleanup task is to keep obsolete branches quarantined, preserve
   reusable certificate-calculus components, and synchronize the manuscript with
   the closed V75 endpoint.
+- Release tag links should be updated only after a matching GitHub release is
+  created; until then, the README keeps the latest public stable tag.
 
 ## AI Disclosure
 

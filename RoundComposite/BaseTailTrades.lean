@@ -1,5 +1,7 @@
 import RoundComposite.BaseTailGeometry
 
+set_option linter.style.longLine false
+
 namespace RoundComposite
 namespace Concrete
 namespace BaseTail
@@ -501,6 +503,7 @@ def nonzeroZeroSwapMovesOfTwoLe {X : Type*} {T : Nat} (hT : 2 ≤ T)
   ActiveHall.Symboling.nonzeroZeroSwapMoves
     (Nat.lt_of_lt_of_le (by omega : 0 < 2) hT) moves
 
+set_option linter.flexible false in
 theorem nonzeroZeroSwapMovesOfTwoLe_pairwise_vertex
     {X : Type*} {T : Nat} (hT : 2 ≤ T)
     (moves : List (ActiveHall.Symboling.NonzeroZeroSwapMove X T))

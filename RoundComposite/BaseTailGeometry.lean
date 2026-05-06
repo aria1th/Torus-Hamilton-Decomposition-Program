@@ -3,6 +3,8 @@ import RoundComposite.ActiveHall
 import Shared.Monodromy
 import Shared.TorusCayley
 
+set_option linter.unnecessarySimpa false
+
 namespace RoundComposite
 namespace Concrete
 namespace BaseTail
@@ -3695,6 +3697,7 @@ theorem activePrefixReturnTailLocalSymbolSplitIndicatorSum
                 (if s.val = k + 2 then ((-1 : ZMod m) ^ (k + 1)) else 0) := by
                 simp [hDelta, hStep]
 
+set_option linter.flexible false in
 theorem activeTailCanonicalRho_update_at_rho {m n : Nat}
     (hT : 2 ≤ n + 1) {z : Fin n → ZMod m}
     (hρ : (activeTailCanonicalRho hT z).val < n)

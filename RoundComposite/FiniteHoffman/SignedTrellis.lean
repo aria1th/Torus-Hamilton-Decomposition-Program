@@ -622,6 +622,7 @@ theorem qge2LayeredBRowHi_triple_ge {n r : Nat}
     simpa [mul_comm] using Nat.lt_mul_div_succ D (by decide : 0 < 3)
   omega
 
+set_option linter.flexible false in
 theorem qge2LayeredBRowHi_le_cols {n r : Nat}
     (hn4 : 4 ≤ n) (hrlt : r < n)
     {a epsBit : Fin n → Nat} (i : Fin n)
@@ -1162,6 +1163,7 @@ theorem sum_qge2LayeredRowTargetNat_eq_of_one_two {m r : Nat}
             rw [hcsumInt]
             ring
 
+set_option linter.flexible false in
 theorem exists_qge2UniformBrow_of_five_le_half {m r : Nat}
     (hm5 : 5 ≤ m) (hrpos : 0 < r)
     (a epsBit : Fin (m + m) → Nat) (c : Fin ((m + m) - 1) → Nat)
@@ -1348,6 +1350,7 @@ theorem exists_qge2UniformBrow_of_five_le_half {m r : Nat}
     ⟨Brow, hbetween, hsum⟩
   exact ⟨Brow, hbetween, hsum⟩
 
+set_option linter.flexible false in
 theorem exists_qge2UniformBrow_of_four_half {r : Nat}
     (hrOdd : Odd r) (hrlt : r < 8) (hrpos : 0 < r)
     (a epsBit : Fin (4 + 4) → Nat) (c : Fin ((4 + 4) - 1) → Nat)
@@ -1618,6 +1621,7 @@ theorem exists_qge2UniformBrow_of_four_le_half {m r : Nat}
     exact exists_qge2UniformBrow_of_four_half
       hrOdd hrlt hrpos a epsBit c ha heps hc heps_sum ha_eq_c
 
+set_option linter.flexible false in
 theorem exists_qge2C2LowBrow_of_three_half {r : Nat}
     (hrOdd : Odd r) (hrlt : r < 3 + 3) (hrpos : 0 < r)
     (a epsBit : Fin (3 + 3) → Nat) (c : Fin ((3 + 3) - 1) → Nat)
