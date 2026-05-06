@@ -229,7 +229,8 @@ q=0..6 samples and have strongly connected support.
     naive source-label/source-parameter interval-affine partition reaches
     1492 blocks by `q=4`, and no nontrivial label has a common passing
     residue-affine modulus among `2,3,4,5,6,8,10,12,16,24,32,48`.
-    Aggregate transition/time fits are therefore not enough.
+    A global section-index affine partition is smaller but still reaches 1051
+    blocks by `q=4`, so aggregate transition/time fits are still not enough.
 13. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.

@@ -13,6 +13,9 @@
       "34": true,
       "Z": true
     },
+    "global_idx_block_count": true,
+    "global_idx_max_block_length": true,
+    "global_idx_singleton_count": true,
     "max_block_length_by_label": {
       "01": true,
       "02": true,

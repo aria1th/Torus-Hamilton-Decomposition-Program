@@ -314,6 +314,9 @@
       "all_samples_ok": true,
       "all_single_cycle": true,
       "all_time_total_ok": true,
+      "global_idx_block_formula": "187 + 220*q - (13/3)*q^2 + (3/2)*q^3 - (1/6)*q^4",
+      "global_idx_max_block_length_formula": "6 + (23/12)*q + (35/24)*q^2 - (5/12)*q^3 + (1/24)*q^4",
+      "global_idx_singleton_formula": "(7/3)*q - (23/12)*q^2 + (2/3)*q^3 - (1/12)*q^4",
       "labels_without_uniform_residue_modulus": [
         "01",
         "02",
@@ -326,6 +329,7 @@
         "24",
         "34"
       ],
+      "max_global_idx_blocks": 1051,
       "max_singleton_blocks": 885,
       "max_total_blocks": 1492,
       "q_values": [
@@ -414,6 +418,9 @@
         "34": true,
         "Z": true
       },
+      "global_idx_block_count": true,
+      "global_idx_max_block_length": true,
+      "global_idx_singleton_count": true,
       "max_block_length_by_label": {
         "01": true,
         "02": true,

@@ -69,6 +69,21 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
         for sample in samples
         if sample.get("ok")
     ]
+    global_block_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["block_count"])
+        for sample in samples
+        if sample.get("ok")
+    ]
+    global_singleton_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["singleton_count"])
+        for sample in samples
+        if sample.get("ok")
+    ]
+    global_max_block_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["max_block_length"])
+        for sample in samples
+        if sample.get("ok")
+    ]
     label_block_fit_ok = {}
     label_singleton_fit_ok = {}
     label_max_block_fit_ok = {}
@@ -113,6 +128,15 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
         and fit_matches_samples(
             fits.get("total_singleton_blocks", {}), singleton_points
         )
+        and fit_matches_samples(
+            fits.get("global_idx_block_count", {}), global_block_points
+        )
+        and fit_matches_samples(
+            fits.get("global_idx_singleton_count", {}), global_singleton_points
+        )
+        and fit_matches_samples(
+            fits.get("global_idx_max_block_length", {}), global_max_block_points
+        )
         and all(label_block_fit_ok.values())
         and all(label_singleton_fit_ok.values())
         and all(label_max_block_fit_ok.values())
@@ -135,6 +159,17 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
             ),
             "total_singleton_blocks": fit_matches_samples(
                 fits.get("total_singleton_blocks", {}), singleton_points
+            ),
+            "global_idx_block_count": fit_matches_samples(
+                fits.get("global_idx_block_count", {}), global_block_points
+            ),
+            "global_idx_singleton_count": fit_matches_samples(
+                fits.get("global_idx_singleton_count", {}),
+                global_singleton_points,
+            ),
+            "global_idx_max_block_length": fit_matches_samples(
+                fits.get("global_idx_max_block_length", {}),
+                global_max_block_points,
             ),
             "block_counts_by_label": label_block_fit_ok,
             "singleton_blocks_by_label": label_singleton_fit_ok,

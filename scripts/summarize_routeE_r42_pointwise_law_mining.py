@@ -35,6 +35,7 @@ from summarize_routeE_r42_allpair_time_fits import (
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BIN = Path(tempfile.gettempdir()) / "routeE_allpair_cpp_v1_2"
 FIELDS = ["dst_a", "time", "events"]
+GLOBAL_FIELDS = ["dst_idx", "time", "events"]
 RESIDUE_MODULI = [2, 3, 4, 5, 6, 8, 10, 12, 16, 24, 32, 48]
 
 
@@ -66,7 +67,11 @@ def is_affine_on_sparse_a(rows: list[dict[str, Any]], field: str) -> bool:
     return True
 
 
-def affine_formula(rows: list[dict[str, Any]], field: str) -> dict[str, Any]:
+def affine_formula(
+    rows: list[dict[str, Any]],
+    field: str,
+    variable: str = "src_a",
+) -> dict[str, Any]:
     if len(rows) == 1:
         return {
             "kind": "constant_singleton",
@@ -74,17 +79,17 @@ def affine_formula(rows: list[dict[str, Any]], field: str) -> dict[str, Any]:
             "formula": str(rows[0][field]),
         }
     slope = rows[1][field] - rows[0][field]
-    intercept = rows[0][field] - slope * rows[0]["src_a"]
+    intercept = rows[0][field] - slope * rows[0][variable]
     if slope == 0:
         text = str(intercept)
     elif intercept == 0:
-        text = f"{slope}*a"
+        text = f"{slope}*{variable}"
     elif intercept > 0:
-        text = f"{slope}*a + {intercept}"
+        text = f"{slope}*{variable} + {intercept}"
     else:
-        text = f"{slope}*a - {-intercept}"
+        text = f"{slope}*{variable} - {-intercept}"
     return {
-        "kind": "affine_in_a",
+        "kind": f"affine_in_{variable}",
         "slope": slope,
         "intercept": intercept,
         "formula": text,
@@ -116,6 +121,39 @@ def partition_label(rows: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
     return blocks
 
 
+def is_affine_on_index(rows: list[dict[str, Any]], field: str) -> bool:
+    if len(rows) <= 2:
+        return True
+    differences = [
+        rows[i + 1][field] - rows[i][field]
+        for i in range(len(rows) - 1)
+    ]
+    return len(set(differences)) == 1
+
+
+def partition_global_index(rows: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    ordered = sorted(rows, key=lambda row: row["idx"])
+    blocks: list[list[dict[str, Any]]] = []
+    current: list[dict[str, Any]] = []
+    for row in ordered:
+        candidate = current + [row]
+        ok = True
+        if current and row["idx"] != current[-1]["idx"] + 1:
+            ok = False
+        for field in GLOBAL_FIELDS:
+            if not is_affine_on_index(candidate, field):
+                ok = False
+                break
+        if ok:
+            current = candidate
+        else:
+            blocks.append(current)
+            current = [row]
+    if current:
+        blocks.append(current)
+    return blocks
+
+
 def block_summary(block: list[dict[str, Any]]) -> dict[str, Any]:
     return {
         "src_a_start": block[0]["src_a"],
@@ -125,6 +163,19 @@ def block_summary(block: list[dict[str, Any]]) -> dict[str, Any]:
         "dst_a": affine_formula(block, "dst_a"),
         "time": affine_formula(block, "time"),
         "events": affine_formula(block, "events"),
+    }
+
+
+def global_block_summary(block: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "idx_start": block[0]["idx"],
+        "idx_end": block[-1]["idx"],
+        "length": len(block),
+        "src_label_start": block[0]["src_label"],
+        "src_label_end": block[-1]["src_label"],
+        "dst_idx": affine_formula(block, "dst_idx", "idx"),
+        "time": affine_formula(block, "time", "idx"),
+        "events": affine_formula(block, "events", "idx"),
     }
 
 
@@ -190,6 +241,7 @@ def summarize_q(binary: Path, q: int, workdir: Path, preview_limit: int) -> dict
         label: partition_label(by_label[label])
         for label in LABELS
     }
+    global_blocks = partition_global_index(rows)
     residue_tests = residue_affine_tests_by_label(by_label)
     block_counts = {
         label: len(blocks_by_label[label])
@@ -233,6 +285,15 @@ def summarize_q(binary: Path, q: int, workdir: Path, preview_limit: int) -> dict
         "rows_by_label": {label: len(by_label[label]) for label in LABELS},
         "residue_affine_tests_by_label": residue_tests,
         "preview_blocks_by_label": preview,
+        "global_idx_affine_blocks": {
+            "block_count": len(global_blocks),
+            "singleton_count": sum(1 for block in global_blocks if len(block) == 1),
+            "max_block_length": max((len(block) for block in global_blocks), default=0),
+            "preview": [
+                global_block_summary(block)
+                for block in global_blocks[:preview_limit]
+            ],
+        },
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
     }
 
@@ -271,6 +332,18 @@ def build_summary(
         (sample["q"], sample["total_singleton_blocks"])
         for sample in ok_samples
     ]
+    global_block_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["block_count"])
+        for sample in ok_samples
+    ]
+    global_singleton_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["singleton_count"])
+        for sample in ok_samples
+    ]
+    global_max_block_points = [
+        (sample["q"], sample["global_idx_affine_blocks"]["max_block_length"])
+        for sample in ok_samples
+    ]
     uniform_residue_moduli_by_label = {}
     for label in LABELS:
         passing_sets = [
@@ -296,6 +369,9 @@ def build_summary(
         "fits": {
             "total_blocks": fit_polynomial(total_block_points),
             "total_singleton_blocks": fit_polynomial(singleton_points),
+            "global_idx_block_count": fit_polynomial(global_block_points),
+            "global_idx_singleton_count": fit_polynomial(global_singleton_points),
+            "global_idx_max_block_length": fit_polynomial(global_max_block_points),
             "block_counts_by_label": fit_by_label(ok_samples, "block_counts_by_label"),
             "singleton_blocks_by_label": fit_by_label(
                 ok_samples, "singleton_blocks_by_label"
@@ -314,11 +390,27 @@ def build_summary(
             "total_singleton_block_formula": fit_polynomial(singleton_points).get(
                 "formula"
             ),
+            "global_idx_block_formula": fit_polynomial(global_block_points).get(
+                "formula"
+            ),
+            "global_idx_singleton_formula": fit_polynomial(
+                global_singleton_points
+            ).get("formula"),
+            "global_idx_max_block_length_formula": fit_polynomial(
+                global_max_block_points
+            ).get("formula"),
             "max_total_blocks": max(
                 (sample["total_blocks"] for sample in ok_samples), default=0
             ),
             "max_singleton_blocks": max(
                 (sample["total_singleton_blocks"] for sample in ok_samples), default=0
+            ),
+            "max_global_idx_blocks": max(
+                (
+                    sample["global_idx_affine_blocks"]["block_count"]
+                    for sample in ok_samples
+                ),
+                default=0,
             ),
             "representative_q": ok_samples[1]["q"] if len(ok_samples) > 1 else None,
             "uniform_residue_moduli_by_label": uniform_residue_moduli_by_label,
