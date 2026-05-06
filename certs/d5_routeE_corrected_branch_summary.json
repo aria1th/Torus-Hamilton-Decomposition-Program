@@ -400,6 +400,7 @@
     "rank_cert_case_count": 28,
     "rank_cert_loaded": true,
     "rank_cert_moduli_match": true,
+    "rank_cert_verified_all_ok": true,
     "status": "finite_small_seam_evidence_window",
     "symbolic_status": "Lambda_E local mask counts are symbolic; full all-even counts/splice law is still open.",
     "verified_all_ok": true

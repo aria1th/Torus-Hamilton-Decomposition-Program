@@ -249,6 +249,12 @@ For the slower recomputation of the recorded `m=6..60` small-seam window:
 python3 scripts/summarize_d5_routeE_corrected_branches.py --verify-small-seam
 ```
 
+For the proof-facing rank/block certificate check on the same window:
+
+```bash
+python3 scripts/summarize_d5_routeE_corrected_branches.py --verify-rank-certs
+```
+
 As of this note, the verified summary is:
 
 ```text
@@ -259,7 +265,7 @@ As of this note, the verified summary is:
 | X2 | adjacent-Kempe only | removed_by_sign_obstruction | discarded branch |
 | E0 | m=2 | filled_boundary_certificate | RF1=True RF2=True sign=True colors=True |
 | E-small | m=4 | filled_finite_C_E_O_schedule | RF1=True RF2=True sign=True colors=True |
-| E-gen-window | 6..60 even | finite_small_seam_evidence_window | cases=28 rank_cert=True moduli_match=True verified=True |
+| E-gen-window | 6..60 even | finite_small_seam_evidence_window | cases=28 rank_cert=True moduli_match=True rank_verified=True seam_verified=True |
 | E-gen-symbolic | all large even m | open | uniform full layered parity-changing template needed |
 ```
 
@@ -279,3 +285,7 @@ This fills the boundary/window evidence branches but does not close the generic
 all-even theorem.  The remaining symbolic proof obligation is a uniform
 count/slot/splice law for the parity-changing full layered branch beyond the
 recorded finite window.
+
+The rank certificate verifier checks more than table presence: it recomputes
+the Theta first-return map, verifies the seam rank step, maximal translation
+blocks, and the return-time sum `m^4` for all recorded `m=6,8,...,60` cases.

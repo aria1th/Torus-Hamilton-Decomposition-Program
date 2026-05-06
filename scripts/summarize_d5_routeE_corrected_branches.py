@@ -24,6 +24,7 @@ from typing import Any
 import d5_routeE_nested_diagnostics as nested
 import export_d5_even_routeE_layers as exporter
 import verify_d5_even_routeE as routee
+import verify_d5_routeE_small_seam_rank_certs as rank_certs
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,7 +92,7 @@ def summarize_m4() -> dict:
     return summarize_layers_payload(exporter.export_layers(4))
 
 
-def summarize_small_seam(rank_cert_path: Path, verify: bool) -> dict:
+def summarize_small_seam(rank_cert_path: Path, verify: bool, verify_rank: bool) -> dict:
     cases = routee.SMALL_SEAM_CASES
     moduli = sorted(cases)
     out = {
@@ -102,6 +103,7 @@ def summarize_small_seam(rank_cert_path: Path, verify: bool) -> dict:
         "rank_cert_loaded": False,
         "rank_cert_case_count": None,
         "rank_cert_moduli_match": None,
+        "rank_cert_verified_all_ok": None,
         "verified_all_ok": None,
     }
     if rank_cert_path.exists():
@@ -114,6 +116,9 @@ def summarize_small_seam(rank_cert_path: Path, verify: bool) -> dict:
                 "rank_cert_moduli_match": cert_moduli == moduli,
             }
         )
+        if verify_rank:
+            rank_summary = rank_certs.verify_cert(cert)
+            out["rank_cert_verified_all_ok"] = bool(rank_summary["all_ok"])
     if verify:
         results = routee.verify_small_seam_cases(moduli)
         out["verified_all_ok"] = all(item.get("ok") for item in results)
@@ -123,7 +128,9 @@ def summarize_small_seam(rank_cert_path: Path, verify: bool) -> dict:
 def build_summary(args: argparse.Namespace) -> dict:
     m2 = summarize_m2(args.m2_cert)
     m4 = summarize_m4()
-    small = summarize_small_seam(args.rank_certs, args.verify_small_seam)
+    small = summarize_small_seam(
+        args.rank_certs, args.verify_small_seam, args.verify_rank_certs
+    )
     return {
         "schema": "d5_routeE_corrected_branch_summary_v1",
         "branch_O_odd": {
@@ -211,7 +218,9 @@ def markdown(summary: dict) -> str:
             eg["status"],
             (
                 f"cases={eg['case_count']} rank_cert={eg['rank_cert_loaded']} "
-                f"moduli_match={eg['rank_cert_moduli_match']} verified={eg['verified_all_ok']}"
+                f"moduli_match={eg['rank_cert_moduli_match']} "
+                f"rank_verified={eg['rank_cert_verified_all_ok']} "
+                f"seam_verified={eg['verified_all_ok']}"
             ),
         ),
         (
@@ -248,6 +257,7 @@ def main() -> None:
     parser.add_argument("--m2-cert", type=Path, default=DEFAULT_M2)
     parser.add_argument("--rank-certs", type=Path, default=DEFAULT_RANK_CERTS)
     parser.add_argument("--verify-small-seam", action="store_true")
+    parser.add_argument("--verify-rank-certs", action="store_true")
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
