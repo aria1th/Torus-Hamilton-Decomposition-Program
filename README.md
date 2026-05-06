@@ -299,6 +299,80 @@ Shared.cyclicLayeredHamiltonDecomposition_of_localLatinReturn
 Shared.heightOneCayleyHamiltonDecomposition_of_rootFlatCertificate
 ```
 
+### 3. Finite-window successor dispatcher
+
+The current paper states successor closure using the stronger hypothesis that
+the base dimension is solved for all odd moduli.  The proof actually needs only
+the finite low-modulus window not covered by the high-modulus branch.
+
+Odd-modulus target:
+
+```text
+Fix b >= 5 and set d = 2*b + 1.
+
+Minimal successor window:
+
+  W_b = {m : 3 <= m < 2*b + 1 and m is odd}
+      = {3, 5, ..., 2*b - 1}.
+
+If D_b(m) is Hamilton-decomposable for every m in W_b, then D_(2*b+1)(m) is
+Hamilton-decomposable for every odd m >= 3.
+```
+
+Proof split:
+
+```text
+1. If m >= 2*b + 1, use the high-modulus count branch for odd d >= 5 and
+   odd m >= d.
+
+2. If 3 <= m < 2*b + 1 and m is odd, use the assumed D_b(m) decomposition
+   and apply the base-tail successor theorem with tail size T = b + 1.
+```
+
+The unit-packet/cylinder input for the low-modulus case is supplied by the
+fixed decomposition
+
+```text
+2*b + 1 = 3 + 2 + ... + 2       (one 3 and b-1 copies of 2)
+```
+
+and the odd-modulus unit decompositions
+
+```text
+m = 1 + (m - 1)          for a 2-packet
+m = 1 + 1 + (m - 2)      for the 3-packet.
+```
+
+The reservoir inequality required by the successor theorem follows uniformly
+from
+
+```text
+m^b > m(2*b + 1)(b + 1),
+```
+
+because in the low-modulus window `m >= 3`, it is enough to check
+
+```text
+3^(b-1) > (2*b + 1)(b + 1),
+```
+
+which holds at `b = 5` (`81 > 66`) and is preserved as `b` increases.
+
+Important scope note:
+
+```text
+This finite-window statement is currently an odd-modulus theorem.  A literal
+all-modulus version would require even-modulus analogues of both the
+high-modulus branch and the base-tail/unit-packet successor construction.
+```
+
+Suggested endpoint names:
+
+```lean
+RoundComposite.Concrete.odd_successor_of_finite_window
+RoundComposite.Concrete.odd_successor_window_minimal
+```
+
 ## Repository Layout
 
 ```text
