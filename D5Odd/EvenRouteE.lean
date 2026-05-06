@@ -804,6 +804,143 @@ theorem boundaryParamPenultimate_val (q : Nat) :
     (boundaryParamPenultimate q).1 =
       ((modulus q - 2 : Nat) : ZMod (modulus q)) := rfl
 
+theorem boundary_shift_ne_zero (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ half q + 2) :
+    a.1 + ((half q - 2 : Nat) : ZMod (modulus q)) ≠ 0 := by
+  intro hzero
+  have hpos : 0 < a.1.val := by
+    by_contra hnot
+    have hzero_val : a.1.val = 0 := by omega
+    exact a.2 ((ZMod.val_eq_zero a.1).mp hzero_val)
+  have hlt := ZMod.val_lt a.1
+  have hconst_lt : half q - 2 < modulus q := by
+    simp [half, modulus]
+    omega
+  have hconst_val :
+      (((half q - 2 : Nat) : ZMod (modulus q))).val = half q - 2 := by
+    rw [ZMod.val_natCast_of_lt hconst_lt]
+  have hval :
+      (a.1 + ((half q - 2 : Nat) : ZMod (modulus q))).val =
+        (0 : ZMod (modulus q)).val :=
+    congrArg (fun z : ZMod (modulus q) => z.val) hzero
+  have hmod :
+      (a.1.val + (half q - 2)) % modulus q = 0 := by
+    rw [ZMod.val_add, hconst_val] at hval
+    simpa using hval
+  have hdiv : modulus q ∣ a.1.val + (half q - 2) :=
+    Nat.dvd_of_mod_eq_zero hmod
+  rcases hdiv with ⟨t, ht⟩
+  have hsum_pos : 0 < a.1.val + (half q - 2) := by
+    have hhalf : 0 < half q - 2 := by simp [half]
+    omega
+  have hsum_lt_two :
+      a.1.val + (half q - 2) < 2 * modulus q := by
+    simp [half, modulus] at hlt ⊢
+    omega
+  have htpos : 0 < t := by
+    by_contra hnot
+    have htzero : t = 0 := by omega
+    rw [htzero, mul_zero] at ht
+    omega
+  have htlt_two : t < 2 := by
+    by_contra hnot
+    have htwo : 2 ≤ t := by omega
+    have hge : 2 * modulus q ≤ modulus q * t := by
+      rw [mul_comm 2 (modulus q)]
+      exact Nat.mul_le_mul_left (modulus q) htwo
+    omega
+  have ht_eq_one : t = 1 := by omega
+  have hsum_eq : a.1.val + (half q - 2) = modulus q := by
+    rw [ht, ht_eq_one, mul_one]
+  apply hne
+  simp [half, modulus] at hsum_eq ⊢
+  omega
+
+def boundaryShiftParam (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ half q + 2) :
+    RouteENonzeroSeam (modulus q) :=
+  ⟨a.1 + ((half q - 2 : Nat) : ZMod (modulus q)),
+    boundary_shift_ne_zero q a hne⟩
+
+theorem boundaryShiftParam_val (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ half q + 2) :
+    (boundaryShiftParam q a hne).1 =
+      a.1 + ((half q - 2 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundary_pred_ne_zero (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ 1) :
+    a.1 - 1 ≠ 0 := by
+  intro hzero
+  have hone : a.1 = (1 : ZMod (modulus q)) := by
+    have h := congrArg (fun z : ZMod (modulus q) => z + 1) hzero
+    simpa [sub_eq_add_neg, add_assoc] using h
+  apply hne
+  have hval := congrArg (fun z : ZMod (modulus q) => z.val) hone
+  simpa [modulus] using hval
+
+def boundaryPredParam (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ 1) :
+    RouteENonzeroSeam (modulus q) :=
+  ⟨a.1 - 1, boundary_pred_ne_zero q a hne⟩
+
+theorem boundaryPredParam_val (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hne : a.1.val ≠ 1) :
+    (boundaryPredParam q a hne).1 = a.1 - 1 := rfl
+
+noncomputable def boundaryQuotient (q : Nat) :
+    RouteEBoundaryNode (modulus q) → RouteEBoundaryNode (modulus q)
+  | Sum.inl _ =>
+      routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalf q)
+  | Sum.inr (RouteEBoundaryLabel.L03, a) =>
+      if _hh : a.1.val = half q then
+        routeEBoundaryNode RouteEBoundaryLabel.L34 (boundaryParamLast q)
+      else if _hsucc : a.1.val = half q + 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalfSubTwo q)
+      else if hev : a.1.val % 2 = 0 then
+        routeEBoundaryNode RouteEBoundaryLabel.L04 a
+      else
+        have hodd : a.1.val % 2 = 1 := by
+          have hlt : a.1.val % 2 < 2 := Nat.mod_lt _ (by omega)
+          omega
+        have hne_shift : a.1.val ≠ half q + 2 := by
+          intro h
+          rw [h] at hodd
+          have heven : (half q + 2) % 2 = 0 := by
+            simp [half, Nat.add_mod, Nat.mul_mod]
+          omega
+        routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryShiftParam q a hne_shift)
+  | Sum.inr (RouteEBoundaryLabel.L04, a) =>
+      if _hpred : a.1.val = half q - 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L34 a
+      else if _hlast : a.1.val = modulus q - 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L34 (boundaryParamPenultimate q)
+      else if _hclose : a.1.val = half q + 2 then
+        routeEBoundaryZero
+      else if _hodd : a.1.val % 2 = 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L03 a
+      else if _htwo : a.1.val = 2 then
+        routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalfSubOne q)
+      else
+        routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryShiftParam q a _hclose)
+  | Sum.inr (RouteEBoundaryLabel.L34, a) =>
+      if h_one : a.1.val = 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamLast q)
+      else if _hh : a.1.val = half q then
+        routeEBoundaryNode RouteEBoundaryLabel.L04 a
+      else if _hlast : a.1.val = modulus q - 1 then
+        routeEBoundaryNode RouteEBoundaryLabel.L04 a
+      else
+        routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundaryPredParam q a h_one)
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and

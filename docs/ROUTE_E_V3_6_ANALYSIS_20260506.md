@@ -65,6 +65,9 @@ New arithmetic names include:
 - `allPairTimeMassTotal`
 - `BoundaryQuotientFormulaTarget`
 - `BoundaryQuotientOneCycleTarget`
+- `boundaryQuotient`
+- `boundaryShiftParam`
+- `boundaryPredParam`
 - `boundaryParamOne`
 - `boundaryParamTwo`
 - `boundaryParamHalfSubTwo`
