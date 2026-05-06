@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `64ffb3a`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `42041aa`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 90 commits ahead of origin.  Those commits add 85 files and
-42,081 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 92 commits ahead of origin.  Those commits add 87 files and
+43,004 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -29,12 +29,13 @@ flowchart LR
   RT[R42 time fits<br/>sum tau = m^4 polynomial]
   RM[R42 transition matrix<br/>28 nonzero edges]
   RA[R42 promotion audit<br/>3 theorem blockers]
+  Q[Open residue queue<br/>R42, R38, portfolio-only split]
   NG[No-go audit<br/>X1 parity and X2 sign contradictions]
   OPEN[Open theorem work<br/>Type-A coverage + E-gen symbolic]
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> RG --> RT --> RM --> RA --> NG --> OPEN
+  P --> R42 --> BQ --> RG --> RT --> RM --> RA --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -52,13 +53,14 @@ flowchart LR
 | 21:05-21:15 | `5899423`..`b36ec5f` | R42 all-pair time polynomial fits and symbolic fit-sum verifier | time-exhaustion evidence strengthened, still open |
 | 21:15-21:25 | `f026400` | R42 all-pair transition count/time polynomial matrices | transition support evidence strengthened, still open |
 | 21:25-21:35 | `64ffb3a` | R42 promotion audit separates evidence from theorem blockers | exact remaining R42 blockers recorded |
+| 21:35-21:45 | `323bbbe`..`42041aa` | ledger refresh and open-residue promotion queue | R42/R38/portfolio-only queue recorded |
 
 ## Proof Progress Gauge
 
 The machine audit still reports 2 missing structural items.
 
 ```text
-Artifacts/audits:  [##################################--] 34/36
+Artifacts/audits:  [###################################--] 35/37
 Closed theorem:    [---------------------------] incomplete
 ```
 
@@ -108,6 +110,16 @@ are kept separate from proof-facing branch theorems.
 | residue | 24 | 26 | 28 | 30 | 32 | 34 | 36 | 38 | 40 | 42 | 44 | 46 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | status | O | O | O | O | O | O | O | G | P | C | P | O |
+
+The open-residue promotion queue records the same split machine-readably:
+
+```text
+proof_facing: [14,16,20,40,44]
+active_promotion_target: [42]
+gate_transducer_target: [38]
+portfolio_only_symmetric_nonaffine: [0,2,4,6,8,10,18,22,24,26,28,30,32,34,46]
+portfolio_only_nonaffine: [12,36]
+```
 
 ## R42 Discovery Snapshot
 
@@ -205,6 +217,9 @@ q=0..6 samples and have strongly connected support.
 10. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
     pointwise first-return equations, no-early/minimality, and a Lean-facing
     endpoint theorem are still missing.
+11. The open residue queue is now explicit: R42 remains the active affine
+    promotion target, R38 remains the gate-transducer target, and the remaining
+    17 open residues are portfolio-only law-mining targets.
 
 ## Remaining Proof Route
 
