@@ -37,6 +37,7 @@ FILES = {
     "allpair_portfolio_fits": ROOT
     / "certs"
     / "routeE_allpair_portfolio_fit_summary.json",
+    "open_residue_queue": ROOT / "certs" / "routeE_open_residue_queue.json",
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r42_record": ROOT / "certs" / "routeE_r42_affine_branch_record.json",
     "r42_sample_verification": ROOT
@@ -107,6 +108,7 @@ def build_audit() -> dict[str, Any]:
     coverage = load_json(FILES["coverage"])
     portfolio = load_json(FILES["allpair_portfolio"])
     portfolio_fits = load_json(FILES["allpair_portfolio_fits"])
+    open_residue_queue = load_json(FILES["open_residue_queue"])
     r38 = load_json(FILES["r38_record"])
     r42 = load_json(FILES["r42_record"])
     r42_sample_verification = load_json(FILES["r42_sample_verification"])
@@ -253,6 +255,32 @@ def build_audit() -> dict[str, Any]:
             and portfolio_fits.get("portfolio_only_affine_xz_residues") == [42]
             and portfolio_fits.get("next_symbolic_candidate") == 42,
             "certs/routeE_allpair_portfolio_fit_summary.json",
+        ),
+        item(
+            "open-residue promotion queue is recorded",
+            open_residue_queue.get("schema") == "routeE_open_residue_queue_v1"
+            and open_residue_queue.get("summary", {}).get("coverage_complete") is False
+            and open_residue_queue.get("summary", {})
+            .get("residues_by_status", {})
+            .get("proof_facing")
+            == [14, 16, 20, 40, 44]
+            and open_residue_queue.get("summary", {})
+            .get("residues_by_status", {})
+            .get("active_promotion_target")
+            == [42]
+            and open_residue_queue.get("summary", {})
+            .get("residues_by_status", {})
+            .get("gate_transducer_target")
+            == [38]
+            and open_residue_queue.get("summary", {}).get("status_counts", {}).get(
+                "portfolio_only_symmetric_nonaffine"
+            )
+            == 15
+            and open_residue_queue.get("summary", {}).get("status_counts", {}).get(
+                "portfolio_only_nonaffine"
+            )
+            == 2,
+            "certs/routeE_open_residue_queue.json",
         ),
         item(
             "Type-A residue coverage is complete",

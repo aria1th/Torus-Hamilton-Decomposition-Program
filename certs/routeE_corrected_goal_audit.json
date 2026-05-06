@@ -97,6 +97,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_open_residue_queue.json",
+      "missing": null,
+      "name": "open-residue promotion queue is recorded",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_typeA_residue_coverage.json",
       "missing": "Only residues 14,16,20,40,44 mod 48 are currently proof-facing.",
       "name": "Type-A residue coverage is complete",

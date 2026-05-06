@@ -37,6 +37,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Preserve all-pair portfolio sample coverage | `certs/routeE_allpair_portfolio_samples_v1_1.json`, `scripts/summarize_routeE_allpair_portfolio.py`, `certs/routeE_allpair_portfolio_summary.json` | done, samples cover all even residues but are not proofs |
 | Fit all-pair portfolio samples by residue | `scripts/analyze_routeE_allpair_portfolio_fits.py`, `certs/routeE_allpair_portfolio_fit_summary.json` | done, `42 mod 48` is next affine portfolio-only candidate |
+| Record open-residue promotion queue | `scripts/summarize_routeE_open_residue_queue.py`, `certs/routeE_open_residue_queue.json` | done, separates proof-facing, R42, R38, and portfolio-only residues |
 | Initialize R42 affine branch record | `scripts/init_routeE_r42_affine_branch_record.py`, `certs/routeE_r42_affine_branch_record.json` | done, branch remains open |
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
@@ -270,6 +271,28 @@ portfolio_only_affine_xz_residues=[42]
 
 Thus the next simple symbolic-promotion candidate from the portfolio is
 `m = 48q + 42` with the observed symmetric affine law `x = z = 6q + 5`.
+
+Open-residue promotion queue:
+
+```bash
+python3 scripts/summarize_routeE_open_residue_queue.py \
+  --json-out certs/routeE_open_residue_queue.json
+```
+
+Result:
+
+```text
+proof_facing: [14,16,20,40,44]
+active_promotion_target: [42]
+gate_transducer_target: [38]
+portfolio_only_symmetric_nonaffine: 15 residues
+portfolio_only_nonaffine: [12,36]
+```
+
+This queue is not a proof artifact.  It records which open residue classes are
+ready for promotion work and which ones are still only portfolio samples.  The
+recommended order is R42 first, R38 second, then new law mining for the
+remaining nonaffine residues.
 
 R42 branch record:
 

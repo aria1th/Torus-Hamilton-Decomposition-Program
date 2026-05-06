@@ -1,0 +1,714 @@
+{
+  "residue_modulus": 48,
+  "rows": [
+    {
+      "fit_nodes_formula": "480*q - 9",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        48,
+        96,
+        144
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 0,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 11",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        50,
+        98,
+        146
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 2,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 31",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        52,
+        100,
+        148
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 4,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 51",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        54,
+        102,
+        150
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 6,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 71",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        56,
+        104,
+        152
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 8,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 91",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        58,
+        106,
+        154
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 10,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 111",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        60,
+        108,
+        156
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples exist but no simple affine x/z law is recorded.",
+      "residue": 12,
+      "sample_count": 3,
+      "status": "portfolio_only_nonaffine",
+      "tags": [
+        "R12-old",
+        "R12-x5",
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 131",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        14,
+        62,
+        110,
+        158
+      ],
+      "open_in_typeA_coverage": false,
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Already covered by Type-A proof-facing artifacts.",
+      "residue": 14,
+      "sample_count": 4,
+      "status": "proof_facing",
+      "tags": [
+        "R14e"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 151",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        16,
+        64,
+        112,
+        160
+      ],
+      "open_in_typeA_coverage": false,
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Already covered by Type-A proof-facing artifacts.",
+      "residue": 16,
+      "sample_count": 4,
+      "status": "proof_facing",
+      "tags": [
+        "B16",
+        "B16/direct"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 171",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        18,
+        66,
+        114,
+        162
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 18,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 191",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        20,
+        68,
+        116,
+        164
+      ],
+      "open_in_typeA_coverage": false,
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Already covered by Type-A proof-facing artifacts.",
+      "residue": 20,
+      "sample_count": 4,
+      "status": "proof_facing",
+      "tags": [
+        "B20sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 211",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        22,
+        70,
+        118,
+        166
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 22,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 231",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        24,
+        72,
+        120,
+        168
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 24,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 251",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        26,
+        74,
+        122,
+        170
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 26,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 271",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        28,
+        76,
+        124,
+        172
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 28,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 291",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        30,
+        78,
+        126,
+        174
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 30,
+      "sample_count": 4,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 311",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        32,
+        80,
+        128
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 32,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 331",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        34,
+        82,
+        130
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 34,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 351",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        36,
+        84,
+        132
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Portfolio samples exist but no simple affine x/z law is recorded.",
+      "residue": 36,
+      "sample_count": 3,
+      "status": "portfolio_only_nonaffine",
+      "tags": [
+        "R12-old",
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 371",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        38,
+        86,
+        134
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "R38 has positive/negative symmetric probes; needs gate-transducer invariant.",
+      "residue": 38,
+      "sample_count": 3,
+      "status": "gate_transducer_target",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    },
+    {
+      "fit_nodes_formula": "480*q + 391",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        40,
+        88,
+        136
+      ],
+      "open_in_typeA_coverage": false,
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Already covered by Type-A proof-facing artifacts.",
+      "residue": 40,
+      "sample_count": 3,
+      "status": "proof_facing",
+      "tags": [
+        "B16"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 411",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        42,
+        90,
+        138
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Simple affine R42 family; missing Pointwise first-return equations are proved for all q; No-early/minimality is proved for all q; Lean-facing endpoint theorem is present.",
+      "residue": 42,
+      "sample_count": 3,
+      "status": "active_promotion_target",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 431",
+      "fit_x_status": "ok",
+      "fit_z_status": "ok",
+      "moduli": [
+        44,
+        92,
+        140
+      ],
+      "open_in_typeA_coverage": false,
+      "proof_facing": true,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Already covered by Type-A proof-facing artifacts.",
+      "residue": 44,
+      "sample_count": 3,
+      "status": "proof_facing",
+      "tags": [
+        "B20sym"
+      ],
+      "xz_affine": true
+    },
+    {
+      "fit_nodes_formula": "480*q + 451",
+      "fit_x_status": "bad",
+      "fit_z_status": "bad",
+      "moduli": [
+        46,
+        94,
+        142
+      ],
+      "open_in_typeA_coverage": true,
+      "proof_facing": false,
+      "q_values": [
+        0,
+        1,
+        2
+      ],
+      "recommended_next_action": "Portfolio samples are symmetric but x=z is not affine across q.",
+      "residue": 46,
+      "sample_count": 3,
+      "status": "portfolio_only_symmetric_nonaffine",
+      "tags": [
+        "sym"
+      ],
+      "xz_affine": false
+    }
+  ],
+  "schema": "routeE_open_residue_queue_v1",
+  "source_artifacts": {
+    "coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json",
+    "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
+    "r38_record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r38_gate_transducer_branch_record.json",
+    "r42_promotion_audit": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_promotion_audit.json"
+  },
+  "summary": {
+    "coverage_complete": false,
+    "open_residues": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      18,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      42,
+      46
+    ],
+    "proof_facing_residues": [
+      14,
+      16,
+      20,
+      40,
+      44
+    ],
+    "recommended_order": [
+      "42: active affine promotion target",
+      "38: gate-transducer target",
+      "remaining nonaffine portfolio-only residues: need new law mining"
+    ],
+    "residues_by_status": {
+      "active_promotion_target": [
+        42
+      ],
+      "gate_transducer_target": [
+        38
+      ],
+      "portfolio_only_nonaffine": [
+        12,
+        36
+      ],
+      "portfolio_only_symmetric_nonaffine": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        18,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        46
+      ],
+      "proof_facing": [
+        14,
+        16,
+        20,
+        40,
+        44
+      ]
+    },
+    "status_counts": {
+      "active_promotion_target": 1,
+      "gate_transducer_target": 1,
+      "portfolio_only_nonaffine": 2,
+      "portfolio_only_symmetric_nonaffine": 15,
+      "proof_facing": 5
+    }
+  },
+  "warning": "This queue ranks proof-promotion work. It does not promote any residue by itself."
+}
