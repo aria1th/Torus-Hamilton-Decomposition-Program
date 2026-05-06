@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `42041aa`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `5ba4770`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 92 commits ahead of origin.  Those commits add 87 files and
-43,004 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 94 commits ahead of origin.  Those commits add 91 files and
+53,882 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -55,6 +55,7 @@ flowchart LR
 | 21:15-21:25 | `f026400` | R42 all-pair transition count/time polynomial matrices | transition support evidence strengthened, still open |
 | 21:25-21:35 | `64ffb3a` | R42 promotion audit separates evidence from theorem blockers | exact remaining R42 blockers recorded |
 | 21:35-21:45 | `323bbbe`..`42041aa` | ledger refresh and open-residue promotion queue | R42/R38/portfolio-only queue recorded |
+| 21:45-22:00 | `5ba4770` | R42 pointwise law-mining diagnostic | naive pointwise law complexity recorded |
 
 ## Proof Progress Gauge
 
