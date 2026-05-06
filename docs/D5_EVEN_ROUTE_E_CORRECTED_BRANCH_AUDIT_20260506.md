@@ -513,6 +513,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+965bf91 Verify R42 compact boundary summary
 b7760a9 Add Route E color sign screen audit
 0993311 Fit R42 run-normalized boundary blocks
 19c9990 Refresh Route E ledger after progress visualization
