@@ -48,6 +48,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 all-pair time fit artifact | `scripts/verify_routeE_r42_allpair_time_fits.py`, `certs/routeE_r42_allpair_time_fit_verification.json` | done |
 | Preserve R42 all-pair transition matrix evidence | `scripts/summarize_routeE_r42_allpair_transition_fits.py`, `certs/routeE_r42_allpair_transition_fit_summary.json` | done, 28 nonzero edges |
 | Verify R42 all-pair transition matrix artifact | `scripts/verify_routeE_r42_allpair_transition_fits.py`, `certs/routeE_r42_allpair_transition_fit_verification.json` | done |
+| Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -476,6 +477,27 @@ destination-label transition counts and transition-time totals.  The verifier
 checks sample values, row/column count sums, time totals, and strong
 connectivity of the nonzero support.  It is still evidence, not a replacement
 for pointwise no-early.
+
+R42 promotion-readiness audit:
+
+```bash
+python3 scripts/audit_routeE_r42_promotion.py \
+  --json-out certs/routeE_r42_promotion_audit.json
+```
+
+Result:
+
+```text
+promotion_ready False
+evidence_items_ok 9
+required_missing 3
+missing: Pointwise first-return equations are proved for all q
+missing: No-early/minimality is proved for all q
+missing: Lean-facing endpoint theorem is present
+```
+
+This audit is intentionally conservative.  It records that R42 has strong
+finite and symbolic-support evidence, but it is not a closed branch theorem.
 
 R38 symmetric recheck:
 

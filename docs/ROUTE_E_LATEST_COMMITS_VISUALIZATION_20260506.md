@@ -28,12 +28,13 @@ flowchart LR
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
   RT[R42 time fits<br/>sum tau = m^4 polynomial]
   RM[R42 transition matrix<br/>28 nonzero edges]
+  RA[R42 promotion audit<br/>3 theorem blockers]
   NG[No-go audit<br/>X1 parity and X2 sign contradictions]
   OPEN[Open theorem work<br/>Type-A coverage + E-gen symbolic]
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> RG --> RT --> RM --> NG --> OPEN
+  P --> R42 --> BQ --> RG --> RT --> RM --> RA --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -200,6 +201,9 @@ q=0..6 samples and have strongly connected support.
 9. R42 all-pair transition evidence is compacted into polynomial matrices with
    28 nonzero support edges, verified row/column sums, and strongly connected
    count/time support.
+10. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
+    pointwise first-return equations, no-early/minimality, and a Lean-facing
+    endpoint theorem are still missing.
 
 ## Remaining Proof Route
 

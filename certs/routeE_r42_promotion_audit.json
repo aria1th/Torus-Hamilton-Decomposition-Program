@@ -1,0 +1,117 @@
+{
+  "branch": "R42",
+  "checklist": [
+    {
+      "evidence": "certs/routeE_r42_affine_branch_record.json: observed_law",
+      "level": "closed formula candidate",
+      "missing": null,
+      "name": "R42 affine family law is fixed",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_affine_samples_verification.json",
+      "level": "finite witness evidence",
+      "missing": null,
+      "name": "R42 all-pair samples are reproducible",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_color_sign_screen_audit.json",
+      "level": "necessary-condition screen",
+      "missing": null,
+      "name": "R42 color-sign vector screen passes",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_boundary_summary_verification.json",
+      "level": "supporting quotient artifact",
+      "missing": null,
+      "name": "R42 compact boundary quotient is internally verified",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_block_formula_regeneration_verification.json",
+      "level": "fresh finite regeneration evidence",
+      "missing": null,
+      "name": "R42 block formulas match regenerated witnesses",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_open_tail_formula_suggestions.json",
+      "level": "compression debt tracker",
+      "missing": null,
+      "name": "R42 compact block open fields are only q=1 boundary exceptions",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_allpair_time_fit_verification.json",
+      "level": "time-exhaustion evidence",
+      "missing": null,
+      "name": "R42 all-pair time fits verify symbolic totals",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r42_allpair_transition_fit_verification.json",
+      "level": "transition evidence",
+      "missing": null,
+      "name": "R42 all-pair transition matrices verify support and totals",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_typeA_residue_coverage.json",
+      "level": "coverage state",
+      "missing": "Residue 42 is not yet promoted to proof-facing Type-A coverage.",
+      "name": "R42 is still open in proof-facing coverage",
+      "ok": true
+    },
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need closed formulas proving F^tau(p)=U(p) for every all-pair section point.",
+      "name": "Pointwise first-return equations are proved for all q",
+      "ok": false
+    },
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need symbolic proof that no section point returns before tau.",
+      "name": "No-early/minimality is proved for all q",
+      "ok": false
+    },
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need theorem endpoint and name synchronized with the Route-E adapter.",
+      "name": "Lean-facing endpoint theorem is present",
+      "ok": false
+    }
+  ],
+  "conclusion": "R42 has strong finite/symbolic-support evidence, but it is not promotion-ready until pointwise first-return, no-early, and Lean-facing endpoint artifacts exist.",
+  "evidence_items_ok": 9,
+  "promotion_ready": false,
+  "record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_branch_record.json",
+  "required_theorem_items_missing": [
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need closed formulas proving F^tau(p)=U(p) for every all-pair section point.",
+      "name": "Pointwise first-return equations are proved for all q",
+      "ok": false
+    },
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need symbolic proof that no section point returns before tau.",
+      "name": "No-early/minimality is proved for all q",
+      "ok": false
+    },
+    {
+      "evidence": "no artifact",
+      "level": "required theorem data",
+      "missing": "Need theorem endpoint and name synchronized with the Route-E adapter.",
+      "name": "Lean-facing endpoint theorem is present",
+      "ok": false
+    }
+  ],
+  "schema": "routeE_r42_promotion_audit_v1"
+}

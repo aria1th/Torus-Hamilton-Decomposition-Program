@@ -64,6 +64,7 @@ FILES = {
     "r42_allpair_transition_verification": ROOT
     / "certs"
     / "routeE_r42_allpair_transition_fit_verification.json",
+    "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -121,6 +122,7 @@ def build_audit() -> dict[str, Any]:
     r42_allpair_transition_verification = load_json(
         FILES["r42_allpair_transition_verification"]
     )
+    r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -499,6 +501,14 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_r42_allpair_transition_fit_summary.json and certs/routeE_r42_allpair_transition_fit_verification.json",
+        ),
+        item(
+            "R42 promotion audit separates evidence from theorem blockers",
+            r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
+            and r42_promotion_audit.get("promotion_ready") is False
+            and len(r42_promotion_audit.get("required_theorem_items_missing", []))
+            == 3,
+            "certs/routeE_r42_promotion_audit.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",
