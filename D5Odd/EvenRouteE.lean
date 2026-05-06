@@ -36,6 +36,8 @@ def modulus (q : Nat) : Nat := 24 * q + 20
 
 def half (q : Nat) : Nat := 12 * q + 10
 
+def quarter (q : Nat) : Nat := 6 * q + 5
+
 def third (q : Nat) : Nat := 4 * q + 3
 
 def repeatedTimeCount (q : Nat) : Nat := 12 * q + 6
@@ -86,6 +88,98 @@ theorem returnTimeWeightedSum_eq_modulus_pow_four (q : Nat) :
     returnTimeWeightedSum q = modulus q ^ 4 := by
   simp [returnTimeWeightedSum, timeA, timeC, timeE, timeF,
     repeatedTimeCount, modulus]
+  ring
+
+theorem modulus_eq_four_quarter (q : Nat) :
+    modulus q = 4 * quarter q := by
+  simp [modulus, quarter]
+  ring
+
+theorem half_eq_two_quarter (q : Nat) :
+    half q = 2 * quarter q := by
+  simp [half, quarter]
+  ring
+
+/-!
+All-pair label time-mass formulas extracted in the Route-E v3.6 bundle.
+The `03` and `04` entries are explicitly named as boundary-clock targets:
+the bundle isolates and sample-checks their polynomials, while the direct
+boundary-clock derivation remains a symbolic proof obligation.
+-/
+
+def allPairTimeZ (q : Nat) : Nat :=
+  12 * q + 13
+
+def allPairTime01 (q : Nat) : Nat :=
+  108 * q ^ 2 + 180 * q + 75
+
+def allPairTime02 (q : Nat) : Nat :=
+  6912 * q ^ 3 + 16992 * q ^ 2 + 13920 * q + 3800
+
+def allPairTime03Target (q : Nat) : Nat :=
+  5184 * q ^ 3 + 12528 * q ^ 2 + 10080 * q + 2703
+
+def allPairTime04Target (q : Nat) : Nat :=
+  5184 * q ^ 3 + 11898 * q ^ 2 + 9099 * q + 2335
+
+def allPairTime12 (q : Nat) : Nat :=
+  576 * q ^ 2 + 912 * q + 363
+
+def allPairTime13 (q : Nat) : Nat :=
+  234 * q ^ 2 + 393 * q + 162
+
+def allPairTime14 (q : Nat) : Nat :=
+  82944 * q ^ 4 + 273024 * q ^ 3 + 337104 * q ^ 2 +
+    185058 * q + 38115
+
+def allPairTime23 (q : Nat) : Nat :=
+  124416 * q ^ 4 + 409536 * q ^ 3 + 505008 * q ^ 2 +
+    276492 * q + 56707
+
+def allPairTime24 (q : Nat) : Nat :=
+  124416 * q ^ 4 + 406080 * q ^ 3 + 496800 * q ^ 2 +
+    269994 * q + 54995
+
+def allPairTime34 (q : Nat) : Nat :=
+  1152 * q ^ 2 + 1860 * q + 732
+
+def allPairTimeMassTotal (q : Nat) : Nat :=
+  allPairTimeZ q +
+  allPairTime01 q +
+  allPairTime02 q +
+  allPairTime03Target q +
+  allPairTime04Target q +
+  allPairTime12 q +
+  allPairTime13 q +
+  allPairTime14 q +
+  allPairTime23 q +
+  allPairTime24 q +
+  allPairTime34 q
+
+theorem allPairTime01_eq_three_quarter_sq (q : Nat) :
+    allPairTime01 q = 3 * quarter q ^ 2 := by
+  simp [allPairTime01, quarter]
+  ring
+
+theorem allPairTime13_two_clock_eq (q : Nat) :
+    2 * (allPairTime13 q + 3) = 13 * quarter q ^ 2 + quarter q := by
+  simp [allPairTime13, quarter]
+  ring
+
+-- The v3.6 draft displays the `q` coefficient as `19079`; adding the two
+-- target polynomials gives `19179`, which is also forced by total time mass.
+theorem allPairTime03Target_add_allPairTime04Target (q : Nat) :
+    allPairTime03Target q + allPairTime04Target q =
+      10368 * q ^ 3 + 24426 * q ^ 2 + 19179 * q + 5038 := by
+  simp [allPairTime03Target, allPairTime04Target]
+  ring
+
+theorem allPairTimeMassTotal_eq_modulus_pow_four (q : Nat) :
+    allPairTimeMassTotal q = modulus q ^ 4 := by
+  simp [allPairTimeMassTotal, allPairTimeZ, allPairTime01,
+    allPairTime02, allPairTime03Target, allPairTime04Target,
+    allPairTime12, allPairTime13, allPairTime14, allPairTime23,
+    allPairTime24, allPairTime34, modulus]
   ring
 
 end RouteEB20
