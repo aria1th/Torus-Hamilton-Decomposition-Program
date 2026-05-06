@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `f7b0506`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `5899423`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 82 commits ahead of origin.  Those commits add 75 files and
-34,761 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 84 commits ahead of origin.  Those commits add 79 files and
+36,314 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -53,7 +53,7 @@ flowchart LR
 The machine audit still reports 2 missing structural items.
 
 ```text
-Artifacts/audits:  [###############################--] 31/33
+Artifacts/audits:  [################################--] 32/34
 Closed theorem:    [---------------------------] incomplete
 ```
 
