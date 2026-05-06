@@ -261,6 +261,185 @@ theorem allPairTimeMass_sum_eq_modulus_pow_four (q : Nat) :
 
 end RouteEB20
 
+namespace RouteEB16
+
+/-!
+Route-E B16 branch surface from the v3.6 bundle.
+
+This records count admissibility and the interpolated all-pair label
+time-mass target.  The bundle leaves the non-boundary lane catalogue,
+boundary quotient derivation, one-cycle proof, and lane/core derivation of the
+time polynomials as symbolic obligations.
+-/
+
+def modulus (q : Nat) : Nat := 24 * q + 16
+
+def half (q : Nat) : Nat := 12 * q + 8
+
+def z (q : Nat) : Nat := 12 * q + 5
+
+def counts (q : Nat) : Fin 5 → Nat :=
+  ![1, 12 * q + 9, 0, z q, 0]
+
+theorem counts_sum (q : Nat) :
+    Finset.univ.sum (counts q) = modulus q - 1 := by
+  simp [counts, Fin.sum_univ_five, z, modulus]
+  omega
+
+def routeCounts (q : Nat) : RouteECounts (modulus q) where
+  slot := 0
+  counts := counts q
+  count_sum := counts_sum q
+
+def allPairTimeZTarget (q : Nat) : Nat :=
+  24 * q + 15
+
+def allPairTime01Target (q : Nat) : Nat :=
+  162 * q ^ 2 + 216 * q + 72
+
+def allPairTime02Target (q : Nat) : Nat :=
+  6912 * q ^ 3 + 13536 * q ^ 2 + 8832 * q + 1920
+
+def allPairTime03Target (q : Nat) : Nat :=
+  3888 * q ^ 3 + 7770 * q ^ 2 + 5171 * q + 1146
+
+def allPairTime04Target (q : Nat) : Nat :=
+  3888 * q ^ 3 + 7461 * q ^ 2 + 4767 * q + 1014
+
+def allPairTime12Target (q : Nat) : Nat :=
+  576 * q ^ 2 + 732 * q + 231
+
+def allPairTime13Target (q : Nat) : Nat :=
+  207 * q ^ 2 + 270 * q + 89
+
+def allPairTime14Target (q : Nat) : Nat :=
+  112896 * q ^ 4 + 295776 * q ^ 3 + 290818 * q ^ 2 +
+    127190 * q + 20878
+
+def allPairTime23Target (q : Nat) : Nat :=
+  111744 * q ^ 4 + 287904 * q ^ 3 + 277220 * q ^ 2 +
+    118211 * q + 18831
+
+def allPairTime24Target (q : Nat) : Nat :=
+  107136 * q ^ 4 + 283776 * q ^ 3 + 281850 * q ^ 2 +
+    124403 * q + 20588
+
+def allPairTime34Target (q : Nat) : Nat :=
+  2592 * q ^ 3 + 5136 * q ^ 2 + 3400 * q + 752
+
+def allPairTimeMassTotalTarget (q : Nat) : Nat :=
+  allPairTimeZTarget q +
+  allPairTime01Target q +
+  allPairTime02Target q +
+  allPairTime03Target q +
+  allPairTime04Target q +
+  allPairTime12Target q +
+  allPairTime13Target q +
+  allPairTime14Target q +
+  allPairTime23Target q +
+  allPairTime24Target q +
+  allPairTime34Target q
+
+theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (q : Nat) :
+    allPairTimeMassTotalTarget q = modulus q ^ 4 := by
+  simp [allPairTimeMassTotalTarget, allPairTimeZTarget,
+    allPairTime01Target, allPairTime02Target, allPairTime03Target,
+    allPairTime04Target, allPairTime12Target, allPairTime13Target,
+    allPairTime14Target, allPairTime23Target, allPairTime24Target,
+    allPairTime34Target, modulus]
+  ring
+
+end RouteEB16
+
+namespace RouteER14e
+
+/-!
+Route-E R14e branch surface from the v3.6 bundle.
+
+This branch has `m = 48*k + 14` and a boundary quotient type distinct from
+B20/B16.  The time-mass polynomials below are evidence targets; the symbolic
+boundary quotient formula and one-cycle derivation remain open.
+-/
+
+def modulus (k : Nat) : Nat := 48 * k + 14
+
+def half (k : Nat) : Nat := 24 * k + 7
+
+def z (k : Nat) : Nat := 24 * k + 5
+
+def counts (k : Nat) : Fin 5 → Nat :=
+  ![1, 24 * k + 7, 0, z k, 0]
+
+theorem counts_sum (k : Nat) :
+    Finset.univ.sum (counts k) = modulus k - 1 := by
+  simp [counts, Fin.sum_univ_five, z, modulus]
+  omega
+
+def routeCounts (k : Nat) : RouteECounts (modulus k) where
+  slot := 0
+  counts := counts k
+  count_sum := counts_sum k
+
+def allPairTimeZTarget (_k : Nat) : Nat :=
+  2
+
+def allPairTime01Target (k : Nat) : Nat :=
+  864 * k ^ 2 + 468 * k + 64
+
+def allPairTime02Target (k : Nat) : Nat :=
+  55296 * k ^ 3 + 47232 * k ^ 2 + 13440 * k + 1274
+
+def allPairTime03Target (k : Nat) : Nat :=
+  10944 * k ^ 3 + 10016 * k ^ 2 + 3036 * k + 305
+
+def allPairTime04Target (k : Nat) : Nat :=
+  59904 * k ^ 3 + 50432 * k ^ 2 + 14152 * k + 1323
+
+def allPairTime12Target (k : Nat) : Nat :=
+  2304 * k ^ 2 + 1296 * k + 182
+
+def allPairTime13Target (k : Nat) : Nat :=
+  1440 * k ^ 2 + 732 * k + 94
+
+def allPairTime14Target (k : Nat) : Nat :=
+  1824768 * k ^ 4 + 2042496 * k ^ 3 + 856008 * k ^ 2 +
+    159192 * k + 11084
+
+def allPairTime23Target (k : Nat) : Nat :=
+  1824768 * k ^ 4 + 2097792 * k ^ 3 + 902640 * k ^ 2 +
+    172412 * k + 12346
+
+def allPairTime24Target (k : Nat) : Nat :=
+  1658880 * k ^ 4 + 1914624 * k ^ 3 + 827624 * k ^ 2 +
+    158756 * k + 11396
+
+def allPairTime34Target (k : Nat) : Nat :=
+  12096 * k ^ 3 + 10944 * k ^ 2 + 3364 * k + 346
+
+def allPairTimeMassTotalTarget (k : Nat) : Nat :=
+  allPairTimeZTarget k +
+  allPairTime01Target k +
+  allPairTime02Target k +
+  allPairTime03Target k +
+  allPairTime04Target k +
+  allPairTime12Target k +
+  allPairTime13Target k +
+  allPairTime14Target k +
+  allPairTime23Target k +
+  allPairTime24Target k +
+  allPairTime34Target k
+
+theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (k : Nat) :
+    allPairTimeMassTotalTarget k = modulus k ^ 4 := by
+  simp [allPairTimeMassTotalTarget, allPairTimeZTarget,
+    allPairTime01Target, allPairTime02Target, allPairTime03Target,
+    allPairTime04Target, allPairTime12Target, allPairTime13Target,
+    allPairTime14Target, allPairTime23Target, allPairTime24Target,
+    allPairTime34Target, modulus]
+  ring
+
+end RouteER14e
+
 def LambdaE (S : Mask5) : Color → Direction :=
   if S = mask5 false false false false false then row5 0 1 2 3 4
   else if S = mask5 true false false false false then row5 0 1 3 2 4
