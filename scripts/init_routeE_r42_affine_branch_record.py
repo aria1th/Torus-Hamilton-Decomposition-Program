@@ -28,6 +28,9 @@ DEFAULT_BOUNDARY_VERIFICATION = (
 DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
+DEFAULT_OPEN_TAIL_SUGGESTIONS = (
+    ROOT / "certs" / "routeE_r42_open_tail_formula_suggestions.json"
+)
 DEFAULT_COLOR_SIGN_SCREEN = ROOT / "certs" / "routeE_color_sign_screen_audit.json"
 
 
@@ -42,6 +45,7 @@ def build_record(
     boundary_summary_path: Path,
     boundary_verification_path: Path,
     block_regeneration_verification_path: Path,
+    open_tail_suggestions_path: Path,
     color_sign_screen_path: Path,
 ) -> dict[str, Any]:
     fits = load_json(fits_path)
@@ -62,6 +66,11 @@ def build_record(
     block_regeneration_verification = (
         load_json(block_regeneration_verification_path)
         if block_regeneration_verification_path.exists()
+        else {}
+    )
+    open_tail_suggestions = (
+        load_json(open_tail_suggestions_path)
+        if open_tail_suggestions_path.exists()
         else {}
     )
     color_sign_screen = (
@@ -103,6 +112,7 @@ def build_record(
             "block_regeneration_verification": str(
                 block_regeneration_verification_path
             ),
+            "open_tail_suggestions": str(open_tail_suggestions_path),
             "color_sign_screen": str(color_sign_screen_path),
             "typeA_coverage": str(coverage_path),
         },
@@ -174,6 +184,10 @@ def build_record(
             "ok": block_regeneration_verification.get("ok"),
             "summary": block_regeneration_verification.get("summary"),
         },
+        "open_tail_formula_suggestions_summary": {
+            "schema": open_tail_suggestions.get("schema"),
+            "summary": open_tail_suggestions.get("summary"),
+        },
         "color_sign_screen_summary": {
             "schema": color_sign_screen.get("schema"),
             "r42_record_count": len(r42_color_sign_records),
@@ -226,6 +240,9 @@ def main() -> None:
         type=Path,
         default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
     )
+    parser.add_argument(
+        "--open-tail-suggestions", type=Path, default=DEFAULT_OPEN_TAIL_SUGGESTIONS
+    )
     parser.add_argument("--color-sign-screen", type=Path, default=DEFAULT_COLOR_SIGN_SCREEN)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -237,6 +254,7 @@ def main() -> None:
         args.boundary_summary,
         args.boundary_verification,
         args.block_regeneration_verification,
+        args.open_tail_suggestions,
         args.color_sign_screen,
     )
     print(

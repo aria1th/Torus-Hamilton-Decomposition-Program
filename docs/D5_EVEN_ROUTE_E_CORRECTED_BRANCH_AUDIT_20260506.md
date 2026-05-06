@@ -41,7 +41,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
 | Verify R42 compact boundary summary | `scripts/verify_routeE_r42_boundary_summary.py`, `certs/routeE_r42_boundary_summary_verification.json` | done, internal affine/block consistency verified |
-| Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..5 regenerated |
+| Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..6 regenerated |
+| Suggest R42 open tail formulas | `scripts/suggest_routeE_r42_open_tail_formulas.py`, `certs/routeE_r42_open_tail_formula_suggestions.json` | done, 9 linear tails recorded |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -353,7 +354,7 @@ R42 regenerated block-formula verification:
 
 ```bash
 python3 scripts/verify_routeE_r42_block_formulas_by_regeneration.py \
-  --q-values 1:5 \
+  --q-values 1:6 \
   --json-out certs/routeE_r42_block_formula_regeneration_verification.json
 ```
 
@@ -361,11 +362,11 @@ Result:
 
 ```text
 ok True
-verified_q_values [1, 2, 3, 4, 5]
+verified_q_values [1, 2, 3, 4, 5, 6]
 block_count 29
 all_block_formulas_match_regeneration True
 all_boundary_single_cycle True
-open_null_formula_field_count 25
+open_null_formula_field_count 34
 ```
 
 This check recompiles/runs the all-pair C++ checker, rebuilds temporary R42
@@ -373,6 +374,40 @@ boundary block tables, and compares the stored 29 block formulas against fresh
 finite witnesses.  The open null fields are optional `condition_interval_count`
 compression debt and q=1 boundary exceptions; they are not transition-mass
 mismatches.
+
+R42 open tail-formula suggestions:
+
+```bash
+python3 scripts/suggest_routeE_r42_open_tail_formulas.py \
+  --json-out certs/routeE_r42_open_tail_formula_suggestions.json
+```
+
+Result:
+
+```text
+suggestion_count 11
+linear_tail_count 9
+single_sample_boundary_exception_count 2
+all_multi_sample_fields_linear True
+```
+
+The multi-sample open fields are optional `condition_interval_count` metadata.
+The inferred visible tails are:
+
+```text
+block 5:  condition_interval_count = 3*q + 2   for q >= 3
+block 7:  condition_interval_count = 3*q + 3   for q >= 2
+block 11: condition_interval_count = 4*q + 3   for q >= 2
+block 14: condition_interval_count = 2*q + 1   for q >= 4
+block 15: condition_interval_count = 2*q + 2   for q >= 4
+block 16: condition_interval_count = 2*q + 2   for q >= 4
+block 17: condition_interval_count = 2*q + 1   for q >= 4
+block 21: condition_interval_count = 2*q + 1   for q >= 4
+block 22: condition_interval_count = 2*q + 2   for q >= 4
+```
+
+The two single-sample fields are the q=1 terminal affine boundary exception
+already covered by the q>=2 tail formulas in the compact summary.
 
 R38 symmetric recheck:
 

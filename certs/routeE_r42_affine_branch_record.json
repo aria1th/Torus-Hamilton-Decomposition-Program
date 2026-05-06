@@ -6,13 +6,14 @@
       "all_block_formulas_match_regeneration": true,
       "all_boundary_single_cycle": true,
       "block_count": 29,
-      "open_null_formula_field_count": 25,
+      "open_null_formula_field_count": 34,
       "verified_q_values": [
         1,
         2,
         3,
         4,
-        5
+        5,
+        6
       ]
     }
   },
@@ -148,6 +149,15 @@
     "x": "6*q + 5",
     "z": "6*q + 5"
   },
+  "open_tail_formula_suggestions_summary": {
+    "schema": "routeE_r42_open_tail_formula_suggestions_v1",
+    "summary": {
+      "all_multi_sample_fields_linear": true,
+      "linear_tail_count": 9,
+      "single_sample_boundary_exception_count": 2,
+      "suggestion_count": 11
+    }
+  },
   "parameter": "m = 48*q + 42",
   "required_branch_data": [
     "closed count/packet law for all q >= 0",
@@ -212,6 +222,7 @@
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
+    "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",

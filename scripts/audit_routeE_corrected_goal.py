@@ -51,6 +51,9 @@ FILES = {
     "r42_block_regeneration_verification": ROOT
     / "certs"
     / "routeE_r42_block_formula_regeneration_verification.json",
+    "r42_open_tail_suggestions": ROOT
+    / "certs"
+    / "routeE_r42_open_tail_formula_suggestions.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -101,6 +104,7 @@ def build_audit() -> dict[str, Any]:
     r42_block_regeneration_verification = load_json(
         FILES["r42_block_regeneration_verification"]
     )
+    r42_open_tail_suggestions = load_json(FILES["r42_open_tail_suggestions"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -375,7 +379,7 @@ def build_audit() -> dict[str, Any]:
             and r42_block_regeneration_verification.get("summary", {}).get(
                 "verified_q_values"
             )
-            == [1, 2, 3, 4, 5]
+            == [1, 2, 3, 4, 5, 6]
             and r42_block_regeneration_verification.get("summary", {}).get(
                 "all_block_formulas_match_regeneration"
             )
@@ -389,6 +393,28 @@ def build_audit() -> dict[str, Any]:
             )
             == 29,
             "certs/routeE_r42_block_formula_regeneration_verification.json",
+        ),
+        item(
+            "R42 open tail-formula suggestions are recorded",
+            r42_open_tail_suggestions.get("schema")
+            == "routeE_r42_open_tail_formula_suggestions_v1"
+            and r42_open_tail_suggestions.get("summary", {}).get(
+                "suggestion_count"
+            )
+            == 11
+            and r42_open_tail_suggestions.get("summary", {}).get(
+                "linear_tail_count"
+            )
+            == 9
+            and r42_open_tail_suggestions.get("summary", {}).get(
+                "single_sample_boundary_exception_count"
+            )
+            == 2
+            and r42_open_tail_suggestions.get("summary", {}).get(
+                "all_multi_sample_fields_linear"
+            )
+            is True,
+            "certs/routeE_r42_open_tail_formula_suggestions.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",
