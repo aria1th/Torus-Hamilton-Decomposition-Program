@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `0cd8204`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `a72d8d4`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 58 commits ahead of origin.  Those commits add 66 files and
-28,157 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 78 commits ahead of origin.  Those commits add 73 files and
+33,740 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -25,12 +25,13 @@ flowchart LR
   R38[R38 gate-transducer target<br/>negative controls preserved]
   R42[R42 affine target<br/>m=48q+42, x=z=6q+5]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
+  RG[R42 regeneration check<br/>q=1..5 formulas match fresh witnesses]
   NG[No-go audit<br/>X1 parity and X2 sign contradictions]
   OPEN[Open theorem work<br/>Type-A coverage + E-gen symbolic]
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> NG --> OPEN
+  P --> R42 --> BQ --> RG --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -43,13 +44,14 @@ flowchart LR
 | 19:54-20:04 | `5b7d8c3`..`b32434a` | open-residue smoke screen, portfolio coverage and affine fits | R42 identified as next simple candidate |
 | 20:06-20:31 | `1538fa5`..`b6af22c` | R42 affine record, q=0..4 verification, boundary quotient fits, q=1 block table, no-go audit | R42 sample-verified but still open |
 | 20:31-20:38 | `8ea8eea`..`0cd8204` | R42 detailed block-signature caveat and ledger refresh | promotion target sharpened, still open |
+| 20:40-20:50 | `a700cc9`..`a72d8d4` | R42 q>=2 tail fits, transition/block mass symbolics, regenerated block-formula verification | stronger R42 evidence, still open |
 
 ## Proof Progress Gauge
 
 The machine audit still reports 2 missing structural items.
 
 ```text
-Artifacts/audits:  [########################--] 24/26
+Artifacts/audits:  [##############################--] 30/32
 Closed theorem:    [---------------------------] incomplete
 ```
 
@@ -141,9 +143,13 @@ Transition-count fits for `q >= 1`:
 | `34` | 0 | `18q + 15` | `18q + 16` | `12q + 10` |
 
 Recent commits add the representative `q=1` boundary block table and record that
-the current miner does not yet produce a stable detailed block signature across
-`q=1,2,3,4`.  The R42 boundary quotient is now a compact symbolic-promotion
-map, but it is still not a proof of the R42 residue.
+the current miner does not yet fully compress all condition-interval metadata.
+Later commits add q>=2 tail formulas for the q=1 boundary exception and verify
+the transition/block mass formulas symbolically.  A regeneration checker now
+rebuilds temporary R42 finite witnesses for `q=1,2,3,4,5` and confirms that the
+stored 29 block formulas still match the fresh block tables.  The R42 boundary
+quotient is now a stronger compact symbolic-promotion map, but it is still not
+a proof of the R42 residue.
 
 ## Mathematical Findings
 
@@ -165,8 +171,9 @@ map, but it is still not a proof of the R42 residue.
 6. R38 remains an open gate-transducer target.  The symmetric probes are useful
    negative controls, not a closed branch law.
 7. R42 is now the sharpest promotion target: samples verify for `q=0..4`, the
-   `q>=1` boundary quotient has a stable 29-block profile, and the `q=1`
-   representative block table is preserved.
+   `q>=1` boundary quotient has a stable 29-block profile, transition/block
+   mass identities verify symbolically, and the 29 block formulas match fresh
+   regenerated witnesses for `q=1..5`.
 
 ## Remaining Proof Route
 
