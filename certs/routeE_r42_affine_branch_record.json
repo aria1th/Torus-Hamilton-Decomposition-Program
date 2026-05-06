@@ -808,6 +808,48 @@
     "sample_count": 5,
     "schema": "routeE_r42_pointwise_law_mining_verification_v1"
   },
+  "qtime_interval_profiles_summary": {
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "The remaining qtime-missing edge groups are interval-affine on sampled tail witnesses.  This suggests an interval grammar for time equations, but it is still sampled evidence.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_qtime_interval_profiles_v1",
+    "summary": {
+      "all_nonaffine_edges_interval_affine": true,
+      "all_samples_ok": true,
+      "bad_interval_counts": {
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0
+      },
+      "nonaffine_edge_counts": {
+        "6": 22,
+        "7": 22,
+        "8": 22,
+        "9": 22
+      }
+    }
+  },
+  "qtime_interval_profiles_verification_summary": {
+    "error_count": 0,
+    "ok": true,
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_qtime_interval_profiles_verification_v1"
+  },
   "required_branch_data": [
     "closed count/packet law for all q >= 0",
     "RF1/RF2 one-layer validity or an adapter to existing all-pair data",
@@ -893,6 +935,8 @@
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
+    "qtime_interval_profiles": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles.json",
+    "qtime_interval_profiles_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles_verification.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",
     "typeA_coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json"
   },

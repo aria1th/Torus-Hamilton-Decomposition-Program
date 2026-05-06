@@ -1,0 +1,782 @@
+{
+  "family": "R42, m=48*q+42, x=z=6*q+5",
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "The remaining qtime-missing edge groups are interval-affine on sampled tail witnesses.  This suggests an interval grammar for time equations, but it is still sampled evidence.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "samples": [
+    {
+      "all_nonaffine_edges_interval_affine": true,
+      "bad_interval_count": 0,
+      "interval_count": 612,
+      "m": 330,
+      "nonaffine_edge_count": 22,
+      "nonaffine_edges": [
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 27,
+          "member_count": 27,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 14,
+          "interval_count": 7,
+          "member_count": 7,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 15,
+          "interval_count": 7,
+          "member_count": 7,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 9,
+          "interval_count": 7,
+          "member_count": 7,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 10,
+          "interval_count": 7,
+          "member_count": 7,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 11,
+          "interval_count": 27,
+          "member_count": 27,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 18,
+          "interval_count": 41,
+          "member_count": 41,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 19,
+          "interval_count": 41,
+          "member_count": 41,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 20,
+          "interval_count": 41,
+          "member_count": 41,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 20,
+          "member_count": 20,
+          "src": 5
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 20,
+          "member_count": 20,
+          "src": 7
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 4,
+          "interval_count": 27,
+          "member_count": 27,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 6,
+          "interval_count": 27,
+          "member_count": 27,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 27,
+          "member_count": 27,
+          "src": 18
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 26,
+          "interval_count": 41,
+          "member_count": 41,
+          "src": 20
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 13,
+          "member_count": 13,
+          "src": 21
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 14,
+          "member_count": 14,
+          "src": 22
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 55,
+          "member_count": 82,
+          "src": 25
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 81,
+          "member_count": 81,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 16,
+          "interval_count": 14,
+          "member_count": 14,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 17,
+          "interval_count": 13,
+          "member_count": 13,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 55,
+          "member_count": 55,
+          "src": 28
+        }
+      ],
+      "ok": true,
+      "q": 6
+    },
+    {
+      "all_nonaffine_edges_interval_affine": true,
+      "bad_interval_count": 0,
+      "interval_count": 702,
+      "m": 378,
+      "nonaffine_edge_count": 22,
+      "nonaffine_edges": [
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 31,
+          "member_count": 31,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 14,
+          "interval_count": 8,
+          "member_count": 8,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 15,
+          "interval_count": 8,
+          "member_count": 8,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 9,
+          "interval_count": 8,
+          "member_count": 8,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 10,
+          "interval_count": 8,
+          "member_count": 8,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 11,
+          "interval_count": 31,
+          "member_count": 31,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 18,
+          "interval_count": 47,
+          "member_count": 47,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 19,
+          "interval_count": 47,
+          "member_count": 47,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 20,
+          "interval_count": 47,
+          "member_count": 47,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 23,
+          "member_count": 23,
+          "src": 5
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 23,
+          "member_count": 23,
+          "src": 7
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 4,
+          "interval_count": 31,
+          "member_count": 31,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 6,
+          "interval_count": 31,
+          "member_count": 31,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 31,
+          "member_count": 31,
+          "src": 18
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 26,
+          "interval_count": 47,
+          "member_count": 47,
+          "src": 20
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 15,
+          "member_count": 15,
+          "src": 21
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 16,
+          "member_count": 16,
+          "src": 22
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 63,
+          "member_count": 94,
+          "src": 25
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 93,
+          "member_count": 93,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 16,
+          "interval_count": 16,
+          "member_count": 16,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 17,
+          "interval_count": 15,
+          "member_count": 15,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 63,
+          "member_count": 63,
+          "src": 28
+        }
+      ],
+      "ok": true,
+      "q": 7
+    },
+    {
+      "all_nonaffine_edges_interval_affine": true,
+      "bad_interval_count": 0,
+      "interval_count": 792,
+      "m": 426,
+      "nonaffine_edge_count": 22,
+      "nonaffine_edges": [
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 35,
+          "member_count": 35,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 14,
+          "interval_count": 9,
+          "member_count": 9,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 15,
+          "interval_count": 9,
+          "member_count": 9,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 9,
+          "interval_count": 9,
+          "member_count": 9,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 10,
+          "interval_count": 9,
+          "member_count": 9,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 11,
+          "interval_count": 35,
+          "member_count": 35,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 18,
+          "interval_count": 53,
+          "member_count": 53,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 19,
+          "interval_count": 53,
+          "member_count": 53,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 20,
+          "interval_count": 53,
+          "member_count": 53,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 26,
+          "member_count": 26,
+          "src": 5
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 26,
+          "member_count": 26,
+          "src": 7
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 4,
+          "interval_count": 35,
+          "member_count": 35,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 6,
+          "interval_count": 35,
+          "member_count": 35,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 35,
+          "member_count": 35,
+          "src": 18
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 26,
+          "interval_count": 53,
+          "member_count": 53,
+          "src": 20
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 17,
+          "member_count": 17,
+          "src": 21
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 18,
+          "member_count": 18,
+          "src": 22
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 71,
+          "member_count": 106,
+          "src": 25
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 105,
+          "member_count": 105,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 16,
+          "interval_count": 18,
+          "member_count": 18,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 17,
+          "interval_count": 17,
+          "member_count": 17,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 71,
+          "member_count": 71,
+          "src": 28
+        }
+      ],
+      "ok": true,
+      "q": 8
+    },
+    {
+      "all_nonaffine_edges_interval_affine": true,
+      "bad_interval_count": 0,
+      "interval_count": 882,
+      "m": 474,
+      "nonaffine_edge_count": 22,
+      "nonaffine_edges": [
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 39,
+          "member_count": 39,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 14,
+          "interval_count": 10,
+          "member_count": 10,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 15,
+          "interval_count": 10,
+          "member_count": 10,
+          "src": 2
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 9,
+          "interval_count": 10,
+          "member_count": 10,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 10,
+          "interval_count": 10,
+          "member_count": 10,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 11,
+          "interval_count": 39,
+          "member_count": 39,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 18,
+          "interval_count": 59,
+          "member_count": 59,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 19,
+          "interval_count": 59,
+          "member_count": 59,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 20,
+          "interval_count": 59,
+          "member_count": 59,
+          "src": 3
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 29,
+          "member_count": 29,
+          "src": 5
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 28,
+          "interval_count": 29,
+          "member_count": 29,
+          "src": 7
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 4,
+          "interval_count": 39,
+          "member_count": 39,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 6,
+          "interval_count": 39,
+          "member_count": 39,
+          "src": 13
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 39,
+          "member_count": 39,
+          "src": 18
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 26,
+          "interval_count": 59,
+          "member_count": 59,
+          "src": 20
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 19,
+          "member_count": 19,
+          "src": 21
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 20,
+          "member_count": 20,
+          "src": 22
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 3,
+          "interval_count": 79,
+          "member_count": 118,
+          "src": 25
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 13,
+          "interval_count": 117,
+          "member_count": 117,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 16,
+          "interval_count": 20,
+          "member_count": 20,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 17,
+          "interval_count": 19,
+          "member_count": 19,
+          "src": 26
+        },
+        {
+          "bad_interval_count": 0,
+          "bad_intervals": [],
+          "dst": 25,
+          "interval_count": 79,
+          "member_count": 79,
+          "src": 28
+        }
+      ],
+      "ok": true,
+      "q": 9
+    }
+  ],
+  "schema": "routeE_r42_qtime_interval_profiles_v1",
+  "summary": {
+    "all_nonaffine_edges_interval_affine": true,
+    "all_samples_ok": true,
+    "bad_interval_counts": {
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0
+    },
+    "nonaffine_edge_counts": {
+      "6": 22,
+      "7": 22,
+      "8": 22,
+      "9": 22
+    }
+  }
+}

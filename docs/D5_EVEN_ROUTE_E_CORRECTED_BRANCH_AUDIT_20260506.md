@@ -1015,6 +1015,13 @@ python3 scripts/summarize_routeE_r42_mod96_tail_refinement.py \
 
 python3 scripts/verify_routeE_r42_mod96_tail_refinement.py \
   --json-out certs/routeE_r42_mod96_tail_refinement_verification.json
+
+python3 scripts/summarize_routeE_r42_qtime_interval_profiles.py \
+  --q-values 6:9 \
+  --json-out certs/routeE_r42_qtime_interval_profiles.json
+
+python3 scripts/verify_routeE_r42_qtime_interval_profiles.py \
+  --json-out certs/routeE_r42_qtime_interval_profiles_verification.json
 ```
 
 This refines the 69-edge boundary-block transducer on the two generic mod-96
@@ -1037,9 +1044,16 @@ too; the remaining obstruction is exactly 22 `qtime`-missing edges on each
 branch.  This suggests the next R42 split is not a target-map split but a
 different local grammar for those 22 time edges.
 
+The qtime interval-profile artifact narrows that grammar further.  On the tail
+sample window `q=6,7,8,9`, each sample has exactly 22 edge groups whose qtime is
+not affine on the whole edge, but after splitting each such edge by contiguous
+source-`a` intervals, every interval has affine qtime.  Thus the remaining
+R42 time-equation problem is now localized to an interval-level qtime grammar,
+not an arbitrary pointwise law.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 17 verified evidence items but
+minimality.  The R42 promotion audit now counts 18 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text

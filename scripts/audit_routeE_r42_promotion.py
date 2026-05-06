@@ -64,6 +64,12 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     mod96_tail_refinement_ver = record.get(
         "mod96_tail_refinement_verification_summary", {}
     )
+    qtime_interval_profiles = record.get("qtime_interval_profiles_summary", {}).get(
+        "summary", {}
+    )
+    qtime_interval_profiles_ver = record.get(
+        "qtime_interval_profiles_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -208,6 +214,21 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             == {"R42-even-q": 22, "R42-odd-q": 22},
             "certs/routeE_r42_mod96_tail_refinement.json and certs/routeE_r42_mod96_tail_refinement_verification.json",
             "tail-refinement diagnostic",
+        ),
+        item(
+            "R42 qtime interval-profile diagnostic is verified",
+            qtime_interval_profiles_ver.get("schema")
+            == "routeE_r42_qtime_interval_profiles_verification_v1"
+            and qtime_interval_profiles_ver.get("ok") is True
+            and qtime_interval_profiles_ver.get("q_values") == [6, 7, 8, 9]
+            and qtime_interval_profiles_ver.get("error_count") == 0
+            and qtime_interval_profiles.get("all_samples_ok") is True
+            and qtime_interval_profiles.get("all_nonaffine_edges_interval_affine")
+            is True
+            and qtime_interval_profiles.get("nonaffine_edge_counts")
+            == {"6": 22, "7": 22, "8": 22, "9": 22},
+            "certs/routeE_r42_qtime_interval_profiles.json and certs/routeE_r42_qtime_interval_profiles_verification.json",
+            "qtime interval diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

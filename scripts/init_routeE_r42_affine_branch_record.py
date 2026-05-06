@@ -54,6 +54,12 @@ DEFAULT_MOD96_TAIL_REFINEMENT = (
 DEFAULT_MOD96_TAIL_REFINEMENT_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_mod96_tail_refinement_verification.json"
 )
+DEFAULT_QTIME_INTERVAL_PROFILES = (
+    ROOT / "certs" / "routeE_r42_qtime_interval_profiles.json"
+)
+DEFAULT_QTIME_INTERVAL_PROFILES_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_qtime_interval_profiles_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -104,6 +110,8 @@ def build_record(
     mod96_edge_partitions_verification_path: Path,
     mod96_tail_refinement_path: Path,
     mod96_tail_refinement_verification_path: Path,
+    qtime_interval_profiles_path: Path,
+    qtime_interval_profiles_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -184,6 +192,16 @@ def build_record(
     mod96_tail_refinement_verification = (
         load_json(mod96_tail_refinement_verification_path)
         if mod96_tail_refinement_verification_path.exists()
+        else {}
+    )
+    qtime_interval_profiles = (
+        load_json(qtime_interval_profiles_path)
+        if qtime_interval_profiles_path.exists()
+        else {}
+    )
+    qtime_interval_profiles_verification = (
+        load_json(qtime_interval_profiles_verification_path)
+        if qtime_interval_profiles_verification_path.exists()
         else {}
     )
     finite_boundary_cases = (
@@ -290,6 +308,10 @@ def build_record(
             "mod96_tail_refinement": str(mod96_tail_refinement_path),
             "mod96_tail_refinement_verification": str(
                 mod96_tail_refinement_verification_path
+            ),
+            "qtime_interval_profiles": str(qtime_interval_profiles_path),
+            "qtime_interval_profiles_verification": str(
+                qtime_interval_profiles_verification_path
             ),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
@@ -462,6 +484,18 @@ def build_record(
             "q_values": mod96_tail_refinement_verification.get("q_values"),
             "error_count": mod96_tail_refinement_verification.get("error_count"),
         },
+        "qtime_interval_profiles_summary": {
+            "schema": qtime_interval_profiles.get("schema"),
+            "q_values": qtime_interval_profiles.get("q_values"),
+            "summary": qtime_interval_profiles.get("summary"),
+            "promotion_impact": qtime_interval_profiles.get("promotion_impact"),
+        },
+        "qtime_interval_profiles_verification_summary": {
+            "schema": qtime_interval_profiles_verification.get("schema"),
+            "ok": qtime_interval_profiles_verification.get("ok"),
+            "q_values": qtime_interval_profiles_verification.get("q_values"),
+            "error_count": qtime_interval_profiles_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -614,6 +648,16 @@ def main() -> None:
         default=DEFAULT_MOD96_TAIL_REFINEMENT_VERIFICATION,
     )
     parser.add_argument(
+        "--qtime-interval-profiles",
+        type=Path,
+        default=DEFAULT_QTIME_INTERVAL_PROFILES,
+    )
+    parser.add_argument(
+        "--qtime-interval-profiles-verification",
+        type=Path,
+        default=DEFAULT_QTIME_INTERVAL_PROFILES_VERIFICATION,
+    )
+    parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
         default=DEFAULT_FINITE_BOUNDARY_CASES,
@@ -678,6 +722,8 @@ def main() -> None:
         args.mod96_edge_partitions_verification,
         args.mod96_tail_refinement,
         args.mod96_tail_refinement_verification,
+        args.qtime_interval_profiles,
+        args.qtime_interval_profiles_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

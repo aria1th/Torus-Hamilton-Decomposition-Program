@@ -1,0 +1,19 @@
+{
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "profiles": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles.json",
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "The remaining qtime-missing edge groups are interval-affine on sampled tail witnesses.  This suggests an interval grammar for time equations, but it is still sampled evidence.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "schema": "routeE_r42_qtime_interval_profiles_verification_v1"
+}
