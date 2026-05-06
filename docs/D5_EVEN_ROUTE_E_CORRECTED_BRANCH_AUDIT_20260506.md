@@ -196,6 +196,9 @@ Hygiene:
 ```bash
 python3 -m py_compile scripts/summarize_d5_routeE_corrected_branches.py
 python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
+python3 -m py_compile scripts/summarize_routeE_typeA_residue_coverage.py
+python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
+python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
 git diff --check
 ```
@@ -224,6 +227,13 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+b516772 Initialize Route E R38 gate-transducer record
+4b504ec Make Route E residue search timeout-safe
+7be1745 Record Route E R38 symmetric probe
+fd4ff1c Record Route E Type-A residue coverage
+a3bc306 Extract Route E Type-A symbolic skeleton
+5a91a94 Preserve Route E Type-A package evidence
+9d22bcd Audit corrected Route E branch progress
 c1dfa2c Extend B20 Route E evidence to m92
 c2036ef Add B20 corrected branch evidence
 c75debc Strengthen Route E branch window verification
@@ -294,6 +304,7 @@ but it does not produce a branch theorem and it shows that the tempting
 
 The corrected dispatcher is now executable and evidence-preserving.  The
 impossible branches are excluded, finite boundary/window artifacts are stored,
-and the B20 symbolic target is sharpened.  The goal should remain active until
+the B20/B16/R14e Type-A branches are preserved as proof-facing evidence, and
+the R38 next-target record is initialized.  The goal should remain active until
 the `E-gen-symbolic` branch obtains a uniform full layered parity-changing
 template or is replaced by a different finite branch cover.
