@@ -79,6 +79,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_small_seam_family_scan_manifest.json",
+      "missing": null,
+      "name": "finite small-seam family scan is recorded",
+      "ok": true
+    },
+    {
       "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_symbolic",
       "missing": "Uniform all-even full layered parity-changing template is still missing.",
       "name": "E-gen-symbolic branch is closed",

@@ -1,0 +1,6406 @@
+{
+  "source": "verify_d5_even_routeE.SMALL_SEAM_CASES",
+  "normalized_slot_zero": true,
+  "case_count": 28,
+  "moduli": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60
+  ],
+  "results": [
+    {
+      "period": 6,
+      "class_count": 3,
+      "min_sample_count": 9,
+      "max_sample_count": 10,
+      "bad_residues": [
+        0,
+        2,
+        4
+      ],
+      "all_non_singleton_affine": false,
+      "robust_affine_residues": [],
+      "singleton_residues": [],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 10,
+          "moduli": [
+            6,
+            12,
+            18,
+            24,
+            30,
+            36,
+            42,
+            48,
+            54,
+            60
+          ],
+          "slots": [
+            0,
+            0,
+            0,
+            0,
+            3,
+            2,
+            0,
+            0,
+            4,
+            3
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [
+              4
+            ],
+            [
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 2
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 12,
+                  "expected": "3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 13,
+                  "den": 54
+                },
+                "intercept": {
+                  "num": -13,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 12,
+                  "expected": "13/9",
+                  "got": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 54
+                },
+                "intercept": {
+                  "num": 10,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 12,
+                  "expected": "8/9",
+                  "got": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 8,
+                  "den": 27
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 12,
+                  "expected": "43/9",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 54
+                },
+                "intercept": {
+                  "num": 10,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 12,
+                  "expected": "8/9",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 9,
+          "moduli": [
+            8,
+            14,
+            20,
+            26,
+            32,
+            38,
+            44,
+            50,
+            56
+          ],
+          "slots": [
+            0,
+            0,
+            0,
+            2,
+            1,
+            3,
+            2,
+            1,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [],
+            [
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "17/8",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "33/8",
+                  "got": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "0",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "5",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "7/4",
+                  "got": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 9,
+          "moduli": [
+            10,
+            16,
+            22,
+            28,
+            34,
+            40,
+            46,
+            52,
+            58
+          ],
+          "slots": [
+            0,
+            4,
+            4,
+            3,
+            2,
+            3,
+            3,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "15/4",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "21/8",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "21/8",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "15/8",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "33/8",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "period": 8,
+      "class_count": 4,
+      "min_sample_count": 7,
+      "max_sample_count": 7,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "all_non_singleton_affine": false,
+      "robust_affine_residues": [],
+      "singleton_residues": [],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 7,
+          "moduli": [
+            8,
+            16,
+            24,
+            32,
+            40,
+            48,
+            56
+          ],
+          "slots": [
+            0,
+            4,
+            0,
+            1,
+            3,
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "13/6",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "11/2",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 40,
+                  "expected": "0",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "17/3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 16,
+                  "expected": "5/3",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 7,
+          "moduli": [
+            10,
+            18,
+            26,
+            34,
+            42,
+            50,
+            58
+          ],
+          "slots": [
+            0,
+            0,
+            2,
+            2,
+            0,
+            1,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "5",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "5/2",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "5/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "11/6",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "31/6",
+                  "got": 8
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 7,
+          "moduli": [
+            12,
+            20,
+            28,
+            36,
+            44,
+            52,
+            60
+          ],
+          "slots": [
+            0,
+            0,
+            3,
+            2,
+            2,
+            3,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "16/3",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "23/6",
+                  "got": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "5/2",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "22/3",
+                  "got": 9
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "0",
+                  "got": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 6,
+          "sample_count": 7,
+          "moduli": [
+            6,
+            14,
+            22,
+            30,
+            38,
+            46,
+            54
+          ],
+          "slots": [
+            0,
+            0,
+            4,
+            3,
+            3,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "14/3",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "0",
+                  "got": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "5/6",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "10/3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 19,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 14,
+                  "expected": "25/6",
+                  "got": 2
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "period": 12,
+      "class_count": 6,
+      "min_sample_count": 4,
+      "max_sample_count": 5,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "all_non_singleton_affine": false,
+      "robust_affine_residues": [],
+      "singleton_residues": [],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 5,
+          "moduli": [
+            12,
+            24,
+            36,
+            48,
+            60
+          ],
+          "slots": [
+            0,
+            0,
+            2,
+            0,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "15/2",
+                  "got": 17
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "19/4",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "9/4",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "17/2",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "0",
+                  "got": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 4,
+          "moduli": [
+            14,
+            26,
+            38,
+            50
+          ],
+          "slots": [
+            0,
+            2,
+            3,
+            1
+          ],
+          "zero_positions": [
+            [],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -53,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "15",
+                  "got": 12
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 36
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 18
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "7/3",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 9
+                },
+                "intercept": {
+                  "num": 50,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "8/3",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 2,
+                  "den": 9
+                },
+                "intercept": {
+                  "num": -19,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "11/3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 18
+                },
+                "intercept": {
+                  "num": 25,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "4/3",
+                  "got": 12
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 4,
+          "moduli": [
+            16,
+            28,
+            40,
+            52
+          ],
+          "slots": [
+            4,
+            3,
+            3,
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 19,
+                  "den": 36
+                },
+                "intercept": {
+                  "num": -67,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "22/3",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -13,
+                  "den": 36
+                },
+                "intercept": {
+                  "num": 169,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "26/3",
+                  "got": 7
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 40,
+                  "expected": "0",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 9
+                },
+                "intercept": {
+                  "num": -103,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "31/3",
+                  "got": 15
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 18
+                },
+                "intercept": {
+                  "num": -8,
+                  "den": 9
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "2/3",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 6,
+          "sample_count": 5,
+          "moduli": [
+            6,
+            18,
+            30,
+            42,
+            54
+          ],
+          "slots": [
+            0,
+            0,
+            3,
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "7",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "0",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "3/4",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "7/2",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 19,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 18,
+                  "expected": "23/4",
+                  "got": 8
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 8,
+          "sample_count": 5,
+          "moduli": [
+            8,
+            20,
+            32,
+            44,
+            56
+          ],
+          "slots": [
+            0,
+            0,
+            1,
+            2,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "9/4",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "33/4",
+                  "got": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "0",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "7",
+                  "got": 9
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 20,
+                  "expected": "3/2",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 10,
+          "sample_count": 5,
+          "moduli": [
+            10,
+            22,
+            34,
+            46,
+            58
+          ],
+          "slots": [
+            0,
+            4,
+            2,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "15/2",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "9/4",
+                  "got": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "9/4",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "7/4",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "29/4",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "period": 16,
+      "class_count": 8,
+      "min_sample_count": 3,
+      "max_sample_count": 4,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "all_non_singleton_affine": false,
+      "robust_affine_residues": [],
+      "singleton_residues": [],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 3,
+          "moduli": [
+            16,
+            32,
+            48
+          ],
+          "slots": [
+            4,
+            1,
+            0
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              "0",
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -9,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "11",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -13,
+                  "den": 32
+                },
+                "intercept": {
+                  "num": 39,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "13/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 9,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -8,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "10",
+                  "got": 11
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 32
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "7/2",
+                  "got": 16
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 3,
+          "moduli": [
+            18,
+            34,
+            50
+          ],
+          "slots": [
+            0,
+            2,
+            1
+          ],
+          "zero_positions": [
+            [
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 33,
+                  "den": 32
+                },
+                "intercept": {
+                  "num": -233,
+                  "den": 16
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "41/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 32
+                },
+                "intercept": {
+                  "num": 73,
+                  "den": 16
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "7/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "0",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 4
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "5",
+                  "got": 15
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 4
+                },
+                "intercept": {
+                  "num": 25,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "4",
+                  "got": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 3,
+          "moduli": [
+            20,
+            36,
+            52
+          ],
+          "slots": [
+            0,
+            2,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              "5/8*m - 7/2",
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 2
+                },
+                "intercept": {
+                  "num": -6,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "12",
+                  "got": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "1",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "5/8*m - 7/2",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -5,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "1",
+                  "got": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 6,
+          "sample_count": 4,
+          "moduli": [
+            6,
+            22,
+            38,
+            54
+          ],
+          "slots": [
+            0,
+            4,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "28/3",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "0",
+                  "got": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "2/3",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "11/3",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 19,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 22,
+                  "expected": "22/3",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 8,
+          "sample_count": 4,
+          "moduli": [
+            8,
+            24,
+            40,
+            56
+          ],
+          "slots": [
+            0,
+            0,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "7/3",
+                  "got": 17
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "11",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 40,
+                  "expected": "0",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "25/3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 24,
+                  "expected": "4/3",
+                  "got": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 10,
+          "sample_count": 4,
+          "moduli": [
+            10,
+            26,
+            42,
+            58
+          ],
+          "slots": [
+            0,
+            2,
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "10",
+                  "got": 12
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "5/3",
+                  "got": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 26,
+                  "expected": "28/3",
+                  "got": 12
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 12,
+          "sample_count": 4,
+          "moduli": [
+            12,
+            28,
+            44,
+            60
+          ],
+          "slots": [
+            0,
+            3,
+            2,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "29/3",
+                  "got": 5
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "17/3",
+                  "got": 7
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 28,
+                  "expected": "29/3",
+                  "got": 15
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 44,
+                  "expected": "0",
+                  "got": 7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 14,
+          "sample_count": 3,
+          "moduli": [
+            14,
+            30,
+            46
+          ],
+          "slots": [
+            0,
+            3,
+            3
+          ],
+          "zero_positions": [
+            [],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": 23,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "2",
+                  "got": 11
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 23,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "1",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 15,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -73,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "19",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -27,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "6",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 23,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "1",
+                  "got": 5
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "period": 24,
+      "class_count": 12,
+      "min_sample_count": 2,
+      "max_sample_count": 3,
+      "bad_residues": [
+        6,
+        8,
+        10,
+        12
+      ],
+      "all_non_singleton_affine": false,
+      "robust_affine_residues": [],
+      "singleton_residues": [],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 2,
+          "moduli": [
+            24,
+            48
+          ],
+          "slots": [
+            0,
+            0
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "1/6*m + 13",
+              "-5/24*m + 10",
+              "0",
+              "3/4*m - 17",
+              "7/24*m - 7"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "1/6*m + 13",
+                "slope": {
+                  "num": 1,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-5/24*m + 10",
+                "slope": {
+                  "num": -5,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 10,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "3/4*m - 17",
+                "slope": {
+                  "num": 3,
+                  "den": 4
+                },
+                "intercept": {
+                  "num": -17,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "7/24*m - 7",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 2,
+          "moduli": [
+            26,
+            50
+          ],
+          "slots": [
+            2,
+            1
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "25/24*m - 181/12",
+              "1/8*m - 13/4",
+              "0",
+              "1/3*m - 23/3",
+              "-1/2*m + 25"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "25/24*m - 181/12",
+                "slope": {
+                  "num": 25,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -181,
+                  "den": 12
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/8*m - 13/4",
+                "slope": {
+                  "num": 1,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -13,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/3*m - 23/3",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": -23,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/2*m + 25",
+                "slope": {
+                  "num": -1,
+                  "den": 2
+                },
+                "intercept": {
+                  "num": 25,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 2,
+          "moduli": [
+            28,
+            52
+          ],
+          "slots": [
+            3,
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "5/8*m - 25/2",
+              "-7/24*m + 91/6",
+              "0",
+              "7/12*m - 4/3",
+              "1/12*m - 7/3"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "5/8*m - 25/2",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-7/24*m + 91/6",
+                "slope": {
+                  "num": -7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 91,
+                  "den": 6
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "7/12*m - 4/3",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -4,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/12*m - 7/3",
+                "slope": {
+                  "num": 1,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 6,
+          "sample_count": 3,
+          "moduli": [
+            6,
+            30,
+            54
+          ],
+          "slots": [
+            0,
+            3,
+            4
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              "0",
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "14",
+                  "got": 11
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "1/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "4",
+                  "got": 13
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 19,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 30,
+                  "expected": "21/2",
+                  "got": 5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 8,
+          "sample_count": 3,
+          "moduli": [
+            8,
+            32,
+            56
+          ],
+          "slots": [
+            0,
+            1,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              "0",
+              "1/3*m + 1/3",
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "5/2",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "33/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/3*m + 1/3",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                },
+                "first_bad": {
+                  "m": 32,
+                  "expected": "1",
+                  "got": 16
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 10,
+          "sample_count": 3,
+          "moduli": [
+            10,
+            34,
+            58
+          ],
+          "slots": [
+            0,
+            2,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "15",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "3/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "3/2",
+                  "got": 4
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "3/2",
+                  "got": 15
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                },
+                "first_bad": {
+                  "m": 34,
+                  "expected": "27/2",
+                  "got": 14
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 12,
+          "sample_count": 3,
+          "moduli": [
+            12,
+            36,
+            60
+          ],
+          "slots": [
+            0,
+            2,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "bad",
+            "formulas": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "coordinate_fits": [
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "14",
+                  "got": 3
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 11,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "15/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 4
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "3/2",
+                  "got": 0
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "12",
+                  "got": 19
+                }
+              },
+              {
+                "status": "bad",
+                "reason": "non_affine",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                },
+                "first_bad": {
+                  "m": 36,
+                  "expected": "0",
+                  "got": 13
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 14,
+          "sample_count": 2,
+          "moduli": [
+            14,
+            38
+          ],
+          "slots": [
+            0,
+            3
+          ],
+          "zero_positions": [
+            [],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "13/24*m - 43/12",
+              "13/24*m - 67/12",
+              "-1/6*m + 19/3",
+              "1/6*m - 4/3",
+              "-1/12*m + 19/6"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "13/24*m - 43/12",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -43,
+                  "den": 12
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "13/24*m - 67/12",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -67,
+                  "den": 12
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/6*m + 19/3",
+                "slope": {
+                  "num": -1,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": 19,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/6*m - 4/3",
+                "slope": {
+                  "num": 1,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": -4,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/12*m + 19/6",
+                "slope": {
+                  "num": -1,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": 19,
+                  "den": 6
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 16,
+          "sample_count": 2,
+          "moduli": [
+            16,
+            40
+          ],
+          "slots": [
+            4,
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "4/3*m - 61/3",
+              "-13/24*m + 65/3",
+              "5/24*m - 10/3",
+              "1",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "4/3*m - 61/3",
+                "slope": {
+                  "num": 4,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": -61,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-13/24*m + 65/3",
+                "slope": {
+                  "num": -13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 65,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "5/24*m - 10/3",
+                "slope": {
+                  "num": 5,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -10,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 18,
+          "sample_count": 2,
+          "moduli": [
+            18,
+            42
+          ],
+          "slots": [
+            0,
+            0
+          ],
+          "zero_positions": [
+            [
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "5/12*m - 7/2",
+              "-1/6*m + 7",
+              "0",
+              "1",
+              "3/4*m - 11/2"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "5/12*m - 7/2",
+                "slope": {
+                  "num": 5,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/6*m + 7",
+                "slope": {
+                  "num": -1,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "3/4*m - 11/2",
+                "slope": {
+                  "num": 3,
+                  "den": 4
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 20,
+          "sample_count": 2,
+          "moduli": [
+            20,
+            44
+          ],
+          "slots": [
+            0,
+            2
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "1/8*m + 3/2",
+              "-1/12*m + 11/3",
+              "-1/6*m + 22/3",
+              "5/6*m - 23/3",
+              "7/24*m - 35/6"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "1/8*m + 3/2",
+                "slope": {
+                  "num": 1,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/12*m + 11/3",
+                "slope": {
+                  "num": -1,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/6*m + 22/3",
+                "slope": {
+                  "num": -1,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": 22,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "5/6*m - 23/3",
+                "slope": {
+                  "num": 5,
+                  "den": 6
+                },
+                "intercept": {
+                  "num": -23,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "7/24*m - 35/6",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -35,
+                  "den": 6
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 22,
+          "sample_count": 2,
+          "moduli": [
+            22,
+            46
+          ],
+          "slots": [
+            4,
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ],
+            [
+              0,
+              1,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "-13/24*m + 299/12",
+              "-1/8*m + 23/4",
+              "17/12*m - 187/6",
+              "1/4*m - 1/2",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "-13/24*m + 299/12",
+                "slope": {
+                  "num": -13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 299,
+                  "den": 12
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/8*m + 23/4",
+                "slope": {
+                  "num": -1,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": 23,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "17/12*m - 187/6",
+                "slope": {
+                  "num": 17,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -187,
+                  "den": 6
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/4*m - 1/2",
+                "slope": {
+                  "num": 1,
+                  "den": 4
+                },
+                "intercept": {
+                  "num": -1,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "period": 48,
+      "class_count": 24,
+      "min_sample_count": 1,
+      "max_sample_count": 2,
+      "bad_residues": [],
+      "all_non_singleton_affine": true,
+      "robust_affine_residues": [],
+      "singleton_residues": [
+        0,
+        2,
+        4,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+        38,
+        40,
+        42,
+        44,
+        46
+      ],
+      "classes": [
+        {
+          "residue": 0,
+          "sample_count": 1,
+          "moduli": [
+            48
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "21",
+              "0",
+              "0",
+              "19",
+              "7"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "21",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 21,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "19",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 19,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "7",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 2,
+          "sample_count": 1,
+          "moduli": [
+            50
+          ],
+          "slots": [
+            1
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "37",
+              "3",
+              "0",
+              "9",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "37",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 37,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "3",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "9",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 4,
+          "sample_count": 1,
+          "moduli": [
+            52
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "20",
+              "0",
+              "0",
+              "29",
+              "2"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "20",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 20,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "29",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "2",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 2,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 6,
+          "sample_count": 2,
+          "moduli": [
+            6,
+            54
+          ],
+          "slots": [
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "7/12*m - 7/2",
+              "0",
+              "-1/48*m + 9/8",
+              "1/24*m + 11/4",
+              "19/48*m - 11/8"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "7/12*m - 7/2",
+                "slope": {
+                  "num": 7,
+                  "den": 12
+                },
+                "intercept": {
+                  "num": -7,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/48*m + 9/8",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 8
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/24*m + 11/4",
+                "slope": {
+                  "num": 1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "19/48*m - 11/8",
+                "slope": {
+                  "num": 19,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 8
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 8,
+          "sample_count": 2,
+          "moduli": [
+            8,
+            56
+          ],
+          "slots": [
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "1/48*m + 11/6",
+              "11/16*m - 11/2",
+              "0",
+              "1/3*m + 1/3",
+              "-1/24*m + 7/3"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "1/48*m + 11/6",
+                "slope": {
+                  "num": 1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 6
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "11/16*m - 11/2",
+                "slope": {
+                  "num": 11,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "1/3*m + 1/3",
+                "slope": {
+                  "num": 1,
+                  "den": 3
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 3
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/24*m + 7/3",
+                "slope": {
+                  "num": -1,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 10,
+          "sample_count": 2,
+          "moduli": [
+            10,
+            58
+          ],
+          "slots": [
+            0,
+            4
+          ],
+          "zero_positions": [
+            [
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "5/8*m - 25/4",
+              "-1/16*m + 29/8",
+              "-1/16*m + 29/8",
+              "-1/48*m + 53/24",
+              "25/48*m - 101/24"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "5/8*m - 25/4",
+                "slope": {
+                  "num": 5,
+                  "den": 8
+                },
+                "intercept": {
+                  "num": -25,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/16*m + 29/8",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/16*m + 29/8",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 8
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/48*m + 53/24",
+                "slope": {
+                  "num": -1,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": 53,
+                  "den": 24
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "25/48*m - 101/24",
+                "slope": {
+                  "num": 25,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -101,
+                  "den": 24
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 12,
+          "sample_count": 2,
+          "moduli": [
+            12,
+            60
+          ],
+          "slots": [
+            0,
+            3
+          ],
+          "zero_positions": [
+            [
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "ok",
+            "formulas": [
+              "13/24*m - 11/2",
+              "11/48*m - 3/4",
+              "-1/16*m + 15/4",
+              "7/24*m + 3/2",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "ok",
+                "formula": "13/24*m - 11/2",
+                "slope": {
+                  "num": 13,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": -11,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "11/48*m - 3/4",
+                "slope": {
+                  "num": 11,
+                  "den": 48
+                },
+                "intercept": {
+                  "num": -3,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "-1/16*m + 15/4",
+                "slope": {
+                  "num": -1,
+                  "den": 16
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 4
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "7/24*m + 3/2",
+                "slope": {
+                  "num": 7,
+                  "den": 24
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 2
+                }
+              },
+              {
+                "status": "ok",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 14,
+          "sample_count": 1,
+          "moduli": [
+            14
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            []
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "4",
+              "2",
+              "4",
+              "1",
+              "2"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "2",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 2,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "2",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 2,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 16,
+          "sample_count": 1,
+          "moduli": [
+            16
+          ],
+          "slots": [
+            4
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "1",
+              "13",
+              "0",
+              "1",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "13",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 18,
+          "sample_count": 1,
+          "moduli": [
+            18
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            [
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "4",
+              "4",
+              "0",
+              "1",
+              "8"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "8",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 8,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 20,
+          "sample_count": 1,
+          "moduli": [
+            20
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            [
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "4",
+              "2",
+              "4",
+              "9",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "2",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 2,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "9",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 9,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 22,
+          "sample_count": 1,
+          "moduli": [
+            22
+          ],
+          "slots": [
+            4
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "13",
+              "3",
+              "0",
+              "5",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "13",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "3",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 24,
+          "sample_count": 1,
+          "moduli": [
+            24
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "17",
+              "5",
+              "0",
+              "1",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "17",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 17,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 26,
+          "sample_count": 1,
+          "moduli": [
+            26
+          ],
+          "slots": [
+            2
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "12",
+              "0",
+              "0",
+              "1",
+              "12"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "12",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 12,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "12",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 12,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 28,
+          "sample_count": 1,
+          "moduli": [
+            28
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "5",
+              "7",
+              "0",
+              "15",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "7",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "15",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 30,
+          "sample_count": 1,
+          "moduli": [
+            30
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "11",
+              "0",
+              "0",
+              "13",
+              "5"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "11",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "13",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 32,
+          "sample_count": 1,
+          "moduli": [
+            32
+          ],
+          "slots": [
+            1
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "4",
+              "0",
+              "0",
+              "11",
+              "16"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "11",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "16",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 16,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 34,
+          "sample_count": 1,
+          "moduli": [
+            34
+          ],
+          "slots": [
+            2
+          ],
+          "zero_positions": [
+            [
+              0,
+              1
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "0",
+              "0",
+              "4",
+              "15",
+              "14"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "4",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 4,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "15",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "14",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 14,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 36,
+          "sample_count": 1,
+          "moduli": [
+            36
+          ],
+          "slots": [
+            2
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "3",
+              "0",
+              "0",
+              "19",
+              "13"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "3",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 3,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "19",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 19,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "13",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 13,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 38,
+          "sample_count": 1,
+          "moduli": [
+            38
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              2,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "17",
+              "15",
+              "0",
+              "5",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "17",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 17,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "15",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 15,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 40,
+          "sample_count": 1,
+          "moduli": [
+            40
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              1,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "33",
+              "0",
+              "5",
+              "1",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "33",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 33,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "5",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 5,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 42,
+          "sample_count": 1,
+          "moduli": [
+            42
+          ],
+          "slots": [
+            0
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "14",
+              "0",
+              "0",
+              "1",
+              "26"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "14",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 14,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "1",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 1,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "26",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 26,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 44,
+          "sample_count": 1,
+          "moduli": [
+            44
+          ],
+          "slots": [
+            2
+          ],
+          "zero_positions": [
+            [
+              1,
+              2
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "7",
+              "0",
+              "0",
+              "29",
+              "7"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "7",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "29",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 29,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "7",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 7,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "residue": 46,
+          "sample_count": 1,
+          "moduli": [
+            46
+          ],
+          "slots": [
+            3
+          ],
+          "zero_positions": [
+            [
+              0,
+              1,
+              4
+            ]
+          ],
+          "fit": {
+            "status": "singleton",
+            "formulas": [
+              "0",
+              "0",
+              "34",
+              "11",
+              "0"
+            ],
+            "coordinate_fits": [
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "34",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 34,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "11",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 11,
+                  "den": 1
+                }
+              },
+              {
+                "status": "singleton",
+                "formula": "0",
+                "slope": {
+                  "num": 0,
+                  "den": 1
+                },
+                "intercept": {
+                  "num": 0,
+                  "den": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

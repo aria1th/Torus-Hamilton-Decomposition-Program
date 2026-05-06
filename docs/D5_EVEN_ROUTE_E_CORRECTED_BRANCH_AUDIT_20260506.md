@@ -34,6 +34,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Initialize R38 gate-transducer branch record | `scripts/init_routeE_r38_gate_transducer_record.py`, `certs/routeE_r38_gate_transducer_branch_record.json` | done, branch remains open |
+| Scan finite small-seam window for simple affine branch laws | `scripts/analyze_d5_routeE_small_seam_families.py`, `certs/routeE_small_seam_family_scan_manifest.json` | done, no robust law found |
 | Machine-check the goal completion status | `scripts/audit_routeE_corrected_goal.py`, `certs/routeE_corrected_goal_audit.json` | done, reports incomplete |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
@@ -211,6 +212,26 @@ closed packet/count law, finite gate transitions, section return one-cycle,
 no-early/minimality, insertion distribution, time-mass polynomials, and
 finite boundary cases.
 
+Finite small-seam family scan:
+
+```bash
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --periods 6,8,12,16,24,48 \
+  --json-out certs/routeE_small_seam_family_scan_6_60.json \
+  --write-manifest certs/routeE_small_seam_family_scan_manifest.json
+```
+
+Result:
+
+```text
+periods 6,8,12,16,24 have bad affine residue classes;
+period 48 has no bad non-singleton classes but is nonrobust
+because 20 of 24 residue classes are singleton in m=6..60.
+```
+
+Thus the existing finite window is not enough to infer a uniform affine count
+law.  It is branch-finding evidence only.
+
 Machine completion audit:
 
 ```bash
@@ -241,6 +262,7 @@ python3 -m py_compile scripts/verify_routeE_typeA_symbolic_skeleton.py
 python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
 python3 -m py_compile scripts/audit_routeE_corrected_goal.py
+python3 -m py_compile scripts/analyze_d5_routeE_small_seam_families.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
 git diff --check
 ```

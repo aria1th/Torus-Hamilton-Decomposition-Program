@@ -31,6 +31,9 @@ FILES = {
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
+    "small_seam_family_manifest": ROOT
+    / "certs"
+    / "routeE_small_seam_family_scan_manifest.json",
 }
 
 
@@ -56,6 +59,7 @@ def build_audit() -> dict[str, Any]:
     r38 = load_json(FILES["r38_record"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
+    family_manifest = load_json(FILES["small_seam_family_manifest"])
 
     checklist = [
         item(
@@ -139,6 +143,13 @@ def build_audit() -> dict[str, Any]:
             timeout.get("schema") == "d5_routeE_cpp_residue_branch_search_v1"
             and all(result.get("timeout") for result in timeout.get("results", [])),
             "certs/routeE_r38_m182_cpp_screen_timeout.json",
+        ),
+        item(
+            "finite small-seam family scan is recorded",
+            family_manifest.get("schema")
+            == "d5_routeE_small_seam_family_scan_manifest_v1"
+            and family_manifest.get("case_count") == 28,
+            "certs/routeE_small_seam_family_scan_manifest.json",
         ),
         item(
             "E-gen-symbolic branch is closed",

@@ -1,0 +1,174 @@
+{
+  "bad_periods": [
+    6,
+    8,
+    12,
+    16,
+    24
+  ],
+  "case_count": 28,
+  "moduli": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60
+  ],
+  "nonrobust_affine_periods": [
+    48
+  ],
+  "normalized_slot_zero": true,
+  "period_summaries": [
+    {
+      "all_non_singleton_affine": false,
+      "bad_residue_count": 3,
+      "bad_residues": [
+        0,
+        2,
+        4
+      ],
+      "class_count": 3,
+      "max_sample_count": 10,
+      "min_sample_count": 9,
+      "period": 6,
+      "robust_affine_residues": [],
+      "singleton_residues": []
+    },
+    {
+      "all_non_singleton_affine": false,
+      "bad_residue_count": 4,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "class_count": 4,
+      "max_sample_count": 7,
+      "min_sample_count": 7,
+      "period": 8,
+      "robust_affine_residues": [],
+      "singleton_residues": []
+    },
+    {
+      "all_non_singleton_affine": false,
+      "bad_residue_count": 6,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "class_count": 6,
+      "max_sample_count": 5,
+      "min_sample_count": 4,
+      "period": 12,
+      "robust_affine_residues": [],
+      "singleton_residues": []
+    },
+    {
+      "all_non_singleton_affine": false,
+      "bad_residue_count": 8,
+      "bad_residues": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "class_count": 8,
+      "max_sample_count": 4,
+      "min_sample_count": 3,
+      "period": 16,
+      "robust_affine_residues": [],
+      "singleton_residues": []
+    },
+    {
+      "all_non_singleton_affine": false,
+      "bad_residue_count": 4,
+      "bad_residues": [
+        6,
+        8,
+        10,
+        12
+      ],
+      "class_count": 12,
+      "max_sample_count": 3,
+      "min_sample_count": 2,
+      "period": 24,
+      "robust_affine_residues": [],
+      "singleton_residues": []
+    },
+    {
+      "all_non_singleton_affine": true,
+      "bad_residue_count": 0,
+      "bad_residues": [],
+      "class_count": 24,
+      "max_sample_count": 2,
+      "min_sample_count": 1,
+      "period": 48,
+      "robust_affine_residues": [],
+      "singleton_residues": [
+        0,
+        2,
+        4,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+        38,
+        40,
+        42,
+        44,
+        46
+      ]
+    }
+  ],
+  "periods": [
+    6,
+    8,
+    12,
+    16,
+    24,
+    48
+  ],
+  "robust_affine_periods": [],
+  "schema": "d5_routeE_small_seam_family_scan_manifest_v1",
+  "source": "verify_d5_even_routeE.SMALL_SEAM_CASES"
+}

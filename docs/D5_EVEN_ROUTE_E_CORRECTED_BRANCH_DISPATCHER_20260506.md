@@ -449,3 +449,17 @@ python3 scripts/audit_routeE_corrected_goal.py \
 
 At the time of this note the audit reports `goal_complete = false`, because
 Type-A residue coverage is incomplete and `E-gen-symbolic` is still open.
+
+The finite small-seam window can be scanned for simple affine count laws by:
+
+```bash
+python3 scripts/analyze_d5_routeE_small_seam_families.py \
+  --periods 6,8,12,16,24,48 \
+  --json-out certs/routeE_small_seam_family_scan_6_60.json \
+  --write-manifest certs/routeE_small_seam_family_scan_manifest.json
+```
+
+The current manifest says that periods `6,8,12,16,24` have bad affine residue
+classes, while period `48` is nonrobust: it has no bad non-singleton classes,
+but `20` of `24` even residue classes are singleton in the `m=6..60` window.
+This prevents the finite window from being treated as a uniform count law.
