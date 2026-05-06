@@ -21,7 +21,7 @@ paper-facing endpoint cuts for the all-dimensional theorem.
 Snapshot: 2026-05-06.
 
 Latest stable release:
-[`0.0.2-d7`](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.0.2-d7).
+[`0.0.3-allodd`](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.0.3-allodd).
 
 ```text
 All odd m, all d >= 2
