@@ -74,6 +74,13 @@ New arithmetic names include:
 - `boundaryQuotient_C_one`
 - `boundaryQuotient_C_h`
 - `boundaryQuotient_C_last`
+- `boundaryQuotient_A_even`
+- `boundaryQuotient_A_odd_shift`
+- `boundaryQuotient_B_odd`
+- `boundaryQuotient_B_two`
+- `boundaryQuotient_B_even_shift`
+- `boundaryQuotient_C_generic`
+- `boundaryQuotient_formulaTarget`
 - `boundaryShiftParam`
 - `boundaryPredParam`
 - `boundaryParamOne`
@@ -178,10 +185,11 @@ Closed or proof-facing in the bundle:
 - 01 and 13 two-clock time masses;
 - 14, 23, and 24 residual-core time masses;
 - 34 finite-defect boundary time mass;
-- boundary quotient one-cycle proof sketch.
+- boundary quotient formula target for the B20 v1.8 candidate.
 
 Remaining B20 obligations:
 
+- prove the B20 boundary quotient candidate is a single cycle;
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;

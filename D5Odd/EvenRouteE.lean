@@ -1144,6 +1144,71 @@ theorem boundaryQuotient_C_generic (q : Nat)
         (boundaryPredParam q a hnot_one) := by
   simp [boundaryQuotient, routeEBoundaryNode, hnot_one, hnot_h, hnot_last]
 
+theorem boundaryQuotient_formulaTarget (q : Nat) :
+    BoundaryQuotientFormulaTarget q (boundaryQuotient q) where
+  zero_to_A :=
+    ⟨boundaryParamHalf q, boundaryParamHalf_val q, boundaryQuotient_zero q⟩
+  A_h_to_C_last := by
+    intro a ha
+    exact ⟨boundaryParamLast q, boundaryParamLast_val q,
+      boundaryQuotient_A_h q a ha⟩
+  A_h_succ_to_A_h_sub_two := by
+    intro a ha
+    exact ⟨boundaryParamHalfSubTwo q, boundaryParamHalfSubTwo_val q,
+      boundaryQuotient_A_h_succ q a ha⟩
+  A_even_to_B_same := by
+    intro a hnot_h heven
+    exact boundaryQuotient_A_even q a hnot_h heven
+  A_odd_to_B_shift := by
+    intro a hnot_succ hodd
+    have hnot_close : a.1.val ≠ half q + 2 := by
+      intro h
+      rw [h] at hodd
+      have heven : (half q + 2) % 2 = 0 := by
+        simp [half, Nat.add_mod, Nat.mul_mod]
+      omega
+    refine ⟨boundaryShiftParam q a hnot_close,
+      boundaryShiftParam_val q a hnot_close, ?_⟩
+    simpa [boundaryShiftParam] using
+      boundaryQuotient_A_odd_shift q a hnot_succ hodd
+  B_h_sub_one_to_C_same := by
+    intro a ha
+    exact boundaryQuotient_B_h_sub_one q a ha
+  B_last_to_C_pred := by
+    intro a ha
+    exact ⟨boundaryParamPenultimate q, boundaryParamPenultimate_val q,
+      boundaryQuotient_B_last q a ha⟩
+  B_h_add_two_to_zero := by
+    intro a ha
+    exact boundaryQuotient_B_close q a ha
+  B_odd_to_A_same := by
+    intro a hnot_pred hnot_last hodd
+    exact boundaryQuotient_B_odd q a hnot_pred hnot_last hodd
+  B_two_to_A_h_sub_one := by
+    intro a ha
+    exact ⟨boundaryParamHalfSubOne q, boundaryParamHalfSubOne_val q,
+      boundaryQuotient_B_two q a ha⟩
+  B_even_to_A_shift := by
+    intro a hnot_two hnot_close heven
+    exact ⟨boundaryShiftParam q a hnot_close,
+      boundaryShiftParam_val q a hnot_close,
+      boundaryQuotient_B_even_shift q a hnot_two hnot_close heven⟩
+  C_one_to_A_last := by
+    intro a ha
+    exact ⟨boundaryParamLast q, boundaryParamLast_val q,
+      boundaryQuotient_C_one q a ha⟩
+  C_h_to_B_same := by
+    intro a ha
+    exact boundaryQuotient_C_h q a ha
+  C_last_to_B_same := by
+    intro a ha
+    exact boundaryQuotient_C_last q a ha
+  C_generic_to_C_pred := by
+    intro a hnot_one hnot_h hnot_last
+    exact ⟨boundaryPredParam q a hnot_one,
+      boundaryPredParam_val q a hnot_one,
+      boundaryQuotient_C_generic q a hnot_one hnot_h hnot_last⟩
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and
