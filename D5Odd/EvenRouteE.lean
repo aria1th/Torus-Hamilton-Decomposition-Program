@@ -1518,6 +1518,21 @@ theorem boundaryCycleSpineNode_four (q : Nat)
         (boundaryParamPenultimate q) := by
   simp [boundaryCycleSpineNode]
 
+theorem boundaryCycleSpineNode_C_run (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i ≤ half q + 2)
+    (hi : i < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q i hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L34
+        (boundarySpineCParam q i hlo hhi) := by
+  have hnot0 : ¬ i = 0 := by omega
+  have hnot1 : ¬ i = 1 := by omega
+  have hnot2 : ¬ i = 2 := by omega
+  have hnot3 : ¬ i = 3 := by omega
+  have hnot4 : ¬ i = 4 := by omega
+  have hnotLast : ¬ i = half q + 3 := by omega
+  simp [boundaryCycleSpineNode, hnot0, hnot1, hnot2, hnot3, hnot4,
+    hnotLast]
+
 theorem boundaryCycleSpine_step_zero (q : Nat)
     (h0 : 0 < boundaryCycleSpineCount q)
     (h1 : 1 < boundaryCycleSpineCount q) :
@@ -1552,6 +1567,65 @@ theorem boundaryCycleSpine_step_three (q : Nat)
   rw [boundaryCycleSpineNode_three q h3, boundaryCycleSpineNode_four q h4]
   exact boundaryQuotient_B_last q (boundaryParamLast q) (by
     simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val])
+
+theorem boundaryCycleSpine_step_C_run (q i : Nat)
+    (hlo : 5 ≤ i) (hnext : i + 1 ≤ half q + 2)
+    (hi : i < boundaryCycleSpineCount q)
+    (his : i + 1 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q i hi) =
+      boundaryCycleSpineNode q (i + 1) his := by
+  have hhi : i ≤ half q + 2 := by omega
+  rw [boundaryCycleSpineNode_C_run q i hlo hhi hi,
+    boundaryCycleSpineNode_C_run q (i + 1) (by omega) hnext his]
+  let a := boundarySpineCParam q i hlo hhi
+  have hnot_one : a.1.val ≠ 1 := by
+    dsimp [a]
+    rw [boundarySpineCParam_val]
+    have hrange := boundarySpineCValue_range q i hlo hhi
+    simp [boundarySpineCValue, half, modulus] at hnext ⊢
+    omega
+  have hnot_h : a.1.val ≠ half q := by
+    dsimp [a]
+    rw [boundarySpineCParam_val]
+    simp [boundarySpineCValue, half, modulus] at hnext ⊢
+    omega
+  have hnot_last : a.1.val ≠ modulus q - 1 := by
+    dsimp [a]
+    rw [boundarySpineCParam_val]
+    simp [boundarySpineCValue, modulus] at hlo ⊢
+    omega
+  calc
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+        routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundaryPredParam q a hnot_one) :=
+      boundaryQuotient_C_generic q a hnot_one hnot_h hnot_last
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundarySpineCParam q (i + 1) (by omega) hnext) := by
+      rw [boundarySpineCParam_pred_eq q i hlo hhi hnext hnot_one]
+
+theorem boundaryCycleSpine_step_C_last (q : Nat)
+    (hi : half q + 2 < boundaryCycleSpineCount q)
+    (his : half q + 3 < boundaryCycleSpineCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q (half q + 2) hi) =
+      boundaryCycleSpineNode q (half q + 3) his := by
+  rw [boundaryCycleSpineNode_C_run q (half q + 2) (by simp [half])
+      (by omega) hi]
+  have hlast :
+      boundaryCycleSpineNode q (half q + 3) his =
+        routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamHalf q) := by
+    have hnot1 : ¬ half q + 3 = 1 := by simp [half]
+    have hnot2 : ¬ half q + 3 = 2 := by simp [half]
+    have hhalf_ne_zero : ¬ half q = 0 := by simp [half]
+    have hnot4 : ¬ half q + 3 = 4 := by simp [half]
+    simp [boundaryCycleSpineNode, hnot1, hnot2, hhalf_ne_zero, hnot4]
+  rw [hlast]
+  have hparam :
+      boundarySpineCParam q (half q + 2) (by simp [half]) (by omega) =
+        boundaryParamHalf q :=
+    boundarySpineCParam_last_eq_half q (by simp [half]) (by omega)
+  rw [hparam]
+  exact boundaryQuotient_C_h q (boundaryParamHalf q) (by
+    simp [boundaryParamHalf, RouteENonzeroSeam.ofNat_val])
 
 def boundaryFirstEvenValue (q j : Nat) : Nat :=
   if j % 2 = 0 then half q - 2 * j else modulus q - 2 * j

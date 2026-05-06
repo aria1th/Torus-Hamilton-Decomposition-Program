@@ -101,6 +101,9 @@ New arithmetic names include:
 - `boundaryCycleSpine_step_one`
 - `boundaryCycleSpine_step_two`
 - `boundaryCycleSpine_step_three`
+- `boundaryCycleSpineNode_C_run`
+- `boundaryCycleSpine_step_C_run`
+- `boundaryCycleSpine_step_C_last`
 - `boundarySpineCValue_succ`
 - `boundarySpineCParam_pred_eq`
 - `boundarySpineCValue_last`
@@ -234,7 +237,8 @@ Closed or proof-facing in the bundle:
 - the first five nodes of the explicit spine enumeration and the first four
   successor checks for `boundaryQuotient`.
 - the C-run predecessor equality and terminal C_h identification needed to
-  extend the spine successor proof.
+  extend the spine successor proof; the spine successor proof is now closed
+  through `C_h -> B_h`.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
