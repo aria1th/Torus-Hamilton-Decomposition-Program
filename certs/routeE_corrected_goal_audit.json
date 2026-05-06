@@ -37,6 +37,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_color_sign_screen_audit.json",
+      "missing": null,
+      "name": "color-by-color sign vector and repeated-block screens are recorded",
+      "ok": true
+    },
+    {
       "evidence": "certs/d5_lambdaE_mask_polynomials.json",
       "missing": null,
       "name": "Lambda_E symbolic mask-count polynomials are recorded",

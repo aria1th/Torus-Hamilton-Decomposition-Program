@@ -44,8 +44,19 @@ def summarize_layers_payload(payload: dict[str, Any], colors: list[int] | None =
     if colors is None:
         colors = list(range(5))
 
+    color_sign_vector = []
+    color_layer_signs = []
     color_summaries = []
     for color in colors:
+        layer_signs = [
+            nested.permutation_sign(nested.layer_map(m, layers, t, color))
+            for t in range(m)
+        ]
+        omega = 1
+        for sign in layer_signs:
+            omega *= sign
+        color_sign_vector.append(omega)
+        color_layer_signs.append(layer_signs)
         perm = nested.return_map(m, layers, color)
         is_perm = sorted(perm) == list(range(m**4))
         cycles = nested.permutation_cycles(perm) if is_perm else []
@@ -60,6 +71,9 @@ def summarize_layers_payload(payload: dict[str, Any], colors: list[int] | None =
         color_summaries.append(
             {
                 "color": color,
+                "layer_signs": layer_signs,
+                "omega": omega,
+                "omega_ok": omega == -1,
                 "return_perm": is_perm,
                 "return_cycles": cycles,
                 "level_cycles": level_cycles,
@@ -82,6 +96,9 @@ def summarize_layers_payload(payload: dict[str, Any], colors: list[int] | None =
         "sign_product": sign_product,
         "sign_target": sign_target,
         "sign_ok": sign_product == sign_target,
+        "color_sign_vector": color_sign_vector,
+        "color_sign_vector_ok": color_sign_vector == [-1] * len(colors),
+        "color_layer_signs": color_layer_signs,
         "colors": color_summaries,
         "all_colors_ok": all(c["ok"] for c in color_summaries),
     }

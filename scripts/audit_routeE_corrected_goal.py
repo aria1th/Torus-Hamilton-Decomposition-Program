@@ -25,6 +25,7 @@ FILES = {
     "no_go_branch_verification": ROOT
     / "certs"
     / "routeE_no_go_branch_verification.json",
+    "color_sign_screen": ROOT / "certs" / "routeE_color_sign_screen_audit.json",
     "b20_branch": ROOT / "certs" / "d5_routeE_b20_branch_verify_m20_44_68.json",
     "typea_summary": ROOT / "certs" / "routeE_typeA_closure_package_summary.json",
     "typea_skeleton": ROOT / "certs" / "routeE_typeA_symbolic_skeleton.json",
@@ -78,6 +79,7 @@ def item(name: str, ok: bool, evidence: str, missing: str | None = None) -> dict
 def build_audit() -> dict[str, Any]:
     branch = load_json(FILES["branch_summary"])
     no_go_branch_verification = load_json(FILES["no_go_branch_verification"])
+    color_sign_screen = load_json(FILES["color_sign_screen"])
     b20 = load_json(FILES["b20_branch"])
     typea = load_json(FILES["typea_summary"])
     skeleton = load_json(FILES["typea_skeleton"])
@@ -144,6 +146,18 @@ def build_audit() -> dict[str, Any]:
             )
             is True,
             "certs/routeE_no_go_branch_verification.json",
+        ),
+        item(
+            "color-by-color sign vector and repeated-block screens are recorded",
+            color_sign_screen.get("schema") == "routeE_color_sign_screen_audit_v1"
+            and color_sign_screen.get("all_recorded_color_sign_screens_ok") is True
+            and color_sign_screen.get("explicit_all_color_sign_vectors_ok") is True
+            and color_sign_screen.get("one_lambda_E_all_color_sign_vectors_ok") is True
+            and color_sign_screen.get("block_power_screen", {}).get(
+                "stationary_branch_discarded"
+            )
+            is True,
+            "certs/routeE_color_sign_screen_audit.json",
         ),
         item(
             "Lambda_E symbolic mask-count polynomials are recorded",

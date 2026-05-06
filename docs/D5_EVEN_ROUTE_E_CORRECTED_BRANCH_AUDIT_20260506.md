@@ -21,6 +21,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Remove impossible even prefix-count branch | same dispatcher doc | done, recorded as `X1` |
 | Remove cyclic bulk + RF2-preserving adjacent-Kempe branch | same dispatcher doc plus `docs/D5_EVEN_ROUTE_E_ADJACENT_KEMPE_NO_GO_20260506.md` | done, recorded as `X2` |
 | Audit discarded X1/X2 mechanisms | `scripts/verify_routeE_no_go_branches.py`, `certs/routeE_no_go_branch_verification.json` | done |
+| Add color-by-color sign vector and repeated-block screens | `scripts/audit_routeE_color_sign_screens.py`, `certs/routeE_color_sign_screen_audit.json` | done |
 | Preserve `m=2` full-layered boundary certificate | `certs/d5_routeE_m2_full_layered_boundary.json` | done |
 | Verify `m=2` RF1/RF2/sign/nested returns | `scripts/summarize_d5_routeE_corrected_branches.py` | done |
 | Preserve `m=4` finite certificate status | summary script via `export_d5_even_routeE_layers.py` | done |
@@ -94,6 +95,33 @@ all_ok=True
 X1 even prefix-count contradiction=True
 X2 adjacent-Kempe-only sign contradiction=True
 ```
+
+Color sign vector and repeated-block screen:
+
+```bash
+python3 scripts/audit_routeE_color_sign_screens.py \
+  --json-out certs/routeE_color_sign_screen_audit.json
+```
+
+Result:
+
+```text
+all_recorded_color_sign_screens_ok True
+one_lambda_records 49
+explicit_records 2
+stationary_branch_discarded True
+```
+
+This strengthens the old global sign screen.  The recorded necessary condition
+is now
+
+```text
+(Omega_0,Omega_1,Omega_2,Omega_3,Omega_4)=(-,-,-,-,-),
+```
+
+where `Omega_kappa = product_t sign(P_{t,kappa})`.  The same artifact records
+the repeated-block screen: if `R_kappa = B_kappa^h`, then `gcd(h,m)=1` is
+necessary; stationary seams have `h=m` and are discarded.
 
 Lambda_E symbolic mask counts:
 
@@ -521,7 +549,7 @@ For the generic full layered branch one still needs:
 1. a finite count/slot branch menu covering every even m >= 6;
 2. closed layer coloring formulas for each branch;
 3. RF1/RF2 proofs for those formulas;
-4. product_t Lambda_t = -1 sign proofs;
+4. color sign vector proofs `Omega_kappa=-1` for all colors;
 5. pointwise first-return equations;
 6. no-earlier-return/minimality proofs;
 7. quotient or splice one-cycle proofs;

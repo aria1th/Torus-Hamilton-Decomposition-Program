@@ -98,7 +98,8 @@ def main() -> None:
         "remaining_symbolic_obligations": [
             "closed branch formula for all q >= 0",
             "RF1/RF2 one-layer validity or adapter-level derivation",
-            "product_t Lambda_t = -1 sign proof",
+            "color sign vector proof Omega_kappa = -1 for all five colors",
+            "repeated-block screen if the branch schedule has block-power form",
             "pointwise first-return equations",
             "no-early/minimality proof",
             "quotient or splice one-cycle proof",

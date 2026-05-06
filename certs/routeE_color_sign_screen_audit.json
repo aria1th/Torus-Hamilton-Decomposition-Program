@@ -1,0 +1,1978 @@
+{
+  "all_recorded_color_sign_screens_ok": true,
+  "block_power_screen": {
+    "necessary_condition": "If a color return has repeated-block form B^h on Q4, then gcd(h,m) = 1 is necessary for a single m^4-cycle.",
+    "schema": "routeE_block_power_screen_v1",
+    "stationary_branch_discarded": true,
+    "stationary_samples": [
+      {
+        "gcd_h_m": 2,
+        "m": 2,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 2
+      },
+      {
+        "gcd_h_m": 4,
+        "m": 4,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 4
+      },
+      {
+        "gcd_h_m": 6,
+        "m": 6,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 6
+      },
+      {
+        "gcd_h_m": 8,
+        "m": 8,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 8
+      },
+      {
+        "gcd_h_m": 10,
+        "m": 10,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 10
+      },
+      {
+        "gcd_h_m": 12,
+        "m": 12,
+        "passes_block_power_screen": false,
+        "reason": "stationary schedule gives R_kappa = B_kappa^m, and gcd(m,m) > 1",
+        "stationary_h": 12
+      }
+    ]
+  },
+  "explicit_all_color_sign_vectors_ok": true,
+  "explicit_layer_certificates": [
+    {
+      "all_color_returns_single": true,
+      "color_layer_signs": [
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "color_return_cycles": [
+        [
+          16
+        ],
+        [
+          16
+        ],
+        [
+          16
+        ],
+        [
+          16
+        ],
+        [
+          16
+        ]
+      ],
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "explicit_layer_table",
+      "m": 2,
+      "name": "E0/m=2 full-layered boundary",
+      "rf1_ok": true,
+      "rf2_ok": true,
+      "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/d5_routeE_m2_full_layered_boundary.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "explicit_C_E_O_rows",
+      "m": 4,
+      "name": "E4",
+      "row_symbol_signs": [
+        [
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          1,
+          1
+        ]
+      ],
+      "rows": [
+        [
+          [
+            "C",
+            0
+          ],
+          [
+            "E",
+            2
+          ],
+          [
+            "O",
+            4
+          ],
+          [
+            "O",
+            0
+          ]
+        ],
+        [
+          [
+            "C",
+            1
+          ],
+          [
+            "E",
+            0
+          ],
+          [
+            "O",
+            2
+          ],
+          [
+            "O",
+            3
+          ]
+        ],
+        [
+          [
+            "C",
+            2
+          ],
+          [
+            "E",
+            3
+          ],
+          [
+            "O",
+            0
+          ],
+          [
+            "O",
+            1
+          ]
+        ],
+        [
+          [
+            "C",
+            3
+          ],
+          [
+            "E",
+            1
+          ],
+          [
+            "O",
+            3
+          ],
+          [
+            "O",
+            4
+          ]
+        ],
+        [
+          [
+            "C",
+            4
+          ],
+          [
+            "E",
+            4
+          ],
+          [
+            "O",
+            1
+          ],
+          [
+            "O",
+            2
+          ]
+        ]
+      ],
+      "source": "scripts/verify_d5_even_routeE.py:M4_ROWS"
+    }
+  ],
+  "meaning": "For even d=5 Route-E, RF3 forces every color return sign to be -1. The audited color_sign_vector must therefore equal (-,-,-,-,-).",
+  "one_lambda_E_all_color_sign_vectors_ok": true,
+  "one_lambda_E_branch_records": [
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        3,
+        0,
+        0,
+        13,
+        3
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 20,
+      "name": "B20",
+      "slot": 0,
+      "source": "certs/d5_routeE_b20_branch_verify_m20_44_68.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        7,
+        0,
+        0,
+        29,
+        7
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 44,
+      "name": "B20",
+      "slot": 0,
+      "source": "certs/d5_routeE_b20_branch_verify_m20_44_68.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        11,
+        0,
+        0,
+        45,
+        11
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 68,
+      "name": "B20",
+      "slot": 0,
+      "source": "certs/d5_routeE_b20_branch_verify_m20_44_68.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        15,
+        0,
+        0,
+        61,
+        15
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 92,
+      "name": "B20",
+      "slot": 0,
+      "source": "certs/d5_routeE_b20_branch_verify_m20_44_68.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        9,
+        0,
+        5,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 16,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        21,
+        0,
+        17,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 40,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        33,
+        0,
+        29,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 64,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        45,
+        0,
+        41,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 88,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        57,
+        0,
+        53,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 112,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        69,
+        0,
+        65,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 136,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        81,
+        0,
+        77,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 160,
+      "name": "B16",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:b16"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        7,
+        0,
+        5,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 14,
+      "name": "R14e",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:r14e"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        31,
+        0,
+        29,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 62,
+      "name": "R14e",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:r14e"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        55,
+        0,
+        53,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 110,
+      "name": "R14e",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:r14e"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        79,
+        0,
+        77,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 158,
+      "name": "R14e",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:r14e"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        103,
+        0,
+        101,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 206,
+      "name": "R14e",
+      "slot": 0,
+      "source": "certs/routeE_typeA_closure_package_summary.json:r14e"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        5,
+        31,
+        0,
+        5,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 42,
+      "name": "R42",
+      "slot": 0,
+      "source": "certs/routeE_r42_affine_samples_verification.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        11,
+        67,
+        0,
+        11,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 90,
+      "name": "R42",
+      "slot": 0,
+      "source": "certs/routeE_r42_affine_samples_verification.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        17,
+        103,
+        0,
+        17,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 138,
+      "name": "R42",
+      "slot": 0,
+      "source": "certs/routeE_r42_affine_samples_verification.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        23,
+        139,
+        0,
+        23,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 186,
+      "name": "R42",
+      "slot": 0,
+      "source": "certs/routeE_r42_affine_samples_verification.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        29,
+        175,
+        0,
+        29,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 234,
+      "name": "R42",
+      "slot": 0,
+      "source": "certs/routeE_r42_affine_samples_verification.json"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        0,
+        1,
+        3,
+        1
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 6,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        2,
+        0,
+        0,
+        3,
+        2
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 8,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        3,
+        3,
+        2,
+        1
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 10,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        2,
+        3,
+        5,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 12,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        4,
+        2,
+        4,
+        1,
+        2
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 14,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        13,
+        0,
+        1,
+        0,
+        1
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 16,
+      "name": "small-seam-window",
+      "slot": 4,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        4,
+        4,
+        0,
+        1,
+        8
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 18,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        4,
+        2,
+        4,
+        9,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 20,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        3,
+        0,
+        5,
+        0,
+        13
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 22,
+      "name": "small-seam-window",
+      "slot": 4,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        17,
+        5,
+        0,
+        1,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 24,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        1,
+        12,
+        12,
+        0,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 26,
+      "name": "small-seam-window",
+      "slot": 2,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        15,
+        0,
+        5,
+        7
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 28,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        13,
+        5,
+        11,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 30,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        16,
+        4,
+        0,
+        0,
+        11
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 32,
+      "name": "small-seam-window",
+      "slot": 1,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        15,
+        14,
+        0,
+        0,
+        4
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 34,
+      "name": "small-seam-window",
+      "slot": 2,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        19,
+        13,
+        3,
+        0,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 36,
+      "name": "small-seam-window",
+      "slot": 2,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        5,
+        0,
+        17,
+        15
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 38,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        5,
+        1,
+        0,
+        33,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 40,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        14,
+        0,
+        0,
+        1,
+        26
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 42,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        29,
+        7,
+        7,
+        0,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 44,
+      "name": "small-seam-window",
+      "slot": 2,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        34,
+        11,
+        0,
+        0,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 46,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        21,
+        0,
+        0,
+        19,
+        7
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 48,
+      "name": "small-seam-window",
+      "slot": 0,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        37,
+        3,
+        0,
+        9
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 50,
+      "name": "small-seam-window",
+      "slot": 1,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        29,
+        2,
+        20,
+        0
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 52,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        0,
+        5,
+        20,
+        28
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 54,
+      "name": "small-seam-window",
+      "slot": 4,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        33,
+        0,
+        19,
+        0,
+        3
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 56,
+      "name": "small-seam-window",
+      "slot": 4,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        0,
+        1,
+        26,
+        30
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 58,
+      "name": "small-seam-window",
+      "slot": 4,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    },
+    {
+      "color_sign_vector": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "color_sign_vector_ok": true,
+      "color_sign_vector_symbols": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "counts": [
+        0,
+        19,
+        0,
+        27,
+        13
+      ],
+      "global_sign": -1,
+      "global_sign_ok": true,
+      "kind": "one_lambda_E_row",
+      "m": 60,
+      "name": "small-seam-window",
+      "slot": 3,
+      "source": "scripts/verify_d5_even_routeE.py:SMALL_SEAM_CASES"
+    }
+  ],
+  "schema": "routeE_color_sign_screen_audit_v1",
+  "symbol_sign_samples": {
+    "all_samples_match_even_pattern": true,
+    "pattern_used_for_one_lambda_E": {
+      "C": [
+        "+",
+        "+",
+        "+",
+        "+",
+        "+"
+      ],
+      "E": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "O": [
+        "+",
+        "+",
+        "+",
+        "+",
+        "+"
+      ],
+      "interpretation": "Every one-Lambda_E row contains exactly one E symbol.  For even m, sampled symbol signs give C/O sign + and E sign -, so the color sign vector for these rows is (-,-,-,-,-)."
+    },
+    "samples": [
+      {
+        "m": 2,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "m": 4,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "m": 6,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "m": 8,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "m": 10,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "m": 12,
+        "signs": {
+          "C": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "E": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "O": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    ],
+    "schema": "routeE_symbol_sign_sample_v1"
+  },
+  "warning": "This is a necessary-condition audit only.  Passing color signs does not close first-return equations, no-early/minimality, or RF3."
+}

@@ -103,10 +103,18 @@ translations are products of `m^3` many `m`-cycles, and `m^3` is even.
 Therefore layer parity is entirely controlled by the outgoing/incoming local
 Latin signs.
 
-## Global Sign Requirement
+## Color Sign Vector Requirement
 
 For even `m`, `|Q4| = m^4` is even.  If RF3 holds, every color return map is a
-single `m^4`-cycle and hence has sign `-1`.  With five colors:
+single `m^4`-cycle and hence has sign `-1`.  Therefore the actual necessary
+screen is colorwise:
+
+```text
+Omega_kappa := product_t sign(P_{t,kappa}) = -1
+for every kappa = 0,1,2,3,4.
+```
+
+The older global condition is only the product of these five equations:
 
 ```text
 product_kappa sign(R_kappa) = (-1)^5 = -1.
@@ -124,7 +132,14 @@ any even `D_5` certificate must satisfy:
 product_t Lambda_t = -1.
 ```
 
-Equivalently, an odd number of layers must carry negative layer parity.
+Equivalently, an odd number of layers must carry negative layer parity.  This
+global check is necessary but not sufficient: a branch may have the right
+global product while one or more individual colors have `Omega_kappa = +1`.
+Every promoted branch must record the full vector
+
+```text
+(Omega_0, Omega_1, Omega_2, Omega_3, Omega_4) = (-,-,-,-,-).
+```
 
 ## Adjacent-Kempe Branch Removal
 
@@ -143,6 +158,25 @@ global sign requirement.
 
 Thus the old adjacent-switch-only branch is not a proof branch.  Adjacent words
 remain useful only as local `S_5` descriptions of a defect layer.
+
+## Repeated-Block Screen
+
+A second early no-go screen is the repeated-block obstruction.  If, for some
+color,
+
+```text
+R_kappa = B_kappa^h
+```
+
+on `Q4`, then `R_kappa` can be a single `m^4`-cycle only if
+
+```text
+gcd(h, m^4) = 1,
+```
+
+equivalently `gcd(h,m)=1`.  In particular stationary seam schedules, which
+force a repeated block with `h=m`, are discarded before quotient or time-sum
+analysis.
 
 ## Even Prefix-Count Branch Removal
 
@@ -184,8 +218,9 @@ Branch E-small:
 
 Branch E-gen:
   m even and m >= M.  Use a full layered parity-changing one-layer coloring
-  template.  The template must verify RF1, RF2, product_t Lambda_t = -1, and
-  the four-level nested first-return/splice certificate for RF3.
+  template.  The template must verify RF1, RF2, color sign vector
+  (-,-,-,-,-), the repeated-block screen, and the four-level nested
+  first-return/splice certificate for RF3.
 ```
 
 Within E-gen there are two proof styles:
@@ -206,7 +241,8 @@ Every concrete E-gen branch record should include:
 ```text
 BranchHeader:  m >= M and m mod L = ell, or a finite m=m0.
 LayerData:     closed formulas for layer colorings and RF1/RF2 proofs.
-SignData:      product_t Lambda_t = -1.
+ColorSignData: Omega_kappa = -1 for every color.
+BlockPower:    repeated block B^h only if gcd(h,m)=1.
 ReturnData:    all-pair or nested first-return equations.
 NoEarlyData:   minimality/no-early return proof.
 PrimitiveData: quotient or splice graph one-cycle proof.
