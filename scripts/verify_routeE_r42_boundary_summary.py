@@ -30,6 +30,7 @@ DEFAULT_CERT = ROOT / "certs" / "routeE_r42_boundary_quotient_summary.json"
 
 
 FORMULA_RE = re.compile(r"^\s*([+-]?\d+)\*q(?:\s*([+-])\s*(\d+))?\s*$")
+LABELS = ["Z", "03", "04", "34"]
 
 
 def eval_formula(expr: str | None, q: int) -> int | None:
@@ -47,6 +48,37 @@ def eval_formula(expr: str | None, q: int) -> int | None:
         term = int(match.group(3))
         value += term if match.group(2) == "+" else -term
     return value
+
+
+def affine_coeffs(expr: str | None) -> tuple[int, int] | None:
+    if expr is None:
+        return None
+    expr = str(expr).strip()
+    if "*q" not in expr:
+        return (0, int(expr))
+    match = FORMULA_RE.match(expr)
+    if match is None:
+        raise ValueError(f"unsupported affine formula: {expr!r}")
+    slope = int(match.group(1))
+    intercept = 0
+    if match.group(2) is not None:
+        term = int(match.group(3))
+        intercept = term if match.group(2) == "+" else -term
+    return (slope, intercept)
+
+
+def add_coeffs(values: list[tuple[int, int]]) -> tuple[int, int]:
+    return (sum(a for a, _ in values), sum(b for _, b in values))
+
+
+def formula_text(coeffs: tuple[int, int]) -> str:
+    slope, intercept = coeffs
+    if slope == 0:
+        return str(intercept)
+    if intercept == 0:
+        return f"{slope}*q"
+    sign = "+" if intercept > 0 else "-"
+    return f"{slope}*q {sign} {abs(intercept)}"
 
 
 def path_run_counts(path: str | None) -> list[dict[str, int | str]]:
@@ -105,6 +137,102 @@ def verify_transition_fits(data: dict[str, Any]) -> list[dict[str, Any]]:
                         }
                     )
     return bad
+
+
+def strongly_connected(edges: set[tuple[str, str]]) -> bool:
+    if not edges:
+        return False
+    adjacency = {label: set() for label in LABELS}
+    reverse = {label: set() for label in LABELS}
+    for src, dst in edges:
+        adjacency[src].add(dst)
+        reverse[dst].add(src)
+
+    def reach(graph: dict[str, set[str]], start: str) -> set[str]:
+        seen = {start}
+        stack = [start]
+        while stack:
+            src = stack.pop()
+            for dst in graph[src]:
+                if dst not in seen:
+                    seen.add(dst)
+                    stack.append(dst)
+        return seen
+
+    return reach(adjacency, LABELS[0]) == set(LABELS) and reach(reverse, LABELS[0]) == set(LABELS)
+
+
+def verify_transition_symbolics(data: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    fits = data.get("q_ge_1_transition_count_fits", {})
+    bad = []
+    expected_label_count = {
+        "Z": (0, 1),
+        "03": (48, 41),
+        "04": (48, 41),
+        "34": (48, 41),
+    }
+    row_totals: dict[str, tuple[int, int]] = {}
+    col_totals: dict[str, tuple[int, int]] = {}
+    positive_edges: set[tuple[str, str]] = set()
+    nonnegative_for_q_ge_1 = True
+    for src in LABELS:
+        coeffs = []
+        for dst in LABELS:
+            value = affine_coeffs(fits.get(src, {}).get(dst))
+            if value is None:
+                bad.append({"check": "missing_transition_fit", "src": src, "dst": dst})
+                value = (0, 0)
+            if value[0] + value[1] < 0 or value[0] < 0:
+                nonnegative_for_q_ge_1 = False
+                bad.append({"check": "negative_for_q_ge_1", "src": src, "dst": dst, "coeffs": value})
+            if value[0] + value[1] > 0:
+                positive_edges.add((src, dst))
+            coeffs.append(value)
+        row_totals[src] = add_coeffs(coeffs)
+    for dst in LABELS:
+        col_totals[dst] = add_coeffs(
+            [affine_coeffs(fits.get(src, {}).get(dst)) or (0, 0) for src in LABELS]
+        )
+    for label in LABELS:
+        if row_totals[label] != expected_label_count[label]:
+            bad.append(
+                {
+                    "check": "row_total",
+                    "label": label,
+                    "expected": expected_label_count[label],
+                    "actual": row_totals[label],
+                }
+            )
+        if col_totals[label] != expected_label_count[label]:
+            bad.append(
+                {
+                    "check": "column_total",
+                    "label": label,
+                    "expected": expected_label_count[label],
+                    "actual": col_totals[label],
+                }
+            )
+    total = add_coeffs(list(row_totals.values()))
+    expected_total = (144, 124)
+    if total != expected_total:
+        bad.append({"check": "total", "expected": expected_total, "actual": total})
+    if not strongly_connected(positive_edges):
+        bad.append({"check": "positive_edge_support_strongly_connected", "edges": sorted(positive_edges)})
+    summary = {
+        "row_totals": {label: formula_text(value) for label, value in row_totals.items()},
+        "column_totals": {label: formula_text(value) for label, value in col_totals.items()},
+        "expected_label_counts": {
+            label: formula_text(value) for label, value in expected_label_count.items()
+        },
+        "total": formula_text(total),
+        "expected_total": "144*q + 124",
+        "m_family": "m = 48*q + 42",
+        "total_equals_3m_minus_2": total == expected_total,
+        "nonnegative_for_q_ge_1": nonnegative_for_q_ge_1,
+        "positive_edges": sorted([list(edge) for edge in positive_edges]),
+        "positive_edge_support_strongly_connected": strongly_connected(positive_edges),
+    }
+    return bad, summary
 
 
 def verify_sample_flags(data: dict[str, Any]) -> list[dict[str, Any]]:
@@ -245,11 +373,14 @@ def verify_stability(data: dict[str, Any]) -> list[dict[str, Any]]:
 def build_verification(cert: Path) -> dict[str, Any]:
     data = json.loads(cert.read_text())
     representative_errors, representative_null_fields = verify_representative_blocks(data)
+    transition_symbolic_errors, transition_symbolic_summary = verify_transition_symbolics(data)
     checks = {
         "schema_ok": data.get("schema") == "routeE_r42_boundary_quotient_summary_v1",
         "raw_csv_not_preserved": data.get("raw_csv_preserved") is False,
         "sample_flag_errors": verify_sample_flags(data),
         "transition_fit_errors": verify_transition_fits(data),
+        "transition_symbolic_errors": transition_symbolic_errors,
+        "transition_symbolic_summary": transition_symbolic_summary,
         "representative_block_errors": representative_errors,
         "representative_block_null_formula_fields": representative_null_fields,
         "stability_errors": verify_stability(data),
@@ -259,6 +390,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
         and checks["raw_csv_not_preserved"]
         and not checks["sample_flag_errors"]
         and not checks["transition_fit_errors"]
+        and not checks["transition_symbolic_errors"]
         and not checks["representative_block_errors"]
         and not checks["stability_errors"]
     )
@@ -270,6 +402,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
         "summary": {
             "sample_q_values": [sample.get("q") for sample in data.get("samples", [])],
             "q_ge_1_transition_fits_verified": not checks["transition_fit_errors"],
+            "q_ge_1_transition_symbolics_verified": not checks["transition_symbolic_errors"],
             "q1_representative_block_formulas_verified": not checks["representative_block_errors"],
             "q1_representative_null_formula_field_count": len(representative_null_fields),
             "q1_null_fields_have_q_ge_2_tail_formulas": all(

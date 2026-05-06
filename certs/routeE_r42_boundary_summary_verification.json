@@ -19,7 +19,76 @@
     "sample_flag_errors": [],
     "schema_ok": true,
     "stability_errors": [],
-    "transition_fit_errors": []
+    "transition_fit_errors": [],
+    "transition_symbolic_errors": [],
+    "transition_symbolic_summary": {
+      "column_totals": {
+        "03": "48*q + 41",
+        "04": "48*q + 41",
+        "34": "48*q + 41",
+        "Z": "1"
+      },
+      "expected_label_counts": {
+        "03": "48*q + 41",
+        "04": "48*q + 41",
+        "34": "48*q + 41",
+        "Z": "1"
+      },
+      "expected_total": "144*q + 124",
+      "m_family": "m = 48*q + 42",
+      "nonnegative_for_q_ge_1": true,
+      "positive_edge_support_strongly_connected": true,
+      "positive_edges": [
+        [
+          "03",
+          "03"
+        ],
+        [
+          "03",
+          "04"
+        ],
+        [
+          "03",
+          "34"
+        ],
+        [
+          "04",
+          "03"
+        ],
+        [
+          "04",
+          "34"
+        ],
+        [
+          "04",
+          "Z"
+        ],
+        [
+          "34",
+          "03"
+        ],
+        [
+          "34",
+          "04"
+        ],
+        [
+          "34",
+          "34"
+        ],
+        [
+          "Z",
+          "03"
+        ]
+      ],
+      "row_totals": {
+        "03": "48*q + 41",
+        "04": "48*q + 41",
+        "34": "48*q + 41",
+        "Z": "1"
+      },
+      "total": "144*q + 124",
+      "total_equals_3m_minus_2": true
+    }
   },
   "ok": true,
   "schema": "routeE_r42_boundary_summary_verification_v1",
@@ -29,6 +98,7 @@
     "q1_representative_block_formulas_verified": true,
     "q1_representative_null_formula_field_count": 2,
     "q_ge_1_transition_fits_verified": true,
+    "q_ge_1_transition_symbolics_verified": true,
     "sample_q_values": [
       0,
       1,

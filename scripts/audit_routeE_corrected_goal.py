@@ -338,6 +338,10 @@ def build_audit() -> dict[str, Any]:
             )
             is True
             and r42_boundary_verification.get("summary", {}).get(
+                "q_ge_1_transition_symbolics_verified"
+            )
+            is True
+            and r42_boundary_verification.get("summary", {}).get(
                 "q1_representative_block_formulas_verified"
             )
             is True
