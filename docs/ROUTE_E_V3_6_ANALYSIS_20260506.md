@@ -149,6 +149,8 @@ New arithmetic names include:
 - `boundaryCycleNode`
 - `boundaryCycleNodeAt_last`
 - `boundaryCycleNode_last_to_zero`
+- `boundaryCycleNodeAt_succ_spine`
+- `boundaryCycleNodeAt_spine_to_firstEven`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`

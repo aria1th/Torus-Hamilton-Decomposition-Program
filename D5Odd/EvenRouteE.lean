@@ -3497,6 +3497,72 @@ theorem boundaryCycleNode_last_to_zero (q : Nat) :
   exact boundaryCycleSecondEvenTail_to_zero q
     (by simp [boundaryCycleSecondEvenTailCount, quarter]; omega)
 
+theorem boundaryCycleNodeAt_succ_spine (q n : Nat)
+    (hn : n < boundaryCycleLength q)
+    (hns : n + 1 < boundaryCycleLength q)
+    (hsp : n < boundaryCycleSpineCount q)
+    (hsps : n + 1 < boundaryCycleSpineCount q) :
+    boundaryCycleNodeAt q (n + 1) hns =
+      boundaryQuotient q (boundaryCycleNodeAt q n hn) := by
+  have hn_node :
+      boundaryCycleNodeAt q n hn = boundaryCycleSpineNode q n hsp := by
+    simp [boundaryCycleNodeAt, hsp]
+  have hns_node :
+      boundaryCycleNodeAt q (n + 1) hns =
+        boundaryCycleSpineNode q (n + 1) hsps := by
+    simp [boundaryCycleNodeAt, hsps]
+  rw [hn_node, hns_node]
+  symm
+  by_cases h0 : n = 0
+  · subst n
+    exact boundaryCycleSpine_step_zero q hsp hsps
+  by_cases h1 : n = 1
+  · subst n
+    exact boundaryCycleSpine_step_one q hsp hsps
+  by_cases h2 : n = 2
+  · subst n
+    exact boundaryCycleSpine_step_two q hsp hsps
+  by_cases h3 : n = 3
+  · subst n
+    exact boundaryCycleSpine_step_three q hsp hsps
+  by_cases h4 : n = 4
+  · subst n
+    exact boundaryCycleSpine_step_four q hsp hsps
+  by_cases hlast : n = half q + 2
+  · subst n
+    exact boundaryCycleSpine_step_C_last q hsp hsps
+  exact boundaryCycleSpine_step_C_run q n (by omega) (by
+      simp [boundaryCycleSpineCount] at hsps
+      omega) hsp hsps
+
+theorem boundaryCycleNodeAt_spine_to_firstEven (q : Nat)
+    (hn : boundaryCycleFirstEvenStart q - 1 < boundaryCycleLength q)
+    (hns : boundaryCycleFirstEvenStart q < boundaryCycleLength q) :
+    boundaryCycleNodeAt q (boundaryCycleFirstEvenStart q) hns =
+      boundaryQuotient q
+        (boundaryCycleNodeAt q (boundaryCycleFirstEvenStart q - 1) hn) := by
+  have hprev :
+      boundaryCycleFirstEvenStart q - 1 = half q + 3 := by
+    simp [boundaryCycleFirstEvenStart, boundaryCycleSpineCount, half]
+  have hprev_node :
+      boundaryCycleNodeAt q (boundaryCycleFirstEvenStart q - 1) hn =
+        boundaryCycleSpineNode q (half q + 3)
+          (by simp [boundaryCycleSpineCount, half]) := by
+    simp [boundaryCycleNodeAt, boundaryCycleFirstEvenStart,
+      boundaryCycleSpineCount, half]
+  have hnext_node :
+      boundaryCycleNodeAt q (boundaryCycleFirstEvenStart q) hns =
+        boundaryCycleFirstEvenTailNode q 0
+          (by simp [boundaryCycleFirstEvenTailCount, quarter]) := by
+    simp [boundaryCycleNodeAt, boundaryCycleFirstEvenStart,
+      boundaryCycleB2BridgeStart, boundaryCycleFirstEvenTailCount,
+      boundaryCycleSpineCount, quarter]
+  rw [hprev_node, hnext_node]
+  symm
+  exact boundaryCycleSpine_to_firstEvenTail q
+    (by simp [boundaryCycleSpineCount, half])
+    (by simp [boundaryCycleFirstEvenTailCount, quarter])
+
 structure BoundaryQuotientCycleEnumeration (q : Nat) where
   node :
     Fin (boundaryCycleLength q) → RouteEBoundaryNode (modulus q)
