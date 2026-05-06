@@ -222,12 +222,18 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEB20.symbolicAllPairBranchTarget_of_labelTraceTarget`
 - `RouteEB20.finiteM20AllPairTarget_of_labelTraceTarget`
 - `RouteEB20.allPairBranchTarget_of_labelTraceTargets`
+- `RouteEB20.hamiltonTarget_of_labelTraceTargets`
+- `RouteEB20.torusTarget_of_labelTraceTargets`
+- `RouteEB20.cayleyTarget_of_labelTraceTargets`
 - `RouteEB20.AllPairIndexedLabelTraceTarget`
 - `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`
 - `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`
 - `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`
 - `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`
 - `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets`
+- `RouteEB20.hamiltonTarget_of_indexedLabelTraceTargets`
+- `RouteEB20.torusTarget_of_indexedLabelTraceTargets`
+- `RouteEB20.cayleyTarget_of_indexedLabelTraceTargets`
 
 This is the root-flat / prefix-count return adapter for the all-pair proof
 route: once a branch supplies exact all-pair first-return equations,
