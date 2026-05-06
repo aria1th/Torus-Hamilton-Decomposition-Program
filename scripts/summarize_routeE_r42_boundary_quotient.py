@@ -189,6 +189,58 @@ def block_counts(rows: list[dict[str, Any]], m: int) -> dict[str, int]:
     return dict(counts)
 
 
+def transition_counts(rows: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    counts: dict[str, Counter[str]] = {
+        label: Counter() for label in ["Z", "03", "04", "34"]
+    }
+    for row in rows:
+        counts[row["src_label"]][row["dst_label"]] += 1
+    return {
+        src: {dst: counts[src][dst] for dst in ["Z", "03", "04", "34"]}
+        for src in ["Z", "03", "04", "34"]
+    }
+
+
+def affine_formula(points: list[tuple[int, int]]) -> str | None:
+    if not points:
+        return None
+    if len(points) == 1:
+        return str(points[0][1])
+    q0, v0 = points[0]
+    q1, v1 = points[1]
+    den = q1 - q0
+    num = v1 - v0
+    if den == 0 or num % den != 0:
+        return None
+    slope = num // den
+    intercept = v0 - slope * q0
+    if any(slope * q + intercept != value for q, value in points):
+        return None
+    if slope == 0:
+        return str(intercept)
+    if intercept == 0:
+        return f"{slope}*q"
+    sign = "+" if intercept > 0 else "-"
+    return f"{slope}*q {sign} {abs(intercept)}"
+
+
+def transition_count_fits(samples: list[dict[str, Any]]) -> dict[str, dict[str, str | None]]:
+    generic = [sample for sample in samples if sample.get("q", 0) >= 1]
+    fits: dict[str, dict[str, str | None]] = {}
+    for src in ["Z", "03", "04", "34"]:
+        fits[src] = {}
+        for dst in ["Z", "03", "04", "34"]:
+            points = [
+                (
+                    int(sample["q"]),
+                    int(sample["boundary_transition_counts"][src][dst]),
+                )
+                for sample in generic
+            ]
+            fits[src][dst] = affine_formula(points)
+    return fits
+
+
 def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     m = 48 * q + 42
     x = 6 * q + 5
@@ -219,6 +271,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     lengths = cycle_lengths(boundary)
     by_label = block_counts(boundary, m)
     block_count = sum(by_label.values())
+    transitions = transition_counts(boundary)
     return {
         "q": q,
         "m": m,
@@ -232,6 +285,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
         "boundary_single_cycle": lengths == [len(boundary)],
         "block_count": block_count,
         "block_count_by_label": by_label,
+        "boundary_transition_counts": transitions,
         "returncode": proc.returncode,
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
         "ok": True,
@@ -279,6 +333,7 @@ def main() -> None:
             if generic
             else None,
         },
+        "q_ge_1_transition_count_fits": transition_count_fits(samples),
         "interpretation": (
             "The boundary quotient is a single cycle for the checked R42 "
             "samples and has stable block counts for q>=1.  This is a "

@@ -237,7 +237,15 @@ def build_audit() -> dict[str, Any]:
             and r42_boundary_summary.get("q_ge_1_stability", {}).get(
                 "all_boundary_single_cycle"
             )
-            is True,
+            is True
+            and r42_boundary_summary.get("q_ge_1_transition_count_fits", {})
+            .get("Z", {})
+            .get("03")
+            == "1"
+            and r42_boundary_summary.get("q_ge_1_transition_count_fits", {})
+            .get("34", {})
+            .get("34")
+            == "12*q + 10",
             "certs/routeE_r42_boundary_quotient_summary.json",
         ),
         item(

@@ -82,6 +82,9 @@ def build_record(
             "status": boundary_summary.get("status"),
             "raw_csv_preserved": boundary_summary.get("raw_csv_preserved"),
             "q_ge_1_stability": boundary_summary.get("q_ge_1_stability"),
+            "q_ge_1_transition_count_fits": boundary_summary.get(
+                "q_ge_1_transition_count_fits"
+            ),
         },
         "coverage_snapshot": {
             "proof_facing_typeA_residues_mod_48": coverage.get(

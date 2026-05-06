@@ -546,5 +546,15 @@ and has stable mined block counts:
 Z: 1, 03: 7, 04: 13, 34: 8
 ```
 
+The label-to-label boundary transition counts also fit affine laws in `q`;
+for example:
+
+```text
+Z -> 03  = 1
+03 -> 04 = 30*q + 25
+04 -> 03 = 30*q + 24
+34 -> 34 = 12*q + 10
+```
+
 The finite boundary case `q=0` is still valid but has a larger exceptional
 block profile.  Raw all-pair CSV is not preserved.

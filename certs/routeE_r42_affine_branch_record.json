@@ -19,6 +19,32 @@
       "stable_block_count": true,
       "stable_block_count_by_label": true
     },
+    "q_ge_1_transition_count_fits": {
+      "03": {
+        "03": "1",
+        "04": "30*q + 25",
+        "34": "18*q + 15",
+        "Z": "0"
+      },
+      "04": {
+        "03": "30*q + 24",
+        "04": "0",
+        "34": "18*q + 16",
+        "Z": "1"
+      },
+      "34": {
+        "03": "18*q + 15",
+        "04": "18*q + 16",
+        "34": "12*q + 10",
+        "Z": "0"
+      },
+      "Z": {
+        "03": "1",
+        "04": "0",
+        "34": "0",
+        "Z": "0"
+      }
+    },
     "raw_csv_preserved": false,
     "schema": "routeE_r42_boundary_quotient_summary_v1",
     "status": "boundary_summary_not_symbolic_proof"
