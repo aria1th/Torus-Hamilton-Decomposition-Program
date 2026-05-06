@@ -28,7 +28,7 @@ remaining gaps.
 | B20 bundle inconsistency check | `T_03 + T_04` coefficient corrected from bundle text `19079` to `19179`; old value fails total time by `100*q` | blocker exposed |
 | Boundary quotient type | `RouteEBoundaryLabel`, `RouteEBoundaryNode`, `card_routeEBoundaryNode` formalize `{Z} union {03,04,34} x {1,...,m-1}` and cardinal `3m-2` | done |
 | B20 boundary quotient formula | `RouteEB20.boundaryQuotient` encodes the v1.8 map candidate; special-gate and generic rewrite lemmas are proved; `RouteEB20.boundaryQuotient_formulaTarget` proves `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` | formula closed, one-cycle open |
-| B20 boundary one-cycle hand count | `RouteEB20.card_boundaryNode_eq_three_modulus_sub_two`, `RouteEB20.boundaryCycleHandCountTotal_eq_card` | count closed, rank/orbit proof open |
+| B20 boundary one-cycle hand count | `RouteEB20.boundaryCycleLength_eq_card`, `RouteEB20.boundaryCycleSecondEvenEnd_eq_length`, `RouteEB20.boundaryCycleHandCountTotal_eq_card` | count and segment endpoints closed, rank/orbit proof open |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
@@ -61,7 +61,8 @@ Both commands completed successfully after the current Lean edits.
 3. B20 has the boundary quotient map candidate `RouteEB20.boundaryQuotient`,
    and `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` is now supplied
    by `RouteEB20.boundaryQuotient_formulaTarget`.  The hand proof's segment
-   count is Lean-checked, but the rank/orbit proof of one-cycle remains open.
+   count and segment endpoints are Lean-checked, but the rank/orbit proof of
+   one-cycle remains open.
 
 4. B16 has a boundary quotient formula and time target in the bundle, but the
    boundary formula, formula-induced one-cycle proof, and lane/core time

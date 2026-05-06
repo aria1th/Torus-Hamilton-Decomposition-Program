@@ -82,6 +82,15 @@ New arithmetic names include:
 - `boundaryQuotient_C_generic`
 - `boundaryQuotient_formulaTarget`
 - `card_boundaryNode_eq_three_modulus_sub_two`
+- `boundaryCycleLength`
+- `boundaryCycleLength_eq_card`
+- `boundaryCycleLength_eq_twelve_quarter_sub_two`
+- `boundaryCycleB2BridgeStart_eq_modulus_add_two`
+- `boundaryCycleFirstOddStart_eq_modulus_add_three`
+- `boundaryCycleALastBridgeStart_eq_two_modulus_add_one`
+- `boundaryCycleSecondOddStart_eq_two_modulus_add_two`
+- `boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one`
+- `boundaryCycleSecondEvenEnd_eq_length`
 - `boundaryCycleHandCountTotal_eq_card`
 - `boundaryShiftParam`
 - `boundaryPredParam`
@@ -196,8 +205,8 @@ Closed or proof-facing in the bundle:
 - 14, 23, and 24 residual-core time masses;
 - 34 finite-defect boundary time mass;
 - boundary quotient formula target for the B20 v1.8 candidate.
-- the boundary one-cycle hand proof's segment count, whose total is
-  `Fintype.card (RouteEBoundaryNode (modulus q))`.
+- the boundary one-cycle hand proof's segment count and orbit segment
+  endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 
 Remaining B20 obligations:
 

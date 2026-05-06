@@ -1285,6 +1285,19 @@ theorem card_boundaryNode_eq_three_modulus_sub_two (q : Nat) :
   simp [modulus]
   omega
 
+def boundaryCycleLength (q : Nat) : Nat :=
+  3 * modulus q - 2
+
+theorem boundaryCycleLength_eq_card (q : Nat) :
+    boundaryCycleLength q =
+      Fintype.card (RouteEBoundaryNode (modulus q)) := by
+  rw [boundaryCycleLength, card_boundaryNode_eq_three_modulus_sub_two]
+
+theorem boundaryCycleLength_eq_twelve_quarter_sub_two (q : Nat) :
+    boundaryCycleLength q = 12 * quarter q - 2 := by
+  simp [boundaryCycleLength, quarter, modulus]
+  omega
+
 def boundaryCycleSpineCount (q : Nat) : Nat :=
   half q + 4
 
@@ -1313,16 +1326,79 @@ def boundaryCycleHandCountTotal (q : Nat) : Nat :=
   boundaryCycleSecondOddTailCount q +
   boundaryCycleSecondEvenTailCount q
 
+def boundaryCycleFirstEvenStart (q : Nat) : Nat :=
+  boundaryCycleSpineCount q
+
+def boundaryCycleB2BridgeStart (q : Nat) : Nat :=
+  boundaryCycleFirstEvenStart q + boundaryCycleFirstEvenTailCount q
+
+def boundaryCycleFirstOddStart (q : Nat) : Nat :=
+  boundaryCycleB2BridgeStart q + boundaryCycleB2BridgeCount q
+
+def boundaryCycleALastBridgeStart (q : Nat) : Nat :=
+  boundaryCycleFirstOddStart q + boundaryCycleFirstOddTailCount q
+
+def boundaryCycleSecondOddStart (q : Nat) : Nat :=
+  boundaryCycleALastBridgeStart q + boundaryCycleALastBridgeCount q
+
+def boundaryCycleSecondEvenStart (q : Nat) : Nat :=
+  boundaryCycleSecondOddStart q + boundaryCycleSecondOddTailCount q
+
+theorem boundaryCycleFirstEvenStart_eq_half_add_four (q : Nat) :
+    boundaryCycleFirstEvenStart q = half q + 4 := rfl
+
+theorem boundaryCycleB2BridgeStart_eq_modulus_add_two (q : Nat) :
+    boundaryCycleB2BridgeStart q = modulus q + 2 := by
+  simp [boundaryCycleB2BridgeStart, boundaryCycleFirstEvenStart,
+    boundaryCycleSpineCount, boundaryCycleFirstEvenTailCount,
+    quarter, half, modulus]
+  omega
+
+theorem boundaryCycleFirstOddStart_eq_modulus_add_three (q : Nat) :
+    boundaryCycleFirstOddStart q = modulus q + 3 := by
+  rw [boundaryCycleFirstOddStart, boundaryCycleB2BridgeStart_eq_modulus_add_two]
+  simp [boundaryCycleB2BridgeCount]
+
+theorem boundaryCycleALastBridgeStart_eq_two_modulus_add_one (q : Nat) :
+    boundaryCycleALastBridgeStart q = 2 * modulus q + 1 := by
+  rw [boundaryCycleALastBridgeStart,
+    boundaryCycleFirstOddStart_eq_modulus_add_three]
+  simp [boundaryCycleFirstOddTailCount, quarter, half, modulus]
+  omega
+
+theorem boundaryCycleSecondOddStart_eq_two_modulus_add_two (q : Nat) :
+    boundaryCycleSecondOddStart q = 2 * modulus q + 2 := by
+  rw [boundaryCycleSecondOddStart,
+    boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+  simp [boundaryCycleALastBridgeCount]
+
+theorem boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one
+    (q : Nat) :
+    boundaryCycleSecondEvenStart q = 2 * modulus q + half q + 1 := by
+  rw [boundaryCycleSecondEvenStart,
+    boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+  simp [boundaryCycleSecondOddTailCount, quarter, half, modulus]
+  omega
+
+theorem boundaryCycleSecondEvenEnd_eq_length (q : Nat) :
+    boundaryCycleSecondEvenStart q + boundaryCycleSecondEvenTailCount q =
+      boundaryCycleLength q := by
+  rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one]
+  simp [boundaryCycleSecondEvenTailCount, boundaryCycleLength,
+    quarter, half, modulus]
+  omega
+
 theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
     boundaryCycleHandCountTotal q =
       Fintype.card (RouteEBoundaryNode (modulus q)) := by
-  rw [card_boundaryNode_eq_three_modulus_sub_two]
+  rw [← boundaryCycleLength_eq_card, ← boundaryCycleSecondEvenEnd_eq_length]
   simp [boundaryCycleHandCountTotal, boundaryCycleSpineCount,
     boundaryCycleFirstEvenTailCount, boundaryCycleB2BridgeCount,
     boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
     boundaryCycleSecondOddTailCount, boundaryCycleSecondEvenTailCount,
-    quarter, half, modulus]
-  omega
+    boundaryCycleFirstEvenStart, boundaryCycleB2BridgeStart,
+    boundaryCycleFirstOddStart, boundaryCycleALastBridgeStart,
+    boundaryCycleSecondOddStart, boundaryCycleSecondEvenStart]
 
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
