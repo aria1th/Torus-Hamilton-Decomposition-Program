@@ -444,6 +444,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+8ca7cb6 Add Route E R42 boundary transition fits
 f438d04 Summarize Route E R42 boundary quotient
 5ac3ac1 Extend Route E R42 sample verification
 327fe6c Verify Route E R42 affine samples
