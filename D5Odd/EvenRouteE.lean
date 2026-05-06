@@ -2414,6 +2414,159 @@ theorem boundaryCycleFirstOddLane_to_BSubOne (q : Nat)
         omega
       rw [← Nat.cast_one, ← Nat.cast_add, hnat]
 
+def boundaryCycleFirstOddCRunCount (q : Nat) : Nat :=
+  half q - 1
+
+def boundaryFirstOddCValue (q k : Nat) : Nat :=
+  half q - 1 - k
+
+theorem boundaryFirstOddCValue_range (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q) :
+    0 < boundaryFirstOddCValue q k ∧
+      boundaryFirstOddCValue q k < modulus q := by
+  simp [boundaryFirstOddCValue, boundaryCycleFirstOddCRunCount, half,
+    modulus] at hk ⊢
+  omega
+
+def boundaryFirstOddCParam (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (boundaryFirstOddCValue q k)
+    (boundaryFirstOddCValue_range q k hk).1
+    (boundaryFirstOddCValue_range q k hk).2
+
+theorem boundaryFirstOddCParam_val (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q) :
+    (boundaryFirstOddCParam q k hk).1.val =
+      boundaryFirstOddCValue q k := by
+  exact RouteENonzeroSeam.ofNat_val _ _ _
+
+noncomputable def boundaryCycleFirstOddCRunNode (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryNode RouteEBoundaryLabel.L34
+    (boundaryFirstOddCParam q k hk)
+
+theorem boundaryFirstOddCParam_zero_eq_halfSubOne (q : Nat)
+    (hk : 0 < boundaryCycleFirstOddCRunCount q) :
+    boundaryFirstOddCParam q 0 hk = boundaryParamHalfSubOne q := by
+  apply Subtype.ext
+  apply ZMod.val_injective (modulus q)
+  rw [boundaryFirstOddCParam_val, boundaryParamHalfSubOne,
+    RouteENonzeroSeam.ofNat_val]
+  simp [boundaryFirstOddCValue]
+
+theorem boundaryCycleFirstOddCRunNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleFirstOddCRunCount q) :
+    boundaryCycleFirstOddCRunNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L34
+        (boundaryParamHalfSubOne q) := by
+  simp [boundaryCycleFirstOddCRunNode,
+    boundaryFirstOddCParam_zero_eq_halfSubOne q hk]
+
+theorem boundaryCycleFirstOddBSubOne_to_CRun (q : Nat)
+    (hb : 0 < boundaryCycleFirstOddBSubOneCount q)
+    (hc : 0 < boundaryCycleFirstOddCRunCount q) :
+    boundaryQuotient q (boundaryCycleFirstOddBSubOneNode q 0 hb) =
+      boundaryCycleFirstOddCRunNode q 0 hc := by
+  rw [boundaryCycleFirstOddCRunNode_zero q hc]
+  change boundaryQuotient q
+      (routeEBoundaryNode RouteEBoundaryLabel.L04
+        (boundaryParamHalfSubOne q)) =
+    routeEBoundaryNode RouteEBoundaryLabel.L34
+      (boundaryParamHalfSubOne q)
+  exact boundaryQuotient_B_h_sub_one q (boundaryParamHalfSubOne q) (by
+    simp [boundaryParamHalfSubOne, RouteENonzeroSeam.ofNat_val])
+
+theorem boundaryFirstOddCValue_succ (q k : Nat)
+    (hnext : k + 1 < boundaryCycleFirstOddCRunCount q) :
+    boundaryFirstOddCValue q (k + 1) =
+      boundaryFirstOddCValue q k - 1 := by
+  simp [boundaryFirstOddCValue, boundaryCycleFirstOddCRunCount, half] at hnext ⊢
+  omega
+
+theorem boundaryFirstOddCParam_pred_eq (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q)
+    (hnext : k + 1 < boundaryCycleFirstOddCRunCount q)
+    (hnot_one : (boundaryFirstOddCParam q k hk).1.val ≠ 1) :
+    boundaryPredParam q (boundaryFirstOddCParam q k hk) hnot_one =
+      boundaryFirstOddCParam q (k + 1) hnext := by
+  apply Subtype.ext
+  rw [boundaryPredParam_val]
+  change (((boundaryFirstOddCValue q k : Nat) : ZMod (modulus q)) - 1) =
+    ((boundaryFirstOddCValue q (k + 1) : Nat) : ZMod (modulus q))
+  rw [boundaryFirstOddCValue_succ q k hnext]
+  rw [Nat.cast_pred (R := ZMod (modulus q))
+    (boundaryFirstOddCValue_range q k hk).1]
+
+set_option linter.flexible false in
+theorem boundaryCycleFirstOddCRun_step (q k : Nat)
+    (hk : k < boundaryCycleFirstOddCRunCount q)
+    (hks : k + 1 < boundaryCycleFirstOddCRunCount q) :
+    boundaryQuotient q (boundaryCycleFirstOddCRunNode q k hk) =
+      boundaryCycleFirstOddCRunNode q (k + 1) hks := by
+  simp [boundaryCycleFirstOddCRunNode]
+  let a := boundaryFirstOddCParam q k hk
+  have hnot_one : a.1.val ≠ 1 := by
+    dsimp [a]
+    rw [boundaryFirstOddCParam_val]
+    simp [boundaryFirstOddCValue, boundaryCycleFirstOddCRunCount, half] at hks ⊢
+    omega
+  have hnot_h : a.1.val ≠ half q := by
+    dsimp [a]
+    rw [boundaryFirstOddCParam_val]
+    simp [boundaryFirstOddCValue, boundaryCycleFirstOddCRunCount, half] at hk ⊢
+    omega
+  have hnot_last : a.1.val ≠ modulus q - 1 := by
+    dsimp [a]
+    rw [boundaryFirstOddCParam_val]
+    simp [boundaryFirstOddCValue, half, modulus]
+    omega
+  calc
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+        routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundaryPredParam q a hnot_one) :=
+      boundaryQuotient_C_generic q a hnot_one hnot_h hnot_last
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L34
+          (boundaryFirstOddCParam q (k + 1) hks) := by
+      rw [boundaryFirstOddCParam_pred_eq q k hk hks hnot_one]
+
+def boundaryCycleALastBridgeNode (q k : Nat)
+    (_hk : k < boundaryCycleALastBridgeCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamLast q)
+
+theorem boundaryCycleFirstOddCRunLastIndex_eq (q : Nat) :
+    boundaryCycleFirstOddCRunCount q - 1 = half q - 2 := by
+  simp [boundaryCycleFirstOddCRunCount, half]
+
+theorem boundaryFirstOddCValue_last_eq_one (q : Nat) :
+    boundaryFirstOddCValue q (boundaryCycleFirstOddCRunCount q - 1) =
+      1 := by
+  simp [boundaryFirstOddCValue, boundaryCycleFirstOddCRunCount, half]
+
+theorem boundaryFirstOddCParam_last_val_one (q : Nat)
+    (hk : boundaryCycleFirstOddCRunCount q - 1 <
+      boundaryCycleFirstOddCRunCount q) :
+    (boundaryFirstOddCParam q (boundaryCycleFirstOddCRunCount q - 1)
+      hk).1.val = 1 := by
+  rw [boundaryFirstOddCParam_val]
+  exact boundaryFirstOddCValue_last_eq_one q
+
+set_option linter.flexible false in
+theorem boundaryCycleFirstOddCRun_to_ALast (q : Nat)
+    (hlast : boundaryCycleFirstOddCRunCount q - 1 <
+      boundaryCycleFirstOddCRunCount q)
+    (ha : 0 < boundaryCycleALastBridgeCount q) :
+    boundaryQuotient q
+        (boundaryCycleFirstOddCRunNode q
+          (boundaryCycleFirstOddCRunCount q - 1) hlast) =
+      boundaryCycleALastBridgeNode q 0 ha := by
+  simp [boundaryCycleFirstOddCRunNode, boundaryCycleALastBridgeNode]
+  exact boundaryQuotient_C_one q
+    (boundaryFirstOddCParam q (boundaryCycleFirstOddCRunCount q - 1) hlast)
+    (boundaryFirstOddCParam_last_val_one q hlast)
+
 def boundarySecondOddParam (q j : Nat)
     (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
     RouteENonzeroSeam (modulus q) :=
