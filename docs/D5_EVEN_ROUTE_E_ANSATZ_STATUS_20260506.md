@@ -201,6 +201,7 @@ What is disproved or strongly disfavored:
 single stationary seam-table ansatz;
 fixed-constant symmetric direct-packet branch laws;
 promoting short hit streaks without next-sample falsification.
+cyclic bulk plus only RF2-preserving adjacent-rank Kempe repairs.
 ```
 
 What is positively supported:
@@ -209,6 +210,7 @@ What is positively supported:
 full layered root-flat certificate format;
 nested first-return diagnostics;
 known finite/small-seam witnesses passing all nested gates.
+one parity-changing global Lambda_E defect layer after constant bulk layers.
 ```
 
 What remains open:
@@ -224,12 +226,25 @@ Therefore the mathematical blocker is no longer the nested first-return
 criterion.  The blocker is extracting a stable, non-fragmenting adjacent-switch
 law from the existing finite witnesses.
 
+Refinement after the sign audit: the desired law cannot be merely a product of
+RF2-preserving adjacent-rank switch supports from cyclic bulk.  Such switches
+preserve the layer sign product, but even D5 needs global return-sign product
+`-1`.  The known witnesses instead have constant bulk layers of sign `+1` and
+a single `Lambda_E` defect layer of sign `-1`.
+
 ## Next Productive Step
 
 Use `export_d5_even_routeE_layers.py` to export the known witnesses for
 `m=4,6,8,...,60`, then study the local difference between those tables and a
 chosen bulk Latin rule.  The goal is to identify whether the differences can be
-compressed into triangular adjacent switch slabs:
+compressed into a parity-changing global `Lambda_E` layer plus symbolic
+first-return formulas.  Local adjacent-switch words are still useful as an
+`S_5` row description, but they are not by themselves RF2-preserving
+construction steps.
+
+If a later template uses adjacent switch slabs, it must also include the
+non-Kempe/global part that changes the layer sign.  The old purely triangular
+adjacent-repair discipline
 
 ```text
 0/1 depending on t,z2,z3,z4
@@ -238,5 +253,7 @@ compressed into triangular adjacent switch slabs:
 3/4 depending on finite z4 lane data
 ```
 
+is no longer sufficient as stated.
+
 If the extracted difference keeps fragmenting by modulus/residue with no small
-description, this adjacent-switch ansatz should be marked false.
+description, the remaining full-layered ansatz should be marked false.
