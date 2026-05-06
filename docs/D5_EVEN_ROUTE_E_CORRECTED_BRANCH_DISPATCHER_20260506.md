@@ -266,7 +266,7 @@ As of this note, the verified summary is:
 | E0 | m=2 | filled_boundary_certificate | RF1=True RF2=True sign=True colors=True |
 | E-small | m=4 | filled_finite_C_E_O_schedule | RF1=True RF2=True sign=True colors=True |
 | E-gen-window | 6..60 even | finite_small_seam_evidence_window | cases=28 rank_cert=True moduli_match=True rank_verified=True seam_verified=True |
-| E-gen-symbolic | all large even m | open | uniform full layered parity-changing template needed |
+| E-gen-symbolic | all large even m | open | B20 samples=[20, 44, 68] ok=True; uniform template still needed |
 ```
 
 The `m=2` full-layered boundary certificate is stored at:
@@ -289,3 +289,22 @@ recorded finite window.
 The rank certificate verifier checks more than table presence: it recomputes
 the Theta first-return map, verifies the seam rank step, maximal translation
 blocks, and the return-time sum `m^4` for all recorded `m=6,8,...,60` cases.
+
+The first Type-A symbolic branch candidate currently tracked is B20:
+
+```text
+m = 24*q + 20,
+counts = (4*q+3, 0, 0, 16*q+13, 4*q+3).
+```
+
+Its current sample verifier artifact is:
+
+```text
+certs/d5_routeE_b20_branch_verify_m20_44_68.json
+```
+
+This artifact checks the two-block seam map, the six-value return-time
+distribution, the pointwise return-time formula, and the weighted `m^4` sum for
+`m=20,44,68`.  It does not close the B20 theorem.  In Lean terms, the remaining
+B20 fields are still the pointwise first-return equation and no-earlier-return
+minimality for `RouteEB20.ThetaPointwiseTraceTarget`.

@@ -30,6 +30,7 @@ import verify_d5_routeE_small_seam_rank_certs as rank_certs
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_M2 = ROOT / "certs" / "d5_routeE_m2_full_layered_boundary.json"
 DEFAULT_RANK_CERTS = ROOT / "certs" / "d5_routeE_small_seam_rank_certs.json"
+DEFAULT_B20_CERT = ROOT / "certs" / "d5_routeE_b20_branch_verify_m20_44_68.json"
 
 
 def summarize_layers_payload(payload: dict[str, Any], colors: list[int] | None = None) -> dict:
@@ -125,12 +126,48 @@ def summarize_small_seam(rank_cert_path: Path, verify: bool, verify_rank: bool) 
     return out
 
 
+def summarize_b20(path: Path) -> dict:
+    out = {
+        "cert_loaded": False,
+        "schema": None,
+        "moduli": [],
+        "all_ok": None,
+        "covers_symbolic_branch": False,
+        "open_fields": [
+            "ThetaPointwiseTraceTarget.firstReturn_equation",
+            "ThetaPointwiseTraceTarget.firstReturn_minimal",
+        ],
+    }
+    if path.exists():
+        payload = json.loads(path.read_text())
+        out.update(
+            {
+                "cert_loaded": True,
+                "schema": payload.get("schema"),
+                "moduli": payload.get("moduli", []),
+                "all_ok": payload.get("all_ok"),
+                "sample_checks": [
+                    {
+                        "m": item["m"],
+                        "blocks_ok": item["translation_blocks_ok"],
+                        "time_distribution_ok": item["time_distribution_ok"],
+                        "return_time_formula_ok": item["return_time_formula_ok"],
+                        "sum_ok": item["return_time_sum_ok"],
+                    }
+                    for item in payload.get("results", [])
+                ],
+            }
+        )
+    return out
+
+
 def build_summary(args: argparse.Namespace) -> dict:
     m2 = summarize_m2(args.m2_cert)
     m4 = summarize_m4()
     small = summarize_small_seam(
         args.rank_certs, args.verify_small_seam, args.verify_rank_certs
     )
+    b20 = summarize_b20(args.b20_cert)
     return {
         "schema": "d5_routeE_corrected_branch_summary_v1",
         "branch_O_odd": {
@@ -155,6 +192,7 @@ def build_summary(args: argparse.Namespace) -> dict:
         },
         "branch_Egen_symbolic": {
             "status": "open",
+            "b20": b20,
             "needed": [
                 "full layered parity-changing one-layer coloring template",
                 "RF1/RF2 closed verification",
@@ -186,6 +224,7 @@ def markdown(summary: dict) -> str:
     e0 = summary["branch_E0_m2"]
     e4 = summary["branch_E4_m4"]
     eg = summary["branch_Egen_m6_to_m60"]
+    b20 = summary["branch_Egen_symbolic"]["b20"]
     rows = [
         ("O", "odd m", summary["branch_O_odd"]["status"], "existing odd branch"),
         (
@@ -227,7 +266,10 @@ def markdown(summary: dict) -> str:
             "E-gen-symbolic",
             "all large even m",
             summary["branch_Egen_symbolic"]["status"],
-            "uniform full layered parity-changing template needed",
+            (
+                f"B20 samples={b20['moduli']} ok={b20['all_ok']}; "
+                "uniform template still needed"
+            ),
         ),
     ]
     lines = [
@@ -256,6 +298,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--m2-cert", type=Path, default=DEFAULT_M2)
     parser.add_argument("--rank-certs", type=Path, default=DEFAULT_RANK_CERTS)
+    parser.add_argument("--b20-cert", type=Path, default=DEFAULT_B20_CERT)
     parser.add_argument("--verify-small-seam", action="store_true")
     parser.add_argument("--verify-rank-certs", action="store_true")
     parser.add_argument("--json-out", type=Path)

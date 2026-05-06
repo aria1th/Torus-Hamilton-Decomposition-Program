@@ -406,6 +406,44 @@
     "verified_all_ok": true
   },
   "branch_Egen_symbolic": {
+    "b20": {
+      "all_ok": true,
+      "cert_loaded": true,
+      "covers_symbolic_branch": false,
+      "moduli": [
+        20,
+        44,
+        68
+      ],
+      "open_fields": [
+        "ThetaPointwiseTraceTarget.firstReturn_equation",
+        "ThetaPointwiseTraceTarget.firstReturn_minimal"
+      ],
+      "sample_checks": [
+        {
+          "blocks_ok": true,
+          "m": 20,
+          "return_time_formula_ok": true,
+          "sum_ok": true,
+          "time_distribution_ok": true
+        },
+        {
+          "blocks_ok": true,
+          "m": 44,
+          "return_time_formula_ok": true,
+          "sum_ok": true,
+          "time_distribution_ok": true
+        },
+        {
+          "blocks_ok": true,
+          "m": 68,
+          "return_time_formula_ok": true,
+          "sum_ok": true,
+          "time_distribution_ok": true
+        }
+      ],
+      "schema": "d5_routeE_b20_branch_v1"
+    },
     "needed": [
       "full layered parity-changing one-layer coloring template",
       "RF1/RF2 closed verification",
