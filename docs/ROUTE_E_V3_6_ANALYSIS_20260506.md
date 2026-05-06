@@ -313,7 +313,8 @@ Closed or proof-facing in the bundle:
   `RouteEB20.BoundaryClockSymbolicMassTarget`, and
   `RouteEB20.BoundaryClockSymbolicMassTarget.toBoundaryClockMassTarget`.
   These names isolate the `q > 0` formula proof from the finite `q = 0`
-  certificate row.
+  certificate row; `RouteEB20.allPairTimeMassFromSymbolicBoundaryClocks_sum_eq_modulus_pow_four`
+  then feeds the symbolic clock target into the all-pair time exhaustion.
 - recovered `03` and `04` boundary-clock aggregate masses:
   `RouteEB20.allPairTime03BoundaryClockBranchMassTotal_eq_target`,
   `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`,

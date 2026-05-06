@@ -1144,6 +1144,15 @@ theorem allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four
   rw [allPairTimeMassFromBoundaryClocks_eq q target]
   exact allPairTimeMass_sum_eq_modulus_pow_four q
 
+theorem allPairTimeMassFromSymbolicBoundaryClocks_sum_eq_modulus_pow_four
+    (q : Nat) (target : BoundaryClockSymbolicMassTarget q) :
+    Finset.univ.sum
+        (allPairTimeMassFromBoundaryClocks q
+          target.toBoundaryClockMassTarget) =
+      modulus q ^ 4 :=
+  allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four q
+    target.toBoundaryClockMassTarget
+
 def boundaryParamOne (q : Nat) : RouteENonzeroSeam (modulus q) :=
   RouteENonzeroSeam.ofNat 1 (by omega) (by simp [modulus])
 
