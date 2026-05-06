@@ -3285,6 +3285,29 @@ def boundaryCycleFirstOddCRunStart (q : Nat) : Nat :=
 def boundaryCycleSecondOddFinalStart (q : Nat) : Nat :=
   boundaryCycleSecondOddStart q + boundaryCycleSecondOddLaneCount q
 
+theorem boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one
+    (q : Nat) :
+    boundaryCycleFirstOddBSubOneStart q = modulus q + half q + 1 := by
+  rw [boundaryCycleFirstOddBSubOneStart,
+    boundaryCycleFirstOddStart_eq_modulus_add_three]
+  simp [boundaryCycleFirstOddLaneCount, quarter, half]
+  omega
+
+theorem boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two
+    (q : Nat) :
+    boundaryCycleFirstOddCRunStart q = modulus q + half q + 2 := by
+  rw [boundaryCycleFirstOddCRunStart,
+    boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+  simp [boundaryCycleFirstOddBSubOneCount]
+
+theorem boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half
+    (q : Nat) :
+    boundaryCycleSecondOddFinalStart q = 2 * modulus q + half q := by
+  rw [boundaryCycleSecondOddFinalStart,
+    boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+  simp [boundaryCycleSecondOddLaneCount, quarter, half]
+  omega
+
 noncomputable def boundaryCycleNode (q : Nat)
     (i : Fin (boundaryCycleLength q)) :
     RouteEBoundaryNode (modulus q) :=
@@ -3354,6 +3377,13 @@ noncomputable def boundaryCycleNode (q : Nat)
             quarter, half, modulus] at hilen ⊢
           omega
         omega)
+
+theorem boundaryCycleNode_zero (q : Nat) :
+    boundaryCycleNode q
+        ⟨0, by simp [boundaryCycleLength, modulus]; omega⟩ =
+      routeEBoundaryZero := by
+  simp [boundaryCycleNode, boundaryCycleSpineNode, boundaryCycleSpineCount,
+    half]
 
 structure BoundaryQuotientCycleEnumeration (q : Nat) where
   node :
