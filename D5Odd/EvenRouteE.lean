@@ -7791,6 +7791,140 @@ theorem boundaryMacroLengthTotalTarget_eq_boundary_card (q : Nat) :
   simp [boundaryMacroLengthTotalTarget, modulus]
   omega
 
+/--
+B16 closed boundary quotient formula from `B16_closure_package_20260506.zip`.
+The formulas are stated with equality in `ZMod (modulus q)`, so targets such as
+`h - 3a` and `h - 1 - 4a` keep their intended modulo-`m` meaning.
+-/
+structure BoundaryQuotientFormulaTarget (q : Nat)
+    (Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)) : Prop where
+  zero_to_A :
+    ∃ a : RouteENonzeroSeam (modulus q),
+      a.1 = (half q : ZMod (modulus q)) ∧
+        Q routeEBoundaryZero =
+          routeEBoundaryNode RouteEBoundaryLabel.L03 a
+  A_special_to_A :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = modulus q - 3 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = (half q + 6 : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  A_mod4_zero_to_C :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val % 4 = 0 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((modulus q - a.1.val / 4 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L34 b
+  A_mod4_one_to_B :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ modulus q - 3 → a.1.val % 4 = 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 =
+            (((2 * q + 1) * a.1.val + 6 * q + 2 : Nat) :
+              ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  A_mod4_two_to_B :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val % 4 = 2 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 =
+            (((2 * q + 1) * a.1.val + 12 * q + 8 : Nat) :
+              ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  A_mod4_three_to_B :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val % 4 = 3 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 =
+            (((2 * q + 1) * a.1.val + 18 * q + 10 : Nat) :
+              ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  B_h_add_two_to_zero :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q + 2 →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+          routeEBoundaryZero
+  B_two_to_A :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = 2 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = (half q - 1 : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  B_mod4_three_to_C :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val % 4 = 3 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((3 * ((a.1.val + 1) / 4) : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L34 b
+  B_mod4_one_to_A :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val % 4 = 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 =
+            ((half q : Nat) : ZMod (modulus q)) -
+              ((3 * a.1.val : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  B_mod4_even_to_A :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ half q + 2 → a.1.val ≠ 2 →
+        (a.1.val % 4 = 0 ∨ a.1.val % 4 = 2) →
+          ∃ b : RouteENonzeroSeam (modulus q),
+            b.1 =
+              ((half q + 6 : Nat) : ZMod (modulus q)) -
+                ((3 * a.1.val : Nat) : ZMod (modulus q)) ∧
+              Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+                routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  C_low_to_A :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val < quarter q →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 =
+            ((half q - 1 : Nat) : ZMod (modulus q)) -
+              ((4 * a.1.val : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  C_last_to_B :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = modulus q - 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = (modulus q - 1 : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  C_high_mod3_two_to_B :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      quarter q ≤ a.1.val → a.1.val ≠ modulus q - 1 →
+        (a.1.val - quarter q) % 3 = 2 →
+          ∃ b : RouteENonzeroSeam (modulus q),
+            b.1 =
+              ((4 * ((a.1.val - quarter q + 1) / 3) : Nat) :
+                ZMod (modulus q)) ∧
+              Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+                routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  C_high_other_to_C :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      quarter q ≤ a.1.val → a.1.val ≠ modulus q - 1 →
+        (a.1.val - quarter q) % 3 ≠ 2 →
+          ∃ b : RouteENonzeroSeam (modulus q),
+            b.1 = ((a.1.val - quarter q + 1 : Nat) : ZMod (modulus q)) ∧
+              Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+                routeEBoundaryNode RouteEBoundaryLabel.L34 b
+
+def BoundaryQuotientOneCycleTarget (q : Nat) : Prop :=
+  ∃ Q : RouteEBoundaryNode (modulus q) → RouteEBoundaryNode (modulus q),
+    BoundaryQuotientFormulaTarget q Q ∧ IsSingleCycleMap Q
+
+def SymbolicBoundaryQuotientOneCycleTarget : Prop :=
+  ∀ q, 0 < q → BoundaryQuotientOneCycleTarget q
+
 abbrev BoundaryMacroNode (q : Nat) :=
   Unit ⊕ { a : RouteENonzeroSeam (modulus q) // a.1.val < quarter q }
 
@@ -7851,6 +7985,26 @@ theorem boundaryQuotient_singleCycle {q : Nat}
   target.toBoundaryFirstReturnTarget.boundaryMap_singleCycle
 
 end BoundaryMacroReturnTarget
+
+theorem boundaryQuotientOneCycleTarget_of_formula_and_macro {q : Nat}
+    {Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)}
+    (hformula : BoundaryQuotientFormulaTarget q Q)
+    (hmacro : Nonempty (BoundaryMacroReturnTarget q Q)) :
+    BoundaryQuotientOneCycleTarget q := by
+  rcases hmacro with ⟨target⟩
+  exact ⟨Q, hformula, target.boundaryQuotient_singleCycle⟩
+
+theorem symbolicBoundaryQuotientOneCycleTarget_of_formula_and_macro
+    (h : ∀ q, 0 < q →
+      ∃ Q : RouteEBoundaryNode (modulus q) →
+          RouteEBoundaryNode (modulus q),
+        BoundaryQuotientFormulaTarget q Q ∧
+          Nonempty (BoundaryMacroReturnTarget q Q)) :
+    SymbolicBoundaryQuotientOneCycleTarget := by
+  intro q hq
+  rcases h q hq with ⟨Q, hformula, hmacro⟩
+  exact boundaryQuotientOneCycleTarget_of_formula_and_macro hformula hmacro
 
 def SymbolicBoundaryMacroReturnTarget : Prop :=
   ∀ q, 0 < q →

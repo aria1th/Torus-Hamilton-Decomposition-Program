@@ -43,7 +43,7 @@ remaining gaps.
 | B20 indexed all-pair adapter | `RouteEB20.AllPairIndexedLabelTraceTarget`, `RouteEB20.AllPairIndexedLabelTraceTarget.toLabelTraceTarget`, `RouteEB20.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB20.symbolicAllPairBranchTarget_of_indexedLabelTraceTarget`, `RouteEB20.finiteM20AllPairTarget_of_indexedLabelTraceTarget`, `RouteEB20.allPairBranchTarget_of_indexedLabelTraceTargets`, `RouteEB20.hamiltonTarget_of_indexedLabelTraceTargets`, `RouteEB20.torusTarget_of_indexedLabelTraceTargets`, `RouteEB20.cayleyTarget_of_indexedLabelTraceTargets` | row-indexed package target added |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
-| B16 boundary macro-return surface | `RouteEB16.BoundaryMacroNode`, `RouteEB16.BoundaryMacroReturnTarget`, `RouteEB16.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`, `RouteEB16.SymbolicBoundaryMacroReturnTarget`, `RouteEB16.FiniteM16BoundaryQuotientTarget`, `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card` | proof-facing boundary target added |
+| B16 boundary quotient formula and macro-return surface | `RouteEB16.BoundaryQuotientFormulaTarget`, `RouteEB16.BoundaryQuotientOneCycleTarget`, `RouteEB16.SymbolicBoundaryQuotientOneCycleTarget`, `RouteEB16.BoundaryMacroNode`, `RouteEB16.BoundaryMacroReturnTarget`, `RouteEB16.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`, `RouteEB16.boundaryQuotientOneCycleTarget_of_formula_and_macro`, `RouteEB16.symbolicBoundaryQuotientOneCycleTarget_of_formula_and_macro`, `RouteEB16.SymbolicBoundaryMacroReturnTarget`, `RouteEB16.FiniteM16BoundaryQuotientTarget`, `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card` | closed formula target and proof-facing boundary target added |
 | B16 label/indexed all-pair adapter | `RouteEB16.AllPairLabelTraceTarget`, `RouteEB16.AllPairIndexedLabelTraceTarget`, `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`, `RouteEB16.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteEB16.SymbolicAllPairBranchTarget`, `RouteEB16.FiniteM16AllPairTarget`, `RouteEB16.AllPairBranchTarget`, and Hamilton/torus/Cayley projections from label or indexed targets | proof-facing endpoint split added |
 | R14e count surface | `RouteER14e.routeCounts`, `RouteER14e.counts_sum` | done |
 | R14e time target | `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
@@ -110,9 +110,10 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
 4. B16 is promoted to proof-facing closure by
    `B16_closure_package_20260506.zip` and
    `RouteE_three_branch_status_package_20260506.zip`.  Lean now has the
-   branch-local boundary macro-return and all-pair adapter endpoints, but the
-   boundary formula, concrete macro-return data, all-pair first-return/no-early
-   equations, and finite `m = 16` certificate are not Lean instances.
+   branch-local closed boundary formula target, boundary macro-return target,
+   and all-pair adapter endpoints, but the concrete boundary quotient map,
+   concrete macro-return data, all-pair first-return/no-early equations, and
+   finite `m = 16` certificate are not Lean instances.
 
 5. R14e is promoted to proof-facing closure by
    `R14e_closure_package_20260506.zip` and

@@ -264,6 +264,11 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
 - `RouteEB16.BoundaryMacroNode`
+- `RouteEB16.BoundaryQuotientFormulaTarget`
+- `RouteEB16.BoundaryQuotientOneCycleTarget`
+- `RouteEB16.SymbolicBoundaryQuotientOneCycleTarget`
+- `RouteEB16.boundaryQuotientOneCycleTarget_of_formula_and_macro`
+- `RouteEB16.symbolicBoundaryQuotientOneCycleTarget_of_formula_and_macro`
 - `RouteEB16.BoundaryMacroReturnTarget`
 - `RouteEB16.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`
 - `RouteEB16.SymbolicBoundaryMacroReturnTarget`
@@ -442,11 +447,14 @@ B16:
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, boundary insertion compression,
   label-wise time masses, and finite `m = 16` exceptional target;
-- Lean now has B16 boundary macro-return and label/indexed all-pair adapters,
-  including the checked macro length identity
+- Lean now has B16 closed boundary formula and boundary macro-return targets,
+  plus label/indexed all-pair adapters.  The formula+macro adapter is
+  `RouteEB16.boundaryQuotientOneCycleTarget_of_formula_and_macro`, and the
+  checked macro length identity is
   `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`;
-- remaining Lean work is to derive/instantiate the boundary quotient formula,
-  all-pair first-return/no-early equations, and the finite `m = 16` table.
+- remaining Lean work is to instantiate the concrete boundary quotient map and
+  macro-return data, then supply all-pair first-return/no-early equations and
+  the finite `m = 16` table.
 
 R14e:
 
