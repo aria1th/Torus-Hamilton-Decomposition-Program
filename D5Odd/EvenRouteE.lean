@@ -634,6 +634,86 @@ theorem allPairTimeMassTarget_sum_eq_modulus_pow_four (q : Nat) :
   rw [allPairTimeMassTarget_sum_eq_total,
     allPairTimeMassTotalTarget_eq_modulus_pow_four]
 
+def allPairLabelDstTimeMassTarget (q : Nat) :
+    RouteEB20.AllPairLabel × RouteEB20.AllPairLabel → Nat
+  | (.Z, .L13) => 24 * q + 15
+  | (.L01, .L01) => 72 * q ^ 2 + 96 * q + 32
+  | (.L01, .L03) => 45 * q ^ 2 + 54 * q + 16
+  | (.L01, .L13) => 45 * q ^ 2 + 54 * q + 16
+  | (.L01, .Z) => 12 * q + 8
+  | (.L02, .L24) =>
+      6912 * q ^ 3 + 13536 * q ^ 2 + 8832 * q + 1920
+  | (.L03, .L04) =>
+      1728 * q ^ 3 + 3528 * q ^ 2 + 2400 * q + 544
+  | (.L03, .L14) =>
+      1728 * q ^ 3 + 3456 * q ^ 2 + 2304 * q + 512
+  | (.L03, .L34) => 432 * q ^ 3 + 786 * q ^ 2 + 467 * q + 90
+  | (.L04, .L01) =>
+      1008 * q ^ 3 + 1827 * q ^ 2 + 1091 * q + 214
+  | (.L04, .L13) => 720 * q ^ 3 + 1440 * q ^ 2 + 967 * q + 218
+  | (.L04, .L14) =>
+      1728 * q ^ 3 + 3312 * q ^ 2 + 2112 * q + 448
+  | (.L04, .L34) => 432 * q ^ 3 + 882 * q ^ 2 + 597 * q + 134
+  | (.L12, .L03) => 12 * q + 7
+  | (.L12, .L12) => 576 * q ^ 2 + 720 * q + 224
+  | (.L13, .L01) => 45 * q ^ 2 + 66 * q + 24
+  | (.L13, .L03) => 162 * q ^ 2 + 204 * q + 65
+  | (.L14, .L02) =>
+      54144 * q ^ 4 + 142368 * q ^ 3 + 140832 * q ^ 2 +
+        62112 * q + 10304
+  | (.L14, .L23) =>
+      58752 * q ^ 4 + 153408 * q ^ 3 + 149986 * q ^ 2 +
+        65078 * q + 10574
+  | (.L23, .L02) =>
+      52992 * q ^ 4 + 139680 * q ^ 3 + 137726 * q ^ 2 +
+        60202 * q + 9842
+  | (.L23, .L04) =>
+      8640 * q ^ 4 + 19416 * q ^ 3 + 15633 * q ^ 2 +
+        5206 * q + 569
+  | (.L23, .L13) =>
+      50112 * q ^ 4 + 128808 * q ^ 3 + 123861 * q ^ 2 +
+        52803 * q + 8420
+  | (.L24, .L04) =>
+      27072 * q ^ 4 + 74640 * q ^ 3 + 77256 * q ^ 2 +
+        35544 * q + 6128
+  | (.L24, .L12) => 24 * q + 16
+  | (.L24, .L13) =>
+      27072 * q ^ 4 + 74112 * q ^ 3 + 75876 * q ^ 2 +
+        34429 * q + 5842
+  | (.L24, .L23) =>
+      52992 * q ^ 4 + 135024 * q ^ 3 + 128718 * q ^ 2 +
+        54406 * q + 8602
+  | (.L34, .L01) => 432 * q ^ 3 + 822 * q ^ 2 + 509 * q + 102
+  | (.L34, .L04) => 432 * q ^ 3 + 882 * q ^ 2 + 603 * q + 138
+  | (.L34, .L34) =>
+      1728 * q ^ 3 + 3432 * q ^ 2 + 2288 * q + 512
+  | _ => 0
+
+theorem allPairLabelDstTimeMassTarget_sum_by_src (q : Nat) :
+    ∀ src : RouteEB20.AllPairLabel,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        allPairLabelDstTimeMassTarget q (src, dst)) =
+          allPairTimeMassTarget q src := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  intro src
+  rw [huniv]
+  fin_cases src <;>
+    simp [allPairLabelDstTimeMassTarget, allPairTimeMassTarget,
+      allPairTimeZTarget, allPairTime01Target, allPairTime02Target,
+      allPairTime03Target, allPairTime04Target, allPairTime12Target,
+      allPairTime13Target, allPairTime14Target, allPairTime23Target,
+      allPairTime24Target, allPairTime34Target] <;>
+    ring
+
 end RouteEB16
 
 namespace RouteER14e
@@ -757,6 +837,91 @@ theorem allPairTimeMassTarget_sum_eq_modulus_pow_four (k : Nat) :
     Finset.univ.sum (allPairTimeMassTarget k) = modulus k ^ 4 := by
   rw [allPairTimeMassTarget_sum_eq_total,
     allPairTimeMassTotalTarget_eq_modulus_pow_four]
+
+def allPairLabelDstTimeMassTarget (k : Nat) :
+    RouteEB20.AllPairLabel × RouteEB20.AllPairLabel → Nat
+  | (.Z, .L03) => 2
+  | (.L01, .L01) => 576 * k ^ 2 + 312 * k + 42
+  | (.L01, .L03) => 1
+  | (.L01, .L13) => 288 * k ^ 2 + 156 * k + 21
+  | (.L02, .L24) =>
+      55296 * k ^ 3 + 47232 * k ^ 2 + 13440 * k + 1274
+  | (.L03, .L04) => 432 * k ^ 2 + 236 * k + 32
+  | (.L03, .L14) =>
+      10944 * k ^ 3 + 9360 * k ^ 2 + 2680 * k + 257
+  | (.L03, .L34) => 224 * k ^ 2 + 120 * k + 16
+  | (.L04, .L03) =>
+      27648 * k ^ 3 + 22704 * k ^ 2 + 6220 * k + 568
+  | (.L04, .L14) =>
+      13824 * k ^ 3 + 11520 * k ^ 2 + 3192 * k + 294
+  | (.L04, .L34) =>
+      18432 * k ^ 3 + 16208 * k ^ 2 + 4740 * k + 461
+  | (.L12, .L12) => 2304 * k ^ 2 + 1248 * k + 168
+  | (.L12, .L13) => 48 * k + 14
+  | (.L13, .L01) => 288 * k ^ 2 + 156 * k + 21
+  | (.L13, .L03) => 3
+  | (.L13, .L13) => 1152 * k ^ 2 + 576 * k + 70
+  | (.L14, .L02) =>
+      829440 * k ^ 4 + 905472 * k ^ 3 + 368640 * k ^ 2 +
+        66240 * k + 4424
+  | (.L14, .L23) =>
+      995328 * k ^ 4 + 1137024 * k ^ 3 + 487368 * k ^ 2 +
+        92952 * k + 6660
+  | (.L23, .L02) =>
+      829440 * k ^ 4 + 998784 * k ^ 3 + 450360 * k ^ 2 +
+        90120 * k + 6752
+  | (.L23, .L03) =>
+      677376 * k ^ 4 + 725184 * k ^ 3 + 284313 * k ^ 2 +
+        47989 * k + 2902
+  | (.L23, .L04) =>
+      55296 * k ^ 4 + 55296 * k ^ 3 + 18372 * k ^ 2 + 2028 * k
+  | (.L23, .L34) =>
+      262656 * k ^ 4 + 318528 * k ^ 3 + 149595 * k ^ 2 +
+        32275 * k + 2692
+  | (.L24, .L03) =>
+      214272 * k ^ 4 + 183456 * k ^ 3 + 52038 * k ^ 2 + 4893 * k
+  | (.L24, .L04) =>
+      138240 * k ^ 4 + 183168 * k ^ 3 + 90336 * k ^ 2 +
+        19668 * k + 1596
+  | (.L24, .L12) => 48 * k + 14
+  | (.L24, .L23) =>
+      829440 * k ^ 4 + 960768 * k ^ 3 + 417384 * k ^ 2 +
+        80592 * k + 5835
+  | (.L24, .L34) =>
+      476928 * k ^ 4 + 587232 * k ^ 3 + 267866 * k ^ 2 +
+        53555 * k + 3951
+  | (.L34, .L01) => 16 * k + 5
+  | (.L34, .L03) => 9216 * k ^ 3 + 6752 * k ^ 2 + 1584 * k + 111
+  | (.L34, .L04) => 464 * k ^ 2 + 300 * k + 48
+  | (.L34, .L13) => 1152 * k ^ 2 + 672 * k + 98
+  | (.L34, .L14) => 2880 * k ^ 3 + 2576 * k ^ 2 + 760 * k + 74
+  | (.L34, .Z) => 32 * k + 10
+  | _ => 0
+
+theorem allPairLabelDstTimeMassTarget_sum_by_src (k : Nat) :
+    ∀ src : RouteEB20.AllPairLabel,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        allPairLabelDstTimeMassTarget k (src, dst)) =
+          allPairTimeMassTarget k src := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  intro src
+  rw [huniv]
+  fin_cases src <;>
+    simp [allPairLabelDstTimeMassTarget, allPairTimeMassTarget,
+      allPairTimeZTarget, allPairTime01Target, allPairTime02Target,
+      allPairTime03Target, allPairTime04Target, allPairTime12Target,
+      allPairTime13Target, allPairTime14Target, allPairTime23Target,
+      allPairTime24Target, allPairTime34Target] <;>
+    ring
 
 end RouteER14e
 
@@ -7774,6 +7939,249 @@ noncomputable def toSectionCertificate {m : Nat} [NeZero m]
 
 end RouteEAllPairIndexedLabelTraceTarget
 
+abbrev RouteEAllPairLabelDst :=
+  RouteEB20.AllPairLabel × RouteEB20.AllPairLabel
+
+/--
+Branch-independent all-pair target with source-label/destination-label fibers.
+This is the proof-facing shape of the `label_dst_sum_polynomials` emitted by
+the Route-E verifier packages.
+-/
+structure RouteEAllPairLabelDstTraceTarget (m : Nat) [NeZero m]
+    (labelTimeMass : RouteEB20.AllPairLabel → Nat)
+    (labelDstTimeMass : RouteEAllPairLabelDst → Nat) where
+  data : D5EvenSeamData m
+  sectionReturn :
+    Color → RouteEAllPairSection m → RouteEAllPairSection m
+  returnTime :
+    Color → RouteEAllPairSection m → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] a.1 =
+        (sectionReturn c a).1
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b : RouteEAllPairSection m,
+        (seamRootReturn data c)^[k] a.1 = b.1
+  sectionReturn_single :
+    ∀ c, IsSingleCycleMap (sectionReturn c)
+  labelOf : RouteEAllPairSection m → RouteEB20.AllPairLabel
+  dstLabelOf : RouteEAllPairSection m → RouteEB20.AllPairLabel
+  label_dst_time_sum :
+    ∀ c src dst,
+      ((Finset.univ : Finset (RouteEAllPairSection m)).filter
+          fun a => labelOf a = src ∧ dstLabelOf a = dst).sum
+            (fun a => returnTime c a) =
+        labelDstTimeMass (src, dst)
+  labelDst_sum_by_src :
+    ∀ src,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        labelDstTimeMass (src, dst)) = labelTimeMass src
+
+namespace RouteEAllPairLabelDstTraceTarget
+
+noncomputable def toLabelTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairLabelDstTraceTarget m labelTimeMass labelDstTimeMass) :
+    RouteEAllPairLabelTraceTarget m labelTimeMass where
+  data := target.data
+  sectionReturn := target.sectionReturn
+  returnTime := target.returnTime
+  returnTime_pos := target.returnTime_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  sectionReturn_single := target.sectionReturn_single
+  labelOf := target.labelOf
+  label_time_sum := by
+    intro c label
+    rw [← target.labelDst_sum_by_src label]
+    rw [← Finset.sum_fiberwise
+      (s := ((Finset.univ : Finset (RouteEAllPairSection m)).filter
+        fun a => target.labelOf a = label))
+      (g := target.dstLabelOf)
+      (f := fun a => target.returnTime c a)]
+    apply Finset.sum_congr rfl
+    intro dst _hdst
+    simpa [Finset.filter_filter, and_left_comm, and_assoc] using
+      target.label_dst_time_sum c label dst
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairLabelDstTraceTarget m labelTimeMass labelDstTimeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum labelTimeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m :=
+  target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
+
+end RouteEAllPairLabelDstTraceTarget
+
+/--
+Branch-independent indexed source/destination-label target.  This matches
+verifier output where CSV rows are indexed and label-destination fibers are
+checked before transport to the canonical all-pair section.
+-/
+structure RouteEAllPairIndexedLabelDstTraceTarget (m : Nat) [NeZero m]
+    (labelTimeMass : RouteEB20.AllPairLabel → Nat)
+    (labelDstTimeMass : RouteEAllPairLabelDst → Nat) where
+  N : Nat
+  data : D5EvenSeamData m
+  point : Fin N → RouteEAllPairSection m
+  point_bijective : Function.Bijective point
+  indexReturn : Color → Fin N → Fin N
+  returnTime : Color → Fin N → Nat
+  returnTime_pos : ∀ c i, 0 < returnTime c i
+  firstReturn_equation :
+    ∀ c i,
+      (seamRootReturn data c)^[returnTime c i] (point i).1 =
+        (point (indexReturn c i)).1
+  firstReturn_minimal :
+    ∀ c i k, 0 < k → k < returnTime c i →
+      ¬ ∃ j : Fin N,
+        (seamRootReturn data c)^[k] (point i).1 = (point j).1
+  indexReturn_single :
+    ∀ c, IsSingleCycleMap (indexReturn c)
+  labelOfIndex : Fin N → RouteEB20.AllPairLabel
+  dstLabelOfIndex : Fin N → RouteEB20.AllPairLabel
+  label_dst_time_sum :
+    ∀ c src dst,
+      ((Finset.univ : Finset (Fin N)).filter
+          fun i => labelOfIndex i = src ∧ dstLabelOfIndex i = dst).sum
+            (fun i => returnTime c i) =
+        labelDstTimeMass (src, dst)
+  labelDst_sum_by_src :
+    ∀ src,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        labelDstTimeMass (src, dst)) = labelTimeMass src
+
+namespace RouteEAllPairIndexedLabelDstTraceTarget
+
+noncomputable def pointEquiv {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass) :
+    Fin target.N ≃ RouteEAllPairSection m :=
+  Equiv.ofBijective target.point target.point_bijective
+
+noncomputable def pointIndex {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass)
+    (a : RouteEAllPairSection m) : Fin target.N :=
+  (target.pointEquiv).symm a
+
+@[simp] theorem point_pointIndex {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass)
+    (a : RouteEAllPairSection m) :
+    target.point (target.pointIndex a) = a := by
+  exact target.pointEquiv.apply_symm_apply a
+
+@[simp] theorem pointIndex_point {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass)
+    (i : Fin target.N) :
+    target.pointIndex (target.point i) = i := by
+  exact target.pointEquiv.symm_apply_apply i
+
+noncomputable def toLabelDstTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass) :
+    RouteEAllPairLabelDstTraceTarget m labelTimeMass labelDstTimeMass where
+  data := target.data
+  sectionReturn := fun c a =>
+    target.point (target.indexReturn c (target.pointIndex a))
+  returnTime := fun c a => target.returnTime c (target.pointIndex a)
+  returnTime_pos := by
+    intro c a
+    exact target.returnTime_pos c (target.pointIndex a)
+  firstReturn_equation := by
+    intro c a
+    simpa using target.firstReturn_equation c (target.pointIndex a)
+  firstReturn_minimal := by
+    intro c a k hkpos hklt hhit
+    apply target.firstReturn_minimal c (target.pointIndex a) k hkpos
+      (by simpa using hklt)
+    rcases hhit with ⟨b, hb⟩
+    exact ⟨target.pointIndex b, by simpa using hb⟩
+  sectionReturn_single := by
+    intro c
+    exact single_cycle_of_bijective_semiconj
+      (f := target.indexReturn c)
+      (g := fun a =>
+        target.point (target.indexReturn c (target.pointIndex a)))
+      (phi := target.point)
+      target.point_bijective
+      (by
+        intro i
+        simp)
+      (target.indexReturn_single c)
+  labelOf := fun a => target.labelOfIndex (target.pointIndex a)
+  dstLabelOf := fun a => target.dstLabelOfIndex (target.pointIndex a)
+  label_dst_time_sum := by
+    intro c src dst
+    let sIdx : Finset (Fin target.N) :=
+      (Finset.univ.filter fun i =>
+        target.labelOfIndex i = src ∧ target.dstLabelOfIndex i = dst)
+    let sSec : Finset (RouteEAllPairSection m) :=
+      (Finset.univ.filter fun a =>
+        target.labelOfIndex (target.pointIndex a) = src ∧
+          target.dstLabelOfIndex (target.pointIndex a) = dst)
+    have hsum :
+        sIdx.sum (fun i => target.returnTime c i) =
+          sSec.sum (fun a => target.returnTime c (target.pointIndex a)) := by
+      exact Finset.sum_bijective
+        (s := sIdx)
+        (t := sSec)
+        (f := fun i => target.returnTime c i)
+        (g := fun a => target.returnTime c (target.pointIndex a))
+        target.point
+        target.point_bijective
+        (by
+          intro i
+          simp [sIdx, sSec])
+        (by
+          intro i _hi
+          simp)
+    calc
+      sSec.sum (fun a => target.returnTime c (target.pointIndex a)) =
+          sIdx.sum (fun i => target.returnTime c i) := hsum.symm
+      _ = labelDstTimeMass (src, dst) :=
+        target.label_dst_time_sum c src dst
+  labelDst_sum_by_src := target.labelDst_sum_by_src
+
+noncomputable def toLabelTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass) :
+    RouteEAllPairLabelTraceTarget m labelTimeMass :=
+  target.toLabelDstTraceTarget.toLabelTraceTarget
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairIndexedLabelDstTraceTarget m labelTimeMass labelDstTimeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum labelTimeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m :=
+  target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
+
+end RouteEAllPairIndexedLabelDstTraceTarget
+
 namespace RouteEB16
 
 instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
@@ -8023,6 +8431,14 @@ abbrev AllPairLabelTraceTarget (q : Nat) :=
 abbrev AllPairIndexedLabelTraceTarget (q : Nat) :=
   RouteEAllPairIndexedLabelTraceTarget (modulus q) (allPairTimeMassTarget q)
 
+abbrev AllPairLabelDstTraceTarget (q : Nat) :=
+  RouteEAllPairLabelDstTraceTarget (modulus q) (allPairTimeMassTarget q)
+    (allPairLabelDstTimeMassTarget q)
+
+abbrev AllPairIndexedLabelDstTraceTarget (q : Nat) :=
+  RouteEAllPairIndexedLabelDstTraceTarget (modulus q) (allPairTimeMassTarget q)
+    (allPairLabelDstTimeMassTarget q)
+
 namespace AllPairLabelTraceTarget
 
 theorem returnTime_sum {q : Nat} (target : AllPairLabelTraceTarget q)
@@ -8042,6 +8458,29 @@ noncomputable def allPairSectionCertificateOfLabelTraceTarget (q : Nat)
   target.toSectionCertificate (routeCounts q)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
 
+namespace AllPairLabelDstTraceTarget
+
+noncomputable def toLabelTraceTarget {q : Nat}
+    (target : AllPairLabelDstTraceTarget q) :
+    AllPairLabelTraceTarget q :=
+  RouteEAllPairLabelDstTraceTarget.toLabelTraceTarget target
+
+theorem returnTime_sum {q : Nat} (target : AllPairLabelDstTraceTarget q)
+    (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection (modulus q) =>
+          target.returnTime c a) =
+      modulus q ^ 4 :=
+  AllPairLabelTraceTarget.returnTime_sum target.toLabelTraceTarget c
+
+end AllPairLabelDstTraceTarget
+
+noncomputable def allPairSectionCertificateOfLabelDstTraceTarget (q : Nat)
+    (target : AllPairLabelDstTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  target.toSectionCertificate (routeCounts q)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
+
 namespace AllPairIndexedLabelTraceTarget
 
 noncomputable def toLabelTraceTarget {q : Nat}
@@ -8053,6 +8492,26 @@ end AllPairIndexedLabelTraceTarget
 
 noncomputable def allPairSectionCertificateOfIndexedLabelTraceTarget
     (q : Nat) (target : AllPairIndexedLabelTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  target.toSectionCertificate (routeCounts q)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
+
+namespace AllPairIndexedLabelDstTraceTarget
+
+noncomputable def toLabelDstTraceTarget {q : Nat}
+    (target : AllPairIndexedLabelDstTraceTarget q) :
+    AllPairLabelDstTraceTarget q :=
+  RouteEAllPairIndexedLabelDstTraceTarget.toLabelDstTraceTarget target
+
+noncomputable def toLabelTraceTarget {q : Nat}
+    (target : AllPairIndexedLabelDstTraceTarget q) :
+    AllPairLabelTraceTarget q :=
+  RouteEAllPairIndexedLabelDstTraceTarget.toLabelTraceTarget target
+
+end AllPairIndexedLabelDstTraceTarget
+
+noncomputable def allPairSectionCertificateOfIndexedLabelDstTraceTarget
+    (q : Nat) (target : AllPairIndexedLabelDstTraceTarget q) :
     RouteEAllPairSectionCertificate (modulus q) :=
   target.toSectionCertificate (routeCounts q)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
@@ -8110,6 +8569,64 @@ theorem finiteM16AllPairTarget_of_indexedLabelTraceTarget
 theorem allPairBranchTarget_of_indexedLabelTraceTargets
     (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelTraceTarget q))
     (hm16 : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro q hq
+      rcases hsymbolic q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm16 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_labelDstTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairLabelDstTraceTarget q)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro q hq
+      rcases h q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM16AllPairTarget_of_labelDstTraceTarget
+    (h : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    FiniteM16AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM16AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_labelDstTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelDstTraceTarget q))
+    (hm16 : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro q hq
+      rcases hsymbolic q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm16 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_indexedLabelDstTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelDstTraceTarget q)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro q hq
+      rcases h q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM16AllPairTarget_of_indexedLabelDstTraceTarget
+    (h : Nonempty (AllPairIndexedLabelDstTraceTarget 0)) :
+    FiniteM16AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM16AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_indexedLabelDstTraceTargets
+    (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairIndexedLabelDstTraceTarget q))
+    (hm16 : Nonempty (AllPairIndexedLabelDstTraceTarget 0)) :
     AllPairBranchTarget :=
   allPairBranchTarget_of_labelTraceTargets
     (by
@@ -8661,6 +9178,14 @@ abbrev AllPairLabelTraceTarget (k : Nat) :=
 abbrev AllPairIndexedLabelTraceTarget (k : Nat) :=
   RouteEAllPairIndexedLabelTraceTarget (modulus k) (allPairTimeMassTarget k)
 
+abbrev AllPairLabelDstTraceTarget (k : Nat) :=
+  RouteEAllPairLabelDstTraceTarget (modulus k) (allPairTimeMassTarget k)
+    (allPairLabelDstTimeMassTarget k)
+
+abbrev AllPairIndexedLabelDstTraceTarget (k : Nat) :=
+  RouteEAllPairIndexedLabelDstTraceTarget (modulus k) (allPairTimeMassTarget k)
+    (allPairLabelDstTimeMassTarget k)
+
 namespace AllPairLabelTraceTarget
 
 theorem returnTime_sum {k : Nat} (target : AllPairLabelTraceTarget k)
@@ -8680,6 +9205,29 @@ noncomputable def allPairSectionCertificateOfLabelTraceTarget (k : Nat)
   target.toSectionCertificate (routeCounts k)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
 
+namespace AllPairLabelDstTraceTarget
+
+noncomputable def toLabelTraceTarget {k : Nat}
+    (target : AllPairLabelDstTraceTarget k) :
+    AllPairLabelTraceTarget k :=
+  RouteEAllPairLabelDstTraceTarget.toLabelTraceTarget target
+
+theorem returnTime_sum {k : Nat} (target : AllPairLabelDstTraceTarget k)
+    (c : Color) :
+    Finset.univ.sum
+        (fun a : RouteEAllPairSection (modulus k) =>
+          target.returnTime c a) =
+      modulus k ^ 4 :=
+  AllPairLabelTraceTarget.returnTime_sum target.toLabelTraceTarget c
+
+end AllPairLabelDstTraceTarget
+
+noncomputable def allPairSectionCertificateOfLabelDstTraceTarget (k : Nat)
+    (target : AllPairLabelDstTraceTarget k) :
+    RouteEAllPairSectionCertificate (modulus k) :=
+  target.toSectionCertificate (routeCounts k)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
+
 namespace AllPairIndexedLabelTraceTarget
 
 noncomputable def toLabelTraceTarget {k : Nat}
@@ -8691,6 +9239,26 @@ end AllPairIndexedLabelTraceTarget
 
 noncomputable def allPairSectionCertificateOfIndexedLabelTraceTarget
     (k : Nat) (target : AllPairIndexedLabelTraceTarget k) :
+    RouteEAllPairSectionCertificate (modulus k) :=
+  target.toSectionCertificate (routeCounts k)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
+
+namespace AllPairIndexedLabelDstTraceTarget
+
+noncomputable def toLabelDstTraceTarget {k : Nat}
+    (target : AllPairIndexedLabelDstTraceTarget k) :
+    AllPairLabelDstTraceTarget k :=
+  RouteEAllPairIndexedLabelDstTraceTarget.toLabelDstTraceTarget target
+
+noncomputable def toLabelTraceTarget {k : Nat}
+    (target : AllPairIndexedLabelDstTraceTarget k) :
+    AllPairLabelTraceTarget k :=
+  RouteEAllPairIndexedLabelDstTraceTarget.toLabelTraceTarget target
+
+end AllPairIndexedLabelDstTraceTarget
+
+noncomputable def allPairSectionCertificateOfIndexedLabelDstTraceTarget
+    (k : Nat) (target : AllPairIndexedLabelDstTraceTarget k) :
     RouteEAllPairSectionCertificate (modulus k) :=
   target.toSectionCertificate (routeCounts k)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
@@ -8748,6 +9316,64 @@ theorem finiteM14AllPairTarget_of_indexedLabelTraceTarget
 theorem allPairBranchTarget_of_indexedLabelTraceTargets
     (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelTraceTarget k))
     (hm14 : Nonempty (AllPairIndexedLabelTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro k hk
+      rcases hsymbolic k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm14 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_labelDstTraceTarget
+    (h : ∀ k, 0 < k → Nonempty (AllPairLabelDstTraceTarget k)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro k hk
+      rcases h k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM14AllPairTarget_of_labelDstTraceTarget
+    (h : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    FiniteM14AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM14AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_labelDstTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelDstTraceTarget k))
+    (hm14 : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro k hk
+      rcases hsymbolic k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm14 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_indexedLabelDstTraceTarget
+    (h : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelDstTraceTarget k)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro k hk
+      rcases h k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM14AllPairTarget_of_indexedLabelDstTraceTarget
+    (h : Nonempty (AllPairIndexedLabelDstTraceTarget 0)) :
+    FiniteM14AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM14AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_indexedLabelDstTraceTargets
+    (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairIndexedLabelDstTraceTarget k))
+    (hm14 : Nonempty (AllPairIndexedLabelDstTraceTarget 0)) :
     AllPairBranchTarget :=
   allPairBranchTarget_of_labelTraceTargets
     (by

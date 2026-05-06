@@ -249,10 +249,12 @@ minimality/no-early witnesses, a one-cycle section map, and time exhaustion,
 the existing `RouteESmallSeamCertificate` machinery carries it to the current
 D5 even Hamilton, torus, and Cayley endpoints.  The branch-independent
 `RouteEAllPairLabelTraceTarget` adapter reduces time exhaustion to per-label
-fiber sums; the indexed variant matches verifier rows (`idx`, `dst_idx`,
-`src_label`, `time`) through a bijection to `RouteEAllPairSection`.  B20 keeps
-its original branch-local target names, while B16/R14e now reuse the generic
-adapter with their own count vectors and time-mass polynomials.
+fiber sums.  `RouteEAllPairLabelDstTraceTarget` refines this to the
+`src_label -> dst_label` sums emitted by the closure verifiers, and the indexed
+variants match verifier rows (`idx`, `dst_idx`, labels, `time`) through a
+bijection to `RouteEAllPairSection`.  B20 keeps its original branch-local
+target names, while B16/R14e now reuse the generic adapters with their own
+count vectors and time-mass polynomials.
 
 B16 and R14e branch surfaces are now also named in Lean:
 
@@ -260,6 +262,8 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.counts_sum`
 - `RouteEB16.routeCounts`
 - `RouteEB16.allPairTimeMassTarget`
+- `RouteEB16.allPairLabelDstTimeMassTarget`
+- `RouteEB16.allPairLabelDstTimeMassTarget_sum_by_src`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_total`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
@@ -276,11 +280,17 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`
 - `RouteEB16.AllPairLabelTraceTarget`
 - `RouteEB16.AllPairIndexedLabelTraceTarget`
+- `RouteEB16.AllPairLabelDstTraceTarget`
+- `RouteEB16.AllPairIndexedLabelDstTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfIndexedLabelTraceTarget`
+- `RouteEB16.allPairSectionCertificateOfLabelDstTraceTarget`
+- `RouteEB16.allPairSectionCertificateOfIndexedLabelDstTraceTarget`
 - `RouteEB16.SymbolicAllPairBranchTarget`
 - `RouteEB16.FiniteM16AllPairTarget`
 - `RouteEB16.AllPairBranchTarget`
+- `RouteEB16.allPairBranchTarget_of_labelDstTraceTargets`
+- `RouteEB16.allPairBranchTarget_of_indexedLabelDstTraceTargets`
 - `RouteEB16.hamiltonTarget_of_labelTraceTargets`
 - `RouteEB16.torusTarget_of_labelTraceTargets`
 - `RouteEB16.cayleyTarget_of_labelTraceTargets`
@@ -291,6 +301,8 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.counts_sum`
 - `RouteER14e.routeCounts`
 - `RouteER14e.allPairTimeMassTarget`
+- `RouteER14e.allPairLabelDstTimeMassTarget`
+- `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_total`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
@@ -309,11 +321,17 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`
 - `RouteER14e.AllPairLabelTraceTarget`
 - `RouteER14e.AllPairIndexedLabelTraceTarget`
+- `RouteER14e.AllPairLabelDstTraceTarget`
+- `RouteER14e.AllPairIndexedLabelDstTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfIndexedLabelTraceTarget`
+- `RouteER14e.allPairSectionCertificateOfLabelDstTraceTarget`
+- `RouteER14e.allPairSectionCertificateOfIndexedLabelDstTraceTarget`
 - `RouteER14e.SymbolicAllPairBranchTarget`
 - `RouteER14e.FiniteM14AllPairTarget`
 - `RouteER14e.AllPairBranchTarget`
+- `RouteER14e.allPairBranchTarget_of_labelDstTraceTargets`
+- `RouteER14e.allPairBranchTarget_of_indexedLabelDstTraceTargets`
 - `RouteER14e.hamiltonTarget_of_labelTraceTargets`
 - `RouteER14e.torusTarget_of_labelTraceTargets`
 - `RouteER14e.cayleyTarget_of_labelTraceTargets`
@@ -324,13 +342,14 @@ B16 and R14e branch surfaces are now also named in Lean:
 These theorem names still do not instantiate the branch maps.  They provide two
 proof-facing endpoints.  First, a boundary quotient plus first-return
 macro-section data feeds `RouteEBoundaryFirstReturnTarget` and yields
-`IsSingleCycleMap` for the quotient.  Second, a concrete label or indexed
-all-pair trace target, plus the finite exceptional case (`m = 16` or `m = 14`),
-yields a `RouteEAllPairSectionCertificate` and then Hamilton/torus/Cayley
-endpoints.  The `RouteE_three_branch_status_package_20260506.zip` package
-promotes B16 and R14e to proof-facing closure on paper/verifier evidence, but
-the boundary quotient derivations, all-pair first-return equations, no-early
-facts, and finite exceptional tables are not yet Lean instances.
+`IsSingleCycleMap` for the quotient.  Second, a concrete label,
+label-destination, or indexed all-pair trace target, plus the finite exceptional
+case (`m = 16` or `m = 14`), yields a `RouteEAllPairSectionCertificate` and
+then Hamilton/torus/Cayley endpoints.  The
+`RouteE_three_branch_status_package_20260506.zip` package promotes B16 and
+R14e to proof-facing closure on paper/verifier evidence, but the boundary
+quotient derivations, all-pair first-return equations, no-early facts, and
+finite exceptional tables are not yet Lean instances.
 
 The file checks with:
 
@@ -451,12 +470,16 @@ B16:
 - `B16_closure_package_20260506.zip` and
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, boundary insertion compression,
-  label-wise time masses, and finite `m = 16` exceptional target;
+  label-wise and label-destination time masses, and finite `m = 16`
+  exceptional target;
 - Lean now has B16 closed boundary formula and boundary macro-return targets,
-  plus label/indexed all-pair adapters.  The formula+macro adapter is
+  plus label/indexed and label-destination all-pair adapters.  The formula+macro
+  adapter is
   `RouteEB16.boundaryQuotientOneCycleTarget_of_formula_and_macro`, and the
   checked macro length identity is
-  `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`;
+  `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`; the
+  label-destination mass check is
+  `RouteEB16.allPairLabelDstTimeMassTarget_sum_by_src`;
 - remaining Lean work is to instantiate the concrete boundary quotient map and
   macro-return data, then supply all-pair first-return/no-early equations and
   the finite `m = 16` table.
@@ -467,13 +490,16 @@ R14e:
 - `R14e_closure_package_20260506.zip` and
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, insertion distribution, label-wise
-  time masses, and finite `m = 14` two-node macro target;
+  and label-destination time masses, and finite `m = 14` two-node macro target;
 - Lean now has R14e closed boundary formula and boundary macro-return targets,
-  insertion-count arithmetic, and label/indexed all-pair adapters.  The
+  insertion-count arithmetic, and label/indexed plus label-destination all-pair
+  adapters.  The
   formula+macro adapter is
   `RouteER14e.boundaryQuotientOneCycleTarget_of_formula_and_macro`; the
   insertion weighted count is connected to the verifier row count target by
-  `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`;
+  `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`; the
+  label-destination mass check is
+  `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src`;
 - remaining Lean work is to instantiate the concrete boundary quotient map and
   macro-return data, then derive/instantiate the insertion distribution,
   all-pair first-return/no-early equations, and the finite `m = 14` table.
@@ -504,9 +530,10 @@ reproduction needs either the missing CSV dumps or a small path/input adapter.
 
 4. B16/R14e instantiation slice:
    turn the new closure packages into concrete
-   `RouteEB16.AllPairIndexedLabelTraceTarget` and
-   `RouteER14e.AllPairIndexedLabelTraceTarget` instances, separating symbolic
-   `q/k > 0` derivations from finite `m = 16` and `m = 14` table witnesses.
+   `RouteEB16.AllPairIndexedLabelDstTraceTarget` and
+   `RouteER14e.AllPairIndexedLabelDstTraceTarget` instances, separating
+   symbolic `q/k > 0` derivations from finite `m = 16` and `m = 14` table
+   witnesses.
 
 5. Branch-menu slice:
    after B20/B16/R14e target instances exist, decide whether the final all-even
