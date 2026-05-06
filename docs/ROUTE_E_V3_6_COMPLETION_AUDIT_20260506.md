@@ -27,7 +27,7 @@ remaining gaps.
 | B20 lane-sum arithmetic | `RouteEB20.allPairTimeZ_eq_half_add_three`, `allPairTime02_lane_sum_eq`, `allPairTime12_lane_sum_eq`, `allPairTime13_two_clock_eq`, `allPairTime34_boundary_defect_eq` | partially done |
 | B20 bundle inconsistency check | `T_03 + T_04` coefficient corrected from bundle text `19079` to `19179`; old value fails total time by `100*q` | blocker exposed |
 | Boundary quotient type | `RouteEBoundaryLabel`, `RouteEBoundaryNode`, `card_routeEBoundaryNode` formalize `{Z} union {03,04,34} x {1,...,m-1}` and cardinal `3m-2` | done |
-| B20 boundary quotient formula | `RouteEB20.boundaryQuotient` encodes the v1.8 map candidate; `RouteEB20.BoundaryQuotientFormulaTarget` encodes the case split; `RouteEB20.BoundaryQuotientOneCycleTarget` names the one-cycle obligation; `RouteEB20.boundaryParam*`, `boundaryShiftParam`, and `boundaryPredParam` fix nonzero witnesses | function defined, proof target open |
+| B20 boundary quotient formula | `RouteEB20.boundaryQuotient` encodes the v1.8 map candidate; special-gate rewrite lemmas are proved; `RouteEB20.BoundaryQuotientFormulaTarget` and `BoundaryQuotientOneCycleTarget` name the remaining obligations | function defined, proof target open |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as target |

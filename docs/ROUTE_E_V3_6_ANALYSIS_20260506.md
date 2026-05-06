@@ -66,6 +66,14 @@ New arithmetic names include:
 - `BoundaryQuotientFormulaTarget`
 - `BoundaryQuotientOneCycleTarget`
 - `boundaryQuotient`
+- `boundaryQuotient_A_h`
+- `boundaryQuotient_A_h_succ`
+- `boundaryQuotient_B_h_sub_one`
+- `boundaryQuotient_B_last`
+- `boundaryQuotient_B_close`
+- `boundaryQuotient_C_one`
+- `boundaryQuotient_C_h`
+- `boundaryQuotient_C_last`
 - `boundaryShiftParam`
 - `boundaryPredParam`
 - `boundaryParamOne`
