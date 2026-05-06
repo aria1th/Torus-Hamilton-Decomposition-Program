@@ -4182,6 +4182,656 @@ theorem boundaryCycleNodeAt_firstOddCRun_to_ALast (q : Nat)
     (by simp [boundaryCycleFirstOddCRunCount, half])
     (by simp [boundaryCycleALastBridgeCount])
 
+theorem boundaryCycleNodeAt_ALast_to_secondOdd (q : Nat)
+    (hn : boundaryCycleSecondOddStart q - 1 < boundaryCycleLength q)
+    (hns : boundaryCycleSecondOddStart q < boundaryCycleLength q) :
+    boundaryCycleNodeAt q (boundaryCycleSecondOddStart q) hns =
+      boundaryQuotient q
+        (boundaryCycleNodeAt q (boundaryCycleSecondOddStart q - 1) hn) := by
+  have hprev_eq :
+      boundaryCycleSecondOddStart q - 1 =
+        boundaryCycleALastBridgeStart q := by
+    rw [boundaryCycleSecondOddStart]
+    simp [boundaryCycleALastBridgeCount]
+  have hprev_sp :
+      ¬ boundaryCycleSecondOddStart q - 1 < boundaryCycleSpineCount q := by
+    rw [hprev_eq]
+    simp [boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeStart, boundaryCycleFirstEvenStart,
+      boundaryCycleSpineCount, boundaryCycleFirstEvenTailCount,
+      boundaryCycleB2BridgeCount, boundaryCycleFirstOddTailCount,
+      quarter, half]
+    omega
+  have hprev_fe :
+      ¬ boundaryCycleSecondOddStart q - 1 < boundaryCycleB2BridgeStart q := by
+    rw [hprev_eq]
+    simp [boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeCount, boundaryCycleFirstOddTailCount,
+      quarter, half]
+    omega
+  have hprev_b2 :
+      ¬ boundaryCycleSecondOddStart q - 1 < boundaryCycleFirstOddStart q := by
+    rw [hprev_eq]
+    simp [boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+      quarter, half]
+  have hprev_fo :
+      ¬ boundaryCycleSecondOddStart q - 1 <
+        boundaryCycleFirstOddBSubOneStart q := by
+    rw [hprev_eq]
+    simp [boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+      boundaryCycleFirstOddBSubOneStart, boundaryCycleFirstOddLaneCount,
+      quarter, half]
+    omega
+  have hprev_fb :
+      ¬ boundaryCycleSecondOddStart q - 1 <
+        boundaryCycleFirstOddCRunStart q := by
+    rw [hprev_eq]
+    simp [boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+      boundaryCycleFirstOddCRunStart, boundaryCycleFirstOddBSubOneStart,
+      boundaryCycleFirstOddLaneCount, boundaryCycleFirstOddBSubOneCount,
+      quarter, half]
+    omega
+  have hprev_fc :
+      ¬ boundaryCycleSecondOddStart q - 1 <
+        boundaryCycleALastBridgeStart q := by
+    rw [hprev_eq]
+    omega
+  have hprev_a :
+      boundaryCycleSecondOddStart q - 1 <
+        boundaryCycleSecondOddStart q := by
+    rw [hprev_eq]
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeCount]
+  have hprev_idx :
+      boundaryCycleSecondOddStart q - 1 -
+          boundaryCycleALastBridgeStart q = 0 := by
+    rw [hprev_eq]
+    omega
+  have hprev_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondOddStart q - 1) hn =
+        boundaryCycleALastBridgeNode q 0
+          (by simp [boundaryCycleALastBridgeCount]) := by
+    simp [boundaryCycleNodeAt, hprev_sp, hprev_fe, hprev_b2, hprev_fo,
+      hprev_fb, hprev_fc, hprev_a, hprev_idx]
+  have hnext_sp :
+      ¬ boundaryCycleSecondOddStart q < boundaryCycleSpineCount q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+      boundaryCycleFirstOddStart, boundaryCycleB2BridgeStart,
+      boundaryCycleFirstEvenStart, boundaryCycleSpineCount,
+      boundaryCycleFirstEvenTailCount, boundaryCycleB2BridgeCount,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      quarter, half]
+    omega
+  have hnext_fe :
+      ¬ boundaryCycleSecondOddStart q < boundaryCycleB2BridgeStart q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+      boundaryCycleFirstOddStart, boundaryCycleB2BridgeCount,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      quarter, half]
+    omega
+  have hnext_b2 :
+      ¬ boundaryCycleSecondOddStart q < boundaryCycleFirstOddStart q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      quarter, half]
+    omega
+  have hnext_fo :
+      ¬ boundaryCycleSecondOddStart q <
+        boundaryCycleFirstOddBSubOneStart q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      boundaryCycleFirstOddBSubOneStart, boundaryCycleFirstOddLaneCount,
+      quarter, half]
+    omega
+  have hnext_fb :
+      ¬ boundaryCycleSecondOddStart q <
+        boundaryCycleFirstOddCRunStart q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeStart,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      boundaryCycleFirstOddCRunStart, boundaryCycleFirstOddBSubOneStart,
+      boundaryCycleFirstOddLaneCount, boundaryCycleFirstOddBSubOneCount,
+      quarter, half]
+    omega
+  have hnext_fc :
+      ¬ boundaryCycleSecondOddStart q < boundaryCycleALastBridgeStart q := by
+    simp [boundaryCycleSecondOddStart, boundaryCycleALastBridgeCount]
+  have hnext_a :
+      ¬ boundaryCycleSecondOddStart q < boundaryCycleSecondOddStart q := by
+    omega
+  have hnext_so :
+      boundaryCycleSecondOddStart q < boundaryCycleSecondOddFinalStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddLaneCount,
+      quarter]
+  have hnext_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondOddStart q) hns =
+        boundaryCycleSecondOddLaneNode q 0
+          (by simp [boundaryCycleSecondOddLaneCount, quarter]) := by
+    simp [boundaryCycleNodeAt, hnext_sp, hnext_fe, hnext_b2, hnext_fo,
+      hnext_fb, hnext_fc, hnext_so]
+  rw [hprev_node, hnext_node]
+  symm
+  exact boundaryCycleALastBridge_to_secondOddLane q
+    (by simp [boundaryCycleALastBridgeCount])
+    (by simp [boundaryCycleSecondOddLaneCount, quarter])
+
+theorem boundaryCycleNodeAt_succ_secondOddLane (q n : Nat)
+    (hn : n < boundaryCycleLength q)
+    (hns : n + 1 < boundaryCycleLength q)
+    (hstart : boundaryCycleSecondOddStart q ≤ n)
+    (hnext : n + 1 < boundaryCycleSecondOddFinalStart q) :
+    boundaryCycleNodeAt q (n + 1) hns =
+      boundaryQuotient q (boundaryCycleNodeAt q n hn) := by
+  have hsp : ¬ n < boundaryCycleSpineCount q := by
+    have hle : boundaryCycleSpineCount q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      simp [boundaryCycleSpineCount, half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfe : ¬ n < boundaryCycleB2BridgeStart q := by
+    have hle : boundaryCycleB2BridgeStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      rw [boundaryCycleB2BridgeStart_eq_modulus_add_two]
+      simp [modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hb2 : ¬ n < boundaryCycleFirstOddStart q := by
+    have hle : boundaryCycleFirstOddStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      rw [boundaryCycleFirstOddStart_eq_modulus_add_three]
+      simp [modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfo : ¬ n < boundaryCycleFirstOddBSubOneStart q := by
+    have hle : boundaryCycleFirstOddBSubOneStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      rw [boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+      simp [half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfb : ¬ n < boundaryCycleFirstOddCRunStart q := by
+    have hle : boundaryCycleFirstOddCRunStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      rw [boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two]
+      simp [half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfc : ¬ n < boundaryCycleALastBridgeStart q := by
+    have hle : boundaryCycleALastBridgeStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two] at hs
+      rw [boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+      omega
+    exact not_lt.mpr hle
+  have ha : ¬ n < boundaryCycleSecondOddStart q := not_lt.mpr hstart
+  have hsps : ¬ n + 1 < boundaryCycleSpineCount q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hsp) (Nat.le_succ n))
+  have hfes : ¬ n + 1 < boundaryCycleB2BridgeStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfe) (Nat.le_succ n))
+  have hb2s : ¬ n + 1 < boundaryCycleFirstOddStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hb2) (Nat.le_succ n))
+  have hfos : ¬ n + 1 < boundaryCycleFirstOddBSubOneStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfo) (Nat.le_succ n))
+  have hfbs : ¬ n + 1 < boundaryCycleFirstOddCRunStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfb) (Nat.le_succ n))
+  have hfcs : ¬ n + 1 < boundaryCycleALastBridgeStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfc) (Nat.le_succ n))
+  have has : ¬ n + 1 < boundaryCycleSecondOddStart q :=
+    not_lt.mpr (Nat.le_trans hstart (Nat.le_succ n))
+  have hso : n < boundaryCycleSecondOddFinalStart q := by omega
+  have hlane : n - boundaryCycleSecondOddStart q <
+      boundaryCycleSecondOddLaneCount q := by
+    rw [boundaryCycleSecondOddFinalStart] at hso
+    omega
+  have hnext_lane : n + 1 - boundaryCycleSecondOddStart q <
+      boundaryCycleSecondOddLaneCount q := by
+    rw [boundaryCycleSecondOddFinalStart] at hnext
+    omega
+  have hidx :
+      n + 1 - boundaryCycleSecondOddStart q =
+        (n - boundaryCycleSecondOddStart q) + 1 := by omega
+  have hlane_succ : (n - boundaryCycleSecondOddStart q) + 1 <
+      boundaryCycleSecondOddLaneCount q := by
+    rw [← hidx]
+    exact hnext_lane
+  have hn_node :
+      boundaryCycleNodeAt q n hn =
+        boundaryCycleSecondOddLaneNode q
+          (n - boundaryCycleSecondOddStart q) hlane := by
+    simp [boundaryCycleNodeAt, hsp, hfe, hb2, hfo, hfb, hfc, ha, hso]
+  have hns_node :
+      boundaryCycleNodeAt q (n + 1) hns =
+        boundaryCycleSecondOddLaneNode q
+          ((n - boundaryCycleSecondOddStart q) + 1) hlane_succ := by
+    trans boundaryCycleSecondOddLaneNode q
+      (n + 1 - boundaryCycleSecondOddStart q) hnext_lane
+    · simp [boundaryCycleNodeAt, hsps, hfes, hb2s, hfos, hfbs, hfcs, has,
+        hnext]
+    · simp [hidx]
+  rw [hn_node, hns_node]
+  symm
+  by_cases heven : (n - boundaryCycleSecondOddStart q) % 2 = 0
+  · exact boundaryCycleSecondOddLane_step_even q
+      (n - boundaryCycleSecondOddStart q) hlane hlane_succ heven
+  · exact boundaryCycleSecondOddLane_step_odd q
+      (n - boundaryCycleSecondOddStart q) hlane hlane_succ heven
+
+theorem boundaryCycleNodeAt_secondOddLane_to_final (q : Nat)
+    (hn : boundaryCycleSecondOddFinalStart q - 1 < boundaryCycleLength q)
+    (hns : boundaryCycleSecondOddFinalStart q < boundaryCycleLength q) :
+    boundaryCycleNodeAt q (boundaryCycleSecondOddFinalStart q) hns =
+      boundaryQuotient q
+        (boundaryCycleNodeAt q (boundaryCycleSecondOddFinalStart q - 1) hn) := by
+  have hprev_sp :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleSpineCount q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeStart, boundaryCycleFirstEvenStart,
+      boundaryCycleSpineCount, boundaryCycleFirstEvenTailCount,
+      boundaryCycleB2BridgeCount, boundaryCycleFirstOddTailCount,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      quarter, half]
+    omega
+  have hprev_fe :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleB2BridgeStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeStart, boundaryCycleFirstEvenStart,
+      boundaryCycleSpineCount, boundaryCycleFirstEvenTailCount,
+      boundaryCycleB2BridgeCount, boundaryCycleFirstOddTailCount,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      quarter, half]
+    omega
+  have hprev_b2 :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleFirstOddStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeStart, boundaryCycleB2BridgeCount,
+      boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+      boundaryCycleSecondOddLaneCount, quarter, half]
+    omega
+  have hprev_fo :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleFirstOddBSubOneStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      boundaryCycleFirstOddBSubOneStart, boundaryCycleFirstOddLaneCount,
+      quarter, half]
+  have hprev_fb :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleFirstOddCRunStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddTailCount,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      boundaryCycleFirstOddCRunStart, boundaryCycleFirstOddBSubOneStart,
+      boundaryCycleFirstOddLaneCount, boundaryCycleFirstOddBSubOneCount,
+      quarter, half]
+  have hprev_fc :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleALastBridgeStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      quarter]
+  have hprev_a :
+      ¬ boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleSecondOddStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddLaneCount,
+      quarter]
+    omega
+  have hprev_so :
+      boundaryCycleSecondOddFinalStart q - 1 <
+        boundaryCycleSecondOddFinalStart q := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddStart,
+      boundaryCycleALastBridgeStart, boundaryCycleFirstOddStart,
+      boundaryCycleB2BridgeStart, boundaryCycleFirstEvenStart,
+      boundaryCycleSpineCount, boundaryCycleFirstEvenTailCount,
+      boundaryCycleB2BridgeCount, boundaryCycleFirstOddTailCount,
+      boundaryCycleALastBridgeCount, boundaryCycleSecondOddLaneCount,
+      quarter, half]
+  have hprev_idx :
+      boundaryCycleSecondOddFinalStart q - 1 -
+          boundaryCycleSecondOddStart q =
+        boundaryCycleSecondOddLaneCount q - 1 := by
+    simp [boundaryCycleSecondOddFinalStart, boundaryCycleSecondOddLaneCount,
+      quarter]
+    omega
+  have hprev_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondOddFinalStart q - 1) hn =
+        boundaryCycleSecondOddLaneNode q
+          (boundaryCycleSecondOddLaneCount q - 1)
+          (by simp [boundaryCycleSecondOddLaneCount, quarter]) := by
+    simp [boundaryCycleNodeAt, hprev_sp, hprev_fe, hprev_b2, hprev_fo,
+      hprev_fb, hprev_fc, hprev_a, hprev_so, hprev_idx]
+  have hnext_sp :
+      ¬ boundaryCycleSecondOddFinalStart q < boundaryCycleSpineCount q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+    simp [boundaryCycleSpineCount, half, modulus]
+    omega
+  have hnext_fe :
+      ¬ boundaryCycleSecondOddFinalStart q < boundaryCycleB2BridgeStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleB2BridgeStart_eq_modulus_add_two]
+    simp [half, modulus]
+    omega
+  have hnext_b2 :
+      ¬ boundaryCycleSecondOddFinalStart q < boundaryCycleFirstOddStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddStart_eq_modulus_add_three]
+    simp [half, modulus]
+    omega
+  have hnext_fo :
+      ¬ boundaryCycleSecondOddFinalStart q <
+        boundaryCycleFirstOddBSubOneStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+    simp [modulus]
+  have hnext_fb :
+      ¬ boundaryCycleSecondOddFinalStart q <
+        boundaryCycleFirstOddCRunStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two]
+    simp [modulus]
+    omega
+  have hnext_fc :
+      ¬ boundaryCycleSecondOddFinalStart q < boundaryCycleALastBridgeStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+    simp [half]
+  have hnext_a :
+      ¬ boundaryCycleSecondOddFinalStart q < boundaryCycleSecondOddStart q := by
+    rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+    simp [half]
+  have hnext_so :
+      ¬ boundaryCycleSecondOddFinalStart q <
+        boundaryCycleSecondOddFinalStart q := by omega
+  have hnext_sf :
+      boundaryCycleSecondOddFinalStart q < boundaryCycleSecondEvenStart q := by
+    simp [boundaryCycleSecondEvenStart, boundaryCycleSecondOddFinalStart,
+      boundaryCycleSecondOddStart, boundaryCycleSecondOddTailCount,
+      boundaryCycleSecondOddLaneCount, quarter]
+    omega
+  have hnext_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondOddFinalStart q) hns =
+        boundaryCycleSecondOddFinalNode q 0
+          (by simp [boundaryCycleSecondOddFinalCount]) := by
+    simp [boundaryCycleNodeAt, hnext_sp, hnext_fe, hnext_b2, hnext_fo,
+      hnext_fb, hnext_fc, hnext_a, hnext_sf]
+  rw [hprev_node, hnext_node]
+  symm
+  exact boundaryCycleSecondOddLane_to_final q
+    (by simp [boundaryCycleSecondOddLaneCount, quarter])
+    (by simp [boundaryCycleSecondOddFinalCount])
+
+theorem boundaryCycleNodeAt_secondOddFinal_to_secondEven (q : Nat)
+    (hn : boundaryCycleSecondEvenStart q - 1 < boundaryCycleLength q)
+    (hns : boundaryCycleSecondEvenStart q < boundaryCycleLength q) :
+    boundaryCycleNodeAt q (boundaryCycleSecondEvenStart q) hns =
+      boundaryQuotient q
+        (boundaryCycleNodeAt q (boundaryCycleSecondEvenStart q - 1) hn) := by
+  have hprev_eq :
+      boundaryCycleSecondEvenStart q - 1 =
+        boundaryCycleSecondOddFinalStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+    simp [half, modulus]
+  have hprev_sp :
+      ¬ boundaryCycleSecondEvenStart q - 1 < boundaryCycleSpineCount q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+    simp [boundaryCycleSpineCount, half, modulus]
+    omega
+  have hprev_fe :
+      ¬ boundaryCycleSecondEvenStart q - 1 < boundaryCycleB2BridgeStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleB2BridgeStart_eq_modulus_add_two]
+    simp [half, modulus]
+    omega
+  have hprev_b2 :
+      ¬ boundaryCycleSecondEvenStart q - 1 < boundaryCycleFirstOddStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddStart_eq_modulus_add_three]
+    simp [half, modulus]
+    omega
+  have hprev_fo :
+      ¬ boundaryCycleSecondEvenStart q - 1 <
+        boundaryCycleFirstOddBSubOneStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+    simp [modulus]
+  have hprev_fb :
+      ¬ boundaryCycleSecondEvenStart q - 1 <
+        boundaryCycleFirstOddCRunStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two]
+    simp [modulus]
+    omega
+  have hprev_fc :
+      ¬ boundaryCycleSecondEvenStart q - 1 < boundaryCycleALastBridgeStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+    simp [half]
+  have hprev_a :
+      ¬ boundaryCycleSecondEvenStart q - 1 < boundaryCycleSecondOddStart q := by
+    rw [hprev_eq, boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half,
+      boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+    simp [half]
+  have hprev_so :
+      ¬ boundaryCycleSecondEvenStart q - 1 <
+        boundaryCycleSecondOddFinalStart q := by
+    rw [hprev_eq]
+    omega
+  have hprev_sf :
+      boundaryCycleSecondEvenStart q - 1 < boundaryCycleSecondEvenStart q := by
+    rw [hprev_eq]
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+    simp [half, modulus]
+  have hprev_idx :
+      boundaryCycleSecondEvenStart q - 1 -
+          boundaryCycleSecondOddFinalStart q = 0 := by
+    rw [hprev_eq]
+    omega
+  have hprev_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondEvenStart q - 1) hn =
+        boundaryCycleSecondOddFinalNode q 0
+          (by simp [boundaryCycleSecondOddFinalCount]) := by
+    simp [boundaryCycleNodeAt, hprev_sp, hprev_fe, hprev_b2, hprev_fo,
+      hprev_fb, hprev_fc, hprev_a, hprev_so, hprev_sf, hprev_idx]
+  have hnext_sp :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleSpineCount q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one]
+    simp [boundaryCycleSpineCount, half, modulus]
+    omega
+  have hnext_fe :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleB2BridgeStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleB2BridgeStart_eq_modulus_add_two]
+    simp [half, modulus]
+    omega
+  have hnext_b2 :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleFirstOddStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleFirstOddStart_eq_modulus_add_three]
+    simp [half, modulus]
+    omega
+  have hnext_fo :
+      ¬ boundaryCycleSecondEvenStart q <
+        boundaryCycleFirstOddBSubOneStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+    simp [modulus]
+  have hnext_fb :
+      ¬ boundaryCycleSecondEvenStart q <
+        boundaryCycleFirstOddCRunStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two]
+    simp [modulus]
+  have hnext_fc :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleALastBridgeStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+    simp [half]
+  have hnext_a :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleSecondOddStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+    simp [half]
+  have hnext_so :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleSecondOddFinalStart q := by
+    rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one,
+      boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+    simp [half]
+  have hnext_sf :
+      ¬ boundaryCycleSecondEvenStart q < boundaryCycleSecondEvenStart q := by
+    omega
+  have hnext_node :
+      boundaryCycleNodeAt q (boundaryCycleSecondEvenStart q) hns =
+        boundaryCycleSecondEvenTailNode q 0
+          (by simp [boundaryCycleSecondEvenTailCount, quarter]; omega) := by
+    simp [boundaryCycleNodeAt, hnext_sp, hnext_fe, hnext_b2, hnext_fo,
+      hnext_fb, hnext_fc, hnext_a, hnext_so]
+  rw [hprev_node, hnext_node]
+  symm
+  exact boundaryCycleSecondOddFinal_to_secondEvenTail q
+    (by simp [boundaryCycleSecondOddFinalCount])
+    (by simp [boundaryCycleSecondEvenTailCount, quarter]; omega)
+
+theorem boundaryCycleNodeAt_succ_secondEven (q n : Nat)
+    (hn : n < boundaryCycleLength q)
+    (hns : n + 1 < boundaryCycleLength q)
+    (hstart : boundaryCycleSecondEvenStart q ≤ n) :
+    boundaryCycleNodeAt q (n + 1) hns =
+      boundaryQuotient q (boundaryCycleNodeAt q n hn) := by
+  have hsp : ¬ n < boundaryCycleSpineCount q := by
+    have hle : boundaryCycleSpineCount q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      simp [boundaryCycleSpineCount, half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfe : ¬ n < boundaryCycleB2BridgeStart q := by
+    have hle : boundaryCycleB2BridgeStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleB2BridgeStart_eq_modulus_add_two]
+      simp [half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hb2 : ¬ n < boundaryCycleFirstOddStart q := by
+    have hle : boundaryCycleFirstOddStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleFirstOddStart_eq_modulus_add_three]
+      simp [half, modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfo : ¬ n < boundaryCycleFirstOddBSubOneStart q := by
+    have hle : boundaryCycleFirstOddBSubOneStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleFirstOddBSubOneStart_eq_modulus_add_half_add_one]
+      simp [modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfb : ¬ n < boundaryCycleFirstOddCRunStart q := by
+    have hle : boundaryCycleFirstOddCRunStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleFirstOddCRunStart_eq_modulus_add_half_add_two]
+      simp [modulus] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hfc : ¬ n < boundaryCycleALastBridgeStart q := by
+    have hle : boundaryCycleALastBridgeStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleALastBridgeStart_eq_two_modulus_add_one]
+      simp [half] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have ha : ¬ n < boundaryCycleSecondOddStart q := by
+    have hle : boundaryCycleSecondOddStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleSecondOddStart_eq_two_modulus_add_two]
+      simp [half] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hso : ¬ n < boundaryCycleSecondOddFinalStart q := by
+    have hle : boundaryCycleSecondOddFinalStart q ≤ n := by
+      have hs := hstart
+      rw [boundaryCycleSecondEvenStart_eq_two_modulus_add_half_add_one] at hs
+      rw [boundaryCycleSecondOddFinalStart_eq_two_modulus_add_half]
+      simp [half] at hs ⊢
+      omega
+    exact not_lt.mpr hle
+  have hsf : ¬ n < boundaryCycleSecondEvenStart q := not_lt.mpr hstart
+  have hsps : ¬ n + 1 < boundaryCycleSpineCount q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hsp) (Nat.le_succ n))
+  have hfes : ¬ n + 1 < boundaryCycleB2BridgeStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfe) (Nat.le_succ n))
+  have hb2s : ¬ n + 1 < boundaryCycleFirstOddStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hb2) (Nat.le_succ n))
+  have hfos : ¬ n + 1 < boundaryCycleFirstOddBSubOneStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfo) (Nat.le_succ n))
+  have hfbs : ¬ n + 1 < boundaryCycleFirstOddCRunStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfb) (Nat.le_succ n))
+  have hfcs : ¬ n + 1 < boundaryCycleALastBridgeStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hfc) (Nat.le_succ n))
+  have has : ¬ n + 1 < boundaryCycleSecondOddStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp ha) (Nat.le_succ n))
+  have hsos : ¬ n + 1 < boundaryCycleSecondOddFinalStart q :=
+    not_lt.mpr (Nat.le_trans (not_lt.mp hso) (Nat.le_succ n))
+  have hsfs : ¬ n + 1 < boundaryCycleSecondEvenStart q :=
+    not_lt.mpr (Nat.le_trans hstart (Nat.le_succ n))
+  have htail : n - boundaryCycleSecondEvenStart q <
+      boundaryCycleSecondEvenTailCount q := by
+    have hn' : n < boundaryCycleSecondEvenStart q +
+        boundaryCycleSecondEvenTailCount q := by
+      simpa [boundaryCycleSecondEvenEnd_eq_length q] using hn
+    omega
+  have hnext_tail : n + 1 - boundaryCycleSecondEvenStart q <
+      boundaryCycleSecondEvenTailCount q := by
+    have hns' : n + 1 < boundaryCycleSecondEvenStart q +
+        boundaryCycleSecondEvenTailCount q := by
+      simpa [boundaryCycleSecondEvenEnd_eq_length q] using hns
+    omega
+  have hidx :
+      n + 1 - boundaryCycleSecondEvenStart q =
+        (n - boundaryCycleSecondEvenStart q) + 1 := by omega
+  have htail_succ : (n - boundaryCycleSecondEvenStart q) + 1 <
+      boundaryCycleSecondEvenTailCount q := by
+    rw [← hidx]
+    exact hnext_tail
+  have hn_node :
+      boundaryCycleNodeAt q n hn =
+        boundaryCycleSecondEvenTailNode q
+          (n - boundaryCycleSecondEvenStart q) htail := by
+    simp [boundaryCycleNodeAt, hsp, hfe, hb2, hfo, hfb, hfc, ha, hso, hsf]
+  have hns_node :
+      boundaryCycleNodeAt q (n + 1) hns =
+        boundaryCycleSecondEvenTailNode q
+          ((n - boundaryCycleSecondEvenStart q) + 1) htail_succ := by
+    trans boundaryCycleSecondEvenTailNode q
+      (n + 1 - boundaryCycleSecondEvenStart q) hnext_tail
+    · simp [boundaryCycleNodeAt, hsps, hfes, hb2s, hfos, hfbs, hfcs, has,
+        hsos, hsfs]
+    · simp [hidx]
+  rw [hn_node, hns_node]
+  symm
+  by_cases heven : (n - boundaryCycleSecondEvenStart q) % 2 = 0
+  · exact boundaryCycleSecondEvenTail_step_even q
+      (n - boundaryCycleSecondEvenStart q) htail htail_succ heven
+  · exact boundaryCycleSecondEvenTail_step_odd q
+      (n - boundaryCycleSecondEvenStart q) htail htail_succ heven
+
 structure BoundaryQuotientCycleEnumeration (q : Nat) where
   node :
     Fin (boundaryCycleLength q) → RouteEBoundaryNode (modulus q)

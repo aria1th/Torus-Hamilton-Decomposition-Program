@@ -159,6 +159,11 @@ New arithmetic names include:
 - `boundaryCycleNodeAt_BSubOne_to_CRun`
 - `boundaryCycleNodeAt_succ_firstOddCRun`
 - `boundaryCycleNodeAt_firstOddCRun_to_ALast`
+- `boundaryCycleNodeAt_ALast_to_secondOdd`
+- `boundaryCycleNodeAt_succ_secondOddLane`
+- `boundaryCycleNodeAt_secondOddLane_to_final`
+- `boundaryCycleNodeAt_secondOddFinal_to_secondEven`
+- `boundaryCycleNodeAt_succ_secondEven`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`
@@ -287,16 +292,15 @@ Closed or proof-facing in the bundle:
   successor checks for `boundaryQuotient`.
 - the C-run predecessor equality and terminal C_h identification needed to
   extend the spine successor proof; the spine successor proof is now closed
-  through `C_h -> B_h`; the first-even tail, B2 bridge, first-odd lane,
-  `B(h-1)` bridge, first-odd C-run, and A-last bridge are connected in the
-  combined `boundaryCycleNodeAt` adapter.
+  through `C_h -> B_h`; every segment-level successor case of the combined
+  `boundaryCycleNodeAt` adapter is now connected through the second-even tail.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
 Remaining B20 obligations:
 
 - prove the B20 boundary quotient candidate is a single cycle, beyond the
-  currently Lean-checked segment count;
+  currently Lean-checked segment count and segment-level successor adapters;
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;
