@@ -53,6 +53,22 @@ lake env lean D5Odd/EvenRouteEM4.lean
 
 Both commands completed successfully after the current Lean edits.
 
+The B20 closure package dumper was also regenerated locally under
+`/tmp/b20_closure_repro` for
+`m = 20,44,68,92,116,140,164`.  Each generated all-pair map had one section
+cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
+`m^4`.  The regenerated `T_03/T_04` sums were:
+
+| m | q | T_03 | T_04 |
+| ---: | ---: | ---: | ---: |
+| 20 | 0 | 2703 | 2335 |
+| 44 | 1 | 30495 | 28516 |
+| 68 | 2 | 114447 | 109597 |
+| 92 | 3 | 285663 | 276682 |
+| 116 | 4 | 575247 | 560875 |
+| 140 | 5 | 1014303 | 993280 |
+| 164 | 6 | 1633935 | 1605001 |
+
 ## Current Blockers
 
 1. B20 `T_03` and `T_04` now have Lean arithmetic branch-mass endpoints and
