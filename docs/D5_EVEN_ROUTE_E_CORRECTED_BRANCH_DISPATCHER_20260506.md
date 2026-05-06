@@ -475,3 +475,10 @@ python3 scripts/derive_d5_lambdaE_mask_polynomials.py \
 This records the inclusion-exclusion mask polynomials and the adjacent-rank
 switch totals for the parity-changing layer.  It is symbolic local data, not a
 global all-even branch theorem.
+
+The recorded artifact is checked by recomputation:
+
+```bash
+python3 scripts/verify_d5_lambdaE_mask_polynomials.py \
+  --json-out certs/d5_lambdaE_mask_polynomials_verification.json
+```

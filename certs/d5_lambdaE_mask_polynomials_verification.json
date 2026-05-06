@@ -1,0 +1,17 @@
+{
+  "cert": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/d5_lambdaE_mask_polynomials.json",
+  "errors": [],
+  "mask_entry_count": 32,
+  "modal_count": "m^4 - 5*m^3 + 10*m^2 - 10*m + 5",
+  "nonmodal_count": "5*m^3 - 10*m^2 + 10*m - 5",
+  "ok": true,
+  "rank_totals": {
+    "0": "3*m^3 + m^2 - 3*m - 1",
+    "1": "3*m^3 + 2*m^2 - 5*m",
+    "2": "3*m^3 - 4*m + 1",
+    "3": "2*m^3 - 2*m"
+  },
+  "reachable_mask_count": 27,
+  "schema": "d5_lambdaE_mask_polynomials_verification_v1",
+  "unreachable_mask_count": 5
+}

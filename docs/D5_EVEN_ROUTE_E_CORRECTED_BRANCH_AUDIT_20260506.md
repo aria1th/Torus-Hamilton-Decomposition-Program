@@ -27,6 +27,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Distinguish rank/block verification from table presence | `scripts/summarize_d5_routeE_corrected_branches.py --verify-rank-certs` | done |
 | Distinguish seam recomputation from rank cert verification | `--verify-small-seam` and `--verify-rank-certs` options | done |
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py`, `certs/d5_lambdaE_mask_polynomials.json`, and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
+| Verify Lambda_E symbolic mask-count artifact by recomputation | `scripts/verify_d5_lambdaE_mask_polynomials.py`, `certs/d5_lambdaE_mask_polynomials_verification.json` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
@@ -89,6 +90,19 @@ rank_0_total   = 3*m^3 + m^2 - 3*m - 1
 rank_1_total   = 3*m^3 + 2*m^2 - 5*m
 rank_2_total   = 3*m^3 - 4*m + 1
 rank_3_total   = 2*m^3 - 2*m
+```
+
+Verification:
+
+```bash
+python3 scripts/verify_d5_lambdaE_mask_polynomials.py \
+  --json-out certs/d5_lambdaE_mask_polynomials_verification.json
+```
+
+Result:
+
+```text
+ok True masks 32 reachable 27 unreachable 5
 ```
 
 B20 branch verifier:
@@ -276,6 +290,7 @@ python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
 python3 -m py_compile scripts/audit_routeE_corrected_goal.py
 python3 -m py_compile scripts/analyze_d5_routeE_small_seam_families.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
+python3 -m py_compile scripts/verify_d5_lambdaE_mask_polynomials.py
 git diff --check
 ```
 
