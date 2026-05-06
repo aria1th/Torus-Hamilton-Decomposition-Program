@@ -1,0 +1,90 @@
+{
+  "branches": [
+    {
+      "name": "B20",
+      "residues_mod_48": [
+        20,
+        44
+      ],
+      "sample_moduli": [
+        20,
+        44,
+        68,
+        92
+      ],
+      "status": "proof-facing evidence; pointwise first-return/minimality still open"
+    },
+    {
+      "name": "B16",
+      "residues_mod_48": [
+        16,
+        40
+      ],
+      "sample_moduli": [
+        16,
+        40,
+        64,
+        88,
+        112,
+        136,
+        160
+      ],
+      "status": "proof-facing package evidence; Lean branch theorem still open"
+    },
+    {
+      "name": "R14e",
+      "residues_mod_48": [
+        14
+      ],
+      "sample_moduli": [
+        14,
+        62,
+        110,
+        158,
+        206
+      ],
+      "status": "proof-facing package evidence; Lean branch theorem still open"
+    }
+  ],
+  "coverage_complete": false,
+  "coverage_count": 5,
+  "covered_residues_mod_48": [
+    14,
+    16,
+    20,
+    40,
+    44
+  ],
+  "even_residue_count": 24,
+  "modulus": 48,
+  "next_target": {
+    "name": "R38 / symmetric or near-symmetric family",
+    "reason": "RouteE_three_branch_status_package_20260506.zip records preliminary observations for m=38,86,134 and recommends mining this family next.  The naive symmetric theorem is known false, so this is a gate-transducer target, not a simple x=z law.",
+    "target_residues_mod_48": [
+      38
+    ]
+  },
+  "open_residues_mod_48": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    18,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    42,
+    46
+  ],
+  "schema": "routeE_typeA_residue_coverage_v1",
+  "warning": "Residue coverage is only a branch-planning artifact.  Covered residues are proof-facing evidence, not closed Lean theorems."
+}

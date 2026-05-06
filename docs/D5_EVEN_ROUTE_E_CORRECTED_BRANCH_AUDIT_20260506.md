@@ -29,6 +29,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py` and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
+| Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -106,6 +107,21 @@ The symbolic skeleton preserves:
 B16: 11 label-polynomial entries and 29 destination-label polynomial entries;
 R14e: 11 label-polynomial entries, 33 destination-label polynomial entries,
       and insertion macro identities.
+```
+
+Type-A residue coverage:
+
+```bash
+python3 scripts/summarize_routeE_typeA_residue_coverage.py \
+  --json-out certs/routeE_typeA_residue_coverage.json
+```
+
+Result:
+
+```text
+covered residues mod 48: 14,16,20,40,44
+open residues mod 48: 0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46
+next target: R38 / symmetric-or-near-symmetric family
 ```
 
 Hygiene:
@@ -197,6 +213,11 @@ The package hashes are stored in
 skeleton is stored in `certs/routeE_typeA_symbolic_skeleton.json`, so the
 evidence can be checked against the original zip artifacts without preserving
 large CSV files in the repository.
+
+The Type-A residue coverage cert records that the promoted branch set covers
+five even residue classes modulo `48`: `14,16,20,40,44`.  The next package
+target is `R38`, but this is explicitly a gate-transducer mining target because
+the naive symmetric `x=z` branch law has a recorded failure.
 
 ## Conclusion
 

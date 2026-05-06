@@ -344,3 +344,29 @@ identities, and the R14e insertion macro identities.  This is the preferred
 artifact for moving those branches into a paper appendix or Lean statement,
 because it avoids storing raw all-pair CSV maps while retaining the algebraic
 mass formulas.
+
+The residue coverage of the promoted Type-A branches is summarized by:
+
+```bash
+python3 scripts/summarize_routeE_typeA_residue_coverage.py \
+  --json-out certs/routeE_typeA_residue_coverage.json
+```
+
+Current Type-A proof-facing coverage modulo `48` is:
+
+```text
+B20:  residues 20,44;
+B16:  residues 16,40;
+R14e: residue 14.
+```
+
+The remaining even residues modulo `48` are:
+
+```text
+0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46.
+```
+
+The next recorded target is the `R38` / symmetric-or-near-symmetric family,
+but the status package explicitly warns that the naive `x=z` symmetric theorem
+is false.  That branch should therefore be mined as a gate-transducer family,
+not as a fixed symmetric-unit law.
