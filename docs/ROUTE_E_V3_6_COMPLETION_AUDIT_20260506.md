@@ -31,7 +31,7 @@ remaining gaps.
 | B20 boundary one-cycle hand count | `RouteEB20.boundaryCycleLength_eq_card`, `RouteEB20.boundaryCycleSecondEvenEnd_eq_length`, `RouteEB20.boundaryCycleHandCountTotal_eq_card` | count and segment endpoints closed, rank/orbit proof open |
 | B20 boundary spine segment | `RouteEB20.boundaryCycleSpineNode`, `RouteEB20.boundaryCycleSpine_step_zero`, `RouteEB20.boundaryCycleSpine_step_one`, `RouteEB20.boundaryCycleSpine_step_two`, `RouteEB20.boundaryCycleSpine_step_three`, `RouteEB20.boundaryCycleSpine_step_four`, `RouteEB20.boundaryCycleSpine_step_C_run`, `RouteEB20.boundaryCycleSpine_step_C_last` | full spine successor segment closed, remaining orbit open |
 | B20 boundary residue chains | `RouteEB20.boundaryFirstEvenValue_range`, `RouteEB20.boundaryFirstEvenParam_shift_succ`, `RouteEB20.boundaryCycleFirstEvenTail_step_even`, `RouteEB20.boundaryCycleFirstEvenTail_step_odd`, `RouteEB20.boundaryCycleSpine_to_firstEvenTail`, `RouteEB20.boundaryCycleFirstEvenTail_to_B2Bridge`, `RouteEB20.boundaryFirstOddParam_shift_succ`, `RouteEB20.boundaryCycleFirstOddLane_step_even`, `RouteEB20.boundaryCycleFirstOddLane_step_odd`, `RouteEB20.boundaryCycleB2Bridge_to_firstOddLane`, `RouteEB20.boundaryCycleFirstOddLane_to_BSubOne`, `RouteEB20.boundaryCycleFirstOddBSubOne_to_CRun`, `RouteEB20.boundaryCycleFirstOddCRun_step`, `RouteEB20.boundaryCycleFirstOddCRun_to_ALast`, `RouteEB20.boundarySecondOddParam_shift_succ`, `RouteEB20.boundaryCycleALastBridge_to_secondOddLane`, `RouteEB20.boundaryCycleSecondOddLane_step_even`, `RouteEB20.boundaryCycleSecondOddLane_step_odd`, `RouteEB20.boundaryCycleSecondOddLane_to_final`, `RouteEB20.boundarySecondEvenParam_shift_succ`, `RouteEB20.boundaryCycleSecondOddFinal_to_secondEvenTail`, `RouteEB20.boundaryCycleSecondEvenTail_step_even`, `RouteEB20.boundaryCycleSecondEvenTail_step_odd`, `RouteEB20.boundaryCycleSecondEvenTail_to_zero` | all listed B20 boundary successor segments from zero back to zero are Lean-checked; remaining bijection/rank packaging proof open |
-| B20 boundary one-cycle adapter | `RouteEB20.boundaryCycleNodeAt`, `RouteEB20.boundaryCycleNode`, `RouteEB20.boundaryCycleNode_last_to_zero`, `RouteEB20.boundaryCycleNodeAt_succ_spine`, `RouteEB20.boundaryCycleNodeAt_spine_to_firstEven`, `RouteEB20.BoundaryQuotientCycleEnumeration.singleCycle`, `RouteEB20.BoundaryQuotientCycleEnumeration.oneCycleTarget` | combined rank-indexed enumeration function plus last-to-zero, spine-internal, and spine-to-first-even step cases; remaining non-spine step cases and bijection proofs still open |
+| B20 boundary one-cycle adapter | `RouteEB20.boundaryCycleNodeAt`, `RouteEB20.boundaryCycleNode`, `RouteEB20.boundaryCycleNode_last_to_zero`, `RouteEB20.boundaryCycleNodeAt_succ_spine`, `RouteEB20.boundaryCycleNodeAt_spine_to_firstEven`, `RouteEB20.boundaryCycleNodeAt_succ_firstEven`, `RouteEB20.boundaryCycleNodeAt_firstEven_to_B2Bridge`, `RouteEB20.boundaryCycleNodeAt_B2Bridge_to_firstOdd`, `RouteEB20.boundaryCycleNodeAt_succ_firstOddLane`, `RouteEB20.boundaryCycleNodeAt_firstOddLane_to_BSubOne`, `RouteEB20.boundaryCycleNodeAt_BSubOne_to_CRun`, `RouteEB20.boundaryCycleNodeAt_succ_firstOddCRun`, `RouteEB20.boundaryCycleNodeAt_firstOddCRun_to_ALast`, `RouteEB20.BoundaryQuotientCycleEnumeration.singleCycle`, `RouteEB20.BoundaryQuotientCycleEnumeration.oneCycleTarget` | combined rank-indexed enumeration function plus last-to-zero and all adapter step cases through A-last; remaining second-odd/second-even adapter cases and bijection proofs still open |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
@@ -87,11 +87,9 @@ Both commands completed successfully after the current Lean edits.
 
 The next best Lean implementation slice is B20 boundary one-cycle:
 
-1. define `boundaryCycleNode q : Fin (boundaryCycleLength q) →
-   RouteEBoundaryNode (modulus q)` by extending the checked spine, first-even
-   tail, and first-odd lane segments across the remaining residue-chain
-   segments;
-2. prove the remaining successor compatibility with
+1. finish the remaining second-odd/second-even `boundaryCycleNodeAt` successor
+   adapter lemmas;
+2. package the full successor compatibility with
    `RouteEB20.boundaryQuotient`;
 3. prove the enumeration is bijective, then conjugate to `finRotate`;
 4. after the quotient cycle is closed, return to the boundary-clock derivation

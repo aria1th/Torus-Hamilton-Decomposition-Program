@@ -151,6 +151,14 @@ New arithmetic names include:
 - `boundaryCycleNode_last_to_zero`
 - `boundaryCycleNodeAt_succ_spine`
 - `boundaryCycleNodeAt_spine_to_firstEven`
+- `boundaryCycleNodeAt_succ_firstEven`
+- `boundaryCycleNodeAt_firstEven_to_B2Bridge`
+- `boundaryCycleNodeAt_B2Bridge_to_firstOdd`
+- `boundaryCycleNodeAt_succ_firstOddLane`
+- `boundaryCycleNodeAt_firstOddLane_to_BSubOne`
+- `boundaryCycleNodeAt_BSubOne_to_CRun`
+- `boundaryCycleNodeAt_succ_firstOddCRun`
+- `boundaryCycleNodeAt_firstOddCRun_to_ALast`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`
@@ -279,8 +287,9 @@ Closed or proof-facing in the bundle:
   successor checks for `boundaryQuotient`.
 - the C-run predecessor equality and terminal C_h identification needed to
   extend the spine successor proof; the spine successor proof is now closed
-  through `C_h -> B_h`, and the first-even tail is connected through both
-  boundary bridges.
+  through `C_h -> B_h`; the first-even tail, B2 bridge, first-odd lane,
+  `B(h-1)` bridge, first-odd C-run, and A-last bridge are connected in the
+  combined `boundaryCycleNodeAt` adapter.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
