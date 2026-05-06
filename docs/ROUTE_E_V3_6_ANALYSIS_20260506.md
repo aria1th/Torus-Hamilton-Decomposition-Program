@@ -308,10 +308,15 @@ Closed or proof-facing in the bundle:
   close the all-pair time exhaustion without changing the endpoint theorem.
 - recovered `03` and `04` boundary-clock aggregate masses:
   `RouteEB20.allPairTime03BoundaryClockBranchMassTotal_eq_target`,
-  `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`, and
+  `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`,
+  `RouteEB20.allPairTime04BoundaryClockModClassMassTotal_eq_target`, and
   `RouteEB20.allPairTime0304BoundaryClockBranchMassTotal_eq_target_sum`.
   These encode the branch-mass decomposition found by exact all-pair samples
-  for `q = 0..9`.
+  and the B20 closure package.
+- the B20 closure package separates the symbolic proof range `q >= 1` from
+  the finite `q = 0`/`m = 20` certificate.  The aggregate polynomials still
+  evaluate correctly at `q = 0`, but the stabilized `04` recurrence is only
+  claimed for `q >= 1`.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
@@ -327,9 +332,9 @@ Closed or proof-facing in the bundle:
 
 Remaining B20 obligations:
 
-- promote the recovered `T_03` pointwise formula and `T_04` odd aggregate
-  destination-class formulas from sample-backed targets to boundary-clock
-  proofs;
+- promote the recovered `T_03` pointwise formula and the `T_04` stabilized
+  mod-class recurrences from proof-facing targets to boundary-clock proofs;
+- add or connect the finite `m = 20` all-pair table certificate;
 - turn the no-early package into Lean-level hypotheses or lemmas;
 - instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
 

@@ -248,6 +248,35 @@ def allPairTime03LowOddBranchMass (q : Nat) : Nat :=
 def allPairTime03HighOddBranchMass (q : Nat) : Nat :=
   1296 * q ^ 3 + 3252 * q ^ 2 + 2728 * q + 765
 
+def allPairTime03OddLowClock (q i : Nat) : Nat :=
+  144 * q ^ 2 + 228 * q + 87 -
+    i * (modulus q + 6) +
+      if 2 * q + 2 ≤ i then modulus q else 0
+
+def allPairTime03OddHighClock (q i : Nat) : Nat :=
+  288 * q ^ 2 + 480 * q + 197 -
+    i * (modulus q + 6) +
+      if third q ≤ i then modulus q else 0
+
+def allPairTime03EvenLowClock (q i : Nat) : Nat :=
+  576 * q ^ 2 + 936 * q + 374 -
+    i * (2 * modulus q + 6) +
+      if third q ≤ i then modulus q else 0
+
+def allPairTime03EvenSpecialClock (q : Nat) : Nat :=
+  modulus q + 3
+
+def allPairTime03EvenHighClock (q i : Nat) : Nat :=
+  288 * q ^ 2 + 444 * q + 164 -
+    i * (2 * modulus q + 6) +
+      if 2 * q + 1 ≤ i then modulus q else 0
+
+theorem allPairTime03SpecialEvenBranchMass_eq_special_clock (q : Nat) :
+    allPairTime03SpecialEvenBranchMass q =
+      allPairTime03EvenSpecialClock q := by
+  simp [allPairTime03SpecialEvenBranchMass, allPairTime03EvenSpecialClock,
+    modulus]
+
 def allPairTime03BoundaryClockBranchMassTotal (q : Nat) : Nat :=
   allPairTime03LowEvenBranchMass q +
   allPairTime03SpecialEvenBranchMass q +
@@ -274,6 +303,9 @@ derivation is formalized.
 def allPairTime04EvenBranchMass (q : Nat) : Nat :=
   1728 * q ^ 3 + 4176 * q ^ 2 + 3360 * q + 900
 
+def allPairTime04EvenClock (q i : Nat) : Nat :=
+  modulus q * (i + 1)
+
 def allPairTime04OddTo01BranchMass (q : Nat) : Nat :=
   1728 * q ^ 3 + 3834 * q ^ 2 + 2829 * q + 698
 
@@ -283,11 +315,69 @@ def allPairTime04OddTo13BranchMass (q : Nat) : Nat :=
 def allPairTime04OddTo34BranchMass (q : Nat) : Nat :=
   24 * q + 29
 
+def allPairTime04ModOneBranchMass (q : Nat) : Nat :=
+  1728 * q ^ 3 + 3834 * q ^ 2 + 2829 * q + 701
+
+def allPairTime04ModThreeBranchMass (q : Nat) : Nat :=
+  1728 * q ^ 3 + 3888 * q ^ 2 + 2910 * q + 734
+
+def allPairTime04OddHSubOneClock (_q : Nat) : Nat :=
+  3
+
+def allPairTime04OddLastClock (q : Nat) : Nat :=
+  modulus q + 6
+
+theorem two_mul_allPairTime04EvenBranchMass_eq_even_clock_sum_closed
+    (q : Nat) :
+    2 * allPairTime04EvenBranchMass q =
+      modulus q * half q * (half q - 1) := by
+  have hsub : half q - 1 = 12 * q + 9 := by
+    simp [half]
+  rw [hsub]
+  simp [allPairTime04EvenBranchMass, modulus, half]
+  ring
+
+theorem allPairTime04OddTo34BranchMass_eq_special_clock_sum
+    (q : Nat) :
+    allPairTime04OddTo34BranchMass q =
+      allPairTime04OddHSubOneClock q + allPairTime04OddLastClock q := by
+  simp [allPairTime04OddTo34BranchMass, allPairTime04OddHSubOneClock,
+    allPairTime04OddLastClock, modulus]
+  ring
+
+theorem allPairTime04OddDestinationBranchMass_eq_modClassBranchMass
+    (q : Nat) :
+    allPairTime04OddTo01BranchMass q +
+        allPairTime04OddTo13BranchMass q +
+        allPairTime04OddTo34BranchMass q =
+      allPairTime04ModOneBranchMass q +
+        allPairTime04ModThreeBranchMass q := by
+  simp [allPairTime04OddTo01BranchMass, allPairTime04OddTo13BranchMass,
+    allPairTime04OddTo34BranchMass, allPairTime04ModOneBranchMass,
+    allPairTime04ModThreeBranchMass]
+  ring
+
 def allPairTime04BoundaryClockBranchMassTotal (q : Nat) : Nat :=
   allPairTime04EvenBranchMass q +
   allPairTime04OddTo01BranchMass q +
   allPairTime04OddTo13BranchMass q +
   allPairTime04OddTo34BranchMass q
+
+def allPairTime04BoundaryClockModClassMassTotal (q : Nat) : Nat :=
+  allPairTime04EvenBranchMass q +
+  allPairTime04ModOneBranchMass q +
+  allPairTime04ModThreeBranchMass q
+
+theorem allPairTime04BoundaryClockBranchMassTotal_eq_modClassTotal
+    (q : Nat) :
+    allPairTime04BoundaryClockBranchMassTotal q =
+      allPairTime04BoundaryClockModClassMassTotal q := by
+  simp [allPairTime04BoundaryClockBranchMassTotal,
+    allPairTime04BoundaryClockModClassMassTotal,
+    allPairTime04EvenBranchMass, allPairTime04OddTo01BranchMass,
+    allPairTime04OddTo13BranchMass, allPairTime04OddTo34BranchMass,
+    allPairTime04ModOneBranchMass, allPairTime04ModThreeBranchMass]
+  ring
 
 theorem allPairTime04BoundaryClockBranchMassTotal_eq_target (q : Nat) :
     allPairTime04BoundaryClockBranchMassTotal q = allPairTime04Target q := by
@@ -296,6 +386,11 @@ theorem allPairTime04BoundaryClockBranchMassTotal_eq_target (q : Nat) :
     allPairTime04OddTo13BranchMass, allPairTime04OddTo34BranchMass,
     allPairTime04Target]
   ring
+
+theorem allPairTime04BoundaryClockModClassMassTotal_eq_target (q : Nat) :
+    allPairTime04BoundaryClockModClassMassTotal q = allPairTime04Target q := by
+  rw [← allPairTime04BoundaryClockBranchMassTotal_eq_modClassTotal]
+  exact allPairTime04BoundaryClockBranchMassTotal_eq_target q
 
 def allPairTime0304BoundaryClockBranchMassTotal (q : Nat) : Nat :=
   allPairTime03BoundaryClockBranchMassTotal q +
