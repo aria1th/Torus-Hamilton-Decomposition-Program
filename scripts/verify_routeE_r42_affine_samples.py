@@ -4,7 +4,7 @@
 This is a sample verifier, not a symbolic branch proof.  It recompiles the
 compact C++ all-pair checker and verifies the three portfolio samples for
 
-    m = 48*q + 42,  x = z = 6*q + 5,  q = 0, 1, 2.
+    m = 48*q + 42,  x = z = 6*q + 5,  q = 0, 1, 2, 3, 4.
 
 The output is intentionally compact so it can be committed as evidence without
 preserving raw traces.
@@ -22,7 +22,7 @@ from tempfile import gettempdir
 REPO = Path(__file__).resolve().parents[1]
 CPP = REPO / "scripts" / "routeE_allpair_cpp_v1_2.cpp"
 DEFAULT_BIN = Path(gettempdir()) / "routeE_allpair_cpp_v1_2"
-DEFAULT_SAMPLES = [0, 1, 2]
+DEFAULT_SAMPLES = [0, 1, 2, 3, 4]
 
 
 def compile_checker(binary: Path) -> None:

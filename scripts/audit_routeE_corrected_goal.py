@@ -206,7 +206,7 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_affine_branch_record.json",
         ),
         item(
-            "R42 affine q=0,1,2 samples verify with all-pair checker",
+            "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
             and r42_sample_verification.get("all_passed") is True
@@ -214,7 +214,7 @@ def build_audit() -> dict[str, Any]:
                 sample.get("q")
                 for sample in r42_sample_verification.get("samples", [])
             ]
-            == [0, 1, 2],
+            == [0, 1, 2, 3, 4],
             "certs/routeE_r42_affine_samples_verification.json",
         ),
         item(

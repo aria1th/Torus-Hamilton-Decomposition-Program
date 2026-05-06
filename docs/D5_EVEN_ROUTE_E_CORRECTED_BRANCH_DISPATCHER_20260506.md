@@ -525,8 +525,9 @@ python3 scripts/verify_routeE_r42_affine_samples.py \
   --json-out certs/routeE_r42_affine_samples_verification.json
 ```
 
-This verifies the portfolio samples `m=42,90,138`, `x=z=5,11,17` for
-all-pair returns, `sum tau = m^4`, and one-cycle section dynamics.  The record
-is still intentionally open: `R42` still needs a closed branch formula,
+This verifies the portfolio samples and two additional affine continuations
+`m=42,90,138,186,234`, `x=z=5,11,17,23,29` for all-pair returns,
+`sum tau = m^4`, and one-cycle section dynamics.  The record is still
+intentionally open: `R42` still needs a closed branch formula,
 first-return equations, no-early proof, splice/quotient one-cycle proof, and
 time identity before it can be added to proof-facing Type-A coverage.

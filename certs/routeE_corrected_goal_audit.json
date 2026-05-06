@@ -105,7 +105,7 @@
     {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
-      "name": "R42 affine q=0,1,2 samples verify with all-pair checker",
+      "name": "R42 affine q=0..4 samples verify with all-pair checker",
       "ok": true
     },
     {

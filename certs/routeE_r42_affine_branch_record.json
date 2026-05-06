@@ -63,7 +63,9 @@
     "verified_q_values": [
       0,
       1,
-      2
+      2,
+      3,
+      4
     ]
   },
   "samples": [

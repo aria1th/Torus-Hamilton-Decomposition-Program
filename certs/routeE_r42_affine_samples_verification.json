@@ -102,6 +102,66 @@
       "stderr_tail": [],
       "x": 17,
       "z": 17
+    },
+    {
+      "cap_events": 345960,
+      "checker": {
+        "count_admissible": true,
+        "cycle_lengths_top": [
+          1851
+        ],
+        "fail_idx": -1,
+        "fail_label": "null",
+        "m": 186,
+        "m4": 1196883216,
+        "max_events": 204604,
+        "max_return_time": 6399977,
+        "ok_returns": true,
+        "schema": "routeE_allpair_cpp_check_v1_2",
+        "single_cycle": true,
+        "sum_ok": true,
+        "time_sum": 1196883216,
+        "unit_pair": true,
+        "x": 23,
+        "z": 23
+      },
+      "m": 186,
+      "passed": true,
+      "q": 3,
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 23,
+      "z": 23
+    },
+    {
+      "cap_events": 547560,
+      "checker": {
+        "count_admissible": true,
+        "cycle_lengths_top": [
+          2331
+        ],
+        "fail_idx": -1,
+        "fail_label": "null",
+        "m": 234,
+        "m4": 2998219536,
+        "max_events": 324796,
+        "max_return_time": 12757793,
+        "ok_returns": true,
+        "schema": "routeE_allpair_cpp_check_v1_2",
+        "single_cycle": true,
+        "sum_ok": true,
+        "time_sum": 2998219536,
+        "unit_pair": true,
+        "x": 29,
+        "z": 29
+      },
+      "m": 234,
+      "passed": true,
+      "q": 4,
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 29,
+      "z": 29
     }
   ],
   "schema": "routeE_r42_affine_samples_verification_v1",

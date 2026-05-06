@@ -241,7 +241,7 @@ Result:
 
 ```text
 all_passed=True
-q=0,1,2 verified by scripts/routeE_allpair_cpp_v1_2.cpp
+q=0,1,2,3,4 verified by scripts/routeE_allpair_cpp_v1_2.cpp
 ```
 
 R38 symmetric recheck:
