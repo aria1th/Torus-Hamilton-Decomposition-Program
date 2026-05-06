@@ -164,6 +164,8 @@ New arithmetic names include:
 - `boundaryCycleNodeAt_secondOddLane_to_final`
 - `boundaryCycleNodeAt_secondOddFinal_to_secondEven`
 - `boundaryCycleNodeAt_succ_secondEven`
+- `boundaryCycleNodeAt_succ`
+- `boundaryCycleNode_step`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`
@@ -293,14 +295,15 @@ Closed or proof-facing in the bundle:
 - the C-run predecessor equality and terminal C_h identification needed to
   extend the spine successor proof; the spine successor proof is now closed
   through `C_h -> B_h`; every segment-level successor case of the combined
-  `boundaryCycleNodeAt` adapter is now connected through the second-even tail.
+  `boundaryCycleNodeAt` adapter is now connected through the second-even tail,
+  and packaged as the `Fin`-indexed global step `boundaryCycleNode_step`.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
 Remaining B20 obligations:
 
 - prove the B20 boundary quotient candidate is a single cycle, beyond the
-  currently Lean-checked segment count and segment-level successor adapters;
+  currently Lean-checked segment count and global successor adapter;
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;
