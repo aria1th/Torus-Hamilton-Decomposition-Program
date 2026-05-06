@@ -50,6 +50,7 @@ remaining gaps.
 | R14e count surface | `RouteER14e.routeCounts`, `RouteER14e.counts_sum` | done |
 | R14e time target | `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
 | R14e label-destination time target | `RouteER14e.allPairLabelDstTimeMassTarget`, `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src` | package `label_dst_sum_polynomials` copied and source sums checked against label masses |
+| R14e label-destination count target | `RouteER14e.allPairLabelDstCountTarget`, `RouteER14e.allPairLabelDstCountTarget_sum_by_src`, `RouteER14e.allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget` | package `count_poly` data copied and summed to verifier row-count target |
 | R14e boundary quotient formula, macro, and insertion surface | `RouteER14e.BoundaryQuotientFormulaTarget`, `RouteER14e.BoundaryQuotientOneCycleTarget`, `RouteER14e.SymbolicBoundaryQuotientOneCycleTarget`, `RouteER14e.BoundaryMacroNode`, `RouteER14e.BoundaryMacroReturnTarget`, `RouteER14e.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`, `RouteER14e.boundaryQuotientOneCycleTarget_of_formula_and_macro`, `RouteER14e.symbolicBoundaryQuotientOneCycleTarget_of_formula_and_macro`, `RouteER14e.SymbolicBoundaryMacroReturnTarget`, `RouteER14e.FiniteM14BoundaryMacroReturnTarget`, `RouteER14e.boundaryMacroLengthTotalTarget_eq_boundary_card`, `RouteER14e.insertionBoundaryCountTarget_eq_boundary_card`, `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget` | closed formula target plus proof-facing boundary and insertion arithmetic targets added |
 | R14e label/indexed all-pair adapter | `RouteER14e.AllPairLabelTraceTarget`, `RouteER14e.AllPairIndexedLabelTraceTarget`, `RouteER14e.AllPairLabelDstTraceTarget`, `RouteER14e.AllPairIndexedLabelDstTraceTarget`, `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`, `RouteER14e.allPairSectionCertificateOfIndexedLabelTraceTarget`, `RouteER14e.allPairSectionCertificateOfLabelDstTraceTarget`, `RouteER14e.allPairSectionCertificateOfIndexedLabelDstTraceTarget`, `RouteER14e.SymbolicAllPairBranchTarget`, `RouteER14e.FiniteM14AllPairTarget`, `RouteER14e.AllPairBranchTarget`, and Hamilton/torus/Cayley projections from all-pair branch targets | proof-facing endpoint split refined to label-destination fibers |
 | Stable Lean verification | `lake env lean D5Odd/EvenRouteE.lean`; `lake env lean D5Odd/EvenRouteEM4.lean`; `lake build D5Odd.EvenRouteE` | done |
@@ -123,8 +124,8 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    `R14e_closure_package_20260506.zip` and
    `RouteE_three_branch_status_package_20260506.zip`.  Lean now has the
    branch-local closed boundary formula target, boundary macro-return target,
-   insertion-count arithmetic, label-destination mass target, and all-pair
-   adapter endpoints, but the concrete boundary quotient map, concrete
+   insertion-count arithmetic, label-destination mass/count targets, and
+   all-pair adapter endpoints, but the concrete boundary quotient map, concrete
    macro-return/insertion data, all-pair first-return/no-early equations, and
    finite `m = 14` two-node macro certificate are not Lean instances.
 

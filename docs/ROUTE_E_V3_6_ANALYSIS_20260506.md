@@ -303,6 +303,9 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.allPairTimeMassTarget`
 - `RouteER14e.allPairLabelDstTimeMassTarget`
 - `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src`
+- `RouteER14e.allPairLabelDstCountTarget`
+- `RouteER14e.allPairLabelDstCountTarget_sum_by_src`
+- `RouteER14e.allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_total`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
@@ -499,7 +502,9 @@ R14e:
   insertion weighted count is connected to the verifier row count target by
   `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`; the
   label-destination mass check is
-  `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src`;
+  `RouteER14e.allPairLabelDstTimeMassTarget_sum_by_src`, and the
+  label-destination row-count check is
+  `RouteER14e.allPairLabelDstCountBySrcTarget_sum_eq_allPairRowCountTarget`;
 - remaining Lean work is to instantiate the concrete boundary quotient map and
   macro-return data, then derive/instantiate the insertion distribution,
   all-pair first-return/no-early equations, and the finite `m = 14` table.
