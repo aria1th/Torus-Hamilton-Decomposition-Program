@@ -59,11 +59,9 @@ def check_branch(branch: dict[str, Any], errors: list[dict[str, Any]]) -> None:
                     }
                 )
                 continue
-            for sample in branch.get("sample_s_values", []):
-                # The per-row artifact stores formulas but not every sampled
-                # condition value again; this check keeps formula syntax live.
+            for sample in row.get("sample_stats", []):
                 try:
-                    eval_formula(formula, int(sample))
+                    expected = eval_formula(formula, int(sample["s"]))
                 except Exception as exc:  # pragma: no cover - diagnostic path
                     errors.append(
                         {
@@ -71,16 +69,112 @@ def check_branch(branch: dict[str, Any], errors: list[dict[str, Any]]) -> None:
                             "src": row.get("src"),
                             "dst": row.get("dst"),
                             "formula": key,
-                            "sample_s": sample,
+                            "sample_s": sample.get("s"),
                             "error": str(exc),
                         }
                     )
+                    continue
+                actual = sample.get("condition", {}).get(field)
+                if expected != actual:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "formula": key,
+                            "sample_s": sample.get("s"),
+                            "expected": expected,
+                            "actual": actual,
+                        }
+                    )
         if row.get("qsteps_slope_formula") is not None:
-            for sample in branch.get("sample_s_values", []):
-                eval_formula(row.get("qsteps_slope_formula"), int(sample))
+            for sample in row.get("sample_stats", []):
+                coeffs = sample.get("qsteps_affine_coeffs")
+                if coeffs is None:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "missing_sample_qsteps_coeffs": sample.get("s"),
+                        }
+                    )
+                    continue
+                expected = eval_formula(row.get("qsteps_slope_formula"), int(sample["s"]))
+                if expected != coeffs[0]:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "qsteps_slope_sample_s": sample.get("s"),
+                            "expected": expected,
+                            "actual": coeffs[0],
+                        }
+                    )
         if row.get("qsteps_intercept_formula") is not None:
-            for sample in branch.get("sample_s_values", []):
-                eval_formula(row.get("qsteps_intercept_formula"), int(sample))
+            for sample in row.get("sample_stats", []):
+                coeffs = sample.get("qsteps_affine_coeffs")
+                if coeffs is None:
+                    continue
+                expected = eval_formula(row.get("qsteps_intercept_formula"), int(sample["s"]))
+                if expected != coeffs[1]:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "qsteps_intercept_sample_s": sample.get("s"),
+                            "expected": expected,
+                            "actual": coeffs[1],
+                        }
+                    )
+        if row.get("target_affine_alpha_formula") is not None:
+            for sample in row.get("sample_stats", []):
+                coeffs = sample.get("target_affine_mod_m")
+                if coeffs is None:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "missing_sample_target_coeffs": sample.get("s"),
+                        }
+                    )
+                    continue
+                expected = eval_formula(
+                    row.get("target_affine_alpha_formula"), int(sample["s"])
+                )
+                if expected != coeffs[0]:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "target_alpha_sample_s": sample.get("s"),
+                            "expected": expected,
+                            "actual": coeffs[0],
+                        }
+                    )
+        if row.get("target_affine_beta_formula") is not None:
+            for sample in row.get("sample_stats", []):
+                coeffs = sample.get("target_affine_mod_m")
+                if coeffs is None:
+                    continue
+                expected = eval_formula(
+                    row.get("target_affine_beta_formula"), int(sample["s"])
+                )
+                if expected != coeffs[1]:
+                    errors.append(
+                        {
+                            "branch": branch.get("name"),
+                            "src": row.get("src"),
+                            "dst": row.get("dst"),
+                            "target_beta_sample_s": sample.get("s"),
+                            "expected": expected,
+                            "actual": coeffs[1],
+                        }
+                    )
 
 
 def build_verification(summary_path: Path) -> dict[str, Any]:

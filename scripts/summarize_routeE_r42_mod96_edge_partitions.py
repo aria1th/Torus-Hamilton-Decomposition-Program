@@ -344,6 +344,23 @@ def summarize_branch(samples: list[dict[str, Any]], parity: int) -> dict[str, An
                 "qsteps_intercept_formula": qsteps_intercept_formula,
                 "qsteps_affine_coeffs_missing_sample_count": qsteps_missing,
                 "sample_s_values": [s for s, _, _ in per_sample],
+                "sample_stats": [
+                    {
+                        "s": s,
+                        "q": sample["q"],
+                        "m": sample["m"],
+                        "condition": {
+                            "count": edge["condition"]["count"],
+                            "min": edge["condition"]["min"],
+                            "max": edge["condition"]["max"],
+                            "interval_count": edge["condition"]["interval_count"],
+                        },
+                        "target_affine_mod_m": edge.get("target_affine_mod_m"),
+                        "qtime_affine_coeffs": edge.get("qtime_affine_coeffs"),
+                        "qsteps_affine_coeffs": edge.get("qsteps_affine_coeffs"),
+                    }
+                    for s, sample, edge in per_sample
+                ],
             }
         )
     return {
