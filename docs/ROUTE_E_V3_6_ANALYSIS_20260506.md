@@ -222,6 +222,8 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEAllPairIndexedLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate`
+- `RouteEBoundaryFirstReturnTarget`
+- `RouteEBoundaryFirstReturnTarget.boundaryMap_singleCycle`
 - `RouteEB20.AllPairLabelTraceTarget`
 - `RouteEB20.AllPairLabelTraceTarget.returnTime_sum`
 - `RouteEB20.allPairSectionCertificateOfLabelTraceTarget`
@@ -261,6 +263,12 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.allPairTimeMassTarget_sum_eq_total`
 - `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
+- `RouteEB16.BoundaryMacroNode`
+- `RouteEB16.BoundaryMacroReturnTarget`
+- `RouteEB16.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`
+- `RouteEB16.SymbolicBoundaryMacroReturnTarget`
+- `RouteEB16.FiniteM16BoundaryQuotientTarget`
+- `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`
 - `RouteEB16.AllPairLabelTraceTarget`
 - `RouteEB16.AllPairIndexedLabelTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`
@@ -281,6 +289,14 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.allPairTimeMassTarget_sum_eq_total`
 - `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
+- `RouteER14e.BoundaryMacroNode`
+- `RouteER14e.BoundaryMacroReturnTarget`
+- `RouteER14e.BoundaryMacroReturnTarget.boundaryQuotient_singleCycle`
+- `RouteER14e.SymbolicBoundaryMacroReturnTarget`
+- `RouteER14e.FiniteM14BoundaryMacroReturnTarget`
+- `RouteER14e.boundaryMacroLengthTotalTarget_eq_boundary_card`
+- `RouteER14e.insertionBoundaryCountTarget_eq_boundary_card`
+- `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`
 - `RouteER14e.AllPairLabelTraceTarget`
 - `RouteER14e.AllPairIndexedLabelTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`
@@ -295,14 +311,16 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.torusTarget_of_indexedLabelTraceTargets`
 - `RouteER14e.cayleyTarget_of_indexedLabelTraceTargets`
 
-These theorem names still do not instantiate the branch maps.  They provide the
-same proof-facing endpoint as B20: a concrete label or indexed trace target,
-plus the finite exceptional case (`m = 16` or `m = 14`), yields a
-`RouteEAllPairSectionCertificate` and then Hamilton/torus/Cayley endpoints.
-The `RouteE_three_branch_status_package_20260506.zip` package promotes B16 and
-R14e to proof-facing closure on paper/verifier evidence, but the boundary
-quotient derivations, all-pair first-return equations, no-early facts, and
-finite exceptional tables are not yet Lean instances.
+These theorem names still do not instantiate the branch maps.  They provide two
+proof-facing endpoints.  First, a boundary quotient plus first-return
+macro-section data feeds `RouteEBoundaryFirstReturnTarget` and yields
+`IsSingleCycleMap` for the quotient.  Second, a concrete label or indexed
+all-pair trace target, plus the finite exceptional case (`m = 16` or `m = 14`),
+yields a `RouteEAllPairSectionCertificate` and then Hamilton/torus/Cayley
+endpoints.  The `RouteE_three_branch_status_package_20260506.zip` package
+promotes B16 and R14e to proof-facing closure on paper/verifier evidence, but
+the boundary quotient derivations, all-pair first-return equations, no-early
+facts, and finite exceptional tables are not yet Lean instances.
 
 The file checks with:
 
@@ -424,8 +442,9 @@ B16:
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, boundary insertion compression,
   label-wise time masses, and finite `m = 16` exceptional target;
-- Lean now has B16 label/indexed all-pair adapters and Hamilton/torus/Cayley
-  projections from those targets;
+- Lean now has B16 boundary macro-return and label/indexed all-pair adapters,
+  including the checked macro length identity
+  `RouteEB16.boundaryMacroLengthTotalTarget_eq_boundary_card`;
 - remaining Lean work is to derive/instantiate the boundary quotient formula,
   all-pair first-return/no-early equations, and the finite `m = 16` table.
 
@@ -436,8 +455,10 @@ R14e:
   `RouteE_three_branch_status_package_20260506.zip` record a proof-facing
   boundary quotient, macro-return one-cycle, insertion distribution, label-wise
   time masses, and finite `m = 14` two-node macro target;
-- Lean now has R14e label/indexed all-pair adapters and Hamilton/torus/Cayley
-  projections from those targets;
+- Lean now has R14e boundary macro-return, insertion-count arithmetic, and
+  label/indexed all-pair adapters.  The insertion weighted count is connected
+  to the verifier row count target by
+  `RouteER14e.insertionWeightedCountTarget_eq_allPairRowCountTarget`;
 - remaining Lean work is to derive/instantiate the closed boundary formula,
   insertion distribution, all-pair first-return/no-early equations, and the
   finite `m = 14` table.

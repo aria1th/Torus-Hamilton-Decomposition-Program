@@ -937,6 +937,62 @@ theorem card_routeEBoundaryNode (m : Nat) [NeZero m] :
   simp [RouteEBoundaryNode, Fintype.card_sum, Fintype.card_prod,
     card_routeEBoundaryLabel]
 
+def routeEBoundaryMacroBase {m : Nat}
+    {p : RouteENonzeroSeam m → Prop}
+    (x : Unit ⊕ { a : RouteENonzeroSeam m // p a }) :
+    RouteEBoundaryNode m :=
+  match x with
+  | Sum.inl _ => routeEBoundaryZero
+  | Sum.inr a => routeEBoundaryNode RouteEBoundaryLabel.L34 a.1
+
+theorem routeEBoundaryMacroBase_injective {m : Nat}
+    {p : RouteENonzeroSeam m → Prop} :
+    Function.Injective (routeEBoundaryMacroBase (m := m) (p := p)) := by
+  intro x y h
+  cases x <;> cases y
+  · rfl
+  · cases h
+  · cases h
+  · apply congrArg Sum.inr
+    apply Subtype.ext
+    injection h with hpair
+    exact congrArg Prod.snd hpair
+
+/--
+Generic boundary first-return adapter.  If a boundary quotient `Q` has a
+smaller first-return section whose return map is one cycle and whose excursions
+cover the whole boundary by cardinality, then `Q` itself is one cycle.
+-/
+structure RouteEBoundaryFirstReturnTarget (m : Nat) [NeZero m]
+    (sigma : Type*) [Fintype sigma] where
+  Q : RouteEBoundaryNode m → RouteEBoundaryNode m
+  Q_bijective : Function.Bijective Q
+  base : sigma → RouteEBoundaryNode m
+  base_injective : Function.Injective base
+  next : sigma → sigma
+  time : sigma → Nat
+  time_pos : ∀ x, 0 < time x
+  firstReturn_equation :
+    ∀ x, Q^[time x] (base x) = base (next x)
+  firstReturn_minimal :
+    ∀ x k, 0 < k → k < time x →
+      ¬ ∃ y, Q^[k] (base x) = base y
+  next_single : IsSingleCycleMap next
+  time_sum :
+    Finset.univ.sum time = Fintype.card (RouteEBoundaryNode m)
+
+namespace RouteEBoundaryFirstReturnTarget
+
+theorem boundaryMap_singleCycle {m : Nat} [NeZero m]
+    {sigma : Type*} [Fintype sigma]
+    (target : RouteEBoundaryFirstReturnTarget m sigma) :
+    IsSingleCycleMap target.Q :=
+  single_cycle_of_first_return_sum target.Q target.base target.next target.time
+    target.Q_bijective target.base_injective target.firstReturn_equation
+    target.firstReturn_minimal target.next_single target.time_sum
+
+end RouteEBoundaryFirstReturnTarget
+
 structure RouteEReturnTimeBlock where
   start : Nat
   stop : Nat
@@ -7723,6 +7779,90 @@ namespace RouteEB16
 instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
   ⟨by simp [modulus]⟩
 
+def quarter (q : Nat) : Nat := 6 * q + 4
+
+def boundaryMacroLengthTotalTarget (q : Nat) : Nat :=
+  72 * q + 46
+
+theorem boundaryMacroLengthTotalTarget_eq_boundary_card (q : Nat) :
+    boundaryMacroLengthTotalTarget q =
+      Fintype.card (RouteEBoundaryNode (modulus q)) := by
+  rw [card_routeEBoundaryNode]
+  simp [boundaryMacroLengthTotalTarget, modulus]
+  omega
+
+abbrev BoundaryMacroNode (q : Nat) :=
+  Unit ⊕ { a : RouteENonzeroSeam (modulus q) // a.1.val < quarter q }
+
+def boundaryMacroBase (q : Nat) :
+    BoundaryMacroNode q → RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryMacroBase
+
+theorem boundaryMacroBase_injective (q : Nat) :
+    Function.Injective (boundaryMacroBase q) :=
+  routeEBoundaryMacroBase_injective
+
+/--
+B16 boundary macro-return target from the closure package.  For `q > 0`, the
+package gives the first return from the closed boundary quotient to
+`{Z} union {34(a) : 1 <= a < m/4}` with total excursion length `3m - 2`.
+-/
+structure BoundaryMacroReturnTarget (q : Nat)
+    (Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)) where
+  Q_bijective : Function.Bijective Q
+  next : BoundaryMacroNode q → BoundaryMacroNode q
+  time : BoundaryMacroNode q → Nat
+  time_pos : ∀ x, 0 < time x
+  firstReturn_equation :
+    ∀ x, Q^[time x] (boundaryMacroBase q x) =
+      boundaryMacroBase q (next x)
+  firstReturn_minimal :
+    ∀ x k, 0 < k → k < time x →
+      ¬ ∃ y, Q^[k] (boundaryMacroBase q x) = boundaryMacroBase q y
+  next_single : IsSingleCycleMap next
+  time_sum :
+    Finset.univ.sum time = Fintype.card (RouteEBoundaryNode (modulus q))
+
+namespace BoundaryMacroReturnTarget
+
+noncomputable def toBoundaryFirstReturnTarget {q : Nat}
+    {Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)}
+    (target : BoundaryMacroReturnTarget q Q) :
+    RouteEBoundaryFirstReturnTarget (modulus q) (BoundaryMacroNode q) where
+  Q := Q
+  Q_bijective := target.Q_bijective
+  base := boundaryMacroBase q
+  base_injective := boundaryMacroBase_injective q
+  next := target.next
+  time := target.time
+  time_pos := target.time_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  next_single := target.next_single
+  time_sum := target.time_sum
+
+theorem boundaryQuotient_singleCycle {q : Nat}
+    {Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)}
+    (target : BoundaryMacroReturnTarget q Q) :
+    IsSingleCycleMap Q :=
+  target.toBoundaryFirstReturnTarget.boundaryMap_singleCycle
+
+end BoundaryMacroReturnTarget
+
+def SymbolicBoundaryMacroReturnTarget : Prop :=
+  ∀ q, 0 < q →
+    ∃ Q : RouteEBoundaryNode (modulus q) →
+        RouteEBoundaryNode (modulus q),
+      Nonempty (BoundaryMacroReturnTarget q Q)
+
+def FiniteM16BoundaryQuotientTarget : Prop :=
+  ∃ Q : RouteEBoundaryNode (modulus 0) →
+      RouteEBoundaryNode (modulus 0),
+    IsSingleCycleMap Q
+
 abbrev AllPairLabelTraceTarget (q : Nat) :=
   RouteEAllPairLabelTraceTarget (modulus q) (allPairTimeMassTarget q)
 
@@ -7924,6 +8064,121 @@ namespace RouteER14e
 
 instance modulus_neZero (k : Nat) : NeZero (modulus k) :=
   ⟨by simp [modulus]⟩
+
+def macroBound (k : Nat) : Nat := 8 * k + 2
+
+def boundaryMacroLengthTotalTarget (k : Nat) : Nat :=
+  144 * k + 40
+
+theorem boundaryMacroLengthTotalTarget_eq_boundary_card (k : Nat) :
+    boundaryMacroLengthTotalTarget k =
+      Fintype.card (RouteEBoundaryNode (modulus k)) := by
+  rw [card_routeEBoundaryNode]
+  simp [boundaryMacroLengthTotalTarget, modulus]
+  omega
+
+def insertionBoundaryCountTarget (k : Nat) : Nat :=
+  1 +
+  ((32 * k + 8) + (3 * k + 1) + (10 * k + 2) + (3 * k + 2)) +
+  ((24 * k + 7) + (6 * k + 1) + (12 * k + 3) + (6 * k + 1) + 1) +
+  ((40 * k + 9) + 1 + (3 * k) + (2 * k + 2) + (3 * k) + 1)
+
+theorem insertionBoundaryCountTarget_eq_boundary_card (k : Nat) :
+    insertionBoundaryCountTarget k =
+      Fintype.card (RouteEBoundaryNode (modulus k)) := by
+  rw [card_routeEBoundaryNode]
+  simp [insertionBoundaryCountTarget, modulus]
+  omega
+
+def insertionWeightedCountTarget (k : Nat) : Nat :=
+  1 +
+  (1 * (32 * k + 8) + 4 * (3 * k + 1) +
+    5 * (10 * k + 2) + 6 * (3 * k + 2)) +
+  (1 * (24 * k + 7) + 4 * (6 * k + 1) +
+    5 * (12 * k + 3) + 6 * (6 * k + 1) +
+    (2 * modulus k + 1)) +
+  (1 * (40 * k + 9) + 2 * 1 + 4 * (3 * k) +
+    5 * (2 * k + 2) + 6 * (3 * k) + modulus k)
+
+def allPairRowCountTarget (k : Nat) : Nat :=
+  1 + 10 * (modulus k - 1)
+
+theorem insertionWeightedCountTarget_eq_allPairRowCountTarget (k : Nat) :
+    insertionWeightedCountTarget k = allPairRowCountTarget k := by
+  simp [insertionWeightedCountTarget, allPairRowCountTarget, modulus]
+  omega
+
+abbrev BoundaryMacroNode (k : Nat) :=
+  Unit ⊕ { a : RouteENonzeroSeam (modulus k) // a.1.val < macroBound k }
+
+def boundaryMacroBase (k : Nat) :
+    BoundaryMacroNode k → RouteEBoundaryNode (modulus k) :=
+  routeEBoundaryMacroBase
+
+theorem boundaryMacroBase_injective (k : Nat) :
+    Function.Injective (boundaryMacroBase k) :=
+  routeEBoundaryMacroBase_injective
+
+/--
+R14e boundary macro-return target from the closure package.  For `k > 0`, the
+macro section is `{Z} union {34(a) : 1 <= a < 8k+2}`; for `k = 0`, the same
+type is the finite two-node section `{Z, 34(1)}`.
+-/
+structure BoundaryMacroReturnTarget (k : Nat)
+    (Q : RouteEBoundaryNode (modulus k) →
+      RouteEBoundaryNode (modulus k)) where
+  Q_bijective : Function.Bijective Q
+  next : BoundaryMacroNode k → BoundaryMacroNode k
+  time : BoundaryMacroNode k → Nat
+  time_pos : ∀ x, 0 < time x
+  firstReturn_equation :
+    ∀ x, Q^[time x] (boundaryMacroBase k x) =
+      boundaryMacroBase k (next x)
+  firstReturn_minimal :
+    ∀ x n, 0 < n → n < time x →
+      ¬ ∃ y, Q^[n] (boundaryMacroBase k x) = boundaryMacroBase k y
+  next_single : IsSingleCycleMap next
+  time_sum :
+    Finset.univ.sum time = Fintype.card (RouteEBoundaryNode (modulus k))
+
+namespace BoundaryMacroReturnTarget
+
+noncomputable def toBoundaryFirstReturnTarget {k : Nat}
+    {Q : RouteEBoundaryNode (modulus k) →
+      RouteEBoundaryNode (modulus k)}
+    (target : BoundaryMacroReturnTarget k Q) :
+    RouteEBoundaryFirstReturnTarget (modulus k) (BoundaryMacroNode k) where
+  Q := Q
+  Q_bijective := target.Q_bijective
+  base := boundaryMacroBase k
+  base_injective := boundaryMacroBase_injective k
+  next := target.next
+  time := target.time
+  time_pos := target.time_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  next_single := target.next_single
+  time_sum := target.time_sum
+
+theorem boundaryQuotient_singleCycle {k : Nat}
+    {Q : RouteEBoundaryNode (modulus k) →
+      RouteEBoundaryNode (modulus k)}
+    (target : BoundaryMacroReturnTarget k Q) :
+    IsSingleCycleMap Q :=
+  target.toBoundaryFirstReturnTarget.boundaryMap_singleCycle
+
+end BoundaryMacroReturnTarget
+
+def SymbolicBoundaryMacroReturnTarget : Prop :=
+  ∀ k, 0 < k →
+    ∃ Q : RouteEBoundaryNode (modulus k) →
+        RouteEBoundaryNode (modulus k),
+      Nonempty (BoundaryMacroReturnTarget k Q)
+
+def FiniteM14BoundaryMacroReturnTarget : Prop :=
+  ∃ Q : RouteEBoundaryNode (modulus 0) →
+      RouteEBoundaryNode (modulus 0),
+    Nonempty (BoundaryMacroReturnTarget 0 Q)
 
 abbrev AllPairLabelTraceTarget (k : Nat) :=
   RouteEAllPairLabelTraceTarget (modulus k) (allPairTimeMassTarget k)
