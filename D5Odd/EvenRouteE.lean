@@ -2281,6 +2281,139 @@ theorem boundaryCycleFirstOddLane_step_odd (q k : Nat)
         (boundaryCycleFirstOddLaneIndex_pos k)
         (boundaryCycleFirstOddLaneIndex_lt q k hk) hjnext hnot_close]
 
+theorem boundaryCycleB2BridgeNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleB2BridgeCount q) :
+    boundaryCycleB2BridgeNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryParamHalfSubOne q) := rfl
+
+theorem boundaryCycleFirstOddLaneNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleFirstOddLaneCount q) :
+    boundaryCycleFirstOddLaneNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L04
+        (boundaryFirstOddParam q 1 (by omega) (by simp [quarter])) := by
+  simp [boundaryCycleFirstOddLaneNode, boundaryCycleFirstOddLaneIndex]
+
+theorem boundaryParamHalfSubOne_shift_eq_firstOdd_one (q : Nat)
+    (hne : (boundaryParamHalfSubOne q).1.val ≠ half q + 2) :
+    boundaryShiftParam q (boundaryParamHalfSubOne q) hne =
+      boundaryFirstOddParam q 1 (by omega) (by simp [quarter]) := by
+  apply Subtype.ext
+  rw [boundaryShiftParam_val]
+  change (((half q - 1 : Nat) : ZMod (modulus q)) +
+      ((half q - 2 : Nat) : ZMod (modulus q))) =
+        ((boundaryFirstOddValue q 1 : Nat) : ZMod (modulus q))
+  rw [← Nat.cast_add]
+  have hnat :
+      (half q - 1) + (half q - 2) = boundaryFirstOddValue q 1 := by
+    simp [boundaryFirstOddValue, half, modulus]
+    omega
+  rw [hnat]
+
+theorem boundaryCycleB2Bridge_to_firstOddLane (q : Nat)
+    (hb : 0 < boundaryCycleB2BridgeCount q)
+    (ho : 0 < boundaryCycleFirstOddLaneCount q) :
+    boundaryQuotient q (boundaryCycleB2BridgeNode q 0 hb) =
+      boundaryCycleFirstOddLaneNode q 0 ho := by
+  rw [boundaryCycleB2BridgeNode_zero q hb,
+    boundaryCycleFirstOddLaneNode_zero q ho]
+  have hnot_succ : (boundaryParamHalfSubOne q).1.val ≠ half q + 1 := by
+    simp [boundaryParamHalfSubOne, RouteENonzeroSeam.ofNat_val, half]
+  have hnot_close : (boundaryParamHalfSubOne q).1.val ≠ half q + 2 := by
+    simp [boundaryParamHalfSubOne, RouteENonzeroSeam.ofNat_val, half]
+  calc
+    boundaryQuotient q
+        (routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryParamHalfSubOne q)) =
+        routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryShiftParam q (boundaryParamHalfSubOne q) hnot_close) :=
+      boundaryQuotient_A_odd_shift q (boundaryParamHalfSubOne q) hnot_succ
+        (by
+          simp [boundaryParamHalfSubOne, RouteENonzeroSeam.ofNat_val, half]
+          omega)
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryFirstOddParam q 1 (by omega) (by simp [quarter])) := by
+      rw [boundaryParamHalfSubOne_shift_eq_firstOdd_one q hnot_close]
+
+def boundaryCycleFirstOddBSubOneCount (_q : Nat) : Nat := 1
+
+noncomputable def boundaryCycleFirstOddBSubOneNode (q k : Nat)
+    (_hk : k < boundaryCycleFirstOddBSubOneCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamHalfSubOne q)
+
+theorem boundaryCycleFirstOddLaneLastIndex_eq (q : Nat) :
+    boundaryCycleFirstOddLaneIndex (boundaryCycleFirstOddLaneCount q - 1) =
+      quarter q - 1 := by
+  simp [boundaryCycleFirstOddLaneIndex, boundaryCycleFirstOddLaneCount,
+    quarter]
+  omega
+
+theorem boundaryCycleFirstOddLaneLast_odd (q : Nat) :
+    (boundaryCycleFirstOddLaneCount q - 1) % 2 ≠ 0 := by
+  simp [boundaryCycleFirstOddLaneCount, quarter]
+  omega
+
+theorem boundaryFirstOddValue_last_eq_one (q : Nat) :
+    boundaryFirstOddValue q (quarter q - 1) = 1 := by
+  have hpar : (quarter q - 1) % 2 = 0 := by
+    simp [quarter]
+    omega
+  rw [boundaryFirstOddValue, if_pos hpar]
+  simp [quarter, half]
+  omega
+
+theorem boundaryFirstOddParam_last_val_one (q : Nat) :
+    (boundaryFirstOddParam q (quarter q - 1) (by simp [quarter])
+      (by simp [quarter])).1.val = 1 := by
+  rw [boundaryFirstOddParam_val]
+  exact boundaryFirstOddValue_last_eq_one q
+
+set_option linter.flexible false in
+theorem boundaryCycleFirstOddLane_to_BSubOne (q : Nat)
+    (hlast : boundaryCycleFirstOddLaneCount q - 1 <
+      boundaryCycleFirstOddLaneCount q)
+    (hbridge : 0 < boundaryCycleFirstOddBSubOneCount q) :
+    boundaryQuotient q
+        (boundaryCycleFirstOddLaneNode q
+          (boundaryCycleFirstOddLaneCount q - 1) hlast) =
+      boundaryCycleFirstOddBSubOneNode q 0 hbridge := by
+  have hodd := boundaryCycleFirstOddLaneLast_odd q
+  simp [boundaryCycleFirstOddLaneNode, boundaryCycleFirstOddBSubOneNode, hodd,
+    boundaryCycleFirstOddLaneLastIndex_eq q]
+  have hnot_succ :
+      (boundaryFirstOddParam q (quarter q - 1) (by simp [quarter])
+        (by simp [quarter])).1.val ≠ half q + 1 := by
+    rw [boundaryFirstOddParam_last_val_one q]
+    simp [half]
+  calc
+    boundaryQuotient q
+        (routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryFirstOddParam q (quarter q - 1) (by simp [quarter])
+            (by simp [quarter]))) =
+        routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryShiftParam q
+            (boundaryFirstOddParam q (quarter q - 1) (by simp [quarter])
+              (by simp [quarter])) (by
+                rw [boundaryFirstOddParam_last_val_one q]
+                simp [half])) :=
+      boundaryQuotient_A_odd_shift q
+        (boundaryFirstOddParam q (quarter q - 1) (by simp [quarter])
+          (by simp [quarter])) hnot_succ (by
+            rw [boundaryFirstOddParam_last_val_one q])
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryParamHalfSubOne q) := by
+      apply congrArg (routeEBoundaryNode RouteEBoundaryLabel.L04)
+      apply Subtype.ext
+      rw [boundaryShiftParam_val]
+      unfold boundaryFirstOddParam boundaryParamHalfSubOne
+        RouteENonzeroSeam.ofNat
+      simp [boundaryFirstOddValue_last_eq_one]
+      have hnat : 1 + (half q - 2) = half q - 1 := by
+        simp [half]
+        omega
+      rw [← Nat.cast_one, ← Nat.cast_add, hnat]
+
 def boundarySecondOddParam (q j : Nat)
     (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
     RouteENonzeroSeam (modulus q) :=

@@ -122,6 +122,8 @@ New arithmetic names include:
 - `boundaryCycleFirstOddLaneNode`
 - `boundaryCycleFirstOddLane_step_even`
 - `boundaryCycleFirstOddLane_step_odd`
+- `boundaryCycleB2Bridge_to_firstOddLane`
+- `boundaryCycleFirstOddLane_to_BSubOne`
 - `boundaryFirstOddParam_shift_succ`
 - `boundarySecondOddValue_range`
 - `boundarySecondEvenValue_range`
