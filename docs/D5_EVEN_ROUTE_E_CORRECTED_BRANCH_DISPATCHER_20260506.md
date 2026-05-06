@@ -463,6 +463,12 @@ The current manifest says that periods `6,8,12,16,24` have bad affine residue
 classes, while period `48` is nonrobust: it has no bad non-singleton classes,
 but `20` of `24` even residue classes are singleton in the `m=6..60` window.
 This prevents the finite window from being treated as a uniform count law.
+The scan artifact is checked by recomputation with:
+
+```bash
+python3 scripts/verify_routeE_small_seam_family_scan.py \
+  --json-out certs/routeE_small_seam_family_scan_verification.json
+```
 
 The local `Lambda_E` defect-layer counts are preserved in machine-readable
 form by:

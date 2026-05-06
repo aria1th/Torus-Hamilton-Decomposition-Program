@@ -1,0 +1,30 @@
+{
+  "bad_periods": [
+    6,
+    8,
+    12,
+    16,
+    24
+  ],
+  "case_count": 28,
+  "manifest": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_small_seam_family_scan_manifest.json",
+  "manifest_match": true,
+  "manifest_mismatches": [],
+  "nonrobust_affine_periods": [
+    48
+  ],
+  "ok": true,
+  "periods": [
+    6,
+    8,
+    12,
+    16,
+    24,
+    48
+  ],
+  "raw": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_small_seam_family_scan_6_60.json",
+  "raw_match": true,
+  "raw_mismatches": [],
+  "robust_affine_periods": [],
+  "schema": "routeE_small_seam_family_scan_verification_v1"
+}

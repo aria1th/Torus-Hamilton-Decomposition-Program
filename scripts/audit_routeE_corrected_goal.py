@@ -41,6 +41,9 @@ FILES = {
     "small_seam_family_manifest": ROOT
     / "certs"
     / "routeE_small_seam_family_scan_manifest.json",
+    "small_seam_family_verification": ROOT
+    / "certs"
+    / "routeE_small_seam_family_scan_verification.json",
 }
 
 
@@ -70,6 +73,7 @@ def build_audit() -> dict[str, Any]:
     lambdae = load_json(FILES["lambdaE_polynomials"])
     lambdae_verification = load_json(FILES["lambdaE_verification"])
     family_manifest = load_json(FILES["small_seam_family_manifest"])
+    family_verification = load_json(FILES["small_seam_family_verification"])
 
     checklist = [
         item(
@@ -184,6 +188,15 @@ def build_audit() -> dict[str, Any]:
             == "d5_routeE_small_seam_family_scan_manifest_v1"
             and family_manifest.get("case_count") == 28,
             "certs/routeE_small_seam_family_scan_manifest.json",
+        ),
+        item(
+            "finite small-seam family scan verifies by recomputation",
+            family_verification.get("schema")
+            == "routeE_small_seam_family_scan_verification_v1"
+            and family_verification.get("ok") is True
+            and family_verification.get("bad_periods") == [6, 8, 12, 16, 24]
+            and family_verification.get("nonrobust_affine_periods") == [48],
+            "certs/routeE_small_seam_family_scan_verification.json",
         ),
         item(
             "E-gen-symbolic branch is closed",

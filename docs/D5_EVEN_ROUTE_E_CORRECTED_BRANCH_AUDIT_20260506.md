@@ -37,6 +37,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
 | Initialize R38 gate-transducer branch record | `scripts/init_routeE_r38_gate_transducer_record.py`, `certs/routeE_r38_gate_transducer_branch_record.json` | done, branch remains open |
 | Scan finite small-seam window for simple affine branch laws | `scripts/analyze_d5_routeE_small_seam_families.py`, `certs/routeE_small_seam_family_scan_manifest.json` | done, no robust law found |
+| Verify finite small-seam family scan by recomputation | `scripts/verify_routeE_small_seam_family_scan.py`, `certs/routeE_small_seam_family_scan_verification.json` | done |
 | Machine-check the goal completion status | `scripts/audit_routeE_corrected_goal.py`, `certs/routeE_corrected_goal_audit.json` | done, reports incomplete |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
@@ -279,6 +280,21 @@ because 20 of 24 residue classes are singleton in m=6..60.
 Thus the existing finite window is not enough to infer a uniform affine count
 law.  It is branch-finding evidence only.
 
+Verification:
+
+```bash
+python3 scripts/verify_routeE_small_seam_family_scan.py \
+  --json-out certs/routeE_small_seam_family_scan_verification.json
+```
+
+Result:
+
+```text
+ok True periods [6, 8, 12, 16, 24, 48]
+bad [6, 8, 12, 16, 24]
+nonrobust [48]
+```
+
 Machine completion audit:
 
 ```bash
@@ -310,6 +326,7 @@ python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
 python3 -m py_compile scripts/audit_routeE_corrected_goal.py
 python3 -m py_compile scripts/analyze_d5_routeE_small_seam_families.py
+python3 -m py_compile scripts/verify_routeE_small_seam_family_scan.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
 python3 -m py_compile scripts/verify_d5_lambdaE_mask_polynomials.py
 git diff --check
