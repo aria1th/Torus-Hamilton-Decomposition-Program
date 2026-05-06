@@ -1279,6 +1279,51 @@ theorem boundaryQuotient_formulaTarget (q : Nat) :
       boundaryPredParam_val q a hnot_one,
       boundaryQuotient_C_generic q a hnot_one hnot_h hnot_last⟩
 
+theorem card_boundaryNode_eq_three_modulus_sub_two (q : Nat) :
+    Fintype.card (RouteEBoundaryNode (modulus q)) = 3 * modulus q - 2 := by
+  rw [card_routeEBoundaryNode]
+  simp [modulus]
+  omega
+
+def boundaryCycleSpineCount (q : Nat) : Nat :=
+  half q + 4
+
+def boundaryCycleFirstEvenTailCount (q : Nat) : Nat :=
+  2 * (quarter q - 1)
+
+def boundaryCycleB2BridgeCount (_q : Nat) : Nat := 1
+
+def boundaryCycleFirstOddTailCount (q : Nat) : Nat :=
+  2 * (quarter q - 1) + 1 + (half q - 1)
+
+def boundaryCycleALastBridgeCount (_q : Nat) : Nat := 1
+
+def boundaryCycleSecondOddTailCount (q : Nat) : Nat :=
+  2 * quarter q - 1
+
+def boundaryCycleSecondEvenTailCount (q : Nat) : Nat :=
+  2 * quarter q - 3
+
+def boundaryCycleHandCountTotal (q : Nat) : Nat :=
+  boundaryCycleSpineCount q +
+  boundaryCycleFirstEvenTailCount q +
+  boundaryCycleB2BridgeCount q +
+  boundaryCycleFirstOddTailCount q +
+  boundaryCycleALastBridgeCount q +
+  boundaryCycleSecondOddTailCount q +
+  boundaryCycleSecondEvenTailCount q
+
+theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
+    boundaryCycleHandCountTotal q =
+      Fintype.card (RouteEBoundaryNode (modulus q)) := by
+  rw [card_boundaryNode_eq_three_modulus_sub_two]
+  simp [boundaryCycleHandCountTotal, boundaryCycleSpineCount,
+    boundaryCycleFirstEvenTailCount, boundaryCycleB2BridgeCount,
+    boundaryCycleFirstOddTailCount, boundaryCycleALastBridgeCount,
+    boundaryCycleSecondOddTailCount, boundaryCycleSecondEvenTailCount,
+    quarter, half, modulus]
+  omega
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and

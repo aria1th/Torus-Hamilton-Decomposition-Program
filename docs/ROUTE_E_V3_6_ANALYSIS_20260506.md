@@ -81,6 +81,8 @@ New arithmetic names include:
 - `boundaryQuotient_B_even_shift`
 - `boundaryQuotient_C_generic`
 - `boundaryQuotient_formulaTarget`
+- `card_boundaryNode_eq_three_modulus_sub_two`
+- `boundaryCycleHandCountTotal_eq_card`
 - `boundaryShiftParam`
 - `boundaryPredParam`
 - `boundaryParamOne`
@@ -194,10 +196,13 @@ Closed or proof-facing in the bundle:
 - 14, 23, and 24 residual-core time masses;
 - 34 finite-defect boundary time mass;
 - boundary quotient formula target for the B20 v1.8 candidate.
+- the boundary one-cycle hand proof's segment count, whose total is
+  `Fintype.card (RouteEBoundaryNode (modulus q))`.
 
 Remaining B20 obligations:
 
-- prove the B20 boundary quotient candidate is a single cycle;
+- prove the B20 boundary quotient candidate is a single cycle, beyond the
+  currently Lean-checked segment count;
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;
