@@ -1,0 +1,191 @@
+{
+  "commands": [
+    "python3 scripts/search_d5_routeE_symmetric_packets.py --moduli 38,86,134 --x-values 5,23 --timeout 20 --jobs 3 --json-out certs/routeE_r38_symmetric_probe_recheck.json",
+    "python3 scripts/search_d5_routeE_symmetric_packets.py --moduli 182,230 --x-values 5,23 --timeout 30 --jobs 2 --json-out certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+    "python3 scripts/search_d5_routeE_symmetric_packets.py --moduli 182 --x-values 1:89:2 --timeout 8 --jobs 8 --json-out certs/routeE_r38_symmetric_probe_m182_oddx.json"
+  ],
+  "conclusion": "Initial m=38,86,134 hits are reproduced, but m=134,x=23 splits and the m=182 quick probe gives no full certificate. Some m=182 candidates have one section cycle but fail time exhaustion. Treat R38 as a gate-transducer/near-symmetric mining target, not a fixed symmetric x=z law.",
+  "hits": {
+    "134": [
+      5
+    ],
+    "38": [
+      5
+    ],
+    "86": [
+      23
+    ]
+  },
+  "important_entries": [
+    {
+      "cycles": [
+        37
+      ],
+      "m": 38,
+      "m4": 2085136,
+      "ok": true,
+      "source": "certs/routeE_r38_symmetric_probe_recheck.json",
+      "time_sum": 2085136,
+      "timeout": false,
+      "x": 5
+    },
+    {
+      "cycles": [
+        7,
+        7,
+        71
+      ],
+      "m": 86,
+      "m4": 54700816,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_recheck.json",
+      "time_sum": 54700816,
+      "timeout": false,
+      "x": 5
+    },
+    {
+      "cycles": [
+        85
+      ],
+      "m": 86,
+      "m4": 54700816,
+      "ok": true,
+      "source": "certs/routeE_r38_symmetric_probe_recheck.json",
+      "time_sum": 54700816,
+      "timeout": false,
+      "x": 23
+    },
+    {
+      "cycles": [
+        133
+      ],
+      "m": 134,
+      "m4": 322417936,
+      "ok": true,
+      "source": "certs/routeE_r38_symmetric_probe_recheck.json",
+      "time_sum": 322417936,
+      "timeout": false,
+      "x": 5
+    },
+    {
+      "cycles": [
+        38,
+        38,
+        57
+      ],
+      "m": 134,
+      "m4": 322417936,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_recheck.json",
+      "time_sum": 322417936,
+      "timeout": false,
+      "x": 23
+    },
+    {
+      "cycles": null,
+      "m": 182,
+      "m4": null,
+      "ok": null,
+      "source": "certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+      "time_sum": null,
+      "timeout": true,
+      "x": 5
+    },
+    {
+      "cycles": null,
+      "m": 182,
+      "m4": null,
+      "ok": null,
+      "source": "certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+      "time_sum": null,
+      "timeout": true,
+      "x": 23
+    },
+    {
+      "cycles": [
+        8,
+        8,
+        55,
+        79,
+        79
+      ],
+      "m": 230,
+      "m4": 2798410000,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+      "time_sum": 116178092,
+      "timeout": false,
+      "x": 5
+    },
+    {
+      "cycles": [
+        6,
+        6,
+        7,
+        7,
+        203
+      ],
+      "m": 230,
+      "m4": 2798410000,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+      "time_sum": 122150700,
+      "timeout": false,
+      "x": 23
+    },
+    {
+      "cycles": null,
+      "m": 182,
+      "m4": null,
+      "ok": null,
+      "source": "certs/routeE_r38_symmetric_probe_m182_oddx.json",
+      "time_sum": null,
+      "timeout": true,
+      "x": 5
+    },
+    {
+      "cycles": [
+        181
+      ],
+      "m": 182,
+      "m4": 1097199376,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_m182_oddx.json",
+      "time_sum": 157580332,
+      "timeout": false,
+      "x": 21
+    },
+    {
+      "cycles": null,
+      "m": 182,
+      "m4": null,
+      "ok": null,
+      "source": "certs/routeE_r38_symmetric_probe_m182_oddx.json",
+      "time_sum": null,
+      "timeout": true,
+      "x": 23
+    },
+    {
+      "cycles": [
+        181
+      ],
+      "m": 182,
+      "m4": 1097199376,
+      "ok": false,
+      "source": "certs/routeE_r38_symmetric_probe_m182_oddx.json",
+      "time_sum": 157580332,
+      "timeout": false,
+      "x": 63
+    }
+  ],
+  "non_timeout_results": 17,
+  "raw_probe_files": [
+    "certs/routeE_r38_symmetric_probe_recheck.json",
+    "certs/routeE_r38_symmetric_probe_recheck_182_230.json",
+    "certs/routeE_r38_symmetric_probe_m182_oddx.json"
+  ],
+  "schema": "routeE_r38_symmetric_probe_summary_v2",
+  "status": "negative-control and next-target evidence for the R38 symmetric/near-symmetric branch",
+  "timeout_results": 38,
+  "total_results": 55
+}

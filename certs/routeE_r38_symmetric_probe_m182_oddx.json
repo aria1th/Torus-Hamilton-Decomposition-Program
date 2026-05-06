@@ -1,0 +1,533 @@
+{
+  "hits": {},
+  "moduli": [
+    182
+  ],
+  "results": [
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 1
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 3
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 5
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          7,
+          167,
+          0,
+          7,
+          0
+        ],
+        "cycles": [
+          2,
+          2,
+          177
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 7
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 9
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 11
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          13,
+          155,
+          0,
+          13,
+          0
+        ],
+        "cycles": [
+          12,
+          12,
+          157
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 7289074
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 13
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 15
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 17
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 19
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          21,
+          139,
+          0,
+          21,
+          0
+        ],
+        "cycles": [
+          181
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 21
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 23
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 25
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 27
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 29
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 31
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 33
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          35,
+          111,
+          0,
+          35,
+          0
+        ],
+        "cycles": [
+          1,
+          1,
+          7,
+          7,
+          13,
+          13,
+          34,
+          34,
+          71
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 35
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 37
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          39,
+          103,
+          0,
+          39,
+          0
+        ],
+        "cycles": [
+          13,
+          13,
+          24,
+          24,
+          107
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 7356076
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 39
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 41
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 43
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 45
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 47
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          49,
+          83,
+          0,
+          49,
+          0
+        ],
+        "cycles": [
+          6,
+          6,
+          40,
+          40,
+          89
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 49
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 51
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 53
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 55
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 57
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 59
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 61
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          63,
+          55,
+          0,
+          63,
+          0
+        ],
+        "cycles": [
+          181
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 63
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          65,
+          51,
+          0,
+          65,
+          0
+        ],
+        "cycles": [
+          25,
+          25,
+          131
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 7356076
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 65
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 67
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 69
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 71
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 73
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 75
+    },
+    {
+      "m": 182,
+      "result": {
+        "counts": [
+          77,
+          27,
+          0,
+          77,
+          0
+        ],
+        "cycles": [
+          1,
+          1,
+          43,
+          68,
+          68
+        ],
+        "j": 2,
+        "m": 182,
+        "m4": 1097199376,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 157580332
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 77
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 79
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 81
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 83
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 85
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 87
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 8.0,
+      "x": 89
+    }
+  ],
+  "schema": "d5_routeE_symmetric_packet_probe_v1",
+  "timeout_seconds": 8.0,
+  "x_values": [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    55,
+    57,
+    59,
+    61,
+    63,
+    65,
+    67,
+    69,
+    71,
+    73,
+    75,
+    77,
+    79,
+    81,
+    83,
+    85,
+    87,
+    89
+  ]
+}

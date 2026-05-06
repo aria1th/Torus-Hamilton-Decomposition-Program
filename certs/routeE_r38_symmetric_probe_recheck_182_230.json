@@ -1,0 +1,87 @@
+{
+  "hits": {},
+  "moduli": [
+    182,
+    230
+  ],
+  "results": [
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 30.0,
+      "x": 5
+    },
+    {
+      "m": 182,
+      "timeout": true,
+      "timeout_seconds": 30.0,
+      "x": 23
+    },
+    {
+      "m": 230,
+      "result": {
+        "counts": [
+          5,
+          219,
+          0,
+          5,
+          0
+        ],
+        "cycles": [
+          8,
+          8,
+          55,
+          79,
+          79
+        ],
+        "j": 2,
+        "m": 230,
+        "m4": 2798410000,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 116178092
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 5
+    },
+    {
+      "m": 230,
+      "result": {
+        "counts": [
+          23,
+          183,
+          0,
+          23,
+          0
+        ],
+        "cycles": [
+          6,
+          6,
+          7,
+          7,
+          203
+        ],
+        "j": 2,
+        "m": 230,
+        "m4": 2798410000,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 122150700
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 23
+    }
+  ],
+  "schema": "d5_routeE_symmetric_packet_probe_v1",
+  "timeout_seconds": 30.0,
+  "x_values": [
+    5,
+    23
+  ]
+}

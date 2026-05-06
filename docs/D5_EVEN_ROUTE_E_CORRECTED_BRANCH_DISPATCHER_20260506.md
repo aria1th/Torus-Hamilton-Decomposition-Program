@@ -370,3 +370,28 @@ The next recorded target is the `R38` / symmetric-or-near-symmetric family,
 but the status package explicitly warns that the naive `x=z` symmetric theorem
 is false.  That branch should therefore be mined as a gate-transducer family,
 not as a fixed symmetric-unit law.
+
+A small R38 symmetric recheck is stored at:
+
+```text
+certs/routeE_r38_symmetric_probe_summary.json
+```
+
+It reproduces the initial symmetric hits:
+
+```text
+m=38,  x=5;
+m=86,  x=23;
+m=134, x=5.
+```
+
+It also records the negative controls:
+
+```text
+m=134, x=23: time sum is m^4 but the section map splits as 38,38,57;
+m=182: quick odd-x probe found no full certificate, and x=21,63 have one
+       section cycle but fail time exhaustion.
+```
+
+So the R38 branch remains open and should be searched as a gate/transducer or
+near-symmetric family, not as a simple two-value or fixed symmetric law.

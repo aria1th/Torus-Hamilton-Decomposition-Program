@@ -30,6 +30,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
+| Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -122,6 +123,30 @@ Result:
 covered residues mod 48: 14,16,20,40,44
 open residues mod 48: 0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46
 next target: R38 / symmetric-or-near-symmetric family
+```
+
+R38 symmetric recheck:
+
+```bash
+python3 scripts/search_d5_routeE_symmetric_packets.py \
+  --moduli 38,86,134 --x-values 5,23 --timeout 20 --jobs 3 \
+  --json-out certs/routeE_r38_symmetric_probe_recheck.json
+
+python3 scripts/search_d5_routeE_symmetric_packets.py \
+  --moduli 182,230 --x-values 5,23 --timeout 30 --jobs 2 \
+  --json-out certs/routeE_r38_symmetric_probe_recheck_182_230.json
+
+python3 scripts/search_d5_routeE_symmetric_packets.py \
+  --moduli 182 --x-values 1:89:2 --timeout 8 --jobs 8 \
+  --json-out certs/routeE_r38_symmetric_probe_m182_oddx.json
+```
+
+Summary:
+
+```text
+hits: m=38,x=5; m=86,x=23; m=134,x=5
+negative control: m=134,x=23 splits as 38,38,57 despite time sum m^4
+m=182 quick probe: no full certificate; x=21,63 have one section cycle but fail time exhaustion
 ```
 
 Hygiene:
@@ -218,6 +243,10 @@ The Type-A residue coverage cert records that the promoted branch set covers
 five even residue classes modulo `48`: `14,16,20,40,44`.  The next package
 target is `R38`, but this is explicitly a gate-transducer mining target because
 the naive symmetric `x=z` branch law has a recorded failure.
+
+The R38 symmetric recheck strengthens that caution.  It reproduces early hits,
+but it does not produce a branch theorem and it shows that the tempting
+`x=5/23` continuation already fails to give a simple law.
 
 ## Conclusion
 

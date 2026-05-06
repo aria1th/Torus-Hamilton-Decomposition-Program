@@ -1,0 +1,166 @@
+{
+  "hits": {
+    "134": [
+      5
+    ],
+    "38": [
+      5
+    ],
+    "86": [
+      23
+    ]
+  },
+  "moduli": [
+    38,
+    86,
+    134
+  ],
+  "results": [
+    {
+      "m": 38,
+      "result": {
+        "counts": [
+          5,
+          27,
+          0,
+          5,
+          0
+        ],
+        "cycles": [
+          37
+        ],
+        "j": 2,
+        "m": 38,
+        "m4": 2085136,
+        "ok": true,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 2085136
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 5
+    },
+    {
+      "m": 38,
+      "reason": "invalid packet",
+      "skipped": true,
+      "x": 23
+    },
+    {
+      "m": 86,
+      "result": {
+        "counts": [
+          5,
+          75,
+          0,
+          5,
+          0
+        ],
+        "cycles": [
+          7,
+          7,
+          71
+        ],
+        "j": 2,
+        "m": 86,
+        "m4": 54700816,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 54700816
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 5
+    },
+    {
+      "m": 86,
+      "result": {
+        "counts": [
+          23,
+          39,
+          0,
+          23,
+          0
+        ],
+        "cycles": [
+          85
+        ],
+        "j": 2,
+        "m": 86,
+        "m4": 54700816,
+        "ok": true,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 54700816
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 23
+    },
+    {
+      "m": 134,
+      "result": {
+        "counts": [
+          5,
+          123,
+          0,
+          5,
+          0
+        ],
+        "cycles": [
+          133
+        ],
+        "j": 2,
+        "m": 134,
+        "m4": 322417936,
+        "ok": true,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 322417936
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 5
+    },
+    {
+      "m": 134,
+      "result": {
+        "counts": [
+          23,
+          87,
+          0,
+          23,
+          0
+        ],
+        "cycles": [
+          38,
+          38,
+          57
+        ],
+        "j": 2,
+        "m": 134,
+        "m4": 322417936,
+        "ok": false,
+        "parsed": true,
+        "slot": 0,
+        "start_ok": true,
+        "time_sum": 322417936
+      },
+      "returncode": 0,
+      "stderr_tail": [],
+      "x": 23
+    }
+  ],
+  "schema": "d5_routeE_symmetric_packet_probe_v1",
+  "timeout_seconds": 20.0,
+  "x_values": [
+    5,
+    23
+  ]
+}
