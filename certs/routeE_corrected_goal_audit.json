@@ -91,6 +91,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_open_residue_cpp_smoke_summary_20260506.json",
+      "missing": null,
+      "name": "open-residue C++ smoke screen is summarized",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_small_seam_family_scan_manifest.json",
       "missing": null,
       "name": "finite small-seam family scan is recorded",

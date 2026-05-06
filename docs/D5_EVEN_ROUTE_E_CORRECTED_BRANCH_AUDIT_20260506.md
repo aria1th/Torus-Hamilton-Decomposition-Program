@@ -34,6 +34,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
+| Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
 | Initialize R38 gate-transducer branch record | `scripts/init_routeE_r38_gate_transducer_record.py`, `certs/routeE_r38_gate_transducer_branch_record.json` | done, branch remains open |
 | Scan finite small-seam window for simple affine branch laws | `scripts/analyze_d5_routeE_small_seam_families.py`, `certs/routeE_small_seam_family_scan_manifest.json` | done, no robust law found |
 | Machine-check the goal completion status | `scripts/audit_routeE_corrected_goal.py`, `certs/routeE_corrected_goal_audit.json` | done, reports incomplete |
@@ -217,6 +218,26 @@ all five tested support patterns timed out with no partial hits.
 
 This is not a mathematical obstruction.  It is a search-control artifact that
 prevents future broad mining runs from requiring manual process kills.
+
+Open-residue C++ smoke screen:
+
+```bash
+python3 scripts/search_d5_routeE_cpp_residue_branches.py \
+  --moduli 48,50,52,54,56,58,60,66,70,72,74,76,78,80,82,84,86,90,94 \
+  --patterns '0,1,3;0,3,4;1,3,4' \
+  --hit-limit 1 --candidate-limit 1500 --cap-m3-factor 0.25 \
+  --jobs 8 --timeout 4 \
+  --json-out certs/routeE_open_residue_cpp_smoke_20260506.json
+```
+
+Result:
+
+```text
+tasks=57 hits=0 timeouts=57
+```
+
+This is again search-control evidence only.  It says this shallow broad screen
+does not immediately fill open Type-A residues.
 
 R38 gate-transducer branch record:
 

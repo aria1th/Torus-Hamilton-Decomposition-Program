@@ -31,6 +31,9 @@ FILES = {
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
+    "open_residue_smoke": ROOT
+    / "certs"
+    / "routeE_open_residue_cpp_smoke_summary_20260506.json",
     "lambdaE_polynomials": ROOT / "certs" / "d5_lambdaE_mask_polynomials.json",
     "lambdaE_verification": ROOT
     / "certs"
@@ -63,6 +66,7 @@ def build_audit() -> dict[str, Any]:
     r38 = load_json(FILES["r38_record"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
+    open_residue_smoke = load_json(FILES["open_residue_smoke"])
     lambdae = load_json(FILES["lambdaE_polynomials"])
     lambdae_verification = load_json(FILES["lambdaE_verification"])
     family_manifest = load_json(FILES["small_seam_family_manifest"])
@@ -165,6 +169,14 @@ def build_audit() -> dict[str, Any]:
             timeout.get("schema") == "d5_routeE_cpp_residue_branch_search_v1"
             and all(result.get("timeout") for result in timeout.get("results", [])),
             "certs/routeE_r38_m182_cpp_screen_timeout.json",
+        ),
+        item(
+            "open-residue C++ smoke screen is summarized",
+            open_residue_smoke.get("schema")
+            == "routeE_open_residue_cpp_smoke_summary_v1"
+            and open_residue_smoke.get("task_count") == 57
+            and open_residue_smoke.get("timeout_count") == 57,
+            "certs/routeE_open_residue_cpp_smoke_summary_20260506.json",
         ),
         item(
             "finite small-seam family scan is recorded",
