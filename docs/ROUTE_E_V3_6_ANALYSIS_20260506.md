@@ -283,6 +283,13 @@ The corrected coefficient `19179` is also forced by the Lean theorem
 `RouteEB20.allPairTimeMassTotal_eq_modulus_pow_four`.  Using `19079` leaves a
 residual error of `100*q` in the B20 total time budget.
 
+Lean now records both sides of this correction:
+
+- `RouteEB20.allPairTime03Target_add_allPairTime04Target_v36_draft_defect`
+  proves the bundle-text value is short by `100*q`.
+- `RouteEB20.allPairTime03Target_add_allPairTime04Target_ne_v36_draft`
+  rules out the printed coefficient for every `q > 0`.
+
 ## B20 Status
 
 Closed or proof-facing in the bundle:
@@ -294,6 +301,11 @@ Closed or proof-facing in the bundle:
 - 34 finite-defect boundary time mass;
 - boundary quotient formula target for the B20 v1.8 candidate.
 - boundary quotient one-cycle target for the B20 v1.8 candidate.
+- a boundary-clock mass adapter:
+  `RouteEB20.BoundaryClockMassTarget` plus
+  `RouteEB20.allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four`.
+  This lets a future pointwise derivation of the `03` and `04` clock functions
+  close the all-pair time exhaustion without changing the endpoint theorem.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four

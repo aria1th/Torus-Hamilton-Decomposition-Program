@@ -234,6 +234,23 @@ theorem allPairTime03Target_add_allPairTime04Target (q : Nat) :
   simp [allPairTime03Target, allPairTime04Target]
   ring
 
+theorem allPairTime03Target_add_allPairTime04Target_v36_draft_defect
+    (q : Nat) :
+    allPairTime03Target q + allPairTime04Target q =
+      (10368 * q ^ 3 + 24426 * q ^ 2 + 19079 * q + 5038) +
+        100 * q := by
+  simp [allPairTime03Target, allPairTime04Target]
+  ring
+
+theorem allPairTime03Target_add_allPairTime04Target_ne_v36_draft
+    (q : Nat) (hq : 0 < q) :
+    allPairTime03Target q + allPairTime04Target q ≠
+      10368 * q ^ 3 + 24426 * q ^ 2 + 19079 * q + 5038 := by
+  intro h
+  have hdefect :=
+    allPairTime03Target_add_allPairTime04Target_v36_draft_defect q
+  omega
+
 theorem allPairTimeMassTotal_eq_modulus_pow_four (q : Nat) :
     allPairTimeMassTotal q = modulus q ^ 4 := by
   simp [allPairTimeMassTotal, allPairTimeZ, allPairTime01,
@@ -812,6 +829,49 @@ structure BoundaryQuotientFormulaTarget (q : Nat)
 def BoundaryQuotientOneCycleTarget (q : Nat) : Prop :=
   ∃ Q : RouteEBoundaryNode (modulus q) → RouteEBoundaryNode (modulus q),
     BoundaryQuotientFormulaTarget q Q ∧ IsSingleCycleMap Q
+
+/--
+Boundary-clock mass endpoint for the two B20 labels still isolated by the
+v3.6 bundle.  An eventual clock derivation should instantiate `time03` and
+`time04` pointwise; this adapter then feeds their sums into the existing
+all-pair exhaustion arithmetic.
+-/
+structure BoundaryClockMassTarget (q : Nat) where
+  time03 : RouteENonzeroSeam (modulus q) → Nat
+  time04 : RouteENonzeroSeam (modulus q) → Nat
+  time03_pos : ∀ a, 0 < time03 a
+  time04_pos : ∀ a, 0 < time04 a
+  time03_sum : Finset.univ.sum time03 = allPairTime03Target q
+  time04_sum : Finset.univ.sum time04 = allPairTime04Target q
+
+def allPairTimeMassFromBoundaryClocks (q : Nat)
+    (target : BoundaryClockMassTarget q) : AllPairLabel → Nat
+  | AllPairLabel.Z => allPairTimeZ q
+  | AllPairLabel.L01 => allPairTime01 q
+  | AllPairLabel.L02 => allPairTime02 q
+  | AllPairLabel.L03 => Finset.univ.sum target.time03
+  | AllPairLabel.L04 => Finset.univ.sum target.time04
+  | AllPairLabel.L12 => allPairTime12 q
+  | AllPairLabel.L13 => allPairTime13 q
+  | AllPairLabel.L14 => allPairTime14 q
+  | AllPairLabel.L23 => allPairTime23 q
+  | AllPairLabel.L24 => allPairTime24 q
+  | AllPairLabel.L34 => allPairTime34 q
+
+theorem allPairTimeMassFromBoundaryClocks_eq (q : Nat)
+    (target : BoundaryClockMassTarget q) :
+    allPairTimeMassFromBoundaryClocks q target = allPairTimeMass q := by
+  funext label
+  cases label <;>
+    simp [allPairTimeMassFromBoundaryClocks, allPairTimeMass,
+      target.time03_sum, target.time04_sum]
+
+theorem allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four
+    (q : Nat) (target : BoundaryClockMassTarget q) :
+    Finset.univ.sum (allPairTimeMassFromBoundaryClocks q target) =
+      modulus q ^ 4 := by
+  rw [allPairTimeMassFromBoundaryClocks_eq q target]
+  exact allPairTimeMass_sum_eq_modulus_pow_four q
 
 def boundaryParamOne (q : Nat) : RouteENonzeroSeam (modulus q) :=
   RouteENonzeroSeam.ofNat 1 (by omega) (by simp [modulus])
