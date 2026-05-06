@@ -268,6 +268,11 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_boundary_quotient_summary.json",
         ),
         item(
+            "R42 representative q=1 boundary block table is preserved",
+            len(r42_boundary_summary.get("representative_q1_block_table", [])) == 29,
+            "certs/routeE_r42_boundary_quotient_summary.json: representative_q1_block_table",
+        ),
+        item(
             "R38 symmetric probe negative controls are preserved",
             probe.get("schema") == "routeE_r38_symmetric_probe_summary_v2"
             and probe.get("hits") == {"38": [5], "86": [23], "134": [5]},

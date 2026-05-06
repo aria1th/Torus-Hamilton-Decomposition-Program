@@ -121,6 +121,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_boundary_quotient_summary.json: representative_q1_block_table",
+      "missing": null,
+      "name": "R42 representative q=1 boundary block table is preserved",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
       "missing": null,
       "name": "R38 symmetric probe negative controls are preserved",

@@ -149,6 +149,124 @@ def terminal(group: list[dict[str, Any]], m: int) -> tuple[str, tuple[int, int]]
     return group[0]["dst_label"], affine
 
 
+def condition_summary(group: list[dict[str, Any]]) -> dict[str, Any]:
+    values = sorted(row["src_a"] for row in group)
+    if not values:
+        return {"count": 0}
+    intervals = []
+    start = prev = values[0]
+    for value in values[1:]:
+        if value == prev + 1:
+            prev = value
+            continue
+        intervals.append([start, prev])
+        start = prev = value
+    intervals.append([start, prev])
+
+    out: dict[str, Any] = {
+        "count": len(values),
+        "min": values[0],
+        "max": values[-1],
+    }
+    if len(intervals) <= 8:
+        out["intervals"] = intervals
+    else:
+        out["interval_count"] = len(intervals)
+        out["first_intervals"] = intervals[:4]
+        out["last_intervals"] = intervals[-3:]
+
+    hints = []
+    for modulus in [2, 3, 4, 5, 6, 8, 10, 12, 16, 24, 32]:
+        residues = sorted({value % modulus for value in values})
+        if len(residues) <= 4:
+            hints.append({"mod": modulus, "residues": residues})
+    if hints:
+        out["residue_hints"] = hints[:6]
+    return out
+
+
+def terminal_dict(group: list[dict[str, Any]], m: int) -> dict[str, Any] | None:
+    result = terminal(group, m)
+    if result is None:
+        return None
+    dst_label, affine = result
+    return {"dst_label": dst_label, "affine_mod": list(affine)}
+
+
+def block_detail(group: list[dict[str, Any]], m: int, extra: dict[str, Any]) -> list[dict[str, Any]]:
+    term = terminal_dict(group, m)
+    if term is not None:
+        return [{"condition": condition_summary(group), "terminal": term, **extra}]
+
+    for modulus in [2, 3, 4, 5, 6, 8, 10, 12, 16, 24, 32]:
+        classes: dict[int, list[dict[str, Any]]] = defaultdict(list)
+        for row in group:
+            classes[row["src_a"] % modulus].append(row)
+        if len(classes) <= 1:
+            continue
+        if all(terminal(rows, m) is not None for rows in classes.values()):
+            out = []
+            for residue, rows in sorted(classes.items()):
+                condition = condition_summary(rows)
+                condition["mod"] = modulus
+                condition["residue"] = residue
+                out.append({"condition": condition, "terminal": terminal_dict(rows, m), **extra})
+            return out
+
+    out = []
+    run: list[dict[str, Any]] = []
+
+    def flush(rows: list[dict[str, Any]]) -> None:
+        if not rows:
+            return
+        term = terminal_dict(rows, m)
+        if term is not None:
+            out.append({"condition": condition_summary(rows), "terminal": term, **extra})
+        else:
+            for row in rows:
+                out.append(
+                    {
+                        "condition": condition_summary([row]),
+                        "terminal": terminal_dict([row], m),
+                        "fallback": "singleton",
+                        **extra,
+                    }
+                )
+
+    for row in sorted(group, key=lambda item: item["src_a"]):
+        candidate = run + [row]
+        if not run or terminal(candidate, m) is not None:
+            run = candidate
+        else:
+            flush(run)
+            run = [row]
+    flush(run)
+    return out
+
+
+def block_table(rows: list[dict[str, Any]], m: int) -> list[dict[str, Any]]:
+    table = []
+    for src_label in ["Z", "03", "04", "34"]:
+        sub = [row for row in rows if row["src_label"] == src_label]
+        if src_label == "Z":
+            table.extend(block_detail(sub, m, {"src_label": src_label, "path": "Z"}))
+            continue
+        groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+        for row in sub:
+            groups[(row["dst_label"], row["path"])].append(row)
+        for (dst_label, path), group in sorted(
+            groups.items(), key=lambda item: (BOUNDARY_ORDER[item[0][0]], item[0][1])
+        ):
+            table.extend(
+                block_detail(
+                    group,
+                    m,
+                    {"src_label": src_label, "dst_label_group": dst_label, "path": path},
+                )
+            )
+    return table
+
+
 def split_blocks(group: list[dict[str, Any]], m: int) -> int:
     if terminal(group, m) is not None:
         return 1
@@ -272,6 +390,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     by_label = block_counts(boundary, m)
     block_count = sum(by_label.values())
     transitions = transition_counts(boundary)
+    representative_blocks = block_table(boundary, m) if q == 1 else None
     return {
         "q": q,
         "m": m,
@@ -286,6 +405,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
         "block_count": block_count,
         "block_count_by_label": by_label,
         "boundary_transition_counts": transitions,
+        "representative_block_table": representative_blocks,
         "returncode": proc.returncode,
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
         "ok": True,
@@ -306,6 +426,16 @@ def main() -> None:
     q_values = parse_range(args.q_values)
     with tempfile.TemporaryDirectory(prefix="routeE-r42-boundary-") as tmp:
         samples = [summarize_sample(args.binary, q, Path(tmp)) for q in q_values]
+    representative_q1_block_table = next(
+        (
+            sample.pop("representative_block_table")
+            for sample in samples
+            if sample.get("q") == 1
+        ),
+        None,
+    )
+    for sample in samples:
+        sample.pop("representative_block_table", None)
 
     generic = [sample for sample in samples if sample.get("q", 0) >= 1]
     stable_counts = len({json.dumps(s.get("block_count_by_label"), sort_keys=True) for s in generic}) == 1
@@ -334,6 +464,7 @@ def main() -> None:
             else None,
         },
         "q_ge_1_transition_count_fits": transition_count_fits(samples),
+        "representative_q1_block_table": representative_q1_block_table,
         "interpretation": (
             "The boundary quotient is a single cycle for the checked R42 "
             "samples and has stable block counts for q>=1.  This is a "

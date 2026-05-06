@@ -563,5 +563,10 @@ Z -> 03  = 1
 34 -> 34 = 12*q + 10
 ```
 
+The artifact also preserves a compact `q=1` representative block table with
+29 blocks.  This table is the next proof target: a symbolic R42 branch would
+need to replace its numeric interval/residue descriptions by formulas in `q`
+and prove the corresponding no-early and terminal affine equations.
+
 The finite boundary case `q=0` is still valid but has a larger exceptional
 block profile.  Raw all-pair CSV is not preserved.
