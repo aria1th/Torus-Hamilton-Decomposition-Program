@@ -133,6 +133,29 @@ layer is built from adjacent stop-rank swaps.  What remains is to prove that
 the resulting global return has a stable symbolic nested first-return formula
 for a covering set of residue branches.
 
+## B20 Trace Profile Diagnostic
+
+The B20 trace-profile analyzer:
+
+```bash
+python3 scripts/analyze_d5_routeE_b20_trace_profiles.py \
+  --moduli 20,44,68 \
+  --json-out /tmp/d5_routeE_b20_profiles_20260506.json
+```
+
+shows that full shifted zero-mask profiles are not constant on the broad B20
+source classes.  In contrast, the aggregate stop-rank count profile is constant
+on each source class.  See
+`docs/D5_EVEN_ROUTE_E_B20_TRACE_PROFILE_20260506.md`.
+
+This changes the proof target: the symbolic B20 proof should track affine
+hit-time sums for the zero-mask predicates and derive the stop-rank aggregate,
+rather than trying to identify complete zero-mask words by return-time class.
+
+The `m = 2` SAT witness remains only a smoke test for the full layered
+encoding.  The actual Route-E even target is `m >= 4`; the one-`Lambda_E`
+branch-formula target begins at `m >= 6`.
+
 ## What Is Disproved
 
 The following sub-ansatzes should no longer be treated as viable proof routes:
