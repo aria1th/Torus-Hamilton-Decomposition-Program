@@ -22,7 +22,7 @@ remaining gaps.
 | Isolated branch | `route-e-v3-6-20260506`; latest committed v3.6 all-pair adapter slice before RoundY triage was `52ac237` | done |
 | Bundle read and compared | `docs/ROUTE_E_V3_6_ANALYSIS_20260506.md` records bundle scope, B20/B16/R14e status, and reproduction caveat | done |
 | RoundY branch notes triaged | `docs/ROUTE_E_ROUNDY_BRANCH_TRIAGE_20260506.md` separates `joined quotient`, `fresh cyclic`, and `master field` from the B20/B16/R14e all-pair closure witnesses | done |
-| Master-field conditional endpoint | `RouteEMasterFieldShape`, `RouteEMasterFieldLocalTarget`, and `RouteECyclicMasterFieldLocalTarget` carry finite quotient fields to the existing Hamilton/Torus/Cayley endpoints once Latin/exact-cover/Hamiltonian hypotheses are supplied | conditional endpoint added |
+| Master-field conditional endpoint | `RouteEMasterFieldShape`, `RouteEMasterFieldLocalTarget`, `RouteEMasterFieldColorZeroLocalTarget`, `RouteECyclicMasterFieldLocalTarget`, and `RouteECyclicMasterFieldColorZeroLocalTarget` carry finite quotient fields to the existing Hamilton/Torus/Cayley endpoints once Latin/exact-cover plus either all-color Hamiltonian data or color-zero Hamiltonian data with a transfer theorem are supplied | conditional endpoint refined |
 | B20 count surface | `RouteEB20.routeCounts`, existing `RouteEB20.counts_sum` | done |
 | B20 small-seam surface | Existing `RouteEB20.returnTimeFormula`, `RouteEB20.seamMap`, `RouteEB20.ThetaPointwiseTraceTarget` | pre-existing, still useful |
 | B20 all-pair time target | `RouteEB20.allPairTimeMassTotal_eq_modulus_pow_four` and `RouteEB20.allPairTimeMass_sum_eq_modulus_pow_four` | done as arithmetic target |

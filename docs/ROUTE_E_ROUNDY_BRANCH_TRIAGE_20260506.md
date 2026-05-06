@@ -42,6 +42,8 @@ phase quotient and local permutation table.
 - `RouteEMasterFieldShape.toSchedule_latin_of_phase_latin`
 - `RouteEMasterFieldShape.toSchedule_exactCover_of_incoming`
 - `RouteEMasterFieldShape.CyclicEquivariance`
+- `RouteEMasterFieldShape.ColorZeroHamiltonian`
+- `RouteEMasterFieldShape.ColorZeroHamiltonianTransfer`
 - `RouteEMasterFieldTarget`
 - `RouteEMasterFieldTarget.toHamiltonDecomposition`
 - `RouteEMasterFieldTarget.toTorusHamiltonDecomposition`
@@ -51,17 +53,29 @@ phase quotient and local permutation table.
 - `RouteEMasterFieldLocalTarget.toHamiltonDecomposition`
 - `RouteEMasterFieldLocalTarget.toTorusHamiltonDecomposition`
 - `RouteEMasterFieldLocalTarget.toCayleyHamiltonDecomposition`
+- `RouteEMasterFieldColorZeroLocalTarget`
+- `RouteEMasterFieldColorZeroLocalTarget.toLocalTarget`
+- `RouteEMasterFieldColorZeroLocalTarget.toHamiltonDecomposition`
+- `RouteEMasterFieldColorZeroLocalTarget.toTorusHamiltonDecomposition`
+- `RouteEMasterFieldColorZeroLocalTarget.toCayleyHamiltonDecomposition`
 - `RouteECyclicMasterFieldLocalTarget`
 - `RouteECyclicMasterFieldLocalTarget.toHamiltonDecomposition`
 - `RouteECyclicMasterFieldLocalTarget.toTorusHamiltonDecomposition`
 - `RouteECyclicMasterFieldLocalTarget.toCayleyHamiltonDecomposition`
+- `RouteECyclicMasterFieldColorZeroLocalTarget`
+- `RouteECyclicMasterFieldColorZeroLocalTarget.toCyclicLocalTarget`
+- `RouteECyclicMasterFieldColorZeroLocalTarget.toHamiltonDecomposition`
+- `RouteECyclicMasterFieldColorZeroLocalTarget.toTorusHamiltonDecomposition`
+- `RouteECyclicMasterFieldColorZeroLocalTarget.toCayleyHamiltonDecomposition`
 
 This interface keeps the theorem endpoint conservative.  A finite quotient
 search must still prove:
 
 1. every phase row is a permutation (`PhaseLatin`);
 2. predecessor rows satisfy incoming Latin (`IncomingLatin`);
-3. the induced schedule is Hamiltonian for all colors;
+3. either the induced schedule is Hamiltonian for all colors, or color zero is
+   Hamiltonian together with a named transfer theorem from color zero to all
+   colors;
 4. optionally, cyclic equivariance of the phase quotient and local field.
 
 Once those are supplied, the existing `HamiltonDecompositionD5`,

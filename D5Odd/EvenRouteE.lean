@@ -1118,6 +1118,13 @@ theorem toSchedule_exactCover_of_incoming {m : Nat}
   intro t c y
   exact h t c y
 
+def ColorZeroHamiltonian {m : Nat} (shape : RouteEMasterFieldShape m) : Prop :=
+  IsSingleCycleMap (colorReturn shape.toSchedule 0)
+
+def ColorZeroHamiltonianTransfer {m : Nat}
+    (shape : RouteEMasterFieldShape m) : Prop :=
+  shape.ColorZeroHamiltonian → AllColorHamiltonian shape.toSchedule
+
 structure CyclicEquivariance {m : Nat}
     (shape : RouteEMasterFieldShape m) where
   rotatePhase : Color → shape.Phase → shape.Phase
@@ -1192,6 +1199,50 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
 
 end RouteEMasterFieldLocalTarget
 
+/-!
+Representative-color master-field interface.
+
+The RoundY master-field note expects cyclic equivariance to reduce the
+Hamiltonicity proof to one representative color, usually color zero.  The
+transfer theorem is deliberately a named hypothesis here: a future proof can
+derive it from `CyclicEquivariance`, while a finite solver artifact only needs
+to provide the color-zero triangular certificate.
+-/
+
+structure RouteEMasterFieldColorZeroLocalTarget (m : Nat) where
+  shape : RouteEMasterFieldShape m
+  phase_latin : shape.PhaseLatin
+  incoming_latin : shape.IncomingLatin
+  color_zero_hamiltonian : shape.ColorZeroHamiltonian
+  hamiltonian_transfer : shape.ColorZeroHamiltonianTransfer
+
+namespace RouteEMasterFieldColorZeroLocalTarget
+
+def toLocalTarget {m : Nat}
+    (target : RouteEMasterFieldColorZeroLocalTarget m) :
+    RouteEMasterFieldLocalTarget m where
+  shape := target.shape
+  phase_latin := target.phase_latin
+  incoming_latin := target.incoming_latin
+  hamiltonian := target.hamiltonian_transfer target.color_zero_hamiltonian
+
+theorem toHamiltonDecomposition {m : Nat}
+    (target : RouteEMasterFieldColorZeroLocalTarget m) :
+    HamiltonDecompositionD5 m :=
+  target.toLocalTarget.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldColorZeroLocalTarget m) :
+    TorusHamiltonDecompositionD5 m :=
+  target.toLocalTarget.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteEMasterFieldColorZeroLocalTarget m) :
+    CayleyHamiltonDecompositionD5 m :=
+  target.toLocalTarget.toCayleyHamiltonDecomposition
+
+end RouteEMasterFieldColorZeroLocalTarget
+
 structure RouteECyclicMasterFieldLocalTarget (m : Nat) where
   target : RouteEMasterFieldLocalTarget m
   cyclic : target.shape.CyclicEquivariance
@@ -1214,6 +1265,35 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
   target.target.toCayleyHamiltonDecomposition
 
 end RouteECyclicMasterFieldLocalTarget
+
+structure RouteECyclicMasterFieldColorZeroLocalTarget (m : Nat) where
+  target : RouteEMasterFieldColorZeroLocalTarget m
+  cyclic : target.shape.CyclicEquivariance
+
+namespace RouteECyclicMasterFieldColorZeroLocalTarget
+
+def toCyclicLocalTarget {m : Nat}
+    (target : RouteECyclicMasterFieldColorZeroLocalTarget m) :
+    RouteECyclicMasterFieldLocalTarget m where
+  target := target.target.toLocalTarget
+  cyclic := target.cyclic
+
+theorem toHamiltonDecomposition {m : Nat}
+    (target : RouteECyclicMasterFieldColorZeroLocalTarget m) :
+    HamiltonDecompositionD5 m :=
+  target.toCyclicLocalTarget.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteECyclicMasterFieldColorZeroLocalTarget m) :
+    TorusHamiltonDecompositionD5 m :=
+  target.toCyclicLocalTarget.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (target : RouteECyclicMasterFieldColorZeroLocalTarget m) :
+    CayleyHamiltonDecompositionD5 m :=
+  target.toCyclicLocalTarget.toCayleyHamiltonDecomposition
+
+end RouteECyclicMasterFieldColorZeroLocalTarget
 
 theorem card_vec4 (m : Nat) [NeZero m] :
     Fintype.card (Vec4 m) = m ^ 4 := by
