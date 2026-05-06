@@ -318,6 +318,10 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+d1d6987 Verify LambdaE mask polynomial artifact
+4b3bce3 Preserve LambdaE mask polynomial artifact
+a716056 Record Route E small-seam family scan
+4204b58 Refresh Route E audit commit list
 60476dd Verify Route E Type-A symbolic skeleton
 d3311f5 Add Route E corrected goal audit
 990005f Refresh Route E corrected branch audit
