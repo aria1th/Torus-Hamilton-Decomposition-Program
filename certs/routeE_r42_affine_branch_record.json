@@ -338,6 +338,33 @@
     ],
     "r42_is_open": true
   },
+  "finite_boundary_cases_summary": {
+    "promotion_impact": {
+      "closes_generic_subbranches": false,
+      "finite_cases_recorded": true,
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "schema": "routeE_r42_finite_boundary_cases_v1",
+    "summary": {
+      "all_cases_color_sign_vector_ok": true,
+      "all_cases_pass_allpair_checker": true,
+      "all_cases_single_cycle": true,
+      "all_cases_time_sum_m4": true,
+      "case_moduli": [
+        42,
+        90
+      ]
+    }
+  },
+  "finite_boundary_cases_verification_summary": {
+    "case_moduli": [
+      42,
+      90
+    ],
+    "ok": true,
+    "schema": "routeE_r42_finite_boundary_cases_verification_v1"
+  },
   "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0..4 samples have reproducible all-pair checker verification, pass the color sign vector screen, and have an internally verified compact boundary summary.  This is still evidence only and does not close the residue until the required symbolic branch data are proved.",
   "mod96_branch_split_summary": {
     "checks": {
@@ -721,6 +748,8 @@
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
+    "finite_boundary_cases": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_finite_boundary_cases.json",
+    "finite_boundary_cases_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_finite_boundary_cases_verification.json",
     "mod96_branch_split": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split.json",
     "mod96_branch_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split_verification.json",
     "mod96_edge_formulas": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas.json",

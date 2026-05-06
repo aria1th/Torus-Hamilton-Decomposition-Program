@@ -1,0 +1,15 @@
+{
+  "case_moduli": [
+    42,
+    90
+  ],
+  "ok": true,
+  "promotion_impact": {
+    "closes_generic_subbranches": false,
+    "finite_cases_recorded": true,
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_finite_boundary_cases_verification_v1",
+  "summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_finite_boundary_cases.json"
+}

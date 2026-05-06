@@ -509,6 +509,29 @@ Thus the q-parity split removes the mod-2 piecewise edge-count law: each of
 the two generic mod-96 subbranches has ordinary affine-in-s block-edge counts.
 This is still block-transducer evidence, not a pointwise/no-early proof.
 
+R42 finite boundary cases:
+
+```bash
+python3 scripts/summarize_routeE_r42_finite_boundary_cases.py \
+  --json-out certs/routeE_r42_finite_boundary_cases.json
+
+python3 scripts/verify_routeE_r42_finite_boundary_cases.py \
+  --json-out certs/routeE_r42_finite_boundary_cases_verification.json
+```
+
+Result:
+
+```text
+ok True
+case_moduli [42, 90]
+all_cases_single_cycle True
+all_cases_color_sign_vector_ok True
+```
+
+These are the finite boundary cases created by the R42 mod-96 split.  They are
+covered by the all-pair finite checker and color-sign screen, but they are still
+finite witness evidence rather than a Lean theorem endpoint.
+
 R42 open tail-formula suggestions:
 
 ```bash
@@ -662,7 +685,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 14
+evidence_items_ok 15
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

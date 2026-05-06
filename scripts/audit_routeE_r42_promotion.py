@@ -49,6 +49,12 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     mod96_split_ver = record.get("mod96_branch_split_verification_summary", {})
     mod96_edges = record.get("mod96_edge_formulas_summary", {}).get("summary", {})
     mod96_edges_ver = record.get("mod96_edge_formulas_verification_summary", {})
+    finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
+        "summary", {}
+    )
+    finite_boundary_cases_ver = record.get(
+        "finite_boundary_cases_verification_summary", {}
+    )
     block_regen = record.get("block_regeneration_verification_summary", {}).get("summary", {})
     tails = record.get("open_tail_formula_suggestions_summary", {}).get("summary", {})
     time_ver = record.get("allpair_time_fit_verification_summary", {}).get("summary", {})
@@ -144,6 +150,17 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and mod96_edges.get("all_odd_branch_formulas_affine_in_s") is True,
             "certs/routeE_r42_mod96_edge_formulas.json and certs/routeE_r42_mod96_edge_formulas_verification.json",
             "branch dispatcher refinement",
+        ),
+        item(
+            "R42 finite boundary cases are recorded",
+            finite_boundary_cases_ver.get("schema")
+            == "routeE_r42_finite_boundary_cases_verification_v1"
+            and finite_boundary_cases_ver.get("ok") is True
+            and finite_boundary_cases_ver.get("case_moduli") == [42, 90]
+            and finite_boundary_cases.get("all_cases_single_cycle") is True
+            and finite_boundary_cases.get("all_cases_color_sign_vector_ok") is True,
+            "certs/routeE_r42_finite_boundary_cases.json and certs/routeE_r42_finite_boundary_cases_verification.json",
+            "finite boundary evidence",
         ),
         item(
             "R42 compact block open fields are only q=1 boundary exceptions",

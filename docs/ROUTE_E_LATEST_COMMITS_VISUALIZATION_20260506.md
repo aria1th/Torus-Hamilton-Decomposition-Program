@@ -30,6 +30,7 @@ flowchart LR
   BT[R42 boundary block transducer<br/>69 q>=2 edges, mod-2 counts]
   R96[R42 mod-96 split<br/>finite 42,90 + two generic branches]
   E96[R42 mod-96 edge formulas<br/>69 affine-in-s edge laws]
+  FB[R42 finite boundary cases<br/>m=42,90 verified]
   RT[R42 time fits<br/>sum tau = m^4 polynomial]
   RM[R42 transition matrix<br/>28 nonzero edges]
   RA[R42 promotion audit<br/>3 theorem blockers]
@@ -40,7 +41,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> BE --> RG --> BT --> R96 --> E96 --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -232,16 +233,18 @@ q=0..6 samples and have strongly connected support.
     then generic subbranches `m=96s+42` and `m=96s+90`.
 13. On those two mod-96 subbranches, all 69 block-edge count laws become
     ordinary affine functions of `s`.
-14. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
+14. The finite boundary cases created by that split, `m=42` and `m=90`, are
+    explicitly recorded from the all-pair checker and color-sign screen.
+15. R42 promotion readiness is explicitly audited.  It is not promotion-ready:
     pointwise first-return equations, no-early/minimality, and a Lean-facing
     endpoint theorem are still missing.
-15. R42 pointwise law mining now quantifies the missing trace grammar: the
+16. R42 pointwise law mining now quantifies the missing trace grammar: the
     naive source-label/source-parameter interval-affine partition reaches
     1492 blocks by `q=4`, and no nontrivial label has a common passing
     residue-affine modulus among `2,3,4,5,6,8,10,12,16,24,32,48`.
     A global section-index affine partition is smaller but still reaches 1051
     blocks by `q=4`, so aggregate transition/time fits are still not enough.
-16. The open residue queue is now explicit: R42 remains the active affine
+17. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

@@ -1,0 +1,69 @@
+{
+  "branch": "R42",
+  "finite_cases": [
+    {
+      "allpair_passed": true,
+      "color_sign_vector": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "color_sign_vector_ok": true,
+      "count_admissible": true,
+      "m": 42,
+      "m4": 3111696,
+      "ok_returns": true,
+      "q": 0,
+      "single_cycle": true,
+      "sum_ok": true,
+      "time_sum": 3111696,
+      "unit_pair": true,
+      "x": 5,
+      "z": 5
+    },
+    {
+      "allpair_passed": true,
+      "color_sign_vector": [
+        "-",
+        "-",
+        "-",
+        "-",
+        "-"
+      ],
+      "color_sign_vector_ok": true,
+      "count_admissible": true,
+      "m": 90,
+      "m4": 65610000,
+      "ok_returns": true,
+      "q": 1,
+      "single_cycle": true,
+      "sum_ok": true,
+      "time_sum": 65610000,
+      "unit_pair": true,
+      "x": 11,
+      "z": 11
+    }
+  ],
+  "promotion_impact": {
+    "closes_generic_subbranches": false,
+    "finite_cases_recorded": true,
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_finite_boundary_cases_v1",
+  "source_samples": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",
+  "source_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
+  "source_split": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split.json",
+  "summary": {
+    "all_cases_color_sign_vector_ok": true,
+    "all_cases_pass_allpair_checker": true,
+    "all_cases_single_cycle": true,
+    "all_cases_time_sum_m4": true,
+    "case_moduli": [
+      42,
+      90
+    ]
+  }
+}
