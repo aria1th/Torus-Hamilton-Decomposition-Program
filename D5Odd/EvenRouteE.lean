@@ -1044,6 +1044,106 @@ theorem boundaryQuotient_C_last (q : Nat)
   simp [boundaryQuotient, routeEBoundaryNode, ha, hnot_one_const,
     hnot_h_const]
 
+theorem boundaryQuotient_A_even (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hnot_h : a.1.val ≠ half q)
+    (heven : a.1.val % 2 = 0) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L04 a := by
+  have hnot_succ : a.1.val ≠ half q + 1 := by
+    intro h
+    rw [h] at heven
+    have hodd : (half q + 1) % 2 = 1 := by
+      simp [half, Nat.add_mod, Nat.mul_mod]
+    omega
+  simp [boundaryQuotient, routeEBoundaryNode, hnot_h, hnot_succ, heven]
+
+theorem boundaryQuotient_A_odd_shift (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hnot_succ : a.1.val ≠ half q + 1)
+    (hodd : a.1.val % 2 = 1) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L04
+        (boundaryShiftParam q a (by
+          intro h
+          rw [h] at hodd
+          have heven : (half q + 2) % 2 = 0 := by
+            simp [half, Nat.add_mod, Nat.mul_mod]
+          omega)) := by
+  have hnot_h : a.1.val ≠ half q := by
+    intro h
+    rw [h] at hodd
+    have heven : (half q) % 2 = 0 := by
+      simp [half, Nat.add_mod, Nat.mul_mod]
+    omega
+  have hnot_even : a.1.val % 2 ≠ 0 := by omega
+  simp [boundaryQuotient, routeEBoundaryNode, hnot_h, hnot_succ, hnot_even]
+
+theorem boundaryQuotient_B_odd (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hnot_pred : a.1.val ≠ half q - 1)
+    (hnot_last : a.1.val ≠ modulus q - 1)
+    (hodd : a.1.val % 2 = 1) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L03 a := by
+  have hnot_close : a.1.val ≠ half q + 2 := by
+    intro h
+    rw [h] at hodd
+    have heven : (half q + 2) % 2 = 0 := by
+      simp [half, Nat.add_mod, Nat.mul_mod]
+    omega
+  simp [boundaryQuotient, routeEBoundaryNode, hnot_pred, hnot_last,
+    hnot_close, hodd]
+
+theorem boundaryQuotient_B_two (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (ha : a.1.val = 2) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryParamHalfSubOne q) := by
+  have hnot_pred_const : ¬ 2 = half q - 1 := by
+    simp [half]
+  have hnot_last_const : ¬ 2 = modulus q - 1 := by
+    simp [modulus]
+  have hnot_close_const : ¬ half q = 0 := by
+    simp [half]
+  simp [boundaryQuotient, routeEBoundaryNode, ha, hnot_pred_const,
+    hnot_last_const, hnot_close_const]
+
+theorem boundaryQuotient_B_even_shift (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hnot_two : a.1.val ≠ 2)
+    (hnot_close : a.1.val ≠ half q + 2)
+    (heven : a.1.val % 2 = 0) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryShiftParam q a hnot_close) := by
+  have hnot_pred : a.1.val ≠ half q - 1 := by
+    intro h
+    rw [h] at heven
+    have hodd : (half q - 1) % 2 = 1 := by
+      simp [half, Nat.add_mod, Nat.mul_mod]
+    omega
+  have hnot_last : a.1.val ≠ modulus q - 1 := by
+    intro h
+    rw [h] at heven
+    have hodd : (modulus q - 1) % 2 = 1 := by
+      simp [modulus, Nat.add_mod, Nat.mul_mod]
+    omega
+  have hnot_odd : a.1.val % 2 ≠ 1 := by omega
+  simp [boundaryQuotient, routeEBoundaryNode, hnot_pred, hnot_last,
+    hnot_close, hnot_odd, hnot_two]
+
+theorem boundaryQuotient_C_generic (q : Nat)
+    (a : RouteENonzeroSeam (modulus q))
+    (hnot_one : a.1.val ≠ 1)
+    (hnot_h : a.1.val ≠ half q)
+    (hnot_last : a.1.val ≠ modulus q - 1) :
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+      routeEBoundaryNode RouteEBoundaryLabel.L34
+        (boundaryPredParam q a hnot_one) := by
+  simp [boundaryQuotient, routeEBoundaryNode, hnot_one, hnot_h, hnot_last]
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and
