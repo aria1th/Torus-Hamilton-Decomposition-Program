@@ -410,3 +410,23 @@ certs/routeE_r38_m182_cpp_screen_timeout.json
 
 It timed out on the tested support patterns without partial hits.  This should
 be read only as search-control evidence, not as a no-go theorem.
+
+The current R38 branch record is initialized at:
+
+```text
+certs/routeE_r38_gate_transducer_branch_record.json
+```
+
+That record fixes the next branch as an open gate-transducer target and lists
+the required data before it can be promoted:
+
+```text
+closed packet/count formula;
+finite gate state set and transition formula;
+section return map and one-cycle proof;
+no-early/minimality;
+boundary/all-pair insertion distribution;
+label or label-destination time mass polynomials;
+sum tau = m^4;
+finite boundary cases.
+```

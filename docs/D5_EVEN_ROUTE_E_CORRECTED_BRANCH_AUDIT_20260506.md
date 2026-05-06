@@ -32,6 +32,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
+| Initialize R38 gate-transducer branch record | `scripts/init_routeE_r38_gate_transducer_record.py`, `certs/routeE_r38_gate_transducer_branch_record.json` | done, branch remains open |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -169,6 +170,26 @@ all five tested support patterns timed out with no partial hits.
 
 This is not a mathematical obstruction.  It is a search-control artifact that
 prevents future broad mining runs from requiring manual process kills.
+
+R38 gate-transducer branch record:
+
+```bash
+python3 scripts/init_routeE_r38_gate_transducer_record.py \
+  --json-out certs/routeE_r38_gate_transducer_branch_record.json
+```
+
+Result:
+
+```text
+branch R38 status open_gate_transducer_target
+target residues [38]
+positive seeds {'134': [5], '38': [5], '86': [23]}
+```
+
+The record fixes the proof-facing data that a future R38 candidate must supply:
+closed packet/count law, finite gate transitions, section return one-cycle,
+no-early/minimality, insertion distribution, time-mass polynomials, and
+finite boundary cases.
 
 Hygiene:
 
