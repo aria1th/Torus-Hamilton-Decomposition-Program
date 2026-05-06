@@ -460,7 +460,31 @@
       "no-early/minimality proof",
       "time exhaustion identity"
     ],
-    "status": "open"
+    "status": "open",
+    "typeA_closure_packages": {
+      "all_recorded_flags_ok": true,
+      "b16_macro_all_ok": true,
+      "b16_moduli": [
+        16,
+        40,
+        64,
+        88,
+        112,
+        136,
+        160
+      ],
+      "cert_loaded": true,
+      "note": "B16/R14e package summary records external verifier outputs; it is proof-facing evidence, not a closed Lean theorem.",
+      "r14e_insertion_comparisons_all_ok": true,
+      "r14e_moduli": [
+        14,
+        62,
+        110,
+        158,
+        206
+      ],
+      "schema": "routeE_typeA_closure_package_summary_v1"
+    }
   },
   "branch_O_odd": {
     "note": "Use existing odd-modulus D5 input / odd machinery.",

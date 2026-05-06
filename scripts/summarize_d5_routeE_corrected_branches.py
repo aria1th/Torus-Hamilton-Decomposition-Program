@@ -8,6 +8,7 @@ current proof-facing artifacts after the sign audit:
 * the embedded `m=4` finite schedule;
 * the recorded non-open small-seam cases for `m=6..60`;
 * the symbolic Lambda_E mask-count derivation hook;
+* the proof-facing Type-A B20/B16/R14e evidence summaries;
 * the removed even prefix-count branch;
 * the removed adjacent-Kempe branch.
 
@@ -31,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_M2 = ROOT / "certs" / "d5_routeE_m2_full_layered_boundary.json"
 DEFAULT_RANK_CERTS = ROOT / "certs" / "d5_routeE_small_seam_rank_certs.json"
 DEFAULT_B20_CERT = ROOT / "certs" / "d5_routeE_b20_branch_verify_m20_44_68.json"
+DEFAULT_TYPEA_CERT = ROOT / "certs" / "routeE_typeA_closure_package_summary.json"
 
 
 def summarize_layers_payload(payload: dict[str, Any], colors: list[int] | None = None) -> dict:
@@ -161,6 +163,40 @@ def summarize_b20(path: Path) -> dict:
     return out
 
 
+def summarize_typea(path: Path) -> dict:
+    out = {
+        "cert_loaded": False,
+        "schema": None,
+        "all_recorded_flags_ok": None,
+        "b16_moduli": [],
+        "b16_macro_all_ok": None,
+        "r14e_moduli": [],
+        "r14e_insertion_comparisons_all_ok": None,
+        "note": (
+            "B16/R14e package summary records external verifier outputs; "
+            "it is proof-facing evidence, not a closed Lean theorem."
+        ),
+    }
+    if path.exists():
+        payload = json.loads(path.read_text())
+        b16 = payload.get("b16", {})
+        r14e = payload.get("r14e", {})
+        out.update(
+            {
+                "cert_loaded": True,
+                "schema": payload.get("schema"),
+                "all_recorded_flags_ok": payload.get("all_recorded_flags_ok"),
+                "b16_moduli": b16.get("moduli", []),
+                "b16_macro_all_ok": b16.get("macro_all_ok"),
+                "r14e_moduli": r14e.get("moduli", []),
+                "r14e_insertion_comparisons_all_ok": r14e.get(
+                    "insertion_comparisons_all_ok"
+                ),
+            }
+        )
+    return out
+
+
 def build_summary(args: argparse.Namespace) -> dict:
     m2 = summarize_m2(args.m2_cert)
     m4 = summarize_m4()
@@ -168,6 +204,7 @@ def build_summary(args: argparse.Namespace) -> dict:
         args.rank_certs, args.verify_small_seam, args.verify_rank_certs
     )
     b20 = summarize_b20(args.b20_cert)
+    typea = summarize_typea(args.typea_cert)
     return {
         "schema": "d5_routeE_corrected_branch_summary_v1",
         "branch_O_odd": {
@@ -193,6 +230,7 @@ def build_summary(args: argparse.Namespace) -> dict:
         "branch_Egen_symbolic": {
             "status": "open",
             "b20": b20,
+            "typeA_closure_packages": typea,
             "needed": [
                 "full layered parity-changing one-layer coloring template",
                 "RF1/RF2 closed verification",
@@ -225,6 +263,7 @@ def markdown(summary: dict) -> str:
     e4 = summary["branch_E4_m4"]
     eg = summary["branch_Egen_m6_to_m60"]
     b20 = summary["branch_Egen_symbolic"]["b20"]
+    typea = summary["branch_Egen_symbolic"]["typeA_closure_packages"]
     rows = [
         ("O", "odd m", summary["branch_O_odd"]["status"], "existing odd branch"),
         (
@@ -268,7 +307,8 @@ def markdown(summary: dict) -> str:
             summary["branch_Egen_symbolic"]["status"],
             (
                 f"B20 samples={b20['moduli']} ok={b20['all_ok']}; "
-                "uniform template still needed"
+                f"TypeA B16={typea['b16_moduli']} R14e={typea['r14e_moduli']} "
+                f"ok={typea['all_recorded_flags_ok']}; uniform template still needed"
             ),
         ),
     ]
@@ -299,6 +339,7 @@ def main() -> None:
     parser.add_argument("--m2-cert", type=Path, default=DEFAULT_M2)
     parser.add_argument("--rank-certs", type=Path, default=DEFAULT_RANK_CERTS)
     parser.add_argument("--b20-cert", type=Path, default=DEFAULT_B20_CERT)
+    parser.add_argument("--typea-cert", type=Path, default=DEFAULT_TYPEA_CERT)
     parser.add_argument("--verify-small-seam", action="store_true")
     parser.add_argument("--verify-rank-certs", action="store_true")
     parser.add_argument("--json-out", type=Path)

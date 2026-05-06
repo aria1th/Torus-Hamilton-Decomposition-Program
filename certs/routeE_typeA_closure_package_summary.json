@@ -1,0 +1,68 @@
+{
+  "all_recorded_flags_ok": true,
+  "b16": {
+    "all_boundary_formula_ok": true,
+    "all_complete": true,
+    "all_section_single_cycle": true,
+    "all_total_equals_m4": true,
+    "case_count": 7,
+    "family": "B16: m=24q+16, x=1, z=12q+5, nu=(1,12q+9,0,12q+5,0)",
+    "label_dst_total_equals_m4": true,
+    "label_total_equals_m4": true,
+    "macro_all_ok": true,
+    "macro_applicable_count": 200,
+    "macro_bad_examples": [],
+    "moduli": [
+      16,
+      40,
+      64,
+      88,
+      112,
+      136,
+      160
+    ],
+    "open_status": "proof-facing branch; still needs concrete Lean first-return/minimality instance, not closed as a theorem",
+    "poly_bad_count": 0,
+    "schema": "b16_complete_verifier_20260506",
+    "sha256": "9efb26e87847c7915d04cc362bef4f033cd8a7e05198daa3e911f2daf3ffb04a",
+    "source": "/data/angel/repos/etc/RouteE/B16_closure_package_20260506.zip"
+  },
+  "r14e": {
+    "all_boundary_step_sum_ok": true,
+    "all_complete": true,
+    "all_section_single_cycle": true,
+    "all_total_equals_m4": true,
+    "case_count": 5,
+    "expected_insertion_weighted_equals_allpair_size": true,
+    "family": "R14e: m=48k+14, x=1, z=24k+5, nu=(1,24k+7,0,24k+5,0)",
+    "insertion_comparison_count": 5,
+    "insertion_comparisons_all_ok": true,
+    "insertion_macro_schema": "r14e_insertion_macro_verifier",
+    "label_dst_count_equals_allpair_size": true,
+    "label_dst_total_equals_m4": true,
+    "label_total_equals_m4": true,
+    "moduli": [
+      14,
+      62,
+      110,
+      158,
+      206
+    ],
+    "open_status": "proof-facing branch; still needs concrete Lean first-return/minimality instance, not closed as a theorem",
+    "schema": "r14e_complete_verifier_20260506",
+    "sha256": "5fec93c3d177485b6ede4115aec79b548d765761c996c12e8383c2c726b00d08",
+    "source": "/data/angel/repos/etc/RouteE/R14e_closure_package_20260506.zip",
+    "symbolic_allpair_size": "480*k + 131",
+    "symbolic_boundary_count": "144*k + 40",
+    "symbolic_boundary_size": "144*k + 40",
+    "symbolic_weighted_steps": "480*k + 131",
+    "used_k_values": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "schema": "routeE_typeA_closure_package_summary_v1"
+}

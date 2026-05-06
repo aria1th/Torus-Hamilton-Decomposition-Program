@@ -28,6 +28,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Distinguish seam recomputation from rank cert verification | `--verify-small-seam` and `--verify-rank-certs` options | done |
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py` and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
+| Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json` | done |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -85,10 +86,24 @@ Result:
 all_ok=True
 ```
 
+Type-A package summary:
+
+```bash
+python3 scripts/summarize_routeE_typeA_closure_packages.py \
+  --json-out certs/routeE_typeA_closure_package_summary.json
+```
+
+Result:
+
+```text
+b16 [16, 40, 64, 88, 112, 136, 160] macro_all_ok True r14e [14, 62, 110, 158, 206] all_recorded_flags_ok True
+```
+
 Hygiene:
 
 ```bash
 python3 -m py_compile scripts/summarize_d5_routeE_corrected_branches.py
+python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
 git diff --check
 ```
@@ -111,7 +126,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 | E0 | m=2 | filled_boundary_certificate | RF1=True RF2=True sign=True colors=True |
 | E-small | m=4 | filled_finite_C_E_O_schedule | RF1=True RF2=True sign=True colors=True |
 | E-gen-window | 6..60 even | finite_small_seam_evidence_window | cases=28 rank_cert=True moduli_match=True rank_verified=True seam_verified=True |
-| E-gen-symbolic | all large even m | open | B20 samples=[20, 44, 68, 92] ok=True; uniform template still needed |
+| E-gen-symbolic | all large even m | open | B20 samples=[20, 44, 68, 92] ok=True; TypeA B16=[16, 40, 64, 88, 112, 136, 160] R14e=[14, 62, 110, 158, 206] ok=True; uniform template still needed |
 ```
 
 ## Commits In This Pass
@@ -160,6 +175,18 @@ RouteEB20.ThetaPointwiseTraceTarget.firstReturn_minimal
 ```
 
 Thus B20 is a proof-facing branch target, not a closed theorem.
+
+The B16/R14e package summary now adds two more Type-A proof-facing branches:
+
+```text
+B16:  m=24q+16, q=0..6, package flags all true;
+R14e: m=48k+14, k=0..4, package flags all true.
+```
+
+The package hashes are stored in
+`certs/routeE_typeA_closure_package_summary.json` so the evidence can be
+checked against the original zip artifacts without preserving large CSV files
+in the repository.
 
 ## Conclusion
 
