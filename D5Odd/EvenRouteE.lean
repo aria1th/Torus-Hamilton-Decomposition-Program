@@ -7193,6 +7193,46 @@ noncomputable instance routeEAllPairSectionFintype (m : Nat) [NeZero m] :
   classical
   infer_instance
 
+/--
+All-pair boundary insertion adapter.
+
+Some closure packages prove that the all-pair section map is one cycle by
+first returning to the boundary rows `Z, 03, 04, 34`, proving that boundary
+quotient is one cycle, and checking that the boundary excursions cover all
+all-pair rows by cardinality.  This target packages exactly that proof shape.
+-/
+structure RouteEAllPairBoundaryInsertionTarget (m : Nat) [NeZero m]
+    (U : RouteEAllPairSection m → RouteEAllPairSection m) where
+  U_bijective : Function.Bijective U
+  boundaryPoint : RouteEBoundaryNode m → RouteEAllPairSection m
+  boundaryPoint_injective : Function.Injective boundaryPoint
+  boundaryReturn : RouteEBoundaryNode m → RouteEBoundaryNode m
+  boundaryTime : RouteEBoundaryNode m → Nat
+  boundaryTime_pos : ∀ x, 0 < boundaryTime x
+  boundary_firstReturn_equation :
+    ∀ x, U^[boundaryTime x] (boundaryPoint x) =
+      boundaryPoint (boundaryReturn x)
+  boundary_firstReturn_minimal :
+    ∀ x k, 0 < k → k < boundaryTime x →
+      ¬ ∃ y, U^[k] (boundaryPoint x) = boundaryPoint y
+  boundaryReturn_single : IsSingleCycleMap boundaryReturn
+  boundaryTime_sum :
+    Finset.univ.sum boundaryTime = Fintype.card (RouteEAllPairSection m)
+
+namespace RouteEAllPairBoundaryInsertionTarget
+
+theorem sectionReturn_single {m : Nat} [NeZero m]
+    {U : RouteEAllPairSection m → RouteEAllPairSection m}
+    (target : RouteEAllPairBoundaryInsertionTarget m U) :
+    IsSingleCycleMap U :=
+  single_cycle_of_first_return_sum U target.boundaryPoint
+    target.boundaryReturn target.boundaryTime target.U_bijective
+    target.boundaryPoint_injective target.boundary_firstReturn_equation
+    target.boundary_firstReturn_minimal target.boundaryReturn_single
+    target.boundaryTime_sum
+
+end RouteEAllPairBoundaryInsertionTarget
+
 structure RouteESmallSeamCertificate (m : Nat) [NeZero m] where
   data : D5EvenSeamData m
   routeCounts : RouteECounts m
@@ -8558,6 +8598,88 @@ noncomputable def toSectionCertificate {m : Nat} [NeZero m]
 end RouteEAllPairLabelDstTraceTarget
 
 /--
+All-pair label-destination target whose section one-cycle proof is supplied by
+boundary insertion data.  This matches closure artifacts, such as the R14e
+package, that first prove a boundary quotient cycle and then prove that its
+excursions insert every all-pair row exactly once.
+-/
+structure RouteEAllPairLabelDstBoundaryTraceTarget (m : Nat) [NeZero m]
+    (labelTimeMass : RouteEB20.AllPairLabel → Nat)
+    (labelDstTimeMass : RouteEAllPairLabelDst → Nat) where
+  data : D5EvenSeamData m
+  sectionReturn :
+    Color → RouteEAllPairSection m → RouteEAllPairSection m
+  returnTime :
+    Color → RouteEAllPairSection m → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] a.1 =
+        (sectionReturn c a).1
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b : RouteEAllPairSection m,
+        (seamRootReturn data c)^[k] a.1 = b.1
+  boundaryInsertion :
+    ∀ c, RouteEAllPairBoundaryInsertionTarget m (sectionReturn c)
+  labelOf : RouteEAllPairSection m → RouteEB20.AllPairLabel
+  dstLabelOf : RouteEAllPairSection m → RouteEB20.AllPairLabel
+  label_dst_time_sum :
+    ∀ c src dst,
+      ((Finset.univ : Finset (RouteEAllPairSection m)).filter
+          fun a => labelOf a = src ∧ dstLabelOf a = dst).sum
+            (fun a => returnTime c a) =
+        labelDstTimeMass (src, dst)
+  labelDst_sum_by_src :
+    ∀ src,
+      Finset.univ.sum (fun dst : RouteEB20.AllPairLabel =>
+        labelDstTimeMass (src, dst)) = labelTimeMass src
+
+namespace RouteEAllPairLabelDstBoundaryTraceTarget
+
+noncomputable def toLabelDstTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairLabelDstBoundaryTraceTarget m labelTimeMass
+        labelDstTimeMass) :
+    RouteEAllPairLabelDstTraceTarget m labelTimeMass labelDstTimeMass where
+  data := target.data
+  sectionReturn := target.sectionReturn
+  returnTime := target.returnTime
+  returnTime_pos := target.returnTime_pos
+  firstReturn_equation := target.firstReturn_equation
+  firstReturn_minimal := target.firstReturn_minimal
+  sectionReturn_single := fun c =>
+    (target.boundaryInsertion c).sectionReturn_single
+  labelOf := target.labelOf
+  dstLabelOf := target.dstLabelOf
+  label_dst_time_sum := target.label_dst_time_sum
+  labelDst_sum_by_src := target.labelDst_sum_by_src
+
+noncomputable def toLabelTraceTarget {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairLabelDstBoundaryTraceTarget m labelTimeMass
+        labelDstTimeMass) :
+    RouteEAllPairLabelTraceTarget m labelTimeMass :=
+  target.toLabelDstTraceTarget.toLabelTraceTarget
+
+noncomputable def toSectionCertificate {m : Nat} [NeZero m]
+    {labelTimeMass : RouteEB20.AllPairLabel → Nat}
+    {labelDstTimeMass : RouteEAllPairLabelDst → Nat}
+    (target :
+      RouteEAllPairLabelDstBoundaryTraceTarget m labelTimeMass
+        labelDstTimeMass)
+    (routeCounts : RouteECounts m)
+    (timeMass_sum : Finset.univ.sum labelTimeMass = m ^ 4) :
+    RouteEAllPairSectionCertificate m :=
+  target.toLabelTraceTarget.toSectionCertificate routeCounts timeMass_sum
+
+end RouteEAllPairLabelDstBoundaryTraceTarget
+
+/--
 Branch-independent indexed source/destination-label target.  This matches
 verifier output where CSV rows are indexed and label-destination fibers are
 checked before transport to the canonical all-pair section.
@@ -9139,6 +9261,10 @@ abbrev AllPairLabelDstTraceTarget (q : Nat) :=
   RouteEAllPairLabelDstTraceTarget (modulus q) (allPairTimeMassTarget q)
     (allPairLabelDstTimeMassTarget q)
 
+abbrev AllPairBoundaryLabelDstTraceTarget (q : Nat) :=
+  RouteEAllPairLabelDstBoundaryTraceTarget (modulus q)
+    (allPairTimeMassTarget q) (allPairLabelDstTimeMassTarget q)
+
 abbrev AllPairIndexedLabelDstTraceTarget (q : Nat) :=
   RouteEAllPairIndexedLabelDstTraceTarget (modulus q) (allPairTimeMassTarget q)
     (allPairLabelDstTimeMassTarget q)
@@ -9185,6 +9311,12 @@ end AllPairLabelDstTraceTarget
 
 noncomputable def allPairSectionCertificateOfLabelDstTraceTarget (q : Nat)
     (target : AllPairLabelDstTraceTarget q) :
+    RouteEAllPairSectionCertificate (modulus q) :=
+  target.toSectionCertificate (routeCounts q)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
+
+noncomputable def allPairSectionCertificateOfBoundaryLabelDstTraceTarget
+    (q : Nat) (target : AllPairBoundaryLabelDstTraceTarget q) :
     RouteEAllPairSectionCertificate (modulus q) :=
   target.toSectionCertificate (routeCounts q)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four q)
@@ -9312,6 +9444,36 @@ theorem finiteM16AllPairTarget_of_labelDstTraceTarget
 theorem allPairBranchTarget_of_labelDstTraceTargets
     (hsymbolic : ∀ q, 0 < q → Nonempty (AllPairLabelDstTraceTarget q))
     (hm16 : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro q hq
+      rcases hsymbolic q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm16 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_boundaryLabelDstTraceTarget
+    (h : ∀ q, 0 < q → Nonempty (AllPairBoundaryLabelDstTraceTarget q)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro q hq
+      rcases h q hq with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM16AllPairTarget_of_boundaryLabelDstTraceTarget
+    (h : Nonempty (AllPairBoundaryLabelDstTraceTarget 0)) :
+    FiniteM16AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM16AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_boundaryLabelDstTraceTargets
+    (hsymbolic : ∀ q, 0 < q →
+      Nonempty (AllPairBoundaryLabelDstTraceTarget q))
+    (hm16 : Nonempty (AllPairBoundaryLabelDstTraceTarget 0)) :
     AllPairBranchTarget :=
   allPairBranchTarget_of_labelTraceTargets
     (by
@@ -10003,6 +10165,10 @@ abbrev AllPairLabelDstTraceTarget (k : Nat) :=
   RouteEAllPairLabelDstTraceTarget (modulus k) (allPairTimeMassTarget k)
     (allPairLabelDstTimeMassTarget k)
 
+abbrev AllPairBoundaryLabelDstTraceTarget (k : Nat) :=
+  RouteEAllPairLabelDstBoundaryTraceTarget (modulus k)
+    (allPairTimeMassTarget k) (allPairLabelDstTimeMassTarget k)
+
 abbrev AllPairIndexedLabelDstTraceTarget (k : Nat) :=
   RouteEAllPairIndexedLabelDstTraceTarget (modulus k) (allPairTimeMassTarget k)
     (allPairLabelDstTimeMassTarget k)
@@ -10049,6 +10215,12 @@ end AllPairLabelDstTraceTarget
 
 noncomputable def allPairSectionCertificateOfLabelDstTraceTarget (k : Nat)
     (target : AllPairLabelDstTraceTarget k) :
+    RouteEAllPairSectionCertificate (modulus k) :=
+  target.toSectionCertificate (routeCounts k)
+    (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
+
+noncomputable def allPairSectionCertificateOfBoundaryLabelDstTraceTarget
+    (k : Nat) (target : AllPairBoundaryLabelDstTraceTarget k) :
     RouteEAllPairSectionCertificate (modulus k) :=
   target.toSectionCertificate (routeCounts k)
     (allPairTimeMassTarget_sum_eq_modulus_pow_four k)
@@ -10176,6 +10348,36 @@ theorem finiteM14AllPairTarget_of_labelDstTraceTarget
 theorem allPairBranchTarget_of_labelDstTraceTargets
     (hsymbolic : ∀ k, 0 < k → Nonempty (AllPairLabelDstTraceTarget k))
     (hm14 : Nonempty (AllPairLabelDstTraceTarget 0)) :
+    AllPairBranchTarget :=
+  allPairBranchTarget_of_labelTraceTargets
+    (by
+      intro k hk
+      rcases hsymbolic k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+    (by
+      rcases hm14 with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem symbolicAllPairBranchTarget_of_boundaryLabelDstTraceTarget
+    (h : ∀ k, 0 < k → Nonempty (AllPairBoundaryLabelDstTraceTarget k)) :
+    SymbolicAllPairBranchTarget :=
+  symbolicAllPairBranchTarget_of_labelTraceTarget
+    (by
+      intro k hk
+      rcases h k hk with ⟨target⟩
+      exact ⟨target.toLabelTraceTarget⟩)
+
+theorem finiteM14AllPairTarget_of_boundaryLabelDstTraceTarget
+    (h : Nonempty (AllPairBoundaryLabelDstTraceTarget 0)) :
+    FiniteM14AllPairTarget := by
+  rcases h with ⟨target⟩
+  exact finiteM14AllPairTarget_of_labelTraceTarget
+    ⟨target.toLabelTraceTarget⟩
+
+theorem allPairBranchTarget_of_boundaryLabelDstTraceTargets
+    (hsymbolic : ∀ k, 0 < k →
+      Nonempty (AllPairBoundaryLabelDstTraceTarget k))
+    (hm14 : Nonempty (AllPairBoundaryLabelDstTraceTarget 0)) :
     AllPairBranchTarget :=
   allPairBranchTarget_of_labelTraceTargets
     (by

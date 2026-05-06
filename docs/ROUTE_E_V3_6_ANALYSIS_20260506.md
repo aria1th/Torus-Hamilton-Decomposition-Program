@@ -222,9 +222,20 @@ The same Lean file also now exposes an all-pair adapter surface:
 - `RouteEAllPairLabelTraceTarget`
 - `RouteEAllPairLabelTraceTarget.returnTime_sum`
 - `RouteEAllPairLabelTraceTarget.toSectionCertificate`
+- `RouteEAllPairLabelDstTraceTarget`
+- `RouteEAllPairLabelDstTraceTarget.toLabelTraceTarget`
+- `RouteEAllPairLabelDstTraceTarget.toSectionCertificate`
+- `RouteEAllPairBoundaryInsertionTarget`
+- `RouteEAllPairBoundaryInsertionTarget.sectionReturn_single`
+- `RouteEAllPairLabelDstBoundaryTraceTarget`
+- `RouteEAllPairLabelDstBoundaryTraceTarget.toLabelDstTraceTarget`
+- `RouteEAllPairLabelDstBoundaryTraceTarget.toSectionCertificate`
 - `RouteEAllPairIndexedLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toLabelTraceTarget`
 - `RouteEAllPairIndexedLabelTraceTarget.toSectionCertificate`
+- `RouteEAllPairIndexedLabelDstTraceTarget`
+- `RouteEAllPairIndexedLabelDstTraceTarget.toLabelDstTraceTarget`
+- `RouteEAllPairIndexedLabelDstTraceTarget.toSectionCertificate`
 - `RouteEAllPairLabelFiber`
 - `RouteEAllPairCanonicalRow`
 - `card_routeEAllPairCanonicalRow`
@@ -262,9 +273,12 @@ the existing `RouteESmallSeamCertificate` machinery carries it to the current
 D5 even Hamilton, torus, and Cayley endpoints.  The branch-independent
 `RouteEAllPairLabelTraceTarget` adapter reduces time exhaustion to per-label
 fiber sums.  `RouteEAllPairLabelDstTraceTarget` refines this to the
-`src_label -> dst_label` sums emitted by the closure verifiers, and the indexed
-variants match verifier rows (`idx`, `dst_idx`, labels, `time`) through a
-bijection to `RouteEAllPairSection`.  The canonical-row variant fixes the
+`src_label -> dst_label` sums emitted by the closure verifiers.
+`RouteEAllPairLabelDstBoundaryTraceTarget` additionally allows the section
+one-cycle proof to be supplied by a boundary quotient plus insertion coverage,
+matching the R14e closure package.  The indexed variants match verifier rows
+(`idx`, `dst_idx`, labels, `time`) through a bijection to
+`RouteEAllPairSection`.  The canonical-row variant fixes the
 verifier row shape as `{Z} union labels x nonzero seam`, proves cardinal
 `1 + 10*(m-1)`, and then transports a branch-supplied row-to-section bijection
 to either the source-label or label-destination certificate surface.  B20 now
@@ -300,15 +314,18 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.AllPairLabelTraceTarget`
 - `RouteEB16.AllPairIndexedLabelTraceTarget`
 - `RouteEB16.AllPairLabelDstTraceTarget`
+- `RouteEB16.AllPairBoundaryLabelDstTraceTarget`
 - `RouteEB16.AllPairIndexedLabelDstTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfLabelTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfIndexedLabelTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfLabelDstTraceTarget`
+- `RouteEB16.allPairSectionCertificateOfBoundaryLabelDstTraceTarget`
 - `RouteEB16.allPairSectionCertificateOfIndexedLabelDstTraceTarget`
 - `RouteEB16.SymbolicAllPairBranchTarget`
 - `RouteEB16.FiniteM16AllPairTarget`
 - `RouteEB16.AllPairBranchTarget`
 - `RouteEB16.allPairBranchTarget_of_labelDstTraceTargets`
+- `RouteEB16.allPairBranchTarget_of_boundaryLabelDstTraceTargets`
 - `RouteEB16.allPairBranchTarget_of_indexedLabelDstTraceTargets`
 - `RouteEB16.hamiltonTarget_of_labelTraceTargets`
 - `RouteEB16.torusTarget_of_labelTraceTargets`
@@ -344,15 +361,18 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteER14e.AllPairLabelTraceTarget`
 - `RouteER14e.AllPairIndexedLabelTraceTarget`
 - `RouteER14e.AllPairLabelDstTraceTarget`
+- `RouteER14e.AllPairBoundaryLabelDstTraceTarget`
 - `RouteER14e.AllPairIndexedLabelDstTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfLabelTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfIndexedLabelTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfLabelDstTraceTarget`
+- `RouteER14e.allPairSectionCertificateOfBoundaryLabelDstTraceTarget`
 - `RouteER14e.allPairSectionCertificateOfIndexedLabelDstTraceTarget`
 - `RouteER14e.SymbolicAllPairBranchTarget`
 - `RouteER14e.FiniteM14AllPairTarget`
 - `RouteER14e.AllPairBranchTarget`
 - `RouteER14e.allPairBranchTarget_of_labelDstTraceTargets`
+- `RouteER14e.allPairBranchTarget_of_boundaryLabelDstTraceTargets`
 - `RouteER14e.allPairBranchTarget_of_indexedLabelDstTraceTargets`
 - `RouteER14e.hamiltonTarget_of_labelTraceTargets`
 - `RouteER14e.torusTarget_of_labelTraceTargets`
@@ -364,10 +384,12 @@ B16 and R14e branch surfaces are now also named in Lean:
 These theorem names still do not instantiate the branch maps.  They provide two
 proof-facing endpoints.  First, a boundary quotient plus first-return
 macro-section data feeds `RouteEBoundaryFirstReturnTarget` and yields
-`IsSingleCycleMap` for the quotient.  Second, a concrete label,
-label-destination, or indexed all-pair trace target, plus the finite exceptional
-case (`m = 16` or `m = 14`), yields a `RouteEAllPairSectionCertificate` and
-then Hamilton/torus/Cayley endpoints.  The
+`IsSingleCycleMap` for the quotient.  Second, a boundary-insertion target can
+turn a one-cycle boundary quotient plus coverage by insertion excursions into
+the all-pair section one-cycle field.  Third, a concrete label,
+label-destination, boundary-label-destination, or indexed all-pair trace target,
+plus the finite exceptional case (`m = 16` or `m = 14`), yields a
+`RouteEAllPairSectionCertificate` and then Hamilton/torus/Cayley endpoints.  The
 `RouteE_three_branch_status_package_20260506.zip` package promotes B16 and
 R14e to proof-facing closure on paper/verifier evidence, but the boundary
 quotient derivations, all-pair first-return equations, no-early facts, and
