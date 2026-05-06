@@ -395,17 +395,17 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_block_formula_regeneration_verification.json",
         ),
         item(
-            "R42 open tail-formula suggestions are recorded",
+            "R42 remaining open tail fields are reduced to q=1 boundary exceptions",
             r42_open_tail_suggestions.get("schema")
             == "routeE_r42_open_tail_formula_suggestions_v1"
             and r42_open_tail_suggestions.get("summary", {}).get(
                 "suggestion_count"
             )
-            == 11
+            == 2
             and r42_open_tail_suggestions.get("summary", {}).get(
                 "linear_tail_count"
             )
-            == 9
+            == 0
             and r42_open_tail_suggestions.get("summary", {}).get(
                 "single_sample_boundary_exception_count"
             )

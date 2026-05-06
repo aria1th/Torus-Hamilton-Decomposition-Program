@@ -81,6 +81,24 @@ def formula_text(coeffs: tuple[int, int]) -> str:
     return f"{slope}*q {sign} {abs(intercept)}"
 
 
+def tail_formula(block: dict[str, Any], field: str, q: int | None = None) -> tuple[str | None, str | None]:
+    prefix = f"{field}_q_ge_"
+    candidates = sorted(
+        (
+            (int(key[len(prefix):]), key)
+            for key in block
+            if key.startswith(prefix) and key[len(prefix):].isdigit()
+        ),
+        reverse=True,
+    )
+    for threshold, key in candidates:
+        if q is None or q >= threshold:
+            value = block.get(key)
+            if value is not None:
+                return value, key
+    return None, None
+
+
 def path_run_counts(path: str | None) -> list[dict[str, int | str]]:
     if not path:
         return []
@@ -272,7 +290,7 @@ def verify_block_formula_symbolics(data: dict[str, Any]) -> tuple[list[dict[str,
         block_count_by_src[src] += 1
         for field in ["terminal_affine_alpha", "terminal_affine_beta"]:
             if block.get(field) is None:
-                tail = block.get(f"{field}_q_ge_2")
+                tail, _ = tail_formula(block, field)
                 if tail is None:
                     missing_terminal_fields.append({"index": index, "field": field})
     for src in LABELS:
@@ -386,13 +404,16 @@ def verify_representative_blocks(data: dict[str, Any]) -> tuple[list[dict[str, A
         for field, actual in comparisons:
             if formula.get(field) is None:
                 if actual is not None:
-                    tail_key = f"{field}_q_ge_2"
+                    _, tail_key = tail_formula(formula, field)
                     null_fields.append(
                         {
                             "index": index,
                             "field": field,
                             "actual_q1": actual,
-                            "tail_q_ge_2_formula": formula.get(tail_key),
+                            "tail_formula_key": tail_key,
+                            "tail_formula": formula.get(tail_key)
+                            if tail_key is not None
+                            else None,
                         }
                     )
                 continue
@@ -506,8 +527,9 @@ def build_verification(cert: Path) -> dict[str, Any]:
             "q1_representative_block_formulas_verified": not checks["representative_block_errors"],
             "q1_representative_null_formula_field_count": len(representative_null_fields),
             "q1_null_fields_have_q_ge_2_tail_formulas": all(
-                item.get("tail_q_ge_2_formula") is not None
+                item.get("tail_formula") is not None
                 for item in representative_null_fields
+                if item.get("field", "").startswith("terminal_affine_")
             ),
             "stability_verified": not checks["stability_errors"],
         },

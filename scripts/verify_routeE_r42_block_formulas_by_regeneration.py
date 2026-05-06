@@ -46,9 +46,18 @@ def formula_value(block_formula: dict[str, Any], field: str, q: int) -> tuple[in
     value = block_formula.get(field)
     if value is not None:
         return eval_formula(value, q), field
-    tail_field = f"{field}_q_ge_2"
-    if q >= 2 and block_formula.get(tail_field) is not None:
-        return eval_formula(block_formula.get(tail_field), q), tail_field
+    prefix = f"{field}_q_ge_"
+    tail_fields = sorted(
+        (
+            (int(key[len(prefix):]), key)
+            for key in block_formula
+            if key.startswith(prefix) and key[len(prefix):].isdigit()
+        ),
+        reverse=True,
+    )
+    for threshold, key in tail_fields:
+        if q >= threshold and block_formula.get(key) is not None:
+            return eval_formula(block_formula.get(key), q), key
     return None, None
 
 

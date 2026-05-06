@@ -159,7 +159,7 @@
     {
       "evidence": "certs/routeE_r42_open_tail_formula_suggestions.json",
       "missing": null,
-      "name": "R42 open tail-formula suggestions are recorded",
+      "name": "R42 remaining open tail fields are reduced to q=1 boundary exceptions",
       "ok": true
     },
     {

@@ -42,7 +42,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
 | Verify R42 compact boundary summary | `scripts/verify_routeE_r42_boundary_summary.py`, `certs/routeE_r42_boundary_summary_verification.json` | done, internal affine/block consistency verified |
 | Verify R42 block formulas against regenerated witnesses | `scripts/verify_routeE_r42_block_formulas_by_regeneration.py`, `certs/routeE_r42_block_formula_regeneration_verification.json` | done, q=1..6 regenerated |
-| Suggest R42 open tail formulas | `scripts/suggest_routeE_r42_open_tail_formulas.py`, `certs/routeE_r42_open_tail_formula_suggestions.json` | done, 9 linear tails recorded |
+| Store R42 open tail formulas in compact summary | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, interval-count tails recorded |
+| Record remaining R42 open tail fields | `scripts/suggest_routeE_r42_open_tail_formulas.py`, `certs/routeE_r42_open_tail_formula_suggestions.json` | done, only q=1 boundary exception remains |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -366,14 +367,15 @@ verified_q_values [1, 2, 3, 4, 5, 6]
 block_count 29
 all_block_formulas_match_regeneration True
 all_boundary_single_cycle True
-open_null_formula_field_count 34
+open_null_formula_field_count 2
 ```
 
 This check recompiles/runs the all-pair C++ checker, rebuilds temporary R42
 boundary block tables, and compares the stored 29 block formulas against fresh
-finite witnesses.  The open null fields are optional `condition_interval_count`
-compression debt and q=1 boundary exceptions; they are not transition-mass
-mismatches.
+finite witnesses.  The optional `condition_interval_count` compression debt is
+now stored directly as q>=N tail formulas in the compact summary.  The only
+remaining open null fields are the q=1 block-24 terminal affine boundary
+exception; they are not transition-mass mismatches.
 
 R42 open tail-formula suggestions:
 
@@ -382,17 +384,16 @@ python3 scripts/suggest_routeE_r42_open_tail_formulas.py \
   --json-out certs/routeE_r42_open_tail_formula_suggestions.json
 ```
 
-Result:
+Result after storing the interval-count tails in the compact summary:
 
 ```text
-suggestion_count 11
-linear_tail_count 9
+suggestion_count 2
+linear_tail_count 0
 single_sample_boundary_exception_count 2
 all_multi_sample_fields_linear True
 ```
 
-The multi-sample open fields are optional `condition_interval_count` metadata.
-The inferred visible tails are:
+The multi-sample optional fields were promoted into the compact summary as:
 
 ```text
 block 5:  condition_interval_count = 3*q + 2   for q >= 3

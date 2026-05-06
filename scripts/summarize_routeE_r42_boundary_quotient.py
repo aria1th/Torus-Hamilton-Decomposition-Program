@@ -377,6 +377,46 @@ def fit_field(
     return affine_formula(points)
 
 
+def tail_formula_fields(
+    blocks_by_q: dict[int, list[dict[str, Any]]],
+    index: int,
+    path: list[Any],
+    field: str,
+) -> dict[str, str]:
+    q_values = sorted(blocks_by_q)
+    out: dict[str, str] = {}
+    for min_q in q_values:
+        if min_q < 2:
+            continue
+        points = []
+        ok = True
+        for q in q_values:
+            if q < min_q:
+                continue
+            value: Any = blocks_by_q[q][index]
+            for key in path:
+                if value is None:
+                    ok = False
+                    break
+                if isinstance(value, dict):
+                    value = value.get(key)
+                elif isinstance(value, list) and isinstance(key, int) and 0 <= key < len(value):
+                    value = value[key]
+                else:
+                    ok = False
+                    break
+            if not ok or not isinstance(value, int):
+                ok = False
+                break
+            points.append((q, value))
+        if ok and len(points) >= 2:
+            formula = affine_formula(points)
+            if formula is not None:
+                out[f"{field}_q_ge_{min_q}"] = formula
+                break
+    return out
+
+
 def q_ge_1_block_formula_fits(blocks_by_q: dict[int, list[dict[str, Any]]]) -> dict[str, Any]:
     if not blocks_by_q:
         return {"stable_structural_keys": False, "blocks": []}
@@ -390,31 +430,40 @@ def q_ge_1_block_formula_fits(blocks_by_q: dict[int, list[dict[str, Any]]]) -> d
         for index, key in enumerate(key_lists[0]):
             alpha = fit_field(blocks_by_q, index, ["terminal", "affine_mod", 0])
             beta = fit_field(blocks_by_q, index, ["terminal", "affine_mod", 1])
-            out.append(
-                {
-                    "index": index,
-                    "key": key,
-                    "condition_count": fit_field(blocks_by_q, index, ["condition", "count"]),
-                    "condition_min": fit_field(blocks_by_q, index, ["condition", "min"]),
-                    "condition_max": fit_field(blocks_by_q, index, ["condition", "max"]),
-                    "condition_interval_count": fit_field(
-                        blocks_by_q, index, ["condition", "interval_count"]
-                    ),
-                    "path_run_counts": fit_path_runs(blocks_by_q, index),
-                    "terminal_affine_alpha": alpha,
-                    "terminal_affine_beta": beta,
-                    "terminal_affine_alpha_q_ge_2": None
-                    if alpha is not None
-                    else fit_field(
-                        blocks_by_q, index, ["terminal", "affine_mod", 0], min_q=2
-                    ),
-                    "terminal_affine_beta_q_ge_2": None
-                    if beta is not None
-                    else fit_field(
-                        blocks_by_q, index, ["terminal", "affine_mod", 1], min_q=2
-                    ),
-                }
+            condition_interval_count = fit_field(
+                blocks_by_q, index, ["condition", "interval_count"]
             )
+            block = {
+                "index": index,
+                "key": key,
+                "condition_count": fit_field(blocks_by_q, index, ["condition", "count"]),
+                "condition_min": fit_field(blocks_by_q, index, ["condition", "min"]),
+                "condition_max": fit_field(blocks_by_q, index, ["condition", "max"]),
+                "condition_interval_count": condition_interval_count,
+                "path_run_counts": fit_path_runs(blocks_by_q, index),
+                "terminal_affine_alpha": alpha,
+                "terminal_affine_beta": beta,
+                "terminal_affine_alpha_q_ge_2": None
+                if alpha is not None
+                else fit_field(
+                    blocks_by_q, index, ["terminal", "affine_mod", 0], min_q=2
+                ),
+                "terminal_affine_beta_q_ge_2": None
+                if beta is not None
+                else fit_field(
+                    blocks_by_q, index, ["terminal", "affine_mod", 1], min_q=2
+                ),
+            }
+            if condition_interval_count is None:
+                block.update(
+                    tail_formula_fields(
+                        blocks_by_q,
+                        index,
+                        ["condition", "interval_count"],
+                        "condition_interval_count",
+                    )
+                )
+            out.append(block)
     return {
         "stable_structural_keys": stable_keys,
         "q_values": sorted(blocks_by_q),

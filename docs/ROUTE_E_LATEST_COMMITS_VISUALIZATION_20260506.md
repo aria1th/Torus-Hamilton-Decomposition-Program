@@ -147,9 +147,9 @@ the current miner does not yet fully compress all condition-interval metadata.
 Later commits add q>=2 tail formulas for the q=1 boundary exception and verify
 the transition/block mass formulas symbolically.  A regeneration checker now
 rebuilds temporary R42 finite witnesses for `q=1,2,3,4,5,6` and confirms that the
-stored 29 block formulas still match the fresh block tables.  The remaining
-multi-sample open interval-count fields all have visible linear tail
-suggestions.  The R42 boundary quotient is now a stronger compact
+stored 29 block formulas still match the fresh block tables.  The multi-sample
+open interval-count fields have been promoted into q>=N tail formulas, leaving
+only the q=1 block-24 boundary exception open.  The R42 boundary quotient is now a stronger compact
 symbolic-promotion map, but it is still not a proof of the R42 residue.
 
 ## Mathematical Findings
@@ -175,7 +175,7 @@ symbolic-promotion map, but it is still not a proof of the R42 residue.
    `q>=1` boundary quotient has a stable 29-block profile, transition/block
    mass identities verify symbolically, the 29 block formulas match fresh
    regenerated witnesses for `q=1..6`, and the optional open interval-count
-   metadata has 9 recorded linear tail suggestions.
+   metadata is now stored as tail formulas in the compact summary.
 
 ## Remaining Proof Route
 
