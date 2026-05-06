@@ -431,6 +431,36 @@ now stored directly as q>=N tail formulas in the compact summary.  The only
 remaining open null fields are the q=1 block-24 terminal affine boundary
 exception; they are not transition-mass mismatches.
 
+R42 boundary block-transducer diagnostic:
+
+```bash
+python3 scripts/summarize_routeE_r42_boundary_block_transducer.py \
+  --q-values 1:6 \
+  --json-out certs/routeE_r42_boundary_block_transducer.json
+
+python3 scripts/verify_routeE_r42_boundary_block_transducer.py \
+  --json-out certs/routeE_r42_boundary_block_transducer_verification.json
+```
+
+Result:
+
+```text
+ok True
+q_ge_2_support_stable True
+q_ge_2_edge_count 69
+q_ge_2_support_strongly_connected True
+edge_count_fits_all_affine False
+edge_count_fits_all_piecewise_affine True
+edge_count_piecewise_moduli [2]
+```
+
+This lifts the 29 boundary blocks to a finite block-to-block transducer.  The
+support is stable and strongly connected for q>=2, but 16 blocks split across
+multiple target blocks and 12 edge-count laws require parity-dependent
+rational-affine formulas.  This is useful symbolic-promotion evidence for the
+boundary/transducer route, but it is still not a pointwise first-return or
+no-early theorem.
+
 R42 open tail-formula suggestions:
 
 ```bash
@@ -584,7 +614,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 11
+evidence_items_ok 12
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

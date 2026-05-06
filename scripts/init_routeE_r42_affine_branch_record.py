@@ -28,6 +28,12 @@ DEFAULT_BOUNDARY_VERIFICATION = (
 DEFAULT_BOUNDARY_EXPANSION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_boundary_expansion_verification.json"
 )
+DEFAULT_BOUNDARY_BLOCK_TRANSDUCER = (
+    ROOT / "certs" / "routeE_r42_boundary_block_transducer.json"
+)
+DEFAULT_BOUNDARY_BLOCK_TRANSDUCER_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_boundary_block_transducer_verification.json"
+)
 DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
@@ -64,6 +70,8 @@ def build_record(
     boundary_summary_path: Path,
     boundary_verification_path: Path,
     boundary_expansion_verification_path: Path,
+    boundary_block_transducer_path: Path,
+    boundary_block_transducer_verification_path: Path,
     block_regeneration_verification_path: Path,
     open_tail_suggestions_path: Path,
     allpair_time_fits_path: Path,
@@ -92,6 +100,16 @@ def build_record(
     boundary_expansion_verification = (
         load_json(boundary_expansion_verification_path)
         if boundary_expansion_verification_path.exists()
+        else {}
+    )
+    boundary_block_transducer = (
+        load_json(boundary_block_transducer_path)
+        if boundary_block_transducer_path.exists()
+        else {}
+    )
+    boundary_block_transducer_verification = (
+        load_json(boundary_block_transducer_verification_path)
+        if boundary_block_transducer_verification_path.exists()
         else {}
     )
     block_regeneration_verification = (
@@ -169,6 +187,10 @@ def build_record(
             "boundary_summary": str(boundary_summary_path),
             "boundary_verification": str(boundary_verification_path),
             "boundary_expansion_verification": str(boundary_expansion_verification_path),
+            "boundary_block_transducer": str(boundary_block_transducer_path),
+            "boundary_block_transducer_verification": str(
+                boundary_block_transducer_verification_path
+            ),
             "block_regeneration_verification": str(
                 block_regeneration_verification_path
             ),
@@ -255,6 +277,22 @@ def build_record(
             "q_values": boundary_expansion_verification.get("q_values"),
             "block_count": boundary_expansion_verification.get("block_count"),
             "note": boundary_expansion_verification.get("note"),
+        },
+        "boundary_block_transducer_summary": {
+            "schema": boundary_block_transducer.get("schema"),
+            "summary": boundary_block_transducer.get("summary"),
+            "promotion_impact": boundary_block_transducer.get("promotion_impact"),
+        },
+        "boundary_block_transducer_verification_summary": {
+            "schema": boundary_block_transducer_verification.get("schema"),
+            "ok": boundary_block_transducer_verification.get("ok"),
+            "q_values": boundary_block_transducer_verification.get("q_values"),
+            "edge_fit_error_count": boundary_block_transducer_verification.get(
+                "edge_fit_error_count"
+            ),
+            "piecewise_fit_error_count": boundary_block_transducer_verification.get(
+                "piecewise_fit_error_count"
+            ),
         },
         "block_regeneration_verification_summary": {
             "schema": block_regeneration_verification.get("schema"),
@@ -348,6 +386,16 @@ def main() -> None:
         default=DEFAULT_BOUNDARY_EXPANSION_VERIFICATION,
     )
     parser.add_argument(
+        "--boundary-block-transducer",
+        type=Path,
+        default=DEFAULT_BOUNDARY_BLOCK_TRANSDUCER,
+    )
+    parser.add_argument(
+        "--boundary-block-transducer-verification",
+        type=Path,
+        default=DEFAULT_BOUNDARY_BLOCK_TRANSDUCER_VERIFICATION,
+    )
+    parser.add_argument(
         "--block-regeneration-verification",
         type=Path,
         default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
@@ -392,6 +440,8 @@ def main() -> None:
         args.boundary_summary,
         args.boundary_verification,
         args.boundary_expansion_verification,
+        args.boundary_block_transducer,
+        args.boundary_block_transducer_verification,
         args.block_regeneration_verification,
         args.open_tail_suggestions,
         args.allpair_time_fits,

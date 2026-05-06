@@ -1,0 +1,80 @@
+{
+  "edge_fit_error_count": 0,
+  "edge_fit_errors": [],
+  "ok": true,
+  "per_sample_checks": [
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 1,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    },
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 2,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    },
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 3,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    },
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 4,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    },
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 5,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    },
+    {
+      "assignment_ok": true,
+      "block_count_ok": true,
+      "boundary_single_cycle": true,
+      "ok": true,
+      "q": 6,
+      "support_strongly_connected": true,
+      "target_histogram_total_ok": true
+    }
+  ],
+  "piecewise_fit_error_count": 0,
+  "piecewise_fit_errors": [],
+  "promotion_impact": {
+    "diagnosis": "The 29-block boundary graph has stable q>=2 support, but many blocks split across several target blocks.  This is a finite transducer skeleton, not a pointwise/no-early proof.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false,
+    "supports_boundary_transducer_route": true
+  },
+  "q_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "sample_count": 6,
+  "schema": "routeE_r42_boundary_block_transducer_verification_v1",
+  "summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer.json"
+}

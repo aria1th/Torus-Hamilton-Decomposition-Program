@@ -39,6 +39,12 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     color = record.get("color_sign_screen_summary", {})
     boundary_ver = record.get("boundary_verification_summary", {}).get("summary", {})
     boundary_expansion_ver = record.get("boundary_expansion_verification_summary", {})
+    boundary_block_transducer = record.get("boundary_block_transducer_summary", {}).get(
+        "summary", {}
+    )
+    boundary_block_transducer_ver = record.get(
+        "boundary_block_transducer_verification_summary", {}
+    )
     block_regen = record.get("block_regeneration_verification_summary", {}).get("summary", {})
     tails = record.get("open_tail_formula_suggestions_summary", {}).get("summary", {})
     time_ver = record.get("allpair_time_fit_verification_summary", {}).get("summary", {})
@@ -99,6 +105,19 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and block_regen.get("verified_q_values") == [1, 2, 3, 4, 5, 6],
             "certs/routeE_r42_block_formula_regeneration_verification.json",
             "fresh finite regeneration evidence",
+        ),
+        item(
+            "R42 boundary block transducer diagnostic is verified",
+            boundary_block_transducer_ver.get("schema")
+            == "routeE_r42_boundary_block_transducer_verification_v1"
+            and boundary_block_transducer_ver.get("ok") is True
+            and boundary_block_transducer_ver.get("q_values") == [1, 2, 3, 4, 5, 6]
+            and boundary_block_transducer_ver.get("piecewise_fit_error_count") == 0
+            and boundary_block_transducer.get("q_ge_2_support_stable") is True
+            and boundary_block_transducer.get("q_ge_2_edge_count") == 69
+            and boundary_block_transducer.get("edge_count_piecewise_moduli") == [2],
+            "certs/routeE_r42_boundary_block_transducer.json and certs/routeE_r42_boundary_block_transducer_verification.json",
+            "boundary transducer diagnostic",
         ),
         item(
             "R42 compact block open fields are only q=1 boundary exceptions",

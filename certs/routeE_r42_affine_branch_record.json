@@ -142,6 +142,60 @@
       ]
     }
   },
+  "boundary_block_transducer_summary": {
+    "promotion_impact": {
+      "diagnosis": "The 29-block boundary graph has stable q>=2 support, but many blocks split across several target blocks.  This is a finite transducer skeleton, not a pointwise/no-early proof.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false,
+      "supports_boundary_transducer_route": true
+    },
+    "schema": "routeE_r42_boundary_block_transducer_v1",
+    "summary": {
+      "all_assignments_ok": true,
+      "all_boundary_single_cycle": true,
+      "all_samples_ok": true,
+      "edge_count_fits_all_affine": false,
+      "edge_count_fits_all_piecewise_affine": true,
+      "edge_count_piecewise_moduli": [
+        2
+      ],
+      "max_targets_per_block_q_ge_2": 7,
+      "q1_edge_count": 68,
+      "q1_extra_edges": [],
+      "q1_missing_q_ge_2_edges": [
+        {
+          "dst": 4,
+          "src": 17
+        }
+      ],
+      "q_ge_2_edge_count": 69,
+      "q_ge_2_support_stable": true,
+      "q_ge_2_support_strongly_connected": true,
+      "q_values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "split_block_count_q_ge_2": 16
+    }
+  },
+  "boundary_block_transducer_verification_summary": {
+    "edge_fit_error_count": 0,
+    "ok": true,
+    "piecewise_fit_error_count": 0,
+    "q_values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "schema": "routeE_r42_boundary_block_transducer_verification_v1"
+  },
   "boundary_expansion_verification_summary": {
     "block_count": 29,
     "note": "The boundary summary preserves boundary segment path-run counts, including the unique Z>13 path, so expansion to all-pair source-label counts is direct.",
@@ -525,6 +579,8 @@
     "allpair_transition_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_summary.json",
     "allpair_transition_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_verification.json",
     "block_regeneration_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_block_formula_regeneration_verification.json",
+    "boundary_block_transducer": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer.json",
+    "boundary_block_transducer_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer_verification.json",
     "boundary_expansion_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_expansion_verification.json",
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
