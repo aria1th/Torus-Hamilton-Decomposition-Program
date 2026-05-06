@@ -430,3 +430,13 @@ label or label-destination time mass polynomials;
 sum tau = m^4;
 finite boundary cases.
 ```
+
+The repository-level completion status can be regenerated with:
+
+```bash
+python3 scripts/audit_routeE_corrected_goal.py \
+  --json-out certs/routeE_corrected_goal_audit.json
+```
+
+At the time of this note the audit reports `goal_complete = false`, because
+Type-A residue coverage is incomplete and `E-gen-symbolic` is still open.

@@ -33,6 +33,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Initialize R38 gate-transducer branch record | `scripts/init_routeE_r38_gate_transducer_record.py`, `certs/routeE_r38_gate_transducer_branch_record.json` | done, branch remains open |
+| Machine-check the goal completion status | `scripts/audit_routeE_corrected_goal.py`, `certs/routeE_corrected_goal_audit.json` | done, reports incomplete |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -191,6 +192,26 @@ closed packet/count law, finite gate transitions, section return one-cycle,
 no-early/minimality, insertion distribution, time-mass polynomials, and
 finite boundary cases.
 
+Machine completion audit:
+
+```bash
+python3 scripts/audit_routeE_corrected_goal.py \
+  --json-out certs/routeE_corrected_goal_audit.json
+```
+
+Result:
+
+```text
+goal_complete False
+missing_count 2
+missing: Type-A residue coverage is complete
+missing: E-gen-symbolic branch is closed
+```
+
+The audit is intentionally conservative: proof-facing evidence does not count
+as a closed branch theorem unless the branch is actually covered and the
+generic symbolic endpoint is no longer open.
+
 Hygiene:
 
 ```bash
@@ -199,6 +220,7 @@ python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
 python3 -m py_compile scripts/summarize_routeE_typeA_residue_coverage.py
 python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py
+python3 -m py_compile scripts/audit_routeE_corrected_goal.py
 python3 -m py_compile scripts/derive_d5_lambdaE_mask_polynomials.py
 git diff --check
 ```

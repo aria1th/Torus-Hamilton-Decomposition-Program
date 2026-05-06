@@ -1,0 +1,101 @@
+{
+  "checklist": [
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/docs/D5_EVEN_ROUTE_E_CORRECTED_BRANCH_DISPATCHER_20260506.md",
+      "missing": null,
+      "name": "corrected branch dispatcher document exists",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/docs/D5_EVEN_ROUTE_E_CORRECTED_BRANCH_AUDIT_20260506.md",
+      "missing": null,
+      "name": "completion audit document exists",
+      "ok": true
+    },
+    {
+      "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_E0_m2",
+      "missing": null,
+      "name": "m=2 finite boundary certificate passes RF1/RF2/sign/color checks",
+      "ok": true
+    },
+    {
+      "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_E4_m4",
+      "missing": null,
+      "name": "m=4 finite branch passes RF1/RF2/sign/color checks",
+      "ok": true
+    },
+    {
+      "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_m6_to_m60",
+      "missing": null,
+      "name": "m=6..60 small-seam window has verified rank and seam evidence",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_typeA_closure_package_summary.json",
+      "missing": null,
+      "name": "B20/B16/R14e Type-A package flags are preserved and true",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_typeA_symbolic_skeleton.json",
+      "missing": null,
+      "name": "B16/R14e symbolic polynomial skeleton is preserved",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_typeA_residue_coverage.json",
+      "missing": null,
+      "name": "Type-A residue coverage is explicitly tracked",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_typeA_residue_coverage.json",
+      "missing": "Only residues 14,16,20,40,44 mod 48 are currently proof-facing.",
+      "name": "Type-A residue coverage is complete",
+      "ok": false
+    },
+    {
+      "evidence": "certs/routeE_r38_gate_transducer_branch_record.json",
+      "missing": null,
+      "name": "R38 next-target record exists and is marked open",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
+      "missing": null,
+      "name": "R38 symmetric probe negative controls are preserved",
+      "ok": true
+    },
+    {
+      "evidence": "certs/routeE_r38_m182_cpp_screen_timeout.json",
+      "missing": null,
+      "name": "timeout-safe C++ screen evidence is preserved",
+      "ok": true
+    },
+    {
+      "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_symbolic",
+      "missing": "Uniform all-even full layered parity-changing template is still missing.",
+      "name": "E-gen-symbolic branch is closed",
+      "ok": false
+    }
+  ],
+  "conclusion": "Goal is not complete: E-gen-symbolic remains open and residue coverage is incomplete.",
+  "goal_complete": false,
+  "missing": [
+    {
+      "evidence": "certs/routeE_typeA_residue_coverage.json",
+      "missing": "Only residues 14,16,20,40,44 mod 48 are currently proof-facing.",
+      "name": "Type-A residue coverage is complete",
+      "ok": false
+    },
+    {
+      "evidence": "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_symbolic",
+      "missing": "Uniform all-even full layered parity-changing template is still missing.",
+      "name": "E-gen-symbolic branch is closed",
+      "ok": false
+    }
+  ],
+  "missing_count": 2,
+  "objective": "Fill corrected d=5 even Route-E branches as far as possible and promote finite witness evidence toward symbolic proof artifacts.",
+  "schema": "routeE_corrected_goal_audit_v1"
+}
