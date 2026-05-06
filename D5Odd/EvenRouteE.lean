@@ -564,6 +564,24 @@ noncomputable def indexEquiv {m : Nat} [NeZero m] :
 
 end RouteENonzeroSeam
 
+inductive RouteEBoundaryLabel where
+  | L03
+  | L04
+  | L34
+deriving DecidableEq, Fintype
+
+abbrev RouteEBoundaryNode (m : Nat) :=
+  Unit ⊕ (RouteEBoundaryLabel × RouteENonzeroSeam m)
+
+theorem card_routeEBoundaryLabel :
+    Fintype.card RouteEBoundaryLabel = 3 := by
+  native_decide
+
+theorem card_routeEBoundaryNode (m : Nat) [NeZero m] :
+    Fintype.card (RouteEBoundaryNode m) = 1 + 3 * (m - 1) := by
+  simp [RouteEBoundaryNode, Fintype.card_sum, Fintype.card_prod,
+    card_routeEBoundaryLabel]
+
 structure RouteEReturnTimeBlock where
   start : Nat
   stop : Nat

@@ -75,6 +75,9 @@ New arithmetic names include:
 
 The same Lean file also now exposes an all-pair adapter surface:
 
+- `RouteEBoundaryLabel`
+- `RouteEBoundaryNode`
+- `card_routeEBoundaryNode`
 - `RouteEAllPairVecSupport`
 - `RouteEAllPairSectionPoint`
 - `RouteEAllPairSection`
