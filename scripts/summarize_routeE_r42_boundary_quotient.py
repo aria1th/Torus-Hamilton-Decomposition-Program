@@ -298,6 +298,116 @@ def block_signature(blocks: list[dict[str, Any]] | None) -> list[dict[str, Any]]
     return out
 
 
+def structural_block_key(block: dict[str, Any]) -> dict[str, Any]:
+    terminal = block.get("terminal") or {}
+    condition = block.get("condition") or {}
+    return {
+        "src_label": block.get("src_label"),
+        "dst_label_group": block.get("dst_label_group"),
+        "path_shape": path_shape(block.get("path")),
+        "fallback": block.get("fallback"),
+        "terminal_dst_label": terminal.get("dst_label"),
+        "condition_mod": condition.get("mod"),
+        "condition_residue": condition.get("residue"),
+    }
+
+
+def compressed_path(path: str | None) -> list[dict[str, Any]]:
+    if not path:
+        return []
+    labels = path.split(">")
+    runs = []
+    cur = labels[0]
+    count = 1
+    for label in labels[1:]:
+        if label == cur:
+            count += 1
+        else:
+            runs.append({"label": cur, "count": count})
+            cur = label
+            count = 1
+    runs.append({"label": cur, "count": count})
+    return runs
+
+
+def path_shape(path: str | None) -> list[str]:
+    return [run["label"] for run in compressed_path(path)]
+
+
+def fit_path_runs(blocks_by_q: dict[int, list[dict[str, Any]]], index: int) -> list[dict[str, Any]]:
+    by_q = {
+        q: compressed_path(blocks[index].get("path"))
+        for q, blocks in sorted(blocks_by_q.items())
+    }
+    if not by_q:
+        return []
+    shapes = [[run["label"] for run in runs] for runs in by_q.values()]
+    if any(shape != shapes[0] for shape in shapes[1:]):
+        return []
+    out = []
+    for run_index, label in enumerate(shapes[0]):
+        points = [(q, runs[run_index]["count"]) for q, runs in by_q.items()]
+        out.append({"label": label, "count": affine_formula(points)})
+    return out
+
+
+def fit_field(blocks_by_q: dict[int, list[dict[str, Any]]], index: int, path: list[Any]) -> str | None:
+    points = []
+    for q, blocks in sorted(blocks_by_q.items()):
+        value: Any = blocks[index]
+        for key in path:
+            if value is None:
+                return None
+            if isinstance(value, dict):
+                value = value.get(key)
+            elif isinstance(value, list) and isinstance(key, int) and 0 <= key < len(value):
+                value = value[key]
+            else:
+                return None
+        if not isinstance(value, int):
+            return None
+        points.append((q, value))
+    return affine_formula(points)
+
+
+def q_ge_1_block_formula_fits(blocks_by_q: dict[int, list[dict[str, Any]]]) -> dict[str, Any]:
+    if not blocks_by_q:
+        return {"stable_structural_keys": False, "blocks": []}
+    key_lists = [
+        [structural_block_key(block) for block in blocks]
+        for _, blocks in sorted(blocks_by_q.items())
+    ]
+    stable_keys = all(keys == key_lists[0] for keys in key_lists[1:])
+    out = []
+    if stable_keys:
+        for index, key in enumerate(key_lists[0]):
+            out.append(
+                {
+                    "index": index,
+                    "key": key,
+                    "condition_count": fit_field(blocks_by_q, index, ["condition", "count"]),
+                    "condition_min": fit_field(blocks_by_q, index, ["condition", "min"]),
+                    "condition_max": fit_field(blocks_by_q, index, ["condition", "max"]),
+                    "condition_interval_count": fit_field(
+                        blocks_by_q, index, ["condition", "interval_count"]
+                    ),
+                    "path_run_counts": fit_path_runs(blocks_by_q, index),
+                    "terminal_affine_alpha": fit_field(
+                        blocks_by_q, index, ["terminal", "affine_mod", 0]
+                    ),
+                    "terminal_affine_beta": fit_field(
+                        blocks_by_q, index, ["terminal", "affine_mod", 1]
+                    ),
+                }
+            )
+    return {
+        "stable_structural_keys": stable_keys,
+        "q_values": sorted(blocks_by_q),
+        "block_count": len(key_lists[0]) if key_lists else 0,
+        "blocks": out,
+    }
+
+
 def split_blocks(group: list[dict[str, Any]], m: int) -> int:
     if terminal(group, m) is not None:
         return 1
@@ -438,6 +548,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
         "boundary_transition_counts": transitions,
         "block_signature": block_signature(blocks) if blocks is not None else None,
         "representative_block_table": blocks if q == 1 else None,
+        "_block_table_for_fit": blocks,
         "returncode": proc.returncode,
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
         "ok": True,
@@ -468,6 +579,14 @@ def main() -> None:
     )
     for sample in samples:
         sample.pop("representative_block_table", None)
+    blocks_by_q = {
+        int(sample["q"]): sample["_block_table_for_fit"]
+        for sample in samples
+        if sample.get("q", 0) >= 1 and sample.get("_block_table_for_fit") is not None
+    }
+    block_formula_fits = q_ge_1_block_formula_fits(blocks_by_q)
+    for sample in samples:
+        sample.pop("_block_table_for_fit", None)
 
     generic = [sample for sample in samples if sample.get("q", 0) >= 1]
     stable_counts = len({json.dumps(s.get("block_count_by_label"), sort_keys=True) for s in generic}) == 1
@@ -501,6 +620,7 @@ def main() -> None:
             else None,
         },
         "q_ge_1_transition_count_fits": transition_count_fits(samples),
+        "q_ge_1_block_formula_fits": block_formula_fits,
         "representative_q1_block_table": representative_q1_block_table,
         "interpretation": (
             "The boundary quotient is a single cycle for the checked R42 "

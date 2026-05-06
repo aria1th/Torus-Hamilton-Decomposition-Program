@@ -276,7 +276,7 @@ q>=1: boundary_nodes = 3*m - 2, one boundary cycle, 29 blocks
 block_count_by_label = {Z:1, 03:7, 04:13, 34:8}
 transition fits include Z->03 = 1 and 34->34 = 12*q + 10
 representative_q1_block_table has 29 compact blocks
-full block_signature stable across q>=1: False under the current miner
+run-normalized block formula fits: stable_structural_keys=True, blocks=29
 raw_csv_preserved=False
 ```
 

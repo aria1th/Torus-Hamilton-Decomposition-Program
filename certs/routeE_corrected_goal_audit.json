@@ -127,6 +127,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_boundary_quotient_summary.json: q_ge_1_block_formula_fits",
+      "missing": null,
+      "name": "R42 q>=1 run-normalized boundary block formula fits are stable",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
       "missing": null,
       "name": "R38 symmetric probe negative controls are preserved",

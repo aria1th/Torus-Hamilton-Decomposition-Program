@@ -273,6 +273,24 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_boundary_quotient_summary.json: representative_q1_block_table",
         ),
         item(
+            "R42 q>=1 run-normalized boundary block formula fits are stable",
+            r42_boundary_summary.get("q_ge_1_block_formula_fits", {}).get(
+                "stable_structural_keys"
+            )
+            is True
+            and r42_boundary_summary.get("q_ge_1_block_formula_fits", {}).get(
+                "block_count"
+            )
+            == 29
+            and len(
+                r42_boundary_summary.get("q_ge_1_block_formula_fits", {}).get(
+                    "blocks", []
+                )
+            )
+            == 29,
+            "certs/routeE_r42_boundary_quotient_summary.json: q_ge_1_block_formula_fits",
+        ),
+        item(
             "R38 symmetric probe negative controls are preserved",
             probe.get("schema") == "routeE_r38_symmetric_probe_summary_v2"
             and probe.get("hits") == {"38": [5], "86": [23], "134": [5]},

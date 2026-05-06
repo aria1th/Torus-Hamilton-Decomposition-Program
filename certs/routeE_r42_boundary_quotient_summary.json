@@ -2,6 +2,1087 @@
   "branch": "R42",
   "family": "m = 48*q + 42, x = z = 6*q + 5",
   "interpretation": "The boundary quotient is a single cycle for the checked R42 samples and has stable block counts for q>=1.  This is a symbolic-promotion guide, not a proof of the R42 residue.",
+  "q_ge_1_block_formula_fits": {
+    "block_count": 29,
+    "blocks": [
+      {
+        "condition_count": "1",
+        "condition_interval_count": null,
+        "condition_max": "0",
+        "condition_min": "0",
+        "index": 0,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": null,
+          "fallback": null,
+          "path_shape": [
+            "Z"
+          ],
+          "src_label": "Z",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "Z"
+          }
+        ],
+        "terminal_affine_alpha": "0",
+        "terminal_affine_beta": "36*q + 32"
+      },
+      {
+        "condition_count": "1",
+        "condition_interval_count": null,
+        "condition_max": "12*q + 11",
+        "condition_min": "12*q + 11",
+        "index": 1,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "03",
+            "14",
+            "23",
+            "02",
+            "24",
+            "23",
+            "13"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "0",
+        "terminal_affine_beta": "12*q + 10"
+      },
+      {
+        "condition_count": "6*q + 5",
+        "condition_interval_count": "6*q + 5",
+        "condition_max": "48*q + 40",
+        "condition_min": "18*q + 16",
+        "index": 2,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "04",
+          "fallback": null,
+          "path_shape": [
+            "03"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          }
+        ],
+        "terminal_affine_alpha": "2",
+        "terminal_affine_beta": "0"
+      },
+      {
+        "condition_count": "24*q + 20",
+        "condition_interval_count": "24*q + 20",
+        "condition_max": "48*q + 41",
+        "condition_min": "1",
+        "index": 3,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "04",
+          "fallback": null,
+          "path_shape": [
+            "03",
+            "14",
+            "23",
+            "02",
+            "24"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          }
+        ],
+        "terminal_affine_alpha": "2",
+        "terminal_affine_beta": "24*q + 19"
+      },
+      {
+        "condition_count": "6*q + 5",
+        "condition_interval_count": "6*q + 5",
+        "condition_max": "12*q + 10",
+        "condition_min": "2",
+        "index": 4,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "03"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 19",
+        "terminal_affine_beta": "0"
+      },
+      {
+        "condition_count": "3*q + 2",
+        "condition_interval_count": null,
+        "condition_max": "18*q + 14",
+        "condition_min": "12*q + 12",
+        "index": 5,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "03"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 19",
+        "terminal_affine_beta": "24*q + 21"
+      },
+      {
+        "condition_count": "6*q + 5",
+        "condition_interval_count": "6*q + 5",
+        "condition_max": "36*q + 30",
+        "condition_min": "24*q + 22",
+        "index": 6,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "03"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 19",
+        "terminal_affine_beta": "0"
+      },
+      {
+        "condition_count": "3*q + 3",
+        "condition_interval_count": null,
+        "condition_max": "42*q + 36",
+        "condition_min": "36*q + 32",
+        "index": 7,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "03"
+          ],
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "03"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 19",
+        "terminal_affine_beta": "24*q + 21"
+      },
+      {
+        "condition_count": "1",
+        "condition_interval_count": null,
+        "condition_max": "24*q + 22",
+        "condition_min": "24*q + 22",
+        "index": 8,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "Z",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13",
+            "01"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "Z"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          },
+          {
+            "count": "5",
+            "label": "01"
+          }
+        ],
+        "terminal_affine_alpha": "0",
+        "terminal_affine_beta": "0"
+      },
+      {
+        "condition_count": "1*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "12*q + 7",
+        "condition_min": "6*q + 7",
+        "index": 9,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "01",
+            "13"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "2",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 39"
+      },
+      {
+        "condition_count": "1*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "6*q + 1",
+        "condition_min": "1",
+        "index": 10,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "01",
+            "13"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 39"
+      },
+      {
+        "condition_count": "4*q + 3",
+        "condition_interval_count": null,
+        "condition_max": "12*q + 9",
+        "condition_min": "3",
+        "index": 11,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "13"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "12*q + 11",
+        "terminal_affine_beta": "36*q + 32"
+      },
+      {
+        "condition_count": "1",
+        "condition_interval_count": null,
+        "condition_max": "2",
+        "condition_min": "2",
+        "index": 12,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "12"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "48*q + 41",
+            "label": "12"
+          }
+        ],
+        "terminal_affine_alpha": "0",
+        "terminal_affine_beta": "36*q + 31"
+      },
+      {
+        "condition_count": "16*q + 12",
+        "condition_interval_count": "16*q + 12",
+        "condition_max": "48*q + 38",
+        "condition_min": "6",
+        "index": 13,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "12*q + 11",
+        "terminal_affine_beta": "12*q + 10"
+      },
+      {
+        "condition_count": "2*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "48*q + 40",
+        "condition_min": "18*q + 22",
+        "index": 14,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13",
+            "01"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          },
+          {
+            "count": "1",
+            "label": "01"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 38"
+      },
+      {
+        "condition_count": "2*q + 2",
+        "condition_interval_count": null,
+        "condition_max": "42*q + 34",
+        "condition_min": "12*q + 16",
+        "index": 15,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13",
+            "01"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          },
+          {
+            "count": "2",
+            "label": "01"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 38"
+      },
+      {
+        "condition_count": "2*q + 2",
+        "condition_interval_count": null,
+        "condition_max": "36*q + 28",
+        "condition_min": "6*q + 10",
+        "index": 16,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13",
+            "01"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          },
+          {
+            "count": "4",
+            "label": "01"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 38"
+      },
+      {
+        "condition_count": "2*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "30*q + 22",
+        "condition_min": "4",
+        "index": 17,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "04",
+            "14",
+            "02",
+            "24",
+            "23",
+            "13",
+            "01"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          },
+          {
+            "count": "1",
+            "label": "14"
+          },
+          {
+            "count": "1",
+            "label": "02"
+          },
+          {
+            "count": "1",
+            "label": "24"
+          },
+          {
+            "count": "1",
+            "label": "23"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          },
+          {
+            "count": "5",
+            "label": "01"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 4",
+        "terminal_affine_beta": "44*q + 38"
+      },
+      {
+        "condition_count": "6*q + 5",
+        "condition_interval_count": "6*q + 5",
+        "condition_max": "24*q + 19",
+        "condition_min": "12*q + 11",
+        "index": 18,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "04"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 20",
+        "terminal_affine_beta": "48*q + 41"
+      },
+      {
+        "condition_count": "6*q + 5",
+        "condition_interval_count": "6*q + 5",
+        "condition_max": "36*q + 29",
+        "condition_min": "24*q + 21",
+        "index": 19,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "04"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 20",
+        "terminal_affine_beta": "24*q + 20"
+      },
+      {
+        "condition_count": "6*q + 6",
+        "condition_interval_count": "6*q + 6",
+        "condition_max": "48*q + 41",
+        "condition_min": "36*q + 31",
+        "index": 20,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "04"
+          ],
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "04"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 20",
+        "terminal_affine_beta": "48*q + 41"
+      },
+      {
+        "condition_count": "2*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "6*q + 3",
+        "condition_min": "3",
+        "index": 21,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "34",
+            "01",
+            "13"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          },
+          {
+            "count": "5",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "12*q + 10",
+        "terminal_affine_beta": "36*q + 31"
+      },
+      {
+        "condition_count": "2*q + 2",
+        "condition_interval_count": null,
+        "condition_max": "12*q + 9",
+        "condition_min": "6*q + 6",
+        "index": 22,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "34",
+            "01",
+            "13"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          },
+          {
+            "count": "4",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "12*q + 10",
+        "terminal_affine_beta": "36*q + 31"
+      },
+      {
+        "condition_count": "1*q + 1",
+        "condition_interval_count": null,
+        "condition_max": "18*q + 15",
+        "condition_min": "12*q + 15",
+        "index": 23,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "34",
+            "01",
+            "13"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          },
+          {
+            "count": "2",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "4*q + 3",
+        "terminal_affine_beta": "12*q + 10"
+      },
+      {
+        "condition_count": "1*q",
+        "condition_interval_count": null,
+        "condition_max": "24*q + 15",
+        "condition_min": "18*q + 21",
+        "index": 24,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "34",
+            "01",
+            "13"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          },
+          {
+            "count": "1",
+            "label": "01"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": null,
+        "terminal_affine_beta": null
+      },
+      {
+        "condition_count": "12*q + 11",
+        "condition_interval_count": "8*q + 7",
+        "condition_max": "24*q + 20",
+        "condition_min": "1",
+        "index": 25,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "03",
+          "fallback": null,
+          "path_shape": [
+            "34",
+            "13"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          },
+          {
+            "count": "1",
+            "label": "13"
+          }
+        ],
+        "terminal_affine_alpha": "12*q + 10",
+        "terminal_affine_beta": "36*q + 31"
+      },
+      {
+        "condition_count": "18*q + 15",
+        "condition_interval_count": "18*q + 15",
+        "condition_max": "48*q + 40",
+        "condition_min": "12*q + 10",
+        "index": 26,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "04",
+          "fallback": null,
+          "path_shape": [
+            "34"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          }
+        ],
+        "terminal_affine_alpha": "24*q + 20",
+        "terminal_affine_beta": "24*q + 20"
+      },
+      {
+        "condition_count": "1",
+        "condition_interval_count": null,
+        "condition_max": "48*q + 41",
+        "condition_min": "48*q + 41",
+        "index": 27,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "04",
+          "fallback": null,
+          "path_shape": [
+            "34"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          }
+        ],
+        "terminal_affine_alpha": "0",
+        "terminal_affine_beta": "48*q + 41"
+      },
+      {
+        "condition_count": "12*q + 10",
+        "condition_interval_count": "12*q + 9",
+        "condition_max": "48*q + 39",
+        "condition_min": "24*q + 22",
+        "index": 28,
+        "key": {
+          "condition_mod": null,
+          "condition_residue": null,
+          "dst_label_group": "34",
+          "fallback": null,
+          "path_shape": [
+            "34"
+          ],
+          "src_label": "34",
+          "terminal_dst_label": "34"
+        },
+        "path_run_counts": [
+          {
+            "count": "1",
+            "label": "34"
+          }
+        ],
+        "terminal_affine_alpha": "1",
+        "terminal_affine_beta": "24*q + 22"
+      }
+    ],
+    "q_values": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "stable_structural_keys": true
+  },
   "q_ge_1_stability": {
     "all_boundary_nodes_formula_ok": true,
     "all_boundary_single_cycle": true,
@@ -2353,7 +3434,7 @@
       "q": 0,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
       ],
       "x": 5,
       "z": 5
@@ -2726,7 +3807,7 @@
       "q": 1,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
       ],
       "x": 11,
       "z": 11
@@ -3099,7 +4180,7 @@
       "q": 2,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
       ],
       "x": 17,
       "z": 17
@@ -3472,7 +4553,7 @@
       "q": 3,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
       ],
       "x": 23,
       "z": 23
@@ -3845,7 +4926,7 @@
       "q": 4,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
       ],
       "x": 29,
       "z": 29

@@ -85,6 +85,19 @@ def build_record(
             "q_ge_1_transition_count_fits": boundary_summary.get(
                 "q_ge_1_transition_count_fits"
             ),
+            "q_ge_1_block_formula_fits_summary": {
+                "stable_structural_keys": boundary_summary.get(
+                    "q_ge_1_block_formula_fits", {}
+                ).get("stable_structural_keys"),
+                "block_count": boundary_summary.get(
+                    "q_ge_1_block_formula_fits", {}
+                ).get("block_count"),
+                "fit_block_count": len(
+                    boundary_summary.get("q_ge_1_block_formula_fits", {}).get(
+                        "blocks", []
+                    )
+                ),
+            },
         },
         "coverage_snapshot": {
             "proof_facing_typeA_residues_mod_48": coverage.get(

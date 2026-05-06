@@ -567,8 +567,11 @@ The artifact also preserves a compact `q=1` representative block table with
 29 blocks.  This table is the next proof target: a symbolic R42 branch would
 need to replace its numeric interval/residue descriptions by formulas in `q`
 and prove the corresponding no-early and terminal affine equations.
-The current miner does not yet produce a stable detailed block signature across
-`q=1,2,3,4`; only the coarser block counts and transition counts are stable.
+After normalizing paths by run length, the `q=1,2,3,4` block keys are stable:
+the artifact records 29 run-normalized block formula candidates, including
+affine fits for condition counts, endpoints, terminal affine maps, and path-run
+lengths.  For example one block has path shape
+`04 > 14 > 02 > 24 > 12` with the final `12` run length `48*q + 41`.
 
 The finite boundary case `q=0` is still valid but has a larger exceptional
 block profile.  Raw all-pair CSV is not preserved.

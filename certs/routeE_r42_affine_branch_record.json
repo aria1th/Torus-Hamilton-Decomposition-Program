@@ -1,5 +1,10 @@
 {
   "boundary_summary": {
+    "q_ge_1_block_formula_fits_summary": {
+      "block_count": 29,
+      "fit_block_count": 29,
+      "stable_structural_keys": true
+    },
     "q_ge_1_stability": {
       "all_boundary_nodes_formula_ok": true,
       "all_boundary_single_cycle": true,
