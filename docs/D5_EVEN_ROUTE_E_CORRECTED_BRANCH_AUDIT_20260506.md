@@ -46,6 +46,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Scan finite small-seam window for simple affine branch laws | `scripts/analyze_d5_routeE_small_seam_families.py`, `certs/routeE_small_seam_family_scan_manifest.json` | done, no robust law found |
 | Verify finite small-seam family scan by recomputation | `scripts/verify_routeE_small_seam_family_scan.py`, `certs/routeE_small_seam_family_scan_verification.json` | done |
 | Machine-check the goal completion status | `scripts/audit_routeE_corrected_goal.py`, `certs/routeE_corrected_goal_audit.json` | done, reports incomplete |
+| Visualize current Route E progress | `docs/ROUTE_E_LATEST_COMMITS_VISUALIZATION_20260506.md` | done |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -462,6 +463,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+da0916c Add Route E progress visualization
 8ea8eea Record R42 block table stability limits
 2d2b6cb Preserve R42 representative boundary block table
 6dd7d40 Add Route E no-go branch audit
