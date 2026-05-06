@@ -339,6 +339,110 @@
     "r42_is_open": true
   },
   "interpretation": "R42 is the next simple symbolic-promotion target.  The q=0..4 samples have reproducible all-pair checker verification, pass the color sign vector screen, and have an internally verified compact boundary summary.  This is still evidence only and does not close the residue until the required symbolic branch data are proved.",
+  "mod96_branch_split_summary": {
+    "checks": {
+      "edge_count_fits_all_piecewise_affine": true,
+      "edge_count_piecewise_moduli": [
+        2
+      ],
+      "promotion_ready": false,
+      "q_ge_2_edge_count": 69,
+      "q_ge_2_support_stable": true,
+      "q_ge_2_support_strongly_connected": true,
+      "required_theorem_item_count": 3
+    },
+    "finite_boundary_cases": [
+      {
+        "m": 42,
+        "q": 0,
+        "reason": "portfolio/all-pair sample case outside the q>=1 boundary block profile"
+      },
+      {
+        "m": 90,
+        "q": 1,
+        "q1_missing_q_ge_2_edges": [
+          {
+            "dst": 4,
+            "src": 17
+          }
+        ],
+        "reason": "boundary block support has one missing q>=2 edge"
+      }
+    ],
+    "generic_subbranches": [
+      {
+        "condition": "q = 2*s, s >= 1",
+        "modulus_family": "m = 96*s + 42",
+        "name": "R42-even-q",
+        "sample_m_values": [
+          138,
+          234,
+          330
+        ],
+        "sample_q_values": [
+          2,
+          4,
+          6
+        ],
+        "x_z_law": "x = z = 12*s + 5"
+      },
+      {
+        "condition": "q = 2*s + 1, s >= 1",
+        "modulus_family": "m = 96*s + 90",
+        "name": "R42-odd-q",
+        "sample_m_values": [
+          186,
+          282
+        ],
+        "sample_q_values": [
+          3,
+          5
+        ],
+        "x_z_law": "x = z = 12*s + 11"
+      }
+    ],
+    "promotion_impact": {
+      "closes_residue": false,
+      "next_symbolic_target": "Prove separate boundary/transducer pointwise and no-early laws for m=96*s+42 and m=96*s+90, plus finite cases m=42,90.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "schema": "routeE_r42_mod96_branch_split_v1"
+  },
+  "mod96_branch_split_verification_summary": {
+    "finite_boundary_cases": [
+      42,
+      90
+    ],
+    "generic_subbranches": {
+      "R42-even-q": {
+        "modulus_family": "m = 96*s + 42",
+        "sample_m_values": [
+          138,
+          234,
+          330
+        ],
+        "sample_q_values": [
+          2,
+          4,
+          6
+        ]
+      },
+      "R42-odd-q": {
+        "modulus_family": "m = 96*s + 90",
+        "sample_m_values": [
+          186,
+          282
+        ],
+        "sample_q_values": [
+          3,
+          5
+        ]
+      }
+    },
+    "ok": true,
+    "schema": "routeE_r42_mod96_branch_split_verification_v1"
+  },
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -585,6 +689,8 @@
     "boundary_summary": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
+    "mod96_branch_split": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split.json",
+    "mod96_branch_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split_verification.json",
     "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
     "pointwise_law_mining": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json",
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",

@@ -461,6 +461,31 @@ rational-affine formulas.  This is useful symbolic-promotion evidence for the
 boundary/transducer route, but it is still not a pointwise first-return or
 no-early theorem.
 
+R42 mod-96 branch split:
+
+```bash
+python3 scripts/summarize_routeE_r42_mod96_branch_split.py \
+  --json-out certs/routeE_r42_mod96_branch_split.json
+
+python3 scripts/verify_routeE_r42_mod96_branch_split.py \
+  --json-out certs/routeE_r42_mod96_branch_split_verification.json
+```
+
+Result:
+
+```text
+ok True
+finite_boundary_cases [42, 90]
+generic_subbranches:
+  m = 96*s + 42, x = z = 12*s + 5
+  m = 96*s + 90, x = z = 12*s + 11
+```
+
+This is now the proof-facing R42 branch split suggested by the transducer
+artifact.  The q=0 and q=1 samples remain finite boundary cases; q>=2 splits
+by q parity because the stable 69-edge block transducer has mod-2
+piecewise-affine edge counts.
+
 R42 open tail-formula suggestions:
 
 ```bash
@@ -614,7 +639,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 12
+evidence_items_ok 13
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

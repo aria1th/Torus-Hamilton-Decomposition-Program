@@ -34,6 +34,10 @@ DEFAULT_BOUNDARY_BLOCK_TRANSDUCER = (
 DEFAULT_BOUNDARY_BLOCK_TRANSDUCER_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_boundary_block_transducer_verification.json"
 )
+DEFAULT_MOD96_BRANCH_SPLIT = ROOT / "certs" / "routeE_r42_mod96_branch_split.json"
+DEFAULT_MOD96_BRANCH_SPLIT_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_mod96_branch_split_verification.json"
+)
 DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
@@ -72,6 +76,8 @@ def build_record(
     boundary_expansion_verification_path: Path,
     boundary_block_transducer_path: Path,
     boundary_block_transducer_verification_path: Path,
+    mod96_branch_split_path: Path,
+    mod96_branch_split_verification_path: Path,
     block_regeneration_verification_path: Path,
     open_tail_suggestions_path: Path,
     allpair_time_fits_path: Path,
@@ -110,6 +116,16 @@ def build_record(
     boundary_block_transducer_verification = (
         load_json(boundary_block_transducer_verification_path)
         if boundary_block_transducer_verification_path.exists()
+        else {}
+    )
+    mod96_branch_split = (
+        load_json(mod96_branch_split_path)
+        if mod96_branch_split_path.exists()
+        else {}
+    )
+    mod96_branch_split_verification = (
+        load_json(mod96_branch_split_verification_path)
+        if mod96_branch_split_verification_path.exists()
         else {}
     )
     block_regeneration_verification = (
@@ -190,6 +206,10 @@ def build_record(
             "boundary_block_transducer": str(boundary_block_transducer_path),
             "boundary_block_transducer_verification": str(
                 boundary_block_transducer_verification_path
+            ),
+            "mod96_branch_split": str(mod96_branch_split_path),
+            "mod96_branch_split_verification": str(
+                mod96_branch_split_verification_path
             ),
             "block_regeneration_verification": str(
                 block_regeneration_verification_path
@@ -294,6 +314,23 @@ def build_record(
                 "piecewise_fit_error_count"
             ),
         },
+        "mod96_branch_split_summary": {
+            "schema": mod96_branch_split.get("schema"),
+            "finite_boundary_cases": mod96_branch_split.get("finite_boundary_cases"),
+            "generic_subbranches": mod96_branch_split.get("generic_subbranches"),
+            "checks": mod96_branch_split.get("checks"),
+            "promotion_impact": mod96_branch_split.get("promotion_impact"),
+        },
+        "mod96_branch_split_verification_summary": {
+            "schema": mod96_branch_split_verification.get("schema"),
+            "ok": mod96_branch_split_verification.get("ok"),
+            "finite_boundary_cases": mod96_branch_split_verification.get(
+                "finite_boundary_cases"
+            ),
+            "generic_subbranches": mod96_branch_split_verification.get(
+                "generic_subbranches"
+            ),
+        },
         "block_regeneration_verification_summary": {
             "schema": block_regeneration_verification.get("schema"),
             "ok": block_regeneration_verification.get("ok"),
@@ -396,6 +433,16 @@ def main() -> None:
         default=DEFAULT_BOUNDARY_BLOCK_TRANSDUCER_VERIFICATION,
     )
     parser.add_argument(
+        "--mod96-branch-split",
+        type=Path,
+        default=DEFAULT_MOD96_BRANCH_SPLIT,
+    )
+    parser.add_argument(
+        "--mod96-branch-split-verification",
+        type=Path,
+        default=DEFAULT_MOD96_BRANCH_SPLIT_VERIFICATION,
+    )
+    parser.add_argument(
         "--block-regeneration-verification",
         type=Path,
         default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
@@ -442,6 +489,8 @@ def main() -> None:
         args.boundary_expansion_verification,
         args.boundary_block_transducer,
         args.boundary_block_transducer_verification,
+        args.mod96_branch_split,
+        args.mod96_branch_split_verification,
         args.block_regeneration_verification,
         args.open_tail_suggestions,
         args.allpair_time_fits,

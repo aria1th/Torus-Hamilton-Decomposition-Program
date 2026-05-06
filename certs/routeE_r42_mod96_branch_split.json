@@ -1,0 +1,75 @@
+{
+  "branch": "R42",
+  "checks": {
+    "edge_count_fits_all_piecewise_affine": true,
+    "edge_count_piecewise_moduli": [
+      2
+    ],
+    "promotion_ready": false,
+    "q_ge_2_edge_count": 69,
+    "q_ge_2_support_stable": true,
+    "q_ge_2_support_strongly_connected": true,
+    "required_theorem_item_count": 3
+  },
+  "finite_boundary_cases": [
+    {
+      "m": 42,
+      "q": 0,
+      "reason": "portfolio/all-pair sample case outside the q>=1 boundary block profile"
+    },
+    {
+      "m": 90,
+      "q": 1,
+      "q1_missing_q_ge_2_edges": [
+        {
+          "dst": 4,
+          "src": 17
+        }
+      ],
+      "reason": "boundary block support has one missing q>=2 edge"
+    }
+  ],
+  "generic_subbranches": [
+    {
+      "condition": "q = 2*s, s >= 1",
+      "modulus_family": "m = 96*s + 42",
+      "name": "R42-even-q",
+      "sample_m_values": [
+        138,
+        234,
+        330
+      ],
+      "sample_q_values": [
+        2,
+        4,
+        6
+      ],
+      "x_z_law": "x = z = 12*s + 5"
+    },
+    {
+      "condition": "q = 2*s + 1, s >= 1",
+      "modulus_family": "m = 96*s + 90",
+      "name": "R42-odd-q",
+      "sample_m_values": [
+        186,
+        282
+      ],
+      "sample_q_values": [
+        3,
+        5
+      ],
+      "x_z_law": "x = z = 12*s + 11"
+    }
+  ],
+  "parent_family": "m = 48*q + 42, x = z = 6*q + 5",
+  "promotion_impact": {
+    "closes_residue": false,
+    "next_symbolic_target": "Prove separate boundary/transducer pointwise and no-early laws for m=96*s+42 and m=96*s+90, plus finite cases m=42,90.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "reason": "The q>=2 29-block transducer support is stable, but edge counts are piecewise rational-affine by q mod 2.  Therefore the symbolic promotion should split R42 into two mod-96 generic subbranches.",
+  "schema": "routeE_r42_mod96_branch_split_v1",
+  "source_promotion_audit": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_promotion_audit.json",
+  "source_transducer": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer.json"
+}

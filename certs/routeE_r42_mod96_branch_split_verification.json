@@ -1,0 +1,41 @@
+{
+  "finite_boundary_cases": [
+    42,
+    90
+  ],
+  "generic_subbranches": {
+    "R42-even-q": {
+      "modulus_family": "m = 96*s + 42",
+      "sample_m_values": [
+        138,
+        234,
+        330
+      ],
+      "sample_q_values": [
+        2,
+        4,
+        6
+      ]
+    },
+    "R42-odd-q": {
+      "modulus_family": "m = 96*s + 90",
+      "sample_m_values": [
+        186,
+        282
+      ],
+      "sample_q_values": [
+        3,
+        5
+      ]
+    }
+  },
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "next_symbolic_target": "Prove separate boundary/transducer pointwise and no-early laws for m=96*s+42 and m=96*s+90, plus finite cases m=42,90.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_mod96_branch_split_verification_v1",
+  "split": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split.json"
+}

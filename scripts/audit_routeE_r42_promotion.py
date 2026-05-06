@@ -45,6 +45,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     boundary_block_transducer_ver = record.get(
         "boundary_block_transducer_verification_summary", {}
     )
+    mod96_split = record.get("mod96_branch_split_summary", {})
+    mod96_split_ver = record.get("mod96_branch_split_verification_summary", {})
     block_regen = record.get("block_regeneration_verification_summary", {}).get("summary", {})
     tails = record.get("open_tail_formula_suggestions_summary", {}).get("summary", {})
     time_ver = record.get("allpair_time_fit_verification_summary", {}).get("summary", {})
@@ -118,6 +120,16 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and boundary_block_transducer.get("edge_count_piecewise_moduli") == [2],
             "certs/routeE_r42_boundary_block_transducer.json and certs/routeE_r42_boundary_block_transducer_verification.json",
             "boundary transducer diagnostic",
+        ),
+        item(
+            "R42 mod-96 branch split plan is verified",
+            mod96_split_ver.get("schema")
+            == "routeE_r42_mod96_branch_split_verification_v1"
+            and mod96_split_ver.get("ok") is True
+            and mod96_split_ver.get("finite_boundary_cases") == [42, 90]
+            and mod96_split.get("checks", {}).get("edge_count_piecewise_moduli") == [2],
+            "certs/routeE_r42_mod96_branch_split.json and certs/routeE_r42_mod96_branch_split_verification.json",
+            "branch dispatcher refinement",
         ),
         item(
             "R42 compact block open fields are only q=1 boundary exceptions",
