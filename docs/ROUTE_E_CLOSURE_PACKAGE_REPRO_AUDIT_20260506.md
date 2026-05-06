@@ -1,0 +1,91 @@
+# Route E Closure Package Reproduction Audit
+
+Date: 2026-05-06.
+
+This note records the current reproducibility status of the B16 and R14e
+closure packages relative to the Lean Route-E targets.
+
+## Packages
+
+- `/data/angel/repos/etc/RouteE/B16_closure_package_20260506.zip`
+- `/data/angel/repos/etc/RouteE/R14e_closure_package_20260506.zip`
+
+The packages were extracted to `/tmp/routee_next`.
+
+## Package Contents
+
+B16 contains:
+
+- `B16_complete_routeE_certificate_note_20260506.md`
+- `b16_complete_verifier.py`
+- `b16_complete_verifier_output.json`
+- `b16_label_dst_q6_verify.out`
+- `b16_mine_subsums.out`
+- `b16_complete_verifier_rerun_clean.stdout`
+
+R14e contains:
+
+- `R14e_complete_routeE_certificate_note_20260506.md`
+- `r14e_complete_verifier.py`
+- `r14e_complete_verifier_output.json`
+- `r14e_insertion_macro_verifier_output.json`
+- `r14e_complete_verifier_stdout.txt`
+- `map_R14e_m206_x1_z101_full.csv`
+- `map_R14e_m206_x1_z101_full_reconstructed.csv`
+- `r14e_macro_Dr_check_out.json`
+
+## Local Rerun Attempts
+
+Commands:
+
+```bash
+python3 /tmp/routee_next/B16/b16_complete_verifier.py
+python3 /tmp/routee_next/R14e/r14e_complete_verifier.py
+```
+
+Both currently fail before reading data:
+
+```text
+ModuleNotFoundError: No module named 'sympy'
+```
+
+This checkout's current Python environment therefore cannot rerun the verifier
+scripts as-is.
+
+## Self-Containment Check
+
+Even with `sympy` installed, the packages are not fully self-contained rerun
+bundles.
+
+B16:
+
+- `b16_complete_verifier.py` globs `/mnt/data/map_B16_m*_x1_z*.csv`.
+- The B16 zip contains no `map_B16_*.csv` files.
+- The included JSON/stdout are evidence artifacts, but the script cannot
+  regenerate them from this zip alone.
+
+R14e:
+
+- `r14e_complete_verifier.py` globs `/mnt/data/map_R14e_m*_x1_z*.csv`.
+- The R14e zip contains only the `m=206` full/reconstructed CSV pair.
+- The recorded verifier output covers `m=14,62,110,158,206`, so the package is
+  missing the other finite CSV inputs needed for a faithful rerun.
+- The script writes `/mnt/data/r14e_complete_verifier_output.json`.
+
+## Lean Consequence
+
+The current Lean state should treat these packages as proof-facing evidence,
+not as closed certificate instances.
+
+The relevant Lean endpoints are now available:
+
+- `RouteEAllPairBoundaryInsertionTarget`
+- `RouteEAllPairLabelDstBoundaryTraceTarget`
+- `RouteEB16.AllPairBoundaryLabelDstTraceTarget`
+- `RouteER14e.AllPairBoundaryLabelDstTraceTarget`
+
+But no `RouteEAllPairSectionCertificate` instance for B16 or R14e has been
+constructed from these packages yet.  A concrete instance still requires either
+the missing deterministic CSV/table artifacts or a direct Lean derivation of
+the first-return equations, no-early/minimality facts, boundary insertion
+coverage, and time-mass sums.

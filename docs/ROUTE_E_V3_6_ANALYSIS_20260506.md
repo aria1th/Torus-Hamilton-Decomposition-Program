@@ -560,6 +560,13 @@ The bundle Python scripts `routeE_B20_twoclock_time_pass_v3_6.py` and
 evidence and proof drafts are still readable and useful, but script
 reproduction needs either the missing CSV dumps or a small path/input adapter.
 
+The B16/R14e closure packages have their own rerun blocker recorded in
+`docs/ROUTE_E_CLOSURE_PACKAGE_REPRO_AUDIT_20260506.md`.  In this checkout the
+verifier scripts fail immediately because `sympy` is not installed.  Even after
+that dependency is supplied, B16 lacks the `map_B16_*.csv` files required by
+its `/mnt/data` glob, and R14e includes only the `m=206` CSV pair although its
+recorded verifier output covers `m=14,62,110,158,206`.
+
 ## Next Divisible Implementation Slices
 
 1. B20 boundary time slice:

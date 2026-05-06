@@ -21,6 +21,7 @@ remaining gaps.
 | --- | --- | --- |
 | Isolated branch | `route-e-v3-6-20260506`; latest committed v3.6 all-pair adapter slice before RoundY triage was `52ac237` | done |
 | Bundle read and compared | `docs/ROUTE_E_V3_6_ANALYSIS_20260506.md` records bundle scope, B20/B16/R14e status, and reproduction caveat | done |
+| B16/R14e closure package rerun audit | `docs/ROUTE_E_CLOSURE_PACKAGE_REPRO_AUDIT_20260506.md` records package contents, local rerun failures, missing dependencies, and missing CSV inputs | blocker exposed |
 | RoundY branch notes triaged | `docs/ROUTE_E_ROUNDY_BRANCH_TRIAGE_20260506.md` separates `joined quotient`, `fresh cyclic`, and `master field` from the B20/B16/R14e all-pair closure witnesses | done |
 | Master-field conditional endpoint | `RouteEMasterFieldShape`, `RouteEMasterFieldLocalTarget`, `RouteEMasterFieldColorZeroLocalTarget`, `RouteECyclicMasterFieldLocalTarget`, and `RouteECyclicMasterFieldColorZeroLocalTarget` carry finite quotient fields to the existing Hamilton/Torus/Cayley endpoints once Latin/exact-cover plus either all-color Hamiltonian data or color-zero Hamiltonian data with a transfer theorem are supplied | conditional endpoint refined |
 | B20 count surface | `RouteEB20.routeCounts`, existing `RouteEB20.counts_sum` | done |
@@ -128,7 +129,9 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    label-destination mass/count targets, and all-pair adapter endpoints, but
    the concrete boundary quotient map, concrete macro-return data, all-pair
    first-return/no-early equations, and finite `m = 16` certificate are not Lean
-   instances.
+   instances.  The rerun audit also shows that the verifier is not
+   self-contained in this checkout: `sympy` is missing and the B16 zip contains
+   no `map_B16_*.csv` inputs.
 
 5. R14e is promoted to proof-facing closure by
    `R14e_closure_package_20260506.zip` and
@@ -137,7 +140,10 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
    insertion-count arithmetic, label-destination mass/count targets, and
    all-pair adapter endpoints, but the concrete boundary quotient map, concrete
    macro-return/insertion data, all-pair first-return/no-early equations, and
-   finite `m = 14` two-node macro certificate are not Lean instances.
+   finite `m = 14` two-node macro certificate are not Lean instances.  The
+   rerun audit also shows that the verifier is not self-contained in this
+   checkout: `sympy` is missing and the R14e zip contains only the `m=206` CSV
+   pair, while the recorded verifier output covers `m=14,62,110,158,206`.
 
 6. The v3.6 bundle reproduction scripts for the B20 time passes expect CSV
    inputs under `/mnt/data`; the B20 closure package includes the C++ dumper and
