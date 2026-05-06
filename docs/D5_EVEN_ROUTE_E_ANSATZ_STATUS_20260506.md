@@ -231,6 +231,8 @@ RF2-preserving adjacent-rank switch supports from cyclic bulk.  Such switches
 preserve the layer sign product, but even D5 needs global return-sign product
 `-1`.  The known witnesses instead have constant bulk layers of sign `+1` and
 a single `Lambda_E` defect layer of sign `-1`.
+See `docs/D5_EVEN_ROUTE_E_ADJACENT_KEMPE_NO_GO_20260506.md` for the standalone
+no-go proof.
 
 ## Next Productive Step
 

@@ -181,3 +181,6 @@ from cyclic bulk cannot supply the required global sign `-1`.
 Known one-`Lambda_E` witnesses instead contain a parity-changing global defect
 layer.  The analyzer reports that the defect layer has `layer_sign=-1`, while
 the constant bulk layers have `layer_sign=+1`.
+
+The standalone no-go note is
+`docs/D5_EVEN_ROUTE_E_ADJACENT_KEMPE_NO_GO_20260506.md`.
