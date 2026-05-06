@@ -19,6 +19,13 @@ The even-modulus Route-E target should therefore be treated as a four-level
 nested clock/lane repair problem, not as a direct copy of the D3 one-clock
 splice.
 
+It should also be treated as a full layered problem.  A stationary seam rule
+that ignores the layer coordinate is too narrow: at `m=2`, stationarity would
+force a two-layer return of the form `P^2`, and no square of a permutation of
+the 16-point root flat can be one 16-cycle.  The full layered SAT witness at
+`m=2` is therefore useful as a warning that layer-dependence is essential,
+even if the final generic theorem starts only at `m >= 4` or `m >= 6`.
+
 The desired final object is a layer direction field
 
 ```text

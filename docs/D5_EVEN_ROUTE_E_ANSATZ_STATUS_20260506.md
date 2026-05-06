@@ -55,6 +55,14 @@ result=unsat
 This does not say that D5(2) is impossible.  It says the stationary seam-table
 sub-ansatz is already too narrow at the smallest even modulus.
 
+The structural reason is simple.  If `m=2` and a color uses the same root-flat
+layer map in both layers, then its return is `P^2`.  The square of a
+permutation on a 16-point set cannot be one 16-cycle: a cycle of length `ell`
+squares into `gcd(ell,2)` cycles.  Hence any proof class that forces a
+stationary two-layer square is structurally unable to prove the `m=2` full
+layered witness.  See
+`docs/D5_EVEN_ROUTE_E_FULL_LAYERED_CERTIFICATE_20260506.md`.
+
 For `m=4`, the same stationary SAT instance had:
 
 ```text
