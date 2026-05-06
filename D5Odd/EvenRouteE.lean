@@ -6081,6 +6081,40 @@ theorem boundaryQuotient_oneCycleTarget (q : Nat) :
     BoundaryQuotientOneCycleTarget q := by
   exact (boundaryQuotientCycleEnumeration q).oneCycleTarget
 
+def boundaryInsertionA0 (q : Nat) : Nat :=
+  3 * q + 2
+
+def insertionBoundaryCountTarget (q : Nat) : Nat :=
+  1 +
+  ((half q - 1) + (half q - 1) + 1) +
+  (2 + (quarter q - 1) + boundaryInsertionA0 q +
+    boundaryInsertionA0 q + (quarter q - 1) +
+    boundaryInsertionA0 q + boundaryInsertionA0 q + 1) +
+  ((modulus q - 2) + 1)
+
+theorem insertionBoundaryCountTarget_eq_boundary_card (q : Nat) :
+    insertionBoundaryCountTarget q =
+      Fintype.card (RouteEBoundaryNode (modulus q)) := by
+  rw [card_routeEBoundaryNode]
+  simp [insertionBoundaryCountTarget, boundaryInsertionA0, half, quarter,
+    modulus]
+  omega
+
+def insertionWeightedCountTarget (q : Nat) : Nat :=
+  2 +
+  ((half q - 1) + 5 * (half q - 1) + 10) +
+  (2 + 2 * (quarter q - 1) + 3 * boundaryInsertionA0 q +
+    5 * boundaryInsertionA0 q + 6 * (quarter q - 1) +
+    7 * boundaryInsertionA0 q + 9 * boundaryInsertionA0 q +
+    (modulus q + 3)) +
+  ((modulus q - 2) + 2)
+
+theorem insertionWeightedCountTarget_eq_allPairRowCountTarget (q : Nat) :
+    insertionWeightedCountTarget q = allPairRowCountTarget q := by
+  simp [insertionWeightedCountTarget, boundaryInsertionA0, allPairRowCountTarget,
+    half, quarter, modulus]
+  omega
+
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
 Theta seam.  The labels match the bundle note: `B = A + m` and
@@ -9023,6 +9057,37 @@ theorem boundaryMacroLengthTotalTarget_eq_boundary_card (q : Nat) :
       Fintype.card (RouteEBoundaryNode (modulus q)) := by
   rw [card_routeEBoundaryNode]
   simp [boundaryMacroLengthTotalTarget, modulus]
+  omega
+
+def insertionBoundaryCountTarget (q : Nat) : Nat :=
+  1 +
+  ((12 * q + 7) + (3 * q + 2) + (6 * q + 3) +
+    (3 * q + 2) + 1) +
+  ((6 * q + 4) + (3 * q + 2) + (3 * q + 2) +
+    (q + 1) + (3 * q + 2) + (4 * q + 1) +
+    (3 * q + 1) + (q + 1) + 1) +
+  ((18 * q + 12) + (6 * q + 3))
+
+theorem insertionBoundaryCountTarget_eq_boundary_card (q : Nat) :
+    insertionBoundaryCountTarget q =
+      Fintype.card (RouteEBoundaryNode (modulus q)) := by
+  rw [card_routeEBoundaryNode]
+  simp [insertionBoundaryCountTarget, modulus]
+  omega
+
+def insertionWeightedCountTarget (q : Nat) : Nat :=
+  3 +
+  (1 * (12 * q + 7) + 4 * (3 * q + 2) +
+    5 * (6 * q + 3) + 6 * (3 * q + 2) + 9) +
+  (1 * (6 * q + 4) + 2 * (3 * q + 2) +
+    4 * (3 * q + 2) + 5 * (q + 1) +
+    6 * (3 * q + 2) + 7 * (4 * q + 1) +
+    8 * (3 * q + 1) + 9 * (q + 1) + (modulus q + 3)) +
+  (1 * (18 * q + 12) + 3 * (6 * q + 3))
+
+theorem insertionWeightedCountTarget_eq_allPairRowCountTarget (q : Nat) :
+    insertionWeightedCountTarget q = allPairRowCountTarget q := by
+  simp [insertionWeightedCountTarget, allPairRowCountTarget, modulus]
   omega
 
 /--
