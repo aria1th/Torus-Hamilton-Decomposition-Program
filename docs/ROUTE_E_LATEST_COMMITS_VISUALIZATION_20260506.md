@@ -250,7 +250,12 @@ q=0..6 samples and have strongly connected support.
     coefficient laws are affine in `s`.  The same artifact records why this is
     still not a theorem: target maps and `qtime` maps remain incomplete, so it
     does not close pointwise first-return or no-early.
-18. The open residue queue is now explicit: R42 remains the active affine
+18. The R42 tail-refinement diagnostic localizes that incompleteness.  After
+    dropping the first generic sample in each parity branch, target coefficient
+    laws become affine in `s`; after dropping the first two generic samples,
+    `qtime` non-affine-in-`s` cases disappear, leaving exactly 22 qtime-missing
+    edges on each branch.
+19. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

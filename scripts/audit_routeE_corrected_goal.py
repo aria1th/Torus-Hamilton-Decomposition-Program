@@ -581,7 +581,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 16
+            and r42_promotion_audit.get("evidence_items_ok") == 17
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

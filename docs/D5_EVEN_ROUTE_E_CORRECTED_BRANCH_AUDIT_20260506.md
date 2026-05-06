@@ -1004,11 +1004,17 @@ R42 now has one more verified diagnostic artifact:
 
 ```text
 python3 scripts/summarize_routeE_r42_mod96_edge_partitions.py \
-  --q-values 2:6 \
+  --q-values 2:9 \
   --json-out certs/routeE_r42_mod96_edge_partitions.json
 
 python3 scripts/verify_routeE_r42_mod96_edge_partitions.py \
   --json-out certs/routeE_r42_mod96_edge_partitions_verification.json
+
+python3 scripts/summarize_routeE_r42_mod96_tail_refinement.py \
+  --json-out certs/routeE_r42_mod96_tail_refinement.json
+
+python3 scripts/verify_routeE_r42_mod96_tail_refinement.py \
+  --json-out certs/routeE_r42_mod96_tail_refinement_verification.json
 ```
 
 This refines the 69-edge boundary-block transducer on the two generic mod-96
@@ -1017,14 +1023,23 @@ that every edge-source condition has affine-in-`s` count/min/max/interval-count
 data, and that the `qsteps` affine coefficients are affine in `s`.
 
 The artifact also records the remaining obstruction honestly.  Target maps are
-not stable as literal maps, and on the even-`q` subbranch 7 edge target
-coefficient pairs are not affine in `s`.  The `qtime` side is weaker still:
+not stable as literal maps.  On the full `q=2,\dots,9` sample window, the
+even-`q` subbranch has 7 edge target coefficient pairs non-affine in `s`, and
+the odd-`q` subbranch has 1 such edge.  The `qtime` side is weaker still:
 22 edges have no affine-in-source-parameter coefficient record on each
-subbranch, and the even-`q` branch has 35 further non-affine coefficient cases.
+subbranch, and each branch has 35 further non-affine coefficient cases.
+
+The tail-refinement artifact gives a sharper diagnosis.  If the first generic
+sample in each parity branch is treated as another finite exception, every
+target coefficient law becomes affine in `s`.  If the first two generic samples
+are treated as finite exceptions, the `qtime` non-affine-in-`s` cases disappear
+too; the remaining obstruction is exactly 22 `qtime`-missing edges on each
+branch.  This suggests the next R42 split is not a target-map split but a
+different local grammar for those 22 time edges.
 
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 16 verified evidence items but
+minimality.  The R42 promotion audit now counts 17 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text

@@ -58,6 +58,12 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     mod96_edge_partitions_ver = record.get(
         "mod96_edge_partitions_verification_summary", {}
     )
+    mod96_tail_refinement = record.get("mod96_tail_refinement_summary", {}).get(
+        "conclusion", {}
+    )
+    mod96_tail_refinement_ver = record.get(
+        "mod96_tail_refinement_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -165,7 +171,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             mod96_edge_partitions_ver.get("schema")
             == "routeE_r42_mod96_edge_partitions_verification_v1"
             and mod96_edge_partitions_ver.get("ok") is True
-            and mod96_edge_partitions_ver.get("q_values") == [2, 3, 4, 5, 6]
+            and mod96_edge_partitions_ver.get("q_values")
+            == [2, 3, 4, 5, 6, 7, 8, 9]
             and mod96_edge_partitions_ver.get("error_count") == 0
             and mod96_edge_partitions.get("all_branch_edge_counts_69") is True
             and mod96_edge_partitions.get("all_count_formulas_affine_in_s") is True
@@ -178,6 +185,29 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and len(mod96_edge_partitions_branches) == 2,
             "certs/routeE_r42_mod96_edge_partitions.json and certs/routeE_r42_mod96_edge_partitions_verification.json",
             "edge-partition diagnostic",
+        ),
+        item(
+            "R42 mod-96 tail-refinement diagnostic is verified",
+            mod96_tail_refinement_ver.get("schema")
+            == "routeE_r42_mod96_tail_refinement_verification_v1"
+            and mod96_tail_refinement_ver.get("ok") is True
+            and mod96_tail_refinement_ver.get("q_values")
+            == [2, 3, 4, 5, 6, 7, 8, 9]
+            and mod96_tail_refinement_ver.get("error_count") == 0
+            and mod96_tail_refinement.get(
+                "target_coefficients_affine_after_dropping_first_generic_sample"
+            )
+            is True
+            and mod96_tail_refinement.get(
+                "qtime_nonaffine_edges_removed_after_dropping_first_two_generic_samples"
+            )
+            is True
+            and mod96_tail_refinement.get(
+                "remaining_qtime_missing_edges_after_two_drops"
+            )
+            == {"R42-even-q": 22, "R42-odd-q": 22},
+            "certs/routeE_r42_mod96_tail_refinement.json and certs/routeE_r42_mod96_tail_refinement_verification.json",
+            "tail-refinement diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

@@ -518,7 +518,8 @@
         "sample_q_values": [
           2,
           4,
-          6
+          6,
+          8
         ]
       },
       {
@@ -526,15 +527,17 @@
           "qsteps_coeffs_missing_edges": 0,
           "qsteps_coeffs_nonaffine_edges": 0,
           "qtime_coeffs_missing_edges": 22,
-          "qtime_coeffs_nonaffine_edges": 0,
+          "qtime_coeffs_nonaffine_edges": 35,
           "target_coeffs_missing_edges": 0,
-          "target_coeffs_nonaffine_edges": 0
+          "target_coeffs_nonaffine_edges": 1
         },
         "edge_count": 69,
         "name": "R42-odd-q",
         "sample_q_values": [
           3,
-          5
+          5,
+          7,
+          9
         ]
       }
     ],
@@ -561,7 +564,10 @@
         3,
         4,
         5,
-        6
+        6,
+        7,
+        8,
+        9
       ]
     }
   },
@@ -577,9 +583,54 @@
       3,
       4,
       5,
-      6
+      6,
+      7,
+      8,
+      9
     ],
     "schema": "routeE_r42_mod96_edge_partitions_verification_v1"
+  },
+  "mod96_tail_refinement_summary": {
+    "conclusion": {
+      "qtime_nonaffine_edges_removed_after_dropping_first_two_generic_samples": true,
+      "remaining_qtime_missing_edges_after_two_drops": {
+        "R42-even-q": 22,
+        "R42-odd-q": 22
+      },
+      "target_coefficients_affine_after_dropping_first_generic_sample": true
+    },
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "Tail refinement localizes the non-affine target/time behavior to early generic samples and to 22 qtime-missing edges, but it does not prove pointwise first-return or no-early.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "q_values": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_mod96_tail_refinement_v1"
+  },
+  "mod96_tail_refinement_verification_summary": {
+    "error_count": 0,
+    "ok": true,
+    "q_values": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_mod96_tail_refinement_verification_v1"
   },
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
@@ -835,6 +886,8 @@
     "mod96_edge_formulas_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas_verification.json",
     "mod96_edge_partitions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_partitions.json",
     "mod96_edge_partitions_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_partitions_verification.json",
+    "mod96_tail_refinement": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_tail_refinement.json",
+    "mod96_tail_refinement_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_tail_refinement_verification.json",
     "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
     "pointwise_law_mining": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json",
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",

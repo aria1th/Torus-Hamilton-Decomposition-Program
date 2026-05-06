@@ -189,7 +189,7 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
     summary = data.get("summary", {})
     ok = (
         data.get("schema") == "routeE_r42_mod96_edge_partitions_v1"
-        and summary.get("q_values") == [2, 3, 4, 5, 6]
+        and summary.get("q_values") == [2, 3, 4, 5, 6, 7, 8, 9]
         and summary.get("all_samples_ok") is True
         and summary.get("all_branch_edge_counts_69") is True
         and summary.get("all_count_formulas_affine_in_s") is True
@@ -202,12 +202,14 @@ def build_verification(summary_path: Path) -> dict[str, Any]:
         and summary.get("all_qsteps_affine_maps_stable") is False
         and even.get("edge_count") == 69
         and odd.get("edge_count") == 69
-        and even.get("sample_q_values") == [2, 4, 6]
-        and odd.get("sample_q_values") == [3, 5]
+        and even.get("sample_q_values") == [2, 4, 6, 8]
+        and odd.get("sample_q_values") == [3, 5, 7, 9]
         and even.get("diagnostic_counts", {}).get("target_coeffs_nonaffine_edges") == 7
-        and odd.get("diagnostic_counts", {}).get("target_coeffs_nonaffine_edges") == 0
+        and odd.get("diagnostic_counts", {}).get("target_coeffs_nonaffine_edges") == 1
         and even.get("diagnostic_counts", {}).get("qtime_coeffs_missing_edges") == 22
         and odd.get("diagnostic_counts", {}).get("qtime_coeffs_missing_edges") == 22
+        and even.get("diagnostic_counts", {}).get("qtime_coeffs_nonaffine_edges") == 35
+        and odd.get("diagnostic_counts", {}).get("qtime_coeffs_nonaffine_edges") == 35
         and data.get("promotion_impact", {}).get("closes_residue") is False
         and data.get("promotion_impact", {}).get("pointwise_equations_closed") is False
         and data.get("promotion_impact", {}).get("no_early_closed") is False
