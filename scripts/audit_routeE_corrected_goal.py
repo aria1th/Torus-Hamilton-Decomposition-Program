@@ -22,6 +22,9 @@ FILES = {
     "dispatcher_doc": ROOT / "docs" / "D5_EVEN_ROUTE_E_CORRECTED_BRANCH_DISPATCHER_20260506.md",
     "audit_doc": ROOT / "docs" / "D5_EVEN_ROUTE_E_CORRECTED_BRANCH_AUDIT_20260506.md",
     "branch_summary": ROOT / "certs" / "d5_routeE_corrected_branch_summary.json",
+    "no_go_branch_verification": ROOT
+    / "certs"
+    / "routeE_no_go_branch_verification.json",
     "b20_branch": ROOT / "certs" / "d5_routeE_b20_branch_verify_m20_44_68.json",
     "typea_summary": ROOT / "certs" / "routeE_typeA_closure_package_summary.json",
     "typea_skeleton": ROOT / "certs" / "routeE_typeA_symbolic_skeleton.json",
@@ -74,6 +77,7 @@ def item(name: str, ok: bool, evidence: str, missing: str | None = None) -> dict
 
 def build_audit() -> dict[str, Any]:
     branch = load_json(FILES["branch_summary"])
+    no_go_branch_verification = load_json(FILES["no_go_branch_verification"])
     b20 = load_json(FILES["b20_branch"])
     typea = load_json(FILES["typea_summary"])
     skeleton = load_json(FILES["typea_skeleton"])
@@ -125,6 +129,21 @@ def build_audit() -> dict[str, Any]:
             branch.get("branch_Egen_m6_to_m60", {}).get("rank_cert_verified_all_ok")
             and branch.get("branch_Egen_m6_to_m60", {}).get("verified_all_ok"),
             "certs/d5_routeE_corrected_branch_summary.json: branch_Egen_m6_to_m60",
+        ),
+        item(
+            "discarded X1/X2 branch mechanisms have machine-readable no-go audit",
+            no_go_branch_verification.get("schema")
+            == "routeE_no_go_branch_verification_v1"
+            and no_go_branch_verification.get("all_ok") is True
+            and no_go_branch_verification.get("X1_even_prefix_count", {}).get(
+                "all_samples_contradict"
+            )
+            is True
+            and no_go_branch_verification.get("X2_adjacent_kempe_only", {}).get(
+                "all_samples_contradict"
+            )
+            is True,
+            "certs/routeE_no_go_branch_verification.json",
         ),
         item(
             "Lambda_E symbolic mask-count polynomials are recorded",

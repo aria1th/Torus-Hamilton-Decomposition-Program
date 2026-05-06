@@ -1,0 +1,381 @@
+{
+  "X1_even_prefix_count": {
+    "all_samples_contradict": true,
+    "samples": [
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 2
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 4
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 6
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 8
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 10
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 12
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 14
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 16
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 18
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 20
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 22
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 24
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 26
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 28
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 30
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 32
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 34
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 36
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 38
+      },
+      {
+        "all_units_are_odd": true,
+        "contradiction": true,
+        "five_required_N0_units_have_parity": 1,
+        "latin_stop0_column_sum_parity": 0,
+        "m": 40
+      }
+    ],
+    "status": "discarded",
+    "symbolic_reason": "Each D5 prefix-count row would need N0 a unit modulo even m, hence odd.  Five odd entries give odd stop-0 column sum, but local Latin balance requires the column sum m, which is even."
+  },
+  "X2_adjacent_kempe_only": {
+    "all_samples_contradict": true,
+    "samples": [
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 2,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 4,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 6,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 8,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 10,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 12,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 14,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 16,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 18,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 20,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 22,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 24,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 26,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 28,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 30,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 32,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 34,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 36,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 38,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      },
+      {
+        "available_global_sign": 1,
+        "contradiction": true,
+        "cyclic_bulk_layer_sign": 1,
+        "m": 40,
+        "nonzero_prefix_translation_sign": 1,
+        "q4_size_even": true,
+        "required_global_sign": -1,
+        "rf2_preserving_adjacent_pair_sign_change": 1
+      }
+    ],
+    "status": "discarded",
+    "symbolic_reason": "For even m, cyclic bulk has layer sign +1.  RF2-preserving adjacent-rank supports are full affected-coordinate cycles and change two color signs by the same factor, preserving the layer sign.  Thus product_t Lambda_t remains +1, while RF3 for five m^4-cycles requires -1."
+  },
+  "all_ok": true,
+  "sample_even_moduli": [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40
+  ],
+  "schema": "routeE_no_go_branch_verification_v1",
+  "scope": "D5 even Route-E discarded mechanisms"
+}

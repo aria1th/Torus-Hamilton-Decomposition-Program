@@ -20,6 +20,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Correct the branch taxonomy after the sign audit | `docs/D5_EVEN_ROUTE_E_CORRECTED_BRANCH_DISPATCHER_20260506.md` | done |
 | Remove impossible even prefix-count branch | same dispatcher doc | done, recorded as `X1` |
 | Remove cyclic bulk + RF2-preserving adjacent-Kempe branch | same dispatcher doc plus `docs/D5_EVEN_ROUTE_E_ADJACENT_KEMPE_NO_GO_20260506.md` | done, recorded as `X2` |
+| Audit discarded X1/X2 mechanisms | `scripts/verify_routeE_no_go_branches.py`, `certs/routeE_no_go_branch_verification.json` | done |
 | Preserve `m=2` full-layered boundary certificate | `certs/d5_routeE_m2_full_layered_boundary.json` | done |
 | Verify `m=2` RF1/RF2/sign/nested returns | `scripts/summarize_d5_routeE_corrected_branches.py` | done |
 | Preserve `m=4` finite certificate status | summary script via `export_d5_even_routeE_layers.py` | done |
@@ -76,6 +77,21 @@ Result:
 
 ```text
 cases 28 all_ok True missing [] extra []
+```
+
+Discarded branch no-go verifier:
+
+```bash
+python3 scripts/verify_routeE_no_go_branches.py \
+  --json-out certs/routeE_no_go_branch_verification.json
+```
+
+Result:
+
+```text
+all_ok=True
+X1 even prefix-count contradiction=True
+X2 adjacent-Kempe-only sign contradiction=True
 ```
 
 Lambda_E symbolic mask counts:
@@ -444,6 +460,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+<pending> Add Route E no-go branch audit
 8ca7cb6 Add Route E R42 boundary transition fits
 f438d04 Summarize Route E R42 boundary quotient
 5ac3ac1 Extend Route E R42 sample verification

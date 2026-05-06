@@ -243,6 +243,13 @@ The current branch table can be regenerated with:
 python3 scripts/summarize_d5_routeE_corrected_branches.py
 ```
 
+The discarded mechanisms are also preserved as a machine-readable audit:
+
+```bash
+python3 scripts/verify_routeE_no_go_branches.py \
+  --json-out certs/routeE_no_go_branch_verification.json
+```
+
 For the slower recomputation of the recorded `m=6..60` small-seam window:
 
 ```bash

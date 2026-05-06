@@ -31,6 +31,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_no_go_branch_verification.json",
+      "missing": null,
+      "name": "discarded X1/X2 branch mechanisms have machine-readable no-go audit",
+      "ok": true
+    },
+    {
       "evidence": "certs/d5_lambdaE_mask_polynomials.json",
       "missing": null,
       "name": "Lambda_E symbolic mask-count polynomials are recorded",
