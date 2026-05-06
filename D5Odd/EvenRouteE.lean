@@ -573,6 +573,13 @@ deriving DecidableEq, Fintype
 abbrev RouteEBoundaryNode (m : Nat) :=
   Unit ⊕ (RouteEBoundaryLabel × RouteENonzeroSeam m)
 
+def routeEBoundaryZero {m : Nat} : RouteEBoundaryNode m :=
+  Sum.inl ()
+
+def routeEBoundaryNode {m : Nat} (label : RouteEBoundaryLabel)
+    (a : RouteENonzeroSeam m) : RouteEBoundaryNode m :=
+  Sum.inr (label, a)
+
 theorem card_routeEBoundaryLabel :
     Fintype.card RouteEBoundaryLabel = 3 := by
   native_decide
@@ -606,6 +613,107 @@ instance modulus_neZero (q : Nat) : NeZero (modulus q) :=
 
 instance modulus_pred_neZero (q : Nat) : NeZero (modulus q - 1) :=
   ⟨by simp [modulus]⟩
+
+structure BoundaryQuotientFormulaTarget (q : Nat)
+    (Q : RouteEBoundaryNode (modulus q) →
+      RouteEBoundaryNode (modulus q)) : Prop where
+  zero_to_A :
+    ∃ a : RouteENonzeroSeam (modulus q),
+      a.1 = (half q : ZMod (modulus q)) ∧
+        Q routeEBoundaryZero =
+          routeEBoundaryNode RouteEBoundaryLabel.L03 a
+  A_h_to_C_last :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((modulus q - 1 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L34 b
+  A_h_succ_to_A_h_sub_two :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q + 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((half q - 2 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  A_even_to_B_same :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ half q → a.1.val % 2 = 0 →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+          routeEBoundaryNode RouteEBoundaryLabel.L04 a
+  A_odd_to_B_shift :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ half q + 1 → a.1.val % 2 = 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = a.1 + ((half q - 2 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L04 b
+  B_h_sub_one_to_C_same :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q - 1 →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+          routeEBoundaryNode RouteEBoundaryLabel.L34 a
+  B_last_to_C_pred :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = modulus q - 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((modulus q - 2 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L34 b
+  B_h_add_two_to_zero :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q + 2 →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+          routeEBoundaryZero
+  B_odd_to_A_same :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ half q - 1 → a.1.val ≠ modulus q - 1 →
+        a.1.val % 2 = 1 →
+          Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+            routeEBoundaryNode RouteEBoundaryLabel.L03 a
+  B_two_to_A_h_sub_one :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = 2 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((half q - 1 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  B_even_to_A_shift :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ 2 → a.1.val ≠ half q + 2 →
+        a.1.val % 2 = 0 →
+          ∃ b : RouteENonzeroSeam (modulus q),
+            b.1 = a.1 + ((half q - 2 : Nat) : ZMod (modulus q)) ∧
+              Q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+                routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  C_one_to_A_last :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = ((modulus q - 1 : Nat) : ZMod (modulus q)) ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L03 b
+  C_h_to_B_same :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = half q →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+          routeEBoundaryNode RouteEBoundaryLabel.L04 a
+  C_last_to_B_same :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val = modulus q - 1 →
+        Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+          routeEBoundaryNode RouteEBoundaryLabel.L04 a
+  C_generic_to_C_pred :
+    ∀ a : RouteENonzeroSeam (modulus q),
+      a.1.val ≠ 1 → a.1.val ≠ half q → a.1.val ≠ modulus q - 1 →
+        ∃ b : RouteENonzeroSeam (modulus q),
+          b.1 = a.1 - 1 ∧
+            Q (routeEBoundaryNode RouteEBoundaryLabel.L34 a) =
+              routeEBoundaryNode RouteEBoundaryLabel.L34 b
+
+def BoundaryQuotientOneCycleTarget (q : Nat) : Prop :=
+  ∃ Q : RouteEBoundaryNode (modulus q) → RouteEBoundaryNode (modulus q),
+    BoundaryQuotientFormulaTarget q Q ∧ IsSingleCycleMap Q
 
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero

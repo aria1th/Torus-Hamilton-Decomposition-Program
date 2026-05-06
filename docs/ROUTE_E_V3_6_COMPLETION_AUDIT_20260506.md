@@ -27,6 +27,7 @@ remaining gaps.
 | B20 lane-sum arithmetic | `RouteEB20.allPairTimeZ_eq_half_add_three`, `allPairTime02_lane_sum_eq`, `allPairTime12_lane_sum_eq`, `allPairTime13_two_clock_eq`, `allPairTime34_boundary_defect_eq` | partially done |
 | B20 bundle inconsistency check | `T_03 + T_04` coefficient corrected from bundle text `19079` to `19179`; old value fails total time by `100*q` | blocker exposed |
 | Boundary quotient type | `RouteEBoundaryLabel`, `RouteEBoundaryNode`, `card_routeEBoundaryNode` formalize `{Z} union {03,04,34} x {1,...,m-1}` and cardinal `3m-2` | done |
+| B20 boundary quotient formula | `RouteEB20.BoundaryQuotientFormulaTarget` encodes the v1.8 case split; `RouteEB20.BoundaryQuotientOneCycleTarget` names the one-cycle obligation | target only |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as target |
@@ -56,15 +57,18 @@ Both commands completed successfully after the current Lean edits.
    minimality, a section one-cycle proof, and the concrete return-time function
    still need to be supplied.
 
-3. B16 has a boundary quotient formula and time target in the bundle, but the
+3. B20 has the boundary quotient formula named as a Lean target, but no
+   function `Q` and no one-cycle proof have been supplied yet.
+
+4. B16 has a boundary quotient formula and time target in the bundle, but the
    boundary formula, formula-induced one-cycle proof, and lane/core time
    derivation are not Lean proofs.
 
-4. R14e has only transition-count and time-mass evidence at this stage.  The
+5. R14e has only transition-count and time-mass evidence at this stage.  The
    bundle explicitly says a closed node-level boundary formula analogous to
    B20/B16 remains to be extracted.
 
-5. The bundle reproduction scripts for the B20 time passes expect CSV inputs
+6. The bundle reproduction scripts for the B20 time passes expect CSV inputs
    under `/mnt/data`; the zip extraction alone does not contain those CSVs.
    This blocks script-level reproduction unless the dumps are restored or the
    scripts are adapted.

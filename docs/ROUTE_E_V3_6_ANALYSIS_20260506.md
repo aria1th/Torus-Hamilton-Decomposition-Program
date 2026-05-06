@@ -63,6 +63,8 @@ New arithmetic names include:
 - `AllPairLabel`
 - `allPairTimeMass`
 - `allPairTimeMassTotal`
+- `BoundaryQuotientFormulaTarget`
+- `BoundaryQuotientOneCycleTarget`
 - `allPairTime01_eq_three_quarter_sq`
 - `allPairTimeZ_eq_half_add_three`
 - `allPairTime02_lane_sum_eq`
