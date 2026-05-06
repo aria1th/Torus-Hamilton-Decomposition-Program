@@ -31,6 +31,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
+| Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Connect B20 to Lean-facing open fields | dispatcher doc, references `RouteEB20.ThetaPointwiseTraceTarget` | done |
 | Prove generic all-even E-gen theorem | none | open |
 
@@ -148,6 +149,26 @@ hits: m=38,x=5; m=86,x=23; m=134,x=5
 negative control: m=134,x=23 splits as 38,38,57 despite time sum m^4
 m=182 quick probe: no full certificate; x=21,63 have one section cycle but fail time exhaustion
 ```
+
+Timeout-safe C++ screen:
+
+```bash
+python3 scripts/search_d5_routeE_cpp_residue_branches.py \
+  --moduli 182 \
+  --patterns '0,1,3;0,3,4;1,3,4;0,1,4;2,3,4' \
+  --hit-limit 3 --candidate-limit 8000 --cap-m3-factor 1.0 \
+  --jobs 5 --timeout 8 \
+  --json-out certs/routeE_r38_m182_cpp_screen_timeout.json
+```
+
+Result:
+
+```text
+all five tested support patterns timed out with no partial hits.
+```
+
+This is not a mathematical obstruction.  It is a search-control artifact that
+prevents future broad mining runs from requiring manual process kills.
 
 Hygiene:
 

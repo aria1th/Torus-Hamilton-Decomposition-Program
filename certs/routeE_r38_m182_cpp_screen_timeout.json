@@ -1,0 +1,79 @@
+{
+  "candidate_limit": 8000,
+  "cap_m3_factor": 1.0,
+  "hit_limit": 3,
+  "moduli": [
+    182
+  ],
+  "patterns": [
+    "0,1,3",
+    "0,3,4",
+    "1,3,4",
+    "0,1,4",
+    "2,3,4"
+  ],
+  "results": [
+    {
+      "candidate_limit": 8000,
+      "cap_steps": 6028568,
+      "hits": [],
+      "m": 182,
+      "pattern": "0,1,3",
+      "returncode": null,
+      "stderr_tail": [],
+      "summary": {},
+      "timeout": true,
+      "timeout_seconds": 8.0
+    },
+    {
+      "candidate_limit": 8000,
+      "cap_steps": 6028568,
+      "hits": [],
+      "m": 182,
+      "pattern": "0,1,4",
+      "returncode": null,
+      "stderr_tail": [],
+      "summary": {},
+      "timeout": true,
+      "timeout_seconds": 8.0
+    },
+    {
+      "candidate_limit": 8000,
+      "cap_steps": 6028568,
+      "hits": [],
+      "m": 182,
+      "pattern": "0,3,4",
+      "returncode": null,
+      "stderr_tail": [],
+      "summary": {},
+      "timeout": true,
+      "timeout_seconds": 8.0
+    },
+    {
+      "candidate_limit": 8000,
+      "cap_steps": 6028568,
+      "hits": [],
+      "m": 182,
+      "pattern": "1,3,4",
+      "returncode": null,
+      "stderr_tail": [],
+      "summary": {},
+      "timeout": true,
+      "timeout_seconds": 8.0
+    },
+    {
+      "candidate_limit": 8000,
+      "cap_steps": 6028568,
+      "hits": [],
+      "m": 182,
+      "pattern": "2,3,4",
+      "returncode": null,
+      "stderr_tail": [],
+      "summary": {},
+      "timeout": true,
+      "timeout_seconds": 8.0
+    }
+  ],
+  "schema": "d5_routeE_cpp_residue_branch_search_v1",
+  "timeout_seconds": 8.0
+}

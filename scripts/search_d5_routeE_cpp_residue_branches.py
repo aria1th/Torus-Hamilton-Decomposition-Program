@@ -91,6 +91,7 @@ def run_task(
     hit_limit: int,
     cap_m3_factor: float,
     candidate_limit: int,
+    timeout: float,
 ) -> dict:
     cap = 0 if cap_m3_factor == 0 else int(cap_m3_factor * (m**3))
     cmd = [
@@ -101,19 +102,42 @@ def run_task(
         str(cap),
         str(candidate_limit),
     ]
-    proc = subprocess.run(
-        cmd,
-        cwd=REPO,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=REPO,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=None if timeout <= 0 else timeout,
+        )
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode(errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode(errors="replace")
+        return {
+            "m": m,
+            "pattern": pattern,
+            "cap_steps": cap,
+            "candidate_limit": candidate_limit,
+            "timeout": True,
+            "timeout_seconds": timeout,
+            "returncode": None,
+            "summary": parse_summary(stderr),
+            "hits": parse_hits(stdout),
+            "stderr_tail": stderr.strip().splitlines()[-5:],
+        }
     return {
         "m": m,
         "pattern": pattern,
         "cap_steps": cap,
         "candidate_limit": candidate_limit,
+        "timeout": False,
+        "timeout_seconds": timeout,
         "returncode": proc.returncode,
         "summary": parse_summary(proc.stderr),
         "hits": parse_hits(proc.stdout) if proc.returncode == 0 else [],
@@ -138,6 +162,12 @@ def main() -> None:
         help="per seam-point cap = factor*m^3; use 0 for exact unbounded-to-m^4 search",
     )
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument(
+        "--timeout",
+        type=float,
+        default=0.0,
+        help="per C++ subprocess timeout in seconds; 0 means no timeout",
+    )
     parser.add_argument("--binary", type=Path, default=DEFAULT_BIN)
     parser.add_argument("--no-compile", action="store_true")
     parser.add_argument("--json-out", type=Path)
@@ -160,6 +190,7 @@ def main() -> None:
                 args.hit_limit,
                 args.cap_m3_factor,
                 args.candidate_limit,
+                args.timeout,
             ): (m, pattern)
             for m, pattern in tasks
         }
@@ -175,6 +206,8 @@ def main() -> None:
                 len(result["hits"]),
                 "checked",
                 result["summary"].get("checked"),
+                "timeout",
+                result.get("timeout"),
             )
 
     results.sort(key=lambda x: (x["m"], x["pattern"]))
@@ -185,6 +218,7 @@ def main() -> None:
         "hit_limit": args.hit_limit,
         "candidate_limit": args.candidate_limit,
         "cap_m3_factor": args.cap_m3_factor,
+        "timeout_seconds": args.timeout,
         "results": results,
     }
     if args.json_out is not None:

@@ -395,3 +395,18 @@ m=182: quick odd-x probe found no full certificate, and x=21,63 have one
 
 So the R38 branch remains open and should be searched as a gate/transducer or
 near-symmetric family, not as a simple two-value or fixed symmetric law.
+
+The C++ residue search driver now supports a per-task timeout:
+
+```bash
+python3 scripts/search_d5_routeE_cpp_residue_branches.py ... --timeout 8
+```
+
+The first recorded timeout-safe screen for `m=182` is:
+
+```text
+certs/routeE_r38_m182_cpp_screen_timeout.json
+```
+
+It timed out on the tested support patterns without partial hits.  This should
+be read only as search-control evidence, not as a no-go theorem.
