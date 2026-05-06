@@ -129,6 +129,13 @@ New arithmetic names include:
 - `boundaryCycleFirstOddCRun_to_ALast`
 - `boundaryFirstOddParam_shift_succ`
 - `boundarySecondOddValue_range`
+- `boundaryCycleSecondOddLaneCount`
+- `boundaryCycleSecondOddLaneNode`
+- `boundaryCycleSecondOddLane_step_even`
+- `boundaryCycleSecondOddLane_step_odd`
+- `boundaryCycleALastBridge_to_secondOddLane`
+- `boundaryCycleSecondOddLane_to_final`
+- `boundarySecondOddParam_shift_succ`
 - `boundarySecondEvenValue_range`
 - `boundaryFirstEvenParam_val`
 - `boundaryFirstEvenParam_shift_succ`

@@ -2580,6 +2580,342 @@ theorem boundarySecondOddParam_val (q j : Nat)
       boundarySecondOddValue q j := by
   exact RouteENonzeroSeam.ofNat_val _ _ _
 
+def boundaryCycleSecondOddLaneCount (q : Nat) : Nat :=
+  2 * (quarter q - 1)
+
+def boundaryCycleSecondOddFinalCount (_q : Nat) : Nat := 1
+
+theorem boundaryCycleSecondOddLaneCount_add_final_eq_tailCount (q : Nat) :
+    boundaryCycleSecondOddLaneCount q +
+      boundaryCycleSecondOddFinalCount q =
+    boundaryCycleSecondOddTailCount q := by
+  simp [boundaryCycleSecondOddLaneCount, boundaryCycleSecondOddFinalCount,
+    boundaryCycleSecondOddTailCount, quarter]
+  omega
+
+def boundaryCycleSecondOddLaneIndex (k : Nat) : Nat :=
+  k / 2 + 1
+
+theorem boundaryCycleSecondOddLaneIndex_pos (k : Nat) :
+    1 ≤ boundaryCycleSecondOddLaneIndex k := by
+  simp [boundaryCycleSecondOddLaneIndex]
+
+theorem boundaryCycleSecondOddLaneIndex_lt (q k : Nat)
+    (hk : k < boundaryCycleSecondOddLaneCount q) :
+    boundaryCycleSecondOddLaneIndex k < quarter q := by
+  simp [boundaryCycleSecondOddLaneIndex, boundaryCycleSecondOddLaneCount,
+    quarter] at hk ⊢
+  omega
+
+theorem boundaryCycleSecondOddLaneIndex_succ_of_even (k : Nat)
+    (heven : k % 2 = 0) :
+    boundaryCycleSecondOddLaneIndex (k + 1) =
+      boundaryCycleSecondOddLaneIndex k := by
+  simp [boundaryCycleSecondOddLaneIndex]
+  omega
+
+theorem boundaryCycleSecondOddLaneIndex_succ_of_odd (k : Nat)
+    (hodd : k % 2 ≠ 0) :
+    boundaryCycleSecondOddLaneIndex (k + 1) =
+      boundaryCycleSecondOddLaneIndex k + 1 := by
+  simp [boundaryCycleSecondOddLaneIndex]
+  omega
+
+theorem boundarySecondOddValue_odd (q j : Nat)
+    (_hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    boundarySecondOddValue q j % 2 = 1 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondOddValue, hpar, modulus]
+    simp [quarter] at hjlt
+    omega
+  · simp [boundarySecondOddValue, hpar, half]
+    simp [quarter] at hjlt
+    omega
+
+theorem boundarySecondOddParam_odd (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundarySecondOddParam q j hjpos hjlt).1.val % 2 = 1 := by
+  rw [boundarySecondOddParam_val]
+  exact boundarySecondOddValue_odd q j hjpos hjlt
+
+theorem boundarySecondOddValue_ne_half_sub_one_of_pos (q j : Nat)
+    (_hjpos : 1 ≤ j) (_hjlt : j < quarter q) :
+    boundarySecondOddValue q j ≠ half q - 1 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondOddValue, hpar, half, modulus]
+    omega
+  · simp [boundarySecondOddValue, hpar, half]
+    omega
+
+theorem boundarySecondOddParam_ne_half_sub_one_of_pos (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundarySecondOddParam q j hjpos hjlt).1.val ≠ half q - 1 := by
+  rw [boundarySecondOddParam_val]
+  exact boundarySecondOddValue_ne_half_sub_one_of_pos q j hjpos hjlt
+
+theorem boundarySecondOddValue_ne_last (q j : Nat)
+    (hjpos : 1 ≤ j) (_hjlt : j < quarter q) :
+    boundarySecondOddValue q j ≠ modulus q - 1 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondOddValue, hpar, modulus]
+    omega
+  · simp [boundarySecondOddValue, hpar, half, modulus]
+    omega
+
+theorem boundarySecondOddParam_ne_last (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
+    (boundarySecondOddParam q j hjpos hjlt).1.val ≠ modulus q - 1 := by
+  rw [boundarySecondOddParam_val]
+  exact boundarySecondOddValue_ne_last q j hjpos hjlt
+
+theorem boundarySecondOddValue_ne_half_add_one_of_succ (q j : Nat)
+    (_hjpos : 1 ≤ j) (_hjlt : j < quarter q)
+    (hjnext : j + 1 < quarter q) :
+    boundarySecondOddValue q j ≠ half q + 1 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondOddValue, hpar, half, modulus]
+    simp [quarter] at hjnext
+    omega
+  · simp [boundarySecondOddValue, hpar, half]
+    omega
+
+theorem boundarySecondOddParam_ne_half_add_one_of_succ (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q)
+    (hjnext : j + 1 < quarter q) :
+    (boundarySecondOddParam q j hjpos hjlt).1.val ≠ half q + 1 := by
+  rw [boundarySecondOddParam_val]
+  exact boundarySecondOddValue_ne_half_add_one_of_succ q j hjpos hjlt hjnext
+
+theorem boundarySecondOddValue_shift_succ_zmod (q j : Nat)
+    (_hjpos : 1 ≤ j) (hjnext : j + 1 < quarter q) :
+    (((boundarySecondOddValue q j : Nat) : ZMod (modulus q)) +
+        ((half q - 2 : Nat) : ZMod (modulus q))) =
+      ((boundarySecondOddValue q (j + 1) : Nat) : ZMod (modulus q)) := by
+  rw [← Nat.cast_add]
+  by_cases hpar : j % 2 = 0
+  · have hpar_next : (j + 1) % 2 ≠ 0 := by omega
+    have hnat :
+        boundarySecondOddValue q j + (half q - 2) =
+          modulus q + boundarySecondOddValue q (j + 1) := by
+      simp [boundarySecondOddValue, hpar, hpar_next, half, modulus]
+      simp [quarter] at hjnext
+      omega
+    rw [hnat]
+    simp
+  · have hpar_next : (j + 1) % 2 = 0 := by omega
+    have hnat :
+        boundarySecondOddValue q j + (half q - 2) =
+          boundarySecondOddValue q (j + 1) := by
+      simp [boundarySecondOddValue, hpar, hpar_next, half, modulus]
+      simp [quarter] at hjnext
+      omega
+    rw [hnat]
+
+theorem boundarySecondOddParam_shift_succ (q j : Nat)
+    (hjpos : 1 ≤ j) (hjlt : j < quarter q)
+    (hjnext : j + 1 < quarter q)
+    (hne : (boundarySecondOddParam q j hjpos hjlt).1.val ≠ half q + 2) :
+    boundaryShiftParam q (boundarySecondOddParam q j hjpos hjlt) hne =
+      boundarySecondOddParam q (j + 1) (by omega) hjnext := by
+  apply Subtype.ext
+  rw [boundaryShiftParam_val]
+  change (((boundarySecondOddValue q j : Nat) : ZMod (modulus q)) +
+      ((half q - 2 : Nat) : ZMod (modulus q))) =
+        ((boundarySecondOddValue q (j + 1) : Nat) : ZMod (modulus q))
+  exact boundarySecondOddValue_shift_succ_zmod q j hjpos hjnext
+
+noncomputable def boundaryCycleSecondOddLaneNode (q k : Nat)
+    (hk : k < boundaryCycleSecondOddLaneCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  let j := boundaryCycleSecondOddLaneIndex k
+  if _heven : k % 2 = 0 then
+    routeEBoundaryNode RouteEBoundaryLabel.L04
+      (boundarySecondOddParam q j
+        (boundaryCycleSecondOddLaneIndex_pos k)
+        (boundaryCycleSecondOddLaneIndex_lt q k hk))
+  else
+    routeEBoundaryNode RouteEBoundaryLabel.L03
+      (boundarySecondOddParam q j
+        (boundaryCycleSecondOddLaneIndex_pos k)
+        (boundaryCycleSecondOddLaneIndex_lt q k hk))
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondOddLane_step_even (q k : Nat)
+    (hk : k < boundaryCycleSecondOddLaneCount q)
+    (hks : k + 1 < boundaryCycleSecondOddLaneCount q)
+    (heven : k % 2 = 0) :
+    boundaryQuotient q (boundaryCycleSecondOddLaneNode q k hk) =
+      boundaryCycleSecondOddLaneNode q (k + 1) hks := by
+  have hnext_odd : ¬ (k + 1) % 2 = 0 := by omega
+  simp [boundaryCycleSecondOddLaneNode, heven, hnext_odd,
+    boundaryCycleSecondOddLaneIndex_succ_of_even k heven]
+  exact boundaryQuotient_B_odd q
+    (boundarySecondOddParam q (boundaryCycleSecondOddLaneIndex k)
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk))
+    (boundarySecondOddParam_ne_half_sub_one_of_pos q
+      (boundaryCycleSecondOddLaneIndex k)
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk))
+    (boundarySecondOddParam_ne_last q (boundaryCycleSecondOddLaneIndex k)
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk))
+    (boundarySecondOddParam_odd q (boundaryCycleSecondOddLaneIndex k)
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk))
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondOddLane_step_odd (q k : Nat)
+    (hk : k < boundaryCycleSecondOddLaneCount q)
+    (hks : k + 1 < boundaryCycleSecondOddLaneCount q)
+    (hodd : k % 2 ≠ 0) :
+    boundaryQuotient q (boundaryCycleSecondOddLaneNode q k hk) =
+      boundaryCycleSecondOddLaneNode q (k + 1) hks := by
+  have hnext_even : (k + 1) % 2 = 0 := by omega
+  have hjnext : boundaryCycleSecondOddLaneIndex k + 1 < quarter q := by
+    rw [← boundaryCycleSecondOddLaneIndex_succ_of_odd k hodd]
+    exact boundaryCycleSecondOddLaneIndex_lt q (k + 1) hks
+  simp [boundaryCycleSecondOddLaneNode, hodd, hnext_even,
+    boundaryCycleSecondOddLaneIndex_succ_of_odd k hodd]
+  let j := boundaryCycleSecondOddLaneIndex k
+  let a := boundarySecondOddParam q j
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk)
+  have hnot_succ : a.1.val ≠ half q + 1 := by
+    dsimp [a, j]
+    exact boundarySecondOddParam_ne_half_add_one_of_succ q
+      (boundaryCycleSecondOddLaneIndex k)
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk) hjnext
+  have hnot_close : a.1.val ≠ half q + 2 := by
+    intro h
+    have hoddv := boundarySecondOddParam_odd q j
+      (boundaryCycleSecondOddLaneIndex_pos k)
+      (boundaryCycleSecondOddLaneIndex_lt q k hk)
+    rw [h] at hoddv
+    have heven : (half q + 2) % 2 = 0 := by
+      simp [half]
+      omega
+    omega
+  calc
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L03 a) =
+        routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryShiftParam q a hnot_close) :=
+      boundaryQuotient_A_odd_shift q a hnot_succ
+        (boundarySecondOddParam_odd q j
+          (boundaryCycleSecondOddLaneIndex_pos k)
+          (boundaryCycleSecondOddLaneIndex_lt q k hk))
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundarySecondOddParam q (j + 1) (by omega) hjnext) := by
+      rw [boundarySecondOddParam_shift_succ q j
+        (boundaryCycleSecondOddLaneIndex_pos k)
+        (boundaryCycleSecondOddLaneIndex_lt q k hk) hjnext hnot_close]
+
+theorem boundaryCycleALastBridgeNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleALastBridgeCount q) :
+    boundaryCycleALastBridgeNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryParamLast q) := rfl
+
+theorem boundaryCycleSecondOddLaneNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleSecondOddLaneCount q) :
+    boundaryCycleSecondOddLaneNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L04
+        (boundarySecondOddParam q 1 (by omega) (by simp [quarter])) := by
+  simp [boundaryCycleSecondOddLaneNode, boundaryCycleSecondOddLaneIndex]
+
+theorem boundaryParamLast_shift_eq_secondOdd_one (q : Nat)
+    (hne : (boundaryParamLast q).1.val ≠ half q + 2) :
+    boundaryShiftParam q (boundaryParamLast q) hne =
+      boundarySecondOddParam q 1 (by omega) (by simp [quarter]) := by
+  apply Subtype.ext
+  rw [boundaryShiftParam_val]
+  change (((modulus q - 1 : Nat) : ZMod (modulus q)) +
+      ((half q - 2 : Nat) : ZMod (modulus q))) =
+        ((boundarySecondOddValue q 1 : Nat) : ZMod (modulus q))
+  rw [← Nat.cast_add]
+  have hnat :
+      (modulus q - 1) + (half q - 2) =
+        modulus q + boundarySecondOddValue q 1 := by
+    simp [boundarySecondOddValue, half, modulus]
+    omega
+  rw [hnat]
+  simp
+
+theorem boundaryCycleALastBridge_to_secondOddLane (q : Nat)
+    (ha : 0 < boundaryCycleALastBridgeCount q)
+    (ho : 0 < boundaryCycleSecondOddLaneCount q) :
+    boundaryQuotient q (boundaryCycleALastBridgeNode q 0 ha) =
+      boundaryCycleSecondOddLaneNode q 0 ho := by
+  rw [boundaryCycleALastBridgeNode_zero q ha,
+    boundaryCycleSecondOddLaneNode_zero q ho]
+  have hnot_succ : (boundaryParamLast q).1.val ≠ half q + 1 := by
+    simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val, half, modulus]
+    omega
+  have hnot_close : (boundaryParamLast q).1.val ≠ half q + 2 := by
+    simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val, half, modulus]
+    omega
+  calc
+    boundaryQuotient q
+        (routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamLast q)) =
+        routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundaryShiftParam q (boundaryParamLast q) hnot_close) :=
+      boundaryQuotient_A_odd_shift q (boundaryParamLast q) hnot_succ (by
+        simp [boundaryParamLast, RouteENonzeroSeam.ofNat_val, modulus,
+          Nat.add_mod, Nat.mul_mod])
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L04
+          (boundarySecondOddParam q 1 (by omega) (by simp [quarter])) := by
+      rw [boundaryParamLast_shift_eq_secondOdd_one q hnot_close]
+
+noncomputable def boundaryCycleSecondOddFinalNode (q k : Nat)
+    (_hk : k < boundaryCycleSecondOddFinalCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalfSubTwo q)
+
+theorem boundaryCycleSecondOddLaneLastIndex_eq (q : Nat) :
+    boundaryCycleSecondOddLaneIndex (boundaryCycleSecondOddLaneCount q - 1) =
+      quarter q - 1 := by
+  simp [boundaryCycleSecondOddLaneIndex, boundaryCycleSecondOddLaneCount,
+    quarter]
+  omega
+
+theorem boundaryCycleSecondOddLaneLast_odd (q : Nat) :
+    (boundaryCycleSecondOddLaneCount q - 1) % 2 ≠ 0 := by
+  simp [boundaryCycleSecondOddLaneCount, quarter]
+  omega
+
+theorem boundarySecondOddValue_last_eq_half_add_one (q : Nat) :
+    boundarySecondOddValue q (quarter q - 1) = half q + 1 := by
+  have hpar : (quarter q - 1) % 2 = 0 := by
+    simp [quarter]
+    omega
+  rw [boundarySecondOddValue, if_pos hpar]
+  simp [quarter, half, modulus]
+  omega
+
+theorem boundarySecondOddParam_last_val_half_add_one (q : Nat) :
+    (boundarySecondOddParam q (quarter q - 1) (by simp [quarter])
+      (by simp [quarter])).1.val = half q + 1 := by
+  rw [boundarySecondOddParam_val]
+  exact boundarySecondOddValue_last_eq_half_add_one q
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondOddLane_to_final (q : Nat)
+    (hlast : boundaryCycleSecondOddLaneCount q - 1 <
+      boundaryCycleSecondOddLaneCount q)
+    (hfinal : 0 < boundaryCycleSecondOddFinalCount q) :
+    boundaryQuotient q
+        (boundaryCycleSecondOddLaneNode q
+          (boundaryCycleSecondOddLaneCount q - 1) hlast) =
+      boundaryCycleSecondOddFinalNode q 0 hfinal := by
+  have hodd := boundaryCycleSecondOddLaneLast_odd q
+  simp [boundaryCycleSecondOddLaneNode, boundaryCycleSecondOddFinalNode, hodd,
+    boundaryCycleSecondOddLaneLastIndex_eq q]
+  exact boundaryQuotient_A_h_succ q
+    (boundarySecondOddParam q (quarter q - 1) (by simp [quarter])
+      (by simp [quarter]))
+    (boundarySecondOddParam_last_val_half_add_one q)
+
 def boundarySecondEvenParam (q j : Nat)
     (hjlt : j < quarter q - 1) :
     RouteENonzeroSeam (modulus q) :=
