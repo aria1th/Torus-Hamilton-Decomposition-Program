@@ -269,6 +269,9 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+60476dd Verify Route E Type-A symbolic skeleton
+d3311f5 Add Route E corrected goal audit
+990005f Refresh Route E corrected branch audit
 b516772 Initialize Route E R38 gate-transducer record
 4b504ec Make Route E residue search timeout-safe
 7be1745 Record Route E R38 symmetric probe
