@@ -443,6 +443,38 @@
     "ok": true,
     "schema": "routeE_r42_mod96_branch_split_verification_v1"
   },
+  "mod96_edge_formulas_summary": {
+    "edge_count": 69,
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "The q-parity split turns the stable R42 block-transducer edge counts into affine-in-s tables on both mod-96 subbranches. This is still a block-count artifact, not pointwise/no-early.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "schema": "routeE_r42_mod96_edge_formulas_v1",
+    "summary": {
+      "all_even_branch_formulas_affine_in_s": true,
+      "all_odd_branch_formulas_affine_in_s": true,
+      "edge_count": 69,
+      "even_q_branch": "m = 96*s + 42, s >= 1",
+      "even_sample_s_values": [
+        1,
+        2,
+        3
+      ],
+      "odd_q_branch": "m = 96*s + 90, s >= 1",
+      "odd_sample_s_values": [
+        1,
+        2
+      ]
+    }
+  },
+  "mod96_edge_formulas_verification_summary": {
+    "edge_count": 69,
+    "error_count": 0,
+    "ok": true,
+    "schema": "routeE_r42_mod96_edge_formulas_verification_v1"
+  },
   "modulus_family": "m == 42 mod 48",
   "observed_law": {
     "nodes": "480*q + 411",
@@ -691,6 +723,8 @@
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",
     "mod96_branch_split": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split.json",
     "mod96_branch_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_branch_split_verification.json",
+    "mod96_edge_formulas": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas.json",
+    "mod96_edge_formulas_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas_verification.json",
     "open_tail_suggestions": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_open_tail_formula_suggestions.json",
     "pointwise_law_mining": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining.json",
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",

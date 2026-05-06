@@ -1,0 +1,14 @@
+{
+  "edge_count": 69,
+  "error_count": 0,
+  "errors": [],
+  "formulas": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_mod96_edge_formulas.json",
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "The q-parity split turns the stable R42 block-transducer edge counts into affine-in-s tables on both mod-96 subbranches. This is still a block-count artifact, not pointwise/no-early.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_mod96_edge_formulas_verification_v1"
+}

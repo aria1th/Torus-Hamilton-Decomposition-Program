@@ -486,6 +486,29 @@ artifact.  The q=0 and q=1 samples remain finite boundary cases; q>=2 splits
 by q parity because the stable 69-edge block transducer has mod-2
 piecewise-affine edge counts.
 
+R42 mod-96 edge-count formula tables:
+
+```bash
+python3 scripts/summarize_routeE_r42_mod96_edge_formulas.py \
+  --json-out certs/routeE_r42_mod96_edge_formulas.json
+
+python3 scripts/verify_routeE_r42_mod96_edge_formulas.py \
+  --json-out certs/routeE_r42_mod96_edge_formulas_verification.json
+```
+
+Result:
+
+```text
+ok True
+edge_count 69
+all_even_branch_formulas_affine_in_s True
+all_odd_branch_formulas_affine_in_s True
+```
+
+Thus the q-parity split removes the mod-2 piecewise edge-count law: each of
+the two generic mod-96 subbranches has ordinary affine-in-s block-edge counts.
+This is still block-transducer evidence, not a pointwise/no-early proof.
+
 R42 open tail-formula suggestions:
 
 ```bash
@@ -639,7 +662,7 @@ Result:
 
 ```text
 promotion_ready False
-evidence_items_ok 13
+evidence_items_ok 14
 required_missing 3
 missing: Pointwise first-return equations are proved for all q
 missing: No-early/minimality is proved for all q

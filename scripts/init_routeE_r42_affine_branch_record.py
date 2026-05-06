@@ -38,6 +38,10 @@ DEFAULT_MOD96_BRANCH_SPLIT = ROOT / "certs" / "routeE_r42_mod96_branch_split.jso
 DEFAULT_MOD96_BRANCH_SPLIT_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_mod96_branch_split_verification.json"
 )
+DEFAULT_MOD96_EDGE_FORMULAS = ROOT / "certs" / "routeE_r42_mod96_edge_formulas.json"
+DEFAULT_MOD96_EDGE_FORMULAS_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_mod96_edge_formulas_verification.json"
+)
 DEFAULT_BLOCK_REGENERATION_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_block_formula_regeneration_verification.json"
 )
@@ -78,6 +82,8 @@ def build_record(
     boundary_block_transducer_verification_path: Path,
     mod96_branch_split_path: Path,
     mod96_branch_split_verification_path: Path,
+    mod96_edge_formulas_path: Path,
+    mod96_edge_formulas_verification_path: Path,
     block_regeneration_verification_path: Path,
     open_tail_suggestions_path: Path,
     allpair_time_fits_path: Path,
@@ -126,6 +132,16 @@ def build_record(
     mod96_branch_split_verification = (
         load_json(mod96_branch_split_verification_path)
         if mod96_branch_split_verification_path.exists()
+        else {}
+    )
+    mod96_edge_formulas = (
+        load_json(mod96_edge_formulas_path)
+        if mod96_edge_formulas_path.exists()
+        else {}
+    )
+    mod96_edge_formulas_verification = (
+        load_json(mod96_edge_formulas_verification_path)
+        if mod96_edge_formulas_verification_path.exists()
         else {}
     )
     block_regeneration_verification = (
@@ -210,6 +226,10 @@ def build_record(
             "mod96_branch_split": str(mod96_branch_split_path),
             "mod96_branch_split_verification": str(
                 mod96_branch_split_verification_path
+            ),
+            "mod96_edge_formulas": str(mod96_edge_formulas_path),
+            "mod96_edge_formulas_verification": str(
+                mod96_edge_formulas_verification_path
             ),
             "block_regeneration_verification": str(
                 block_regeneration_verification_path
@@ -331,6 +351,18 @@ def build_record(
                 "generic_subbranches"
             ),
         },
+        "mod96_edge_formulas_summary": {
+            "schema": mod96_edge_formulas.get("schema"),
+            "summary": mod96_edge_formulas.get("summary"),
+            "edge_count": mod96_edge_formulas.get("edge_count"),
+            "promotion_impact": mod96_edge_formulas.get("promotion_impact"),
+        },
+        "mod96_edge_formulas_verification_summary": {
+            "schema": mod96_edge_formulas_verification.get("schema"),
+            "ok": mod96_edge_formulas_verification.get("ok"),
+            "edge_count": mod96_edge_formulas_verification.get("edge_count"),
+            "error_count": mod96_edge_formulas_verification.get("error_count"),
+        },
         "block_regeneration_verification_summary": {
             "schema": block_regeneration_verification.get("schema"),
             "ok": block_regeneration_verification.get("ok"),
@@ -443,6 +475,16 @@ def main() -> None:
         default=DEFAULT_MOD96_BRANCH_SPLIT_VERIFICATION,
     )
     parser.add_argument(
+        "--mod96-edge-formulas",
+        type=Path,
+        default=DEFAULT_MOD96_EDGE_FORMULAS,
+    )
+    parser.add_argument(
+        "--mod96-edge-formulas-verification",
+        type=Path,
+        default=DEFAULT_MOD96_EDGE_FORMULAS_VERIFICATION,
+    )
+    parser.add_argument(
         "--block-regeneration-verification",
         type=Path,
         default=DEFAULT_BLOCK_REGENERATION_VERIFICATION,
@@ -491,6 +533,8 @@ def main() -> None:
         args.boundary_block_transducer_verification,
         args.mod96_branch_split,
         args.mod96_branch_split_verification,
+        args.mod96_edge_formulas,
+        args.mod96_edge_formulas_verification,
         args.block_regeneration_verification,
         args.open_tail_suggestions,
         args.allpair_time_fits,
