@@ -22,6 +22,7 @@ FILES = {
     "dispatcher_doc": ROOT / "docs" / "D5_EVEN_ROUTE_E_CORRECTED_BRANCH_DISPATCHER_20260506.md",
     "audit_doc": ROOT / "docs" / "D5_EVEN_ROUTE_E_CORRECTED_BRANCH_AUDIT_20260506.md",
     "branch_summary": ROOT / "certs" / "d5_routeE_corrected_branch_summary.json",
+    "b20_branch": ROOT / "certs" / "d5_routeE_b20_branch_verify_m20_44_68.json",
     "typea_summary": ROOT / "certs" / "routeE_typeA_closure_package_summary.json",
     "typea_skeleton": ROOT / "certs" / "routeE_typeA_symbolic_skeleton.json",
     "typea_skeleton_verification": ROOT
@@ -62,6 +63,7 @@ def item(name: str, ok: bool, evidence: str, missing: str | None = None) -> dict
 
 def build_audit() -> dict[str, Any]:
     branch = load_json(FILES["branch_summary"])
+    b20 = load_json(FILES["b20_branch"])
     typea = load_json(FILES["typea_summary"])
     skeleton = load_json(FILES["typea_skeleton"])
     skeleton_verification = load_json(FILES["typea_skeleton_verification"])
@@ -123,6 +125,13 @@ def build_audit() -> dict[str, Any]:
             and lambdae_verification.get("ok") is True
             and lambdae_verification.get("mask_entry_count") == 32,
             "certs/d5_lambdaE_mask_polynomials_verification.json",
+        ),
+        item(
+            "B20 Type-A sample branch verifier is preserved and true",
+            b20.get("schema") == "d5_routeE_b20_branch_v1"
+            and b20.get("all_ok") is True
+            and b20.get("moduli") == [20, 44, 68, 92],
+            "certs/d5_routeE_b20_branch_verify_m20_44_68.json",
         ),
         item(
             "B20/B16/R14e Type-A package flags are preserved and true",

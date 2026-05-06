@@ -29,6 +29,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Turn Lambda_E local mask counts into symbolic formulas | `scripts/derive_d5_lambdaE_mask_polynomials.py`, `certs/d5_lambdaE_mask_polynomials.json`, and `docs/D5_EVEN_ROUTE_E_PROOF_PROGRESS_20260506.md` | done |
 | Verify Lambda_E symbolic mask-count artifact by recomputation | `scripts/verify_d5_lambdaE_mask_polynomials.py`, `certs/d5_lambdaE_mask_polynomials_verification.json` | done |
 | Preserve first Type-A B20 branch evidence | `certs/d5_routeE_b20_branch_verify_m20_44_68.json` | done, covers `m=20,44,68,92` despite filename |
+| Check B20 sample branch verifier in completion audit | `scripts/audit_routeE_corrected_goal.py` | done |
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
