@@ -7079,6 +7079,65 @@ theorem thetaPiecewiseTarget_of_pointwiseTraceTarget (q : Nat)
   exact ⟨thetaPiecewiseCertificateOfTraceTarget q
     (thetaTraceTargetOfPointwise q target)⟩
 
+def SymbolicAllPairBranchTarget : Prop :=
+  ∀ q, 0 < q → Nonempty (RouteEAllPairSectionCertificate (modulus q))
+
+def FiniteM20AllPairTarget : Prop :=
+  Nonempty (RouteEAllPairSectionCertificate (modulus 0))
+
+def AllPairBranchTarget : Prop :=
+  ∀ q, Nonempty (RouteEAllPairSectionCertificate (modulus q))
+
+theorem allPairBranchTarget_of_symbolic_and_m20
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm20 : FiniteM20AllPairTarget) :
+    AllPairBranchTarget := by
+  intro q
+  cases q with
+  | zero =>
+      simpa [FiniteM20AllPairTarget] using hm20
+  | succ q =>
+      exact hsymbolic (Nat.succ q) (Nat.succ_pos q)
+
+theorem hamiltonTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toHamiltonDecomposition⟩
+
+theorem torusTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toTorusHamiltonDecomposition⟩
+
+theorem cayleyTarget_of_allPairBranchTarget
+    (h : AllPairBranchTarget) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) := by
+  rcases h q with ⟨cert⟩
+  exact ⟨cert.toCayleyHamiltonDecomposition⟩
+
+theorem hamiltonTarget_of_symbolic_and_m20
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm20 : FiniteM20AllPairTarget) (q : Nat) :
+    Nonempty (HamiltonDecompositionD5 (modulus q)) :=
+  hamiltonTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m20 hsymbolic hm20) q
+
+theorem torusTarget_of_symbolic_and_m20
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm20 : FiniteM20AllPairTarget) (q : Nat) :
+    Nonempty (TorusHamiltonDecompositionD5 (modulus q)) :=
+  torusTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m20 hsymbolic hm20) q
+
+theorem cayleyTarget_of_symbolic_and_m20
+    (hsymbolic : SymbolicAllPairBranchTarget)
+    (hm20 : FiniteM20AllPairTarget) (q : Nat) :
+    Nonempty (CayleyHamiltonDecompositionD5 (modulus q)) :=
+  cayleyTarget_of_allPairBranchTarget
+    (allPairBranchTarget_of_symbolic_and_m20 hsymbolic hm20) q
+
 end RouteEB20
 
 def D5EvenRouteEAllLargeEvenTarget : Prop :=

@@ -317,6 +317,12 @@ Closed or proof-facing in the bundle:
   the finite `q = 0`/`m = 20` certificate.  The aggregate polynomials still
   evaluate correctly at `q = 0`, but the stabilized `04` recurrence is only
   claimed for `q >= 1`.
+- B20 symbolic/finite dispatcher endpoints:
+  `RouteEB20.SymbolicAllPairBranchTarget`,
+  `RouteEB20.FiniteM20AllPairTarget`,
+  `RouteEB20.AllPairBranchTarget`,
+  `RouteEB20.allPairBranchTarget_of_symbolic_and_m20`, and the Hamilton/Torus/
+  Cayley projection theorems from that branch target.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
