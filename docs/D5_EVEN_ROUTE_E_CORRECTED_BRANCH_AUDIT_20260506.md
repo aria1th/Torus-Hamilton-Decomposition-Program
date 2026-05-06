@@ -427,6 +427,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+327fe6c Verify Route E R42 affine samples
 1538fa5 Initialize Route E R42 affine branch record
 b32434a Analyze Route E portfolio affine fits
 7cb945b Summarize Route E all-pair portfolio coverage
