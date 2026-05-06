@@ -2929,6 +2929,298 @@ theorem boundarySecondEvenParam_val (q j : Nat)
       boundarySecondEvenValue q j := by
   exact RouteENonzeroSeam.ofNat_val _ _ _
 
+def boundaryCycleSecondEvenTailIndex (k : Nat) : Nat :=
+  k / 2
+
+theorem boundaryCycleSecondEvenTailIndex_lt (q k : Nat)
+    (hk : k < boundaryCycleSecondEvenTailCount q) :
+    boundaryCycleSecondEvenTailIndex k < quarter q - 1 := by
+  simp [boundaryCycleSecondEvenTailIndex, boundaryCycleSecondEvenTailCount,
+    quarter] at hk ⊢
+  omega
+
+theorem boundaryCycleSecondEvenTailIndex_succ_lt (q k : Nat)
+    (hk : k < boundaryCycleSecondEvenTailCount q)
+    (hodd : k % 2 ≠ 0) :
+    boundaryCycleSecondEvenTailIndex k + 1 < quarter q - 1 := by
+  simp [boundaryCycleSecondEvenTailIndex, boundaryCycleSecondEvenTailCount,
+    quarter] at hk ⊢
+  omega
+
+theorem boundaryCycleSecondEvenTailIndex_succ_of_even (k : Nat)
+    (heven : k % 2 = 0) :
+    boundaryCycleSecondEvenTailIndex (k + 1) =
+      boundaryCycleSecondEvenTailIndex k := by
+  simp [boundaryCycleSecondEvenTailIndex]
+  omega
+
+theorem boundaryCycleSecondEvenTailIndex_succ_of_odd (k : Nat)
+    (hodd : k % 2 ≠ 0) :
+    boundaryCycleSecondEvenTailIndex (k + 1) =
+      boundaryCycleSecondEvenTailIndex k + 1 := by
+  simp [boundaryCycleSecondEvenTailIndex]
+  omega
+
+theorem boundarySecondEvenValue_even (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    boundarySecondEvenValue q j % 2 = 0 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondEvenValue, hpar, half]
+    simp [quarter] at hjlt
+    omega
+  · simp [boundarySecondEvenValue, hpar, modulus]
+    simp [quarter] at hjlt
+    omega
+
+theorem boundarySecondEvenParam_even (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    (boundarySecondEvenParam q j hjlt).1.val % 2 = 0 := by
+  rw [boundarySecondEvenParam_val]
+  exact boundarySecondEvenValue_even q j hjlt
+
+theorem boundarySecondEvenValue_ne_half (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    boundarySecondEvenValue q j ≠ half q := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondEvenValue, hpar, half]
+    omega
+  · simp [boundarySecondEvenValue, hpar, half, modulus]
+    simp [quarter] at hjlt
+    omega
+
+theorem boundarySecondEvenParam_ne_half (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    (boundarySecondEvenParam q j hjlt).1.val ≠ half q := by
+  rw [boundarySecondEvenParam_val]
+  exact boundarySecondEvenValue_ne_half q j hjlt
+
+theorem boundarySecondEvenValue_ne_two (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    boundarySecondEvenValue q j ≠ 2 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondEvenValue, hpar, half]
+    simp [quarter] at hjlt
+    omega
+  · simp [boundarySecondEvenValue, hpar, modulus]
+    simp [quarter] at hjlt
+    omega
+
+theorem boundarySecondEvenParam_ne_two (q j : Nat)
+    (hjlt : j < quarter q - 1) :
+    (boundarySecondEvenParam q j hjlt).1.val ≠ 2 := by
+  rw [boundarySecondEvenParam_val]
+  exact boundarySecondEvenValue_ne_two q j hjlt
+
+theorem boundarySecondEvenValue_ne_half_add_two_of_succ (q j : Nat)
+    (_hjlt : j < quarter q - 1) (hjnext : j + 1 < quarter q - 1) :
+    boundarySecondEvenValue q j ≠ half q + 2 := by
+  by_cases hpar : j % 2 = 0
+  · simp [boundarySecondEvenValue, hpar, half]
+    simp [quarter] at hjnext
+    omega
+  · simp [boundarySecondEvenValue, hpar, half, modulus]
+    simp [quarter] at hjnext
+    omega
+
+theorem boundarySecondEvenParam_ne_half_add_two_of_succ (q j : Nat)
+    (hjlt : j < quarter q - 1) (hjnext : j + 1 < quarter q - 1) :
+    (boundarySecondEvenParam q j hjlt).1.val ≠ half q + 2 := by
+  rw [boundarySecondEvenParam_val]
+  exact boundarySecondEvenValue_ne_half_add_two_of_succ q j hjlt hjnext
+
+theorem boundarySecondEvenValue_shift_succ_zmod (q j : Nat)
+    (hjnext : j + 1 < quarter q - 1) :
+    (((boundarySecondEvenValue q j : Nat) : ZMod (modulus q)) +
+        ((half q - 2 : Nat) : ZMod (modulus q))) =
+      ((boundarySecondEvenValue q (j + 1) : Nat) : ZMod (modulus q)) := by
+  rw [← Nat.cast_add]
+  by_cases hpar : j % 2 = 0
+  · have hpar_next : (j + 1) % 2 ≠ 0 := by omega
+    have hnat :
+        boundarySecondEvenValue q j + (half q - 2) =
+          boundarySecondEvenValue q (j + 1) := by
+      simp [boundarySecondEvenValue, hpar, hpar_next, half, modulus]
+      simp [quarter] at hjnext
+      omega
+    rw [hnat]
+  · have hpar_next : (j + 1) % 2 = 0 := by omega
+    have hnat :
+        boundarySecondEvenValue q j + (half q - 2) =
+          modulus q + boundarySecondEvenValue q (j + 1) := by
+      simp [boundarySecondEvenValue, hpar, hpar_next, half, modulus]
+      simp [quarter] at hjnext
+      omega
+    rw [hnat]
+    simp
+
+theorem boundarySecondEvenParam_shift_succ (q j : Nat)
+    (hjlt : j < quarter q - 1) (hjnext : j + 1 < quarter q - 1)
+    (hne : (boundarySecondEvenParam q j hjlt).1.val ≠ half q + 2) :
+    boundaryShiftParam q (boundarySecondEvenParam q j hjlt) hne =
+      boundarySecondEvenParam q (j + 1) hjnext := by
+  apply Subtype.ext
+  rw [boundaryShiftParam_val]
+  change (((boundarySecondEvenValue q j : Nat) : ZMod (modulus q)) +
+      ((half q - 2 : Nat) : ZMod (modulus q))) =
+        ((boundarySecondEvenValue q (j + 1) : Nat) : ZMod (modulus q))
+  exact boundarySecondEvenValue_shift_succ_zmod q j hjnext
+
+noncomputable def boundaryCycleSecondEvenTailNode (q k : Nat)
+    (hk : k < boundaryCycleSecondEvenTailCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  let j := boundaryCycleSecondEvenTailIndex k
+  if _heven : k % 2 = 0 then
+    routeEBoundaryNode RouteEBoundaryLabel.L04
+      (boundarySecondEvenParam q j
+        (boundaryCycleSecondEvenTailIndex_lt q k hk))
+  else
+    routeEBoundaryNode RouteEBoundaryLabel.L03
+      (boundarySecondEvenParam q (j + 1)
+        (boundaryCycleSecondEvenTailIndex_succ_lt q k hk _heven))
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondEvenTail_step_even (q k : Nat)
+    (hk : k < boundaryCycleSecondEvenTailCount q)
+    (hks : k + 1 < boundaryCycleSecondEvenTailCount q)
+    (heven : k % 2 = 0) :
+    boundaryQuotient q (boundaryCycleSecondEvenTailNode q k hk) =
+      boundaryCycleSecondEvenTailNode q (k + 1) hks := by
+  have hnext_odd : (k + 1) % 2 ≠ 0 := by omega
+  have hjnext : boundaryCycleSecondEvenTailIndex k + 1 <
+      quarter q - 1 := by
+    rw [← boundaryCycleSecondEvenTailIndex_succ_of_even k heven]
+    exact boundaryCycleSecondEvenTailIndex_succ_lt q (k + 1) hks hnext_odd
+  simp [boundaryCycleSecondEvenTailNode, heven, hnext_odd,
+    boundaryCycleSecondEvenTailIndex_succ_of_even k heven]
+  let j := boundaryCycleSecondEvenTailIndex k
+  let a := boundarySecondEvenParam q j
+      (boundaryCycleSecondEvenTailIndex_lt q k hk)
+  have hnot_two : a.1.val ≠ 2 := by
+    dsimp [a, j]
+    exact boundarySecondEvenParam_ne_two q
+      (boundaryCycleSecondEvenTailIndex k)
+      (boundaryCycleSecondEvenTailIndex_lt q k hk)
+  have hnot_close : a.1.val ≠ half q + 2 := by
+    dsimp [a, j]
+    exact boundarySecondEvenParam_ne_half_add_two_of_succ q
+      (boundaryCycleSecondEvenTailIndex k)
+      (boundaryCycleSecondEvenTailIndex_lt q k hk) hjnext
+  calc
+    boundaryQuotient q (routeEBoundaryNode RouteEBoundaryLabel.L04 a) =
+        routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryShiftParam q a hnot_close) :=
+      boundaryQuotient_B_even_shift q a hnot_two hnot_close
+        (boundarySecondEvenParam_even q j
+          (boundaryCycleSecondEvenTailIndex_lt q k hk))
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundarySecondEvenParam q (j + 1) hjnext) := by
+      rw [boundarySecondEvenParam_shift_succ q j
+        (boundaryCycleSecondEvenTailIndex_lt q k hk) hjnext hnot_close]
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondEvenTail_step_odd (q k : Nat)
+    (hk : k < boundaryCycleSecondEvenTailCount q)
+    (hks : k + 1 < boundaryCycleSecondEvenTailCount q)
+    (hodd : k % 2 ≠ 0) :
+    boundaryQuotient q (boundaryCycleSecondEvenTailNode q k hk) =
+      boundaryCycleSecondEvenTailNode q (k + 1) hks := by
+  have hnext_even : (k + 1) % 2 = 0 := by omega
+  simp [boundaryCycleSecondEvenTailNode, hodd, hnext_even,
+    boundaryCycleSecondEvenTailIndex_succ_of_odd k hodd]
+  let j := boundaryCycleSecondEvenTailIndex k + 1
+  let a := boundarySecondEvenParam q j
+      (boundaryCycleSecondEvenTailIndex_succ_lt q k hk hodd)
+  exact boundaryQuotient_A_even q a
+    (by
+      dsimp [a, j]
+      exact boundarySecondEvenParam_ne_half q
+        (boundaryCycleSecondEvenTailIndex k + 1)
+        (boundaryCycleSecondEvenTailIndex_succ_lt q k hk hodd))
+    (by
+      dsimp [a, j]
+      exact boundarySecondEvenParam_even q
+        (boundaryCycleSecondEvenTailIndex k + 1)
+        (boundaryCycleSecondEvenTailIndex_succ_lt q k hk hodd))
+
+theorem boundarySecondEvenParam_zero_eq_halfSubTwo (q : Nat)
+    (hk : 0 < quarter q - 1) :
+    boundarySecondEvenParam q 0 hk = boundaryParamHalfSubTwo q := by
+  apply Subtype.ext
+  apply ZMod.val_injective (modulus q)
+  rw [boundarySecondEvenParam_val, boundaryParamHalfSubTwo,
+    RouteENonzeroSeam.ofNat_val]
+  simp [boundarySecondEvenValue]
+
+theorem boundaryCycleSecondOddFinalNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleSecondOddFinalCount q) :
+    boundaryCycleSecondOddFinalNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryParamHalfSubTwo q) := rfl
+
+theorem boundaryCycleSecondEvenTailNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleSecondEvenTailCount q) :
+    boundaryCycleSecondEvenTailNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L04
+        (boundarySecondEvenParam q 0 (by simp [quarter])) := by
+  simp [boundaryCycleSecondEvenTailNode, boundaryCycleSecondEvenTailIndex]
+
+theorem boundaryCycleSecondOddFinal_to_secondEvenTail (q : Nat)
+    (hf : 0 < boundaryCycleSecondOddFinalCount q)
+    (he : 0 < boundaryCycleSecondEvenTailCount q) :
+    boundaryQuotient q (boundaryCycleSecondOddFinalNode q 0 hf) =
+      boundaryCycleSecondEvenTailNode q 0 he := by
+  rw [boundaryCycleSecondOddFinalNode_zero q hf,
+    boundaryCycleSecondEvenTailNode_zero q he]
+  rw [boundarySecondEvenParam_zero_eq_halfSubTwo q (by simp [quarter])]
+  exact boundaryQuotient_A_even q (boundaryParamHalfSubTwo q) (by
+    simp [boundaryParamHalfSubTwo, RouteENonzeroSeam.ofNat_val, half])
+    (by
+      simp [boundaryParamHalfSubTwo, RouteENonzeroSeam.ofNat_val, half,
+        Nat.add_mod, Nat.mul_mod])
+
+theorem boundaryCycleSecondEvenTailLastIndex_eq (q : Nat) :
+    boundaryCycleSecondEvenTailIndex
+        (boundaryCycleSecondEvenTailCount q - 1) =
+      quarter q - 2 := by
+  simp [boundaryCycleSecondEvenTailIndex, boundaryCycleSecondEvenTailCount,
+    quarter]
+  omega
+
+theorem boundaryCycleSecondEvenTailLast_even (q : Nat) :
+    (boundaryCycleSecondEvenTailCount q - 1) % 2 = 0 := by
+  simp [boundaryCycleSecondEvenTailCount, quarter]
+  omega
+
+theorem boundarySecondEvenValue_last_eq_half_add_two (q : Nat) :
+    boundarySecondEvenValue q (quarter q - 2) = half q + 2 := by
+  have hpar : (quarter q - 2) % 2 ≠ 0 := by
+    simp [quarter]
+    omega
+  rw [boundarySecondEvenValue, if_neg hpar]
+  simp [quarter, half, modulus]
+  omega
+
+theorem boundarySecondEvenParam_last_val_half_add_two (q : Nat) :
+    (boundarySecondEvenParam q (quarter q - 2)
+      (by simp [quarter])).1.val = half q + 2 := by
+  rw [boundarySecondEvenParam_val]
+  exact boundarySecondEvenValue_last_eq_half_add_two q
+
+set_option linter.flexible false in
+theorem boundaryCycleSecondEvenTail_to_zero (q : Nat)
+    (hlast : boundaryCycleSecondEvenTailCount q - 1 <
+      boundaryCycleSecondEvenTailCount q) :
+    boundaryQuotient q
+        (boundaryCycleSecondEvenTailNode q
+          (boundaryCycleSecondEvenTailCount q - 1) hlast) =
+      routeEBoundaryZero := by
+  have heven := boundaryCycleSecondEvenTailLast_even q
+  simp [boundaryCycleSecondEvenTailNode, heven,
+    boundaryCycleSecondEvenTailLastIndex_eq q]
+  exact boundaryQuotient_B_close q
+    (boundarySecondEvenParam q (quarter q - 2) (by simp [quarter]))
+    (boundarySecondEvenParam_last_val_half_add_two q)
+
 theorem boundaryCycleHandCountTotal_eq_card (q : Nat) :
     boundaryCycleHandCountTotal q =
       Fintype.card (RouteEBoundaryNode (modulus q)) := by

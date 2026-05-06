@@ -137,6 +137,13 @@ New arithmetic names include:
 - `boundaryCycleSecondOddLane_to_final`
 - `boundarySecondOddParam_shift_succ`
 - `boundarySecondEvenValue_range`
+- `boundaryCycleSecondEvenTailIndex`
+- `boundaryCycleSecondEvenTailNode`
+- `boundaryCycleSecondEvenTail_step_even`
+- `boundaryCycleSecondEvenTail_step_odd`
+- `boundaryCycleSecondOddFinal_to_secondEvenTail`
+- `boundaryCycleSecondEvenTail_to_zero`
+- `boundarySecondEvenParam_shift_succ`
 - `boundaryFirstEvenParam_val`
 - `boundaryFirstEvenParam_shift_succ`
 - `boundaryFirstOddParam_val`
