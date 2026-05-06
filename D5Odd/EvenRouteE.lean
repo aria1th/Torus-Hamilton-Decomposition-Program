@@ -1460,6 +1460,24 @@ theorem routeEThetaSeamPoint_injective {m : Nat} (slot : Color) :
   apply Subtype.ext
   exact routeEThetaPoint_injective slot h
 
+def RouteEAllPairVecSupport {m : Nat} (w : Vec5 m) : Prop :=
+  w = 0 ∨
+    ∃ (i j : Color), i.val < j.val ∧
+      ∃ a : ZMod m, a ≠ 0 ∧
+        w i = a ∧ w j = -a ∧
+          ∀ k : Color, k ≠ i → k ≠ j → w k = 0
+
+def RouteEAllPairSectionPoint {m : Nat} (z : Vec4 m) : Prop :=
+  RouteEAllPairVecSupport (rootOfZ z).1
+
+abbrev RouteEAllPairSection (m : Nat) :=
+  { z : Vec4 m // RouteEAllPairSectionPoint z }
+
+noncomputable instance routeEAllPairSectionFintype (m : Nat) [NeZero m] :
+    Fintype (RouteEAllPairSection m) := by
+  classical
+  infer_instance
+
 structure RouteESmallSeamCertificate (m : Nat) [NeZero m] where
   data : D5EvenSeamData m
   routeCounts : RouteECounts m
@@ -1531,6 +1549,79 @@ theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
   D5_even_cayley_from_return_certificate cert.toSeamReturnCertificateTarget
 
 end RouteESmallSeamCertificate
+
+structure RouteEAllPairSectionCertificate (m : Nat) [NeZero m] where
+  data : D5EvenSeamData m
+  routeCounts : RouteECounts m
+  sectionReturn : Color → RouteEAllPairSection m → RouteEAllPairSection m
+  returnTime : Color → RouteEAllPairSection m → Nat
+  returnTime_pos : ∀ c a, 0 < returnTime c a
+  firstReturn_equation :
+    ∀ c a,
+      (seamRootReturn data c)^[returnTime c a] a.1 =
+        (sectionReturn c a).1
+  firstReturn_minimal :
+    ∀ c a k, 0 < k → k < returnTime c a →
+      ¬ ∃ b : RouteEAllPairSection m,
+        (seamRootReturn data c)^[k] a.1 = b.1
+  sectionReturn_single :
+    ∀ c, IsSingleCycleMap (sectionReturn c)
+  returnTime_sum :
+    ∀ c,
+      Finset.univ.sum (fun a : RouteEAllPairSection m => returnTime c a) =
+        m ^ 4
+
+namespace RouteEAllPairSectionCertificate
+
+noncomputable def toSmallSeamCertificate {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) :
+    RouteESmallSeamCertificate m where
+  data := cert.data
+  routeCounts := cert.routeCounts
+  seam := RouteEAllPairSection m
+  seamFintype := by
+    classical
+    infer_instance
+  seamPoint := fun a => a.1
+  seamPoint_injective := by
+    intro a b h
+    exact Subtype.ext h
+  seamReturn := cert.sectionReturn
+  returnTime := cert.returnTime
+  returnTime_pos := cert.returnTime_pos
+  firstReturn_equation := cert.firstReturn_equation
+  firstReturn_minimal := cert.firstReturn_minimal
+  seamReturn_single := by
+    intro c
+    exact cert.sectionReturn_single c
+  returnTime_sum := cert.returnTime_sum
+
+theorem seamRootReturn_single_cycle {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) (c : Color) :
+    IsSingleCycleMap (seamRootReturn cert.data c) :=
+  cert.toSmallSeamCertificate.seamRootReturn_single_cycle c
+
+theorem orbitTarget {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) :
+    D5EvenSeamReturnOrbitTarget cert.data :=
+  cert.toSmallSeamCertificate.orbitTarget
+
+theorem toHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) :
+    HamiltonDecompositionD5 m :=
+  cert.toSmallSeamCertificate.toHamiltonDecomposition
+
+theorem toTorusHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) :
+    TorusHamiltonDecompositionD5 m :=
+  cert.toSmallSeamCertificate.toTorusHamiltonDecomposition
+
+theorem toCayleyHamiltonDecomposition {m : Nat} [NeZero m]
+    (cert : RouteEAllPairSectionCertificate m) :
+    CayleyHamiltonDecompositionD5 m :=
+  cert.toSmallSeamCertificate.toCayleyHamiltonDecomposition
+
+end RouteEAllPairSectionCertificate
 
 structure RouteENonopenSmallSeamCertificate (m : Nat) [NeZero m] where
   data : D5EvenSeamData m

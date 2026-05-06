@@ -70,6 +70,25 @@ New arithmetic names include:
 - `allPairTime03Target_add_allPairTime04Target`
 - `allPairTimeMassTotal_eq_modulus_pow_four`
 
+The same Lean file also now exposes an all-pair adapter surface:
+
+- `RouteEAllPairVecSupport`
+- `RouteEAllPairSectionPoint`
+- `RouteEAllPairSection`
+- `RouteEAllPairSectionCertificate`
+- `RouteEAllPairSectionCertificate.toSmallSeamCertificate`
+- `RouteEAllPairSectionCertificate.seamRootReturn_single_cycle`
+- `RouteEAllPairSectionCertificate.orbitTarget`
+- `RouteEAllPairSectionCertificate.toHamiltonDecomposition`
+- `RouteEAllPairSectionCertificate.toTorusHamiltonDecomposition`
+- `RouteEAllPairSectionCertificate.toCayleyHamiltonDecomposition`
+
+This is the root-flat / prefix-count return adapter for the all-pair proof
+route: once a branch supplies exact all-pair first-return equations,
+minimality/no-early witnesses, a one-cycle section map, and time exhaustion,
+the existing `RouteESmallSeamCertificate` machinery carries it to the current
+D5 even Hamilton, torus, and Cayley endpoints.
+
 The file checks with:
 
 ```bash
@@ -122,9 +141,7 @@ Remaining B20 obligations:
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;
-- connect the all-pair first-return map to the current Theta small-seam
-  certificate interface, or state a new all-pair certificate adapter and prove
-  the collapse.
+- instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
 
 ## B16 and R14e Status
 
