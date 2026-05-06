@@ -166,6 +166,11 @@ New arithmetic names include:
 - `boundaryCycleNodeAt_succ_secondEven`
 - `boundaryCycleNodeAt_succ`
 - `boundaryCycleNode_step`
+- `boundaryCycleNode_injective`
+- `boundaryCycleNode_bijective`
+- `boundaryQuotientCycleEnumeration`
+- `boundaryQuotient_singleCycle`
+- `boundaryQuotient_oneCycleTarget`
 - `BoundaryQuotientCycleEnumeration`
 - `BoundaryQuotientCycleEnumeration.singleCycle`
 - `BoundaryQuotientCycleEnumeration.oneCycleTarget`
@@ -288,6 +293,7 @@ Closed or proof-facing in the bundle:
 - 14, 23, and 24 residual-core time masses;
 - 34 finite-defect boundary time mass;
 - boundary quotient formula target for the B20 v1.8 candidate.
+- boundary quotient one-cycle target for the B20 v1.8 candidate.
 - the boundary one-cycle hand proof's segment count and orbit segment
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
@@ -296,14 +302,13 @@ Closed or proof-facing in the bundle:
   extend the spine successor proof; the spine successor proof is now closed
   through `C_h -> B_h`; every segment-level successor case of the combined
   `boundaryCycleNodeAt` adapter is now connected through the second-even tail,
-  and packaged as the `Fin`-indexed global step `boundaryCycleNode_step`.
+  packaged as the `Fin`-indexed global step `boundaryCycleNode_step`, and
+  closed as `boundaryQuotient_oneCycleTarget`.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
 Remaining B20 obligations:
 
-- prove the B20 boundary quotient candidate is a single cycle, beyond the
-  currently Lean-checked segment count and global successor adapter;
 - derive `T_03` and `T_04` from the boundary-clock formulas, not only from
   sample-verified target polynomials;
 - turn the no-early package into Lean-level hypotheses or lemmas;

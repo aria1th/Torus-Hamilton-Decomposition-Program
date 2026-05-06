@@ -4951,6 +4951,163 @@ theorem boundaryCycleNode_step (q : Nat)
     symm
     exact boundaryCycleNode_last_to_zero q
 
+set_option linter.flexible false in
+theorem boundaryCycleSpineNode_eq_zero_iff (q i : Nat)
+    (hi : i < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q i hi = routeEBoundaryZero ↔ i = 0 := by
+  constructor
+  · intro h
+    by_cases h0 : i = 0
+    · exact h0
+    · exfalso
+      simp [boundaryCycleSpineNode, routeEBoundaryZero, routeEBoundaryNode,
+        h0] at h
+      repeat' (split at h)
+      all_goals contradiction
+  · intro h
+    subst i
+    simp [boundaryCycleSpineNode, routeEBoundaryZero]
+
+set_option linter.flexible false in
+theorem boundaryCycleNodeAt_eq_zero_iff (q n : Nat)
+    (hn : n < boundaryCycleLength q) :
+    boundaryCycleNodeAt q n hn = routeEBoundaryZero ↔ n = 0 := by
+  by_cases hsp : n < boundaryCycleSpineCount q
+  · simp [boundaryCycleNodeAt, hsp,
+      boundaryCycleSpineNode_eq_zero_iff q n hsp]
+  · have hnot :
+        boundaryCycleNodeAt q n hn ≠ routeEBoundaryZero := by
+      intro h
+      simp [boundaryCycleNodeAt, hsp, routeEBoundaryZero,
+        routeEBoundaryNode, boundaryCycleFirstEvenTailNode,
+        boundaryCycleB2BridgeNode, boundaryCycleFirstOddLaneNode,
+        boundaryCycleFirstOddBSubOneNode, boundaryCycleFirstOddCRunNode,
+        boundaryCycleALastBridgeNode, boundaryCycleSecondOddLaneNode,
+        boundaryCycleSecondOddFinalNode, boundaryCycleSecondEvenTailNode] at h
+      repeat' (split at h)
+      all_goals contradiction
+    constructor
+    · intro h
+      exact (hnot h).elim
+    · intro h
+      subst n
+      have : 0 < boundaryCycleSpineCount q := by
+        simp [boundaryCycleSpineCount, half]
+      exact (hsp this).elim
+
+theorem boundaryCycleNode_eq_zero_iff (q : Nat)
+    (i : Fin (boundaryCycleLength q)) :
+    boundaryCycleNode q i = routeEBoundaryZero ↔ i.val = 0 := by
+  simpa [boundaryCycleNode] using
+    boundaryCycleNodeAt_eq_zero_iff q i.val i.2
+
+theorem boundaryCycleNode_iterate (q : Nat)
+    (i : Fin (boundaryCycleLength q)) (k : Nat) :
+    boundaryCycleNode q (((finRotate (boundaryCycleLength q))^[k]) i) =
+      ((boundaryQuotient q)^[k]) (boundaryCycleNode q i) := by
+  induction k generalizing i with
+  | zero =>
+      simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply',
+        boundaryCycleNode_step q, ih]
+
+theorem boundaryCycleNode_injective (q : Nat) :
+    Function.Injective (boundaryCycleNode q) := by
+  intro i j hij
+  haveI : NeZero (boundaryCycleLength q) := by
+    exact ⟨by simp [boundaryCycleLength, modulus]; omega⟩
+  by_cases hval : i.val = j.val
+  · exact Fin.ext hval
+  · rcases Nat.lt_or_gt_of_ne hval with hijlt | hjilt
+    · let k := boundaryCycleLength q - j.val
+      have hiter := congrArg (((boundaryQuotient q)^[k])) hij
+      rw [← boundaryCycleNode_iterate q i k,
+        ← boundaryCycleNode_iterate q j k] at hiter
+      have hjzero :
+          (((finRotate (boundaryCycleLength q))^[k]) j).val = 0 := by
+        rw [finRotate_iterate_val]
+        dsimp [k]
+        have hsum : j.val + (boundaryCycleLength q - j.val) =
+            boundaryCycleLength q := by omega
+        rw [hsum, Nat.mod_self]
+      have hright :
+          boundaryCycleNode q
+              (((finRotate (boundaryCycleLength q))^[k]) j) =
+            routeEBoundaryZero := by
+        exact (boundaryCycleNode_eq_zero_iff q
+          (((finRotate (boundaryCycleLength q))^[k]) j)).2 hjzero
+      have hleft :
+          boundaryCycleNode q
+              (((finRotate (boundaryCycleLength q))^[k]) i) =
+            routeEBoundaryZero := hiter.trans hright
+      have hizero :=
+        (boundaryCycleNode_eq_zero_iff q
+          (((finRotate (boundaryCycleLength q))^[k]) i)).1 hleft
+      have hival :
+          (((finRotate (boundaryCycleLength q))^[k]) i).val =
+            boundaryCycleLength q - (j.val - i.val) := by
+        rw [finRotate_iterate_val]
+        dsimp [k]
+        have hN : j.val ≤ boundaryCycleLength q := Nat.le_of_lt j.2
+        have hsum :
+            i.val + (boundaryCycleLength q - j.val) =
+              boundaryCycleLength q - (j.val - i.val) := by omega
+        rw [hsum]
+        have hpos : 0 < boundaryCycleLength q - (j.val - i.val) := by
+          omega
+        have hlt : boundaryCycleLength q - (j.val - i.val) <
+            boundaryCycleLength q := by
+          omega
+        exact Nat.mod_eq_of_lt hlt
+      omega
+    · let k := boundaryCycleLength q - i.val
+      have hiter := congrArg (((boundaryQuotient q)^[k])) hij
+      rw [← boundaryCycleNode_iterate q i k,
+        ← boundaryCycleNode_iterate q j k] at hiter
+      have hizero :
+          (((finRotate (boundaryCycleLength q))^[k]) i).val = 0 := by
+        rw [finRotate_iterate_val]
+        dsimp [k]
+        have hsum : i.val + (boundaryCycleLength q - i.val) =
+            boundaryCycleLength q := by omega
+        rw [hsum, Nat.mod_self]
+      have hleft :
+          boundaryCycleNode q
+              (((finRotate (boundaryCycleLength q))^[k]) i) =
+            routeEBoundaryZero := by
+        exact (boundaryCycleNode_eq_zero_iff q
+          (((finRotate (boundaryCycleLength q))^[k]) i)).2 hizero
+      have hright :
+          boundaryCycleNode q
+              (((finRotate (boundaryCycleLength q))^[k]) j) =
+            routeEBoundaryZero := hiter.symm.trans hleft
+      have hjzero :=
+        (boundaryCycleNode_eq_zero_iff q
+          (((finRotate (boundaryCycleLength q))^[k]) j)).1 hright
+      have hjval :
+          (((finRotate (boundaryCycleLength q))^[k]) j).val =
+            boundaryCycleLength q - (i.val - j.val) := by
+        rw [finRotate_iterate_val]
+        dsimp [k]
+        have hN : i.val ≤ boundaryCycleLength q := Nat.le_of_lt i.2
+        have hsum :
+            j.val + (boundaryCycleLength q - i.val) =
+              boundaryCycleLength q - (i.val - j.val) := by omega
+        rw [hsum]
+        have hlt : boundaryCycleLength q - (i.val - j.val) <
+            boundaryCycleLength q := by
+          omega
+        exact Nat.mod_eq_of_lt hlt
+      omega
+
+theorem boundaryCycleNode_bijective (q : Nat) :
+    Function.Bijective (boundaryCycleNode q) := by
+  rw [Fintype.bijective_iff_injective_and_card]
+  constructor
+  · exact boundaryCycleNode_injective q
+  · rw [Fintype.card_fin, boundaryCycleLength_eq_card q]
+
 structure BoundaryQuotientCycleEnumeration (q : Nat) where
   node :
     Fin (boundaryCycleLength q) → RouteEBoundaryNode (modulus q)
@@ -4976,6 +5133,20 @@ theorem BoundaryQuotientCycleEnumeration.oneCycleTarget {q : Nat}
     BoundaryQuotientOneCycleTarget q := by
   exact ⟨boundaryQuotient q, boundaryQuotient_formulaTarget q,
     cert.singleCycle⟩
+
+noncomputable def boundaryQuotientCycleEnumeration (q : Nat) :
+    BoundaryQuotientCycleEnumeration q where
+  node := boundaryCycleNode q
+  step := boundaryCycleNode_step q
+  bijective := boundaryCycleNode_bijective q
+
+theorem boundaryQuotient_singleCycle (q : Nat) :
+    IsSingleCycleMap (boundaryQuotient q) := by
+  exact (boundaryQuotientCycleEnumeration q).singleCycle
+
+theorem boundaryQuotient_oneCycleTarget (q : Nat) :
+    BoundaryQuotientOneCycleTarget q := by
+  exact (boundaryQuotientCycleEnumeration q).oneCycleTarget
 
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
