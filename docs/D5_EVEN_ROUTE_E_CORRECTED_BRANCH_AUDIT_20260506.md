@@ -682,6 +682,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+64ffb3a Audit R42 promotion blockers
 f026400 Record R42 all-pair transition fits
 b36ec5f Strengthen R42 time fit verification
 5899423 Record R42 all-pair time fits
