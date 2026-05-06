@@ -24,6 +24,7 @@ remaining gaps.
 | B20 count surface | `RouteEB20.routeCounts`, existing `RouteEB20.counts_sum` | done |
 | B20 small-seam surface | Existing `RouteEB20.returnTimeFormula`, `RouteEB20.seamMap`, `RouteEB20.ThetaPointwiseTraceTarget` | pre-existing, still useful |
 | B20 all-pair time target | `RouteEB20.allPairTimeMassTotal_eq_modulus_pow_four` and `RouteEB20.allPairTimeMass_sum_eq_modulus_pow_four` | done as arithmetic target |
+| B20 all-pair row-count target | `RouteEB20.allPairRowCountTarget`, `RouteEB20.allPairLabelCountTarget`, `RouteEB20.allPairLabelCountTarget_sum_eq_allPairRowCountTarget` | verifier-facing label-count target added |
 | B20 lane-sum arithmetic | `RouteEB20.allPairTimeZ_eq_half_add_three`, `allPairTime02_lane_sum_eq`, `allPairTime12_lane_sum_eq`, `allPairTime13_two_clock_eq`, `allPairTime34_boundary_defect_eq` | partially done |
 | B20 bundle inconsistency check | `T_03 + T_04` coefficient corrected from bundle text `19079` to `19179`; `RouteEB20.allPairTime03Target_add_allPairTime04Target_v36_draft_defect` proves the old value is short by `100*q`, and `RouteEB20.allPairTime03Target_add_allPairTime04Target_ne_v36_draft` rejects it for `q > 0` | blocker exposed |
 | B20 boundary-clock mass adapter | `RouteEB20.BoundaryClockMassTarget`, `RouteEB20.allPairTimeMassFromBoundaryClocks_eq`, `RouteEB20.allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four` | endpoint surface added |

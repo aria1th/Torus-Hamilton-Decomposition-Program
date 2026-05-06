@@ -509,6 +509,28 @@ theorem allPairTimeMass_sum_eq_modulus_pow_four (q : Nat) :
     allPairTime34, modulus]
   ring
 
+def allPairRowCountTarget (q : Nat) : Nat :=
+  1 + 10 * (modulus q - 1)
+
+def allPairLabelCountTarget (q : Nat) : AllPairLabel → Nat
+  | .Z => 1
+  | _ => modulus q - 1
+
+theorem allPairLabelCountTarget_sum_eq_allPairRowCountTarget (q : Nat) :
+    Finset.univ.sum (allPairLabelCountTarget q) =
+      allPairRowCountTarget q := by
+  have huniv :
+      (Finset.univ : Finset AllPairLabel) =
+        ({ AllPairLabel.Z, AllPairLabel.L01, AllPairLabel.L02,
+          AllPairLabel.L03, AllPairLabel.L04, AllPairLabel.L12,
+          AllPairLabel.L13, AllPairLabel.L14, AllPairLabel.L23,
+          AllPairLabel.L24, AllPairLabel.L34 } : Finset AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [allPairLabelCountTarget, allPairRowCountTarget, modulus]
+  ring
+
 end RouteEB20
 
 namespace RouteEB16
