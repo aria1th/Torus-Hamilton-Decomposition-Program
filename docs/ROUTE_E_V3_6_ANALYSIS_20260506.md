@@ -111,10 +111,15 @@ New arithmetic names include:
 - `RouteENonzeroSeam.ofNat_val`
 - `routeEBoundaryNodeOfNat`
 - `boundaryFirstEvenValue_range`
+- `boundaryCycleFirstEvenTailIndex`
+- `boundaryCycleFirstEvenTailNode`
+- `boundaryCycleFirstEvenTail_step_even`
+- `boundaryCycleFirstEvenTail_step_odd`
 - `boundaryFirstOddValue_range`
 - `boundarySecondOddValue_range`
 - `boundarySecondEvenValue_range`
 - `boundaryFirstEvenParam_val`
+- `boundaryFirstEvenParam_shift_succ`
 - `boundaryFirstOddParam_val`
 - `boundarySecondOddParam_val`
 - `boundarySecondEvenParam_val`
