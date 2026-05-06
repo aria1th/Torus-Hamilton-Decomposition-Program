@@ -1,0 +1,735 @@
+{
+  "samples": [
+    {
+      "count_admissible": "1",
+      "m": "14",
+      "nodes": "131",
+      "tag": "R14e",
+      "time_sum_target": "38416",
+      "x": "1",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "16",
+      "nodes": "151",
+      "tag": "B16/direct",
+      "time_sum_target": "65536",
+      "x": "1",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "18",
+      "nodes": "171",
+      "tag": "sym",
+      "time_sum_target": "104976",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "20",
+      "nodes": "191",
+      "tag": "B20sym",
+      "time_sum_target": "160000",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "22",
+      "nodes": "211",
+      "tag": "sym",
+      "time_sum_target": "234256",
+      "x": "1",
+      "z": "1"
+    },
+    {
+      "count_admissible": "1",
+      "m": "24",
+      "nodes": "231",
+      "tag": "sym",
+      "time_sum_target": "331776",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "26",
+      "nodes": "251",
+      "tag": "sym",
+      "time_sum_target": "456976",
+      "x": "1",
+      "z": "1"
+    },
+    {
+      "count_admissible": "1",
+      "m": "28",
+      "nodes": "271",
+      "tag": "sym",
+      "time_sum_target": "614656",
+      "x": "1",
+      "z": "1"
+    },
+    {
+      "count_admissible": "1",
+      "m": "30",
+      "nodes": "291",
+      "tag": "sym",
+      "time_sum_target": "810000",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "32",
+      "nodes": "311",
+      "tag": "sym",
+      "time_sum_target": "1048576",
+      "x": "1",
+      "z": "1"
+    },
+    {
+      "count_admissible": "1",
+      "m": "34",
+      "nodes": "331",
+      "tag": "sym",
+      "time_sum_target": "1336336",
+      "x": "9",
+      "z": "9"
+    },
+    {
+      "count_admissible": "1",
+      "m": "36",
+      "nodes": "351",
+      "tag": "R12-old",
+      "time_sum_target": "1679616",
+      "x": "1",
+      "z": "25"
+    },
+    {
+      "count_admissible": "1",
+      "m": "38",
+      "nodes": "371",
+      "tag": "sym",
+      "time_sum_target": "2085136",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "40",
+      "nodes": "391",
+      "tag": "B16",
+      "time_sum_target": "2560000",
+      "x": "1",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "42",
+      "nodes": "411",
+      "tag": "sym",
+      "time_sum_target": "3111696",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "44",
+      "nodes": "431",
+      "tag": "B20sym",
+      "time_sum_target": "3748096",
+      "x": "7",
+      "z": "7"
+    },
+    {
+      "count_admissible": "1",
+      "m": "46",
+      "nodes": "451",
+      "tag": "sym",
+      "time_sum_target": "4477456",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "48",
+      "nodes": "471",
+      "tag": "sym",
+      "time_sum_target": "5308416",
+      "x": "23",
+      "z": "23"
+    },
+    {
+      "count_admissible": "1",
+      "m": "50",
+      "nodes": "491",
+      "tag": "sym",
+      "time_sum_target": "6250000",
+      "x": "9",
+      "z": "9"
+    },
+    {
+      "count_admissible": "1",
+      "m": "52",
+      "nodes": "511",
+      "tag": "sym",
+      "time_sum_target": "7311616",
+      "x": "7",
+      "z": "7"
+    },
+    {
+      "count_admissible": "1",
+      "m": "54",
+      "nodes": "531",
+      "tag": "sym",
+      "time_sum_target": "8503056",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "56",
+      "nodes": "551",
+      "tag": "sym",
+      "time_sum_target": "9834496",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "58",
+      "nodes": "571",
+      "tag": "sym",
+      "time_sum_target": "11316496",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "60",
+      "nodes": "591",
+      "tag": "R12-old",
+      "time_sum_target": "12960000",
+      "x": "1",
+      "z": "49"
+    },
+    {
+      "count_admissible": "1",
+      "m": "62",
+      "nodes": "611",
+      "tag": "R14e",
+      "time_sum_target": "14776336",
+      "x": "1",
+      "z": "29"
+    },
+    {
+      "count_admissible": "1",
+      "m": "64",
+      "nodes": "631",
+      "tag": "B16",
+      "time_sum_target": "16777216",
+      "x": "1",
+      "z": "29"
+    },
+    {
+      "count_admissible": "1",
+      "m": "66",
+      "nodes": "651",
+      "tag": "sym",
+      "time_sum_target": "18974736",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "68",
+      "nodes": "671",
+      "tag": "B20sym",
+      "time_sum_target": "21381376",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "70",
+      "nodes": "691",
+      "tag": "sym",
+      "time_sum_target": "24010000",
+      "x": "9",
+      "z": "9"
+    },
+    {
+      "count_admissible": "1",
+      "m": "72",
+      "nodes": "711",
+      "tag": "sym",
+      "time_sum_target": "26873856",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "74",
+      "nodes": "731",
+      "tag": "sym",
+      "time_sum_target": "29986576",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "76",
+      "nodes": "751",
+      "tag": "sym",
+      "time_sum_target": "33362176",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "78",
+      "nodes": "771",
+      "tag": "sym",
+      "time_sum_target": "37015056",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "80",
+      "nodes": "791",
+      "tag": "sym",
+      "time_sum_target": "40960000",
+      "x": "29",
+      "z": "29"
+    },
+    {
+      "count_admissible": "1",
+      "m": "82",
+      "nodes": "811",
+      "tag": "sym",
+      "time_sum_target": "45212176",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "84",
+      "nodes": "831",
+      "tag": "sym",
+      "time_sum_target": "49787136",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "86",
+      "nodes": "851",
+      "tag": "sym",
+      "time_sum_target": "54700816",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "88",
+      "nodes": "871",
+      "tag": "B16",
+      "time_sum_target": "59969536",
+      "x": "1",
+      "z": "41"
+    },
+    {
+      "count_admissible": "1",
+      "m": "90",
+      "nodes": "891",
+      "tag": "sym",
+      "time_sum_target": "65610000",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "92",
+      "nodes": "911",
+      "tag": "B20sym",
+      "time_sum_target": "71639296",
+      "x": "15",
+      "z": "15"
+    },
+    {
+      "count_admissible": "1",
+      "m": "94",
+      "nodes": "931",
+      "tag": "sym",
+      "time_sum_target": "78074896",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "96",
+      "nodes": "951",
+      "tag": "sym",
+      "time_sum_target": "84934656",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "98",
+      "nodes": "971",
+      "tag": "sym",
+      "time_sum_target": "92236816",
+      "x": "15",
+      "z": "15"
+    },
+    {
+      "count_admissible": "1",
+      "m": "100",
+      "nodes": "991",
+      "tag": "sym",
+      "time_sum_target": "100000000",
+      "x": "21",
+      "z": "21"
+    },
+    {
+      "count_admissible": "1",
+      "m": "102",
+      "nodes": "1011",
+      "tag": "sym",
+      "time_sum_target": "108243216",
+      "x": "23",
+      "z": "23"
+    },
+    {
+      "count_admissible": "1",
+      "m": "104",
+      "nodes": "1031",
+      "tag": "sym",
+      "time_sum_target": "116985856",
+      "x": "7",
+      "z": "7"
+    },
+    {
+      "count_admissible": "1",
+      "m": "106",
+      "nodes": "1051",
+      "tag": "sym",
+      "time_sum_target": "126247696",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "108",
+      "nodes": "1071",
+      "tag": "sym",
+      "time_sum_target": "136048896",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "110",
+      "nodes": "1091",
+      "tag": "R14e",
+      "time_sum_target": "146410000",
+      "x": "1",
+      "z": "53"
+    },
+    {
+      "count_admissible": "1",
+      "m": "112",
+      "nodes": "1111",
+      "tag": "B16",
+      "time_sum_target": "157351936",
+      "x": "1",
+      "z": "53"
+    },
+    {
+      "count_admissible": "1",
+      "m": "114",
+      "nodes": "1131",
+      "tag": "sym",
+      "time_sum_target": "168896016",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "116",
+      "nodes": "1151",
+      "tag": "B20sym",
+      "time_sum_target": "181063936",
+      "x": "19",
+      "z": "19"
+    },
+    {
+      "count_admissible": "1",
+      "m": "118",
+      "nodes": "1171",
+      "tag": "sym",
+      "time_sum_target": "193877776",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "120",
+      "nodes": "1191",
+      "tag": "sym",
+      "time_sum_target": "207360000",
+      "x": "23",
+      "z": "23"
+    },
+    {
+      "count_admissible": "1",
+      "m": "122",
+      "nodes": "1211",
+      "tag": "sym",
+      "time_sum_target": "221533456",
+      "x": "15",
+      "z": "15"
+    },
+    {
+      "count_admissible": "1",
+      "m": "124",
+      "nodes": "1231",
+      "tag": "sym",
+      "time_sum_target": "236421376",
+      "x": "21",
+      "z": "21"
+    },
+    {
+      "count_admissible": "1",
+      "m": "126",
+      "nodes": "1251",
+      "tag": "sym",
+      "time_sum_target": "252047376",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "128",
+      "nodes": "1271",
+      "tag": "sym",
+      "time_sum_target": "268435456",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "130",
+      "nodes": "1291",
+      "tag": "sym",
+      "time_sum_target": "285610000",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "132",
+      "nodes": "1311",
+      "tag": "sym",
+      "time_sum_target": "303595776",
+      "x": "23",
+      "z": "23"
+    },
+    {
+      "count_admissible": "1",
+      "m": "134",
+      "nodes": "1331",
+      "tag": "sym",
+      "time_sum_target": "322417936",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "136",
+      "nodes": "1351",
+      "tag": "B16",
+      "time_sum_target": "342102016",
+      "x": "1",
+      "z": "65"
+    },
+    {
+      "count_admissible": "1",
+      "m": "138",
+      "nodes": "1371",
+      "tag": "sym",
+      "time_sum_target": "362673936",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "140",
+      "nodes": "1391",
+      "tag": "B20sym",
+      "time_sum_target": "384160000",
+      "x": "23",
+      "z": "23"
+    },
+    {
+      "count_admissible": "1",
+      "m": "142",
+      "nodes": "1411",
+      "tag": "sym",
+      "time_sum_target": "406586896",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "144",
+      "nodes": "1431",
+      "tag": "sym",
+      "time_sum_target": "429981696",
+      "x": "17",
+      "z": "17"
+    },
+    {
+      "count_admissible": "1",
+      "m": "146",
+      "nodes": "1451",
+      "tag": "sym",
+      "time_sum_target": "454371856",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "148",
+      "nodes": "1471",
+      "tag": "sym",
+      "time_sum_target": "479785216",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "150",
+      "nodes": "1491",
+      "tag": "sym",
+      "time_sum_target": "506250000",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "152",
+      "nodes": "1511",
+      "tag": "sym",
+      "time_sum_target": "533794816",
+      "x": "3",
+      "z": "3"
+    },
+    {
+      "count_admissible": "1",
+      "m": "154",
+      "nodes": "1531",
+      "tag": "sym",
+      "time_sum_target": "562448656",
+      "x": "13",
+      "z": "13"
+    },
+    {
+      "count_admissible": "1",
+      "m": "156",
+      "nodes": "1551",
+      "tag": "R12-x5",
+      "time_sum_target": "592240896",
+      "x": "5",
+      "z": "97"
+    },
+    {
+      "count_admissible": "1",
+      "m": "158",
+      "nodes": "1571",
+      "tag": "R14e",
+      "time_sum_target": "623201296",
+      "x": "1",
+      "z": "77"
+    },
+    {
+      "count_admissible": "1",
+      "m": "160",
+      "nodes": "1591",
+      "tag": "B16",
+      "time_sum_target": "655360000",
+      "x": "1",
+      "z": "77"
+    },
+    {
+      "count_admissible": "1",
+      "m": "162",
+      "nodes": "1611",
+      "tag": "sym",
+      "time_sum_target": "688747536",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "164",
+      "nodes": "1631",
+      "tag": "B20sym",
+      "time_sum_target": "723394816",
+      "x": "27",
+      "z": "27"
+    },
+    {
+      "count_admissible": "1",
+      "m": "166",
+      "nodes": "1651",
+      "tag": "sym",
+      "time_sum_target": "759333136",
+      "x": "5",
+      "z": "5"
+    },
+    {
+      "count_admissible": "1",
+      "m": "168",
+      "nodes": "1671",
+      "tag": "sym",
+      "time_sum_target": "796594176",
+      "x": "11",
+      "z": "11"
+    },
+    {
+      "count_admissible": "1",
+      "m": "170",
+      "nodes": "1691",
+      "tag": "sym",
+      "time_sum_target": "835210000",
+      "x": "21",
+      "z": "21"
+    },
+    {
+      "count_admissible": "1",
+      "m": "172",
+      "nodes": "1711",
+      "tag": "sym",
+      "time_sum_target": "875213056",
+      "x": "7",
+      "z": "7"
+    },
+    {
+      "count_admissible": "1",
+      "m": "174",
+      "nodes": "1731",
+      "tag": "sym",
+      "time_sum_target": "916636176",
+      "x": "5",
+      "z": "5"
+    }
+  ],
+  "schema": "routeE_allpair_portfolio_samples_v1_1",
+  "scope": "even m from 14 through 174; each row is a zero-event checked all-pair single-cycle candidate from the current portfolio pass"
+}

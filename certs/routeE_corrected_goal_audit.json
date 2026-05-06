@@ -73,6 +73,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_allpair_portfolio_summary.json",
+      "missing": null,
+      "name": "all-pair portfolio sample coverage is recorded separately from proofs",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_typeA_residue_coverage.json",
       "missing": "Only residues 14,16,20,40,44 mod 48 are currently proof-facing.",
       "name": "Type-A residue coverage is complete",

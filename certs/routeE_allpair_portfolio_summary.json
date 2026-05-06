@@ -1,0 +1,523 @@
+{
+  "all_even_residues_covered_by_samples": true,
+  "covered_residue_count": 24,
+  "covered_residues": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46
+  ],
+  "even_residue_count": 24,
+  "interpretation": "The portfolio gives zero-event checked all-pair candidates across all even residues mod 48.  It is search evidence only; residues outside proof_facing_typeA_residues still need symbolic formulas, no-early proofs, time identities, and Lean-facing branch records.",
+  "portfolio_only_count": 19,
+  "portfolio_only_residues": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    18,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    42,
+    46
+  ],
+  "proof_facing_typeA_residues": [
+    14,
+    16,
+    20,
+    40,
+    44
+  ],
+  "residue_modulus": 48,
+  "residue_rows": [
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        48,
+        96,
+        144
+      ],
+      "residue": 0,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        5308416,
+        84934656,
+        429981696
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        50,
+        98,
+        146
+      ],
+      "residue": 2,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        6250000,
+        92236816,
+        454371856
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        52,
+        100,
+        148
+      ],
+      "residue": 4,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        7311616,
+        100000000,
+        479785216
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        54,
+        102,
+        150
+      ],
+      "residue": 6,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        8503056,
+        108243216,
+        506250000
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        56,
+        104,
+        152
+      ],
+      "residue": 8,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        9834496,
+        116985856,
+        533794816
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        58,
+        106,
+        154
+      ],
+      "residue": 10,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        11316496,
+        126247696,
+        562448656
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        60,
+        108,
+        156
+      ],
+      "residue": 12,
+      "sample_count": 3,
+      "tags": [
+        "R12-old",
+        "R12-x5",
+        "sym"
+      ],
+      "time_sum_targets": [
+        12960000,
+        136048896,
+        592240896
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        14,
+        62,
+        110,
+        158
+      ],
+      "residue": 14,
+      "sample_count": 4,
+      "tags": [
+        "R14e"
+      ],
+      "time_sum_targets": [
+        38416,
+        14776336,
+        146410000,
+        623201296
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        16,
+        64,
+        112,
+        160
+      ],
+      "residue": 16,
+      "sample_count": 4,
+      "tags": [
+        "B16",
+        "B16/direct"
+      ],
+      "time_sum_targets": [
+        65536,
+        16777216,
+        157351936,
+        655360000
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        18,
+        66,
+        114,
+        162
+      ],
+      "residue": 18,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        104976,
+        18974736,
+        168896016,
+        688747536
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        20,
+        68,
+        116,
+        164
+      ],
+      "residue": 20,
+      "sample_count": 4,
+      "tags": [
+        "B20sym"
+      ],
+      "time_sum_targets": [
+        160000,
+        21381376,
+        181063936,
+        723394816
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        22,
+        70,
+        118,
+        166
+      ],
+      "residue": 22,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        234256,
+        24010000,
+        193877776,
+        759333136
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        24,
+        72,
+        120,
+        168
+      ],
+      "residue": 24,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        331776,
+        26873856,
+        207360000,
+        796594176
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        26,
+        74,
+        122,
+        170
+      ],
+      "residue": 26,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        456976,
+        29986576,
+        221533456,
+        835210000
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        28,
+        76,
+        124,
+        172
+      ],
+      "residue": 28,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        614656,
+        33362176,
+        236421376,
+        875213056
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        30,
+        78,
+        126,
+        174
+      ],
+      "residue": 30,
+      "sample_count": 4,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        810000,
+        37015056,
+        252047376,
+        916636176
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        32,
+        80,
+        128
+      ],
+      "residue": 32,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        1048576,
+        40960000,
+        268435456
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        34,
+        82,
+        130
+      ],
+      "residue": 34,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        1336336,
+        45212176,
+        285610000
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        36,
+        84,
+        132
+      ],
+      "residue": 36,
+      "sample_count": 3,
+      "tags": [
+        "R12-old",
+        "sym"
+      ],
+      "time_sum_targets": [
+        1679616,
+        49787136,
+        303595776
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        38,
+        86,
+        134
+      ],
+      "residue": 38,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        2085136,
+        54700816,
+        322417936
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        40,
+        88,
+        136
+      ],
+      "residue": 40,
+      "sample_count": 3,
+      "tags": [
+        "B16"
+      ],
+      "time_sum_targets": [
+        2560000,
+        59969536,
+        342102016
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        42,
+        90,
+        138
+      ],
+      "residue": 42,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        3111696,
+        65610000,
+        362673936
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        44,
+        92,
+        140
+      ],
+      "residue": 44,
+      "sample_count": 3,
+      "tags": [
+        "B20sym"
+      ],
+      "time_sum_targets": [
+        3748096,
+        71639296,
+        384160000
+      ]
+    },
+    {
+      "count_admissible_all": true,
+      "moduli": [
+        46,
+        94,
+        142
+      ],
+      "residue": 46,
+      "sample_count": 3,
+      "tags": [
+        "sym"
+      ],
+      "time_sum_targets": [
+        4477456,
+        78074896,
+        406586896
+      ]
+    }
+  ],
+  "sample_count": 81,
+  "schema": "routeE_allpair_portfolio_summary_v1",
+  "scope": "even m from 14 through 174; each row is a zero-event checked all-pair single-cycle candidate from the current portfolio pass",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_samples_v1_1.json",
+  "upstream_schema": "routeE_allpair_portfolio_samples_v1_1"
+}

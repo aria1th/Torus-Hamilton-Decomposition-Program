@@ -488,3 +488,15 @@ The recorded artifact is checked by recomputation:
 python3 scripts/verify_d5_lambdaE_mask_polynomials.py \
   --json-out certs/d5_lambdaE_mask_polynomials_verification.json
 ```
+
+The v3.6 proof bundle also contains an all-pair portfolio with zero-event
+checked samples in every even residue class modulo `48`.  It is summarized by:
+
+```bash
+python3 scripts/summarize_routeE_allpair_portfolio.py \
+  --json-out certs/routeE_allpair_portfolio_summary.json
+```
+
+This portfolio is useful branch-mining evidence, but it is deliberately kept
+separate from `routeE_typeA_residue_coverage.json`: a sample is not a symbolic
+branch theorem.

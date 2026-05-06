@@ -33,6 +33,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Preserve Type-A B16/R14e package evidence without raw CSV | `scripts/summarize_routeE_typeA_closure_packages.py`, `certs/routeE_typeA_closure_package_summary.json`, `certs/routeE_typeA_symbolic_skeleton.json` | done |
 | Verify Type-A symbolic skeleton identities without `sympy` | `scripts/verify_routeE_typeA_symbolic_skeleton.py`, `certs/routeE_typeA_symbolic_skeleton_verification.json` | done |
 | Record Type-A residue coverage and next target | `scripts/summarize_routeE_typeA_residue_coverage.py`, `certs/routeE_typeA_residue_coverage.json` | done |
+| Preserve all-pair portfolio sample coverage | `certs/routeE_allpair_portfolio_samples_v1_1.json`, `scripts/summarize_routeE_allpair_portfolio.py`, `certs/routeE_allpair_portfolio_summary.json` | done, samples cover all even residues but are not proofs |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -176,6 +177,24 @@ covered residues mod 48: 14,16,20,40,44
 open residues mod 48: 0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46
 next target: R38 / symmetric-or-near-symmetric family
 ```
+
+All-pair portfolio sample coverage from the v3.6 proof bundle:
+
+```bash
+python3 scripts/summarize_routeE_allpair_portfolio.py \
+  --json-out certs/routeE_allpair_portfolio_summary.json
+```
+
+Result:
+
+```text
+samples=81
+covered_residues=24/24 even residue classes mod 48
+portfolio_only_residues=19
+```
+
+These are zero-event checked all-pair candidates, not symbolic branch theorems.
+The audit keeps this evidence separate from proof-facing Type-A coverage.
 
 R38 symmetric recheck:
 
@@ -322,6 +341,7 @@ Hygiene:
 python3 -m py_compile scripts/summarize_d5_routeE_corrected_branches.py
 python3 -m py_compile scripts/summarize_routeE_typeA_closure_packages.py
 python3 -m py_compile scripts/summarize_routeE_typeA_residue_coverage.py
+python3 -m py_compile scripts/summarize_routeE_allpair_portfolio.py
 python3 -m py_compile scripts/verify_routeE_typeA_symbolic_skeleton.py
 python3 -m py_compile scripts/search_d5_routeE_cpp_residue_branches.py
 python3 -m py_compile scripts/init_routeE_r38_gate_transducer_record.py

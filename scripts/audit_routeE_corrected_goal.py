@@ -29,6 +29,7 @@ FILES = {
     / "certs"
     / "routeE_typeA_symbolic_skeleton_verification.json",
     "coverage": ROOT / "certs" / "routeE_typeA_residue_coverage.json",
+    "allpair_portfolio": ROOT / "certs" / "routeE_allpair_portfolio_summary.json",
     "r38_record": ROOT / "certs" / "routeE_r38_gate_transducer_branch_record.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -68,6 +69,7 @@ def build_audit() -> dict[str, Any]:
     skeleton = load_json(FILES["typea_skeleton"])
     skeleton_verification = load_json(FILES["typea_skeleton_verification"])
     coverage = load_json(FILES["coverage"])
+    portfolio = load_json(FILES["allpair_portfolio"])
     r38 = load_json(FILES["r38_record"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
@@ -158,6 +160,13 @@ def build_audit() -> dict[str, Any]:
             "Type-A residue coverage is explicitly tracked",
             coverage.get("schema") == "routeE_typeA_residue_coverage_v1",
             "certs/routeE_typeA_residue_coverage.json",
+        ),
+        item(
+            "all-pair portfolio sample coverage is recorded separately from proofs",
+            portfolio.get("schema") == "routeE_allpair_portfolio_summary_v1"
+            and portfolio.get("all_even_residues_covered_by_samples") is True
+            and portfolio.get("portfolio_only_count") == 19,
+            "certs/routeE_allpair_portfolio_summary.json",
         ),
         item(
             "Type-A residue coverage is complete",
