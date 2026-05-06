@@ -267,6 +267,37 @@ def block_table(rows: list[dict[str, Any]], m: int) -> list[dict[str, Any]]:
     return table
 
 
+def condition_shape(condition: dict[str, Any]) -> dict[str, Any]:
+    shape = {"count": condition.get("count")}
+    if "mod" in condition:
+        shape["mod"] = condition.get("mod")
+        shape["residue"] = condition.get("residue")
+    if "interval_count" in condition:
+        shape["interval_count"] = condition.get("interval_count")
+    elif "intervals" in condition:
+        shape["intervals_len"] = len(condition.get("intervals", []))
+    return shape
+
+
+def block_signature(blocks: list[dict[str, Any]] | None) -> list[dict[str, Any]] | None:
+    if blocks is None:
+        return None
+    out = []
+    for block in blocks:
+        terminal = block.get("terminal") or {}
+        out.append(
+            {
+                "src_label": block.get("src_label"),
+                "dst_label_group": block.get("dst_label_group"),
+                "path": block.get("path"),
+                "fallback": block.get("fallback"),
+                "terminal_dst_label": terminal.get("dst_label"),
+                "condition_shape": condition_shape(block.get("condition", {})),
+            }
+        )
+    return out
+
+
 def split_blocks(group: list[dict[str, Any]], m: int) -> int:
     if terminal(group, m) is not None:
         return 1
@@ -390,7 +421,7 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     by_label = block_counts(boundary, m)
     block_count = sum(by_label.values())
     transitions = transition_counts(boundary)
-    representative_blocks = block_table(boundary, m) if q == 1 else None
+    blocks = block_table(boundary, m) if q >= 1 else None
     return {
         "q": q,
         "m": m,
@@ -405,7 +436,8 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
         "block_count": block_count,
         "block_count_by_label": by_label,
         "boundary_transition_counts": transitions,
-        "representative_block_table": representative_blocks,
+        "block_signature": block_signature(blocks) if blocks is not None else None,
+        "representative_block_table": blocks if q == 1 else None,
         "returncode": proc.returncode,
         "stderr_tail": proc.stderr.strip().splitlines()[-3:],
         "ok": True,
@@ -440,6 +472,10 @@ def main() -> None:
     generic = [sample for sample in samples if sample.get("q", 0) >= 1]
     stable_counts = len({json.dumps(s.get("block_count_by_label"), sort_keys=True) for s in generic}) == 1
     stable_block_count = len({s.get("block_count") for s in generic}) == 1
+    stable_block_signature = (
+        len({json.dumps(s.get("block_signature"), sort_keys=True) for s in generic})
+        == 1
+    )
     payload = {
         "schema": "routeE_r42_boundary_quotient_summary_v1",
         "branch": "R42",
@@ -452,6 +488,7 @@ def main() -> None:
             "sample_q_values": [sample.get("q") for sample in generic],
             "stable_block_count": stable_block_count,
             "stable_block_count_by_label": stable_counts,
+            "stable_block_signature": stable_block_signature,
             "all_boundary_single_cycle": all(
                 sample.get("boundary_single_cycle") for sample in generic
             ),

@@ -17,7 +17,8 @@
         4
       ],
       "stable_block_count": true,
-      "stable_block_count_by_label": true
+      "stable_block_count_by_label": true,
+      "stable_block_signature": false
     },
     "q_ge_1_transition_count_fits": {
       "03": {

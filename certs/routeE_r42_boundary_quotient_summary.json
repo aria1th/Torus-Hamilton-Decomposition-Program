@@ -19,7 +19,8 @@
       4
     ],
     "stable_block_count": true,
-    "stable_block_count_by_label": true
+    "stable_block_count_by_label": true,
+    "stable_block_signature": false
   },
   "q_ge_1_transition_count_fits": {
     "03": {
@@ -2313,6 +2314,7 @@
         "34": 17,
         "Z": 1
       },
+      "block_signature": null,
       "boundary_cycle_lengths": [
         124
       ],
@@ -2351,7 +2353,7 @@
       "q": 0,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-f8d47uti/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
       ],
       "x": 5,
       "z": 5
@@ -2365,6 +2367,327 @@
         "34": 8,
         "Z": 1
       },
+      "block_signature": [
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": null,
+          "fallback": null,
+          "path": "Z",
+          "src_label": "Z",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "03>14>23>02>24>23>13",
+          "src_label": "03",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 44,
+            "interval_count": 44
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03>14>23>02>24",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 6,
+            "intervals_len": 6
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "Z",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "Z"
+        },
+        {
+          "condition_shape": {
+            "count": 2,
+            "intervals_len": 2
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 2,
+            "intervals_len": 2
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 7,
+            "intervals_len": 7
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 28,
+            "interval_count": 28
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 12,
+            "interval_count": 12
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 2,
+            "intervals_len": 2
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 15
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 33,
+            "interval_count": 33
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 22,
+            "interval_count": 21
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "34"
+        }
+      ],
       "boundary_cycle_lengths": [
         268
       ],
@@ -2403,7 +2726,7 @@
       "q": 1,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-f8d47uti/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
       ],
       "x": 11,
       "z": 11
@@ -2417,6 +2740,327 @@
         "34": 8,
         "Z": 1
       },
+      "block_signature": [
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": null,
+          "fallback": null,
+          "path": "Z",
+          "src_label": "Z",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "03>14>23>02>24>23>13",
+          "src_label": "03",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 17,
+            "interval_count": 17
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 68,
+            "interval_count": 68
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03>14>23>02>24",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 17,
+            "interval_count": 17
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 8,
+            "intervals_len": 8
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 17,
+            "interval_count": 17
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 9,
+            "interval_count": 9
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "Z",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "Z"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 44,
+            "interval_count": 44
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 6,
+            "intervals_len": 6
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 6,
+            "intervals_len": 6
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 17,
+            "interval_count": 17
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 17,
+            "interval_count": 17
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 18,
+            "interval_count": 18
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 6,
+            "intervals_len": 6
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 2,
+            "intervals_len": 2
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 35,
+            "interval_count": 23
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 51,
+            "interval_count": 51
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 34,
+            "interval_count": 33
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "34"
+        }
+      ],
       "boundary_cycle_lengths": [
         412
       ],
@@ -2455,7 +3099,7 @@
       "q": 2,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-f8d47uti/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
       ],
       "x": 17,
       "z": 17
@@ -2469,6 +3113,327 @@
         "34": 8,
         "Z": 1
       },
+      "block_signature": [
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": null,
+          "fallback": null,
+          "path": "Z",
+          "src_label": "Z",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "03>14>23>02>24>23>13",
+          "src_label": "03",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 23
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 92,
+            "interval_count": 92
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03>14>23>02>24",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 23
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 11,
+            "interval_count": 11
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 23
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 12,
+            "interval_count": 12
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "Z",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "Z"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 15,
+            "interval_count": 15
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 60,
+            "interval_count": 60
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 7,
+            "intervals_len": 7
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 8,
+            "intervals_len": 8
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 8,
+            "intervals_len": 8
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 7,
+            "intervals_len": 7
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 23
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 23,
+            "interval_count": 23
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 24,
+            "interval_count": 24
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 7,
+            "intervals_len": 7
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 8,
+            "intervals_len": 8
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 3,
+            "intervals_len": 3
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 47,
+            "interval_count": 31
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 69,
+            "interval_count": 69
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 46,
+            "interval_count": 45
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "34"
+        }
+      ],
       "boundary_cycle_lengths": [
         556
       ],
@@ -2507,7 +3472,7 @@
       "q": 3,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-f8d47uti/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
       ],
       "x": 23,
       "z": 23
@@ -2521,6 +3486,327 @@
         "34": 8,
         "Z": 1
       },
+      "block_signature": [
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": null,
+          "fallback": null,
+          "path": "Z",
+          "src_label": "Z",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "03>14>23>02>24>23>13",
+          "src_label": "03",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 29,
+            "interval_count": 29
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 116,
+            "interval_count": 116
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "03>14>23>02>24",
+          "src_label": "03",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 29,
+            "interval_count": 29
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 14,
+            "interval_count": 14
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 29,
+            "interval_count": 29
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 15,
+            "interval_count": 15
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "03",
+          "src_label": "03",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "Z",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "Z"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>01>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 19,
+            "interval_count": 19
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12>12",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 76,
+            "interval_count": 76
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 9,
+            "interval_count": 9
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 10,
+            "interval_count": 10
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 10,
+            "interval_count": 10
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 9,
+            "interval_count": 9
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "04>14>02>24>23>13>01>01>01>01>01",
+          "src_label": "04",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 29,
+            "interval_count": 29
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 29,
+            "interval_count": 29
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 30,
+            "interval_count": 30
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "04",
+          "src_label": "04",
+          "terminal_dst_label": "34"
+        },
+        {
+          "condition_shape": {
+            "count": 9,
+            "interval_count": 9
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 10,
+            "interval_count": 10
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 5,
+            "intervals_len": 5
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 4,
+            "intervals_len": 4
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>01>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 59,
+            "interval_count": 39
+          },
+          "dst_label_group": "03",
+          "fallback": null,
+          "path": "34>13",
+          "src_label": "34",
+          "terminal_dst_label": "03"
+        },
+        {
+          "condition_shape": {
+            "count": 87,
+            "interval_count": 87
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 1,
+            "intervals_len": 1
+          },
+          "dst_label_group": "04",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "04"
+        },
+        {
+          "condition_shape": {
+            "count": 58,
+            "interval_count": 57
+          },
+          "dst_label_group": "34",
+          "fallback": null,
+          "path": "34",
+          "src_label": "34",
+          "terminal_dst_label": "34"
+        }
+      ],
       "boundary_cycle_lengths": [
         700
       ],
@@ -2559,7 +3845,7 @@
       "q": 4,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-f8d47uti/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+        "wrote /tmp/routeE-r42-boundary-5nzh810p/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
       ],
       "x": 29,
       "z": 29
