@@ -27,6 +27,7 @@ remaining gaps.
 | B20 lane-sum arithmetic | `RouteEB20.allPairTimeZ_eq_half_add_three`, `allPairTime02_lane_sum_eq`, `allPairTime12_lane_sum_eq`, `allPairTime13_two_clock_eq`, `allPairTime34_boundary_defect_eq` | partially done |
 | B20 bundle inconsistency check | `T_03 + T_04` coefficient corrected from bundle text `19079` to `19179`; `RouteEB20.allPairTime03Target_add_allPairTime04Target_v36_draft_defect` proves the old value is short by `100*q`, and `RouteEB20.allPairTime03Target_add_allPairTime04Target_ne_v36_draft` rejects it for `q > 0` | blocker exposed |
 | B20 boundary-clock mass adapter | `RouteEB20.BoundaryClockMassTarget`, `RouteEB20.allPairTimeMassFromBoundaryClocks_eq`, `RouteEB20.allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four` | endpoint surface added |
+| B20 boundary-clock pointwise formulas | `RouteEB20.boundaryClockTime03Formula`, `RouteEB20.boundaryClockTime04Formula`, `RouteEB20.BoundaryClockPointwiseFormulaTarget`, `RouteEB20.BoundaryClockSymbolicMassTarget`, `RouteEB20.BoundaryClockSymbolicMassTarget.toBoundaryClockMassTarget` | symbolic `q > 0` formula surface added |
 | B20 `03`/`04` boundary-clock branch masses | `RouteEB20.allPairTime03BoundaryClockBranchMassTotal_eq_target`, `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`, `RouteEB20.allPairTime04BoundaryClockModClassMassTotal_eq_target`, `RouteEB20.allPairTime0304BoundaryClockBranchMassTotal_eq_target_sum`; the B20 closure package supports the symbolic `q >= 1` formulas and separates finite `m=20` | aggregate targets added |
 | B20 symbolic/finite dispatcher | `RouteEB20.SymbolicAllPairBranchTarget`, `RouteEB20.FiniteM20AllPairTarget`, `RouteEB20.AllPairBranchTarget`, `RouteEB20.allPairBranchTarget_of_symbolic_and_m20`, plus Hamilton/Torus/Cayley projections | endpoint split added |
 | Boundary quotient type | `RouteEBoundaryLabel`, `RouteEBoundaryNode`, `card_routeEBoundaryNode` formalize `{Z} union {03,04,34} x {1,...,m-1}` and cardinal `3m-2` | done |
@@ -72,10 +73,12 @@ cycle from index `0`, node count `1 + 10*(m-1)`, and total first-return time
 ## Current Blockers
 
 1. B20 `T_03` and `T_04` now have Lean arithmetic branch-mass endpoints and
-   proof-facing clock formula surfaces.  They are still not first-principles
-   boundary-clock derivations inside Lean.  The closure package states the
-   symbolic clock formulas for `q >= 1` and separates the finite `m=20`
-   certificate.
+   proof-facing clock formula surfaces
+   (`RouteEB20.BoundaryClockPointwiseFormulaTarget` and
+   `RouteEB20.BoundaryClockSymbolicMassTarget`).  They are still not
+   first-principles boundary-clock derivations inside Lean.  The closure package
+   states the symbolic clock formulas for `q >= 1` and separates the finite
+   `m=20` certificate.
 
 2. No branch currently instantiates `RouteEAllPairSectionCertificate`.  The
    adapter exists, but exact all-pair first-return equations, no-early

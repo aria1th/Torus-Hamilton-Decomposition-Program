@@ -306,6 +306,19 @@ def allPairTime04EvenBranchMass (q : Nat) : Nat :=
 def allPairTime04EvenClock (q i : Nat) : Nat :=
   modulus q * (i + 1)
 
+def boundaryClockTime03Formula (q k : Nat) : Nat :=
+  if k = half q then
+    allPairTime03EvenSpecialClock q
+  else if k % 2 = 1 then
+    if k < half q then
+      allPairTime03OddLowClock q ((k - 1) / 2)
+    else
+      allPairTime03OddHighClock q ((k - (half q + 1)) / 2)
+  else if k < half q then
+    allPairTime03EvenLowClock q ((k - 2) / 2)
+  else
+    allPairTime03EvenHighClock q ((k - (half q + 2)) / 2)
+
 def allPairTime04OddTo01BranchMass (q : Nat) : Nat :=
   1728 * q ^ 3 + 3834 * q ^ 2 + 2829 * q + 698
 
@@ -326,6 +339,48 @@ def allPairTime04OddHSubOneClock (_q : Nat) : Nat :=
 
 def allPairTime04OddLastClock (q : Nat) : Nat :=
   modulus q + 6
+
+def allPairTime04ModOneLowCorrection (q s : Nat) : Nat :=
+  (if q < s then quarter q else 0) +
+    if 2 * q + 1 < s then modulus q + quarter q else 0
+
+def allPairTime04ModOneHighCorrection (q s : Nat) : Nat :=
+  (if 4 * q + 2 < s then quarter q else 0) +
+  (if 4 * q + 3 < s then modulus q else 0) +
+    if 5 * q + 3 < s then quarter q else 0
+
+def allPairTime04ModOneClock (q s : Nat) : Nat :=
+  if s = 3 * q + 2 then
+    allPairTime04OddHSubOneClock q
+  else if s < 3 * q + 2 then
+    6 + s * (4 * modulus q + 18) -
+      allPairTime04ModOneLowCorrection q s
+  else
+    288 * q ^ 2 + 540 * q + 265 +
+      (s - (3 * q + 3)) * (4 * modulus q + 18) -
+        allPairTime04ModOneHighCorrection q s
+
+def allPairTime04ModThreeDefectCount (q s : Nat) : Nat :=
+  (if q - 1 < s then 1 else 0) +
+  (if 2 * q < s then 1 else 0) +
+  (if 3 * q + 1 < s then 1 else 0) +
+  (if 4 * q + 2 < s then 1 else 0) +
+    if 5 * q + 3 < s then 1 else 0
+
+def allPairTime04ModThreeClock (q s : Nat) : Nat :=
+  if s = quarter q - 1 then
+    allPairTime04OddLastClock q
+  else
+    60 * q + 71 + s * (4 * modulus q + 24) -
+      modulus q * allPairTime04ModThreeDefectCount q s
+
+def boundaryClockTime04Formula (q k : Nat) : Nat :=
+  if k % 2 = 0 then
+    allPairTime04EvenClock q (k / 2 - 1)
+  else if k % 4 = 1 then
+    allPairTime04ModOneClock q (k / 4)
+  else
+    allPairTime04ModThreeClock q (k / 4)
 
 theorem two_mul_allPairTime04EvenBranchMass_eq_even_clock_sum_closed
     (q : Nat) :
@@ -1021,6 +1076,44 @@ structure BoundaryClockMassTarget (q : Nat) where
   time04_pos : ∀ a, 0 < time04 a
   time03_sum : Finset.univ.sum time03 = allPairTime03Target q
   time04_sum : Finset.univ.sum time04 = allPairTime04Target q
+
+/--
+Pointwise symbolic formulas for the B20 boundary clocks.  The closure package
+uses these formulas only for the stable range `q > 0`; the exceptional `q = 0`
+row remains the separate finite `m = 20` target.
+-/
+structure BoundaryClockPointwiseFormulaTarget (q : Nat) where
+  hq : 0 < q
+  time03 : RouteENonzeroSeam (modulus q) → Nat
+  time04 : RouteENonzeroSeam (modulus q) → Nat
+  time03_eq_formula :
+    ∀ a, time03 a = boundaryClockTime03Formula q a.1.val
+  time04_eq_formula :
+    ∀ a, time04 a = boundaryClockTime04Formula q a.1.val
+
+/--
+Symbolic B20 boundary-clock endpoint after the pointwise formulas have been
+matched to actual return clocks and summed.
+-/
+structure BoundaryClockSymbolicMassTarget (q : Nat) where
+  pointwise : BoundaryClockPointwiseFormulaTarget q
+  time03_pos : ∀ a, 0 < pointwise.time03 a
+  time04_pos : ∀ a, 0 < pointwise.time04 a
+  time03_sum : Finset.univ.sum pointwise.time03 = allPairTime03Target q
+  time04_sum : Finset.univ.sum pointwise.time04 = allPairTime04Target q
+
+def BoundaryClockSymbolicMassTarget.toBoundaryClockMassTarget {q : Nat}
+    (target : BoundaryClockSymbolicMassTarget q) :
+    BoundaryClockMassTarget q where
+  time03 := target.pointwise.time03
+  time04 := target.pointwise.time04
+  time03_pos := target.time03_pos
+  time04_pos := target.time04_pos
+  time03_sum := target.time03_sum
+  time04_sum := target.time04_sum
+
+def SymbolicBoundaryClockFamilyTarget : Prop :=
+  ∀ q, 0 < q → Nonempty (BoundaryClockSymbolicMassTarget q)
 
 def allPairTimeMassFromBoundaryClocks (q : Nat)
     (target : BoundaryClockMassTarget q) : AllPairLabel → Nat

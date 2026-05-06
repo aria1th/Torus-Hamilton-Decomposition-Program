@@ -306,6 +306,14 @@ Closed or proof-facing in the bundle:
   `RouteEB20.allPairTimeMassFromBoundaryClocks_sum_eq_modulus_pow_four`.
   This lets a future pointwise derivation of the `03` and `04` clock functions
   close the all-pair time exhaustion without changing the endpoint theorem.
+- pointwise boundary-clock formula surfaces for the stable symbolic range:
+  `RouteEB20.boundaryClockTime03Formula`,
+  `RouteEB20.boundaryClockTime04Formula`,
+  `RouteEB20.BoundaryClockPointwiseFormulaTarget`,
+  `RouteEB20.BoundaryClockSymbolicMassTarget`, and
+  `RouteEB20.BoundaryClockSymbolicMassTarget.toBoundaryClockMassTarget`.
+  These names isolate the `q > 0` formula proof from the finite `q = 0`
+  certificate row.
 - recovered `03` and `04` boundary-clock aggregate masses:
   `RouteEB20.allPairTime03BoundaryClockBranchMassTotal_eq_target`,
   `RouteEB20.allPairTime04BoundaryClockBranchMassTotal_eq_target`,
@@ -339,7 +347,8 @@ Closed or proof-facing in the bundle:
 Remaining B20 obligations:
 
 - promote the recovered `T_03` pointwise formula and the `T_04` stabilized
-  mod-class recurrences from proof-facing targets to boundary-clock proofs;
+  mod-class recurrences from
+  `RouteEB20.BoundaryClockPointwiseFormulaTarget` to boundary-clock proofs;
 - add or connect the finite `m = 20` all-pair table certificate;
 - turn the no-early package into Lean-level hypotheses or lemmas;
 - instantiate `RouteEAllPairSectionCertificate` for the B20 section map.
