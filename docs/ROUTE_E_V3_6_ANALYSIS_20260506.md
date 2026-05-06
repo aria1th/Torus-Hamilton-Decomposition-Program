@@ -118,6 +118,11 @@ New arithmetic names include:
 - `boundaryCycleSpine_to_firstEvenTail`
 - `boundaryCycleFirstEvenTail_to_B2Bridge`
 - `boundaryFirstOddValue_range`
+- `boundaryCycleFirstOddLaneCount`
+- `boundaryCycleFirstOddLaneNode`
+- `boundaryCycleFirstOddLane_step_even`
+- `boundaryCycleFirstOddLane_step_odd`
+- `boundaryFirstOddParam_shift_succ`
 - `boundarySecondOddValue_range`
 - `boundarySecondEvenValue_range`
 - `boundaryFirstEvenParam_val`

@@ -30,7 +30,7 @@ remaining gaps.
 | B20 boundary quotient formula | `RouteEB20.boundaryQuotient` encodes the v1.8 map candidate; special-gate and generic rewrite lemmas are proved; `RouteEB20.boundaryQuotient_formulaTarget` proves `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` | formula closed, one-cycle open |
 | B20 boundary one-cycle hand count | `RouteEB20.boundaryCycleLength_eq_card`, `RouteEB20.boundaryCycleSecondEvenEnd_eq_length`, `RouteEB20.boundaryCycleHandCountTotal_eq_card` | count and segment endpoints closed, rank/orbit proof open |
 | B20 boundary spine segment | `RouteEB20.boundaryCycleSpineNode`, `RouteEB20.boundaryCycleSpine_step_zero`, `RouteEB20.boundaryCycleSpine_step_one`, `RouteEB20.boundaryCycleSpine_step_two`, `RouteEB20.boundaryCycleSpine_step_three`, `RouteEB20.boundaryCycleSpine_step_C_run`, `RouteEB20.boundaryCycleSpine_step_C_last` | full spine successor segment closed, remaining orbit open |
-| B20 boundary residue chains | `RouteEB20.boundaryFirstEvenValue_range`, `RouteEB20.boundaryFirstEvenParam_shift_succ`, `RouteEB20.boundaryCycleFirstEvenTail_step_even`, `RouteEB20.boundaryCycleFirstEvenTail_step_odd`, `RouteEB20.boundaryCycleSpine_to_firstEvenTail`, `RouteEB20.boundaryCycleFirstEvenTail_to_B2Bridge`, plus first-odd/second-chain range lemmas | first-even tail successor and both adjacent bridges closed; remaining chains and bijection proof open |
+| B20 boundary residue chains | `RouteEB20.boundaryFirstEvenValue_range`, `RouteEB20.boundaryFirstEvenParam_shift_succ`, `RouteEB20.boundaryCycleFirstEvenTail_step_even`, `RouteEB20.boundaryCycleFirstEvenTail_step_odd`, `RouteEB20.boundaryCycleSpine_to_firstEvenTail`, `RouteEB20.boundaryCycleFirstEvenTail_to_B2Bridge`, `RouteEB20.boundaryFirstOddParam_shift_succ`, `RouteEB20.boundaryCycleFirstOddLane_step_even`, `RouteEB20.boundaryCycleFirstOddLane_step_odd`, plus second-chain range lemmas | first-even segment and first-odd lane internal successor closed; remaining first-odd bridges/C-run, second chains, and bijection proof open |
 | All-pair adapter to endpoints | `RouteEAllPairSectionCertificate.toSmallSeamCertificate` and Hamilton/torus/Cayley projection theorems | done |
 | B16 count surface | `RouteEB16.routeCounts`, `RouteEB16.counts_sum` | done |
 | B16 time target | `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`, `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four` | done as label-indexed target |
@@ -64,8 +64,9 @@ Both commands completed successfully after the current Lean edits.
    and `BoundaryQuotientFormulaTarget q (boundaryQuotient q)` is now supplied
    by `RouteEB20.boundaryQuotient_formulaTarget`.  The hand proof's segment
    count, segment endpoints, the spine successor segment, the first-even tail
-   successor segment, and residue-chain range lemmas are Lean-checked, but the
-   remaining tail chains and bijection parts of the rank/orbit proof remain
+   successor segment, the first-odd lane internal successor segment, and
+   residue-chain range lemmas are Lean-checked, but the remaining tail bridges,
+   C-runs, second chains, and bijection parts of the rank/orbit proof remain
    open.
 
 4. B16 has a boundary quotient formula and time target in the bundle, but the
@@ -86,8 +87,9 @@ Both commands completed successfully after the current Lean edits.
 The next best Lean implementation slice is B20 boundary one-cycle:
 
 1. define `boundaryCycleNode q : Fin (boundaryCycleLength q) →
-   RouteEBoundaryNode (modulus q)` by extending the checked spine and
-   first-even tail segments across the remaining residue-chain segments;
+   RouteEBoundaryNode (modulus q)` by extending the checked spine, first-even
+   tail, and first-odd lane segments across the remaining residue-chain
+   segments;
 2. prove the remaining successor compatibility with
    `RouteEB20.boundaryQuotient`;
 3. prove the enumeration is bijective, then conjugate to `finRotate`;
