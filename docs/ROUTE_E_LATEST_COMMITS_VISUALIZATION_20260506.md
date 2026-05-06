@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `b36ec5f`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `f026400`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 86 commits ahead of origin.  Those commits add 79 files and
-36,480 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 88 commits ahead of origin.  Those commits add 83 files and
+41,737 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -49,13 +49,14 @@ flowchart LR
 | 20:40-20:50 | `a700cc9`..`a72d8d4` | R42 q>=2 tail fits, transition/block mass symbolics, regenerated block-formula verification | stronger R42 evidence, still open |
 | 20:50-21:05 | `10e8561`..`f7b0506` | R42 interval-count tails promoted into compact summary | remaining compact block debt reduced to q=1 boundary exception |
 | 21:05-21:15 | `5899423`..`b36ec5f` | R42 all-pair time polynomial fits and symbolic fit-sum verifier | time-exhaustion evidence strengthened, still open |
+| 21:15-21:25 | `f026400` | R42 all-pair transition count/time polynomial matrices | transition support evidence strengthened, still open |
 
 ## Proof Progress Gauge
 
 The machine audit still reports 2 missing structural items.
 
 ```text
-Artifacts/audits:  [################################--] 32/34
+Artifacts/audits:  [#################################--] 33/35
 Closed theorem:    [---------------------------] incomplete
 ```
 
