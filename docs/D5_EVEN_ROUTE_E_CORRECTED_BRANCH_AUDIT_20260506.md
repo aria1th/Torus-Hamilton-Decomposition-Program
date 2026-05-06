@@ -628,6 +628,7 @@ python3 scripts/summarize_d5_routeE_corrected_branches.py \
 ## Commits In This Pass
 
 ```text
+b36ec5f Strengthen R42 time fit verification
 5899423 Record R42 all-pair time fits
 f7b0506 Promote R42 interval tail formulas into summary
 793957c Refresh Route E ledger after tail suggestions

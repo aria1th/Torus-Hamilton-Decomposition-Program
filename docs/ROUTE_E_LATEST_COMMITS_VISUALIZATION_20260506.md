@@ -2,11 +2,11 @@
 
 Date: 2026-05-06.
 
-Scope: snapshot of local `route-e-v3-6-20260506` through `5899423`, compared with
+Scope: snapshot of local `route-e-v3-6-20260506` through `b36ec5f`, compared with
 `origin/route-e-v3-6-20260506` at `6ab7e51`.
 
-At that snapshot the local branch was 84 commits ahead of origin.  Those commits add 79 files and
-36,314 inserted lines, almost entirely as scripts, certificates, and audit
+At that snapshot the local branch was 86 commits ahead of origin.  Those commits add 79 files and
+36,480 inserted lines, almost entirely as scripts, certificates, and audit
 documents for the corrected even `D_5` Route E branch.
 
 ## High-Level Flow
@@ -47,6 +47,7 @@ flowchart LR
 | 20:31-20:38 | `8ea8eea`..`0cd8204` | R42 detailed block-signature caveat and ledger refresh | promotion target sharpened, still open |
 | 20:40-20:50 | `a700cc9`..`a72d8d4` | R42 q>=2 tail fits, transition/block mass symbolics, regenerated block-formula verification | stronger R42 evidence, still open |
 | 20:50-21:05 | `10e8561`..`f7b0506` | R42 interval-count tails promoted into compact summary | remaining compact block debt reduced to q=1 boundary exception |
+| 21:05-21:15 | `5899423`..`b36ec5f` | R42 all-pair time polynomial fits and symbolic fit-sum verifier | time-exhaustion evidence strengthened, still open |
 
 ## Proof Progress Gauge
 
@@ -161,6 +162,8 @@ The all-pair time artifact additionally fits the sample return-time total as
 ```
 
 It also records source/destination label count and time-total fits.
+The verifier checks that source/destination count fits sum to `480q+411`, and
+source/destination time fits sum to `(48q+42)^4`.
 
 ## Mathematical Findings
 
