@@ -163,7 +163,15 @@ def verify_representative_blocks(data: dict[str, Any]) -> tuple[list[dict[str, A
         for field, actual in comparisons:
             if formula.get(field) is None:
                 if actual is not None:
-                    null_fields.append({"index": index, "field": field, "actual_q1": actual})
+                    tail_key = f"{field}_q_ge_2"
+                    null_fields.append(
+                        {
+                            "index": index,
+                            "field": field,
+                            "actual_q1": actual,
+                            "tail_q_ge_2_formula": formula.get(tail_key),
+                        }
+                    )
                 continue
             expected = eval_formula(formula.get(field), q)
             if expected != actual:
@@ -264,6 +272,10 @@ def build_verification(cert: Path) -> dict[str, Any]:
             "q_ge_1_transition_fits_verified": not checks["transition_fit_errors"],
             "q1_representative_block_formulas_verified": not checks["representative_block_errors"],
             "q1_representative_null_formula_field_count": len(representative_null_fields),
+            "q1_null_fields_have_q_ge_2_tail_formulas": all(
+                item.get("tail_q_ge_2_formula") is not None
+                for item in representative_null_fields
+            ),
             "stability_verified": not checks["stability_errors"],
         },
         "warning": (

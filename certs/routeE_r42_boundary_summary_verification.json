@@ -6,12 +6,14 @@
       {
         "actual_q1": 0,
         "field": "terminal_affine_alpha",
-        "index": 24
+        "index": 24,
+        "tail_q_ge_2_formula": "4*q + 3"
       },
       {
         "actual_q1": 25,
         "field": "terminal_affine_beta",
-        "index": 24
+        "index": 24,
+        "tail_q_ge_2_formula": "12*q + 10"
       }
     ],
     "sample_flag_errors": [],
@@ -23,6 +25,7 @@
   "schema": "routeE_r42_boundary_summary_verification_v1",
   "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
   "summary": {
+    "q1_null_fields_have_q_ge_2_tail_formulas": true,
     "q1_representative_block_formulas_verified": true,
     "q1_representative_null_formula_field_count": 2,
     "q_ge_1_transition_fits_verified": true,

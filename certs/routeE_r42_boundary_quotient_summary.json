@@ -29,7 +29,9 @@
           }
         ],
         "terminal_affine_alpha": "0",
-        "terminal_affine_beta": "36*q + 32"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 32",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1",
@@ -85,7 +87,9 @@
           }
         ],
         "terminal_affine_alpha": "0",
-        "terminal_affine_beta": "12*q + 10"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "12*q + 10",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 5",
@@ -111,7 +115,9 @@
           }
         ],
         "terminal_affine_alpha": "2",
-        "terminal_affine_beta": "0"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "0",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "24*q + 20",
@@ -157,7 +163,9 @@
           }
         ],
         "terminal_affine_alpha": "2",
-        "terminal_affine_beta": "24*q + 19"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 19",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 5",
@@ -183,7 +191,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 19",
-        "terminal_affine_beta": "0"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "0",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "3*q + 2",
@@ -209,7 +219,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 19",
-        "terminal_affine_beta": "24*q + 21"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 21",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 5",
@@ -235,7 +247,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 19",
-        "terminal_affine_beta": "0"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "0",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "3*q + 3",
@@ -261,7 +275,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 19",
-        "terminal_affine_beta": "24*q + 21"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 21",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1",
@@ -317,7 +333,9 @@
           }
         ],
         "terminal_affine_alpha": "0",
-        "terminal_affine_beta": "0"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "0",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1*q + 1",
@@ -353,7 +371,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 39"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 39",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1*q + 1",
@@ -389,7 +409,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 39"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 39",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "4*q + 3",
@@ -420,7 +442,9 @@
           }
         ],
         "terminal_affine_alpha": "12*q + 11",
-        "terminal_affine_beta": "36*q + 32"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 32",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1",
@@ -466,7 +490,9 @@
           }
         ],
         "terminal_affine_alpha": "0",
-        "terminal_affine_beta": "36*q + 31"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 31",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "16*q + 12",
@@ -517,7 +543,9 @@
           }
         ],
         "terminal_affine_alpha": "12*q + 11",
-        "terminal_affine_beta": "12*q + 10"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "12*q + 10",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 1",
@@ -573,7 +601,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 38"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 38",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 2",
@@ -629,7 +659,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 38"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 38",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 2",
@@ -685,7 +717,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 38"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 38",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 1",
@@ -741,7 +775,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 4",
-        "terminal_affine_beta": "44*q + 38"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "44*q + 38",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 5",
@@ -767,7 +803,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 20",
-        "terminal_affine_beta": "48*q + 41"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "48*q + 41",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 5",
@@ -793,7 +831,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 20",
-        "terminal_affine_beta": "24*q + 20"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 20",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "6*q + 6",
@@ -819,7 +859,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 20",
-        "terminal_affine_beta": "48*q + 41"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "48*q + 41",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 1",
@@ -855,7 +897,9 @@
           }
         ],
         "terminal_affine_alpha": "12*q + 10",
-        "terminal_affine_beta": "36*q + 31"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 31",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "2*q + 2",
@@ -891,7 +935,9 @@
           }
         ],
         "terminal_affine_alpha": "12*q + 10",
-        "terminal_affine_beta": "36*q + 31"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 31",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1*q + 1",
@@ -927,7 +973,9 @@
           }
         ],
         "terminal_affine_alpha": "4*q + 3",
-        "terminal_affine_beta": "12*q + 10"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "12*q + 10",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1*q",
@@ -963,7 +1011,9 @@
           }
         ],
         "terminal_affine_alpha": null,
-        "terminal_affine_beta": null
+        "terminal_affine_alpha_q_ge_2": "4*q + 3",
+        "terminal_affine_beta": null,
+        "terminal_affine_beta_q_ge_2": "12*q + 10"
       },
       {
         "condition_count": "12*q + 11",
@@ -994,7 +1044,9 @@
           }
         ],
         "terminal_affine_alpha": "12*q + 10",
-        "terminal_affine_beta": "36*q + 31"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "36*q + 31",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "18*q + 15",
@@ -1020,7 +1072,9 @@
           }
         ],
         "terminal_affine_alpha": "24*q + 20",
-        "terminal_affine_beta": "24*q + 20"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 20",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "1",
@@ -1046,7 +1100,9 @@
           }
         ],
         "terminal_affine_alpha": "0",
-        "terminal_affine_beta": "48*q + 41"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "48*q + 41",
+        "terminal_affine_beta_q_ge_2": null
       },
       {
         "condition_count": "12*q + 10",
@@ -1072,7 +1128,9 @@
           }
         ],
         "terminal_affine_alpha": "1",
-        "terminal_affine_beta": "24*q + 22"
+        "terminal_affine_alpha_q_ge_2": null,
+        "terminal_affine_beta": "24*q + 22",
+        "terminal_affine_beta_q_ge_2": null
       }
     ],
     "q_values": [
@@ -3434,7 +3492,7 @@
       "q": 0,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
+        "wrote /tmp/routeE-r42-boundary-mpoq9ib6/r42_q0.csv N=411 total=3111696 m4=3111696 max_events=9916"
       ],
       "x": 5,
       "z": 5
@@ -3807,7 +3865,7 @@
       "q": 1,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
+        "wrote /tmp/routeE-r42-boundary-mpoq9ib6/r42_q1.csv N=891 total=65610000 m4=65610000 max_events=47164"
       ],
       "x": 11,
       "z": 11
@@ -4180,7 +4238,7 @@
       "q": 2,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
+        "wrote /tmp/routeE-r42-boundary-mpoq9ib6/r42_q2.csv N=1371 total=362673936 m4=362673936 max_events=112060"
       ],
       "x": 17,
       "z": 17
@@ -4553,7 +4611,7 @@
       "q": 3,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
+        "wrote /tmp/routeE-r42-boundary-mpoq9ib6/r42_q3.csv N=1851 total=1196883216 m4=1196883216 max_events=204604"
       ],
       "x": 23,
       "z": 23
@@ -4926,7 +4984,7 @@
       "q": 4,
       "returncode": 0,
       "stderr_tail": [
-        "wrote /tmp/routeE-r42-boundary-0qtr5z8f/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
+        "wrote /tmp/routeE-r42-boundary-mpoq9ib6/r42_q4.csv N=2331 total=2998219536 m4=2998219536 max_events=324796"
       ],
       "x": 29,
       "z": 29

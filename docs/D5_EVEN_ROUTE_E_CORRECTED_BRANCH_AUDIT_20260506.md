@@ -323,12 +323,14 @@ ok True
 q_ge_1_transition_fits_verified True
 q1_representative_block_formulas_verified True
 q1_representative_null_formula_field_count 2
+q1_null_fields_have_q_ge_2_tail_formulas True
 stability_verified True
 ```
 
 The two remaining null formula fields are terminal affine fields in the
-representative block table.  They are recorded as open compression debt, not as
-a mismatch.
+representative block table.  They are recorded as q=1 boundary compression
+debt, not as a mismatch; both now have q>=2 tail affine formulas in the compact
+summary.
 
 R38 symmetric recheck:
 

@@ -324,6 +324,12 @@ def build_audit() -> dict[str, Any]:
             and r42_boundary_verification.get("summary", {}).get(
                 "stability_verified"
             )
+            is True
+            # The only q=1 null fields currently recorded have q>=2 tail affine
+            # formulas, so future regenerations should not silently lose them.
+            and r42_boundary_verification.get("summary", {}).get(
+                "q1_null_fields_have_q_ge_2_tail_formulas"
+            )
             is True,
             "certs/routeE_r42_boundary_summary_verification.json",
         ),

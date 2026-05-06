@@ -351,9 +351,16 @@ def fit_path_runs(blocks_by_q: dict[int, list[dict[str, Any]]], index: int) -> l
     return out
 
 
-def fit_field(blocks_by_q: dict[int, list[dict[str, Any]]], index: int, path: list[Any]) -> str | None:
+def fit_field(
+    blocks_by_q: dict[int, list[dict[str, Any]]],
+    index: int,
+    path: list[Any],
+    min_q: int = 1,
+) -> str | None:
     points = []
     for q, blocks in sorted(blocks_by_q.items()):
+        if q < min_q:
+            continue
         value: Any = blocks[index]
         for key in path:
             if value is None:
@@ -381,6 +388,8 @@ def q_ge_1_block_formula_fits(blocks_by_q: dict[int, list[dict[str, Any]]]) -> d
     out = []
     if stable_keys:
         for index, key in enumerate(key_lists[0]):
+            alpha = fit_field(blocks_by_q, index, ["terminal", "affine_mod", 0])
+            beta = fit_field(blocks_by_q, index, ["terminal", "affine_mod", 1])
             out.append(
                 {
                     "index": index,
@@ -392,11 +401,17 @@ def q_ge_1_block_formula_fits(blocks_by_q: dict[int, list[dict[str, Any]]]) -> d
                         blocks_by_q, index, ["condition", "interval_count"]
                     ),
                     "path_run_counts": fit_path_runs(blocks_by_q, index),
-                    "terminal_affine_alpha": fit_field(
-                        blocks_by_q, index, ["terminal", "affine_mod", 0]
+                    "terminal_affine_alpha": alpha,
+                    "terminal_affine_beta": beta,
+                    "terminal_affine_alpha_q_ge_2": None
+                    if alpha is not None
+                    else fit_field(
+                        blocks_by_q, index, ["terminal", "affine_mod", 0], min_q=2
                     ),
-                    "terminal_affine_beta": fit_field(
-                        blocks_by_q, index, ["terminal", "affine_mod", 1]
+                    "terminal_affine_beta_q_ge_2": None
+                    if beta is not None
+                    else fit_field(
+                        blocks_by_q, index, ["terminal", "affine_mod", 1], min_q=2
                     ),
                 }
             )
