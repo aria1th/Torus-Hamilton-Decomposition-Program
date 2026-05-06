@@ -235,6 +235,101 @@ def verify_transition_symbolics(data: dict[str, Any]) -> tuple[list[dict[str, An
     return bad, summary
 
 
+def coeffs_equal_text(left: tuple[int, int], right: tuple[int, int]) -> bool:
+    return left == right
+
+
+def nonnegative_affine_for_q_ge_1(coeffs: tuple[int, int]) -> bool:
+    slope, intercept = coeffs
+    return slope >= 0 and slope + intercept >= 0
+
+
+def verify_block_formula_symbolics(data: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    fits = data.get("q_ge_1_block_formula_fits", {})
+    blocks = fits.get("blocks", [])
+    transitions = data.get("q_ge_1_transition_count_fits", {})
+    stability = data.get("q_ge_1_stability", {})
+    bad = []
+    by_src: dict[str, tuple[int, int]] = {label: (0, 0) for label in LABELS}
+    by_transition: dict[tuple[str, str], tuple[int, int]] = {
+        (src, dst): (0, 0) for src in LABELS for dst in LABELS
+    }
+    block_count_by_src = Counter()
+    missing_terminal_fields = []
+    for block in blocks:
+        index = block.get("index")
+        key = block.get("key") or {}
+        src = key.get("src_label")
+        dst = key.get("terminal_dst_label")
+        count = affine_coeffs(block.get("condition_count"))
+        if src not in LABELS or dst not in LABELS or count is None:
+            bad.append({"index": index, "check": "bad_block_key_or_count", "block": block})
+            continue
+        if not nonnegative_affine_for_q_ge_1(count):
+            bad.append({"index": index, "check": "negative_condition_count", "count": count})
+        by_src[src] = add_coeffs([by_src[src], count])
+        by_transition[(src, dst)] = add_coeffs([by_transition[(src, dst)], count])
+        block_count_by_src[src] += 1
+        for field in ["terminal_affine_alpha", "terminal_affine_beta"]:
+            if block.get(field) is None:
+                tail = block.get(f"{field}_q_ge_2")
+                if tail is None:
+                    missing_terminal_fields.append({"index": index, "field": field})
+    for src in LABELS:
+        expected_src = add_coeffs(
+            [affine_coeffs(transitions.get(src, {}).get(dst)) or (0, 0) for dst in LABELS]
+        )
+        if by_src[src] != expected_src:
+            bad.append(
+                {
+                    "check": "src_block_mass",
+                    "src": src,
+                    "expected": expected_src,
+                    "actual": by_src[src],
+                }
+            )
+        for dst in LABELS:
+            expected = affine_coeffs(transitions.get(src, {}).get(dst)) or (0, 0)
+            actual = by_transition[(src, dst)]
+            if actual != expected:
+                bad.append(
+                    {
+                        "check": "transition_block_mass",
+                        "src": src,
+                        "dst": dst,
+                        "expected": expected,
+                        "actual": actual,
+                    }
+                )
+    expected_block_counts = stability.get("block_count_by_label") or {}
+    if dict(block_count_by_src) != expected_block_counts:
+        bad.append(
+            {
+                "check": "block_count_by_src",
+                "expected": expected_block_counts,
+                "actual": dict(block_count_by_src),
+            }
+        )
+    if missing_terminal_fields:
+        bad.append({"check": "missing_terminal_tail_fields", "items": missing_terminal_fields})
+    summary = {
+        "block_count": len(blocks),
+        "block_count_by_src": dict(block_count_by_src),
+        "src_masses": {src: formula_text(value) for src, value in by_src.items()},
+        "transition_masses": {
+            src: {
+                dst: formula_text(by_transition[(src, dst)])
+                for dst in LABELS
+                if by_transition[(src, dst)] != (0, 0)
+            }
+            for src in LABELS
+        },
+        "block_masses_match_transition_fits": not bad,
+        "all_null_terminal_fields_have_q_ge_2_tails": not missing_terminal_fields,
+    }
+    return bad, summary
+
+
 def verify_sample_flags(data: dict[str, Any]) -> list[dict[str, Any]]:
     bad = []
     for sample in data.get("samples", []):
@@ -374,6 +469,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
     data = json.loads(cert.read_text())
     representative_errors, representative_null_fields = verify_representative_blocks(data)
     transition_symbolic_errors, transition_symbolic_summary = verify_transition_symbolics(data)
+    block_formula_errors, block_formula_summary = verify_block_formula_symbolics(data)
     checks = {
         "schema_ok": data.get("schema") == "routeE_r42_boundary_quotient_summary_v1",
         "raw_csv_not_preserved": data.get("raw_csv_preserved") is False,
@@ -381,6 +477,8 @@ def build_verification(cert: Path) -> dict[str, Any]:
         "transition_fit_errors": verify_transition_fits(data),
         "transition_symbolic_errors": transition_symbolic_errors,
         "transition_symbolic_summary": transition_symbolic_summary,
+        "block_formula_symbolic_errors": block_formula_errors,
+        "block_formula_symbolic_summary": block_formula_summary,
         "representative_block_errors": representative_errors,
         "representative_block_null_formula_fields": representative_null_fields,
         "stability_errors": verify_stability(data),
@@ -391,6 +489,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
         and not checks["sample_flag_errors"]
         and not checks["transition_fit_errors"]
         and not checks["transition_symbolic_errors"]
+        and not checks["block_formula_symbolic_errors"]
         and not checks["representative_block_errors"]
         and not checks["stability_errors"]
     )
@@ -403,6 +502,7 @@ def build_verification(cert: Path) -> dict[str, Any]:
             "sample_q_values": [sample.get("q") for sample in data.get("samples", [])],
             "q_ge_1_transition_fits_verified": not checks["transition_fit_errors"],
             "q_ge_1_transition_symbolics_verified": not checks["transition_symbolic_errors"],
+            "q_ge_1_block_formula_symbolics_verified": not checks["block_formula_symbolic_errors"],
             "q1_representative_block_formulas_verified": not checks["representative_block_errors"],
             "q1_representative_null_formula_field_count": len(representative_null_fields),
             "q1_null_fields_have_q_ge_2_tail_formulas": all(

@@ -326,6 +326,7 @@ Result:
 ok True
 q_ge_1_transition_fits_verified True
 q_ge_1_transition_symbolics_verified True
+q_ge_1_block_formula_symbolics_verified True
 q1_representative_block_formulas_verified True
 q1_representative_null_formula_field_count 2
 q1_null_fields_have_q_ge_2_tail_formulas True
@@ -339,6 +340,7 @@ row totals    = {Z:1, 03:48*q+41, 04:48*q+41, 34:48*q+41}
 column totals = {Z:1, 03:48*q+41, 04:48*q+41, 34:48*q+41}
 total         = 144*q + 124 = 3*(48*q+42)-2
 positive-edge support is strongly connected
+29 block condition-count formulas sum to the transition-count formulas
 ```
 
 The two remaining null formula fields are terminal affine fields in the

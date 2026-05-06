@@ -1,5 +1,43 @@
 {
   "checks": {
+    "block_formula_symbolic_errors": [],
+    "block_formula_symbolic_summary": {
+      "all_null_terminal_fields_have_q_ge_2_tails": true,
+      "block_count": 29,
+      "block_count_by_src": {
+        "03": 7,
+        "04": 13,
+        "34": 8,
+        "Z": 1
+      },
+      "block_masses_match_transition_fits": true,
+      "src_masses": {
+        "03": "48*q + 41",
+        "04": "48*q + 41",
+        "34": "48*q + 41",
+        "Z": "1"
+      },
+      "transition_masses": {
+        "03": {
+          "03": "1",
+          "04": "30*q + 25",
+          "34": "18*q + 15"
+        },
+        "04": {
+          "03": "30*q + 24",
+          "34": "18*q + 16",
+          "Z": "1"
+        },
+        "34": {
+          "03": "18*q + 15",
+          "04": "18*q + 16",
+          "34": "12*q + 10"
+        },
+        "Z": {
+          "03": "1"
+        }
+      }
+    },
     "raw_csv_not_preserved": true,
     "representative_block_errors": [],
     "representative_block_null_formula_fields": [
@@ -97,6 +135,7 @@
     "q1_null_fields_have_q_ge_2_tail_formulas": true,
     "q1_representative_block_formulas_verified": true,
     "q1_representative_null_formula_field_count": 2,
+    "q_ge_1_block_formula_symbolics_verified": true,
     "q_ge_1_transition_fits_verified": true,
     "q_ge_1_transition_symbolics_verified": true,
     "sample_q_values": [

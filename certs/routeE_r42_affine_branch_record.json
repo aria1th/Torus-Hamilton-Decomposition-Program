@@ -66,6 +66,7 @@
       "q1_null_fields_have_q_ge_2_tail_formulas": true,
       "q1_representative_block_formulas_verified": true,
       "q1_representative_null_formula_field_count": 2,
+      "q_ge_1_block_formula_symbolics_verified": true,
       "q_ge_1_transition_fits_verified": true,
       "q_ge_1_transition_symbolics_verified": true,
       "sample_q_values": [
