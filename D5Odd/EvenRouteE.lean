@@ -524,6 +524,10 @@ def ofIndex {m : Nat} [NeZero m] (i : Fin (m - 1)) : RouteENonzeroSeam m :=
   ⟨((i.val + 1 : Nat) : ZMod m), by
     exact zmod_nat_ne_zero (m := m) (k := i.val + 1) (by omega) (by omega)⟩
 
+def ofNat {m : Nat} [NeZero m] (k : Nat) (hpos : 0 < k)
+    (hlt : k < m) : RouteENonzeroSeam m :=
+  ⟨((k : Nat) : ZMod m), zmod_nat_ne_zero (m := m) (k := k) hpos hlt⟩
+
 set_option linter.flexible false in
 theorem ofIndex_toIndex {m : Nat} [NeZero m] (a : RouteENonzeroSeam m) :
     ofIndex (toIndex a) = a := by
@@ -722,6 +726,83 @@ structure BoundaryQuotientFormulaTarget (q : Nat)
 def BoundaryQuotientOneCycleTarget (q : Nat) : Prop :=
   ∃ Q : RouteEBoundaryNode (modulus q) → RouteEBoundaryNode (modulus q),
     BoundaryQuotientFormulaTarget q Q ∧ IsSingleCycleMap Q
+
+def boundaryParamOne (q : Nat) : RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat 1 (by omega) (by simp [modulus])
+
+def boundaryParamTwo (q : Nat) : RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat 2 (by omega) (by simp [modulus])
+
+def boundaryParamHalfSubTwo (q : Nat) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (half q - 2) (by simp [half]) (by
+    simp [half, modulus]
+    omega)
+
+def boundaryParamHalfSubOne (q : Nat) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (half q - 1) (by simp [half]) (by
+    simp [half, modulus]
+    omega)
+
+def boundaryParamHalf (q : Nat) : RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (half q) (by simp [half]) (by
+    simp [half, modulus]
+    omega)
+
+def boundaryParamHalfAddOne (q : Nat) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (half q + 1) (by simp [half]) (by
+    simp [half, modulus]
+    omega)
+
+def boundaryParamHalfAddTwo (q : Nat) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (half q + 2) (by simp [half]) (by
+    simp [half, modulus]
+    omega)
+
+def boundaryParamPenultimate (q : Nat) :
+    RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (modulus q - 2) (by simp [modulus]) (by
+    simp [modulus])
+
+def boundaryParamLast (q : Nat) : RouteENonzeroSeam (modulus q) :=
+  RouteENonzeroSeam.ofNat (modulus q - 1) (by simp [modulus]) (by
+    simp [modulus])
+
+theorem boundaryParamHalf_val (q : Nat) :
+    (boundaryParamHalf q).1 = (half q : ZMod (modulus q)) := rfl
+
+theorem boundaryParamHalfSubTwo_val (q : Nat) :
+    (boundaryParamHalfSubTwo q).1 =
+      ((half q - 2 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundaryParamHalfSubOne_val (q : Nat) :
+    (boundaryParamHalfSubOne q).1 =
+      ((half q - 1 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundaryParamOne_val (q : Nat) :
+    (boundaryParamOne q).1 = (1 : ZMod (modulus q)) := rfl
+
+theorem boundaryParamTwo_val (q : Nat) :
+    (boundaryParamTwo q).1 = (2 : ZMod (modulus q)) := rfl
+
+theorem boundaryParamHalfAddOne_val (q : Nat) :
+    (boundaryParamHalfAddOne q).1 =
+      ((half q + 1 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundaryParamHalfAddTwo_val (q : Nat) :
+    (boundaryParamHalfAddTwo q).1 =
+      ((half q + 2 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundaryParamLast_val (q : Nat) :
+    (boundaryParamLast q).1 =
+      ((modulus q - 1 : Nat) : ZMod (modulus q)) := rfl
+
+theorem boundaryParamPenultimate_val (q : Nat) :
+    (boundaryParamPenultimate q).1 =
+      ((modulus q - 2 : Nat) : ZMod (modulus q)) := rfl
 
 /-!
 The verifier's B20 return-time formula, written pointwise on the nonzero
