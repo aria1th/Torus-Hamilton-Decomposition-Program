@@ -1944,6 +1944,111 @@ theorem boundaryCycleFirstEvenTail_step_odd (q k : Nat)
         (boundaryCycleFirstEvenTailIndex_pos k)
         (boundaryCycleFirstEvenTailIndex_lt q k hk) hjnext hnot_close]
 
+theorem boundaryCycleSpineNode_last (q : Nat)
+    (hi : half q + 3 < boundaryCycleSpineCount q) :
+    boundaryCycleSpineNode q (half q + 3) hi =
+      routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamHalf q) := by
+  have hnot1 : ¬ half q + 3 = 1 := by simp [half]
+  have hnot2 : ¬ half q + 3 = 2 := by simp [half]
+  have hhalf_ne_zero : ¬ half q = 0 := by simp [half]
+  have hnot4 : ¬ half q + 3 = 4 := by simp [half]
+  simp [boundaryCycleSpineNode, hnot1, hnot2, hhalf_ne_zero, hnot4]
+
+theorem boundaryCycleFirstEvenTailNode_zero (q : Nat)
+    (hk : 0 < boundaryCycleFirstEvenTailCount q) :
+    boundaryCycleFirstEvenTailNode q 0 hk =
+      routeEBoundaryNode RouteEBoundaryLabel.L03
+        (boundaryFirstEvenParam q 1 (by omega) (by simp [quarter])) := by
+  simp [boundaryCycleFirstEvenTailNode, boundaryCycleFirstEvenTailIndex]
+
+theorem boundaryParamHalf_shift_eq_firstEven_one (q : Nat)
+    (hne : (boundaryParamHalf q).1.val ≠ half q + 2) :
+    boundaryShiftParam q (boundaryParamHalf q) hne =
+      boundaryFirstEvenParam q 1 (by omega) (by simp [quarter]) := by
+  apply Subtype.ext
+  rw [boundaryShiftParam_val]
+  change (((half q : Nat) : ZMod (modulus q)) +
+      ((half q - 2 : Nat) : ZMod (modulus q))) =
+        ((boundaryFirstEvenValue q 1 : Nat) : ZMod (modulus q))
+  rw [← Nat.cast_add]
+  have hnat : half q + (half q - 2) = boundaryFirstEvenValue q 1 := by
+    simp [boundaryFirstEvenValue, half, modulus]
+    omega
+  rw [hnat]
+
+theorem boundaryCycleSpine_to_firstEvenTail (q : Nat)
+    (hsp : half q + 3 < boundaryCycleSpineCount q)
+    (htail : 0 < boundaryCycleFirstEvenTailCount q) :
+    boundaryQuotient q (boundaryCycleSpineNode q (half q + 3) hsp) =
+      boundaryCycleFirstEvenTailNode q 0 htail := by
+  rw [boundaryCycleSpineNode_last q hsp,
+    boundaryCycleFirstEvenTailNode_zero q htail]
+  have hnot_two : (boundaryParamHalf q).1.val ≠ 2 := by
+    simp [boundaryParamHalf, RouteENonzeroSeam.ofNat_val, half]
+  have hnot_close : (boundaryParamHalf q).1.val ≠ half q + 2 := by
+    simp [boundaryParamHalf, RouteENonzeroSeam.ofNat_val, half]
+  calc
+    boundaryQuotient q
+        (routeEBoundaryNode RouteEBoundaryLabel.L04 (boundaryParamHalf q)) =
+        routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryShiftParam q (boundaryParamHalf q) hnot_close) :=
+      boundaryQuotient_B_even_shift q (boundaryParamHalf q) hnot_two hnot_close
+        (by
+          simp [boundaryParamHalf, RouteENonzeroSeam.ofNat_val, half]
+          omega)
+    _ = routeEBoundaryNode RouteEBoundaryLabel.L03
+          (boundaryFirstEvenParam q 1 (by omega) (by simp [quarter])) := by
+      rw [boundaryParamHalf_shift_eq_firstEven_one q hnot_close]
+
+noncomputable def boundaryCycleB2BridgeNode (q k : Nat)
+    (_hk : k < boundaryCycleB2BridgeCount q) :
+    RouteEBoundaryNode (modulus q) :=
+  routeEBoundaryNode RouteEBoundaryLabel.L03 (boundaryParamHalfSubOne q)
+
+theorem boundaryCycleFirstEvenTailLastIndex_eq (q : Nat) :
+    boundaryCycleFirstEvenTailIndex (boundaryCycleFirstEvenTailCount q - 1) =
+      quarter q - 1 := by
+  simp [boundaryCycleFirstEvenTailIndex, boundaryCycleFirstEvenTailCount,
+    quarter]
+  omega
+
+theorem boundaryCycleFirstEvenTailLast_odd (q : Nat) :
+    (boundaryCycleFirstEvenTailCount q - 1) % 2 ≠ 0 := by
+  simp [boundaryCycleFirstEvenTailCount, quarter]
+  omega
+
+theorem boundaryFirstEvenValue_last_eq_two (q : Nat) :
+    boundaryFirstEvenValue q (quarter q - 1) = 2 := by
+  have hpar : (quarter q - 1) % 2 = 0 := by
+    simp [quarter]
+    omega
+  rw [boundaryFirstEvenValue, if_pos hpar]
+  simp [quarter, half]
+  omega
+
+theorem boundaryFirstEvenParam_last_val_two (q : Nat) :
+    (boundaryFirstEvenParam q (quarter q - 1) (by simp [quarter])
+      (by simp [quarter])).1.val = 2 := by
+  rw [boundaryFirstEvenParam_val]
+  exact boundaryFirstEvenValue_last_eq_two q
+
+set_option linter.flexible false in
+theorem boundaryCycleFirstEvenTail_to_B2Bridge (q : Nat)
+    (hlast : boundaryCycleFirstEvenTailCount q - 1 <
+      boundaryCycleFirstEvenTailCount q)
+    (hbridge : 0 < boundaryCycleB2BridgeCount q) :
+    boundaryQuotient q
+        (boundaryCycleFirstEvenTailNode q
+          (boundaryCycleFirstEvenTailCount q - 1) hlast) =
+      boundaryCycleB2BridgeNode q 0 hbridge := by
+  have hodd := boundaryCycleFirstEvenTailLast_odd q
+  simp [boundaryCycleFirstEvenTailNode, boundaryCycleB2BridgeNode, hodd,
+    boundaryCycleFirstEvenTailLastIndex_eq q]
+  exact boundaryQuotient_B_two q
+    (boundaryFirstEvenParam q (quarter q - 1) (by simp [quarter])
+      (by simp [quarter]))
+    (boundaryFirstEvenParam_last_val_two q)
+
 def boundaryFirstOddParam (q j : Nat)
     (hjpos : 1 ≤ j) (hjlt : j < quarter q) :
     RouteENonzeroSeam (modulus q) :=

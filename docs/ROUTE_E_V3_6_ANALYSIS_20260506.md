@@ -115,6 +115,8 @@ New arithmetic names include:
 - `boundaryCycleFirstEvenTailNode`
 - `boundaryCycleFirstEvenTail_step_even`
 - `boundaryCycleFirstEvenTail_step_odd`
+- `boundaryCycleSpine_to_firstEvenTail`
+- `boundaryCycleFirstEvenTail_to_B2Bridge`
 - `boundaryFirstOddValue_range`
 - `boundarySecondOddValue_range`
 - `boundarySecondEvenValue_range`
@@ -243,7 +245,8 @@ Closed or proof-facing in the bundle:
   successor checks for `boundaryQuotient`.
 - the C-run predecessor equality and terminal C_h identification needed to
   extend the spine successor proof; the spine successor proof is now closed
-  through `C_h -> B_h`.
+  through `C_h -> B_h`, and the first-even tail is connected through both
+  boundary bridges.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
