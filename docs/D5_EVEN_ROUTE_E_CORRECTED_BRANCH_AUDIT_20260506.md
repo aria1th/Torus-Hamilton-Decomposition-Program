@@ -40,6 +40,7 @@ as a branch-taxonomy and evidence-preservation pass.
 | Initialize R42 affine branch record | `scripts/init_routeE_r42_affine_branch_record.py`, `certs/routeE_r42_affine_branch_record.json` | done, branch remains open |
 | Reproduce R42 affine samples with all-pair checker | `scripts/routeE_allpair_cpp_v1_2.cpp`, `scripts/verify_routeE_r42_affine_samples.py`, `certs/routeE_r42_affine_samples_verification.json` | done, sample-verified but not symbolic |
 | Summarize R42 boundary quotient | `scripts/summarize_routeE_r42_boundary_quotient.py`, `certs/routeE_r42_boundary_quotient_summary.json` | done, q>=1 block profile stable |
+| Verify R42 compact boundary summary | `scripts/verify_routeE_r42_boundary_summary.py`, `certs/routeE_r42_boundary_summary_verification.json` | done, internal affine/block consistency verified |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
 | Run broad open-residue C++ smoke screen | `certs/routeE_open_residue_cpp_smoke_20260506.json`, `certs/routeE_open_residue_cpp_smoke_summary_20260506.json` | done, all timed out |
@@ -307,6 +308,27 @@ representative_q1_block_table has 29 compact blocks
 run-normalized block formula fits: stable_structural_keys=True, blocks=29
 raw_csv_preserved=False
 ```
+
+R42 compact boundary summary verification:
+
+```bash
+python3 scripts/verify_routeE_r42_boundary_summary.py \
+  --json-out certs/routeE_r42_boundary_summary_verification.json
+```
+
+Result:
+
+```text
+ok True
+q_ge_1_transition_fits_verified True
+q1_representative_block_formulas_verified True
+q1_representative_null_formula_field_count 2
+stability_verified True
+```
+
+The two remaining null formula fields are terminal affine fields in the
+representative block table.  They are recorded as open compression debt, not as
+a mismatch.
 
 R38 symmetric recheck:
 

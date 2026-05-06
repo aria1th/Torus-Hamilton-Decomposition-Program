@@ -139,6 +139,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_boundary_summary_verification.json",
+      "missing": null,
+      "name": "R42 compact boundary summary verifies internally",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r38_symmetric_probe_summary.json",
       "missing": null,
       "name": "R38 symmetric probe negative controls are preserved",

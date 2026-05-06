@@ -45,6 +45,9 @@ FILES = {
     "r42_boundary_summary": ROOT
     / "certs"
     / "routeE_r42_boundary_quotient_summary.json",
+    "r42_boundary_verification": ROOT
+    / "certs"
+    / "routeE_r42_boundary_summary_verification.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
     "open_residue_smoke": ROOT
@@ -91,6 +94,7 @@ def build_audit() -> dict[str, Any]:
     r42 = load_json(FILES["r42_record"])
     r42_sample_verification = load_json(FILES["r42_sample_verification"])
     r42_boundary_summary = load_json(FILES["r42_boundary_summary"])
+    r42_boundary_verification = load_json(FILES["r42_boundary_verification"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
     open_residue_smoke = load_json(FILES["open_residue_smoke"])
@@ -303,6 +307,25 @@ def build_audit() -> dict[str, Any]:
             )
             == 29,
             "certs/routeE_r42_boundary_quotient_summary.json: q_ge_1_block_formula_fits",
+        ),
+        item(
+            "R42 compact boundary summary verifies internally",
+            r42_boundary_verification.get("schema")
+            == "routeE_r42_boundary_summary_verification_v1"
+            and r42_boundary_verification.get("ok") is True
+            and r42_boundary_verification.get("summary", {}).get(
+                "q_ge_1_transition_fits_verified"
+            )
+            is True
+            and r42_boundary_verification.get("summary", {}).get(
+                "q1_representative_block_formulas_verified"
+            )
+            is True
+            and r42_boundary_verification.get("summary", {}).get(
+                "stability_verified"
+            )
+            is True,
+            "certs/routeE_r42_boundary_summary_verification.json",
         ),
         item(
             "R38 symmetric probe negative controls are preserved",

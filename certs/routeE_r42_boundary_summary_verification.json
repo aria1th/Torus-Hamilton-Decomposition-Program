@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "raw_csv_not_preserved": true,
+    "representative_block_errors": [],
+    "representative_block_null_formula_fields": [
+      {
+        "actual_q1": 0,
+        "field": "terminal_affine_alpha",
+        "index": 24
+      },
+      {
+        "actual_q1": 25,
+        "field": "terminal_affine_beta",
+        "index": 24
+      }
+    ],
+    "sample_flag_errors": [],
+    "schema_ok": true,
+    "stability_errors": [],
+    "transition_fit_errors": []
+  },
+  "ok": true,
+  "schema": "routeE_r42_boundary_summary_verification_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+  "summary": {
+    "q1_representative_block_formulas_verified": true,
+    "q1_representative_null_formula_field_count": 2,
+    "q_ge_1_transition_fits_verified": true,
+    "sample_q_values": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "stability_verified": true
+  },
+  "warning": "This verifies the compact R42 boundary summary artifact.  It does not prove pointwise no-early returns or the full R42 branch theorem."
+}
