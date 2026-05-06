@@ -1427,6 +1427,44 @@ theorem boundarySpineCParam_val (q i : Nat)
       boundarySpineCValue q i := by
   exact RouteENonzeroSeam.ofNat_val _ _ _
 
+theorem boundarySpineCValue_succ (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i + 1 ≤ half q + 2) :
+    boundarySpineCValue q (i + 1) =
+      boundarySpineCValue q i - 1 := by
+  simp [boundarySpineCValue, half, modulus] at hhi ⊢
+  omega
+
+theorem boundarySpineCParam_pred_eq (q i : Nat)
+    (hlo : 5 ≤ i) (hhi : i ≤ half q + 2)
+    (hnext : i + 1 ≤ half q + 2)
+    (hnot_one :
+      (boundarySpineCParam q i hlo hhi).1.val ≠ 1) :
+    boundaryPredParam q (boundarySpineCParam q i hlo hhi) hnot_one =
+      boundarySpineCParam q (i + 1) (by omega) hnext := by
+  apply Subtype.ext
+  rw [boundaryPredParam_val]
+  change (((boundarySpineCValue q i : Nat) : ZMod (modulus q)) - 1) =
+    ((boundarySpineCValue q (i + 1) : Nat) : ZMod (modulus q))
+  rw [boundarySpineCValue_succ q i hlo hnext]
+  rw [Nat.cast_pred
+    (R := ZMod (modulus q))
+    (boundarySpineCValue_range q i hlo hhi).1]
+
+theorem boundarySpineCValue_last (q : Nat) :
+    boundarySpineCValue q (half q + 2) = half q := by
+  simp [boundarySpineCValue, half, modulus]
+  omega
+
+theorem boundarySpineCParam_last_eq_half (q : Nat)
+    (hlo : 5 ≤ half q + 2)
+    (hhi : half q + 2 ≤ half q + 2) :
+    boundarySpineCParam q (half q + 2) hlo hhi =
+      boundaryParamHalf q := by
+  apply Subtype.ext
+  apply ZMod.val_injective (modulus q)
+  rw [boundarySpineCParam_val, boundaryParamHalf, RouteENonzeroSeam.ofNat_val,
+    boundarySpineCValue_last]
+
 noncomputable def boundaryCycleSpineNode (q i : Nat)
     (hi : i < boundaryCycleSpineCount q) :
     RouteEBoundaryNode (modulus q) :=

@@ -101,6 +101,10 @@ New arithmetic names include:
 - `boundaryCycleSpine_step_one`
 - `boundaryCycleSpine_step_two`
 - `boundaryCycleSpine_step_three`
+- `boundarySpineCValue_succ`
+- `boundarySpineCParam_pred_eq`
+- `boundarySpineCValue_last`
+- `boundarySpineCParam_last_eq_half`
 - `RouteENonzeroSeam.ofNat_val`
 - `routeEBoundaryNodeOfNat`
 - `boundaryFirstEvenValue_range`
@@ -229,6 +233,8 @@ Closed or proof-facing in the bundle:
   endpoints, whose total is `Fintype.card (RouteEBoundaryNode (modulus q))`.
 - the first five nodes of the explicit spine enumeration and the first four
   successor checks for `boundaryQuotient`.
+- the C-run predecessor equality and terminal C_h identification needed to
+  extend the spine successor proof.
 - numeric nonzero seam constructors and range lemmas for the four modular
   residue chains used by the explicit boundary-cycle orbit enumeration.
 
