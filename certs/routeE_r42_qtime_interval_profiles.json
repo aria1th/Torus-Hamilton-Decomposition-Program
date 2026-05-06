@@ -1,5 +1,967 @@
 {
   "family": "R42, m=48*q+42, x=z=6*q+5",
+  "generic_subbranches": [
+    {
+      "all_interval_counts_affine_in_s": true,
+      "all_member_counts_affine_in_s": true,
+      "edge_count": 22,
+      "edge_interval_formulas": [
+        {
+          "dst": 13,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 3",
+          "member_count_formula": "8*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 27,
+              "member_count": 27,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 35,
+              "member_count": 35,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 14,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 1",
+          "member_count_formula": "2*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 7,
+              "member_count": 7,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 9,
+              "member_count": 9,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 15,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 1",
+          "member_count_formula": "2*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 7,
+              "member_count": 7,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 9,
+              "member_count": 9,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 9,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 1",
+          "member_count_formula": "2*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 7,
+              "member_count": 7,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 9,
+              "member_count": 9,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 10,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 1",
+          "member_count_formula": "2*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 7,
+              "member_count": 7,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 9,
+              "member_count": 9,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 11,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 3",
+          "member_count_formula": "8*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 27,
+              "member_count": 27,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 35,
+              "member_count": 35,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 18,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 5",
+          "member_count_formula": "12*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 41,
+              "member_count": 41,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 53,
+              "member_count": 53,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 19,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 5",
+          "member_count_formula": "12*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 41,
+              "member_count": 41,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 53,
+              "member_count": 53,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 20,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 5",
+          "member_count_formula": "12*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 41,
+              "member_count": 41,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 53,
+              "member_count": 53,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 28,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "6*s + 2",
+          "member_count_formula": "6*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 20,
+              "member_count": 20,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 26,
+              "member_count": 26,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 5
+        },
+        {
+          "dst": 28,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "6*s + 2",
+          "member_count_formula": "6*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 20,
+              "member_count": 20,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 26,
+              "member_count": 26,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 7
+        },
+        {
+          "dst": 4,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 3",
+          "member_count_formula": "8*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 27,
+              "member_count": 27,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 35,
+              "member_count": 35,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 13
+        },
+        {
+          "dst": 6,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 3",
+          "member_count_formula": "8*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 27,
+              "member_count": 27,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 35,
+              "member_count": 35,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 13
+        },
+        {
+          "dst": 25,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 3",
+          "member_count_formula": "8*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 27,
+              "member_count": 27,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 35,
+              "member_count": 35,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 18
+        },
+        {
+          "dst": 26,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 5",
+          "member_count_formula": "12*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 41,
+              "member_count": 41,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 53,
+              "member_count": 53,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 20
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 1",
+          "member_count_formula": "4*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 13,
+              "member_count": 13,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 17,
+              "member_count": 17,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 21
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 2",
+          "member_count_formula": "4*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 14,
+              "member_count": 14,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 18,
+              "member_count": 18,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 22
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": true,
+          "interval_count_formula": "16*s + 7",
+          "member_count_formula": "24*s + 10",
+          "sample_points": [
+            {
+              "interval_count": 55,
+              "member_count": 82,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 71,
+              "member_count": 106,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 25
+        },
+        {
+          "dst": 13,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "24*s + 9",
+          "member_count_formula": "24*s + 9",
+          "sample_points": [
+            {
+              "interval_count": 81,
+              "member_count": 81,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 105,
+              "member_count": 105,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 16,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 2",
+          "member_count_formula": "4*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 14,
+              "member_count": 14,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 18,
+              "member_count": 18,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 17,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 1",
+          "member_count_formula": "4*s + 1",
+          "sample_points": [
+            {
+              "interval_count": 13,
+              "member_count": 13,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 17,
+              "member_count": 17,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 25,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "16*s + 7",
+          "member_count_formula": "16*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 55,
+              "member_count": 55,
+              "q": 6,
+              "s": 3
+            },
+            {
+              "interval_count": 71,
+              "member_count": 71,
+              "q": 8,
+              "s": 4
+            }
+          ],
+          "src": 28
+        }
+      ],
+      "multi_point_interval_edge_count": 1,
+      "name": "R42-even-q",
+      "parity": 0,
+      "sample_q_values": [
+        6,
+        8
+      ],
+      "sample_s_values": [
+        3,
+        4
+      ]
+    },
+    {
+      "all_interval_counts_affine_in_s": true,
+      "all_member_counts_affine_in_s": true,
+      "edge_count": 22,
+      "edge_interval_formulas": [
+        {
+          "dst": 13,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 7",
+          "member_count_formula": "8*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 31,
+              "member_count": 31,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 39,
+              "member_count": 39,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 14,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 2",
+          "member_count_formula": "2*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 8,
+              "member_count": 8,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 10,
+              "member_count": 10,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 15,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 2",
+          "member_count_formula": "2*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 8,
+              "member_count": 8,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 10,
+              "member_count": 10,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 2
+        },
+        {
+          "dst": 9,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 2",
+          "member_count_formula": "2*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 8,
+              "member_count": 8,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 10,
+              "member_count": 10,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 10,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "2*s + 2",
+          "member_count_formula": "2*s + 2",
+          "sample_points": [
+            {
+              "interval_count": 8,
+              "member_count": 8,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 10,
+              "member_count": 10,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 11,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 7",
+          "member_count_formula": "8*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 31,
+              "member_count": 31,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 39,
+              "member_count": 39,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 18,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 11",
+          "member_count_formula": "12*s + 11",
+          "sample_points": [
+            {
+              "interval_count": 47,
+              "member_count": 47,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 59,
+              "member_count": 59,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 19,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 11",
+          "member_count_formula": "12*s + 11",
+          "sample_points": [
+            {
+              "interval_count": 47,
+              "member_count": 47,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 59,
+              "member_count": 59,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 20,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 11",
+          "member_count_formula": "12*s + 11",
+          "sample_points": [
+            {
+              "interval_count": 47,
+              "member_count": 47,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 59,
+              "member_count": 59,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 3
+        },
+        {
+          "dst": 28,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "6*s + 5",
+          "member_count_formula": "6*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 23,
+              "member_count": 23,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 29,
+              "member_count": 29,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 5
+        },
+        {
+          "dst": 28,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "6*s + 5",
+          "member_count_formula": "6*s + 5",
+          "sample_points": [
+            {
+              "interval_count": 23,
+              "member_count": 23,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 29,
+              "member_count": 29,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 7
+        },
+        {
+          "dst": 4,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 7",
+          "member_count_formula": "8*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 31,
+              "member_count": 31,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 39,
+              "member_count": 39,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 13
+        },
+        {
+          "dst": 6,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 7",
+          "member_count_formula": "8*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 31,
+              "member_count": 31,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 39,
+              "member_count": 39,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 13
+        },
+        {
+          "dst": 25,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "8*s + 7",
+          "member_count_formula": "8*s + 7",
+          "sample_points": [
+            {
+              "interval_count": 31,
+              "member_count": 31,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 39,
+              "member_count": 39,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 18
+        },
+        {
+          "dst": 26,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "12*s + 11",
+          "member_count_formula": "12*s + 11",
+          "sample_points": [
+            {
+              "interval_count": 47,
+              "member_count": 47,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 59,
+              "member_count": 59,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 20
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 3",
+          "member_count_formula": "4*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 15,
+              "member_count": 15,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 19,
+              "member_count": 19,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 21
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 4",
+          "member_count_formula": "4*s + 4",
+          "sample_points": [
+            {
+              "interval_count": 16,
+              "member_count": 16,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 20,
+              "member_count": 20,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 22
+        },
+        {
+          "dst": 3,
+          "has_multi_point_intervals": true,
+          "interval_count_formula": "16*s + 15",
+          "member_count_formula": "24*s + 22",
+          "sample_points": [
+            {
+              "interval_count": 63,
+              "member_count": 94,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 79,
+              "member_count": 118,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 25
+        },
+        {
+          "dst": 13,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "24*s + 21",
+          "member_count_formula": "24*s + 21",
+          "sample_points": [
+            {
+              "interval_count": 93,
+              "member_count": 93,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 117,
+              "member_count": 117,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 16,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 4",
+          "member_count_formula": "4*s + 4",
+          "sample_points": [
+            {
+              "interval_count": 16,
+              "member_count": 16,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 20,
+              "member_count": 20,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 17,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "4*s + 3",
+          "member_count_formula": "4*s + 3",
+          "sample_points": [
+            {
+              "interval_count": 15,
+              "member_count": 15,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 19,
+              "member_count": 19,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 26
+        },
+        {
+          "dst": 25,
+          "has_multi_point_intervals": false,
+          "interval_count_formula": "16*s + 15",
+          "member_count_formula": "16*s + 15",
+          "sample_points": [
+            {
+              "interval_count": 63,
+              "member_count": 63,
+              "q": 7,
+              "s": 3
+            },
+            {
+              "interval_count": 79,
+              "member_count": 79,
+              "q": 9,
+              "s": 4
+            }
+          ],
+          "src": 28
+        }
+      ],
+      "multi_point_interval_edge_count": 1,
+      "name": "R42-odd-q",
+      "parity": 1,
+      "sample_q_values": [
+        7,
+        9
+      ],
+      "sample_s_values": [
+        3,
+        4
+      ]
+    }
+  ],
   "promotion_impact": {
     "closes_residue": false,
     "diagnosis": "The remaining qtime-missing edge groups are interval-affine on sampled tail witnesses.  This suggests an interval grammar for time equations, but it is still sampled evidence.",
@@ -764,6 +1726,8 @@
   ],
   "schema": "routeE_r42_qtime_interval_profiles_v1",
   "summary": {
+    "all_interval_counts_affine_in_s": true,
+    "all_member_counts_affine_in_s": true,
     "all_nonaffine_edges_interval_affine": true,
     "all_samples_ok": true,
     "bad_interval_counts": {
@@ -771,6 +1735,10 @@
       "7": 0,
       "8": 0,
       "9": 0
+    },
+    "branch_multi_point_interval_edge_counts": {
+      "R42-even-q": 1,
+      "R42-odd-q": 1
     },
     "nonaffine_edge_counts": {
       "6": 22,

@@ -823,6 +823,8 @@
     ],
     "schema": "routeE_r42_qtime_interval_profiles_v1",
     "summary": {
+      "all_interval_counts_affine_in_s": true,
+      "all_member_counts_affine_in_s": true,
       "all_nonaffine_edges_interval_affine": true,
       "all_samples_ok": true,
       "bad_interval_counts": {
@@ -830,6 +832,10 @@
         "7": 0,
         "8": 0,
         "9": 0
+      },
+      "branch_multi_point_interval_edge_counts": {
+        "R42-even-q": 1,
+        "R42-odd-q": 1
       },
       "nonaffine_edge_counts": {
         "6": 22,

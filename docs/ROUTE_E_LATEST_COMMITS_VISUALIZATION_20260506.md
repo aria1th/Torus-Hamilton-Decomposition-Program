@@ -259,7 +259,11 @@ q=0..6 samples and have strongly connected support.
     groups are not arbitrary.  On q=6,7,8,9, each such edge becomes qtime-affine
     after splitting by contiguous source-`a` intervals.  The next R42 grammar
     target is therefore an interval-level qtime table.
-20. The open residue queue is now explicit: R42 remains the active affine
+20. The interval table is now smaller than it first looked: all interval-count
+    and member-count laws are affine in the branch parameter, and the only
+    multi-point interval edge is `25 -> 3`; the other 21 qtime-missing edges are
+    singleton-interval families.
+21. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

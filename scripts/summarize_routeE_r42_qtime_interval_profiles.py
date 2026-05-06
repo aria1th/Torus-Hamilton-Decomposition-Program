@@ -23,6 +23,32 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BIN = Path(tempfile.gettempdir()) / "routeE_allpair_cpp_v1_2"
 
 
+def affine_formula(points: list[tuple[int, int]], var: str) -> str | None:
+    if not points:
+        return None
+    if len(points) == 1:
+        return str(points[0][1])
+    x0, y0 = points[0]
+    x1, y1 = points[1]
+    if x1 == x0:
+        return None
+    num = y1 - y0
+    den = x1 - x0
+    if num % den:
+        return None
+    slope = num // den
+    intercept = y0 - slope * x0
+    if any(slope * x + intercept != y for x, y in points):
+        return None
+    if slope == 0:
+        return str(intercept)
+    term = var if slope == 1 else f"{slope}*{var}"
+    if intercept == 0:
+        return term
+    sign = "+" if intercept > 0 else "-"
+    return f"{term} {sign} {abs(intercept)}"
+
+
 def parse_range(text: str) -> list[int]:
     if ":" in text:
         start, end = [int(part) for part in text.split(":", 1)]
@@ -109,21 +135,112 @@ def summarize_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     }
 
 
+def branch_formula_summary(samples: list[dict[str, Any]], parity: int) -> dict[str, Any]:
+    name = "R42-even-q" if parity == 0 else "R42-odd-q"
+    selected = [
+        sample
+        for sample in samples
+        if sample.get("ok") and sample["q"] % 2 == parity
+    ]
+    edge_keys = sorted(
+        {
+            (edge["src"], edge["dst"])
+            for sample in selected
+            for edge in sample.get("nonaffine_edges", [])
+        }
+    )
+    rows = []
+    all_interval_counts_affine = True
+    all_member_counts_affine = True
+    for src, dst in edge_keys:
+        per_sample = []
+        for sample in selected:
+            edge = next(
+                edge
+                for edge in sample.get("nonaffine_edges", [])
+                if edge["src"] == src and edge["dst"] == dst
+            )
+            s = sample["q"] // 2 if parity == 0 else (sample["q"] - 1) // 2
+            per_sample.append((s, sample, edge))
+        interval_formula = affine_formula(
+            [(s, edge["interval_count"]) for s, _, edge in per_sample], "s"
+        )
+        member_formula = affine_formula(
+            [(s, edge["member_count"]) for s, _, edge in per_sample], "s"
+        )
+        all_interval_counts_affine = (
+            all_interval_counts_affine and interval_formula is not None
+        )
+        all_member_counts_affine = all_member_counts_affine and member_formula is not None
+        rows.append(
+            {
+                "src": src,
+                "dst": dst,
+                "interval_count_formula": interval_formula,
+                "member_count_formula": member_formula,
+                "has_multi_point_intervals": any(
+                    edge["member_count"] != edge["interval_count"]
+                    for _, _, edge in per_sample
+                ),
+                "sample_points": [
+                    {
+                        "s": s,
+                        "q": sample["q"],
+                        "interval_count": edge["interval_count"],
+                        "member_count": edge["member_count"],
+                    }
+                    for s, sample, edge in per_sample
+                ],
+            }
+        )
+    return {
+        "name": name,
+        "parity": parity,
+        "sample_q_values": [sample["q"] for sample in selected],
+        "sample_s_values": [
+            sample["q"] // 2 if parity == 0 else (sample["q"] - 1) // 2
+            for sample in selected
+        ],
+        "edge_count": len(edge_keys),
+        "all_interval_counts_affine_in_s": all_interval_counts_affine,
+        "all_member_counts_affine_in_s": all_member_counts_affine,
+        "multi_point_interval_edge_count": sum(
+            1 for row in rows if row["has_multi_point_intervals"]
+        ),
+        "edge_interval_formulas": rows,
+    }
+
+
 def build_summary(q_values: list[int], binary: Path, compile_binary: bool) -> dict[str, Any]:
     if compile_binary:
         r42.compile_checker(binary)
     with tempfile.TemporaryDirectory(prefix="routeE-r42-qtime-intervals-") as tmp:
         samples = [summarize_sample(binary, q, Path(tmp)) for q in q_values]
+    branch_formulas = [
+        branch_formula_summary(samples, 0),
+        branch_formula_summary(samples, 1),
+    ]
     return {
         "schema": "routeE_r42_qtime_interval_profiles_v1",
         "family": "R42, m=48*q+42, x=z=6*q+5",
         "q_values": q_values,
         "samples": samples,
+        "generic_subbranches": branch_formulas,
         "summary": {
             "all_samples_ok": all(sample.get("ok") for sample in samples),
             "all_nonaffine_edges_interval_affine": all(
                 sample.get("all_nonaffine_edges_interval_affine") for sample in samples
             ),
+            "all_interval_counts_affine_in_s": all(
+                branch.get("all_interval_counts_affine_in_s") for branch in branch_formulas
+            ),
+            "all_member_counts_affine_in_s": all(
+                branch.get("all_member_counts_affine_in_s") for branch in branch_formulas
+            ),
+            "branch_multi_point_interval_edge_counts": {
+                branch["name"]: branch["multi_point_interval_edge_count"]
+                for branch in branch_formulas
+            },
             "nonaffine_edge_counts": {
                 str(sample.get("q")): sample.get("nonaffine_edge_count")
                 for sample in samples

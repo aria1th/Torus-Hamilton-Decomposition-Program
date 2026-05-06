@@ -1051,6 +1051,18 @@ source-`a` intervals, every interval has affine qtime.  Thus the remaining
 R42 time-equation problem is now localized to an interval-level qtime grammar,
 not an arbitrary pointwise law.
 
+The same artifact now records the size laws for this interval grammar.  For
+each parity branch, all 22 interval-count and member-count laws are affine in
+the branch parameter `s`.  Moreover, only one edge has multi-point intervals:
+`25 -> 3`.  Its interval/member counts are
+
+```text
+R42-even-q: interval_count = 16*s + 7,  member_count = 24*s + 10
+R42-odd-q:  interval_count = 16*s + 15, member_count = 24*s + 22
+```
+
+All other remaining qtime-missing edges are singleton-interval families.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
 minimality.  The R42 promotion audit now counts 18 verified evidence items but
