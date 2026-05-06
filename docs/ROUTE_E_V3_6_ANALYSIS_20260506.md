@@ -129,16 +129,24 @@ B16 and R14e branch surfaces are now also named in Lean:
 - `RouteEB16.modulus`
 - `RouteEB16.counts_sum`
 - `RouteEB16.routeCounts`
+- `RouteEB16.allPairTimeMassTarget`
+- `RouteEB16.allPairTimeMassTarget_sum_eq_total`
+- `RouteEB16.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteEB16.allPairTimeMassTotalTarget_eq_modulus_pow_four`
 - `RouteER14e.modulus`
 - `RouteER14e.counts_sum`
 - `RouteER14e.routeCounts`
+- `RouteER14e.allPairTimeMassTarget`
+- `RouteER14e.allPairTimeMassTarget_sum_eq_total`
+- `RouteER14e.allPairTimeMassTarget_sum_eq_modulus_pow_four`
 - `RouteER14e.allPairTimeMassTotalTarget_eq_modulus_pow_four`
 
 These theorem names intentionally stop at count admissibility and symbolic
-time-mass target identities.  The bundle still marks the B16 boundary
-one-cycle proof and the R14e boundary formula/one-cycle proof as not yet
-fully symbolic.
+time-mass target identities.  The label-indexed mass functions package the
+same target polynomials over `RouteEB20.AllPairLabel`; they are not
+first-return theorems.  The bundle still marks the B16 boundary one-cycle
+proof and the R14e boundary formula/one-cycle proof as not yet fully
+symbolic.
 
 The file checks with:
 

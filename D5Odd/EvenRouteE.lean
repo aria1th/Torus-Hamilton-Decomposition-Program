@@ -340,6 +340,36 @@ def allPairTimeMassTotalTarget (q : Nat) : Nat :=
   allPairTime24Target q +
   allPairTime34Target q
 
+def allPairTimeMassTarget (q : Nat) : RouteEB20.AllPairLabel → Nat
+  | .Z => allPairTimeZTarget q
+  | .L01 => allPairTime01Target q
+  | .L02 => allPairTime02Target q
+  | .L03 => allPairTime03Target q
+  | .L04 => allPairTime04Target q
+  | .L12 => allPairTime12Target q
+  | .L13 => allPairTime13Target q
+  | .L14 => allPairTime14Target q
+  | .L23 => allPairTime23Target q
+  | .L24 => allPairTime24Target q
+  | .L34 => allPairTime34Target q
+
+theorem allPairTimeMassTarget_sum_eq_total (q : Nat) :
+    Finset.univ.sum (allPairTimeMassTarget q) =
+      allPairTimeMassTotalTarget q := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [allPairTimeMassTarget, allPairTimeMassTotalTarget]
+  ac_rfl
+
 theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (q : Nat) :
     allPairTimeMassTotalTarget q = modulus q ^ 4 := by
   simp [allPairTimeMassTotalTarget, allPairTimeZTarget,
@@ -348,6 +378,11 @@ theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (q : Nat) :
     allPairTime14Target, allPairTime23Target, allPairTime24Target,
     allPairTime34Target, modulus]
   ring
+
+theorem allPairTimeMassTarget_sum_eq_modulus_pow_four (q : Nat) :
+    Finset.univ.sum (allPairTimeMassTarget q) = modulus q ^ 4 := by
+  rw [allPairTimeMassTarget_sum_eq_total,
+    allPairTimeMassTotalTarget_eq_modulus_pow_four]
 
 end RouteEB16
 
@@ -429,6 +464,36 @@ def allPairTimeMassTotalTarget (k : Nat) : Nat :=
   allPairTime24Target k +
   allPairTime34Target k
 
+def allPairTimeMassTarget (k : Nat) : RouteEB20.AllPairLabel → Nat
+  | .Z => allPairTimeZTarget k
+  | .L01 => allPairTime01Target k
+  | .L02 => allPairTime02Target k
+  | .L03 => allPairTime03Target k
+  | .L04 => allPairTime04Target k
+  | .L12 => allPairTime12Target k
+  | .L13 => allPairTime13Target k
+  | .L14 => allPairTime14Target k
+  | .L23 => allPairTime23Target k
+  | .L24 => allPairTime24Target k
+  | .L34 => allPairTime34Target k
+
+theorem allPairTimeMassTarget_sum_eq_total (k : Nat) :
+    Finset.univ.sum (allPairTimeMassTarget k) =
+      allPairTimeMassTotalTarget k := by
+  have huniv :
+      (Finset.univ : Finset RouteEB20.AllPairLabel) =
+        ({ RouteEB20.AllPairLabel.Z, RouteEB20.AllPairLabel.L01,
+          RouteEB20.AllPairLabel.L02, RouteEB20.AllPairLabel.L03,
+          RouteEB20.AllPairLabel.L04, RouteEB20.AllPairLabel.L12,
+          RouteEB20.AllPairLabel.L13, RouteEB20.AllPairLabel.L14,
+          RouteEB20.AllPairLabel.L23, RouteEB20.AllPairLabel.L24,
+          RouteEB20.AllPairLabel.L34 } : Finset RouteEB20.AllPairLabel) := by
+    ext x
+    fin_cases x <;> simp
+  rw [huniv]
+  simp [allPairTimeMassTarget, allPairTimeMassTotalTarget]
+  ac_rfl
+
 theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (k : Nat) :
     allPairTimeMassTotalTarget k = modulus k ^ 4 := by
   simp [allPairTimeMassTotalTarget, allPairTimeZTarget,
@@ -437,6 +502,11 @@ theorem allPairTimeMassTotalTarget_eq_modulus_pow_four (k : Nat) :
     allPairTime14Target, allPairTime23Target, allPairTime24Target,
     allPairTime34Target, modulus]
   ring
+
+theorem allPairTimeMassTarget_sum_eq_modulus_pow_four (k : Nat) :
+    Finset.univ.sum (allPairTimeMassTarget k) = modulus k ^ 4 := by
+  rw [allPairTimeMassTarget_sum_eq_total,
+    allPairTimeMassTotalTarget_eq_modulus_pow_four]
 
 end RouteER14e
 
