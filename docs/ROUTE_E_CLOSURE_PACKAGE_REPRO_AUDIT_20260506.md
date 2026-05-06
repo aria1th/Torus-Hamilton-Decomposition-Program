@@ -72,6 +72,20 @@ R14e:
   missing the other finite CSV inputs needed for a faithful rerun.
 - The script writes `/mnt/data/r14e_complete_verifier_output.json`.
 
+The included R14e `m=206` CSV pair does pass an independent stdlib-only finite
+check:
+
+```text
+rows = expected_rows = 2051
+total_time = m^4 = 1800814096
+section_cycle_lengths = [2051]
+boundary_step_sum = 2051
+insertion_dist = {1: 409, 2: 1, 4: 50, 5: 103, 6: 51, 206: 1, 413: 1}
+```
+
+This is positive finite evidence for `m=206`, but it is not enough to rerun the
+recorded interpolation/verifier output for `m=14,62,110,158,206`.
+
 ## Lean Consequence
 
 The current Lean state should treat these packages as proof-facing evidence,
