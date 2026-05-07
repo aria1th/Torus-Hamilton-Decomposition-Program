@@ -64,6 +64,10 @@ DEFAULT_QTIME_INTERVAL_LAWS = ROOT / "certs" / "routeE_r42_qtime_interval_laws.j
 DEFAULT_QTIME_INTERVAL_LAWS_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_qtime_interval_laws_verification.json"
 )
+DEFAULT_C_SKELETON = ROOT / "certs" / "routeE_r42_c_skeleton.json"
+DEFAULT_C_SKELETON_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_c_skeleton_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -118,6 +122,8 @@ def build_record(
     qtime_interval_profiles_verification_path: Path,
     qtime_interval_laws_path: Path,
     qtime_interval_laws_verification_path: Path,
+    c_skeleton_path: Path,
+    c_skeleton_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -218,6 +224,16 @@ def build_record(
     qtime_interval_laws_verification = (
         load_json(qtime_interval_laws_verification_path)
         if qtime_interval_laws_verification_path.exists()
+        else {}
+    )
+    c_skeleton = (
+        load_json(c_skeleton_path)
+        if c_skeleton_path.exists()
+        else {}
+    )
+    c_skeleton_verification = (
+        load_json(c_skeleton_verification_path)
+        if c_skeleton_verification_path.exists()
         else {}
     )
     finite_boundary_cases = (
@@ -333,6 +349,8 @@ def build_record(
             "qtime_interval_laws_verification": str(
                 qtime_interval_laws_verification_path
             ),
+            "c_skeleton": str(c_skeleton_path),
+            "c_skeleton_verification": str(c_skeleton_verification_path),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
                 finite_boundary_cases_verification_path
@@ -537,6 +555,23 @@ def build_record(
                 "occurrence_count"
             ),
         },
+        "c_skeleton_summary": {
+            "schema": c_skeleton.get("schema"),
+            "parameters": c_skeleton.get("parameters"),
+            "coarse_skeleton": c_skeleton.get("coarse_skeleton"),
+            "row_sum_formulas": c_skeleton.get("row_sum_formulas"),
+            "clock_carry_hint": c_skeleton.get("clock_carry_hint"),
+            "checks": c_skeleton.get("checks"),
+            "promotion_impact": c_skeleton.get("promotion_impact"),
+        },
+        "c_skeleton_verification_summary": {
+            "schema": c_skeleton_verification.get("schema"),
+            "ok": c_skeleton_verification.get("ok"),
+            "transition_row_count": c_skeleton_verification.get(
+                "transition_row_count"
+            ),
+            "error_count": c_skeleton_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -610,6 +645,7 @@ def build_record(
             "quotient or splice one-cycle proof",
             "sum tau = m^4 time identity",
             "finite boundary case q = 0 integration",
+            "clock-carry refinement of the c-band qtime grammar",
             "Lean-facing theorem endpoint and theorem-name synchronization",
         ],
         "interpretation": (
@@ -706,6 +742,12 @@ def main() -> None:
         type=Path,
         default=DEFAULT_QTIME_INTERVAL_LAWS_VERIFICATION,
     )
+    parser.add_argument("--c-skeleton", type=Path, default=DEFAULT_C_SKELETON)
+    parser.add_argument(
+        "--c-skeleton-verification",
+        type=Path,
+        default=DEFAULT_C_SKELETON_VERIFICATION,
+    )
     parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
@@ -775,6 +817,8 @@ def main() -> None:
         args.qtime_interval_profiles_verification,
         args.qtime_interval_laws,
         args.qtime_interval_laws_verification,
+        args.c_skeleton,
+        args.c_skeleton_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

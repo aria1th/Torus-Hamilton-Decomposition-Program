@@ -93,6 +93,13 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_c_skeleton.json and certs/routeE_r42_c_skeleton_verification.json",
+      "level": "clock-carry reparameterization evidence",
+      "missing": null,
+      "name": "R42 c-parameter clock-carry skeleton is verified",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_finite_boundary_cases.json and certs/routeE_r42_finite_boundary_cases_verification.json",
       "level": "finite boundary evidence",
       "missing": null,
@@ -157,7 +164,7 @@
     }
   ],
   "conclusion": "R42 has strong finite/symbolic-support evidence, but it is not promotion-ready until pointwise first-return, no-early, and Lean-facing endpoint artifacts exist.",
-  "evidence_items_ok": 19,
+  "evidence_items_ok": 20,
   "promotion_ready": false,
   "record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_branch_record.json",
   "required_theorem_items_missing": [

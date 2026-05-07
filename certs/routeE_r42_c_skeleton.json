@@ -1,0 +1,204 @@
+{
+  "branch": "R42",
+  "checks": {
+    "all_transition_formulas_match_expected_c_skeleton": true,
+    "error_count": 0,
+    "errors": []
+  },
+  "clock_carry_hint": {
+    "band_count": "8 full c-bands plus endpoint correction since m = 8*c + 2",
+    "expected_refined_state": [
+      "boundary block",
+      "c-band j",
+      "zero-clock winner",
+      "wrap/carry residue"
+    ],
+    "prototype_edge": {
+      "diagnosis": "balanced Beatty/rotation-carry interval word, not simple ordinal order",
+      "edge": "25 -> 3",
+      "interval_count": "m/6 = (4*c + 1)/3",
+      "member_count": "(m - 2)/4 = 2*c"
+    },
+    "source_coordinate_decomposition": "a = j*c + u"
+  },
+  "coarse_skeleton": {
+    "03": {
+      "04": "5*c",
+      "34": "3*c",
+      "self_or_Z": "1"
+    },
+    "04": {
+      "03": "5*c - 1",
+      "34": "3*c + 1",
+      "Z": "1"
+    },
+    "34": {
+      "03": "3*c",
+      "04": "3*c + 1",
+      "34": "2*c"
+    }
+  },
+  "modular_inverse_identities": [
+    {
+      "identity": "c*(4*c - 3) - 1 = ((c - 1)/2)*(8*c + 2)",
+      "inverse_mod_m": "4*c - 3",
+      "side_condition": "c is odd",
+      "unit": "c"
+    },
+    {
+      "identity": "(6*c + 1)*(4*c - 1) - 1 = (3*c - 1)*(8*c + 2)",
+      "inverse_mod_m": "4*c - 1",
+      "side_condition": "none beyond m=8*c+2",
+      "unit": "6*c + 1"
+    }
+  ],
+  "parameters": {
+    "c_congruence": "c \u2261 5 mod 6",
+    "new": "c = 6*q + 5, m = 8*c + 2, x = z = c",
+    "old": "m = 48*q + 42, x = z = 6*q + 5"
+  },
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "This records the natural c-parameter skeleton for R42.  It explains the coarse transition ratios but does not prove the clock-carry qtime grammar.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "row_sum_formulas": {
+    "03": "1 + 5*c + 3*c = 8*c + 1 = m - 1",
+    "04": "(5*c - 1) + (3*c + 1) + 1 = 8*c + 1 = m - 1",
+    "34": "3*c + (3*c + 1) + 2*c = 8*c + 1 = m - 1",
+    "Z": "1"
+  },
+  "schema": "routeE_r42_c_skeleton_v1",
+  "source": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_quotient_summary.json",
+  "transition_rows": [
+    {
+      "c_formula": "1",
+      "dst": "03",
+      "expected_c_formula": "1",
+      "ok": true,
+      "q_formula": "1",
+      "src": "03"
+    },
+    {
+      "c_formula": "5*c",
+      "dst": "04",
+      "expected_c_formula": "5*c",
+      "ok": true,
+      "q_formula": "30*q + 25",
+      "src": "03"
+    },
+    {
+      "c_formula": "3*c",
+      "dst": "34",
+      "expected_c_formula": "3*c",
+      "ok": true,
+      "q_formula": "18*q + 15",
+      "src": "03"
+    },
+    {
+      "c_formula": "0",
+      "dst": "Z",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "03"
+    },
+    {
+      "c_formula": "5*c - 1",
+      "dst": "03",
+      "expected_c_formula": "5*c - 1",
+      "ok": true,
+      "q_formula": "30*q + 24",
+      "src": "04"
+    },
+    {
+      "c_formula": "0",
+      "dst": "04",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "04"
+    },
+    {
+      "c_formula": "3*c + 1",
+      "dst": "34",
+      "expected_c_formula": "3*c + 1",
+      "ok": true,
+      "q_formula": "18*q + 16",
+      "src": "04"
+    },
+    {
+      "c_formula": "1",
+      "dst": "Z",
+      "expected_c_formula": "1",
+      "ok": true,
+      "q_formula": "1",
+      "src": "04"
+    },
+    {
+      "c_formula": "3*c",
+      "dst": "03",
+      "expected_c_formula": "3*c",
+      "ok": true,
+      "q_formula": "18*q + 15",
+      "src": "34"
+    },
+    {
+      "c_formula": "3*c + 1",
+      "dst": "04",
+      "expected_c_formula": "3*c + 1",
+      "ok": true,
+      "q_formula": "18*q + 16",
+      "src": "34"
+    },
+    {
+      "c_formula": "2*c",
+      "dst": "34",
+      "expected_c_formula": "2*c",
+      "ok": true,
+      "q_formula": "12*q + 10",
+      "src": "34"
+    },
+    {
+      "c_formula": "0",
+      "dst": "Z",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "34"
+    },
+    {
+      "c_formula": "1",
+      "dst": "03",
+      "expected_c_formula": "1",
+      "ok": true,
+      "q_formula": "1",
+      "src": "Z"
+    },
+    {
+      "c_formula": "0",
+      "dst": "04",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "Z"
+    },
+    {
+      "c_formula": "0",
+      "dst": "34",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "Z"
+    },
+    {
+      "c_formula": "0",
+      "dst": "Z",
+      "expected_c_formula": "0",
+      "ok": true,
+      "q_formula": "0",
+      "src": "Z"
+    }
+  ]
+}

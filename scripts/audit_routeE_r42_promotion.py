@@ -74,6 +74,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     qtime_interval_laws_ver = record.get(
         "qtime_interval_laws_verification_summary", {}
     )
+    c_skeleton = record.get("c_skeleton_summary", {})
+    c_skeleton_ver = record.get("c_skeleton_verification_summary", {})
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -256,6 +258,27 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             is False,
             "certs/routeE_r42_qtime_interval_laws.json and certs/routeE_r42_qtime_interval_laws_verification.json",
             "negative interval-law diagnostic",
+        ),
+        item(
+            "R42 c-parameter clock-carry skeleton is verified",
+            c_skeleton_ver.get("schema")
+            == "routeE_r42_c_skeleton_verification_v1"
+            and c_skeleton_ver.get("ok") is True
+            and c_skeleton_ver.get("transition_row_count") == 16
+            and c_skeleton_ver.get("error_count") == 0
+            and c_skeleton.get("schema") == "routeE_r42_c_skeleton_v1"
+            and c_skeleton.get("parameters", {}).get("new")
+            == "c = 6*q + 5, m = 8*c + 2, x = z = c"
+            and c_skeleton.get("checks", {}).get(
+                "all_transition_formulas_match_expected_c_skeleton"
+            )
+            is True
+            and c_skeleton.get("clock_carry_hint", {})
+            .get("prototype_edge", {})
+            .get("member_count")
+            == "(m - 2)/4 = 2*c",
+            "certs/routeE_r42_c_skeleton.json and certs/routeE_r42_c_skeleton_verification.json",
+            "clock-carry reparameterization evidence",
         ),
         item(
             "R42 finite boundary cases are recorded",

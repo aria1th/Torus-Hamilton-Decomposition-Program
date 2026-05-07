@@ -1,0 +1,14 @@
+{
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "This records the natural c-parameter skeleton for R42.  It explains the coarse transition ratios but does not prove the clock-carry qtime grammar.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_c_skeleton_verification_v1",
+  "skeleton": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_c_skeleton.json",
+  "transition_row_count": 16
+}

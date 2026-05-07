@@ -52,6 +52,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 all-pair transition matrix artifact | `scripts/verify_routeE_r42_allpair_transition_fits.py`, `certs/routeE_r42_allpair_transition_fit_verification.json` | done |
 | Mine R42 pointwise first-return law complexity | `scripts/summarize_routeE_r42_pointwise_law_mining.py`, `certs/routeE_r42_pointwise_law_mining.json` | done, diagnostic only |
 | Verify R42 pointwise law-mining artifact | `scripts/verify_routeE_r42_pointwise_law_mining.py`, `certs/routeE_r42_pointwise_law_mining_verification.json` | done |
+| Record R42 c-parameter skeleton | `scripts/summarize_routeE_r42_c_skeleton.py`, `certs/routeE_r42_c_skeleton.json` | done, `m=8c+2` clock-carry skeleton |
+| Verify R42 c-parameter skeleton | `scripts/verify_routeE_r42_c_skeleton.py`, `certs/routeE_r42_c_skeleton_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1071,9 +1073,45 @@ laws and `2758` occurrences are not covered by any repeated affine start/end
 group.  Therefore the next qtime grammar must use more structure than just
 start/end interval ordinal.
 
+R42 now also has the natural `c`-parameter skeleton recorded:
+
+```text
+c = 6q + 5
+m = 8c + 2
+x = z = c
+c == 5 mod 6
+```
+
+In this coordinate the coarse boundary transition laws become the simple
+`5c/3c/2c` skeleton:
+
+```text
+03 -> 04 = 5c,      03 -> 34 = 3c
+04 -> 03 = 5c - 1,  04 -> 34 = 3c + 1,  04 -> Z = 1
+34 -> 03 = 3c,      34 -> 04 = 3c + 1,  34 -> 34 = 2c
+```
+
+The committed verifier checks all 16 transition entries against the old
+`q`-formulas.  It also records the modular inverse identities
+
+```text
+c^{-1} == 4c - 3       mod (8c + 2)
+(6c + 1)^{-1} == 4c - 1 mod (8c + 2)
+```
+
+and marks the expected refined state as
+
+```text
+boundary block + c-band + zero-clock winner + wrap/carry residue.
+```
+
+This explains why the 29-block/69-edge quotient is probably a projection of a
+finer clock-carry transducer.  It is not a branch closure: it still leaves the
+pointwise first-return equations and no-early proof open.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 19 verified evidence items but
+minimality.  The R42 promotion audit now counts 20 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text

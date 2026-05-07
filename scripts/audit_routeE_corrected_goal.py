@@ -72,6 +72,10 @@ FILES = {
     "r42_pointwise_law_mining_verification": ROOT
     / "certs"
     / "routeE_r42_pointwise_law_mining_verification.json",
+    "r42_c_skeleton": ROOT / "certs" / "routeE_r42_c_skeleton.json",
+    "r42_c_skeleton_verification": ROOT
+    / "certs"
+    / "routeE_r42_c_skeleton_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -138,6 +142,8 @@ def build_audit() -> dict[str, Any]:
     r42_pointwise_law_mining_verification = load_json(
         FILES["r42_pointwise_law_mining_verification"]
     )
+    r42_c_skeleton = load_json(FILES["r42_c_skeleton"])
+    r42_c_skeleton_verification = load_json(FILES["r42_c_skeleton_verification"])
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
@@ -358,6 +364,21 @@ def build_audit() -> dict[str, Any]:
             == "routeE_r42_pointwise_law_mining_verification_v1"
             and r42_pointwise_law_mining_verification.get("ok") is True,
             "certs/routeE_r42_pointwise_law_mining.json and certs/routeE_r42_pointwise_law_mining_verification.json",
+        ),
+        item(
+            "R42 c-parameter clock-carry skeleton is recorded and verified",
+            r42_c_skeleton.get("schema") == "routeE_r42_c_skeleton_v1"
+            and r42_c_skeleton.get("parameters", {}).get("new")
+            == "c = 6*q + 5, m = 8*c + 2, x = z = c"
+            and r42_c_skeleton.get("checks", {}).get(
+                "all_transition_formulas_match_expected_c_skeleton"
+            )
+            is True
+            and r42_c_skeleton_verification.get("schema")
+            == "routeE_r42_c_skeleton_verification_v1"
+            and r42_c_skeleton_verification.get("ok") is True
+            and r42_c_skeleton_verification.get("transition_row_count") == 16,
+            "certs/routeE_r42_c_skeleton.json and certs/routeE_r42_c_skeleton_verification.json",
         ),
         item(
             "R42 affine q=0..4 samples verify with all-pair checker",
@@ -581,7 +602,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 19
+            and r42_promotion_audit.get("evidence_items_ok") == 20
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

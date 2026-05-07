@@ -24,6 +24,7 @@ flowchart LR
   P[All-pair portfolio<br/>24/24 even residues sampled]
   R38[R38 gate-transducer target<br/>negative controls preserved]
   R42[R42 affine target<br/>m=48q+42, x=z=6q+5]
+  RC[R42 c-skeleton<br/>m=8c+2, x=z=c]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -41,7 +42,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -267,7 +268,21 @@ q=0..6 samples and have strongly connected support.
     rejected.  It leaves 2266 repeated non-affine ordinal groups and 2758
     uncovered interval occurrences on q=6..11, so the next qtime law must use a
     richer interval key.
-22. The open residue queue is now explicit: R42 remains the active affine
+22. R42 has now been reparametrized by `c=6q+5`, so `m=8c+2` and `x=z=c`.
+    In this coordinate the boundary skeleton has transition masses
+    `5c,3c,2c`:
+
+    ```text
+    03 -> 04 = 5c,      03 -> 34 = 3c
+    04 -> 03 = 5c - 1,  04 -> 34 = 3c + 1,  04 -> Z = 1
+    34 -> 03 = 3c,      34 -> 04 = 3c + 1,  34 -> 34 = 2c
+    ```
+
+    The verifier also records `c^{-1}=4c-3` and `(6c+1)^{-1}=4c-1`
+    modulo `m=8c+2`.  This supports the new interpretation that the
+    29-block/69-edge quotient is a projection of a finer c-band clock-carry
+    transducer.
+23. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 
