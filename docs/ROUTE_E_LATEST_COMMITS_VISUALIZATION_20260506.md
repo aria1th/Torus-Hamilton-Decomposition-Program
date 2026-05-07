@@ -294,9 +294,10 @@ q=0..6 samples and have strongly connected support.
     ```
 
     Thus `member_count=2c`, `interval_count=(4c+1)/3=m/6`, and the qtime
-    slope alphabet is `0,4c+3,12c+5` on the sampled witnesses.  This is
-    positive evidence for a carry grammar, not a proof of qtime intercepts or
-    no-early.
+    slope alphabet is `0,4c+3,12c+5` on the sampled witnesses.  The verifier
+    also checks the corresponding qtime coefficient formulas, including the
+    carry at odd `n >= (c+1)/3`.  This is positive evidence for a carry grammar,
+    not a proof of the remaining 21 qtime edges or no-early.
 24. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.

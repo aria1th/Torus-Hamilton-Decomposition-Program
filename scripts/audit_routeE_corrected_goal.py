@@ -399,6 +399,10 @@ def build_audit() -> dict[str, Any]:
                 "all_qtime_slopes_within_expected_alphabet"
             )
             is True
+            and r42_proto25_carry.get("summary", {}).get(
+                "all_qtime_coeffs_match_carry_formula"
+            )
+            is True
             and r42_proto25_carry_verification.get("schema")
             == "routeE_r42_proto25_carry_verification_v1"
             and r42_proto25_carry_verification.get("ok") is True

@@ -47,10 +47,18 @@ def build_verification(proto_path: Path) -> dict[str, Any]:
                     "bad_qtime_slope_values": sample.get("qtime_slope_values"),
                 }
             )
+        if sample.get("qtime_coeffs_match_carry_formula") is not True:
+            errors.append(
+                {
+                    "q": q,
+                    "bad_qtime_coeffs": sample.get("qtime_coeff_mismatches"),
+                }
+            )
         for flag in [
             "support_matches_carry_grammar",
             "all_intervals_qtime_affine",
             "qtime_slopes_within_expected_alphabet",
+            "qtime_coeffs_match_carry_formula",
         ]:
             if sample.get(flag) is not True:
                 errors.append({"q": q, "flag": flag, "actual": sample.get(flag)})
@@ -63,6 +71,8 @@ def build_verification(proto_path: Path) -> dict[str, Any]:
         is True
         and data.get("summary", {}).get("all_intervals_qtime_affine") is True
         and data.get("summary", {}).get("all_qtime_slopes_within_expected_alphabet")
+        is True
+        and data.get("summary", {}).get("all_qtime_coeffs_match_carry_formula")
         is True
         and data.get("promotion_impact", {}).get("closes_residue") is False
         and data.get("promotion_impact", {}).get("pointwise_equations_closed")

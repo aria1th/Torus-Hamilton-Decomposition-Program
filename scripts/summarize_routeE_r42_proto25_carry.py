@@ -53,6 +53,31 @@ def expected_intervals(c: int) -> list[tuple[int, int, str]]:
     return sorted(out)
 
 
+def expected_qtime_coeffs(c: int, lo: int, hi: int, kind: str) -> tuple[int, int]:
+    m = 8 * c + 2
+    if kind == "double_1mod3":
+        n = (lo - 1) // 3
+        threshold = (c + 1) // 3
+        high_slope = 12 * c + 5
+        low_slope = 4 * c + 3
+        slope = high_slope if ((n % 2 == 0) == (n < threshold)) else low_slope
+        if n % 2 == 0:
+            qlo = m * (lo + 1) + 4 + 6 * n
+        else:
+            carry = 1 if n >= threshold else 0
+            qlo = m * (lo + 1 - carry) + 4 * c + 5 + 6 * n
+        return slope, qlo - slope * lo
+    if kind == "single_2c1_6j":
+        j = (lo - (2 * c + 1)) // 6
+        return 0, m * lo + 4 * c + 4 + 12 * j
+    if kind == "single_2c3_6j":
+        j = (lo - (2 * c + 3)) // 6
+        return 0, m * lo + 4 * c + 8 + 12 * j
+    if kind == "single_endpoint_4c":
+        return 0, m * lo + 4 * c + 1
+    raise ValueError(f"unknown kind: {kind}")
+
+
 def collect_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     c = 6 * q + 5
     m = 8 * c + 2
@@ -130,6 +155,23 @@ def collect_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
     actual_support = [(row["lo"], row["hi"]) for row in actual]
     expected_support = [(lo, hi) for lo, hi, _ in expected]
     expected_type_by_interval = {(lo, hi): kind for lo, hi, kind in expected}
+    qtime_coeff_mismatches = []
+    for row in actual:
+        kind = expected_type_by_interval.get((row["lo"], row["hi"]))
+        if kind is None or not row["qtime_affine"]:
+            continue
+        expected_coeffs = expected_qtime_coeffs(c, row["lo"], row["hi"], kind)
+        actual_coeffs = (row["qtime_slope"], row["qtime_intercept"])
+        if expected_coeffs != actual_coeffs:
+            qtime_coeff_mismatches.append(
+                {
+                    "lo": row["lo"],
+                    "hi": row["hi"],
+                    "kind": kind,
+                    "expected": expected_coeffs,
+                    "actual": actual_coeffs,
+                }
+            )
     expected_slope_alphabet = [0, 4 * c + 3, 12 * c + 5]
     length_counts = {
         str(length): sum(1 for row in actual if row["length"] == length)
@@ -162,10 +204,19 @@ def collect_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
         "qtime_slopes_within_expected_alphabet": set(slope_values).issubset(
             set(expected_slope_alphabet)
         ),
+        "qtime_coeffs_match_carry_formula": not qtime_coeff_mismatches,
+        "qtime_coeff_mismatch_count": len(qtime_coeff_mismatches),
+        "qtime_coeff_mismatches": qtime_coeff_mismatches[:10],
         "first_intervals": [
             {
                 **row,
                 "expected_type": expected_type_by_interval.get((row["lo"], row["hi"])),
+                "expected_qtime_coeffs": expected_qtime_coeffs(
+                    c,
+                    row["lo"],
+                    row["hi"],
+                    expected_type_by_interval[(row["lo"], row["hi"])],
+                ),
             }
             for row in actual[:24]
         ],
@@ -173,6 +224,12 @@ def collect_sample(binary: Path, q: int, workdir: Path) -> dict[str, Any]:
             {
                 **row,
                 "expected_type": expected_type_by_interval.get((row["lo"], row["hi"])),
+                "expected_qtime_coeffs": expected_qtime_coeffs(
+                    c,
+                    row["lo"],
+                    row["hi"],
+                    expected_type_by_interval[(row["lo"], row["hi"])],
+                ),
             }
             for row in actual[-12:]
         ],
@@ -201,6 +258,9 @@ def build_summary(q_values: list[int], binary: Path, compile_binary: bool) -> di
                 sample.get("qtime_slopes_within_expected_alphabet")
                 for sample in samples
             ),
+            "all_qtime_coeffs_match_carry_formula": all(
+                sample.get("qtime_coeffs_match_carry_formula") for sample in samples
+            ),
             "expected_support_grammar": [
                 "[1+3n, 2+3n], 0 <= n <= (2c-4)/3",
                 "{2c+1+6j}, 0 <= j <= (c-2)/3",
@@ -212,6 +272,14 @@ def build_summary(q_values: list[int], binary: Path, compile_binary: bool) -> di
                 "4c + 3",
                 "12c + 5",
             ],
+            "expected_qtime_coeff_grammar": {
+                "double_even_n": "qlo=(8c+2)(lo+1)+4+6n",
+                "double_odd_n_before_threshold": "qlo=(8c+2)(lo+1)+4c+5+6n",
+                "double_odd_n_after_threshold": "qlo=(8c+2)lo+4c+5+6n",
+                "single_2c1_6j": "qtime=(8c+2)a+4c+4+12j",
+                "single_2c3_6j": "qtime=(8c+2)a+4c+8+12j",
+                "single_endpoint_4c": "qtime=(8c+2)(4c)+4c+1",
+            },
         },
         "promotion_impact": {
             "closes_residue": False,
@@ -244,6 +312,10 @@ def main() -> None:
     print(
         "all_qtime_slopes_within_expected_alphabet",
         payload["summary"]["all_qtime_slopes_within_expected_alphabet"],
+    )
+    print(
+        "all_qtime_coeffs_match_carry_formula",
+        payload["summary"]["all_qtime_coeffs_match_carry_formula"],
     )
     if args.json_out is not None:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)

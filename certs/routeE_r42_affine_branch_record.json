@@ -888,9 +888,18 @@
     "schema": "routeE_r42_proto25_carry_v1",
     "summary": {
       "all_intervals_qtime_affine": true,
+      "all_qtime_coeffs_match_carry_formula": true,
       "all_qtime_slopes_within_expected_alphabet": true,
       "all_samples_ok": true,
       "all_support_matches_carry_grammar": true,
+      "expected_qtime_coeff_grammar": {
+        "double_even_n": "qlo=(8c+2)(lo+1)+4+6n",
+        "double_odd_n_after_threshold": "qlo=(8c+2)lo+4c+5+6n",
+        "double_odd_n_before_threshold": "qlo=(8c+2)(lo+1)+4c+5+6n",
+        "single_2c1_6j": "qtime=(8c+2)a+4c+4+12j",
+        "single_2c3_6j": "qtime=(8c+2)a+4c+8+12j",
+        "single_endpoint_4c": "qtime=(8c+2)(4c)+4c+1"
+      },
       "expected_qtime_slope_alphabet": [
         "0",
         "4c + 3",

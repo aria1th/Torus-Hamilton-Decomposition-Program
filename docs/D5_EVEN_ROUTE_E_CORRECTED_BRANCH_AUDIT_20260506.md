@@ -1137,8 +1137,28 @@ and the sampled qtime slopes lie in the three-value alphabet
 0, 4c + 3, 12c + 5.
 ```
 
-This is the first positive clock-carry evidence beyond the coarse skeleton.
-It still does not close qtime intercepts, pointwise equations, or no-early.
+The same verifier checks the sampled qtime coefficients against the carry
+formula:
+
+```text
+double even n:
+  qlo = (8c+2)(lo+1) + 4 + 6n
+double odd n before threshold (n < (c+1)/3):
+  qlo = (8c+2)(lo+1) + 4c + 5 + 6n
+double odd n after threshold (n >= (c+1)/3):
+  qlo = (8c+2)lo + 4c + 5 + 6n
+single 2c+1+6j:
+  qtime = (8c+2)a + 4c + 4 + 12j
+single 2c+3+6j:
+  qtime = (8c+2)a + 4c + 8 + 12j
+endpoint 4c:
+  qtime = (8c+2)(4c) + 4c + 1
+```
+
+This is the first positive clock-carry evidence beyond the coarse skeleton:
+the prototype edge now has support and qtime coefficients explained on the
+sampled witnesses.  It still does not close the other 21 qtime edges, the full
+pointwise first-return equations, or no-early.
 
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
