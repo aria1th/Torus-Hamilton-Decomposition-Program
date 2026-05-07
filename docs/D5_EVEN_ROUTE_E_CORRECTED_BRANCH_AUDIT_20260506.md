@@ -56,6 +56,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 c-parameter skeleton | `scripts/verify_routeE_r42_c_skeleton.py`, `certs/routeE_r42_c_skeleton_verification.json` | done |
 | Probe R42 `25 -> 3` c-band carry grammar | `scripts/summarize_routeE_r42_proto25_carry.py`, `certs/routeE_r42_proto25_carry.json` | done, prototype multi-point edge |
 | Verify R42 `25 -> 3` c-band carry grammar | `scripts/verify_routeE_r42_proto25_carry.py`, `certs/routeE_r42_proto25_carry_verification.json` | done |
+| Summarize R42 c-band support atoms | `scripts/summarize_routeE_r42_carry_support_atoms.py`, `certs/routeE_r42_carry_support_atoms.json` | done, all 22 qtime-missing edges |
+| Verify R42 c-band support atoms | `scripts/verify_routeE_r42_carry_support_atoms.py`, `certs/routeE_r42_carry_support_atoms_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1160,9 +1162,23 @@ the prototype edge now has support and qtime coefficients explained on the
 sampled witnesses.  It still does not close the other 21 qtime edges, the full
 pointwise first-return equations, or no-early.
 
+A broader support-level scan now covers all 22 qtime-missing edges.  Splitting
+by
+
+```text
+edge + interval length + c-band + u mod 6
+```
+
+gives a finite support-state set on the q=6,7,8,9 witnesses.  Each parity
+branch has 116 such support atoms, and every atom has affine count and affine
+`j`-range endpoints in the branch parameter `s`.  This is positive evidence
+that a finite c-band clock-carry transducer is the right primitive object.
+It still does not provide qtime coefficient laws for all atoms or the no-early
+argument.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 21 verified evidence items but
+minimality.  The R42 promotion audit now counts 22 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text

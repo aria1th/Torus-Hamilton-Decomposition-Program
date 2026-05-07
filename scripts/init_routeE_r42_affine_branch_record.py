@@ -72,6 +72,10 @@ DEFAULT_PROTO25_CARRY = ROOT / "certs" / "routeE_r42_proto25_carry.json"
 DEFAULT_PROTO25_CARRY_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_proto25_carry_verification.json"
 )
+DEFAULT_CARRY_SUPPORT_ATOMS = ROOT / "certs" / "routeE_r42_carry_support_atoms.json"
+DEFAULT_CARRY_SUPPORT_ATOMS_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_carry_support_atoms_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -130,6 +134,8 @@ def build_record(
     c_skeleton_verification_path: Path,
     proto25_carry_path: Path,
     proto25_carry_verification_path: Path,
+    carry_support_atoms_path: Path,
+    carry_support_atoms_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -252,6 +258,16 @@ def build_record(
         if proto25_carry_verification_path.exists()
         else {}
     )
+    carry_support_atoms = (
+        load_json(carry_support_atoms_path)
+        if carry_support_atoms_path.exists()
+        else {}
+    )
+    carry_support_atoms_verification = (
+        load_json(carry_support_atoms_verification_path)
+        if carry_support_atoms_verification_path.exists()
+        else {}
+    )
     finite_boundary_cases = (
         load_json(finite_boundary_cases_path)
         if finite_boundary_cases_path.exists()
@@ -369,6 +385,8 @@ def build_record(
             "c_skeleton_verification": str(c_skeleton_verification_path),
             "proto25_carry": str(proto25_carry_path),
             "proto25_carry_verification": str(proto25_carry_verification_path),
+            "carry_support_atoms": str(carry_support_atoms_path),
+            "carry_support_atoms_verification": str(carry_support_atoms_verification_path),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
                 finite_boundary_cases_verification_path
@@ -603,6 +621,21 @@ def build_record(
             "sample_count": proto25_carry_verification.get("sample_count"),
             "error_count": proto25_carry_verification.get("error_count"),
         },
+        "carry_support_atoms_summary": {
+            "schema": carry_support_atoms.get("schema"),
+            "q_values": carry_support_atoms.get("q_values"),
+            "summary": carry_support_atoms.get("summary"),
+            "promotion_impact": carry_support_atoms.get("promotion_impact"),
+        },
+        "carry_support_atoms_verification_summary": {
+            "schema": carry_support_atoms_verification.get("schema"),
+            "ok": carry_support_atoms_verification.get("ok"),
+            "q_values": carry_support_atoms_verification.get("q_values"),
+            "branch_atom_key_counts": carry_support_atoms_verification.get(
+                "branch_atom_key_counts"
+            ),
+            "error_count": carry_support_atoms_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -786,6 +819,16 @@ def main() -> None:
         default=DEFAULT_PROTO25_CARRY_VERIFICATION,
     )
     parser.add_argument(
+        "--carry-support-atoms",
+        type=Path,
+        default=DEFAULT_CARRY_SUPPORT_ATOMS,
+    )
+    parser.add_argument(
+        "--carry-support-atoms-verification",
+        type=Path,
+        default=DEFAULT_CARRY_SUPPORT_ATOMS_VERIFICATION,
+    )
+    parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
         default=DEFAULT_FINITE_BOUNDARY_CASES,
@@ -858,6 +901,8 @@ def main() -> None:
         args.c_skeleton_verification,
         args.proto25_carry,
         args.proto25_carry_verification,
+        args.carry_support_atoms,
+        args.carry_support_atoms_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

@@ -80,6 +80,10 @@ FILES = {
     "r42_proto25_carry_verification": ROOT
     / "certs"
     / "routeE_r42_proto25_carry_verification.json",
+    "r42_carry_support_atoms": ROOT / "certs" / "routeE_r42_carry_support_atoms.json",
+    "r42_carry_support_atoms_verification": ROOT
+    / "certs"
+    / "routeE_r42_carry_support_atoms_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -151,6 +155,10 @@ def build_audit() -> dict[str, Any]:
     r42_proto25_carry = load_json(FILES["r42_proto25_carry"])
     r42_proto25_carry_verification = load_json(
         FILES["r42_proto25_carry_verification"]
+    )
+    r42_carry_support_atoms = load_json(FILES["r42_carry_support_atoms"])
+    r42_carry_support_atoms_verification = load_json(
+        FILES["r42_carry_support_atoms_verification"]
     )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
@@ -410,6 +418,25 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_proto25_carry.json and certs/routeE_r42_proto25_carry_verification.json",
         ),
         item(
+            "R42 qtime-missing support atoms are c-band finite-state verified",
+            r42_carry_support_atoms.get("schema")
+            == "routeE_r42_carry_support_atoms_v1"
+            and r42_carry_support_atoms.get("summary", {}).get(
+                "all_branch_atom_counts_affine"
+            )
+            is True
+            and r42_carry_support_atoms.get("summary", {}).get(
+                "all_branch_j_ranges_affine"
+            )
+            is True
+            and r42_carry_support_atoms_verification.get("schema")
+            == "routeE_r42_carry_support_atoms_verification_v1"
+            and r42_carry_support_atoms_verification.get("ok") is True
+            and r42_carry_support_atoms_verification.get("branch_atom_key_counts")
+            == {"R42-even-q": 116, "R42-odd-q": 116},
+            "certs/routeE_r42_carry_support_atoms.json and certs/routeE_r42_carry_support_atoms_verification.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
@@ -631,7 +658,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 21
+            and r42_promotion_audit.get("evidence_items_ok") == 22
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

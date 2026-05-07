@@ -1,0 +1,23 @@
+{
+  "atoms": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_support_atoms.json",
+  "branch_atom_key_counts": {
+    "R42-even-q": 116,
+    "R42-odd-q": 116
+  },
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "All qtime-missing edge supports are summarized by finite c-band/u-mod-6 atoms on the sampled witnesses.  This records candidate states for a clock-carry transducer but does not prove qtime coefficients or no-early.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "schema": "routeE_r42_carry_support_atoms_verification_v1"
+}

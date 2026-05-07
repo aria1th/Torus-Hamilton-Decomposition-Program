@@ -78,6 +78,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     c_skeleton_ver = record.get("c_skeleton_verification_summary", {})
     proto25 = record.get("proto25_carry_summary", {})
     proto25_ver = record.get("proto25_carry_verification_summary", {})
+    support_atoms = record.get("carry_support_atoms_summary", {})
+    support_atoms_ver = record.get("carry_support_atoms_verification_summary", {})
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -303,6 +305,23 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             is True,
             "certs/routeE_r42_proto25_carry.json and certs/routeE_r42_proto25_carry_verification.json",
             "prototype edge clock-carry diagnostic",
+        ),
+        item(
+            "R42 qtime-missing support atoms are c-band finite-state verified",
+            support_atoms_ver.get("schema")
+            == "routeE_r42_carry_support_atoms_verification_v1"
+            and support_atoms_ver.get("ok") is True
+            and support_atoms_ver.get("q_values") == [6, 7, 8, 9]
+            and support_atoms_ver.get("branch_atom_key_counts")
+            == {"R42-even-q": 116, "R42-odd-q": 116}
+            and support_atoms_ver.get("error_count") == 0
+            and support_atoms.get("schema") == "routeE_r42_carry_support_atoms_v1"
+            and support_atoms.get("summary", {}).get("all_branch_atom_counts_affine")
+            is True
+            and support_atoms.get("summary", {}).get("all_branch_j_ranges_affine")
+            is True,
+            "certs/routeE_r42_carry_support_atoms.json and certs/routeE_r42_carry_support_atoms_verification.json",
+            "support-level finite-state diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

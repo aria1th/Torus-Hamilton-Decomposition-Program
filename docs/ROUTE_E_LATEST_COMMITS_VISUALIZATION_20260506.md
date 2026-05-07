@@ -26,6 +26,7 @@ flowchart LR
   R42[R42 affine target<br/>m=48q+42, x=z=6q+5]
   RC[R42 c-skeleton<br/>m=8c+2, x=z=c]
   R25[R42 25→3 prototype<br/>c-band carry grammar]
+  RSA[R42 support atoms<br/>116 per parity branch]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -43,7 +44,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> RC --> R25 --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> R25 --> RSA --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -298,7 +299,13 @@ q=0..6 samples and have strongly connected support.
     also checks the corresponding qtime coefficient formulas, including the
     carry at odd `n >= (c+1)/3`.  This is positive evidence for a carry grammar,
     not a proof of the remaining 21 qtime edges or no-early.
-24. The open residue queue is now explicit: R42 remains the active affine
+24. A support-level c-band atom scan now covers all 22 qtime-missing edges.
+    Splitting by edge, interval length, c-band, and `u mod 6` gives 116 support
+    atoms on each parity branch.  On q=6,7,8,9 every atom has affine count and
+    affine `j`-range endpoints in the branch parameter `s`.  This supports a
+    finite clock-carry state set, but qtime coefficients and no-early remain
+    open.
+25. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 
