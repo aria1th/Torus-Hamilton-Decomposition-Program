@@ -819,7 +819,9 @@
       6,
       7,
       8,
-      9
+      9,
+      10,
+      11
     ],
     "schema": "routeE_r42_qtime_interval_profiles_v1",
     "summary": {
@@ -828,6 +830,8 @@
       "all_nonaffine_edges_interval_affine": true,
       "all_samples_ok": true,
       "bad_interval_counts": {
+        "10": 0,
+        "11": 0,
         "6": 0,
         "7": 0,
         "8": 0,
@@ -838,6 +842,8 @@
         "R42-odd-q": 1
       },
       "nonaffine_edge_counts": {
+        "10": 22,
+        "11": 22,
         "6": 22,
         "7": 22,
         "8": 22,
@@ -852,7 +858,9 @@
       6,
       7,
       8,
-      9
+      9,
+      10,
+      11
     ],
     "schema": "routeE_r42_qtime_interval_profiles_verification_v1"
   },

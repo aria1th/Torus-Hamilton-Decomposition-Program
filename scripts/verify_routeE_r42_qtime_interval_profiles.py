@@ -38,7 +38,14 @@ def eval_formula(expr: str | None, s: int) -> int | None:
 def build_verification(profiles_path: Path) -> dict[str, Any]:
     data = json.loads(profiles_path.read_text())
     errors = []
-    expected_counts = {"6": 22, "7": 22, "8": 22, "9": 22}
+    expected_counts = {
+        "6": 22,
+        "7": 22,
+        "8": 22,
+        "9": 22,
+        "10": 22,
+        "11": 22,
+    }
     for sample in data.get("samples", []):
         q = str(sample.get("q"))
         if sample.get("nonaffine_edge_count") != expected_counts.get(q):
@@ -94,7 +101,7 @@ def build_verification(profiles_path: Path) -> dict[str, Any]:
                     )
     ok = (
         data.get("schema") == "routeE_r42_qtime_interval_profiles_v1"
-        and data.get("q_values") == [6, 7, 8, 9]
+        and data.get("q_values") == [6, 7, 8, 9, 10, 11]
         and data.get("summary", {}).get("all_samples_ok") is True
         and data.get("summary", {}).get("all_nonaffine_edges_interval_affine") is True
         and data.get("summary", {}).get("all_interval_counts_affine_in_s") is True
@@ -103,7 +110,7 @@ def build_verification(profiles_path: Path) -> dict[str, Any]:
         == {"R42-even-q": 1, "R42-odd-q": 1}
         and data.get("summary", {}).get("nonaffine_edge_counts") == expected_counts
         and data.get("summary", {}).get("bad_interval_counts")
-        == {"6": 0, "7": 0, "8": 0, "9": 0}
+        == {"6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0}
         and data.get("promotion_impact", {}).get("closes_residue") is False
         and data.get("promotion_impact", {}).get("pointwise_equations_closed") is False
         and data.get("promotion_impact", {}).get("no_early_closed") is False
