@@ -1063,9 +1063,17 @@ R42-odd-q:  interval_count = 16*s + 15, member_count = 24*s + 22
 
 All other remaining qtime-missing edges are singleton-interval families.
 
+A further start/end-ordinal law-mining pass was intentionally negative.  It
+tested whether each interval could be indexed only by its ordinal from the
+front or back of the edge.  On the `q=6,\dots,11` window this simple grammar has
+`5022` interval occurrences, but `2266` repeated ordinal groups fail affine
+laws and `2758` occurrences are not covered by any repeated affine start/end
+group.  Therefore the next qtime grammar must use more structure than just
+start/end interval ordinal.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 18 verified evidence items but
+minimality.  The R42 promotion audit now counts 19 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text

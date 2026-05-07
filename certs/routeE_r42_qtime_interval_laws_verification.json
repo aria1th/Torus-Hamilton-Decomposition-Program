@@ -1,0 +1,22 @@
+{
+  "laws": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_laws.json",
+  "occurrence_count": 5022,
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "This tests the simple start/end ordinal qtime interval-law hypothesis.  The summary records whether repeated ordinal groups are affine and whether sampled occurrences are covered. A failure is useful negative evidence for the next grammar.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "repeated_bad_group_count": 2266,
+  "schema": "routeE_r42_qtime_interval_laws_verification_v1",
+  "uncovered_occurrence_count": 2758
+}

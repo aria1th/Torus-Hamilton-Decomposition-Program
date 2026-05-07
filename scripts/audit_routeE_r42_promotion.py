@@ -70,6 +70,10 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     qtime_interval_profiles_ver = record.get(
         "qtime_interval_profiles_verification_summary", {}
     )
+    qtime_interval_laws = record.get("qtime_interval_laws_summary", {})
+    qtime_interval_laws_ver = record.get(
+        "qtime_interval_laws_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -234,6 +238,24 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             == {"R42-even-q": 1, "R42-odd-q": 1},
             "certs/routeE_r42_qtime_interval_profiles.json and certs/routeE_r42_qtime_interval_profiles_verification.json",
             "qtime interval diagnostic",
+        ),
+        item(
+            "R42 simple start/end interval-law diagnostic is verified negative",
+            qtime_interval_laws_ver.get("schema")
+            == "routeE_r42_qtime_interval_laws_verification_v1"
+            and qtime_interval_laws_ver.get("ok") is True
+            and qtime_interval_laws_ver.get("q_values") == [6, 7, 8, 9, 10, 11]
+            and qtime_interval_laws_ver.get("occurrence_count") == 5022
+            and qtime_interval_laws.get("repeated_bad_group_count") == 2266
+            and qtime_interval_laws.get("uncovered_occurrence_count") == 2758
+            and qtime_interval_laws.get("summary", {}).get("all_repeated_groups_affine")
+            is False
+            and qtime_interval_laws.get("summary", {}).get(
+                "all_occurrences_covered_by_start_or_end_affine_group"
+            )
+            is False,
+            "certs/routeE_r42_qtime_interval_laws.json and certs/routeE_r42_qtime_interval_laws_verification.json",
+            "negative interval-law diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

@@ -263,7 +263,11 @@ q=0..6 samples and have strongly connected support.
     and member-count laws are affine in the branch parameter, and the only
     multi-point interval edge is `25 -> 3`; the other 21 qtime-missing edges are
     singleton-interval families.
-21. The open residue queue is now explicit: R42 remains the active affine
+21. A simple start/end ordinal grammar for those intervals has been tested and
+    rejected.  It leaves 2266 repeated non-affine ordinal groups and 2758
+    uncovered interval occurrences on q=6..11, so the next qtime law must use a
+    richer interval key.
+22. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 
