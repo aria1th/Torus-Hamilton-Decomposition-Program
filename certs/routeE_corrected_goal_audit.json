@@ -139,6 +139,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_proto25_carry.json and certs/routeE_r42_proto25_carry_verification.json",
+      "missing": null,
+      "name": "R42 25->3 prototype c-band carry grammar is recorded and verified",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
       "name": "R42 affine q=0..4 samples verify with all-pair checker",

@@ -76,6 +76,10 @@ FILES = {
     "r42_c_skeleton_verification": ROOT
     / "certs"
     / "routeE_r42_c_skeleton_verification.json",
+    "r42_proto25_carry": ROOT / "certs" / "routeE_r42_proto25_carry.json",
+    "r42_proto25_carry_verification": ROOT
+    / "certs"
+    / "routeE_r42_proto25_carry_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -144,6 +148,10 @@ def build_audit() -> dict[str, Any]:
     )
     r42_c_skeleton = load_json(FILES["r42_c_skeleton"])
     r42_c_skeleton_verification = load_json(FILES["r42_c_skeleton_verification"])
+    r42_proto25_carry = load_json(FILES["r42_proto25_carry"])
+    r42_proto25_carry_verification = load_json(
+        FILES["r42_proto25_carry_verification"]
+    )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
     timeout = load_json(FILES["timeout_screen"])
@@ -381,6 +389,23 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_c_skeleton.json and certs/routeE_r42_c_skeleton_verification.json",
         ),
         item(
+            "R42 25->3 prototype c-band carry grammar is recorded and verified",
+            r42_proto25_carry.get("schema") == "routeE_r42_proto25_carry_v1"
+            and r42_proto25_carry.get("summary", {}).get(
+                "all_support_matches_carry_grammar"
+            )
+            is True
+            and r42_proto25_carry.get("summary", {}).get(
+                "all_qtime_slopes_within_expected_alphabet"
+            )
+            is True
+            and r42_proto25_carry_verification.get("schema")
+            == "routeE_r42_proto25_carry_verification_v1"
+            and r42_proto25_carry_verification.get("ok") is True
+            and r42_proto25_carry_verification.get("q_values") == [6, 7, 8, 9],
+            "certs/routeE_r42_proto25_carry.json and certs/routeE_r42_proto25_carry_verification.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
@@ -602,7 +627,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 20
+            and r42_promotion_audit.get("evidence_items_ok") == 21
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

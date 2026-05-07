@@ -1,0 +1,20 @@
+{
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "The prototype 25->3 edge has a stable c-band support grammar and a small qtime slope alphabet on the sampled witnesses.  This supports the clock-carry-transducer hypothesis, but it does not prove the full qtime law or no-early condition.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "proto": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_proto25_carry.json",
+  "q_values": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "sample_count": 4,
+  "schema": "routeE_r42_proto25_carry_verification_v1"
+}

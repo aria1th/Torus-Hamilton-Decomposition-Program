@@ -68,6 +68,10 @@ DEFAULT_C_SKELETON = ROOT / "certs" / "routeE_r42_c_skeleton.json"
 DEFAULT_C_SKELETON_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_c_skeleton_verification.json"
 )
+DEFAULT_PROTO25_CARRY = ROOT / "certs" / "routeE_r42_proto25_carry.json"
+DEFAULT_PROTO25_CARRY_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_proto25_carry_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -124,6 +128,8 @@ def build_record(
     qtime_interval_laws_verification_path: Path,
     c_skeleton_path: Path,
     c_skeleton_verification_path: Path,
+    proto25_carry_path: Path,
+    proto25_carry_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -234,6 +240,16 @@ def build_record(
     c_skeleton_verification = (
         load_json(c_skeleton_verification_path)
         if c_skeleton_verification_path.exists()
+        else {}
+    )
+    proto25_carry = (
+        load_json(proto25_carry_path)
+        if proto25_carry_path.exists()
+        else {}
+    )
+    proto25_carry_verification = (
+        load_json(proto25_carry_verification_path)
+        if proto25_carry_verification_path.exists()
         else {}
     )
     finite_boundary_cases = (
@@ -351,6 +367,8 @@ def build_record(
             ),
             "c_skeleton": str(c_skeleton_path),
             "c_skeleton_verification": str(c_skeleton_verification_path),
+            "proto25_carry": str(proto25_carry_path),
+            "proto25_carry_verification": str(proto25_carry_verification_path),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
                 finite_boundary_cases_verification_path
@@ -572,6 +590,19 @@ def build_record(
             ),
             "error_count": c_skeleton_verification.get("error_count"),
         },
+        "proto25_carry_summary": {
+            "schema": proto25_carry.get("schema"),
+            "q_values": proto25_carry.get("q_values"),
+            "summary": proto25_carry.get("summary"),
+            "promotion_impact": proto25_carry.get("promotion_impact"),
+        },
+        "proto25_carry_verification_summary": {
+            "schema": proto25_carry_verification.get("schema"),
+            "ok": proto25_carry_verification.get("ok"),
+            "q_values": proto25_carry_verification.get("q_values"),
+            "sample_count": proto25_carry_verification.get("sample_count"),
+            "error_count": proto25_carry_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -748,6 +779,12 @@ def main() -> None:
         type=Path,
         default=DEFAULT_C_SKELETON_VERIFICATION,
     )
+    parser.add_argument("--proto25-carry", type=Path, default=DEFAULT_PROTO25_CARRY)
+    parser.add_argument(
+        "--proto25-carry-verification",
+        type=Path,
+        default=DEFAULT_PROTO25_CARRY_VERIFICATION,
+    )
     parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
@@ -819,6 +856,8 @@ def main() -> None:
         args.qtime_interval_laws_verification,
         args.c_skeleton,
         args.c_skeleton_verification,
+        args.proto25_carry,
+        args.proto25_carry_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

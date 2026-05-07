@@ -76,6 +76,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     )
     c_skeleton = record.get("c_skeleton_summary", {})
     c_skeleton_ver = record.get("c_skeleton_verification_summary", {})
+    proto25 = record.get("proto25_carry_summary", {})
+    proto25_ver = record.get("proto25_carry_verification_summary", {})
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -279,6 +281,24 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             == "(m - 2)/4 = 2*c",
             "certs/routeE_r42_c_skeleton.json and certs/routeE_r42_c_skeleton_verification.json",
             "clock-carry reparameterization evidence",
+        ),
+        item(
+            "R42 25->3 prototype c-band carry grammar is verified",
+            proto25_ver.get("schema")
+            == "routeE_r42_proto25_carry_verification_v1"
+            and proto25_ver.get("ok") is True
+            and proto25_ver.get("q_values") == [6, 7, 8, 9]
+            and proto25_ver.get("sample_count") == 4
+            and proto25_ver.get("error_count") == 0
+            and proto25.get("schema") == "routeE_r42_proto25_carry_v1"
+            and proto25.get("summary", {}).get("all_support_matches_carry_grammar")
+            is True
+            and proto25.get("summary", {}).get(
+                "all_qtime_slopes_within_expected_alphabet"
+            )
+            is True,
+            "certs/routeE_r42_proto25_carry.json and certs/routeE_r42_proto25_carry_verification.json",
+            "prototype edge clock-carry diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

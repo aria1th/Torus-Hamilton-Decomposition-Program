@@ -872,6 +872,50 @@
     "sample_count": 5,
     "schema": "routeE_r42_pointwise_law_mining_verification_v1"
   },
+  "proto25_carry_summary": {
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "The prototype 25->3 edge has a stable c-band support grammar and a small qtime slope alphabet on the sampled witnesses.  This supports the clock-carry-transducer hypothesis, but it does not prove the full qtime law or no-early condition.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_proto25_carry_v1",
+    "summary": {
+      "all_intervals_qtime_affine": true,
+      "all_qtime_slopes_within_expected_alphabet": true,
+      "all_samples_ok": true,
+      "all_support_matches_carry_grammar": true,
+      "expected_qtime_slope_alphabet": [
+        "0",
+        "4c + 3",
+        "12c + 5"
+      ],
+      "expected_support_grammar": [
+        "[1+3n, 2+3n], 0 <= n <= (2c-4)/3",
+        "{2c+1+6j}, 0 <= j <= (c-2)/3",
+        "{2c+3+6j}, 0 <= j <= (c-5)/3",
+        "{4c}"
+      ]
+    }
+  },
+  "proto25_carry_verification_summary": {
+    "error_count": 0,
+    "ok": true,
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "sample_count": 4,
+    "schema": "routeE_r42_proto25_carry_verification_v1"
+  },
   "qtime_interval_laws_summary": {
     "occurrence_count": 5022,
     "promotion_impact": {
@@ -1057,6 +1101,8 @@
     "pointwise_law_mining_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_pointwise_law_mining_verification.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "portfolio_samples": "certs/routeE_allpair_portfolio_samples_v1_1.json",
+    "proto25_carry": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_proto25_carry.json",
+    "proto25_carry_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_proto25_carry_verification.json",
     "qtime_interval_laws": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_laws.json",
     "qtime_interval_laws_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_laws_verification.json",
     "qtime_interval_profiles": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles.json",

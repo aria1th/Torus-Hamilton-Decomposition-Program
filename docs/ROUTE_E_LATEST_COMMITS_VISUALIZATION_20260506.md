@@ -25,6 +25,7 @@ flowchart LR
   R38[R38 gate-transducer target<br/>negative controls preserved]
   R42[R42 affine target<br/>m=48q+42, x=z=6q+5]
   RC[R42 c-skeleton<br/>m=8c+2, x=z=c]
+  R25[R42 25→3 prototype<br/>c-band carry grammar]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -42,7 +43,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> RC --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> R25 --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -282,7 +283,21 @@ q=0..6 samples and have strongly connected support.
     modulo `m=8c+2`.  This supports the new interpretation that the
     29-block/69-edge quotient is a projection of a finer c-band clock-carry
     transducer.
-23. The open residue queue is now explicit: R42 remains the active affine
+23. The unique multi-point qtime edge `25 -> 3` now has a focused
+    clock-carry diagnostic on q=6,7,8,9.  Its support is exactly
+
+    ```text
+    [1+3n, 2+3n], 0 <= n <= (2c-4)/3
+    {2c+1+6j},    0 <= j <= (c-2)/3
+    {2c+3+6j},    0 <= j <= (c-5)/3
+    {4c}
+    ```
+
+    Thus `member_count=2c`, `interval_count=(4c+1)/3=m/6`, and the qtime
+    slope alphabet is `0,4c+3,12c+5` on the sampled witnesses.  This is
+    positive evidence for a carry grammar, not a proof of qtime intercepts or
+    no-early.
+24. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

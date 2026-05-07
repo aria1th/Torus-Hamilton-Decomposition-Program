@@ -54,6 +54,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 pointwise law-mining artifact | `scripts/verify_routeE_r42_pointwise_law_mining.py`, `certs/routeE_r42_pointwise_law_mining_verification.json` | done |
 | Record R42 c-parameter skeleton | `scripts/summarize_routeE_r42_c_skeleton.py`, `certs/routeE_r42_c_skeleton.json` | done, `m=8c+2` clock-carry skeleton |
 | Verify R42 c-parameter skeleton | `scripts/verify_routeE_r42_c_skeleton.py`, `certs/routeE_r42_c_skeleton_verification.json` | done |
+| Probe R42 `25 -> 3` c-band carry grammar | `scripts/summarize_routeE_r42_proto25_carry.py`, `certs/routeE_r42_proto25_carry.json` | done, prototype multi-point edge |
+| Verify R42 `25 -> 3` c-band carry grammar | `scripts/verify_routeE_r42_proto25_carry.py`, `certs/routeE_r42_proto25_carry_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1109,9 +1111,38 @@ This explains why the 29-block/69-edge quotient is probably a projection of a
 finer clock-carry transducer.  It is not a branch closure: it still leaves the
 pointwise first-return equations and no-early proof open.
 
+The first focused prototype check is the unique multi-point qtime edge
+`25 -> 3`.  On `q=6,7,8,9` the regenerated witnesses match the following
+support grammar exactly:
+
+```text
+doubletons: [1+3n, 2+3n], 0 <= n <= (2c-4)/3
+singletons: {2c+1+6j},    0 <= j <= (c-2)/3
+            {2c+3+6j},    0 <= j <= (c-5)/3
+            {4c}
+```
+
+Consequently
+
+```text
+member_count   = 2c
+interval_count = (4c + 1)/3 = m/6
+length-2 count = (2c - 1)/3
+length-1 count = (2c + 2)/3
+```
+
+and the sampled qtime slopes lie in the three-value alphabet
+
+```text
+0, 4c + 3, 12c + 5.
+```
+
+This is the first positive clock-carry evidence beyond the coarse skeleton.
+It still does not close qtime intercepts, pointwise equations, or no-early.
+
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 20 verified evidence items but
+minimality.  The R42 promotion audit now counts 21 verified evidence items but
 keeps the same three theorem blockers:
 
 ```text
