@@ -80,6 +80,15 @@ DEFAULT_CARRY_QTIME_ATOMS = ROOT / "certs" / "routeE_r42_carry_qtime_atoms.json"
 DEFAULT_CARRY_QTIME_ATOMS_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_carry_qtime_atoms_verification.json"
 )
+DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_EVEN = (
+    ROOT / "certs" / "routeE_r42_bad_intercept_carry_split_even_q6_8.json"
+)
+DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_ODD = (
+    ROOT / "certs" / "routeE_r42_bad_intercept_carry_split_odd_q7_9.json"
+)
+DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_bad_intercept_carry_split_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -142,6 +151,9 @@ def build_record(
     carry_support_atoms_verification_path: Path,
     carry_qtime_atoms_path: Path,
     carry_qtime_atoms_verification_path: Path,
+    bad_intercept_carry_split_even_path: Path,
+    bad_intercept_carry_split_odd_path: Path,
+    bad_intercept_carry_split_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -284,6 +296,21 @@ def build_record(
         if carry_qtime_atoms_verification_path.exists()
         else {}
     )
+    bad_intercept_carry_split_even = (
+        load_json(bad_intercept_carry_split_even_path)
+        if bad_intercept_carry_split_even_path.exists()
+        else {}
+    )
+    bad_intercept_carry_split_odd = (
+        load_json(bad_intercept_carry_split_odd_path)
+        if bad_intercept_carry_split_odd_path.exists()
+        else {}
+    )
+    bad_intercept_carry_split_verification = (
+        load_json(bad_intercept_carry_split_verification_path)
+        if bad_intercept_carry_split_verification_path.exists()
+        else {}
+    )
     finite_boundary_cases = (
         load_json(finite_boundary_cases_path)
         if finite_boundary_cases_path.exists()
@@ -405,6 +432,15 @@ def build_record(
             "carry_support_atoms_verification": str(carry_support_atoms_verification_path),
             "carry_qtime_atoms": str(carry_qtime_atoms_path),
             "carry_qtime_atoms_verification": str(carry_qtime_atoms_verification_path),
+            "bad_intercept_carry_split_even": str(
+                bad_intercept_carry_split_even_path
+            ),
+            "bad_intercept_carry_split_odd": str(
+                bad_intercept_carry_split_odd_path
+            ),
+            "bad_intercept_carry_split_verification": str(
+                bad_intercept_carry_split_verification_path
+            ),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
                 finite_boundary_cases_verification_path
@@ -673,6 +709,29 @@ def build_record(
             ),
             "error_count": carry_qtime_atoms_verification.get("error_count"),
         },
+        "bad_intercept_carry_split_summary": {
+            "even": {
+                "schema": bad_intercept_carry_split_even.get("schema"),
+                "q_values": bad_intercept_carry_split_even.get("q_values"),
+                "summary": bad_intercept_carry_split_even.get("summary"),
+            },
+            "odd": {
+                "schema": bad_intercept_carry_split_odd.get("schema"),
+                "q_values": bad_intercept_carry_split_odd.get("q_values"),
+                "summary": bad_intercept_carry_split_odd.get("summary"),
+            },
+            "promotion_impact": bad_intercept_carry_split_verification.get(
+                "promotion_impact"
+            ),
+        },
+        "bad_intercept_carry_split_verification_summary": {
+            "schema": bad_intercept_carry_split_verification.get("schema"),
+            "ok": bad_intercept_carry_split_verification.get("ok"),
+            "diagnostic_result": bad_intercept_carry_split_verification.get(
+                "diagnostic_result"
+            ),
+            "error_count": bad_intercept_carry_split_verification.get("error_count"),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -876,6 +935,21 @@ def main() -> None:
         default=DEFAULT_CARRY_QTIME_ATOMS_VERIFICATION,
     )
     parser.add_argument(
+        "--bad-intercept-carry-split-even",
+        type=Path,
+        default=DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_EVEN,
+    )
+    parser.add_argument(
+        "--bad-intercept-carry-split-odd",
+        type=Path,
+        default=DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_ODD,
+    )
+    parser.add_argument(
+        "--bad-intercept-carry-split-verification",
+        type=Path,
+        default=DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_VERIFICATION,
+    )
+    parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
         default=DEFAULT_FINITE_BOUNDARY_CASES,
@@ -952,6 +1026,9 @@ def main() -> None:
         args.carry_support_atoms_verification,
         args.carry_qtime_atoms,
         args.carry_qtime_atoms_verification,
+        args.bad_intercept_carry_split_even,
+        args.bad_intercept_carry_split_odd,
+        args.bad_intercept_carry_split_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

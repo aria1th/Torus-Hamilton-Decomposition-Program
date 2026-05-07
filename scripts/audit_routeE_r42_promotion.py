@@ -82,6 +82,10 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     support_atoms_ver = record.get("carry_support_atoms_verification_summary", {})
     qtime_atoms = record.get("carry_qtime_atoms_summary", {})
     qtime_atoms_ver = record.get("carry_qtime_atoms_verification_summary", {})
+    bad_intercept_split = record.get("bad_intercept_carry_split_summary", {})
+    bad_intercept_split_ver = record.get(
+        "bad_intercept_carry_split_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -347,6 +351,32 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and qtime_atoms.get("schema") == "routeE_r42_carry_qtime_atoms_v1",
             "certs/routeE_r42_carry_qtime_atoms.json and certs/routeE_r42_carry_qtime_atoms_verification.json",
             "qtime formula-class diagnostic",
+        ),
+        item(
+            "R42 bad qtime-intercept atoms have a next carry split diagnostic",
+            bad_intercept_split_ver.get("schema")
+            == "routeE_r42_bad_intercept_carry_split_verification_v1"
+            and bad_intercept_split_ver.get("ok") is True
+            and bad_intercept_split_ver.get("diagnostic_result", {}).get(
+                "bad_atom_count_per_branch"
+            )
+            == 9
+            and bad_intercept_split_ver.get("diagnostic_result", {}).get(
+                "one_feature_hits_per_branch"
+            )
+            == {"R42-even-q": 8, "R42-odd-q": 8}
+            and bad_intercept_split_ver.get("diagnostic_result", {}).get(
+                "two_feature_hits_per_branch"
+            )
+            == {"R42-even-q": 1, "R42-odd-q": 1}
+            and bad_intercept_split_ver.get("diagnostic_result", {}).get(
+                "two_feature_atom"
+            )
+            == "20->26|L1|B7:7|R0:0"
+            and bad_intercept_split.get("even", {}).get("q_values") == [6, 8]
+            and bad_intercept_split.get("odd", {}).get("q_values") == [7, 9],
+            "certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json, and certs/routeE_r42_bad_intercept_carry_split_verification.json",
+            "next carry-split diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",

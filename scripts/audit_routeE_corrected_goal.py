@@ -90,6 +90,15 @@ FILES = {
     "r42_carry_qtime_atoms_verification": ROOT
     / "certs"
     / "routeE_r42_carry_qtime_atoms_verification.json",
+    "r42_bad_intercept_carry_split_even": ROOT
+    / "certs"
+    / "routeE_r42_bad_intercept_carry_split_even_q6_8.json",
+    "r42_bad_intercept_carry_split_odd": ROOT
+    / "certs"
+    / "routeE_r42_bad_intercept_carry_split_odd_q7_9.json",
+    "r42_bad_intercept_carry_split_verification": ROOT
+    / "certs"
+    / "routeE_r42_bad_intercept_carry_split_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -169,6 +178,15 @@ def build_audit() -> dict[str, Any]:
     r42_carry_qtime_atoms = load_json(FILES["r42_carry_qtime_atoms"])
     r42_carry_qtime_atoms_verification = load_json(
         FILES["r42_carry_qtime_atoms_verification"]
+    )
+    r42_bad_intercept_carry_split_even = load_json(
+        FILES["r42_bad_intercept_carry_split_even"]
+    )
+    r42_bad_intercept_carry_split_odd = load_json(
+        FILES["r42_bad_intercept_carry_split_odd"]
+    )
+    r42_bad_intercept_carry_split_verification = load_json(
+        FILES["r42_bad_intercept_carry_split_verification"]
     )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
@@ -485,6 +503,31 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_carry_qtime_atoms.json and certs/routeE_r42_carry_qtime_atoms_verification.json",
         ),
         item(
+            "R42 bad qtime-intercept atoms have a next carry split diagnostic",
+            r42_bad_intercept_carry_split_verification.get("schema")
+            == "routeE_r42_bad_intercept_carry_split_verification_v1"
+            and r42_bad_intercept_carry_split_verification.get("ok") is True
+            and r42_bad_intercept_carry_split_verification.get(
+                "diagnostic_result", {}
+            ).get("bad_atom_count_per_branch")
+            == 9
+            and r42_bad_intercept_carry_split_verification.get(
+                "diagnostic_result", {}
+            ).get("one_feature_hits_per_branch")
+            == {"R42-even-q": 8, "R42-odd-q": 8}
+            and r42_bad_intercept_carry_split_verification.get(
+                "diagnostic_result", {}
+            ).get("two_feature_hits_per_branch")
+            == {"R42-even-q": 1, "R42-odd-q": 1}
+            and r42_bad_intercept_carry_split_verification.get(
+                "diagnostic_result", {}
+            ).get("two_feature_atom")
+            == "20->26|L1|B7:7|R0:0"
+            and r42_bad_intercept_carry_split_even.get("q_values") == [6, 8]
+            and r42_bad_intercept_carry_split_odd.get("q_values") == [7, 9],
+            "certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json, and certs/routeE_r42_bad_intercept_carry_split_verification.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
@@ -706,7 +749,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 23
+            and r42_promotion_audit.get("evidence_items_ok") == 24
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

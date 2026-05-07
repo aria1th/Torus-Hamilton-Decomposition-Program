@@ -1,0 +1,62 @@
+{
+  "branch_summaries": [
+    {
+      "atoms_with_one_feature_hit": 8,
+      "atoms_with_two_feature_hit": 1,
+      "branch": "R42-even-q",
+      "q_values": [
+        6,
+        8
+      ],
+      "rows": 131,
+      "two_feature_atom": "20->26|L1|B7:7|R0:0",
+      "two_feature_set": [
+        "m*1[j%5=0]",
+        "m*1[j%6=5]"
+      ]
+    },
+    {
+      "atoms_with_one_feature_hit": 8,
+      "atoms_with_two_feature_hit": 1,
+      "branch": "R42-odd-q",
+      "q_values": [
+        7,
+        9
+      ],
+      "rows": 147,
+      "two_feature_atom": "20->26|L1|B7:7|R0:0",
+      "two_feature_set": [
+        "m*1[j%5=0]",
+        "m*1[j%6=5]"
+      ]
+    }
+  ],
+  "diagnostic_result": {
+    "bad_atom_count_per_branch": 9,
+    "one_feature_hits_per_branch": {
+      "R42-even-q": 8,
+      "R42-odd-q": 8
+    },
+    "two_feature_atom": "20->26|L1|B7:7|R0:0",
+    "two_feature_hits_per_branch": {
+      "R42-even-q": 1,
+      "R42-odd-q": 1
+    },
+    "two_feature_set": [
+      "m*1[j%5=0]",
+      "m*1[j%6=5]"
+    ]
+  },
+  "error_count": 0,
+  "errors": [],
+  "even_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json",
+  "odd_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json",
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "On q=6,8 and q=7,9, the nine bad qtime-intercept atoms split further into eight one-threshold carry atoms and one two-residue carry atom.  This identifies the next finite state refinement, but it is still not a no-early proof.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "schema": "routeE_r42_bad_intercept_carry_split_verification_v1"
+}

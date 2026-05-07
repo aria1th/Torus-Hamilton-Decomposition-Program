@@ -60,6 +60,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 c-band support atoms | `scripts/verify_routeE_r42_carry_support_atoms.py`, `certs/routeE_r42_carry_support_atoms_verification.json` | done |
 | Test first R42 c-band qtime atom model | `scripts/summarize_routeE_r42_carry_qtime_atoms.py`, `certs/routeE_r42_carry_qtime_atoms.json` | done, slopes fit but first intercept model fails on 9 atoms per parity branch |
 | Verify R42 qtime atom diagnostic | `scripts/verify_routeE_r42_carry_qtime_atoms.py`, `certs/routeE_r42_carry_qtime_atoms_verification.json` | done, partial negative evidence preserved |
+| Mine next carry split for R42 bad qtime-intercept atoms | `scripts/summarize_routeE_r42_bad_intercept_carry_split.py`, `certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json`, `certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json` | done, 8 threshold atoms and 1 two-residue atom per parity branch |
+| Verify R42 bad-intercept carry split diagnostic | `scripts/verify_routeE_r42_bad_intercept_carry_split.py`, `certs/routeE_r42_bad_intercept_carry_split_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1218,8 +1220,35 @@ edge + interval length + c-band + u mod 6
 
 is strong enough for support and qtime slopes, but not for all qtime intercepts.
 The next symbolic primitive must add one more carry/winner split for the 9 bad
-atoms in each parity branch.  The R42 promotion audit now counts 23 verified
-evidence items and keeps the same three theorem blockers.
+atoms in each parity branch.  At this diagnostic stage, the R42 promotion audit
+counted 23 verified evidence items and kept the same three theorem blockers.
+
+That next carry split has now been mined on the two generic parity branches
+separately.  On `q=6,8`, the even branch has 8 bad atoms fixed by one
+threshold carry and 1 atom fixed by a two-residue carry.  On `q=7,9`, the odd
+branch has the same pattern.  The unique two-feature atom in both branches is
+
+```text
+20->26|L1|B7:7|R0:0
+```
+
+and its sampled fit uses
+
+```text
+m*1[j%5=0]  and  m*1[j%6=5].
+```
+
+The other 8 bad atoms are threshold-carry atoms such as `m*1[j>s+k]` or the
+equivalent `m*1[j>=s+k+1]`.  This is the first concrete refinement beyond
+
+```text
+edge + interval length + c-band + u mod 6.
+```
+
+It still is not branch closure: these are q=6,8 and q=7,9 sampled fits, and the
+pointwise first-return equations/no-early proof remain open.  The R42 promotion
+audit now counts 24 verified evidence items and keeps the same three theorem
+blockers.
 
 ## Conclusion
 

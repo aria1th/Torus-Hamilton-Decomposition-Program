@@ -157,6 +157,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json, and certs/routeE_r42_bad_intercept_carry_split_verification.json",
+      "missing": null,
+      "name": "R42 bad qtime-intercept atoms have a next carry split diagnostic",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
       "name": "R42 affine q=0..4 samples verify with all-pair checker",

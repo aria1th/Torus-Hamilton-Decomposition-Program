@@ -1,0 +1,441 @@
+{
+  "bad_atom_count": 9,
+  "candidate_feature_count": 80,
+  "family": "R42, c=6*q+5, m=8*c+2, x=z=c",
+  "generic_subbranches": [
+    {
+      "atom_summaries": [
+        {
+          "atom": "13->4|L1|B6:6|R0:0",
+          "base_fit": false,
+          "j_values": [
+            0,
+            2,
+            4,
+            6,
+            8
+          ],
+          "one_feature_hit_count": 3,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s-3]",
+              "formula": "-88368845 + 41498640*s + 264*j + 576*s*j - m*1[j>s-3]"
+            },
+            {
+              "feature": "m*1[j>=s-2]",
+              "formula": "-88368845 + 41498640*s + 264*j + 576*s*j - m*1[j>=s-2]"
+            },
+            {
+              "feature": "m*1[j%5=0]",
+              "formula": "-88368887 + 41498544*s + 264*j + 576*s*j + m*1[j%5=0]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 9,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "20->26|L1|B7:7|R0:0",
+          "base_fit": false,
+          "j_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 16,
+          "two_feature_hit_count": 1,
+          "two_feature_hits": [
+            {
+              "features": [
+                "m*1[j%5=0]",
+                "m*1[j%6=5]"
+              ],
+              "formula": "-27315 + 17904*s + 528*j + 1152*s*j + m*1[j%5=0] - m*1[j%6=5]"
+            }
+          ]
+        },
+        {
+          "atom": "22->3|L1|B1:1|R4:4",
+          "base_fit": false,
+          "j_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>2s-1]",
+              "formula": "-13384 + 9552*s + 264*j + 576*s*j + m*1[j>2s-1]"
+            },
+            {
+              "feature": "m*1[j>=2s+0]",
+              "formula": "-13384 + 9552*s + 264*j + 576*s*j + m*1[j>=2s+0]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 16,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R0:0",
+          "base_fit": false,
+          "j_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s+0]",
+              "formula": "-23 - 48*s + 528*j + 1152*s*j - m*1[j>s+0]"
+            },
+            {
+              "feature": "m*1[j>=s+1]",
+              "formula": "-23 - 48*s + 528*j + 1152*s*j - m*1[j>=s+1]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 14,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R2:2",
+          "base_fit": false,
+          "j_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s+0]",
+              "formula": "153 + 336*s + 528*j + 1152*s*j - m*1[j>s+0]"
+            },
+            {
+              "feature": "m*1[j>=s+1]",
+              "formula": "153 + 336*s + 528*j + 1152*s*j - m*1[j>=s+1]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 16,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R4:4",
+          "base_fit": false,
+          "j_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s-1]",
+              "formula": "329 + 720*s + 528*j + 1152*s*j - m*1[j>s-1]"
+            },
+            {
+              "feature": "m*1[j>=s+0]",
+              "formula": "329 + 720*s + 528*j + 1152*s*j - m*1[j>=s+0]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 16,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R0:0",
+          "base_fit": false,
+          "j_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s+0]",
+              "formula": "-111 - 240*s + 528*j + 1152*s*j - m*1[j>s+0]"
+            },
+            {
+              "feature": "m*1[j>=s+1]",
+              "formula": "-111 - 240*s + 528*j + 1152*s*j - m*1[j>=s+1]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 14,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R2:2",
+          "base_fit": false,
+          "j_values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s+0]",
+              "formula": "65 + 144*s + 528*j + 1152*s*j - m*1[j>s+0]"
+            },
+            {
+              "feature": "m*1[j>=s+1]",
+              "formula": "65 + 144*s + 528*j + 1152*s*j - m*1[j>=s+1]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 14,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R4:4",
+          "base_fit": false,
+          "j_values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "one_feature_hit_count": 2,
+          "one_feature_hits": [
+            {
+              "feature": "m*1[j>s+0]",
+              "formula": "241 + 528*s + 528*j + 1152*s*j - m*1[j>s+0]"
+            },
+            {
+              "feature": "m*1[j>=s+1]",
+              "formula": "241 + 528*s + 528*j + 1152*s*j - m*1[j>=s+1]"
+            }
+          ],
+          "q_values": [
+            6,
+            8
+          ],
+          "sample_count": 16,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        }
+      ],
+      "atoms_with_one_feature_hit": 8,
+      "atoms_with_two_feature_hit": 1,
+      "bad_atom_count": 9,
+      "name": "R42-even-q",
+      "rows": 131
+    },
+    {
+      "atom_summaries": [
+        {
+          "atom": "13->4|L1|B6:6|R0:0",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "20->26|L1|B7:7|R0:0",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "22->3|L1|B1:1|R4:4",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R0:0",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R2:2",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "5->28|L1|B2:2|R4:4",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R0:0",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R2:2",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        },
+        {
+          "atom": "7->28|L1|B6:6|R4:4",
+          "base_fit": false,
+          "j_values": [],
+          "one_feature_hit_count": 0,
+          "one_feature_hits": [],
+          "q_values": [],
+          "sample_count": 0,
+          "two_feature_hit_count": 0,
+          "two_feature_hits": []
+        }
+      ],
+      "atoms_with_one_feature_hit": 0,
+      "atoms_with_two_feature_hit": 0,
+      "bad_atom_count": 9,
+      "name": "R42-odd-q",
+      "rows": 0
+    }
+  ],
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "Mines small carry features for the nine qtime-intercept atoms that the first c-band atom model misses.  A positive hit is a candidate for the next refined transducer state, not a proof of no-early.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    8
+  ],
+  "row_count": 131,
+  "schema": "routeE_r42_bad_intercept_carry_split_v1",
+  "summary": {
+    "all_bad_atoms_have_one_feature_hit": false,
+    "all_bad_atoms_have_one_or_two_feature_hit": false,
+    "branch_one_feature_hits": {
+      "R42-even-q": 8,
+      "R42-odd-q": 0
+    },
+    "branch_two_feature_hits": {
+      "R42-even-q": 1,
+      "R42-odd-q": 0
+    }
+  }
+}

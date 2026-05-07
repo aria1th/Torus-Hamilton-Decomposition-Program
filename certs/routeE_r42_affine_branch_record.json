@@ -124,6 +124,73 @@
       "transition_time_values_verified": true
     }
   },
+  "bad_intercept_carry_split_summary": {
+    "even": {
+      "q_values": [
+        6,
+        8
+      ],
+      "schema": "routeE_r42_bad_intercept_carry_split_v1",
+      "summary": {
+        "all_bad_atoms_have_one_feature_hit": false,
+        "all_bad_atoms_have_one_or_two_feature_hit": false,
+        "branch_one_feature_hits": {
+          "R42-even-q": 8,
+          "R42-odd-q": 0
+        },
+        "branch_two_feature_hits": {
+          "R42-even-q": 1,
+          "R42-odd-q": 0
+        }
+      }
+    },
+    "odd": {
+      "q_values": [
+        7,
+        9
+      ],
+      "schema": "routeE_r42_bad_intercept_carry_split_v1",
+      "summary": {
+        "all_bad_atoms_have_one_feature_hit": false,
+        "all_bad_atoms_have_one_or_two_feature_hit": false,
+        "branch_one_feature_hits": {
+          "R42-even-q": 0,
+          "R42-odd-q": 8
+        },
+        "branch_two_feature_hits": {
+          "R42-even-q": 0,
+          "R42-odd-q": 1
+        }
+      }
+    },
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "On q=6,8 and q=7,9, the nine bad qtime-intercept atoms split further into eight one-threshold carry atoms and one two-residue carry atom.  This identifies the next finite state refinement, but it is still not a no-early proof.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    }
+  },
+  "bad_intercept_carry_split_verification_summary": {
+    "diagnostic_result": {
+      "bad_atom_count_per_branch": 9,
+      "one_feature_hits_per_branch": {
+        "R42-even-q": 8,
+        "R42-odd-q": 8
+      },
+      "two_feature_atom": "20->26|L1|B7:7|R0:0",
+      "two_feature_hits_per_branch": {
+        "R42-even-q": 1,
+        "R42-odd-q": 1
+      },
+      "two_feature_set": [
+        "m*1[j%5=0]",
+        "m*1[j%6=5]"
+      ]
+    },
+    "error_count": 0,
+    "ok": true,
+    "schema": "routeE_r42_bad_intercept_carry_split_verification_v1"
+  },
   "block_regeneration_verification_summary": {
     "ok": true,
     "schema": "routeE_r42_block_formula_regeneration_verification_v1",
@@ -1191,6 +1258,9 @@
     "allpair_time_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_time_fit_verification.json",
     "allpair_transition_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_summary.json",
     "allpair_transition_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_verification.json",
+    "bad_intercept_carry_split_even": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json",
+    "bad_intercept_carry_split_odd": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json",
+    "bad_intercept_carry_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_verification.json",
     "block_regeneration_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_block_formula_regeneration_verification.json",
     "boundary_block_transducer": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer.json",
     "boundary_block_transducer_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer_verification.json",

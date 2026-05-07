@@ -28,6 +28,7 @@ flowchart LR
   R25[R42 25→3 prototype<br/>c-band carry grammar]
   RSA[R42 support atoms<br/>116 per parity branch]
   RQA[R42 qtime atom diagnostic<br/>slopes fit, 9 bad intercept atoms/branch]
+  RBS[R42 bad-intercept split<br/>8 threshold + 1 two-residue atom/branch]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -45,7 +46,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> RC --> R25 --> RSA --> RQA --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> R25 --> RSA --> RQA --> RBS --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -317,7 +318,14 @@ q=0..6 samples and have strongly connected support.
     fails on exactly 9 atoms in each parity branch.  This is useful negative
     evidence: `edge + interval length + c-band + u mod 6` is enough for support
     and slopes, but one more carry/winner split is needed for qtime intercepts.
-26. The open residue queue is now explicit: R42 remains the active affine
+26. The next bad-intercept carry split has been mined on parity-separated
+    samples.  On q=6,8 and q=7,9, the 9 bad atoms in each parity branch split
+    into 8 one-threshold carry atoms and 1 two-residue carry atom.  The unique
+    two-residue atom is `20->26|L1|B7:7|R0:0`, using the sampled features
+    `m*1[j%5=0]` and `m*1[j%6=5]`.  This identifies the next finite state
+    refinement, but it is still sampled qtime evidence rather than a no-early
+    proof.
+27. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 
