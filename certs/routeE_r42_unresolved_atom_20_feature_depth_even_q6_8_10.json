@@ -1,0 +1,242 @@
+{
+  "atom": "20->26|L1|B7:7|R0:0",
+  "candidate_feature_count": 80,
+  "family": "R42, c=6*q+5, m=8*c+2, x=z=c",
+  "generic_subbranches": [
+    {
+      "base_fit": false,
+      "hits": [
+        {
+          "features": [
+            "m*1[j>s+4]",
+            "m*1[j%5=0]",
+            "m*1[j%6=5]"
+          ],
+          "formula": "333 + 1776*s + 2304*s^2 + 528*j + 1152*s*j - m*1[j>s+4] + m*1[j%5=0] - m*1[j%6=5]"
+        },
+        {
+          "features": [
+            "m*1[j>=s+5]",
+            "m*1[j%5=0]",
+            "m*1[j%6=5]"
+          ],
+          "formula": "333 + 1776*s + 2304*s^2 + 528*j + 1152*s*j - m*1[j>=s+5] + m*1[j%5=0] - m*1[j%6=5]"
+        }
+      ],
+      "j_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "minimal_depth": 3,
+      "name": "R42-even-q",
+      "q_values": [
+        6,
+        8,
+        10
+      ],
+      "qj_points": [
+        {
+          "j": 0,
+          "q": 6,
+          "qtime_intercept": 26727,
+          "s": 3
+        },
+        {
+          "j": 1,
+          "q": 6,
+          "qtime_intercept": 30381,
+          "s": 3
+        },
+        {
+          "j": 2,
+          "q": 6,
+          "qtime_intercept": 34365,
+          "s": 3
+        },
+        {
+          "j": 3,
+          "q": 6,
+          "qtime_intercept": 38349,
+          "s": 3
+        },
+        {
+          "j": 4,
+          "q": 6,
+          "qtime_intercept": 42333,
+          "s": 3
+        },
+        {
+          "j": 5,
+          "q": 6,
+          "qtime_intercept": 46317,
+          "s": 3
+        },
+        {
+          "j": 6,
+          "q": 6,
+          "qtime_intercept": 50301,
+          "s": 3
+        },
+        {
+          "j": 0,
+          "q": 8,
+          "qtime_intercept": 44727,
+          "s": 4
+        },
+        {
+          "j": 1,
+          "q": 8,
+          "qtime_intercept": 49437,
+          "s": 4
+        },
+        {
+          "j": 2,
+          "q": 8,
+          "qtime_intercept": 54573,
+          "s": 4
+        },
+        {
+          "j": 3,
+          "q": 8,
+          "qtime_intercept": 59709,
+          "s": 4
+        },
+        {
+          "j": 4,
+          "q": 8,
+          "qtime_intercept": 64845,
+          "s": 4
+        },
+        {
+          "j": 5,
+          "q": 8,
+          "qtime_intercept": 69981,
+          "s": 4
+        },
+        {
+          "j": 6,
+          "q": 8,
+          "qtime_intercept": 75117,
+          "s": 4
+        },
+        {
+          "j": 7,
+          "q": 8,
+          "qtime_intercept": 80253,
+          "s": 4
+        },
+        {
+          "j": 8,
+          "q": 8,
+          "qtime_intercept": 85389,
+          "s": 4
+        },
+        {
+          "j": 0,
+          "q": 10,
+          "qtime_intercept": 67335,
+          "s": 5
+        },
+        {
+          "j": 1,
+          "q": 10,
+          "qtime_intercept": 73101,
+          "s": 5
+        },
+        {
+          "j": 2,
+          "q": 10,
+          "qtime_intercept": 79389,
+          "s": 5
+        },
+        {
+          "j": 3,
+          "q": 10,
+          "qtime_intercept": 85677,
+          "s": 5
+        },
+        {
+          "j": 4,
+          "q": 10,
+          "qtime_intercept": 91965,
+          "s": 5
+        },
+        {
+          "j": 5,
+          "q": 10,
+          "qtime_intercept": 98253,
+          "s": 5
+        },
+        {
+          "j": 6,
+          "q": 10,
+          "qtime_intercept": 104541,
+          "s": 5
+        },
+        {
+          "j": 7,
+          "q": 10,
+          "qtime_intercept": 110829,
+          "s": 5
+        },
+        {
+          "j": 8,
+          "q": 10,
+          "qtime_intercept": 117117,
+          "s": 5
+        },
+        {
+          "j": 9,
+          "q": 10,
+          "qtime_intercept": 123405,
+          "s": 5
+        },
+        {
+          "j": 10,
+          "q": 10,
+          "qtime_intercept": 129693,
+          "s": 5
+        }
+      ],
+      "rows": 27
+    },
+    {
+      "base_fit": false,
+      "hits": [],
+      "j_values": [],
+      "minimal_depth": null,
+      "name": "R42-odd-q",
+      "q_values": [],
+      "qj_points": [],
+      "rows": 0
+    }
+  ],
+  "max_depth": 3,
+  "promotion_impact": {
+    "closes_residue": false,
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    8,
+    10
+  ],
+  "schema": "routeE_r42_unresolved_atom_feature_depth_v1",
+  "summary": {
+    "all_nonempty_branches_hit": true,
+    "minimal_depth_by_branch": {
+      "R42-even-q": 3,
+      "R42-odd-q": null
+    }
+  }
+}

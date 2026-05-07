@@ -1367,7 +1367,61 @@
     "qtime_interval_profiles": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles.json",
     "qtime_interval_profiles_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_qtime_interval_profiles_verification.json",
     "sample_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_samples_verification.json",
-    "typeA_coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json"
+    "typeA_coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json",
+    "unresolved_atom_feature_depth_even": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json",
+    "unresolved_atom_feature_depth_odd": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json",
+    "unresolved_atom_feature_depth_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_feature_depth_verification.json"
   },
-  "status": "sample_verified_open_symbolic_candidate"
+  "status": "sample_verified_open_symbolic_candidate",
+  "unresolved_atom_feature_depth_summary": {
+    "even": {
+      "q_values": [
+        6,
+        8,
+        10
+      ],
+      "schema": "routeE_r42_unresolved_atom_feature_depth_v1",
+      "summary": {
+        "all_nonempty_branches_hit": true,
+        "minimal_depth_by_branch": {
+          "R42-even-q": 3,
+          "R42-odd-q": null
+        }
+      }
+    },
+    "odd": {
+      "q_values": [
+        7,
+        9,
+        11
+      ],
+      "schema": "routeE_r42_unresolved_atom_feature_depth_v1",
+      "summary": {
+        "all_nonempty_branches_hit": false,
+        "minimal_depth_by_branch": {
+          "R42-even-q": null,
+          "R42-odd-q": null
+        }
+      }
+    },
+    "promotion_impact": {
+      "closes_residue": false,
+      "no_early_closed": false,
+      "pointwise_equations_closed": false,
+      "refutes_depth_three_uniformity": true
+    }
+  },
+  "unresolved_atom_feature_depth_verification_summary": {
+    "diagnostic_result": {
+      "atom": "20->26|L1|B7:7|R0:0",
+      "even_minimal_depth": 3,
+      "even_rows": 27,
+      "interpretation": "The even parity sample is rescued by three tested carry features, but the odd parity sample is not rescued up to depth three.  This weakens the simple finite-depth carry ansatz and points to a deeper or different state variable.",
+      "odd_minimal_depth": null,
+      "odd_rows": 30
+    },
+    "error_count": 0,
+    "ok": true,
+    "schema": "routeE_r42_unresolved_atom_feature_depth_verification_v1"
+  }
 }

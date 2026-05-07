@@ -98,6 +98,15 @@ DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_STRESS_ODD = (
 DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_STRESS_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_bad_intercept_carry_split_stress_verification.json"
 )
+DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_EVEN = (
+    ROOT / "certs" / "routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json"
+)
+DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_ODD = (
+    ROOT / "certs" / "routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json"
+)
+DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_VERIFICATION = (
+    ROOT / "certs" / "routeE_r42_unresolved_atom_feature_depth_verification.json"
+)
 DEFAULT_FINITE_BOUNDARY_CASES = ROOT / "certs" / "routeE_r42_finite_boundary_cases.json"
 DEFAULT_FINITE_BOUNDARY_CASES_VERIFICATION = (
     ROOT / "certs" / "routeE_r42_finite_boundary_cases_verification.json"
@@ -166,6 +175,9 @@ def build_record(
     bad_intercept_carry_split_stress_even_path: Path,
     bad_intercept_carry_split_stress_odd_path: Path,
     bad_intercept_carry_split_stress_verification_path: Path,
+    unresolved_atom_feature_depth_even_path: Path,
+    unresolved_atom_feature_depth_odd_path: Path,
+    unresolved_atom_feature_depth_verification_path: Path,
     finite_boundary_cases_path: Path,
     finite_boundary_cases_verification_path: Path,
     block_regeneration_verification_path: Path,
@@ -338,6 +350,21 @@ def build_record(
         if bad_intercept_carry_split_stress_verification_path.exists()
         else {}
     )
+    unresolved_atom_feature_depth_even = (
+        load_json(unresolved_atom_feature_depth_even_path)
+        if unresolved_atom_feature_depth_even_path.exists()
+        else {}
+    )
+    unresolved_atom_feature_depth_odd = (
+        load_json(unresolved_atom_feature_depth_odd_path)
+        if unresolved_atom_feature_depth_odd_path.exists()
+        else {}
+    )
+    unresolved_atom_feature_depth_verification = (
+        load_json(unresolved_atom_feature_depth_verification_path)
+        if unresolved_atom_feature_depth_verification_path.exists()
+        else {}
+    )
     finite_boundary_cases = (
         load_json(finite_boundary_cases_path)
         if finite_boundary_cases_path.exists()
@@ -476,6 +503,15 @@ def build_record(
             ),
             "bad_intercept_carry_split_stress_verification": str(
                 bad_intercept_carry_split_stress_verification_path
+            ),
+            "unresolved_atom_feature_depth_even": str(
+                unresolved_atom_feature_depth_even_path
+            ),
+            "unresolved_atom_feature_depth_odd": str(
+                unresolved_atom_feature_depth_odd_path
+            ),
+            "unresolved_atom_feature_depth_verification": str(
+                unresolved_atom_feature_depth_verification_path
             ),
             "finite_boundary_cases": str(finite_boundary_cases_path),
             "finite_boundary_cases_verification": str(
@@ -793,6 +829,31 @@ def build_record(
                 "error_count"
             ),
         },
+        "unresolved_atom_feature_depth_summary": {
+            "even": {
+                "schema": unresolved_atom_feature_depth_even.get("schema"),
+                "q_values": unresolved_atom_feature_depth_even.get("q_values"),
+                "summary": unresolved_atom_feature_depth_even.get("summary"),
+            },
+            "odd": {
+                "schema": unresolved_atom_feature_depth_odd.get("schema"),
+                "q_values": unresolved_atom_feature_depth_odd.get("q_values"),
+                "summary": unresolved_atom_feature_depth_odd.get("summary"),
+            },
+            "promotion_impact": unresolved_atom_feature_depth_verification.get(
+                "promotion_impact"
+            ),
+        },
+        "unresolved_atom_feature_depth_verification_summary": {
+            "schema": unresolved_atom_feature_depth_verification.get("schema"),
+            "ok": unresolved_atom_feature_depth_verification.get("ok"),
+            "diagnostic_result": unresolved_atom_feature_depth_verification.get(
+                "diagnostic_result"
+            ),
+            "error_count": unresolved_atom_feature_depth_verification.get(
+                "error_count"
+            ),
+        },
         "finite_boundary_cases_summary": {
             "schema": finite_boundary_cases.get("schema"),
             "summary": finite_boundary_cases.get("summary"),
@@ -1026,6 +1087,21 @@ def main() -> None:
         default=DEFAULT_BAD_INTERCEPT_CARRY_SPLIT_STRESS_VERIFICATION,
     )
     parser.add_argument(
+        "--unresolved-atom-feature-depth-even",
+        type=Path,
+        default=DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_EVEN,
+    )
+    parser.add_argument(
+        "--unresolved-atom-feature-depth-odd",
+        type=Path,
+        default=DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_ODD,
+    )
+    parser.add_argument(
+        "--unresolved-atom-feature-depth-verification",
+        type=Path,
+        default=DEFAULT_UNRESOLVED_ATOM_FEATURE_DEPTH_VERIFICATION,
+    )
+    parser.add_argument(
         "--finite-boundary-cases",
         type=Path,
         default=DEFAULT_FINITE_BOUNDARY_CASES,
@@ -1108,6 +1184,9 @@ def main() -> None:
         args.bad_intercept_carry_split_stress_even,
         args.bad_intercept_carry_split_stress_odd,
         args.bad_intercept_carry_split_stress_verification,
+        args.unresolved_atom_feature_depth_even,
+        args.unresolved_atom_feature_depth_odd,
+        args.unresolved_atom_feature_depth_verification,
         args.finite_boundary_cases,
         args.finite_boundary_cases_verification,
         args.block_regeneration_verification,

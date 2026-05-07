@@ -64,6 +64,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 bad-intercept carry split diagnostic | `scripts/verify_routeE_r42_bad_intercept_carry_split.py`, `certs/routeE_r42_bad_intercept_carry_split_verification.json` | done |
 | Stress-test the bad-intercept split on larger R42 samples | `certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json`, `certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json` | done, refutes the simple one-step carry split |
 | Verify R42 bad-intercept stress diagnostic | `scripts/verify_routeE_r42_bad_intercept_carry_split_stress.py`, `certs/routeE_r42_bad_intercept_carry_split_stress_verification.json` | done |
+| Probe unresolved R42 atom feature depth | `scripts/summarize_routeE_r42_unresolved_atom_feature_depth.py`, `certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json`, `certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json` | done, even hits depth 3 while odd misses through depth 3 |
+| Verify unresolved atom feature-depth probe | `scripts/verify_routeE_r42_unresolved_atom_feature_depth.py`, `certs/routeE_r42_unresolved_atom_feature_depth_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1267,10 +1269,23 @@ negative conclusion: R42 may still have a deeper clock-carry transducer, but
 the simple one-step carry split is overfit evidence and must not be promoted
 to a branch theorem.
 
-It still is not branch closure: these are q=6,8 and q=7,9 sampled fits, and the
-pointwise first-return equations/no-early proof remain open.  The R42 promotion
-audit now counts 24 verified evidence items and keeps the same three theorem
-blockers.
+The surviving unresolved atom was then probed directly.  For `q=6,8,10`, this
+atom is rescued by a depth-three feature model, for example
+
+```text
+m*1[j>s+4],  m*1[j%5=0],  m*1[j%6=5].
+```
+
+For `q=7,9,11`, the same atom is not rescued by any tested feature set of
+depth at most three.  This parity asymmetry is the current strongest warning
+against the simple c-band clock-carry promotion: the R42 projection still may
+come from a finite transducer, but the state variable must be deeper than the
+tested threshold/residue carry alphabet, or the branch should be treated as
+not yet structurally explained.
+
+It still is not branch closure: these are sampled fits, and the pointwise
+first-return equations/no-early proof remain open.  The R42 promotion audit now
+counts 26 verified evidence items and keeps the same three theorem blockers.
 
 ## Conclusion
 

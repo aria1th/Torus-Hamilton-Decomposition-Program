@@ -169,6 +169,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json, certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json, and certs/routeE_r42_unresolved_atom_feature_depth_verification.json",
+      "missing": null,
+      "name": "R42 unresolved atom feature-depth probe separates even and odd parity",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
       "name": "R42 affine q=0..4 samples verify with all-pair checker",

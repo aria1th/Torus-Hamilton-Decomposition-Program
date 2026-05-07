@@ -108,6 +108,15 @@ FILES = {
     "r42_bad_intercept_carry_split_stress_verification": ROOT
     / "certs"
     / "routeE_r42_bad_intercept_carry_split_stress_verification.json",
+    "r42_unresolved_atom_feature_depth_even": ROOT
+    / "certs"
+    / "routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json",
+    "r42_unresolved_atom_feature_depth_odd": ROOT
+    / "certs"
+    / "routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json",
+    "r42_unresolved_atom_feature_depth_verification": ROOT
+    / "certs"
+    / "routeE_r42_unresolved_atom_feature_depth_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -205,6 +214,15 @@ def build_audit() -> dict[str, Any]:
     )
     r42_bad_intercept_carry_split_stress_verification = load_json(
         FILES["r42_bad_intercept_carry_split_stress_verification"]
+    )
+    r42_unresolved_atom_feature_depth_even = load_json(
+        FILES["r42_unresolved_atom_feature_depth_even"]
+    )
+    r42_unresolved_atom_feature_depth_odd = load_json(
+        FILES["r42_unresolved_atom_feature_depth_odd"]
+    )
+    r42_unresolved_atom_feature_depth_verification = load_json(
+        FILES["r42_unresolved_atom_feature_depth_verification"]
     )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
@@ -573,6 +591,29 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json, and certs/routeE_r42_bad_intercept_carry_split_stress_verification.json",
         ),
         item(
+            "R42 unresolved atom feature-depth probe separates even and odd parity",
+            r42_unresolved_atom_feature_depth_verification.get("schema")
+            == "routeE_r42_unresolved_atom_feature_depth_verification_v1"
+            and r42_unresolved_atom_feature_depth_verification.get("ok") is True
+            and r42_unresolved_atom_feature_depth_verification.get(
+                "diagnostic_result", {}
+            ).get("even_minimal_depth")
+            == 3
+            and r42_unresolved_atom_feature_depth_verification.get(
+                "diagnostic_result", {}
+            ).get("odd_minimal_depth")
+            is None
+            and r42_unresolved_atom_feature_depth_verification.get(
+                "diagnostic_result", {}
+            ).get("atom")
+            == "20->26|L1|B7:7|R0:0"
+            and r42_unresolved_atom_feature_depth_even.get("q_values")
+            == [6, 8, 10]
+            and r42_unresolved_atom_feature_depth_odd.get("q_values")
+            == [7, 9, 11],
+            "certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json, certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json, and certs/routeE_r42_unresolved_atom_feature_depth_verification.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
@@ -794,7 +835,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 25
+            and r42_promotion_audit.get("evidence_items_ok") == 26
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

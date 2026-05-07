@@ -1,0 +1,22 @@
+{
+  "diagnostic_result": {
+    "atom": "20->26|L1|B7:7|R0:0",
+    "even_minimal_depth": 3,
+    "even_rows": 27,
+    "interpretation": "The even parity sample is rescued by three tested carry features, but the odd parity sample is not rescued up to depth three.  This weakens the simple finite-depth carry ansatz and points to a deeper or different state variable.",
+    "odd_minimal_depth": null,
+    "odd_rows": 30
+  },
+  "error_count": 0,
+  "errors": [],
+  "even_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json",
+  "odd_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json",
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "no_early_closed": false,
+    "pointwise_equations_closed": false,
+    "refutes_depth_three_uniformity": true
+  },
+  "schema": "routeE_r42_unresolved_atom_feature_depth_verification_v1"
+}

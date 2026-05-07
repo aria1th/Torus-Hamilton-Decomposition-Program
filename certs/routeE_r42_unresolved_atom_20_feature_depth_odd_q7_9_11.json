@@ -1,0 +1,244 @@
+{
+  "atom": "20->26|L1|B7:7|R0:0",
+  "candidate_feature_count": 80,
+  "family": "R42, c=6*q+5, m=8*c+2, x=z=c",
+  "generic_subbranches": [
+    {
+      "base_fit": false,
+      "hits": [],
+      "j_values": [],
+      "minimal_depth": null,
+      "name": "R42-even-q",
+      "q_values": [],
+      "qj_points": [],
+      "rows": 0
+    },
+    {
+      "base_fit": false,
+      "hits": [],
+      "j_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "minimal_depth": null,
+      "name": "R42-odd-q",
+      "q_values": [
+        7,
+        9,
+        11
+      ],
+      "qj_points": [
+        {
+          "j": 0,
+          "q": 7,
+          "qtime_intercept": 35151,
+          "s": 3
+        },
+        {
+          "j": 1,
+          "q": 7,
+          "qtime_intercept": 39333,
+          "s": 3
+        },
+        {
+          "j": 2,
+          "q": 7,
+          "qtime_intercept": 43893,
+          "s": 3
+        },
+        {
+          "j": 3,
+          "q": 7,
+          "qtime_intercept": 48453,
+          "s": 3
+        },
+        {
+          "j": 4,
+          "q": 7,
+          "qtime_intercept": 53013,
+          "s": 3
+        },
+        {
+          "j": 5,
+          "q": 7,
+          "qtime_intercept": 57573,
+          "s": 3
+        },
+        {
+          "j": 6,
+          "q": 7,
+          "qtime_intercept": 62133,
+          "s": 3
+        },
+        {
+          "j": 7,
+          "q": 7,
+          "qtime_intercept": 66693,
+          "s": 3
+        },
+        {
+          "j": 0,
+          "q": 9,
+          "qtime_intercept": 55455,
+          "s": 4
+        },
+        {
+          "j": 1,
+          "q": 9,
+          "qtime_intercept": 60693,
+          "s": 4
+        },
+        {
+          "j": 2,
+          "q": 9,
+          "qtime_intercept": 66405,
+          "s": 4
+        },
+        {
+          "j": 3,
+          "q": 9,
+          "qtime_intercept": 72117,
+          "s": 4
+        },
+        {
+          "j": 4,
+          "q": 9,
+          "qtime_intercept": 77829,
+          "s": 4
+        },
+        {
+          "j": 5,
+          "q": 9,
+          "qtime_intercept": 83541,
+          "s": 4
+        },
+        {
+          "j": 6,
+          "q": 9,
+          "qtime_intercept": 89253,
+          "s": 4
+        },
+        {
+          "j": 7,
+          "q": 9,
+          "qtime_intercept": 94965,
+          "s": 4
+        },
+        {
+          "j": 8,
+          "q": 9,
+          "qtime_intercept": 100677,
+          "s": 4
+        },
+        {
+          "j": 9,
+          "q": 9,
+          "qtime_intercept": 106389,
+          "s": 4
+        },
+        {
+          "j": 0,
+          "q": 11,
+          "qtime_intercept": 80367,
+          "s": 5
+        },
+        {
+          "j": 1,
+          "q": 11,
+          "qtime_intercept": 86661,
+          "s": 5
+        },
+        {
+          "j": 2,
+          "q": 11,
+          "qtime_intercept": 93525,
+          "s": 5
+        },
+        {
+          "j": 3,
+          "q": 11,
+          "qtime_intercept": 100389,
+          "s": 5
+        },
+        {
+          "j": 4,
+          "q": 11,
+          "qtime_intercept": 107253,
+          "s": 5
+        },
+        {
+          "j": 5,
+          "q": 11,
+          "qtime_intercept": 114117,
+          "s": 5
+        },
+        {
+          "j": 6,
+          "q": 11,
+          "qtime_intercept": 120981,
+          "s": 5
+        },
+        {
+          "j": 7,
+          "q": 11,
+          "qtime_intercept": 127845,
+          "s": 5
+        },
+        {
+          "j": 8,
+          "q": 11,
+          "qtime_intercept": 134709,
+          "s": 5
+        },
+        {
+          "j": 9,
+          "q": 11,
+          "qtime_intercept": 141573,
+          "s": 5
+        },
+        {
+          "j": 10,
+          "q": 11,
+          "qtime_intercept": 148437,
+          "s": 5
+        },
+        {
+          "j": 11,
+          "q": 11,
+          "qtime_intercept": 155301,
+          "s": 5
+        }
+      ],
+      "rows": 30
+    }
+  ],
+  "max_depth": 3,
+  "promotion_impact": {
+    "closes_residue": false,
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    7,
+    9,
+    11
+  ],
+  "schema": "routeE_r42_unresolved_atom_feature_depth_v1",
+  "summary": {
+    "all_nonempty_branches_hit": false,
+    "minimal_depth_by_branch": {
+      "R42-even-q": null,
+      "R42-odd-q": null
+    }
+  }
+}

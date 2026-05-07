@@ -90,6 +90,10 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     bad_intercept_stress_ver = record.get(
         "bad_intercept_carry_split_stress_verification_summary", {}
     )
+    unresolved_depth = record.get("unresolved_atom_feature_depth_summary", {})
+    unresolved_depth_ver = record.get(
+        "unresolved_atom_feature_depth_verification_summary", {}
+    )
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -407,6 +411,26 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             and bad_intercept_stress.get("odd", {}).get("q_values") == [7, 9, 11],
             "certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json, and certs/routeE_r42_bad_intercept_carry_split_stress_verification.json",
             "negative stress diagnostic",
+        ),
+        item(
+            "R42 unresolved atom feature-depth probe separates even and odd parity",
+            unresolved_depth_ver.get("schema")
+            == "routeE_r42_unresolved_atom_feature_depth_verification_v1"
+            and unresolved_depth_ver.get("ok") is True
+            and unresolved_depth_ver.get("diagnostic_result", {}).get(
+                "even_minimal_depth"
+            )
+            == 3
+            and unresolved_depth_ver.get("diagnostic_result", {}).get(
+                "odd_minimal_depth"
+            )
+            is None
+            and unresolved_depth_ver.get("diagnostic_result", {}).get("atom")
+            == "20->26|L1|B7:7|R0:0"
+            and unresolved_depth.get("even", {}).get("q_values") == [6, 8, 10]
+            and unresolved_depth.get("odd", {}).get("q_values") == [7, 9, 11],
+            "certs/routeE_r42_unresolved_atom_20_feature_depth_even_q6_8_10.json, certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json, and certs/routeE_r42_unresolved_atom_feature_depth_verification.json",
+            "feature-depth diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",
