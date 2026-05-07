@@ -124,6 +124,74 @@
       "transition_time_values_verified": true
     }
   },
+  "bad_intercept_carry_split_stress_summary": {
+    "even": {
+      "q_values": [
+        6,
+        8,
+        10
+      ],
+      "schema": "routeE_r42_bad_intercept_carry_split_v1",
+      "summary": {
+        "all_bad_atoms_have_one_feature_hit": false,
+        "all_bad_atoms_have_one_or_two_feature_hit": false,
+        "branch_one_feature_hits": {
+          "R42-even-q": 7,
+          "R42-odd-q": 0
+        },
+        "branch_two_feature_hits": {
+          "R42-even-q": 1,
+          "R42-odd-q": 0
+        }
+      }
+    },
+    "odd": {
+      "q_values": [
+        7,
+        9,
+        11
+      ],
+      "schema": "routeE_r42_bad_intercept_carry_split_v1",
+      "summary": {
+        "all_bad_atoms_have_one_feature_hit": false,
+        "all_bad_atoms_have_one_or_two_feature_hit": false,
+        "branch_one_feature_hits": {
+          "R42-even-q": 0,
+          "R42-odd-q": 7
+        },
+        "branch_two_feature_hits": {
+          "R42-even-q": 0,
+          "R42-odd-q": 1
+        }
+      }
+    },
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "Adding q=10 and q=11 breaks the apparent two-sample split: one atom remains unresolved even with all tested one/two features.  R42 may still have a deeper clock-carry structure, but the one-step carry split is not a branch theorem.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false,
+      "refutes_simple_one_step_carry_split": true
+    }
+  },
+  "bad_intercept_carry_split_stress_verification_summary": {
+    "diagnostic_result": {
+      "bad_atom_count_per_branch": 9,
+      "new_two_feature_atom": "13->4|L1|B6:6|R0:0",
+      "one_feature_hits_per_branch": {
+        "R42-even-q": 7,
+        "R42-odd-q": 7
+      },
+      "simple_one_or_two_feature_schema_stable": false,
+      "two_feature_hits_per_branch": {
+        "R42-even-q": 1,
+        "R42-odd-q": 1
+      },
+      "unresolved_atom": "20->26|L1|B7:7|R0:0"
+    },
+    "error_count": 0,
+    "ok": true,
+    "schema": "routeE_r42_bad_intercept_carry_split_stress_verification_v1"
+  },
   "bad_intercept_carry_split_summary": {
     "even": {
       "q_values": [
@@ -1260,6 +1328,9 @@
     "allpair_transition_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_allpair_transition_fit_verification.json",
     "bad_intercept_carry_split_even": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json",
     "bad_intercept_carry_split_odd": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json",
+    "bad_intercept_carry_split_stress_even": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json",
+    "bad_intercept_carry_split_stress_odd": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json",
+    "bad_intercept_carry_split_stress_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_stress_verification.json",
     "bad_intercept_carry_split_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_verification.json",
     "block_regeneration_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_block_formula_regeneration_verification.json",
     "boundary_block_transducer": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_block_transducer.json",

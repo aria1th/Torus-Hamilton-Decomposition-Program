@@ -29,6 +29,7 @@ flowchart LR
   RSA[R42 support atoms<br/>116 per parity branch]
   RQA[R42 qtime atom diagnostic<br/>slopes fit, 9 bad intercept atoms/branch]
   RBS[R42 bad-intercept split<br/>8 threshold + 1 two-residue atom/branch]
+  RBX[R42 split stress<br/>q=10/11 refutes simple split]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -46,7 +47,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> RC --> R25 --> RSA --> RQA --> RBS --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> R25 --> RSA --> RQA --> RBS --> RBX --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -325,7 +326,13 @@ q=0..6 samples and have strongly connected support.
     `m*1[j%5=0]` and `m*1[j%6=5]`.  This identifies the next finite state
     refinement, but it is still sampled qtime evidence rather than a no-early
     proof.
-27. The open residue queue is now explicit: R42 remains the active affine
+27. The larger stress test q=6,8,10 and q=7,9,11 refutes the simple one-step
+    bad-intercept split as a stable law.  In each parity branch only 7 atoms
+    remain one-feature, 1 remains two-feature, and
+    `20->26|L1|B7:7|R0:0` is unresolved by the tested one/two-feature family.
+    This is negative evidence against promoting that split; R42 needs a deeper
+    clock-carry state or a different primitive description.
+28. The open residue queue is now explicit: R42 remains the active affine
     promotion target, R38 remains the gate-transducer target, and the remaining
     17 open residues are portfolio-only law-mining targets.
 

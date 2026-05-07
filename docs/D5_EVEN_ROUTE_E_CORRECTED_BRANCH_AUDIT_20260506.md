@@ -62,6 +62,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 qtime atom diagnostic | `scripts/verify_routeE_r42_carry_qtime_atoms.py`, `certs/routeE_r42_carry_qtime_atoms_verification.json` | done, partial negative evidence preserved |
 | Mine next carry split for R42 bad qtime-intercept atoms | `scripts/summarize_routeE_r42_bad_intercept_carry_split.py`, `certs/routeE_r42_bad_intercept_carry_split_even_q6_8.json`, `certs/routeE_r42_bad_intercept_carry_split_odd_q7_9.json` | done, 8 threshold atoms and 1 two-residue atom per parity branch |
 | Verify R42 bad-intercept carry split diagnostic | `scripts/verify_routeE_r42_bad_intercept_carry_split.py`, `certs/routeE_r42_bad_intercept_carry_split_verification.json` | done |
+| Stress-test the bad-intercept split on larger R42 samples | `certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json`, `certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json` | done, refutes the simple one-step carry split |
+| Verify R42 bad-intercept stress diagnostic | `scripts/verify_routeE_r42_bad_intercept_carry_split_stress.py`, `certs/routeE_r42_bad_intercept_carry_split_stress_verification.json` | done |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1244,6 +1246,26 @@ equivalent `m*1[j>=s+k+1]`.  This is the first concrete refinement beyond
 ```text
 edge + interval length + c-band + u mod 6.
 ```
+
+A larger stress test refutes this as a stable branch law.  With `q=6,8,10`
+on the even branch and `q=7,9,11` on the odd branch, the same script reports
+only 7 one-feature atoms and 1 two-feature atom in each parity branch.  The
+atom
+
+```text
+20->26|L1|B7:7|R0:0
+```
+
+is no longer explained by the tested one/two-feature carry family, while
+
+```text
+13->4|L1|B6:6|R0:0
+```
+
+becomes a two-feature atom.  The verified stress artifact therefore records a
+negative conclusion: R42 may still have a deeper clock-carry transducer, but
+the simple one-step carry split is overfit evidence and must not be promoted
+to a branch theorem.
 
 It still is not branch closure: these are q=6,8 and q=7,9 sampled fits, and the
 pointwise first-return equations/no-early proof remain open.  The R42 promotion

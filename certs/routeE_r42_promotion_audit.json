@@ -128,6 +128,13 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_bad_intercept_carry_split_even_q6_8_10.json, certs/routeE_r42_bad_intercept_carry_split_odd_q7_9_11.json, and certs/routeE_r42_bad_intercept_carry_split_stress_verification.json",
+      "level": "negative stress diagnostic",
+      "missing": null,
+      "name": "R42 extended stress refutes the simple one-step carry split",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_finite_boundary_cases.json and certs/routeE_r42_finite_boundary_cases_verification.json",
       "level": "finite boundary evidence",
       "missing": null,
@@ -192,7 +199,7 @@
     }
   ],
   "conclusion": "R42 has strong finite/symbolic-support evidence, but it is not promotion-ready until pointwise first-return, no-early, and Lean-facing endpoint artifacts exist.",
-  "evidence_items_ok": 24,
+  "evidence_items_ok": 25,
   "promotion_ready": false,
   "record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_affine_branch_record.json",
   "required_theorem_items_missing": [
