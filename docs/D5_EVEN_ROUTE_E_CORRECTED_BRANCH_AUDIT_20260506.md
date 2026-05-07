@@ -58,6 +58,8 @@ as a branch-taxonomy and evidence-preservation pass.
 | Verify R42 `25 -> 3` c-band carry grammar | `scripts/verify_routeE_r42_proto25_carry.py`, `certs/routeE_r42_proto25_carry_verification.json` | done |
 | Summarize R42 c-band support atoms | `scripts/summarize_routeE_r42_carry_support_atoms.py`, `certs/routeE_r42_carry_support_atoms.json` | done, all 22 qtime-missing edges |
 | Verify R42 c-band support atoms | `scripts/verify_routeE_r42_carry_support_atoms.py`, `certs/routeE_r42_carry_support_atoms_verification.json` | done |
+| Test first R42 c-band qtime atom model | `scripts/summarize_routeE_r42_carry_qtime_atoms.py`, `certs/routeE_r42_carry_qtime_atoms.json` | done, slopes fit but first intercept model fails on 9 atoms per parity branch |
+| Verify R42 qtime atom diagnostic | `scripts/verify_routeE_r42_carry_qtime_atoms.py`, `certs/routeE_r42_carry_qtime_atoms_verification.json` | done, partial negative evidence preserved |
 | Audit R42 promotion readiness | `scripts/audit_routeE_r42_promotion.py`, `certs/routeE_r42_promotion_audit.json` | done, not promotion-ready |
 | Recheck R38 symmetric next-target evidence | `certs/routeE_r38_symmetric_probe_summary.json` and raw small probe JSONs | done, negative-control only |
 | Make C++ residue branch search timeout-safe | `scripts/search_d5_routeE_cpp_residue_branches.py --timeout`, `certs/routeE_r38_m182_cpp_screen_timeout.json` | done |
@@ -1178,14 +1180,46 @@ argument.
 
 Thus this is useful packet-grammar evidence, not branch closure.  It does not
 prove pointwise first-return equations and it does not prove no-early
-minimality.  The R42 promotion audit now counts 22 verified evidence items but
-keeps the same three theorem blockers:
+minimality.  At this support-atom stage the R42 promotion audit counted 22
+verified evidence items and kept the same three theorem blockers:
 
 ```text
 1. pointwise first-return equations;
 2. no-early/minimality;
 3. Lean-facing endpoint theorem.
 ```
+
+The next qtime-atom diagnostic tests whether that same finite support-state set
+already determines the sampled qtime coefficients.  On `q=6,7,8,9`, all 116
+atoms in each parity branch have affine qtime slopes in the branch parameter.
+The first intercept model
+
+```text
+A + B*s + C*s^2 + D*j + E*s*j
+```
+
+does not suffice: exactly 9 atoms fail on each parity branch.  The verifier
+records this as expected partial negative evidence rather than as a failed
+artifact:
+
+```text
+row_count = 2988
+branch_atom_key_counts = {R42-even-q: 116, R42-odd-q: 116}
+all_slopes_fit = True
+intercept_model_fails_as_expected = True
+bad_intercept_atom_counts = {R42-even-q: 9, R42-odd-q: 9}
+```
+
+Thus the current finite state
+
+```text
+edge + interval length + c-band + u mod 6
+```
+
+is strong enough for support and qtime slopes, but not for all qtime intercepts.
+The next symbolic primitive must add one more carry/winner split for the 9 bad
+atoms in each parity branch.  The R42 promotion audit now counts 23 verified
+evidence items and keeps the same three theorem blockers.
 
 ## Conclusion
 

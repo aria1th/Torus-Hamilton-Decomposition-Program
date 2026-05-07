@@ -84,6 +84,12 @@ FILES = {
     "r42_carry_support_atoms_verification": ROOT
     / "certs"
     / "routeE_r42_carry_support_atoms_verification.json",
+    "r42_carry_qtime_atoms": ROOT
+    / "certs"
+    / "routeE_r42_carry_qtime_atoms.json",
+    "r42_carry_qtime_atoms_verification": ROOT
+    / "certs"
+    / "routeE_r42_carry_qtime_atoms_verification.json",
     "r42_promotion_audit": ROOT / "certs" / "routeE_r42_promotion_audit.json",
     "r38_probe": ROOT / "certs" / "routeE_r38_symmetric_probe_summary.json",
     "timeout_screen": ROOT / "certs" / "routeE_r38_m182_cpp_screen_timeout.json",
@@ -159,6 +165,10 @@ def build_audit() -> dict[str, Any]:
     r42_carry_support_atoms = load_json(FILES["r42_carry_support_atoms"])
     r42_carry_support_atoms_verification = load_json(
         FILES["r42_carry_support_atoms_verification"]
+    )
+    r42_carry_qtime_atoms = load_json(FILES["r42_carry_qtime_atoms"])
+    r42_carry_qtime_atoms_verification = load_json(
+        FILES["r42_carry_qtime_atoms_verification"]
     )
     r42_promotion_audit = load_json(FILES["r42_promotion_audit"])
     probe = load_json(FILES["r38_probe"])
@@ -437,6 +447,44 @@ def build_audit() -> dict[str, Any]:
             "certs/routeE_r42_carry_support_atoms.json and certs/routeE_r42_carry_support_atoms_verification.json",
         ),
         item(
+            "R42 qtime-atom first model is verified as partial negative evidence",
+            r42_carry_qtime_atoms.get("schema")
+            == "routeE_r42_carry_qtime_atoms_v1"
+            and r42_carry_qtime_atoms.get("summary", {}).get(
+                "all_branch_qtime_slopes_affine"
+            )
+            is True
+            and r42_carry_qtime_atoms.get("summary", {}).get(
+                "all_branch_qtime_intercepts_fit"
+            )
+            is False
+            and r42_carry_qtime_atoms.get("summary", {}).get(
+                "branch_atom_key_counts"
+            )
+            == {"R42-even-q": 116, "R42-odd-q": 116}
+            and r42_carry_qtime_atoms_verification.get("schema")
+            == "routeE_r42_carry_qtime_atoms_verification_v1"
+            and r42_carry_qtime_atoms_verification.get("ok") is True
+            and r42_carry_qtime_atoms_verification.get("q_values")
+            == [6, 7, 8, 9]
+            and r42_carry_qtime_atoms_verification.get("row_count") == 2988
+            and r42_carry_qtime_atoms_verification.get("branch_atom_key_counts")
+            == {"R42-even-q": 116, "R42-odd-q": 116}
+            and r42_carry_qtime_atoms_verification.get("diagnostic_result", {}).get(
+                "all_slopes_fit"
+            )
+            is True
+            and r42_carry_qtime_atoms_verification.get("diagnostic_result", {}).get(
+                "intercept_model_fails_as_expected"
+            )
+            is True
+            and r42_carry_qtime_atoms_verification.get("diagnostic_result", {}).get(
+                "bad_intercept_atom_counts"
+            )
+            == {"R42-even-q": 9, "R42-odd-q": 9},
+            "certs/routeE_r42_carry_qtime_atoms.json and certs/routeE_r42_carry_qtime_atoms_verification.json",
+        ),
+        item(
             "R42 affine q=0..4 samples verify with all-pair checker",
             r42_sample_verification.get("schema")
             == "routeE_r42_affine_samples_verification_v1"
@@ -658,7 +706,7 @@ def build_audit() -> dict[str, Any]:
             "R42 promotion audit separates evidence from theorem blockers",
             r42_promotion_audit.get("schema") == "routeE_r42_promotion_audit_v1"
             and r42_promotion_audit.get("promotion_ready") is False
-            and r42_promotion_audit.get("evidence_items_ok") == 22
+            and r42_promotion_audit.get("evidence_items_ok") == 23
             and len(r42_promotion_audit.get("required_theorem_items_missing", []))
             == 3,
             "certs/routeE_r42_promotion_audit.json",

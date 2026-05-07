@@ -359,6 +359,54 @@
     "schema": "routeE_r42_c_skeleton_verification_v1",
     "transition_row_count": 16
   },
+  "carry_qtime_atoms_summary": {
+    "promotion_impact": {
+      "closes_residue": false,
+      "diagnosis": "On sampled witnesses, qtime slope/intercept formulas fit on the c-band support atoms.  This is a candidate formula class for the clock-carry transducer, not a proof of no-early.",
+      "no_early_closed": false,
+      "pointwise_equations_closed": false
+    },
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "schema": "routeE_r42_carry_qtime_atoms_v1",
+    "summary": {
+      "all_branch_qtime_intercepts_fit": false,
+      "all_branch_qtime_slopes_affine": true,
+      "branch_atom_key_counts": {
+        "R42-even-q": 116,
+        "R42-odd-q": 116
+      },
+      "row_count": 2988
+    }
+  },
+  "carry_qtime_atoms_verification_summary": {
+    "branch_atom_key_counts": {
+      "R42-even-q": 116,
+      "R42-odd-q": 116
+    },
+    "diagnostic_result": {
+      "all_slopes_fit": true,
+      "bad_intercept_atom_counts": {
+        "R42-even-q": 9,
+        "R42-odd-q": 9
+      },
+      "intercept_model_fails_as_expected": true
+    },
+    "error_count": 0,
+    "ok": true,
+    "q_values": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "row_count": 2988,
+    "schema": "routeE_r42_carry_qtime_atoms_verification_v1"
+  },
   "carry_support_atoms_summary": {
     "promotion_impact": {
       "closes_residue": false,
@@ -1151,6 +1199,8 @@
     "boundary_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_boundary_summary_verification.json",
     "c_skeleton": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_c_skeleton.json",
     "c_skeleton_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_c_skeleton_verification.json",
+    "carry_qtime_atoms": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_qtime_atoms.json",
+    "carry_qtime_atoms_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_qtime_atoms_verification.json",
     "carry_support_atoms": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_support_atoms.json",
     "carry_support_atoms_verification": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_support_atoms_verification.json",
     "color_sign_screen": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_color_sign_screen_audit.json",

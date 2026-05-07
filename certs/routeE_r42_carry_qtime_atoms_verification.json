@@ -1,0 +1,32 @@
+{
+  "branch_atom_key_counts": {
+    "R42-even-q": 116,
+    "R42-odd-q": 116
+  },
+  "diagnostic_result": {
+    "all_slopes_fit": true,
+    "bad_intercept_atom_counts": {
+      "R42-even-q": 9,
+      "R42-odd-q": 9
+    },
+    "intercept_model_fails_as_expected": true
+  },
+  "error_count": 0,
+  "errors": [],
+  "ok": true,
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "On sampled witnesses, qtime slope/intercept formulas fit on the c-band support atoms.  This is a candidate formula class for the clock-carry transducer, not a proof of no-early.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "qtime_atoms": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_qtime_atoms.json",
+  "row_count": 2988,
+  "schema": "routeE_r42_carry_qtime_atoms_verification_v1"
+}

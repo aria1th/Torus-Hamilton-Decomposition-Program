@@ -151,6 +151,12 @@
       "ok": true
     },
     {
+      "evidence": "certs/routeE_r42_carry_qtime_atoms.json and certs/routeE_r42_carry_qtime_atoms_verification.json",
+      "missing": null,
+      "name": "R42 qtime-atom first model is verified as partial negative evidence",
+      "ok": true
+    },
+    {
       "evidence": "certs/routeE_r42_affine_samples_verification.json",
       "missing": null,
       "name": "R42 affine q=0..4 samples verify with all-pair checker",

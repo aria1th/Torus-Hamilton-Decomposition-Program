@@ -80,6 +80,8 @@ def build_audit(record_path: Path) -> dict[str, Any]:
     proto25_ver = record.get("proto25_carry_verification_summary", {})
     support_atoms = record.get("carry_support_atoms_summary", {})
     support_atoms_ver = record.get("carry_support_atoms_verification_summary", {})
+    qtime_atoms = record.get("carry_qtime_atoms_summary", {})
+    qtime_atoms_ver = record.get("carry_qtime_atoms_verification_summary", {})
     finite_boundary_cases = record.get("finite_boundary_cases_summary", {}).get(
         "summary", {}
     )
@@ -322,6 +324,29 @@ def build_audit(record_path: Path) -> dict[str, Any]:
             is True,
             "certs/routeE_r42_carry_support_atoms.json and certs/routeE_r42_carry_support_atoms_verification.json",
             "support-level finite-state diagnostic",
+        ),
+        item(
+            "R42 qtime-atom first model is verified as partial negative evidence",
+            qtime_atoms_ver.get("schema")
+            == "routeE_r42_carry_qtime_atoms_verification_v1"
+            and qtime_atoms_ver.get("ok") is True
+            and qtime_atoms_ver.get("q_values") == [6, 7, 8, 9]
+            and qtime_atoms_ver.get("row_count") == 2988
+            and qtime_atoms_ver.get("branch_atom_key_counts")
+            == {"R42-even-q": 116, "R42-odd-q": 116}
+            and qtime_atoms_ver.get("diagnostic_result", {}).get("all_slopes_fit")
+            is True
+            and qtime_atoms_ver.get("diagnostic_result", {}).get(
+                "intercept_model_fails_as_expected"
+            )
+            is True
+            and qtime_atoms_ver.get("diagnostic_result", {}).get(
+                "bad_intercept_atom_counts"
+            )
+            == {"R42-even-q": 9, "R42-odd-q": 9}
+            and qtime_atoms.get("schema") == "routeE_r42_carry_qtime_atoms_v1",
+            "certs/routeE_r42_carry_qtime_atoms.json and certs/routeE_r42_carry_qtime_atoms_verification.json",
+            "qtime formula-class diagnostic",
         ),
         item(
             "R42 finite boundary cases are recorded",
