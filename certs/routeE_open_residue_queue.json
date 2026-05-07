@@ -564,10 +564,10 @@
         1,
         2
       ],
-      "recommended_next_action": "Simple affine R42 family; missing Pointwise first-return equations are proved for all q; No-early/minimality is proved for all q; Lean-facing endpoint theorem is present.",
+      "recommended_next_action": "The tested c-band threshold/residue clock-carry promotion failed; only continue with a new raw zero-clock winner/carry state variable.",
       "residue": 42,
       "sample_count": 3,
-      "status": "active_promotion_target",
+      "status": "demoted_clock_carry_failed",
       "tags": [
         "sym"
       ],
@@ -629,6 +629,7 @@
     "coverage": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_typeA_residue_coverage.json",
     "portfolio_fits": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_allpair_portfolio_fit_summary.json",
     "r38_record": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r38_gate_transducer_branch_record.json",
+    "r42_clock_carry_goal_audit": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_clock_carry_goal_audit.json",
     "r42_promotion_audit": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_promotion_audit.json"
   },
   "summary": {
@@ -662,12 +663,12 @@
       44
     ],
     "recommended_order": [
-      "42: active affine promotion target",
+      "42: demoted unless a new raw zero-clock winner/carry state is introduced",
       "38: gate-transducer target",
       "remaining nonaffine portfolio-only residues: need new law mining"
     ],
     "residues_by_status": {
-      "active_promotion_target": [
+      "demoted_clock_carry_failed": [
         42
       ],
       "gate_transducer_target": [
@@ -703,7 +704,7 @@
       ]
     },
     "status_counts": {
-      "active_promotion_target": 1,
+      "demoted_clock_carry_failed": 1,
       "gate_transducer_target": 1,
       "portfolio_only_nonaffine": 2,
       "portfolio_only_symmetric_nonaffine": 15,

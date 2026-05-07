@@ -219,11 +219,13 @@ q=0..6 samples and have strongly connected support.
    already proof-facing residues.
 6. R38 remains an open gate-transducer target.  The symmetric probes are useful
    negative controls, not a closed branch law.
-7. R42 is now the sharpest promotion target: samples verify for `q=0..4`, the
-   `q>=1` boundary quotient has a stable 29-block profile, transition/block
+7. R42 was the sharpest affine promotion candidate: samples verify for `q=0..4`,
+   the `q>=1` boundary quotient has a stable 29-block profile, transition/block
    mass identities verify symbolically, the 29 block formulas match fresh
    regenerated witnesses for `q=1..6`, and the optional open interval-count
-   metadata is now stored as tail formulas in the compact summary.
+   metadata is stored as tail formulas in the compact summary.  The later
+   clock-carry audit demotes this specific c-band threshold/residue promotion
+   path.
 8. R42 all-pair time evidence now has a compact polynomial artifact: the total
    return-time fit is exactly `(48q+42)^4`, with label-wise count/time fits
    verified against q=0..6 samples.
@@ -338,9 +340,10 @@ q=0..6 samples and have strongly connected support.
     the two residue carries `j%5=0`, `j%6=5`; on q=7,9,11 it is not rescued by
     any tested feature set through depth three.  This parity asymmetry is the
     current strongest warning against the simple c-band clock-carry promotion.
-29. The open residue queue is now explicit: R42 remains the active affine
-    promotion target, R38 remains the gate-transducer target, and the remaining
-    17 open residues are portfolio-only law-mining targets.
+29. The open residue queue is now explicit: R42 is demoted unless a new raw
+    zero-clock winner/carry state is introduced, R38 remains the gate-transducer
+    target, and the remaining 17 open residues are portfolio-only law-mining
+    targets.
 
 ## Remaining Proof Route
 

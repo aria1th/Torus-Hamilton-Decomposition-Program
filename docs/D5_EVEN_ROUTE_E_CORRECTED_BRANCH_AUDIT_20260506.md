@@ -251,7 +251,8 @@ Result:
 ```text
 covered residues mod 48: 14,16,20,40,44
 open residues mod 48: 0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46
-next target: R42 affine all-pair/boundary family
+queue: R42 demoted unless a new raw zero-clock winner/carry state is introduced;
+       R38 remains the gate-transducer target
 ```
 
 All-pair portfolio sample coverage from the v3.6 proof bundle:
