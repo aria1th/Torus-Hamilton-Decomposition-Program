@@ -1,0 +1,61 @@
+{
+  "checklist": [
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_c_skeleton_verification.json",
+      "name": "R42 is reparameterized by c with m=8c+2 and x=z=c",
+      "note": "",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_support_atoms_verification.json",
+      "name": "c-band support atoms cover the sampled qtime-missing supports",
+      "note": "",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_carry_qtime_atoms_verification.json",
+      "name": "first c-band qtime model fits slopes but leaves nine intercept atoms per parity",
+      "note": "",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_verification.json",
+      "name": "two-sample bad-intercept split suggests a small next carry alphabet",
+      "note": "This is treated as provisional evidence only.",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_bad_intercept_carry_split_stress_verification.json",
+      "name": "larger stress test refutes the simple one/two-feature split",
+      "note": "",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_feature_depth_verification.json",
+      "name": "unresolved atom is not uniformly rescued by tested depth-three features",
+      "note": "",
+      "ok": true
+    },
+    {
+      "evidence": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_promotion_audit.json",
+      "name": "R42 remains non-promoted as a Route-E theorem",
+      "note": "",
+      "ok": true
+    }
+  ],
+  "missing_for_branch_closure": [
+    "closed pointwise first-return equations",
+    "symbolic no-early/minimality proof",
+    "Lean-facing endpoint theorem"
+  ],
+  "objective": "Explain or refute B42/R42 using the c-band clock-carry transducer program.",
+  "r42_branch_closed": false,
+  "recommendation": "Do not continue blind threshold/residue atom splitting.  Either introduce a genuinely new state variable from the raw zero-clock winner/carry dynamics, or demote R42 from promotion target.",
+  "schema": "routeE_r42_clock_carry_goal_audit_v1",
+  "scope": {
+    "not_proved": "R42 Route-E theorem",
+    "not_refuted": "all conceivable full layered R42 transducers",
+    "refuted": "tested c-band threshold/residue carry promotion"
+  },
+  "tested_refinement_failed": true
+}
