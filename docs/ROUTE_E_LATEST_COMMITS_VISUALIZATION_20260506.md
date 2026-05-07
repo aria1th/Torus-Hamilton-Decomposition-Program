@@ -31,6 +31,7 @@ flowchart LR
   RBS[R42 bad-intercept split<br/>8 threshold + 1 two-residue atom/branch]
   RBX[R42 split stress<br/>q=10/11 refutes simple split]
   RUD[R42 unresolved atom probe<br/>even depth 3, odd no hit]
+  ROS[R42 odd phase-shift screen<br/>302400 candidates, no survivors]
   BQ[R42 boundary quotient<br/>q>=1 stable 29-block profile]
   BE[R42 boundary expansion<br/>29 blocks to all-pair counts]
   RG[R42 regeneration check<br/>q=1..6 formulas match fresh witnesses]
@@ -48,7 +49,7 @@ flowchart LR
 
   O --> M --> A --> S --> D --> F --> L --> T --> P
   P --> R38
-  P --> R42 --> RC --> R25 --> RSA --> RQA --> RBS --> RBX --> RUD --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
+  P --> R42 --> RC --> R25 --> RSA --> RQA --> RBS --> RBX --> RUD --> ROS --> BQ --> BE --> RG --> BT --> R96 --> E96 --> FB --> RT --> RM --> RA --> RP --> Q --> NG --> OPEN
 ```
 
 ## Latest Commit Bands
@@ -69,6 +70,7 @@ flowchart LR
 | 21:35-21:45 | `323bbbe`..`42041aa` | ledger refresh and open-residue promotion queue | R42/R38/portfolio-only queue recorded |
 | 21:45-22:00 | `5ba4770` | R42 pointwise law-mining diagnostic | naive pointwise law complexity recorded |
 | 22:00-22:10 | `1112f21` | R42 residue-class pointwise diagnostic | simple residue-affine trace law ruled out for nontrivial labels |
+| later local | `01ad367`..current | R42 clock-carry stress and odd phase-shift screen | R42 split into R42-even candidate and R42-odd raw-state diagnostic |
 
 ## Proof Progress Gauge
 
@@ -113,8 +115,8 @@ flowchart TD
 
 ## Residue Coverage Mod 48
 
-Legend: `P` means proof-facing Type-A branch evidence, `C` means current
-symbolic-promotion candidate, `G` means gate-transducer target, `O` means still
+Legend: `P` means proof-facing Type-A branch evidence, `S` means split
+clock-carry partial candidate, `G` means gate-transducer target, `O` means still
 open.  The all-pair portfolio has samples for all 24 even residues, but samples
 are kept separate from proof-facing branch theorems.
 
@@ -124,13 +126,13 @@ are kept separate from proof-facing branch theorems.
 
 | residue | 24 | 26 | 28 | 30 | 32 | 34 | 36 | 38 | 40 | 42 | 44 | 46 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| status | O | O | O | O | O | O | O | G | P | C | P | O |
+| status | O | O | O | O | O | O | O | G | P | S | P | O |
 
 The open-residue promotion queue records the same split machine-readably:
 
 ```text
 proof_facing: [14,16,20,40,44]
-active_promotion_target: [42]
+split_clock_carry_partial: [42]
 gate_transducer_target: [38]
 portfolio_only_symmetric_nonaffine: [0,2,4,6,8,10,18,22,24,26,28,30,32,34,46]
 portfolio_only_nonaffine: [12,36]
@@ -340,10 +342,21 @@ q=0..6 samples and have strongly connected support.
     the two residue carries `j%5=0`, `j%6=5`; on q=7,9,11 it is not rescued by
     any tested feature set through depth three.  This parity asymmetry is the
     current strongest warning against the simple c-band clock-carry promotion.
-29. The open residue queue is now explicit: R42 is demoted unless a new raw
-    zero-clock winner/carry state is introduced, R38 remains the gate-transducer
-    target, and the remaining 17 open residues are portfolio-only law-mining
-    targets.
+29. The natural R42-odd follow-up was tested: one threshold/reversed-threshold
+    carry plus phase-shifted gates
+
+    ```text
+    ±j + alpha*q + beta == 0 mod 5
+    ±j + gamma*q + delta == 0 mod 6
+    ```
+
+    The screen checks `302400` depth-three candidates on q=7,9,11 for the
+    same unresolved atom and leaves no two-prime modular survivors.  Thus the
+    R42-odd branch is not explained by a phase shift of the even-q grammar.
+30. The open residue queue is now explicit: R42 is split into an R42-even
+    depth-three carry candidate and an R42-odd raw-state diagnostic target,
+    R38 remains the gate-transducer target, and the remaining 17 open residues
+    are portfolio-only law-mining targets.
 
 ## Remaining Proof Route
 

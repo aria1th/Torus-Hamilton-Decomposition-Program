@@ -31,6 +31,10 @@ FILES = {
     "unresolved_depth": ROOT
     / "certs"
     / "routeE_r42_unresolved_atom_feature_depth_verification.json",
+    "odd_phase_shift": ROOT / "certs" / "routeE_r42_odd_phase_shifted_carry.json",
+    "odd_phase_shift_verification": ROOT
+    / "certs"
+    / "routeE_r42_odd_phase_shifted_carry_verification.json",
     "promotion": ROOT / "certs" / "routeE_r42_promotion_audit.json",
 }
 
@@ -50,6 +54,8 @@ def build_audit() -> dict[str, Any]:
     bad_split = load(FILES["bad_split"])
     bad_split_stress = load(FILES["bad_split_stress"])
     unresolved_depth = load(FILES["unresolved_depth"])
+    odd_phase_shift = load(FILES["odd_phase_shift"])
+    odd_phase_shift_verification = load(FILES["odd_phase_shift_verification"])
     promotion = load(FILES["promotion"])
 
     checklist = [
@@ -107,6 +113,23 @@ def build_audit() -> dict[str, Any]:
             str(FILES["unresolved_depth"]),
         ),
         item(
+            "R42-odd is not rescued by the tested phase-shifted depth-three carry grammar",
+            odd_phase_shift.get("schema")
+            == "routeE_r42_odd_phase_shifted_carry_v1"
+            and odd_phase_shift_verification.get("ok") is True
+            and odd_phase_shift.get("hit_count") == 0
+            and odd_phase_shift.get("search_space", {}).get("checked_candidate_count")
+            == 302400
+            and odd_phase_shift.get("search_space", {}).get("modular_survivor_count")
+            == 0,
+            str(FILES["odd_phase_shift"]),
+            (
+                "This is a two-prime modular screen for the natural next "
+                "odd-q phase-shifted model, not a no-go theorem for all "
+                "R42-odd state variables."
+            ),
+        ),
+        item(
             "R42 remains non-promoted as a Route-E theorem",
             promotion.get("schema") == "routeE_r42_promotion_audit_v1"
             and promotion.get("promotion_ready") is False
@@ -122,8 +145,15 @@ def build_audit() -> dict[str, Any]:
             "transducer program."
         ),
         "scope": {
-            "refuted": "tested c-band threshold/residue carry promotion",
-            "not_refuted": "all conceivable full layered R42 transducers",
+            "refuted": (
+                "tested one-piece c-band threshold/residue carry promotion; "
+                "tested R42-odd phase-shifted depth-three carry grammar"
+            ),
+            "not_refuted": (
+                "R42-even depth-three carry candidate; all conceivable full "
+                "layered R42 transducers; R42-odd models with a genuinely new "
+                "raw zero-clock winner/carry state"
+            ),
             "not_proved": "R42 Route-E theorem",
         },
         "tested_refinement_failed": tested_refinement_failed,
@@ -135,9 +165,11 @@ def build_audit() -> dict[str, Any]:
             "Lean-facing endpoint theorem",
         ],
         "recommendation": (
-            "Do not continue blind threshold/residue atom splitting.  Either "
-            "introduce a genuinely new state variable from the raw zero-clock "
-            "winner/carry dynamics, or demote R42 from promotion target."
+            "Split R42 into mod-96 sub-branches.  Keep R42-even as a "
+            "depth-three carry candidate, but do not promote the full R42 "
+            "residue.  For R42-odd, the tested phase-shifted depth-three "
+            "grammar failed; continue only with a genuinely new raw "
+            "zero-clock winner/carry state."
         ),
     }
 

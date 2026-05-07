@@ -366,7 +366,7 @@ def build_audit() -> dict[str, Any]:
             == [14, 16, 20, 40, 44]
             and open_residue_queue.get("summary", {})
             .get("residues_by_status", {})
-            .get("demoted_clock_carry_failed")
+            .get("split_clock_carry_partial")
             == [42]
             and open_residue_queue.get("summary", {})
             .get("residues_by_status", {})

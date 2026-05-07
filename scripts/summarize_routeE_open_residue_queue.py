@@ -34,8 +34,8 @@ def classify_row(
     if residue == 42:
         if r42_clock_carry.get("tested_refinement_failed") is True:
             return (
-                "demoted_clock_carry_failed",
-                "The tested c-band threshold/residue clock-carry promotion failed; only continue with a new raw zero-clock winner/carry state variable.",
+                "split_clock_carry_partial",
+                "Split R42 by q parity: R42-even remains a depth-three carry candidate, but R42-odd failed the tested phase-shifted depth-three screen; do not promote the full residue without a new raw zero-clock winner/carry state.",
             )
         missing = [
             item["name"]
@@ -124,7 +124,7 @@ def build_queue(
             "status_counts": {status: len(residues) for status, residues in by_status.items()},
             "residues_by_status": by_status,
             "recommended_order": [
-                "42: demoted unless a new raw zero-clock winner/carry state is introduced",
+                "42: split into R42-even candidate and R42-odd raw-state diagnostic",
                 "38: gate-transducer target",
                 "remaining nonaffine portfolio-only residues: need new law mining",
             ],

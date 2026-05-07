@@ -1,0 +1,45 @@
+{
+  "atom": "20->26|L1|B7:7|R0:0",
+  "hit_count": 0,
+  "hits": [],
+  "j_values": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "promotion_impact": {
+    "closes_residue": false,
+    "diagnosis": "Tests whether R42-odd is a phase-shifted version of the R42-even depth-three carry grammar on the unresolved atom.",
+    "no_early_closed": false,
+    "pointwise_equations_closed": false
+  },
+  "q_values": [
+    7,
+    9,
+    11
+  ],
+  "sample_count": 30,
+  "schema": "routeE_r42_odd_phase_shifted_carry_v1",
+  "search_space": {
+    "checked_candidate_count": 302400,
+    "depth_three_candidate_count": 302400,
+    "mod5_feature_count": 50,
+    "mod6_feature_count": 72,
+    "modular_survivor_count": 0,
+    "screen_primes": [
+      1000000007,
+      1000000009
+    ],
+    "threshold_feature_count": 84
+  },
+  "source_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_unresolved_atom_20_feature_depth_odd_q7_9_11.json"
+}

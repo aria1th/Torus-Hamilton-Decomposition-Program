@@ -564,10 +564,10 @@
         1,
         2
       ],
-      "recommended_next_action": "The tested c-band threshold/residue clock-carry promotion failed; only continue with a new raw zero-clock winner/carry state variable.",
+      "recommended_next_action": "Split R42 by q parity: R42-even remains a depth-three carry candidate, but R42-odd failed the tested phase-shifted depth-three screen; do not promote the full residue without a new raw zero-clock winner/carry state.",
       "residue": 42,
       "sample_count": 3,
-      "status": "demoted_clock_carry_failed",
+      "status": "split_clock_carry_partial",
       "tags": [
         "sym"
       ],
@@ -663,14 +663,11 @@
       44
     ],
     "recommended_order": [
-      "42: demoted unless a new raw zero-clock winner/carry state is introduced",
+      "42: split into R42-even candidate and R42-odd raw-state diagnostic",
       "38: gate-transducer target",
       "remaining nonaffine portfolio-only residues: need new law mining"
     ],
     "residues_by_status": {
-      "demoted_clock_carry_failed": [
-        42
-      ],
       "gate_transducer_target": [
         38
       ],
@@ -701,14 +698,17 @@
         20,
         40,
         44
+      ],
+      "split_clock_carry_partial": [
+        42
       ]
     },
     "status_counts": {
-      "demoted_clock_carry_failed": 1,
       "gate_transducer_target": 1,
       "portfolio_only_nonaffine": 2,
       "portfolio_only_symmetric_nonaffine": 15,
-      "proof_facing": 5
+      "proof_facing": 5,
+      "split_clock_carry_partial": 1
     }
   },
   "warning": "This queue ranks proof-promotion work. It does not promote any residue by itself."

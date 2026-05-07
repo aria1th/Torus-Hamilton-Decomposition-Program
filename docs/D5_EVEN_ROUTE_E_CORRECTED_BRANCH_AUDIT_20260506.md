@@ -251,7 +251,7 @@ Result:
 ```text
 covered residues mod 48: 14,16,20,40,44
 open residues mod 48: 0,2,4,6,8,10,12,18,22,24,26,28,30,32,34,36,38,42,46
-queue: R42 demoted unless a new raw zero-clock winner/carry state is introduced;
+queue: R42 split into R42-even carry candidate and R42-odd raw-state diagnostic;
        R38 remains the gate-transducer target
 ```
 
@@ -301,7 +301,7 @@ Result:
 
 ```text
 proof_facing: [14,16,20,40,44]
-active_promotion_target: [42]
+split_clock_carry_partial: [42]
 gate_transducer_target: [38]
 portfolio_only_symmetric_nonaffine: 15 residues
 portfolio_only_nonaffine: [12,36]
@@ -309,8 +309,8 @@ portfolio_only_nonaffine: [12,36]
 
 This queue is not a proof artifact.  It records which open residue classes are
 ready for promotion work and which ones are still only portfolio samples.  The
-recommended order is R42 first, R38 second, then new law mining for the
-remaining nonaffine residues.
+recommended order is now R42-even/R42-odd split analysis first, R38 second,
+then new law mining for the remaining nonaffine residues.
 
 R42 branch record:
 

@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "atom": true,
+    "candidate_count": true,
+    "checked_candidate_count": true,
+    "feature_counts": true,
+    "no_exact_hits_after_screen": true,
+    "no_modular_survivors": true,
+    "q_values": true,
+    "sample_count": true,
+    "schema": true
+  },
+  "interpretation": "The natural R42-odd phase-shifted depth-three screen has no two-prime modular survivors on the unresolved atom.  This is a screened failure of that grammar, not a theorem excluding every possible R42-odd carry state.",
+  "ok": true,
+  "schema": "routeE_r42_odd_phase_shifted_carry_verification_v1",
+  "source_artifact": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/certs/routeE_r42_odd_phase_shifted_carry.json"
+}
