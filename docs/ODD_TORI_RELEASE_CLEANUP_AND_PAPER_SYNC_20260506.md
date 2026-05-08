@@ -50,7 +50,15 @@ The paper should be updated around the following points.
    unrestricted signed-column packing theorem is false; only the ordinary
    q>=2 seed closure is used.
 
-5. Describe AI assistance in the disclosure section: OpenAI Codex 5.5
+5. Add the `D_7`, `m = 3,5` finite Lean certificate details to the
+   appendix/reproducibility section.  The manuscript-facing insertion is
+   recorded in
+   `docs/D7_M3_M5_LEAN_CERTIFICATE_APPENDIX_20260508.md`; it cites the exact
+   `RootFlatCertificate` interface, `smallRootFlatCertificate3`,
+   `smallRootFlatCertificate5`, `smallHamilton3`, `smallHamilton5`, and the
+   `D7_odd_shared_cayley_uniform` endpoint.
+
+6. Describe AI assistance in the disclosure section: OpenAI Codex 5.5
    (`xhigh`) and GPT-5.5 Pro (`xhigh`) were used autonomously for planning,
    Lean implementation, audit, and documentation.
 
