@@ -21,6 +21,35 @@ def layerBijective {Color Direction RootState : Type*} {m : Nat}
     (S : RootFlatSchedule Color Direction RootState m) : Prop :=
   ∀ t c, Function.Bijective (S.layerMap t c)
 
+theorem layerBijective_of_layerMap_bijective
+    {Color Direction RootState : Type*} {m : Nat}
+    {S : RootFlatSchedule Color Direction RootState m}
+    (hLayer : ∀ t c, Function.Bijective (S.layerMap t c)) :
+    S.layerBijective :=
+  hLayer
+
+theorem layerBijective_of_layerMap_eq
+    {Color Direction RootState : Type*} {m : Nat}
+    {S : RootFlatSchedule Color Direction RootState m}
+    (F : ZMod m → Color → RootState → RootState)
+    (hF : ∀ t c, Function.Bijective (F t c))
+    (hEq : ∀ t c, S.layerMap t c = F t c) :
+    S.layerBijective := by
+  intro t c
+  rw [hEq t c]
+  exact hF t c
+
+theorem layerBijective_of_layerMap_apply_eq
+    {Color Direction RootState : Type*} {m : Nat}
+    {S : RootFlatSchedule Color Direction RootState m}
+    (F : ZMod m → Color → RootState → RootState)
+    (hF : ∀ t c, Function.Bijective (F t c))
+    (hEq : ∀ t c w, S.layerMap t c w = F t c w) :
+    S.layerBijective :=
+  layerBijective_of_layerMap_eq F hF (fun t c => by
+    funext w
+    exact hEq t c w)
+
 def returnMap {Color Direction RootState : Type*} {m : Nat} [NeZero m]
     (S : RootFlatSchedule Color Direction RootState m) (c : Color) :
     RootState → RootState :=

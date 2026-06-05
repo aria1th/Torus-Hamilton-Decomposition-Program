@@ -124,4 +124,30 @@ theorem zmod_add_single_cycle_of_unit
       _ = (↑(u⁻¹) : ZMod m) * x + (↑(u⁻¹) : ZMod m) * (u : ZMod m) := by rw [hu]
       _ = (↑(u⁻¹) : ZMod m) * x + 1 := by simp
 
+/-- Iterating translation by `a` from zero gives multiplication by the iterate
+count. -/
+theorem zmod_add_const_iterate_zero
+    {m : Nat} (a : ZMod m) :
+    ∀ n : Nat, ((fun x : ZMod m => x + a)^[n]) 0 = (n : ZMod m) * a
+  | 0 => by simp
+  | n + 1 => by
+      rw [Function.iterate_succ_apply']
+      rw [zmod_add_const_iterate_zero a n]
+      simp [Nat.cast_add, Nat.cast_one]
+      ring
+
+theorem isUnit_of_zmod_add_single_cycle
+    {m : Nat} {a : ZMod m}
+    (hcycle : IsSingleCycleMap (fun x : ZMod m => x + a)) :
+    IsUnit a := by
+  rcases hcycle.2 0 1 with ⟨n, hn⟩
+  have hn' : (n : ZMod m) * a = 1 := by
+    simpa [zmod_add_const_iterate_zero] using hn
+  exact IsUnit.of_mul_eq_one (n : ZMod m) (by simpa [mul_comm] using hn')
+
+theorem zmod_add_single_cycle_iff_unit
+    {m : Nat} [NeZero m] {a : ZMod m} :
+    IsSingleCycleMap (fun x : ZMod m => x + a) ↔ IsUnit a :=
+  ⟨isUnit_of_zmod_add_single_cycle, zmod_add_single_cycle_of_unit⟩
+
 end Shared

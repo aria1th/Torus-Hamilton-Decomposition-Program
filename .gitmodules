@@ -1,0 +1,3 @@
+[submodule "Torus-Hamilton-Decomposition"]
+	path = Torus-Hamilton-Decomposition
+	url = https://github.com/aria1th/Torus-Hamilton-Decomposition

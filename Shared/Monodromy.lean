@@ -514,6 +514,21 @@ theorem sectionReturn_skewProductMap_zmod_add_single_cycle_of_unit
   rw [hcarry]
   exact zmod_add_single_cycle_of_unit ha
 
+theorem sectionReturn_skewProductMap_zmod_add_single_cycle_iff_unit
+    {Base : Type*} {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (base : Base) (period : Nat) (a : ZMod m)
+    (hcarry :
+      skewFiberAdditiveCarry baseStep carry period base = a) :
+    IsSingleCycleMap
+      (sectionReturn
+        (skewProductMap baseStep (fun b z => z + carry b))
+        base period) ↔
+      IsUnit a := by
+  rw [sectionReturn_skewProductMap_zmod_add]
+  rw [hcarry]
+  exact zmod_add_single_cycle_iff_unit
+
 noncomputable def sectionReturn_skewProductMap_zmod_add_cycleCoordinate_of_coprime
     {Base : Type*} {m : Nat} [NeZero m]
     (baseStep : Base → Base) (carry : Base → ZMod m)
@@ -702,6 +717,108 @@ theorem single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
     hunit
     (skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
       baseStep rank carry base hstep)
+
+/-- Rank-coordinate unit-carry criterion, in iff form. This is the reusable
+P1 surface: for a cyclic base ranked by `ZMod N`, the additive skew product is
+a single cycle exactly when the total carry around the base cycle is a unit. -/
+theorem skewProduct_zmod_additive_rank_single_cycle_iff_unit_sum
+    {Base : Type*} [Fintype Base]
+    {N m : Nat} [NeZero N] [NeZero m]
+    (baseStep : Base → Base) (rank : Base ≃ ZMod N)
+    (carry : Base → ZMod m) (base : Base)
+    (hstep : ∀ x : Base, rank (baseStep x) = rank x + 1) :
+    IsSingleCycleMap
+        (skewProductMap baseStep (fun b z => z + carry b)) ↔
+      IsUnit (∑ x : Base, carry x) := by
+  constructor
+  · intro hS
+    let S : Base × ZMod m → Base × ZMod m :=
+      skewProductMap baseStep (fun b z => z + carry b)
+    let Γ : ZMod m := ∑ x : Base, carry x
+    let R : ZMod m → ZMod m := fun z => z + Γ
+    have hreturn : ∀ z : ZMod m, S^[N] (base, z) = (base, R z) := by
+      intro z
+      apply Prod.ext
+      · calc
+          (S^[N] (base, z)).1 = (baseStep^[N]) base := by
+            simpa [S] using
+              skewProductMap_fst_iterate
+                baseStep (fun b z => z + carry b) N (base, z)
+          _ = base := zmod_rank_iterate_period baseStep rank hstep base
+      · calc
+          (S^[N] (base, z)).2 =
+              skewFiberIterate baseStep (fun b z => z + carry b) N base z := by
+            simpa [S] using
+              skewProductMap_snd_iterate
+                baseStep (fun b z => z + carry b) N (base, z)
+          _ = z + skewFiberAdditiveCarry baseStep carry N base := by
+            rw [skewFiberIterate_zmod_add]
+          _ = z + Γ := by
+            rw [skewFiberAdditiveCarry_eq_univ_sum_of_rank_step
+              baseStep rank carry base hstep]
+    rcases hS.2 (base, 0) (base, 1) with ⟨n, hn⟩
+    have hbaseReturn : (baseStep^[n]) base = base := by
+      calc
+        (baseStep^[n]) base = (S^[n] (base, 0)).1 := by
+          simpa [S] using
+            (skewProductMap_fst_iterate
+              baseStep (fun b z => z + carry b) n (base, 0)).symm
+        _ = base := by simpa using congrArg Prod.fst hn
+    have hnZ : (n : ZMod N) = 0 := by
+      have hrank : rank base + (n : ZMod N) = rank base := by
+        simpa [hbaseReturn] using
+          iterate_rank_add_one baseStep rank hstep n base
+      have hrank' : rank base + (n : ZMod N) = rank base + 0 := by
+        simpa using hrank
+      exact add_left_cancel hrank'
+    rcases (ZMod.natCast_eq_zero_iff n N).mp hnZ with ⟨q, hq⟩
+    have hnq : n = q * N := by
+      rw [hq, Nat.mul_comm]
+    have hperiod :=
+      iterate_mul_base_of_periodic_return S (fun z : ZMod m => (base, z))
+        R N hreturn q 0
+    have htarget : S^[q * N] (base, 0) = (base, 1) := by
+      simpa [hnq] using hn
+    have hpair : (base, R^[q] 0) = (base, 1) :=
+      hperiod.symm.trans htarget
+    have hmul : (q : ZMod m) * Γ = 1 := by
+      simpa [R, Γ, zmod_add_const_iterate_zero] using congrArg Prod.snd hpair
+    exact IsUnit.of_mul_eq_one (q : ZMod m) (by simpa [mul_comm] using hmul)
+  · intro hunit
+    exact single_cycle_of_skewProduct_zmod_additive_carry_of_rank_unit_sum
+      baseStep rank carry base hstep hunit
+
+/-- Unit-carry criterion over an arbitrary finite base cycle. The cycle
+coordinate is extracted once from `hbase`, then the rank-coordinate criterion
+above applies. The `1 < card` hypothesis excludes the degenerate empty/singleton
+edge cases that do not occur in the return-cycle applications. -/
+theorem skewProduct_zmod_additive_single_cycle_iff_unit_sum_of_base_cycle
+    {Base : Type*} [Fintype Base]
+    {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (hbase : IsSingleCycleMap baseStep)
+    (hcard : 1 < Fintype.card Base) :
+    IsSingleCycleMap
+        (skewProductMap baseStep (fun b z => z + carry b)) ↔
+      IsUnit (∑ x : Base, carry x) := by
+  classical
+  letI : NeZero (Fintype.card Base) := ⟨by omega⟩
+  let C : CycleCoordinate (Fintype.card Base) baseStep :=
+    CycleCoordinate.ofFiniteSingleCycle rfl hcard hbase
+  exact skewProduct_zmod_additive_rank_single_cycle_iff_unit_sum
+    baseStep C.equiv.symm carry (C.equiv 0) (fun x => C.rank_step x)
+
+theorem single_cycle_of_skewProduct_zmod_additive_unit_sum_of_base_cycle
+    {Base : Type*} [Fintype Base]
+    {m : Nat} [NeZero m]
+    (baseStep : Base → Base) (carry : Base → ZMod m)
+    (hbase : IsSingleCycleMap baseStep)
+    (hcard : 1 < Fintype.card Base)
+    (hunit : IsUnit (∑ x : Base, carry x)) :
+    IsSingleCycleMap
+      (skewProductMap baseStep (fun b z => z + carry b)) :=
+  (skewProduct_zmod_additive_single_cycle_iff_unit_sum_of_base_cycle
+    baseStep carry hbase hcard).2 hunit
 
 noncomputable def cycleCoordinate_of_skewProduct_zmod_additive_carry
     {Base : Type*} [Fintype Base] [DecidableEq Base]
