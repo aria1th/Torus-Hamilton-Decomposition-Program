@@ -529,6 +529,58 @@ theorem physical_layerBijective_of_seedLayer_conj
       _ = e (e.symm w) := by rw [hs]
       _ = w := by simp
 
+/-- Seed-side row-equivalence table for a four-layer D5(4) row construction. -/
+abbrev D54SeedRow :=
+  ZMod 4 → Seed → TorusColor 5 ≃ TorusDirection 5
+
+/-- Turn a seed-side row table into displayed physical rows by transporting the
+source state through the return-section equivalence.  The direction labels are
+unchanged. -/
+def physicalRowsOfSeedRow
+    (e : Seed ≃ RootState) (row : D54SeedRow) : PhysicalLayerRows where
+  layer0 := fun w => row (0 : ZMod 4) (e.symm w)
+  layer1 := fun w => row (1 : ZMod 4) (e.symm w)
+  layer2 := fun w => row (2 : ZMod 4) (e.symm w)
+  layer3 := fun w => row (3 : ZMod 4) (e.symm w)
+
+theorem physicalRowsOfSeedRow_row
+    (e : Seed ≃ RootState) (row : D54SeedRow) :
+    ∀ t w, (physicalRowsOfSeedRow e row).row t w = row t (e.symm w) := by
+  intro t w
+  fin_cases t <;> rfl
+
+def seedLayerOfSeedRow
+    (seedStep : TorusDirection 5 → Seed → Seed) (row : D54SeedRow) :
+    ZMod 4 → TorusColor 5 → Seed → Seed :=
+  fun t c s => seedStep ((row t s) c) s
+
+/-- If the seed-side generator step is transported to the standard D5 root step,
+then the physical rows obtained from the same seed row are layerwise conjugate to
+the seed-side layer maps. -/
+theorem physicalRowsOfSeedRow_layerMap_conj
+    (e : Seed ≃ RootState) (row : D54SeedRow)
+    (seedStep : TorusDirection 5 → Seed → Seed)
+    (hStep :
+      ∀ δ s, e (seedStep δ s) = LowD5M4Schedule.rootStep δ (e s)) :
+    ∀ t c s,
+      (LowD5M4RibbonInterface.schedule (physicalRowsOfSeedRow e row)).layerMap
+          t c (e s) =
+        e (seedLayerOfSeedRow seedStep row t c s) := by
+  intro t c s
+  calc
+    (LowD5M4RibbonInterface.schedule (physicalRowsOfSeedRow e row)).layerMap
+          t c (e s)
+        =
+      LowD5M4Schedule.rootStep
+        (((physicalRowsOfSeedRow e row).row t (e s)) c) (e s) := by
+          rfl
+    _ = LowD5M4Schedule.rootStep ((row t s) c) (e s) := by
+          rw [physicalRowsOfSeedRow_row e row t (e s)]
+          simp
+    _ = e (seedStep ((row t s) c) s) := by
+          exact (hStep ((row t s) c) s).symm
+    _ = e (seedLayerOfSeedRow seedStep row t c s) := rfl
+
 /-- Transport a root-flat schedule on an arbitrary 256-state model to the
 standard `D5(4)` root chart.  This is the direct-RF route, separate from the
 paper `fullReturn` ribbon handoff. -/
@@ -1349,6 +1401,44 @@ def D54ProductBaseLayerConjRealization.toProductBaseRealization
     D54ProductBaseRealization :=
   H.toLayerModelRealization.toProductBaseRealization
 
+/-- Product-base realization in the form closest to a row transcription: provide
+a seed-side row table, a seed-side generator step transported to the standard
+root step, and the seed fold equal to `RbaseNeutral`. -/
+structure D54ProductBaseSeedRowRealization where
+  e0 : Seed ≃ RootState
+  seedStep0 : TorusDirection 5 → Seed → Seed
+  seedRow0 : D54SeedRow
+  stepConj0 :
+    ∀ δ s, e0 (seedStep0 δ s) = LowD5M4Schedule.rootStep δ (e0 s)
+  seedLayerBijective0 :
+    ∀ t : ZMod 4, ∀ c : TorusColor 5,
+      Function.Bijective (seedLayerOfSeedRow seedStep0 seedRow0 t c)
+  seedReturn_eq_RbaseNeutral :
+    ∀ c s,
+      seedLayerReturn (seedLayerOfSeedRow seedStep0 seedRow0) c s =
+        RbaseNeutral c s
+
+def D54ProductBaseSeedRowRealization.rows0
+    (H : D54ProductBaseSeedRowRealization) : PhysicalLayerRows :=
+  physicalRowsOfSeedRow H.e0 H.seedRow0
+
+def D54ProductBaseSeedRowRealization.toLayerConjRealization
+    (H : D54ProductBaseSeedRowRealization) :
+    D54ProductBaseLayerConjRealization where
+  rows0 := H.rows0
+  e0 := H.e0
+  seedLayer0 := seedLayerOfSeedRow H.seedStep0 H.seedRow0
+  seedLayerBijective0 := H.seedLayerBijective0
+  layerMapConj0 :=
+    physicalRowsOfSeedRow_layerMap_conj H.e0 H.seedRow0
+      H.seedStep0 H.stepConj0
+  seedReturn_eq_RbaseNeutral := H.seedReturn_eq_RbaseNeutral
+
+def D54ProductBaseSeedRowRealization.toProductBaseRealization
+    (H : D54ProductBaseSeedRowRealization) :
+    D54ProductBaseRealization :=
+  H.toLayerConjRealization.toProductBaseRealization
+
 /-- A product-base realization is not yet the final H2 realization: every
 product-base return map is conjugate to `RbaseNeutral`, hence still preserves
 the neutral `Z` fiber and is not a single cycle. -/
@@ -1375,6 +1465,19 @@ theorem D54ProductBaseLayerConjRealization.returnMapConj_RbaseNeutral
 
 theorem D54ProductBaseLayerConjRealization.returnMap_not_singleCycle
     (H : D54ProductBaseLayerConjRealization) (c : TorusColor 5) :
+    ¬ Shared.IsSingleCycleMap
+      ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c) :=
+  H.toProductBaseRealization.returnMap_not_singleCycle c
+
+theorem D54ProductBaseSeedRowRealization.returnMapConj_RbaseNeutral
+    (H : D54ProductBaseSeedRowRealization) :
+    ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4RibbonInterface.schedule H.rows0).returnMap c w =
+        H.e0 (RbaseNeutral c (H.e0.symm w)) :=
+  H.toLayerConjRealization.returnMapConj_RbaseNeutral
+
+theorem D54ProductBaseSeedRowRealization.returnMap_not_singleCycle
+    (H : D54ProductBaseSeedRowRealization) (c : TorusColor 5) :
     ¬ Shared.IsSingleCycleMap
       ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c) :=
   H.toProductBaseRealization.returnMap_not_singleCycle c
@@ -1415,6 +1518,49 @@ def D54TwoStageLayerConjRealization.toLayerModelRealization
       seedTwoStageFullReturnLayer_bijective
       H.layerMapConj_twoStage
   layerMapConj_twoStage := H.layerMapConj_twoStage
+
+/-- Final two-stage realization in seed-row form.  Compared with
+`D54TwoStageLayerConjRealization`, this records the actual seed-side generator
+step and row table whose transported physical rows realize the fixed
+`seedTwoStageFullReturnLayer` model. -/
+structure D54TwoStageSeedRowRealization where
+  e : Seed ≃ RootState
+  seedStep : TorusDirection 5 → Seed → Seed
+  seedRow : D54SeedRow
+  stepConj :
+    ∀ δ s, e (seedStep δ s) = LowD5M4Schedule.rootStep δ (e s)
+  seedLayer_eq_twoStage :
+    ∀ t c s,
+      seedLayerOfSeedRow seedStep seedRow t c s =
+        seedTwoStageFullReturnLayer t c s
+
+def D54TwoStageSeedRowRealization.rows
+    (H : D54TwoStageSeedRowRealization) : PhysicalLayerRows :=
+  physicalRowsOfSeedRow H.e H.seedRow
+
+theorem D54TwoStageSeedRowRealization.seedLayerBijective
+    (H : D54TwoStageSeedRowRealization) :
+    ∀ t : ZMod 4, ∀ c : TorusColor 5,
+      Function.Bijective (seedLayerOfSeedRow H.seedStep H.seedRow t c) := by
+  intro t c
+  have h := seedTwoStageFullReturnLayer_bijective t c
+  simpa [H.seedLayer_eq_twoStage t c] using h
+
+def D54TwoStageSeedRowRealization.toLayerConjRealization
+    (H : D54TwoStageSeedRowRealization) :
+    D54TwoStageLayerConjRealization where
+  rows := H.rows
+  e := H.e
+  layerMapConj_twoStage := by
+    intro t c s
+    calc
+      (LowD5M4RibbonInterface.schedule H.rows).layerMap t c (H.e s)
+          =
+        H.e (seedLayerOfSeedRow H.seedStep H.seedRow t c s) :=
+          physicalRowsOfSeedRow_layerMap_conj H.e H.seedRow
+            H.seedStep H.stepConj t c s
+      _ = H.e (seedTwoStageFullReturnLayer t c s) := by
+            rw [H.seedLayer_eq_twoStage t c s]
 
 def D54TwoStageLayerModelRealization.toMapConjRibbonCollapseInput
     (H : D54TwoStageLayerModelRealization) :
@@ -1671,10 +1817,24 @@ structure D54TwoStageLayerConjSingletonSwitchRealization where
   twoStage : D54TwoStageLayerConjRealization
   rf2 : PhysicalSingletonSwitchLayerData twoStage.rows
 
+/-- Seed-row version of the final two-stage singleton-switch target.  This is
+closest to a literal row construction: the physical rows are transported from the
+seed row table, while RF2 is still supplied by the singleton-switch certificate
+for those transported rows. -/
+structure D54TwoStageSeedRowSingletonSwitchRealization where
+  seedRows : D54TwoStageSeedRowRealization
+  rf2 : PhysicalSingletonSwitchLayerData seedRows.rows
+
 def D54TwoStageLayerConjSingletonSwitchRealization.toTwoStageSingletonSwitchRealization
     (H : D54TwoStageLayerConjSingletonSwitchRealization) :
     D54TwoStageSingletonSwitchRealization where
   twoStage := H.twoStage.toLayerModelRealization
+  rf2 := H.rf2
+
+def D54TwoStageSeedRowSingletonSwitchRealization.toLayerConjSingletonSwitchRealization
+    (H : D54TwoStageSeedRowSingletonSwitchRealization) :
+    D54TwoStageLayerConjSingletonSwitchRealization where
+  twoStage := H.seedRows.toLayerConjRealization
   rf2 := H.rf2
 
 def D54TwoStageSingletonSwitchRealization.toFiveSwitchLayerModelRealization
@@ -1745,6 +1905,16 @@ theorem D54TwoStageLayerConjSingletonSwitchRealization.lowBaseFamily
     FinalLowD5M4RootFlatCertificateFamily :=
   H.toTwoStageSingletonSwitchRealization.lowBaseFamily
 
+theorem D54TwoStageSeedRowSingletonSwitchRealization.nonemptyRibbonData
+    (H : D54TwoStageSeedRowSingletonSwitchRealization) :
+    Nonempty ResetPortH2RowEquivRibbonRealizationData :=
+  H.toLayerConjSingletonSwitchRealization.nonemptyRibbonData
+
+theorem D54TwoStageSeedRowSingletonSwitchRealization.lowBaseFamily
+    (H : D54TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H.toLayerConjSingletonSwitchRealization.lowBaseFamily
+
 theorem D54FiveSwitchSeedSwitchRealization.nonemptyRibbonData
     (H : D54FiveSwitchSeedSwitchRealization) :
     Nonempty ResetPortH2RowEquivRibbonRealizationData :=
@@ -1805,6 +1975,12 @@ def D54PaperRealization.ofTwoStageLayerConjSingletonSwitchRealization
     D54PaperRealization :=
   D54PaperRealization.ofTwoStageSingletonSwitchRealization
     H.toTwoStageSingletonSwitchRealization
+
+def D54PaperRealization.ofTwoStageSeedRowSingletonSwitchRealization
+    (H : D54TwoStageSeedRowSingletonSwitchRealization) :
+    D54PaperRealization :=
+  D54PaperRealization.ofTwoStageLayerConjSingletonSwitchRealization
+    H.toLayerConjSingletonSwitchRealization
 
 theorem D54PaperRealization.lowBaseFamily
     (H : D54PaperRealization) :
@@ -1889,6 +2065,15 @@ def D54PaperRealizationLadder.ofLayerConjStages
   D54PaperRealizationLadder.ofStagesTwoStageLayerConjSingletonSwitch
     terminal productBase.toProductBaseRealization twoStageSwitch
 
+def D54PaperRealizationLadder.ofSeedRowStages
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseSeedRowRealization)
+    (twoStageSwitch : D54TwoStageSeedRowSingletonSwitchRealization) :
+    D54PaperRealizationLadder :=
+  D54PaperRealizationLadder.ofLayerConjStages
+    terminal productBase.toLayerConjRealization
+    twoStageSwitch.toLayerConjSingletonSwitchRealization
+
 theorem D54PaperRealizationLadder.lowBaseFamily
     (H : D54PaperRealizationLadder) :
     FinalLowD5M4RootFlatCertificateFamily :=
@@ -1941,6 +2126,14 @@ theorem finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages
     (twoStageSwitch : D54TwoStageLayerConjSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   (D54PaperRealizationLadder.ofLayerConjStages
+    terminal productBase twoStageSwitch).lowBaseFamily
+
+theorem finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseSeedRowRealization)
+    (twoStageSwitch : D54TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  (D54PaperRealizationLadder.ofSeedRowStages
     terminal productBase twoStageSwitch).lowBaseFamily
 
 end D54

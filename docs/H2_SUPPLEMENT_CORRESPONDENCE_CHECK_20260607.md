@@ -254,11 +254,12 @@ certificate and avoidance facts, and `EvenV11.Main` exposes
 `lowD5M4_of_paperRealization` / `lowD5M4_of_paperRealizationLadder` for the
 final low-base certificate.  It also exposes the stage-wise theorems
 `lowD5M4_of_paperStagesTwoStageSingleton`, the narrower
-`lowD5M4_of_paperStagesTwoStageLayerConjSingleton`, and the narrowest
-`lowD5M4_of_paperLayerConjStages`.  The last one takes exactly: terminal
-realization, product-base layer-conjugacy realization, and a two-stage
-layer-conjugacy singleton-switch realization.  Thus the smallest current
-paper-realization target is
+`lowD5M4_of_paperStagesTwoStageLayerConjSingleton`,
+`lowD5M4_of_paperLayerConjStages`, and the seed-row endpoint
+`lowD5M4_of_paperSeedRowStages`.  The last one takes exactly: terminal
+realization, product-base seed-row realization, and a two-stage seed-row
+singleton-switch realization.  Thus the smallest current paper-realization
+target is
 
 ```lean
 H2.D54.D54FiveSwitchRealization
@@ -293,6 +294,20 @@ is useful as an audit or as a bridge endpoint for the paper switch model,
 because its return fold, layer bijectivity, and return single-cycle facts are
 already closed in Lean.
 
+The seed-row bridge now goes one level closer to a literal row transcription:
+
+```lean
+physicalRowsOfSeedRow_layerMap_conj
+H2.D54.D54ProductBaseSeedRowRealization
+H2.D54.D54TwoStageSeedRowRealization
+H2.D54.D54TwoStageSeedRowSingletonSwitchRealization
+```
+
+Here the caller supplies a seed-side row equivalence table, a seed-side
+generator step transported to the standard root step, and the seed fold/equality
+facts.  Lean constructs the physical `PhysicalLayerRows` and their layerwise
+conjugacy automatically.
+
 If the same rows also carry singleton-switch RF2 data, Lean now exposes the
 direct bridge:
 
@@ -304,6 +319,7 @@ H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
+EvenV11.lowD5M4_of_paperSeedRowStages
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,

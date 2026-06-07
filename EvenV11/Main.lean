@@ -90,17 +90,26 @@ abbrev LowD5M4ProductBaseRealization :=
 abbrev LowD5M4ProductBaseLayerConjRealization :=
   H2.D54.D54ProductBaseLayerConjRealization
 
+abbrev LowD5M4ProductBaseSeedRowRealization :=
+  H2.D54.D54ProductBaseSeedRowRealization
+
 abbrev LowD5M4TwoStageLayerModelRealization :=
   H2.D54.D54TwoStageLayerModelRealization
 
 abbrev LowD5M4TwoStageLayerConjRealization :=
   H2.D54.D54TwoStageLayerConjRealization
 
+abbrev LowD5M4TwoStageSeedRowRealization :=
+  H2.D54.D54TwoStageSeedRowRealization
+
 abbrev LowD5M4TwoStageSingletonSwitchRealization :=
   H2.D54.D54TwoStageSingletonSwitchRealization
 
 abbrev LowD5M4TwoStageLayerConjSingletonSwitchRealization :=
   H2.D54.D54TwoStageLayerConjSingletonSwitchRealization
+
+abbrev LowD5M4TwoStageSeedRowSingletonSwitchRealization :=
+  H2.D54.D54TwoStageSeedRowSingletonSwitchRealization
 
 abbrev LowD5M4FiveSwitchLayerModelRealization :=
   H2.D54.D54FiveSwitchLayerModelRealization
@@ -128,6 +137,11 @@ def lowD5M4ProductBaseRealization_of_productBaseLayerConjRealization
     (input : LowD5M4ProductBaseLayerConjRealization) :
     LowD5M4ProductBaseRealization :=
   input.toProductBaseRealization
+
+def lowD5M4ProductBaseLayerConjRealization_of_productBaseSeedRowRealization
+    (input : LowD5M4ProductBaseSeedRowRealization) :
+    LowD5M4ProductBaseLayerConjRealization :=
+  input.toLayerConjRealization
 
 theorem lowD5M4RibbonData_of_fiveSwitchRealization
     (input : LowD5M4FiveSwitchRealization) :
@@ -159,6 +173,11 @@ theorem lowD5M4_of_twoStageLayerConjRealization
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 
+def lowD5M4TwoStageLayerConjRealization_of_seedRowRealization
+    (input : LowD5M4TwoStageSeedRowRealization) :
+    LowD5M4TwoStageLayerConjRealization :=
+  input.toLayerConjRealization
+
 theorem lowD5M4RibbonData_of_twoStageSingletonSwitchRealization
     (input : LowD5M4TwoStageSingletonSwitchRealization) :
     Nonempty LowD5M4RibbonData :=
@@ -179,10 +198,25 @@ theorem lowD5M4_of_twoStageLayerConjSingletonSwitchRealization
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 
+theorem lowD5M4RibbonData_of_twoStageSeedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    Nonempty LowD5M4RibbonData :=
+  input.nonemptyRibbonData
+
+theorem lowD5M4_of_twoStageSeedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  input.lowBaseFamily
+
 def lowD5M4TwoStageSingletonSwitchRealization_of_layerConjSingletonSwitchRealization
     (input : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
     LowD5M4TwoStageSingletonSwitchRealization :=
   input.toTwoStageSingletonSwitchRealization
+
+def lowD5M4TwoStageLayerConjSingletonSwitchRealization_of_seedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    LowD5M4TwoStageLayerConjSingletonSwitchRealization :=
+  input.toLayerConjSingletonSwitchRealization
 
 def lowD5M4PaperRealization_of_twoStageSingletonSwitchRealization
     (input : LowD5M4TwoStageSingletonSwitchRealization) :
@@ -193,6 +227,11 @@ def lowD5M4PaperRealization_of_twoStageLayerConjSingletonSwitchRealization
     (input : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
     LowD5M4PaperRealization :=
   H2.D54.D54PaperRealization.ofTwoStageLayerConjSingletonSwitchRealization input
+
+def lowD5M4PaperRealization_of_twoStageSeedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    LowD5M4PaperRealization :=
+  H2.D54.D54PaperRealization.ofTwoStageSeedRowSingletonSwitchRealization input
 
 theorem lowD5M4RibbonData_of_fiveSwitchLayerModelRealization
     (input : LowD5M4FiveSwitchLayerModelRealization) :
@@ -256,6 +295,14 @@ theorem lowD5M4_of_paperLayerConjStages
     (twoStageSwitch : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages
+    terminal productBase twoStageSwitch
+
+theorem lowD5M4_of_paperSeedRowStages
+    (terminal : LowD5M4TerminalRealization)
+    (productBase : LowD5M4ProductBaseSeedRowRealization)
+    (twoStageSwitch : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages
     terminal productBase twoStageSwitch
 
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via

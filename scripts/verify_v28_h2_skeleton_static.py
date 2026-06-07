@@ -35,12 +35,17 @@ H2_TOKENS = [
 H2_CORE_TOKENS = [
     "postBaseCarry_after_RbaseNeutral_eq_Rhat",
     "seedLayerReturn_twoStageFullReturnLayer",
+    "physicalRowsOfSeedRow_layerMap_conj",
     "physical_layerBijective_of_seedLayer_conj",
     "structure D54ProductBaseLayerConjRealization",
+    "structure D54ProductBaseSeedRowRealization",
     "structure D54TwoStageLayerConjRealization",
+    "structure D54TwoStageSeedRowRealization",
     "structure D54TwoStageLayerConjSingletonSwitchRealization",
+    "structure D54TwoStageSeedRowSingletonSwitchRealization",
     "finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSingleton",
     "finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages",
+    "finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages",
 ]
 
 OBSTRUCTION_TOKENS = [

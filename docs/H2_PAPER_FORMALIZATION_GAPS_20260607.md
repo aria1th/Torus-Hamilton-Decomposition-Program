@@ -298,11 +298,14 @@ The public stage-wise endpoint is now:
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
+EvenV11.lowD5M4_of_paperSeedRowStages
 ```
 
 so the narrowest remaining inputs are exactly terminal realization,
-product-base layer-conjugacy realization, and the two-stage layer-conjugacy
-singleton-switch realization.
+product-base seed-row realization, and the two-stage seed-row singleton-switch
+realization.  The bridge theorem `physicalRowsOfSeedRow_layerMap_conj`
+constructs the physical row layer-conjugacy from a seed-side row table and a
+seed-side generator step transported to the standard root step.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

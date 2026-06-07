@@ -260,11 +260,14 @@ The public stage-wise assembly endpoint is:
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
+EvenV11.lowD5M4_of_paperSeedRowStages
 ```
 
 The narrowest version takes exactly the three remaining construction stages:
-terminal realization, product-base layer-conjugacy realization, and two-stage
-layer-conjugacy singleton-switch realization.
+terminal realization, product-base seed-row realization, and two-stage seed-row
+singleton-switch realization.  At this level T8 supplies seed-side row
+equivalence tables and generator-step conjugacy; Lean then derives the physical
+layer-conjugacy through `physicalRowsOfSeedRow_layerMap_conj`.
 
 ### T9. H2 Certificate Assembly
 
