@@ -224,7 +224,15 @@ The model is:
 Thus T8 no longer needs a raw finite proof that a four-layer seed fold equals
 `LowD5M4.fullReturn`; it can instead prove that the paper five-switch/ribbon
 construction is conjugate to this closed seed-level return model, or prove the
-equivalent singleton-switch seed fold and then identify it with this model.
+same rows satisfy:
+
+```lean
+D54TwoStageSingletonSwitchRealization
+```
+
+Lean now upgrades this directly to `D54FiveSwitchRealization`.  Alternatively,
+T8 can prove the equivalent singleton-switch seed fold and then identify it with
+this model.
 
 ### T9. H2 Certificate Assembly
 

@@ -1500,6 +1500,29 @@ def D54FiveSwitchLayerModelRealization.toFiveSwitchRealization
       physical_returnMap_conj_of_seedLayerReturn_eq
         H.rows H.e H.seedLayer Rhat H.layerMapConj H.seedReturn_eq_Rhat
 
+/-- Two-stage audit target plus singleton-switch RF2 data.  This is a narrower
+way to supply the final five-switch realization: prove the physical rows are
+layerwise conjugate to the closed `seedTwoStageFullReturnLayer` model, and give
+the singleton-switch RF2 certificate for the same rows. -/
+structure D54TwoStageSingletonSwitchRealization where
+  twoStage : D54TwoStageLayerModelRealization
+  rf2 : PhysicalSingletonSwitchLayerData twoStage.rows
+
+def D54TwoStageSingletonSwitchRealization.toFiveSwitchLayerModelRealization
+    (H : D54TwoStageSingletonSwitchRealization) :
+    D54FiveSwitchLayerModelRealization where
+  rows := H.twoStage.rows
+  rf2 := H.rf2
+  e := H.twoStage.e
+  seedLayer := seedTwoStageFullReturnLayer
+  layerMapConj := H.twoStage.layerMapConj_twoStage
+  seedReturn_eq_Rhat := seedTwoStageFullReturnLayer_return_eq_Rhat
+
+def D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
+    (H : D54TwoStageSingletonSwitchRealization) :
+    D54FiveSwitchRealization :=
+  H.toFiveSwitchLayerModelRealization.toFiveSwitchRealization
+
 def D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
     (H : D54FiveSwitchSeedSwitchRealization) :
     D54FiveSwitchRealization :=
@@ -1527,6 +1550,16 @@ theorem D54FiveSwitchRealization.lowBaseFamily
     (H : D54FiveSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H.toPhysicalRowsSingletonSwitchMapConjInput.lowBaseFamily
+
+theorem D54TwoStageSingletonSwitchRealization.nonemptyRibbonData
+    (H : D54TwoStageSingletonSwitchRealization) :
+    Nonempty ResetPortH2RowEquivRibbonRealizationData :=
+  H.toFiveSwitchRealization.nonemptyRibbonData
+
+theorem D54TwoStageSingletonSwitchRealization.lowBaseFamily
+    (H : D54TwoStageSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H.toFiveSwitchRealization.lowBaseFamily
 
 theorem D54FiveSwitchSeedSwitchRealization.nonemptyRibbonData
     (H : D54FiveSwitchSeedSwitchRealization) :

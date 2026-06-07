@@ -84,6 +84,9 @@ abbrev LowD5M4FiveSwitchRealization :=
 abbrev LowD5M4TwoStageLayerModelRealization :=
   H2.D54.D54TwoStageLayerModelRealization
 
+abbrev LowD5M4TwoStageSingletonSwitchRealization :=
+  H2.D54.D54TwoStageSingletonSwitchRealization
+
 abbrev LowD5M4FiveSwitchLayerModelRealization :=
   H2.D54.D54FiveSwitchLayerModelRealization
 
@@ -123,6 +126,16 @@ theorem lowD5M4RibbonData_of_twoStageLayerModelRealization
 
 theorem lowD5M4_of_twoStageLayerModelRealization
     (input : LowD5M4TwoStageLayerModelRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  input.lowBaseFamily
+
+theorem lowD5M4RibbonData_of_twoStageSingletonSwitchRealization
+    (input : LowD5M4TwoStageSingletonSwitchRealization) :
+    Nonempty LowD5M4RibbonData :=
+  input.nonemptyRibbonData
+
+theorem lowD5M4_of_twoStageSingletonSwitchRealization
+    (input : LowD5M4TwoStageSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 

@@ -71,6 +71,7 @@ TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
 TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
 RbaseNeutral_not_singleCycle
 D54ProductBaseRealization.returnMap_not_singleCycle
+D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
 D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
 D54PaperRealization.ofFiveSwitchSeedSwitchRealization
 ```
@@ -274,6 +275,18 @@ It asks only for physical layer maps conjugate to the closed
 `seedTwoStageFullReturnLayer` model plus RF2.  This target is useful as an audit
 or as a bridge endpoint for the paper switch model, because its return fold,
 layer bijectivity, and return single-cycle facts are already closed in Lean.
+
+If the same rows also carry singleton-switch RF2 data, Lean now exposes the
+direct bridge:
+
+```lean
+H2.D54.D54TwoStageSingletonSwitchRealization
+H2.D54.D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
+```
+
+This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,
+together with the paper's singleton-switch RF2 certificate for those rows,
+already supplies the final `D54FiveSwitchRealization`.
 
 The most structured active paper target is now:
 

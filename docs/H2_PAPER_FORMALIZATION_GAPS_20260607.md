@@ -256,8 +256,16 @@ D54TwoStageLayerModelRealization
 ```
 
 Supplying this fixed-layer conjugacy already produces the existing H2 ribbon
-data.  Supplying `D54FiveSwitchSeedSwitchRealization` remains the more
-paper-faithful route because it exposes the singleton switch/ribbon data.
+data.  If the same rows also come with singleton-switch RF2 data, the new
+intermediate target
+
+```lean
+D54TwoStageSingletonSwitchRealization
+```
+
+upgrades directly to `D54FiveSwitchRealization`.  Supplying
+`D54FiveSwitchSeedSwitchRealization` remains the more paper-faithful route
+because it exposes the seed-side singleton switch/ribbon mirror explicitly.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 
