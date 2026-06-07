@@ -552,6 +552,17 @@ def chat2 : Seed := (cx2, (0 : Zed4))
 
 def ChatSeedList : List Seed := [chat0, chat1, chat2]
 
+/-- The terminal protected neighborhood
+`C4 ∪ F1(C4) ∪ F2(C4) ∪ F1⁻¹(C4) ∪ F2⁻¹(C4)`, normalized as the paper table. -/
+def NTList : List Q4 :=
+  [q4 0 3, q4 1 2, q4 1 3, q4 2 0,
+   q4 2 1, q4 2 3, q4 3 0, q4 3 3]
+
+/-- The lifted protected neighborhood `Nhat = NT × {0} × {0}` in D54 table
+coordinates. -/
+def NhatList : List D54ResetData.D54Point :=
+  NTList.map fun q => { q := q, y := (0 : Y4), z := (0 : Zed4) }
+
 /-- First hit of `targets` under positive iterates of `f`, searched up to
 `limit`.  The returned natural number is the positive hitting time. -/
 def firstHitListAux {α : Type*} [DecidableEq α]
@@ -576,6 +587,13 @@ def FInv (i : Fin 3) : Q4 → Q4 :=
 
 def terminalSigma : Q4 → Q4 :=
   fun q => FInv 2 (F 1 q)
+
+/-- Unnormalized one-step terminal selector neighborhood.  The theorem
+`NTList_mem_iff_terminalNeighborhoodList_mem` below records that it has exactly
+the normalized protected-neighborhood entries in `NTList`. -/
+def terminalNeighborhoodList : List Q4 :=
+  C4List ++ C4List.map (F 1) ++ C4List.map (F 2) ++
+    C4List.map (FInv 1) ++ C4List.map (FInv 2)
 
 theorem C4_terminal_comparison_table :
     terminalSigma c0 = c1 ∧
@@ -682,6 +700,48 @@ theorem Chat_Rhat2_successor_table :
 theorem C4List_nodup : C4List.Nodup :=
   D54ResetData.d54TerminalSelector_nodup
 
+theorem ChatList_nodup : ChatList.Nodup := by
+  decide
+
+theorem reservePoints_nodup : reservePoints.Nodup := by
+  decide
+
+theorem NTList_nodup : NTList.Nodup := by
+  decide
+
+theorem NhatList_nodup : NhatList.Nodup := by
+  decide
+
+theorem NTList_mem_iff_terminalNeighborhoodList_mem :
+    ∀ q : Q4, q ∈ NTList ↔ q ∈ terminalNeighborhoodList := by
+  decide
+
+theorem C4List_subset_NTList :
+    ∀ q : Q4, q ∈ C4List → q ∈ NTList := by
+  decide
+
+theorem ChatList_subset_NhatList :
+    ∀ p : D54ResetData.D54Point, p ∈ ChatList → p ∈ NhatList := by
+  decide
+
+theorem mem_NhatList_of_mem_NTList {q : Q4}
+    (hq : q ∈ NTList) :
+    ({ q := q, y := (0 : Y4), z := (0 : Zed4) } :
+      D54ResetData.D54Point) ∈ NhatList := by
+  exact List.mem_map.2 ⟨q, hq, rfl⟩
+
+theorem mem_NTList_of_mem_NhatList
+    {p : D54ResetData.D54Point}
+    (hp : p ∈ NhatList) :
+    p.q ∈ NTList ∧ p.y = (0 : Y4) ∧ p.z = (0 : Zed4) := by
+  rcases List.mem_map.1 hp with ⟨q, hq, hpq⟩
+  subst hpq
+  exact ⟨hq, rfl, rfl⟩
+
+theorem resetSites_avoid_NTList :
+    ∀ i : Fin 3, pReset i ∉ NTList := by
+  decide
+
 theorem resetSites_disjoint_C4List :
     D54ResetData.listsDisjoint
       D54ResetData.d54TerminalResetSites C4List :=
@@ -698,6 +758,14 @@ theorem reservePoints_avoid_finalCylinders :
 theorem reservePoints_disjoint_ChatList :
     D54ResetData.listsDisjoint reservePoints ChatList :=
   D54ResetData.d54ReservePoints_disjoint_liftedSelector
+
+theorem finalCylinders_avoid_NhatList :
+    D54ResetData.cylindersAvoidPoints finalCylinders NhatList := by
+  rfl
+
+theorem reservePoints_disjoint_NhatList :
+    D54ResetData.listsDisjoint reservePoints NhatList := by
+  rfl
 
 /-- The finite comparison/successor tables for the terminal selector, its
 `Y`-lift, and the final `Z`-lift.  This is the return-level part of the paper's
@@ -754,22 +822,48 @@ def d54SelectorTables : D54SelectorTables where
 /-- Support and reserve facts needed by the D54 switch/ribbon proof. -/
 structure D54SupportTables where
   selectorNodup : C4List.Nodup
+  liftedSelectorNodup : ChatList.Nodup
+  reservePointsNodup : reservePoints.Nodup
+  terminalProtectedNodup : NTList.Nodup
+  liftedProtectedNodup : NhatList.Nodup
+  selectorSubsetProtected :
+    ∀ q : Q4, q ∈ C4List → q ∈ NTList
+  liftedSelectorSubsetProtected :
+    ∀ p : D54ResetData.D54Point, p ∈ ChatList → p ∈ NhatList
+  terminalProtectedNeighborhoodMem :
+    ∀ q : Q4, q ∈ NTList ↔ q ∈ terminalNeighborhoodList
   resetSitesDisjointSelector :
     D54ResetData.listsDisjoint
       D54ResetData.d54TerminalResetSites C4List
+  resetSitesAvoidProtected :
+    ∀ i : Fin 3, pReset i ∉ NTList
   finalCylindersAvoidSelector :
     D54ResetData.cylindersAvoidPoints finalCylinders ChatList
+  finalCylindersAvoidProtected :
+    D54ResetData.cylindersAvoidPoints finalCylinders NhatList
   reserveAvoidFinalCylinders :
     D54ResetData.reservesAvoidCylinders reservePoints finalCylinders
   reserveDisjointSelector :
     D54ResetData.listsDisjoint reservePoints ChatList
+  reserveDisjointProtected :
+    D54ResetData.listsDisjoint reservePoints NhatList
 
 def d54SupportTables : D54SupportTables where
   selectorNodup := C4List_nodup
+  liftedSelectorNodup := ChatList_nodup
+  reservePointsNodup := reservePoints_nodup
+  terminalProtectedNodup := NTList_nodup
+  liftedProtectedNodup := NhatList_nodup
+  selectorSubsetProtected := C4List_subset_NTList
+  liftedSelectorSubsetProtected := ChatList_subset_NhatList
+  terminalProtectedNeighborhoodMem := NTList_mem_iff_terminalNeighborhoodList_mem
   resetSitesDisjointSelector := resetSites_disjoint_C4List
+  resetSitesAvoidProtected := resetSites_avoid_NTList
   finalCylindersAvoidSelector := finalCylinders_avoid_ChatList
+  finalCylindersAvoidProtected := finalCylinders_avoid_NhatList
   reserveAvoidFinalCylinders := reservePoints_avoid_finalCylinders
   reserveDisjointSelector := reservePoints_disjoint_ChatList
+  reserveDisjointProtected := reservePoints_disjoint_NhatList
 
 /-- Return-level terminal data already formalized by the finite tables.  This is
 not the physical row realization; it is the finite core that the physical
@@ -1204,10 +1298,14 @@ structure D54PaperRealization extends D54FiveSwitchRealization where
   resetTable : D54ResetData.D54ResetTableCertificate
   finalCylindersAvoidSelector :
     D54ResetData.cylindersAvoidPoints finalCylinders ChatList
+  finalCylindersAvoidProtected :
+    D54ResetData.cylindersAvoidPoints finalCylinders NhatList
   reserveAvoidFinalCylinders :
     D54ResetData.reservesAvoidCylinders reservePoints finalCylinders
   reserveDisjointSelector :
     D54ResetData.listsDisjoint reservePoints ChatList
+  reserveDisjointProtected :
+    D54ResetData.listsDisjoint reservePoints NhatList
 
 def D54PaperRealization.toFiveSwitchRealization
     (H : D54PaperRealization) : D54FiveSwitchRealization where
@@ -1224,8 +1322,10 @@ def D54PaperRealization.ofFiveSwitchRealization
   toD54FiveSwitchRealization := H
   resetTable := D54ResetData.d54ResetTableCertificate
   finalCylindersAvoidSelector := finalCylinders_avoid_ChatList
+  finalCylindersAvoidProtected := finalCylinders_avoid_NhatList
   reserveAvoidFinalCylinders := reservePoints_avoid_finalCylinders
   reserveDisjointSelector := reservePoints_disjoint_ChatList
+  reserveDisjointProtected := reservePoints_disjoint_NhatList
 
 def D54PaperRealization.ofFiveSwitchSeedSwitchRealization
     (H : D54FiveSwitchSeedSwitchRealization) :
@@ -1252,10 +1352,14 @@ structure D54PaperRealizationLadder where
   resetTable : D54ResetData.D54ResetTableCertificate
   finalCylindersAvoidSelector :
     D54ResetData.cylindersAvoidPoints finalCylinders ChatList
+  finalCylindersAvoidProtected :
+    D54ResetData.cylindersAvoidPoints finalCylinders NhatList
   reserveAvoidFinalCylinders :
     D54ResetData.reservesAvoidCylinders reservePoints finalCylinders
   reserveDisjointSelector :
     D54ResetData.listsDisjoint reservePoints ChatList
+  reserveDisjointProtected :
+    D54ResetData.listsDisjoint reservePoints NhatList
 
 def D54PaperRealizationLadder.toPaperRealization
     (H : D54PaperRealizationLadder) :
@@ -1263,8 +1367,10 @@ def D54PaperRealizationLadder.toPaperRealization
   toD54FiveSwitchRealization := H.fiveSwitch
   resetTable := H.resetTable
   finalCylindersAvoidSelector := H.finalCylindersAvoidSelector
+  finalCylindersAvoidProtected := H.finalCylindersAvoidProtected
   reserveAvoidFinalCylinders := H.reserveAvoidFinalCylinders
   reserveDisjointSelector := H.reserveDisjointSelector
+  reserveDisjointProtected := H.reserveDisjointProtected
 
 /-- Build the paper-order ladder once the three genuine construction stages have
 been supplied.  The reset/support table fields are filled by the closed finite
@@ -1279,8 +1385,10 @@ def D54PaperRealizationLadder.ofStages
   fiveSwitch := fiveSwitch
   resetTable := D54ResetData.d54ResetTableCertificate
   finalCylindersAvoidSelector := finalCylinders_avoid_ChatList
+  finalCylindersAvoidProtected := finalCylinders_avoid_NhatList
   reserveAvoidFinalCylinders := reservePoints_avoid_finalCylinders
   reserveDisjointSelector := reservePoints_disjoint_ChatList
+  reserveDisjointProtected := reservePoints_disjoint_NhatList
 
 theorem D54PaperRealizationLadder.lowBaseFamily
     (H : D54PaperRealizationLadder) :

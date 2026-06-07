@@ -155,10 +155,21 @@ Additional direct checks confirm:
    the same nesting as `LowD5M4.fullReturn`, namely `((q,y),z)`.  Still, adding
    this theorem is useful as a stable rewrite boundary.
 
-3. `D54ResetData` already proves many table facts, but not all strengthened
-   `NT`/`Nhat` protected-neighborhood facts as named theorem-level artifacts.
-   Those stronger facts should be added if the switching-ribbon proof needs the
-   full protected neighborhood rather than only the lifted selector.
+3. The strengthened `NT`/`Nhat` protected-neighborhood facts are now named in
+   `D54ReturnCore`, including:
+
+   ```lean
+   NTList
+   NhatList
+   NTList_mem_iff_terminalNeighborhoodList_mem
+   resetSites_avoid_NTList
+   finalCylinders_avoid_NhatList
+   reservePoints_disjoint_NhatList
+   ```
+
+   `D54SupportTables`, `D54PaperRealization`, and `D54PaperRealizationLadder`
+   also expose the protected-neighborhood avoidance fields needed by a future
+   switching-ribbon proof.
 
 4. `TerminalA2M4Realization` is exactly the right missing theorem shape, but it
    must avoid the known bad interpretations:

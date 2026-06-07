@@ -264,13 +264,26 @@ The current Lean data has much of the table content, but the paper does not
 spell out every membership/nonmembership statement needed by the switching
 proof.
 
-Active Lean status: the finite D54 reset/support table facts are now packaged
-strongly enough for final assembly.  They are no longer a separate H2-closing
-obligation: `D54PaperRealization.ofFiveSwitchRealization` fills them from
-`D54ResetData.d54ResetTableCertificate` and the closed avoidance lemmas.  Extra
-protected-neighborhood facts may still be useful inside a future proof of the
-switching theorem, but the public H2 target no longer asks the caller to supply
-the existing table certificate manually.
+Active Lean status: the finite D54 reset/support/protected-neighborhood table
+facts are now packaged strongly enough for final assembly.  They are no longer
+a separate H2-closing obligation: `D54PaperRealization.ofFiveSwitchRealization`
+fills them from `D54ResetData.d54ResetTableCertificate`, the closed avoidance
+lemmas, and the named `NTList`/`NhatList` protected-neighborhood lemmas in
+`D54ReturnCore`.
+
+The support payload now includes:
+
+```lean
+NTList_mem_iff_terminalNeighborhoodList_mem
+resetSites_avoid_NTList
+finalCylinders_avoid_NhatList
+reservePoints_disjoint_NhatList
+D54PaperRealization.finalCylindersAvoidProtected
+D54PaperRealization.reserveDisjointProtected
+```
+
+What remains is not table separation, but the physical switching theorem that
+uses these facts.
 
 ## Gap 8. The Paper Does Not Separate "Direct RF Certificate" From "Paper Realization"
 
