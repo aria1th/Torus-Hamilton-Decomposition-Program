@@ -26,10 +26,12 @@ lake build EvenV11
 echo "== checking disabled generated low-base targets stay out of default spine =="
 if grep -rnE \
     --exclude='LowD5M4Finite.lean' \
+    --exclude='LowD7M4Finite.lean' \
     --exclude='LowD7M6Finite.lean' \
-    '^import[[:space:]]+EvenV11\.(LowD5M4Finite|LowD7M6Finite)([[:space:]]|$)' \
+    --exclude-dir='V28Hard' \
+    '^import[[:space:]]+EvenV11\.(LowD5M4Finite|LowD7M4Finite|LowD7M6Finite)([[:space:]]|$)' \
     EvenV11.lean EvenV11/ ; then
-  fail "generated LowD5M4/LowD7M6 finite targets must remain explicit-only archive targets"
+  fail "generated LowD5M4/LowD7M4/LowD7M6 finite targets must remain explicit-only archive targets"
 fi
 
 # 3) Forbid the real cheats. `sorry` is allowed (honest, warns + shows as
@@ -75,7 +77,25 @@ grep -qE \
 
 # 5) Progress metric: open obligations are the `assume_*` theorems still proved
 #    by `sorry` in Main.lean. Also surface any stray sorry elsewhere.
-holes="$(grep -cE '^theorem assume_[A-Za-z0-9_]+ .*:= sorry' EvenV11/Main.lean || true)"
+holes="$(python3 - <<'PY'
+from pathlib import Path
+import re
+
+count = 0
+in_assume = False
+for line in Path("EvenV11/Main.lean").read_text().splitlines():
+    if re.match(r"^theorem assume_[A-Za-z0-9_]+", line):
+        in_assume = True
+    elif in_assume and re.match(r"^(theorem|def|abbrev|structure|end|namespace)\b", line):
+        in_assume = False
+
+    if in_assume and re.search(r"\bsorry\b", line):
+        count += 1
+        in_assume = False
+
+print(count)
+PY
+)"
 stray="$(grep -rlnE ':= sorry|by sorry' EvenV11/ | grep -v 'EvenV11/Main.lean' || true)"
 
 echo "=================================================="

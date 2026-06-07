@@ -1,5 +1,12 @@
 # v28 논문 spine vs Lean 형식화 감사 (2026-06-05)
 
+> 2026-06-06 이후 이 문서의 H3 상태는 갱신되었다.
+> `D7(4)`도 generated finite certificate 직접 사용에서 빠졌고,
+> 기본 proof spine은 `assume_lowD7M4CycleData :
+> Nonempty (RootFlatCycle.RootFlatCycleData 6 4)`를 받는다. 최신 상세 계획은
+> `docs/V28_PAPER_FORMALIZATION_AUDIT_20260606.md`와
+> `docs/V28_FORMALIZATION_STRATEGY_20260606.md`를 보라.
+
 ## 0. 결론
 
 현재 Lean 형식화는 **최종 ordinary Hamilton decomposition 정리의 귀납 분기**는 논문
@@ -28,8 +35,8 @@ v28과 대체로 같은 모양이다. 그러나 논문 전체를 형식화했다
 | marked/reserve invariant | Lean payload에서 소거됨 |
 | H2 D5(4) | 잘못된 tame route를 버리고 논문형 open input으로 수정됨 |
 | H1 | 부분 자산은 있으나 논문 §5 terminal A2 family 그대로는 아님 |
-| H3 | 닫혔지만 generated finite certificate 경로. 논문 경로 형식화와는 별도 |
-| H4 | open. generated witness는 archive이고 기본 spine에서는 제외 |
+| H3 | open. `RootFlatCycleData 6 4` structural slot으로 전환 |
+| H4 | open. `RootFlatCycleData 6 6` structural slot으로 유지 |
 | H5/H6 | 로컬 도구는 많지만 실제 promotion은 아직 `sorry` slot |
 
 ## 1. 논문 proof spine
@@ -90,8 +97,8 @@ preservation을 따로 증명하는 이유가 Lean 최종 payload에서는 사�
 |---|---|---|---|
 | H1 `assume_d3EvenRootFlat` | §5 terminal A2 row word로 모든 even `m≥4`의 D3 base | `D3EvenM4RootFlat`은 `m=4` certificate를 갖고, Route-E bridge가 일반 `m≥6`를 zero-layer bijectivity + return rank package로 줄임 | 중간 drift. 목표 타입은 root-flat certificate family로 적절하지만, proof path는 논문 terminal A2 family 그대로가 아니라 D3 Route-E 자산 중심 |
 | H2 `assume_lowD5M4RibbonRealizationData` | §11 D5(4) parity reset. Five abstract reset returns를 실제 root-flat rows/ribbons로 실현 | `LowD5M4Seed`는 abstract `fullReturn` cycles를 닫음. `LowD5M4Structural`은 Latin `row`, RF2, wild `e : Seed ≃ RootState`, return-realization을 open input으로 둠 | 현재 방향은 논문과 정합. 남은 핵심은 실제 ribbon/run-collapse realization |
-| H3 `assume_lowD7M4` | rank-three/folded endpoint base `RHD(7,4)` | `LowD7M4Finite.finalLowD7M4RootFlatCertificateFamily`로 닫힘 | theorem은 닫혔지만 논문 proof 구조가 아니라 generated finite root-flat certificate |
-| H4 `assume_lowD7M6` | rank-three/folded endpoint base `RHD(7,6)` | 기본 spine에서는 open. `LowD7M6Finite`는 archive/explicit target | open. H3와 같은 generated 경로를 쓸지, 논문 two-rail/folded 구조를 포팅할지 결정 필요 |
+| H3 `assume_lowD7M4CycleData` | rank-three/folded endpoint base `RHD(7,4)` | 기본 spine에서는 `RootFlatCycleData 6 4` open. `LowD7M4Finite`는 archive/explicit target | open. 논문 two-rail/folded RF1/RF2/RF3 포팅 필요 |
+| H4 `assume_lowD7M6CycleData` | rank-three/folded endpoint base `RHD(7,6)` | 기본 spine에서는 `RootFlatCycleData 6 6` open. `LowD7M6Finite`는 archive/explicit target | open. H3와 같은 two-rail schema로 포팅 필요 |
 | H5 `assume_oddHighModulus` | high-even finite anchors + coforest/laminar splice + four-point growth | Type A coforest audits, projection-kernel, guide-locality, cut-splice tools가 있음. 그러나 `FinalOddHighModulusTargetPromotion` 자체는 open | 큰 open slot. 로컬 lemma는 논문과 꽤 맞지만, finite relay -> root-flat model -> promotion 연결이 없음 |
 | H6 `assume_oddEndpoint` | endpoint successor: terminal product cycles, completion unit carry, marked transfer, separated ports | completion carry, phase-product support, marked-transfer audits가 있음. 그러나 `FinalOddEndpointPhaseProductTargetPromotion`은 아직 promotion-shaped open input | 큰 open slot. 로컬 components는 있으나 endpoint row realization -> RF certificate/promotion이 없음 |
 
@@ -167,7 +174,7 @@ return effect는 cut-splice/ribbon/reindexing으로 운반하는 형태여야 �
    - B: 논문 `RHD` marked/reserve invariant까지 포함하는 faithful spine.
 
    A만 목표라면 현재 `FinalMarkedTarget = TorusHamiltonDecomposition` 축소를 명시적으로
-   인정하고 H1/H2/H4/H5/H6를 ordinary certificate/promotion으로 닫으면 된다. B가 목표라면
+   인정하고 H1/H2/H3/H4/H5/H6를 ordinary certificate/promotion으로 닫으면 된다. B가 목표라면
    `FinalMarkedTarget`을 실제 구조체로 바꾸는 큰 재설계가 필요하다.
 
 2. **H2는 현재 방향 유지**
@@ -182,8 +189,8 @@ return effect는 cut-splice/ribbon/reindexing으로 운반하는 형태여야 �
    같은 이름의 중간 구조체를 만들고, 각 필드를 논문 lemma 단위로 맞춘다.
 
 4. **generated finite certificates의 지위를 명확히 유지**
-   - H3처럼 generated certificate로 닫은 항목은 theorem closure로는 유효하다.
-   - 하지만 논문 경로 형식화로 세지 않으려면 archive/explicit target임을 계속 표시한다.
+   - H3/H4의 generated certificate는 theorem closure용 regression artifact로는 유효하다.
+   - 하지만 논문 경로 형식화로 세지 않기 위해 archive/explicit target으로만 둔다.
 
 5. **다음 실작업 우선순위**
    - H2: `row/e/layerBijective/returnRealization` 중 먼저 `row`와 local support
@@ -199,12 +206,12 @@ return effect는 cut-splice/ribbon/reindexing으로 운반하는 형태여야 �
 
 - H1 `assume_d3EvenRootFlat`
 - H2 `assume_lowD5M4RibbonRealizationData`
-- H4 `assume_lowD7M6`
+- H3 `assume_lowD7M4CycleData`
+- H4 `assume_lowD7M6CycleData`
 - H5 `assume_oddHighModulus`
 - H6 `assume_oddEndpoint`
 
-H3 `D7(4)`는 기본 spine에서 닫혀 있다. 단, 논문 구조 형식화 여부와 theorem closure
-여부는 별도로 계산해야 한다.
+H3/H4 generated D7 finite files는 기본 spine 밖의 archive/explicit-only target이다.
 
 ## 8. 2026-06-05 1-3단계 착수 기록
 

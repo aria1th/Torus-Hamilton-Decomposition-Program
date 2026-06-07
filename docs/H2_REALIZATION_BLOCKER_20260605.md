@@ -39,7 +39,10 @@ tame 좌표 동치로는 같아질 수 없습니다. 논문의 "realize by layer
 - ❌ prefix leaf(`TerminalCoreTailPrefixPathGoal`, 색0): canonical baseRow에서
   256개 중 **0개** 도달. tail base 변위 `Δ₀−a₀=(3,1)`은 q-좌표에 **4 증가** 필요,
   prefix는 **layer 3개**뿐 → 어떤 baseRow로도 불가(layer 예산 부족). 이는 §1의
-  특수 사례.
+  특수 사례. 2026-06-07에는 이를 Lean theorem
+  `D5M4H2Skeleton.not_terminalCoreTailPrefixPathGoal`와
+  `D5M4H2Skeleton.not_nonempty_resetPortH2PaperSkewProductCoreYFirstZFirstTailData`
+  로 기록했다.
 
 ## 4. 따라서 올바른 경로 (선택)
 
@@ -61,19 +64,20 @@ tame 좌표 동치로는 같아질 수 없습니다. 논문의 "realize by layer
 기본 proof spine은 이제 (B)를 따릅니다.
 
 - `EvenV11.LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`를 현재
-  `Main`의 H2 open input으로 사용한다. 필드는 실제 Latin row
-  `row : ZMod 4 → RootState → TorusColor 5 ≃ TorusDirection 5`, wild
-  `e : Seed ≃ RootState`, RF2, 그리고
+  `Main`의 H2 open input으로 사용한다. 필드는 실제 four-layer physical row,
+  wild `e : Seed ≃ RootState`, RF2, 그리고
   `e.symm (returnMap c (e x)) = LowD5M4.fullReturn c x`이다. RF1은
-  `rowLatin_of_rowEquiv`로 자동 처리된다.
+  row equivalence로 자동 처리된다. 2026-06-07 Lean check 결과, layer index 없이
+  first/final reset substitutions를 동시에 적용하는 `resetPortRowOfBase` route는
+  RF2에 맞지 않으므로 compatibility/negative route로만 유지한다.
 - 더 일반적인 내부 handoff로
   `EvenV11.LowD5M4Structural.ResetPortH2RibbonRealizationData`도 남아 있다. 이는
   arbitrary `dir`, wild `e`, RF1/RF2, return-realization을 직접 받는다.
 - `ResetPortH2RootFlatCycleData`도 추가했다. 이는 ribbon 증명 없이도 RF3
   `returnsSingleCycle`을 직접 얻었을 때 바로 certificate로 가는 일반 RF handoff다.
 - `EvenV11.Main`의 H2 가정은
-  `assume_lowD5M4RibbonRealizationData : Nonempty LowD5M4RibbonRealizationData`로
-  교체했다. `assume_lowD5M4`는
+  `assume_lowD5M4RibbonCollapseInput : Nonempty LowD5M4RibbonCollapseInput`으로
+  교체했다. `assume_lowD5M4RibbonRealizationData`와 `assume_lowD5M4`는
   `finalLowD5M4RootFlatCertificateFamily_of_nonemptyRowEquivRibbonRealizationData`에서
   파생된다.
 - 기본 `EvenV11.lean` import closure에서 `EvenV11.LowD5M4Realization`을 제거했다.
@@ -99,3 +103,43 @@ paperReturn 0 disp>4 인 상태 수 = 64/256  (poc_eval3)
 canonical prefix(색0) tail-base 도달 수 = 0/256, decide=false  (poc_prefix/poc_eval)
 read leaf rfl로 닫힘                       (poc.lean)
 ```
+
+---
+
+## 8. RF2 판정 — `resetPortRowOfBase`는 layerBijective 불가능 (2026-06-07)
+
+§4.1의 "resetPortRowOfBase는 RF2에 안 맞음"을 **결정적으로 확정**. Python으로 정확한
+Lean 시맨틱(`resetPortSwappedRow = finalLiftSwappedRow ∘ firstLiftSwappedRow`,
+liftY=dir2, liftZ=dir3)을 모델링해 layer map 단사성을 검사 (`/tmp/rf2_judge.py`).
+
+**결과: RF2가 color 0·layer 0에서 실패, baseRow 무관** (identity/shift/perm2/q0-rotate
+4종 전부 실패; image 240 또는 204/256).
+
+원인(구조적, baseRow 불가피):
+`resetPortRowOfBase`는 first(Y)·final(Z) substitution을 **layer-index 없이 매 layer
+동시 적용**한다. `qCoord=(0,0)`에서:
+- first-swap(qCoord=p0)이 color 0을 항상 Y(dir 2)로 강제.
+- final-swap(`liftSite[c]=((0,0),c)`)이 `y=0`일 때만 color 0을 Z(dir 3)로 덮어씀.
+
+따라서 color 0의 forced map:
+```
+((0,0),0,z) → ((0,0),0,z+1)   (Z)
+((0,0),3,z) → ((0,0),0,z)     (Y: y=3→0)
+```
+두 그룹 8개가 `((0,0),0,·)` 4-fiber로 몰려 비단사. color 0 방향이 swap으로 완전히
+강제되므로 **모든 baseRow에서 동일**.
+
+### 함의
+- **현재 Main H2 slot(`assume_lowD5M4RibbonCollapseInput :
+  Nonempty ResetPortBaseRowRibbonRealizationData`)은 증명 불가능**: 그 `layerBijective`
+  필드(=`resetPortRowOfBase baseRow`의 RF2)가 어떤 baseRow로도 성립 불가.
+
+### 해법 (actionable)
+dir을 **layer-의존(t-indexed)** 으로: Y-carry substitution과 Z-carry substitution을
+**서로 다른 layer**에 배치(논문의 2-stage Y-then-Z tower 그대로). 그러면 한 first-return
+내에서 Y증가와 Z증가가 다른 layer에서 일어나 fiber 과집중이 사라진다.
+- 인프라는 이미 t-의존 dir을 지원: `LowD5M4Structural.ResetPortH2RibbonRealizationData`
+  (임의 `dir` + wild e + RF1/RF2/RF3-via-realization)와 `ResetPortH2RootFlatCycleData`
+  (임의 `dir` + RF1/RF2/RF3 직접)는 t-의존 dir을 받는다.
+- 즉 Main H2를 `resetPortRowOfBase` 기반 핸드오프에서 **임의 t-의존 dir 핸드오프로
+  교체**하고, t별로 substitution을 분리한 dir을 구성하면 RF2 충돌이 해소된다.

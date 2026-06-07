@@ -1,24 +1,27 @@
 # EvenV11 가정 원장 (Assumption Ledger) — 정직한 진행 추적
 
 작성일: 2026-06-03. 측정 환경: `/root/.elan`, `lake build EvenV11` 성공(약 4초).
-업데이트: 2026-06-04에 H3 `D7(4)`는 generated finite root-flat certificate로
-닫혔다. H2 `D5(4)`와 H4 `D7(6)`의 generated witnesses는 archive/명시 검증
-target으로만 남기고, 논문 구조 포팅으로 대체하기 위해 기본 proof spine에서는
-open input으로 두었다.
+업데이트: 2026-06-06 v28 방향 전환 이후 H3 `D7(4)`도 generated finite root-flat
+certificate 직접 사용에서 빠졌다. H2 `D5(4)`, H3 `D7(4)`, H4 `D7(6)`의 generated
+witnesses는 archive/명시 검증 target으로만 남기고, 논문 구조 포팅으로 대체하기
+위해 기본 proof spine에서는 open input으로 둔다.
 
 > 이 문서는 "closure-first" 전략이 숨긴 것을 드러낸다. 예전 `Status.lean` 경로는
 > `sorry`도 `axiom`도 없이 빌드됐지만, **그것은 배관(plumbing)이 건전하다는 뜻이지
 > 정리가 증명됐다는 뜻이 아니었다.** 현재 `Main.lean` proof spine은 이 숨은 입력을
-> `assume_* := sorry`로 노출한다. 최초 원자 구멍은 6개였고, 현재 기본 proof spine의
-> 미증명 구멍은 H1/H2/H4/H5/H6 다섯 개다. 단 H2는 더 이상
-> `FinalLowD5M4RootFlatCertificateFamily` 자체를 가정하지 않는다.
-> `assume_lowD5M4RibbonRealizationData : Nonempty LowD5M4RibbonRealizationData`를
-> 열어 둔다. 이 입력은 논문 `ribbon-realization`의 wild run-collapse 재색인
-> `e : Seed ≃ RootState`, Latin row equivalence, RF2/return-realization을 담으며,
-> RF1은 row equivalence에서 자동으로 나온다. final family는
+> `assume_* := sorry`로 노출한다. 현재 기본 proof spine의 미증명 구멍은
+> H1/H2/H3/H4/H5/H6 여섯 개다. 단 H2는 더 이상
+> `FinalLowD5M4RootFlatCertificateFamily` 자체나 row-equivalence ribbon data
+> 자체를 가정하지 않는다.
+> `assume_lowD5M4RibbonCollapseInput :
+> Nonempty LowD5M4RibbonCollapseInput`를 열어 둔다. 이 입력은 논문 §11의
+> actual four-layer physical rows, RF2, 그리고 paper `LowD5M4.fullReturn`을 실제
+> first-return map으로 운반하는 return-section reindexing을 담는다.
+> `assume_lowD5M4RibbonRealizationData`는 이 입력에서 파생된다. final family는
 > `LowD5M4Structural.finalLowD5M4RootFlatCertificateFamily_of_nonemptyRowEquivRibbonRealizationData`
-> 로 파생한다. `paperReturn` table route는 기본 proof spine 밖의 explicit adapter
-> (`EvenV11/LowD5M4H2PaperRow.lean`)로 남아 있다.
+> 로 파생한다. broad paper table route와 core-tail prefix route는 기본 proof spine 밖의
+> explicit/negative adapter (`EvenV11/LowD5M4H2PaperRow.lean`,
+> `EvenV11/V28Hard/D5M4H2Skeleton.lean`)로 남아 있다.
 
 ---
 
@@ -57,27 +60,26 @@ open input으로 두었다.
 
 ---
 
-## 2. 진짜 미증명 구멍 — 기본 spine 기준 원자 6개 중 1개 완료
+## 2. 진짜 미증명 구멍 — 기본 spine 기준 원자 6개
 
 `FinalRootFlatTorusCertificate d m`(payload)을 구성해야 했던 6개 지점:
 
 | # | Lean 가정 (미구성) | 논문 | payload | 이를 닫는 도구 | 비고 |
 |---|---|---|---|---|---|
 | H1 | `FinalD3EvenRootFlatCertificateFamily` | §5 terminal A2 + D3 seed | `…Cert 3 m` (even m) | P8(six-turn)+P1 lift | 일반 m |
-| H2 | `assume_lowD5M4RibbonRealizationData : Nonempty LowD5M4RibbonRealizationData` | §11 D5(4) parity reset | `…Cert 5 4` | ribbon/run-collapse reindexing → structural RF certificate | data-shaped open input in `Main`; `assume_lowD5M4` is derived by `LowD5M4Structural.finalLowD5M4RootFlatCertificateFamily_of_nonemptyRowEquivRibbonRealizationData`; generated witness and paper-table route stay archive/explicit-only |
-| H3 | `FinalLowD7M4RootFlatCertificateFamily` | App A/B two-rail | `…Cert 7 4` | generated finite root-flat cert | ✅ closed: `LowD7M4Finite.finalLowD7M4RootFlatCertificateFamily` |
-| H4 | `FinalLowD7M6RootFlatCertificateFamily` | App A/B two-rail | `…Cert 7 6` | structural two-rail replacement | open in `Main`; `LowD7M6Finite.finalLowD7M6RootFlatCertificateFamily` is archive/explicit-only, not the default-spine discharge |
+| H2 | `assume_lowD5M4RibbonCollapseInput : Nonempty LowD5M4RibbonCollapseInput` | §11 D5(4) parity reset | `…Cert 5 4` | actual four-layer rows + RF2 + return-section/ribbon-collapse realization | open input in `Main`; `assume_lowD5M4RibbonRealizationData` and `assume_lowD5M4` are derived; generated witness, layer-blind reset-port base-row route, broad paper-table route, and impossible core-tail prefix route stay archive/explicit-only |
+| H3 | `assume_lowD7M4CycleData : Nonempty LowD7M4RootFlatCycleData` | App A/B two-rail | `…Cert 7 4` | structural `RootFlatCycleData 6 4` | open in `Main`; `LowD7M4Finite.finalLowD7M4RootFlatCertificateFamily` is archive/explicit-only |
+| H4 | `assume_lowD7M6CycleData : Nonempty LowD7M6RootFlatCycleData` | App A/B two-rail | `…Cert 7 6` | structural `RootFlatCycleData 6 6` | open in `Main`; `LowD7M6Finite.finalLowD7M6RootFlatCertificateFamily` is archive/explicit-only |
 | H5 | `FinalOddHighModulusTargetPromotion` | §6–8 coforest+growth | 일반 | **P6**(coforest)+P1 growth | parametric |
 | H6 | `FinalOddEndpointPhaseProductTargetPromotion` | §9–10 endpoint | 일반 | P3(cut-splice)+P1 completion | parametric |
 
-묶음(파생, 별도 작업 아님): `FinalLowBaseRootFlatCertificateFamilies`(=H2+H3+H4, 현재 H2/H4 open),
+묶음(파생, 별도 작업 아님): `FinalLowBaseRootFlatCertificateFamilies`(=H2+H3+H4, 현재 H2/H3/H4 open),
 `FinalTargetCertificateChecklistWithD3AndLowRootFlat`(=H1+묶음+H5+H6).
 
 **현재 임계 경로:** H1은 §5 terminal/D3 root-flat family, H2는 §11 D5(4)
-paper reset-port table realization data 구성, H4는 Appendix A/B D7(6) two-rail structural
-replacement, H5는 odd high-modulus promotion, H6는 endpoint successor promotion.
-H2의 final family 조립은 이미 구조 정리로 연결됐고, H3만 기본 proof spine에서
-generated finite root-flat certificate로 닫혀 있다.
+paper reset-port table realization data 구성, H3/H4는 Appendix A/B D7(4)/D7(6)
+two-rail structural replacement, H5는 odd high-modulus promotion, H6는 endpoint
+successor promotion. H2의 final family 조립은 이미 구조 정리로 연결됐다.
 
 2026-06-04 추가 확인: H1의 아카이브 D3 자산 중 `EvenV11/D3EvenM4.lean`은
 `Shared.CayleyHamiltonDecomposition 3 4`를 닫고, `EvenV11/D3EvenRouteEGeSix.lean`은
@@ -155,12 +157,12 @@ theorem evenModulusDirectedToriHamiltonDecomposition
    - `EvenModulusToriAllDimensionsGoal`(홀수 미러)를 무조건 메인 정리로 서술.
    - 최초 6개 구멍을 `assume_*` 정리(`:= sorry`)로 노출, `evenCertificateChecklist`로
      조립해 `evenModulusToriAllDimensions : EvenModulusToriAllDimensionsGoal` 증명.
-     현재 H3는 닫혔고 H2는 `assume_lowD5M4RibbonRealizationData` 데이터 가정으로
-     세분화됐다.
-   - 검증: `lake build EvenV11.Main` 성공(현재 경고 = sorry 5개).
+     현재 H2는 `assume_lowD5M4RibbonCollapseInput` 데이터 가정으로 세분화됐고,
+     H3/H4도 paper-structured root-flat cycle data 입력으로 열려 있다.
+   - 검증: `lake build EvenV11.Main` 성공(현재 경고 = sorry 6개).
      `#print axioms evenModulusToriAllDimensions`
      ⟹ `[propext, sorryAx, Classical.choice, Quot.sound]` — **sorryAx 노출**.
-   - **진행 지표(live):** 잔여 `sorry` 수 5 → 0, `#print axioms`에 `sorryAx` 소멸.
+   - **진행 지표(live):** 잔여 `sorry` 수 6 → 0, `#print axioms`에 `sorryAx` 소멸.
 3. **closure 게이트 은퇴/교체 — 완료. ✅**
    - `scripts/check_evenv11_closure.sh` 제거 → `scripts/check_evenv11_progress.sh` 신설.
      CI(`.github/workflows/lean_action_ci.yml`)도 progress 게이트 호출로 갱신.
@@ -357,8 +359,8 @@ theorem evenModulusDirectedToriHamiltonDecomposition
 | 구멍 | Main.lean 정리 | 닫는 도구 |
 |---|---|---|
 | H1 | `assume_d3EvenRootFlat` | §5 + P1 |
-| H2 | `assume_lowD5M4RibbonRealizationData` (`assume_lowD5M4`는 파생) | §11 ribbon/run-collapse realization + RF1/RF2 |
-| H3 | `assume_lowD7M4` | generated finite root-flat cert (closed) |
-| H4 | `assume_lowD7M6` | P3+P6 + P1 |
+| H2 | `assume_lowD5M4RibbonCollapseInput` (`assume_lowD5M4RibbonRealizationData`, `assume_lowD5M4`는 파생) | §11 reset-port rows + RF2 + ribbon/run-collapse realization |
+| H3 | `assume_lowD7M4CycleData` (`assume_lowD7M4`는 파생) | D7(4) two-rail RF1/RF2/RF3 |
+| H4 | `assume_lowD7M6CycleData` (`assume_lowD7M6`는 파생) | D7(6) two-rail RF1/RF2/RF3 |
 | H5 | `assume_oddHighModulus` | P6 + P1 |
 | H6 | `assume_oddEndpoint` | P3 + P1 |

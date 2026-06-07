@@ -160,6 +160,51 @@ structure ResetPortH2RowEquivRibbonRealizationData where
         ((LowD5M4Schedule.schedule (dirOfRowEquiv row)).returnMap c (e x))
       = LowD5M4.fullReturn c x
 
+/-- Convert the usual map-level conjugacy
+`returnMap = e ∘ fullReturn ∘ e.symm` into the pointwise orientation consumed by
+`single_cycle_of_equiv_conj` and the H2 handoff records. -/
+theorem returnRealization_of_returnMap_conj
+    {dir : ZMod 4 → RootState → TorusColor 5 → TorusDirection 5}
+    (e : Seed ≃ RootState)
+    (hReturn : ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4Schedule.schedule dir).returnMap c w =
+        e (LowD5M4.fullReturn c (e.symm w))) :
+    ∀ c : TorusColor 5, ∀ x : Seed,
+      e.symm ((LowD5M4Schedule.schedule dir).returnMap c (e x))
+        = LowD5M4.fullReturn c x := by
+  intro c x
+  rw [hReturn c (e x)]
+  simp
+
+def ribbonRealizationData_of_returnMap_conj
+    (dir : ZMod 4 → RootState → TorusColor 5 → TorusDirection 5)
+    (e : Seed ≃ RootState)
+    (hRow : (LowD5M4Schedule.schedule dir).rowLatin)
+    (hLayer : (LowD5M4Schedule.schedule dir).layerBijective)
+    (hReturn : ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4Schedule.schedule dir).returnMap c w =
+        e (LowD5M4.fullReturn c (e.symm w))) :
+    ResetPortH2RibbonRealizationData where
+  dir := dir
+  e := e
+  rowLatin := hRow
+  layerBijective := hLayer
+  returnRealization := returnRealization_of_returnMap_conj e hReturn
+
+def rowEquivRibbonRealizationData_of_returnMap_conj
+    (row : ZMod 4 → RootState → TorusColor 5 ≃ TorusDirection 5)
+    (e : Seed ≃ RootState)
+    (hLayer :
+      (LowD5M4Schedule.schedule (dirOfRowEquiv row)).layerBijective)
+    (hReturn : ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4Schedule.schedule (dirOfRowEquiv row)).returnMap c w =
+        e (LowD5M4.fullReturn c (e.symm w))) :
+    ResetPortH2RowEquivRibbonRealizationData where
+  row := row
+  e := e
+  layerBijective := hLayer
+  returnRealization := returnRealization_of_returnMap_conj e hReturn
+
 def ribbonRealizationData_of_rowEquivRibbonRealizationData
     (data : ResetPortH2RowEquivRibbonRealizationData) :
     ResetPortH2RibbonRealizationData where

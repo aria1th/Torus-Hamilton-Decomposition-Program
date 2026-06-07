@@ -8,8 +8,9 @@ This module connects the row-level assets in `LowD5M4Realization` to the current
 the worksheet records that the naive `qCoord` row is a negative control.  Instead
 it packages an arbitrary paper base row after the D54 reset-port switches.
 
-It is intentionally not imported by `EvenV11.Main` yet.  The remaining hard
-H2 work is still RF2 plus the switching-ribbon/run-collapse conjugacy.
+`EvenV11.Main` uses the broad ribbon-realization input below as its H2 slot.  The
+remaining hard H2 work is still RF2 plus the switching-ribbon/run-collapse
+conjugacy.
 -/
 
 namespace EvenV11
@@ -43,6 +44,12 @@ def rowEquivRibbonRealizationData_of_resetPortBaseRowData
   e := data.e
   layerBijective := data.layerBijective
   returnRealization := data.returnRealization
+
+theorem nonemptyRowEquivRibbonRealizationData_of_nonemptyResetPortBaseRowData
+    (hData : Nonempty ResetPortBaseRowRibbonRealizationData) :
+    Nonempty ResetPortH2RowEquivRibbonRealizationData :=
+  ⟨rowEquivRibbonRealizationData_of_resetPortBaseRowData
+    (Classical.choice hData)⟩
 
 /-- Package a reset-port base row, RF2, and the transported paper return-map
 equality as the current `Main` H2 row-equivalence handoff. -/
@@ -97,6 +104,59 @@ def rowEquivRibbonRealizationData_of_resetPortBaseFullSplitGoals
   rowEquivRibbonRealizationData_of_resetPortBaseFourLayer
     baseRow hLayer
     (resetPortFourLayerRealizationGoal_of_fullSplitGoals hGoals)
+
+def resetPortFourLayerRealizationGoal_of_fullCoreYFirstZFirstTailGoals
+    {baseRow : LowD5M4Realization.ResetPortBaseRow}
+    (hGoals :
+      LowD5M4Realization.ResetPortFullCoreYFirstZFirstTailRowWordGoals
+        baseRow) :
+    LowD5M4Realization.ResetPortFourLayerRealizationGoal baseRow :=
+  LowD5M4Realization.resetPortFourLayerRealizationGoal_of_preFinalFinalCarryGoals
+    baseRow
+    (LowD5M4Realization.resetPortPreFinalRealizationGoal_of_coreYFirstTailRowWordGoals
+      hGoals.preFinal)
+    (LowD5M4Realization.resetPortFinalCarryRealizationGoal_of_rowWordSplitPathGoals
+      baseRow
+      (LowD5M4Realization.resetPortFinalCarryRowWordSplitPathGoals_of_zFirstTail
+        hGoals.finalCarry))
+
+def rowEquivRibbonRealizationData_of_resetPortBaseFullCoreYFirstZFirstTailGoals
+    (baseRow : LowD5M4Realization.ResetPortBaseRow)
+    (hLayer : LowD5M4Realization.ResetPortLayerBijectiveGoal baseRow)
+    (hGoals :
+      LowD5M4Realization.ResetPortFullCoreYFirstZFirstTailRowWordGoals
+        baseRow) :
+    ResetPortH2RowEquivRibbonRealizationData :=
+  rowEquivRibbonRealizationData_of_resetPortBaseFourLayer
+    baseRow hLayer
+    (resetPortFourLayerRealizationGoal_of_fullCoreYFirstZFirstTailGoals
+      hGoals)
+
+def rowEquivRibbonRealizationData_of_paperSkewProductCoreYFirstZFirstData
+    (data :
+      LowD5M4Realization.ResetPortH2PaperSkewProductCoreYFirstZFirstTailData) :
+    ResetPortH2RowEquivRibbonRealizationData :=
+  rowEquivRibbonRealizationData_of_resetPortBaseFullCoreYFirstZFirstTailGoals
+    data.baseRow
+    (LowD5M4Realization.resetPortLayerBijective_of_layerSkewProductData
+      data.baseRow data.layerData)
+    data.goals
+
+theorem nonemptyRowEquivRibbonRealizationData_of_nonemptyPaperSkewProductCoreYFirstZFirstData
+    (hData :
+      Nonempty
+        LowD5M4Realization.ResetPortH2PaperSkewProductCoreYFirstZFirstTailData) :
+    Nonempty ResetPortH2RowEquivRibbonRealizationData :=
+  ⟨rowEquivRibbonRealizationData_of_paperSkewProductCoreYFirstZFirstData
+    (Classical.choice hData)⟩
+
+theorem nonemptyRibbonData_of_nonemptySkewProductCoreTailData
+    (hData :
+      Nonempty
+        LowD5M4Realization.ResetPortH2PaperSkewProductCoreYFirstZFirstTailData) :
+    Nonempty ResetPortH2RowEquivRibbonRealizationData :=
+  nonemptyRowEquivRibbonRealizationData_of_nonemptyPaperSkewProductCoreYFirstZFirstData
+    hData
 
 def rowEquivRibbonRealizationData_of_resetPortBasePrefixReadGoals
     (baseRow : LowD5M4Realization.ResetPortBaseRow)

@@ -1,9 +1,10 @@
 # 가장 어려운 부분들 (사용자 해결용 핸드오프)
 
-작성일: 2026-06-04. H3 `D7(4)`는 generated finite root-flat certificate로 닫혔다.
-H2 `D5(4)`와 H4 `D7(6)`의 generated witnesses는 archive/명시 검증 target으로
-남기되, 논문 구조 포팅으로 대체하기 위해 기본 `EvenV11` proof spine에서는
-비활성화했다. 남은 핵심은 H1/H2/H4/H5/H6의 concrete family/promotion 실현이다.
+작성일: 2026-06-04. 2026-06-06 v28 방향 전환 이후 H3 `D7(4)`도 generated finite
+root-flat certificate 직접 사용에서 빠졌다. H2 `D5(4)`, H3 `D7(4)`, H4 `D7(6)`의
+generated witnesses는 archive/명시 검증 target으로 남기되, 논문 구조 포팅으로
+대체하기 위해 기본 `EvenV11` proof spine에서는 비활성화했다. 남은 핵심은
+H1/H2/H3/H4/H5/H6의 concrete family/promotion 실현이다.
 아래는 현재 정밀 obligation.
 
 ## 0. 현재 상태 (빌드되는 자산)
@@ -70,11 +71,12 @@ H2 `D5(4)`와 H4 `D7(6)`의 generated witnesses는 archive/명시 검증 target�
   (`w ↦ (w.1,-w.2)`)와 `oldR2xy_singleCycle`을 제공한다. 후자는 old
   `TorusD3Even.Color2.cycleOn_color2`를 `CycleOnBridge.isSingleCycleMap_of_cycleOn`으로
   현재 `Shared.IsSingleCycleMap (TorusD3Even.R2xy)` 형태로 변환한다.
-- `EvenV11/Main.lean` — `assume_lowD7M4`는 generated certificate로 교체됨.
-  H2는 `assume_lowD5M4RibbonRealizationData :
-  Nonempty LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`, H4는
-  `assume_lowD7M6CycleData`를 논문 구조 포팅으로 대체하기 위한 open input으로
-  두었다. 실제 `sorry`는 H1/H2/H4/H5/H6 다섯 개.
+- `EvenV11/Main.lean` — H3 `assume_lowD7M4`도 generated certificate 직접 사용에서
+  구조적 `RootFlatCycleData 6 4` 입력으로 교체됨.
+  H2는 `assume_lowD5M4RibbonCollapseInput :
+  Nonempty LowD5M4RibbonCollapseInput`, H3는
+  `assume_lowD7M4CycleData`, H4는 `assume_lowD7M6CycleData`를 논문 구조 포팅으로
+  대체하기 위한 open input으로 두었다. 실제 `sorry`는 H1/H2/H3/H4/H5/H6 여섯 개.
 
 ### H1/D3 비교 메모
 
@@ -189,9 +191,9 @@ H2의 generated witness `LowD5M4Finite.finalLowD5M4RootFlatCertificateFamily`는
 명시 target으로 보존되어 있다. 기본 `EvenV11` proof spine에서는 이 witness를
 import하지 않는다. 현재 `assume_lowD5M4`는
 `LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`에서 파생되며, 실제 open
-input은 `assume_lowD5M4RibbonRealizationData`다. §11 skew-product/prefix-table
-entry는 `EvenV11/LowD5M4H2PaperRow.lean`에서 이 row-equivalence handoff로 변환하는
-explicit adapter로 남아 있다.
+input은 `assume_lowD5M4RibbonCollapseInput`다. §11 skew-product/prefix-table
+entry는 `EvenV11/LowD5M4H2PaperRow.lean`에서 row-equivalence handoff로 변환하는
+explicit/negative adapter로 남아 있다.
 
 일반적으로 `finalRootFlatTorusCertificate_of_fields`는 다음 필드를 요구
 (`schedule = { dir := fun t w c => dir t w c, step := LowD5M4Schedule.rootStep }`):
@@ -225,8 +227,11 @@ theorem stepConjugacy  : ... -- `LowD5M4Schedule.stepConjugacy_of_dir dir`로 �
 3. **추상↔구체 conjugation** — dir의 returnMap이 제 `fullReturn`과 켤레임을 보임.
 
 기본 proof spine은 finite-array certificate를 사용하지 않는다. H2의 open slot은
+이제 `assume_lowD5M4RibbonCollapseInput :
+Nonempty LowD5M4RibbonCollapseInput`다.
 `assume_lowD5M4RibbonRealizationData :
-Nonempty LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`이며,
+Nonempty LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`는 현재
+`assume_lowD5M4RibbonCollapseInput`과 같은 direct row-equivalence input이다.
 generated witness는 명시 target으로만 남겨 둔다.
 `D54ResetTableCertificate`는 reset orbit/selector/reserve facts에 더해
 `d54TerminalResetSites_eq_lowD5M4`와
@@ -234,12 +239,27 @@ generated witness는 명시 target으로만 남겨 둔다.
 site 데이터가 `LowD5M4`의 `p0,p1,p2`/`liftSite`와 일치함을 Lean 패키지 안에서
 재사용할 수 있다.
 `ResetPortH2PaperTableData`는 H2 skew-product/table realization 입력을
-보존하는 explicit paper-table adapter다. 현재 `Main` handoff는 더 작은
-row-equivalence ribbon data이고,
-`LowD5M4H2PaperRow.rowEquivRibbonRealizationData_of_paperTableData`가 paper-table
-data를 그 입력으로 변환한다. 닫힌 D54 audit을 함께 쓰는 support projection이
-필요하면 `resetPortH2PaperCertificateData_of_paperTableData`로
+보존하는 explicit legacy paper-table adapter다. 2026-06-07 audit 이후 broad
+`ResetPortFullPaperRowWordReadGoals` route는 본선이 아니다. 추가 Lean check는
+`TerminalCoreTailPrefixPathGoal`도 literal D5 root-step 의미에서는 불가능함을 보였다
+(`not_terminalCoreTailPrefixPathGoal`,
+`not_nonempty_resetPortH2PaperSkewProductCoreYFirstZFirstTailData`). 현재 `Main`
+handoff는 실제 four-layer physical rows를 담는
+`ResetPortH2RowEquivRibbonRealizationData`를 직접 받는다. layer index 없이
+first/final reset substitutions를 동시에 적용하는 `resetPortRowOfBase` route는
+`not_d54PaperProductRows_layerBijective` 때문에 본선이 아니다. 닫힌 D54 audit을
+함께 쓰는 support projection이 필요하면 `resetPortH2PaperCertificateData_of_paperTableData`로
 `ResetPortH2PaperCertificateData`를 만든다.
+`PaperLayeredBaseRows`에서 바로 이 Main handoff로 가는 일반 작업 target은
+`D5M4H2Skeleton.PaperRowsLayerEquivRibbonCollapseInput` 또는
+`D5M4H2Skeleton.PaperRowsSkewProductRibbonCollapseInput`이다. 2026-06-07 추가
+Lean check 결과, 네 layer를 모두 terminal row로 둔
+`D5M4H2PaperRows.d54PaperProductRows`는 RF2가 아니다
+(`D5M4H2PaperRows.not_d54PaperProductRows_layerBijective`,
+`D5M4H2PaperRows.not_nonempty_D54PaperProductSingletonSwitchRibbonCollapseInput`).
+따라서 다음 H2 leaf는 논문 §11의 실제 four-layer row table을 다시
+`PaperLayeredBaseRows`로 전사하고, 그 row table에 대해 singleton-switch RF2,
+return-section equivalence, `returnRealization`을 닫는 것이다.
 `d54TerminalResetSite_eq_firstLiftSiteOfIndex`와
 `finalLiftCarrySite_iff_d54FinalCylinderOfColor`가 표 site를 실제 reset-port row
 construction의 site predicate로 옮긴다.
@@ -289,24 +309,25 @@ LowD5M4H2PaperRow.finalLowD5M4RootFlatCertificateFamily_of_nonemptyPaperTableDat
 ```
 
 `EvenV11/Main.lean`의 `assume_lowD5M4`는 현재 구조 정리로 파생된다. 실제 `sorry`
-open slot은 `assume_lowD5M4RibbonRealizationData :
-Nonempty LowD5M4RibbonRealizationData`다.
+open slot은 `assume_lowD5M4RibbonCollapseInput :
+Nonempty LowD5M4RibbonCollapseInput`다.
 RF2가 이미 layer-bijective로 닫혀 있으면 `ResetPortH2PrefixReadData`
 (concrete `baseRow`, `ResetPortLayerBijectiveGoal`, prefix path goals,
 last-layer row-word read goals)를 공급해 paper table data까지 올리면 된다.
 layer-equiv RF2로 이미 운반한 경우
-`ResetPortH2PaperLayerEquivPrefixReadData`가 대응 prefix/read 호환 entry다. 논문
-RF2 class (ii)의 skew-product lift 그대로라면
-`ResetPortH2PaperSkewProductPrefixReadData`가 최상위 handoff다. split goals를 이미
-묶었다면 `ResetPortH2PaperLayerEquivCoreYFirstZFirstTailSplitData`와
-`ResetPortH2PaperSkewProductCoreYFirstZFirstTailSplitData`가 대응 split 호환 entry이고,
-combined `ResetPortH2PaperLayerEquivCoreYFirstZFirstTailData`도 호환 entry로 남아 있다.
+`ResetPortH2PaperLayerEquivPrefixReadData`가 대응 prefix/read 호환 entry다. 하지만
+논문 RF2 class (ii)의 skew-product lift와 core-tail prefix를 합친
+`ResetPortH2PaperSkewProductCoreYFirstZFirstTailData`는 현재 Lean predicate에서는
+불가능한 handoff로 판정됐다. split/core-tail compatibility entries는 regression
+checkpoint로만 남기고, Main에 가장 가까운 target은
+`D5M4H2Skeleton.PaperRowsDirectRibbonCollapseInput`이다. RF2를 direct
+layer-equivalence/skew-product route로 별도 포장할 때는
+`D5M4H2Skeleton.PaperRowsLayerEquivRibbonCollapseInput` 또는
+`D5M4H2Skeleton.PaperRowsSkewProductRibbonCollapseInput`를 compatibility target으로
+사용한다.
 read side를 논문 §11 표처럼 terminal/pre-final/final-carry row-word table로
-공급하는 경우 `ResetPortFullPaperRowWordReadGoals`와
-`ResetPortH2SkewProductPrefixRowReadData`를 쓰면 된다.
-prefix path side까지 같은 표 단위로 공급하는 경우
-`ResetPortFullPaperTableGoals`와 `ResetPortH2PaperTableData`가 현재 가장
-compact한 H2 handoff다. RF2를 이미 닫은 base row라면
+공급하는 `ResetPortFullPaperRowWordReadGoals` route는 Lean에서 overstrong으로
+확인되었으므로 regression checkpoint로만 둔다. RF2를 이미 닫은 base row라면
 `finalLowD5M4RootFlatCertificateFamily_of_resetPortBasePaperTableGoals`가 이 table을
 직접 split realization route로 올린다.
 세 필드가 따로 있으면 `resetPortH2PaperTableData_of_fields`로 최상위 handoff를
@@ -358,8 +379,9 @@ split tail 입력은
 `resetPortFinalYShiftPathOnGoal_of_zFirstLastStepSplitPathOnGoal`,
 `resetPortFinalYTerminalPathOnGoal_of_zFirstTailSplitPathOnGoal`으로 바로 올린다.
 singleton partial-exchange RF2가 필요한 경우
-`ResetPortH2PaperSingletonCoreYFirstZFirstTailData`가, 일반 partial-exchange RF2가
-필요한 경우 `ResetPortH2PaperTailRealizationData`가 호환 entry로 남아 있다.
+`ResetPortH2PaperSingletonCoreYFirstZFirstTailData`는 현재 core-tail prefix 반례 때문에
+본선 target이 아니다. 일반 partial-exchange RF2가 필요한 경우에도 최종 handoff는
+`ResetPortH2PaperTailRealizationData`보다 broad ribbon-collapse input으로 잡는다.
 pre-final terminal no-first는 no-reset terminal-A2 core와 reset-port residual로
 분리되어 있고, pre-final terminal first-carry는 no-final source의 forced `y += 1`
 first step 뒤 collapsed terminal tail, 그리고 final-site conflict residual로
@@ -385,13 +407,13 @@ skew-product prefix/read, row-read, table entry도 이 split-data route로 내�
 layer-equiv/combined 변환은 호환 adapter로만 남는다. paper table과 paper certificate
 entry는 base-level paper-table theorem으로 바로 내려간다.
 
-## 4. H3 완료, H4 generated witness 비활성화 (D7(4)·D7(6))
+## 4. H3/H4 generated witnesses 비활성화 (D7(4)·D7(6))
 
 아카이브의 generated blob root-flat certificates는 둘 다 포팅되어 개별 target으로는
-검증 가능하다. 다만 H4 `D7(6)`은 대형 blob certificate 의존을 줄이고 논문 Appendix
-A/B의 two-rail 구조를 포팅하기 위해 기본 proof spine에서 제외했다. 즉
-`LowD7M6Finite`는 archive/명시 검증 target이지, `Main.assume_lowD7M6`의 discharge로
-쓰지 않는다.
+검증 가능하다. 다만 H3 `D7(4)`와 H4 `D7(6)`은 blob certificate 의존을 줄이고 논문
+Appendix A/B의 two-rail 구조를 포팅하기 위해 기본 proof spine에서 제외했다. 즉
+`LowD7M4Finite`/`LowD7M6Finite`는 archive/명시 검증 target이지,
+`Main.assume_lowD7M4`/`Main.assume_lowD7M6`의 discharge로 쓰지 않는다.
 
 ```lean
 LowD7M4Finite.finalLowD7M4RootFlatCertificateFamily
@@ -413,13 +435,9 @@ one-isolate forests, primitive closing columns, support rows, reserve coordinate
 folded terminal words를 재현 검증한다. 반면 현재 Lean 포팅은 실제 root-flat
 schedule 전체의 Latin/bijective/single-cycle 조건을 kernel에서 확인한다.
 
-따라서 이 방법이 유일한 것은 아니다. 논문 충실형 대안은 D7 folded rank-three
+따라서 이 방법은 이제 기본 spine의 목표가 아니다. 논문 충실형 대안은 D7 folded rank-three
 endpoint proof를 `word-skew product`, `unit-carry`, seven-site separation,
-singleton selector, reserve cylinder 정리로 직접 형식화하는 것이다. 다만 현재
-`FinalMarkedTarget`은 ordinary torus decomposition의 abbrev이므로, 현재 proof graph의
-저차원 base를 닫는 데는 generated root-flat certificate가 충분하다. 반대로 H5/H6는
-파라메트릭 high-even growth와 endpoint successor 자체가 남은 promotion이므로, 단순
-finite certificate 우회만으로는 맞지 않고 논문식 구조 포팅이 더 자연스럽다.
+singleton selector, reserve cylinder 정리로 직접 형식화하는 것이다.
 
 ## 5. H6 (endpoint successor) — §9–10
 - 파라메트릭(b→2b+1). 단일순환은 `UnitCarry.productExponentSingleCycle`/
@@ -428,13 +446,13 @@ finite certificate 우회만으로는 맞지 않고 논문식 구조 포팅이 �
   promotion 조립(`finalOddEndpointPhaseProductPromotion_of_*`).
 
 ## 6. 요약 — 남은 핵심 1줄
-> H3는 generated finite root-flat certificate로 닫혔다. H2와 H4는 generated witness를
-> archive/명시 target으로 보존하되 기본 spine에서는 비활성화했다. 남은 것은 H1(D3 even root-flat family),
-> H2(D5(4) structural reset-port replacement), H4(D7(6) structural replacement),
+> H2/H3/H4 generated witnesses는 archive/명시 target으로 보존하되 기본 spine에서는
+> 비활성화했다. 남은 것은 H1(D3 even root-flat family), H2(D5(4) structural
+> reset-port replacement), H3/H4(D7(4)/D7(6) structural two-rail replacement),
 > H5(odd high-modulus promotion), H6(endpoint successor promotion)이다.
 
 관련 파일: `LowD5M4Finite.lean`(H2 generated witness, 기본 spine 비활성),
-`LowD7M4Finite.lean`(H3 certificate ✅), `LowD7M6Finite.lean`(H4 generated witness,
+`LowD7M4Finite.lean`(H3 archive/explicit-only witness), `LowD7M6Finite.lean`(H4 generated witness,
 기본 spine 비활성),
 `FiniteArrayCert.lean`(array/blob checker), `StandardRootFlatLift.lean`(D7 lift),
 `LowD5M4Seed.lean`(단일순환 ✅), `LowD5M4Schedule.lean`(D5 인프라),
@@ -450,7 +468,7 @@ finite certificate 우회만으로는 맞지 않고 논문식 구조 포팅이 �
 - 2026-06-04 갱신: `LowD5M4Finite`와 `LowD7M6Finite`를 기본 proof spine에서 제외.
   이후
   `lake env lean EvenV11/Main.lean` / `lake build EvenV11`의 예상 `sorry`는
-  5개(H1/H2/H4/H5/H6; H2 warning은 `assume_lowD5M4RibbonRealizationData`).
+  6개(H1/H2/H3/H4/H5/H6; H2 warning은 `assume_lowD5M4RibbonCollapseInput`).
 - `scripts/check_evenv11_progress.sh`는 `lake build EvenV11`을 확인하고, 보존용
   generated/archive finite 파일의 `native_decide`는 구조 포팅 실패로 보지 않는다.
   대신 structural module에서 새 `native_decide`가 나오거나 H2/H4 generated finite

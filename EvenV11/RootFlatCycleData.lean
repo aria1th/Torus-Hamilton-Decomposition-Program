@@ -1,5 +1,6 @@
 import EvenV11.StandardRootFlatLift
 import EvenV11.FinalTargetLowBaseRootFlatCertificateBridge
+import EvenV11.FinalRangeBookkeepingBridge
 
 /-!
 # Generic root-flat cycle-data → certificate reduction (connective glue)
@@ -93,6 +94,29 @@ theorem finalLowD7M4RootFlatCertificateFamily_of_nonemptyCycleData
     (hData : Nonempty (RootFlatCycleData 6 4)) :
     FinalLowD7M4RootFlatCertificateFamily :=
   finalLowD7M4RootFlatCertificateFamily_of_cycleData (Classical.choice hData)
+
+/-! ## H1 wiring: `D₃(m)`, parametric over all even `m ≥ 4` -/
+
+/-- `EvenModulusRange m` (which contains `4 ≤ m`) gives `NeZero m`. -/
+theorem neZero_of_evenModulusRange {m : Nat} (hm : EvenModulusRange m) :
+    NeZero m :=
+  ⟨by have := hm.1; omega⟩
+
+/-- Parametric H1 obligation: a standard-lift root-flat cycle-data
+(`dir` on `Fin 2 → ZMod m` with RF1/RF2/RF3) for **every** even `m ≥ 4`.
+This is the paper §5 terminal-`A₂` content in the uniform RF interface. -/
+abbrev D3EvenCycleDataFamily : Prop :=
+  ∀ {m : Nat} (hm : EvenModulusRange m),
+    Nonempty (@RootFlatCycleData 2 m (neZero_of_evenModulusRange hm))
+
+/-- The `D₃`-even root-flat family from parametric cycle-data. (`n = 2`,
+`n + 1 = 3`.) -/
+theorem finalD3EvenRootFlatCertificateFamily_of_d3EvenCycleDataFamily
+    (h : D3EvenCycleDataFamily) :
+    FinalD3EvenRootFlatCertificateFamily where
+  rootFlatCertificate := fun {m} hm =>
+    @finalRootFlatTorusCertificate_of_cycleData 2 m
+      (neZero_of_evenModulusRange hm) (Classical.choice (h hm))
 
 end RootFlatCycle
 end EvenV11
