@@ -252,10 +252,12 @@ obligations in the active Lean interface.  `D54PaperRealization` can now be
 built from a `D54FiveSwitchRealization` by filling `D54ResetData`'s closed table
 certificate and avoidance facts, and `EvenV11.Main` exposes
 `lowD5M4_of_paperRealization` / `lowD5M4_of_paperRealizationLadder` for the
-final low-base certificate.  It also exposes the stage-wise theorem
-`lowD5M4_of_paperStagesTwoStageSingleton`, whose remaining inputs are exactly:
-terminal realization, product-base realization, and two-stage singleton-switch
-realization.  Thus the smallest current paper-realization target is
+final low-base certificate.  It also exposes the stage-wise theorems
+`lowD5M4_of_paperStagesTwoStageSingleton` and the narrower
+`lowD5M4_of_paperStagesTwoStageLayerConjSingleton`.  The latter takes exactly:
+terminal realization, product-base realization, and a two-stage
+layer-conjugacy singleton-switch realization.  Thus the smallest current
+paper-realization target is
 
 ```lean
 H2.D54.D54FiveSwitchRealization
@@ -279,21 +281,27 @@ There is now also a fixed two-stage seed-model target:
 
 ```lean
 H2.D54.D54TwoStageLayerModelRealization
+H2.D54.D54TwoStageLayerConjRealization
 ```
 
-It asks only for physical layer maps conjugate to the closed
-`seedTwoStageFullReturnLayer` model plus RF2.  This target is useful as an audit
-or as a bridge endpoint for the paper switch model, because its return fold,
-layer bijectivity, and return single-cycle facts are already closed in Lean.
+The `LayerModel` form asks for physical layer maps conjugate to the closed
+`seedTwoStageFullReturnLayer` model plus RF2.  The newer `LayerConj` form drops
+that RF2 field: `physical_layerBijective_of_seedLayer_conj` derives it from
+the layerwise conjugacy and `seedTwoStageFullReturnLayer_bijective`.  This target
+is useful as an audit or as a bridge endpoint for the paper switch model,
+because its return fold, layer bijectivity, and return single-cycle facts are
+already closed in Lean.
 
 If the same rows also carry singleton-switch RF2 data, Lean now exposes the
 direct bridge:
 
 ```lean
 H2.D54.D54TwoStageSingletonSwitchRealization
+H2.D54.D54TwoStageLayerConjSingletonSwitchRealization
 H2.D54.D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
 H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
+EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,
@@ -321,6 +329,8 @@ The return-level fold itself is now also represented by a closed fixed seed
 model:
 
 ```lean
+postBaseCarry_after_RbaseNeutral_eq_Rhat
+seedLayerReturn_twoStageFullReturnLayer
 seedTwoStageFullReturnLayer_return_eq_Rhat
 seedTwoStageFullReturnLayer_bijective
 seedTwoStageFullReturnLayer_return_singleCycle

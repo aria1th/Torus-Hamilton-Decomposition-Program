@@ -223,6 +223,8 @@ show that the old `H2TableRouteSkeleton` predicates overlap on the pre-final
 Active Lean refinement: the return-level fold target has a closed seed model.
 
 ```lean
+postBaseCarry_after_RbaseNeutral_eq_Rhat
+seedLayerReturn_twoStageFullReturnLayer
 seedTwoStageFullReturnLayer_return_eq_Rhat :
   forall c s,
     seedLayerReturn seedTwoStageFullReturnLayer c s = Rhat c s
@@ -241,21 +243,27 @@ same rows satisfy:
 
 ```lean
 D54TwoStageSingletonSwitchRealization
+D54TwoStageLayerConjSingletonSwitchRealization
 ```
 
 Lean now upgrades this directly to `D54FiveSwitchRealization` and then to
-`D54PaperRealization` with the closed D54 table facts.  Alternatively, T8 can
-prove the equivalent singleton-switch seed fold and then identify it with this
-model.
+`D54PaperRealization` with the closed D54 table facts.  In the `LayerConj`
+version, RF2 for the layer model is derived automatically by
+`physical_layerBijective_of_seedLayer_conj`; the caller supplies only layerwise
+conjugacy plus the singleton-switch RF2 certificate for the same rows.
+Alternatively, T8 can prove the equivalent singleton-switch seed fold and then
+identify it with this model.
 
 The public stage-wise assembly endpoint is:
 
 ```lean
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
+EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 ```
 
 It takes exactly the three remaining construction stages: terminal realization,
-product-base realization, and two-stage singleton-switch realization.
+product-base realization, and two-stage layer-conjugacy singleton-switch
+realization.
 
 ### T9. H2 Certificate Assembly
 

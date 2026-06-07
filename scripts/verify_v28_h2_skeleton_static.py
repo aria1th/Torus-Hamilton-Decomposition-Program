@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = [
     "EvenV11/LowD5M4RibbonInterface.lean",
+    "EvenV11/D54ReturnCore.lean",
     "EvenV11/LowD5M4TameObstruction.lean",
     "EvenV11/V28Hard/ChecklistH2RootFlat.lean",
     "EvenV11/V28Hard/ChecklistFromHardParts.lean",
@@ -29,6 +30,16 @@ H2_TOKENS = [
     "PhysicalSingletonSwitchLayerData",
     "physicalRowsLayerBijective_of_singletonSwitchLayerData",
     "returnRealization_of_returnMap_conj",
+]
+
+H2_CORE_TOKENS = [
+    "postBaseCarry_after_RbaseNeutral_eq_Rhat",
+    "seedLayerReturn_twoStageFullReturnLayer",
+    "physical_layerBijective_of_seedLayer_conj",
+    "structure D54ProductBaseLayerConjRealization",
+    "structure D54TwoStageLayerConjRealization",
+    "structure D54TwoStageLayerConjSingletonSwitchRealization",
+    "finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSingleton",
 ]
 
 OBSTRUCTION_TOKENS = [
@@ -100,6 +111,11 @@ def main() -> None:
         if token not in h2:
             fail(f"active H2 interface token missing: {token}")
 
+    h2_core = (ROOT / "EvenV11/D54ReturnCore.lean").read_text()
+    for token in H2_CORE_TOKENS:
+        if token not in h2_core:
+            fail(f"active H2 core token missing: {token}")
+
     obstruction = (ROOT / "EvenV11/LowD5M4TameObstruction.lean").read_text()
     for token in OBSTRUCTION_TOKENS:
         if token not in obstruction:
@@ -132,6 +148,7 @@ def main() -> None:
     print("active v28 H2 interface static checks passed")
     print(f"required files: {len(REQUIRED)}")
     print(f"active H2 tokens: {len(H2_TOKENS)}")
+    print(f"active H2 core tokens: {len(H2_CORE_TOKENS)}")
     print(f"tame obstruction tokens: {len(OBSTRUCTION_TOKENS)}")
     print(f"broad row-read blocker tokens: {len(BROAD_ROW_READ_BLOCKER_TOKENS)}")
     print("archive-dependent H2/D7 checkpoint files are quarantined under archive/")

@@ -255,6 +255,8 @@ that those five switches produce exactly `Rhat`.
 calculation:
 
 ```lean
+postBaseCarry_after_RbaseNeutral_eq_Rhat
+seedLayerReturn_twoStageFullReturnLayer
 seedTwoStageFullReturnLayer_return_eq_Rhat
 seedTwoStageFullReturnLayer_bijective
 seedTwoStageFullReturnLayer_return_singleCycle
@@ -271,14 +273,18 @@ The corresponding active Lean handoff is:
 
 ```lean
 D54TwoStageLayerModelRealization
+D54TwoStageLayerConjRealization
 ```
 
 Supplying this fixed-layer conjugacy already produces the existing H2 ribbon
-data.  If the same rows also come with singleton-switch RF2 data, the new
-intermediate target
+data.  In the newer `D54TwoStageLayerConjRealization` form, RF2 is derived by
+`physical_layerBijective_of_seedLayer_conj` from the layerwise conjugacy and
+`seedTwoStageFullReturnLayer_bijective`, so it is not a separate field.  If the
+same rows also come with singleton-switch RF2 data, the intermediate targets
 
 ```lean
 D54TwoStageSingletonSwitchRealization
+D54TwoStageLayerConjSingletonSwitchRealization
 ```
 
 upgrades directly to `D54FiveSwitchRealization`, and the closed D54 table facts
@@ -290,10 +296,11 @@ The public stage-wise endpoint is now:
 
 ```lean
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
+EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 ```
 
 so the remaining inputs are exactly terminal realization, product-base
-realization, and the two-stage singleton-switch realization.
+realization, and the two-stage layer-conjugacy singleton-switch realization.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 
