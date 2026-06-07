@@ -77,6 +77,7 @@ TERMINAL_SEARCH_TOKENS = [
     "TerminalA2M4TransportedSeedRowRealization",
     "target_triple_for_emap",
     "factor_fixed_emap",
+    "relation_signature",
     "common_conjugacy",
     "sample_four_layer_candidates",
     "two_layer_products",

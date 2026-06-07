@@ -192,6 +192,15 @@ def terminal_target_triple() -> Layer:
     return (out[0], out[1], out[2])
 
 
+def relation_signature(layer: Layer) -> tuple[tuple[int, ...], tuple[int, ...], tuple[int, ...]]:
+    """Cycle types of `(R0 o R1, R0 o R2, R1 o R2)`."""
+    return (
+        cycle_type(compose(layer[0], layer[1])),
+        cycle_type(compose(layer[0], layer[2])),
+        cycle_type(compose(layer[1], layer[2])),
+    )
+
+
 def common_conjugacy(target: Layer, actual: Layer, start: int = ORIGIN) -> list[int] | None:
     """Return one bijection `e` with `actual_i(e x)=e(target_i x)`, if found."""
     for image_start in range(N):
@@ -287,11 +296,12 @@ def sample_four_layer_candidates(
     rng = random.Random(seed)
     pair_blobs = list(table.pair_index.keys())
     target = terminal_target_triple()
+    target_relation_signature = relation_signature(target)
     relation_hist: dict[int, int] = {}
     single_relation_hist: dict[int, int] = {}
     single_cycle_hits = 0
     relation_33_hits = 0
-    filtered_checks = 0
+    full_signature_hits = 0
     common_conj_hits = 0
 
     for k in range(samples):
@@ -314,8 +324,10 @@ def sample_four_layer_candidates(
         relation_hist[relation_order] = relation_hist.get(relation_order, 0) + 1
         if relation_order == 33:
             relation_33_hits += 1
-        if all_single and relation_order == 33:
-            filtered_checks += 1
+        full_signature = relation_signature(actual) == target_relation_signature
+        if all_single and full_signature:
+            full_signature_hits += 1
+        if all_single and full_signature:
             emap = common_conjugacy(target, actual)
             if emap is not None:
                 common_conj_hits += 1
@@ -343,7 +355,7 @@ def sample_four_layer_candidates(
     print(f"sampled_four_layer={samples}", flush=True)
     print(f"sample_single_cycle_triples={single_cycle_hits}", flush=True)
     print(f"sample_relation_order_33={relation_33_hits}", flush=True)
-    print(f"sample_single_cycle_and_relation_order_33={filtered_checks}", flush=True)
+    print(f"sample_single_cycle_and_full_relation_signature={full_signature_hits}", flush=True)
     print(f"sample_common_conjugacy_hits={common_conj_hits}", flush=True)
     print(f"sample_relation_order_hist_top={top_orders}", flush=True)
     print(f"sample_single_cycle_relation_order_hist_top={top_single_orders}", flush=True)

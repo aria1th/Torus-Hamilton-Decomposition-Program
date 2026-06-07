@@ -356,10 +356,12 @@ Lean table certificate for `TerminalA2M4TransportedSeedRowRealization`.
 The same helper can sample full four-layer triples and test common conjugacy to
 the paper terminal triple.  With seed `20260608`, 20,000 sampled four-layer
 triples produced 33 triples whose three color returns were all 16-cycles and
-253 triples with relation order `order(R0 o R2)=33`, but none satisfying both
-conditions and hence no common-conjugacy witness.  This is not an obstruction
-theorem; it shows that a terminal `eT` witness is not likely to appear from an
-unstructured random section or random four-layer product.
+253 triples with relation order `order(R0 o R2)=33`.  None matched the full
+paper pair-relation signature
+`((1,1,7,7), (1,1,3,11), (8,8))` while also having three 16-cycle returns, and
+there was no common-conjugacy witness.  This is not an obstruction theorem; it
+shows that a terminal `eT` witness is not likely to appear from an unstructured
+random section or random four-layer product.
 
 The most structured active paper target is now:
 
