@@ -1497,6 +1497,34 @@ theorem TerminalA2M4PhysicalRealization.not_colorAnchoredOriginRow
     decide
   exact hne (hbij.1 hdup)
 
+theorem TerminalA2M4TransportedSeedRowRealization.returnsSingleCycle
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    H.toPhysicalRealization.rows.returnsSingleCycle :=
+  H.toPhysicalRealization.returnsSingleCycle
+
+theorem TerminalA2M4TransportedSeedRowRealization.return_eq_terminalReturn
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ c : TorusColor 3, ∀ q : Q4,
+      H.eT.symm (H.toPhysicalRealization.rows.returnMap c (H.eT q)) =
+        terminalReturn (m := 4) c q :=
+  H.toPhysicalRealization.return_eq_terminalReturn
+
+theorem TerminalA2M4TransportedSeedRowRealization.not_terminalRootEquivSection
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    H.eT ≠ terminalRootEquiv.symm :=
+  H.toPhysicalRealization.not_terminalRootEquivSection
+
+theorem TerminalA2M4TransportedSeedRowRealization.not_colorAnchoredOriginRow
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ¬ (∀ c : TorusColor 3,
+      H.seedRow (0 : Z4) (H.eT.symm terminalOrigin) c =
+        colorAnchoredTerminalDir terminalOrigin c) := by
+  intro hrow
+  exact H.toPhysicalRealization.not_colorAnchoredOriginRow (by
+    intro c
+    simpa [TerminalA2M4SeedRowRealization.rows,
+      terminalScheduleOfSeedRow] using hrow c)
+
 /-- Completed return-level D54 core.  The only missing H2 part is now the
 physical row/ribbon realization that transports these maps to root-flat rows. -/
 structure D54ReturnLevelCore where
@@ -1726,6 +1754,21 @@ theorem D54ProductBaseSeedRowRealization.returnMap_not_singleCycle
       ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c) :=
   H.toProductBaseRealization.returnMap_not_singleCycle c
 
+theorem D54ProductBaseTransportedSeedRowRealization.returnMapConj_RbaseNeutral
+    (H : D54ProductBaseTransportedSeedRowRealization) :
+    ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4RibbonInterface.schedule H.toSeedRowRealization.rows0).returnMap
+          c w =
+        H.e0 (RbaseNeutral c (H.e0.symm w)) :=
+  H.toSeedRowRealization.returnMapConj_RbaseNeutral
+
+theorem D54ProductBaseTransportedSeedRowRealization.returnMap_not_singleCycle
+    (H : D54ProductBaseTransportedSeedRowRealization) (c : TorusColor 5) :
+    ¬ Shared.IsSingleCycleMap
+      ((LowD5M4RibbonInterface.schedule H.toSeedRowRealization.rows0).returnMap
+        c) :=
+  H.toProductBaseRealization.returnMap_not_singleCycle c
+
 /-- Fixed two-stage seed-model realization target.  This is not a construction
 of the paper rows by itself; it is a useful narrowed handoff: once physical rows
 are known to be layerwise conjugate to `seedTwoStageFullReturnLayer`, the return
@@ -1867,6 +1910,11 @@ theorem D54TwoStageLayerConjRealization.returnMapConj_Rhat
     (H : D54TwoStageLayerConjRealization) :
     PhysicalRowsReturnMapConjGoal H.rows H.e :=
   H.toLayerModelRealization.toMapConjRibbonCollapseInput.returnMapConj
+
+theorem D54TwoStageTransportedSeedRowRealization.returnMapConj_Rhat
+    (H : D54TwoStageTransportedSeedRowRealization) :
+    PhysicalRowsReturnMapConjGoal H.toSeedRowRealization.rows H.e :=
+  H.toLayerConjRealization.returnMapConj_Rhat
 
 /-- The five local switches after the product base has been built.  This is the
 precise row-level target needed by the current H2 handoff. -/
@@ -2141,6 +2189,11 @@ def D54TwoStageLayerConjSingletonSwitchRealization.toFiveSwitchRealization
     D54FiveSwitchRealization :=
   H.toTwoStageSingletonSwitchRealization.toFiveSwitchRealization
 
+def D54TwoStageTransportedSeedRowSingletonSwitchRealization.toFiveSwitchRealization
+    (H : D54TwoStageTransportedSeedRowSingletonSwitchRealization) :
+    D54FiveSwitchRealization :=
+  H.toLayerConjSingletonSwitchRealization.toFiveSwitchRealization
+
 def D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
     (H : D54FiveSwitchSeedSwitchRealization) :
     D54FiveSwitchRealization :=
@@ -2208,6 +2261,19 @@ theorem D54TwoStageTransportedSeedRowSingletonSwitchRealization.lowBaseFamily
     (H : D54TwoStageTransportedSeedRowSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H.toSeedRowSingletonSwitchRealization.lowBaseFamily
+
+theorem D54TwoStageTransportedSeedRowSingletonSwitchRealization.returnMapConj_Rhat
+    (H : D54TwoStageTransportedSeedRowSingletonSwitchRealization) :
+    PhysicalRowsReturnMapConjGoal
+      H.seedRows.toSeedRowRealization.rows H.seedRows.e :=
+  by
+    simpa [D54TwoStageTransportedSeedRowSingletonSwitchRealization.toFiveSwitchRealization,
+      D54TwoStageTransportedSeedRowSingletonSwitchRealization.toLayerConjSingletonSwitchRealization,
+      D54TwoStageTransportedSeedRowSingletonSwitchRealization.toSeedRowSingletonSwitchRealization,
+      D54TwoStageSeedRowSingletonSwitchRealization.toLayerConjSingletonSwitchRealization,
+      D54TwoStageSeedRowRealization.toLayerConjRealization,
+      D54TwoStageSeedRowRealization.rows]
+      using H.toFiveSwitchRealization.returnMapConj_Rhat
 
 theorem D54FiveSwitchSeedSwitchRealization.nonemptyRibbonData
     (H : D54FiveSwitchSeedSwitchRealization) :
