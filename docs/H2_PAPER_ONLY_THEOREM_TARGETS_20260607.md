@@ -207,6 +207,19 @@ H2 low-base obligation through the direct finite RF certificate packaged in
 replace that direct/generated route by the paper's terminal/product/five-switch
 ribbon realization.
 
+Do not revive the archived broad row-read table route as T8.  The archive
+theorems
+
+```lean
+not_preFinalP0P1RowWordReadGoals
+H2TableRouteSkeleton_false
+```
+
+show that the old `H2TableRouteSkeleton` predicates overlap on the pre-final
+`P0/P1` read.  The viable targets are path-local split data such as
+`H2SkewProductPathRouteSkeleton`, or the active `H2RibbonCollapseInput` /
+`D54FiveSwitchRealization` handoff.
+
 Active Lean refinement: the return-level fold target has a closed seed model.
 
 ```lean

@@ -194,6 +194,19 @@ layer/color switch:
 
 Those are required to prove RF2 without a finite blob.
 
+Archive Lean also records a separate row-read blocker for the old table route:
+the broad pre-final `P0/P1` read predicates overlap.  The theorem
+
+```lean
+not_preFinalP0P1RowWordReadGoals
+H2TableRouteSkeleton_false
+```
+
+in `archive/EvenV11/V28Hard/D5M4H2PaperRows.lean` shows that the legacy
+`H2TableRouteSkeleton` cannot be the next target as stated.  The active route
+must use a path-local split such as `H2SkewProductPathRouteSkeleton`, or the
+broader row/ribbon handoff `H2RibbonCollapseInput` / `D54FiveSwitchRealization`.
+
 ## Gap 5. Switching-Ribbon Realization Is Not Given in a D54-Ready Form
 
 The paper's switching-ribbon lemma explains that local two-color ribbons realize

@@ -37,6 +37,18 @@ OBSTRUCTION_TOKENS = [
     "not_returnMapConj_tameSeedRootEquiv",
 ]
 
+BROAD_ROW_READ_BLOCKER_TOKENS = [
+    "not_preFinalP0P1RowWordReadGoals",
+    "H2TableRouteSkeleton_false",
+]
+
+DOC_ROW_READ_BLOCKER_TOKENS = [
+    "not_preFinalP0P1RowWordReadGoals",
+    "H2TableRouteSkeleton_false",
+    "H2SkewProductPathRouteSkeleton",
+    "H2RibbonCollapseInput",
+]
+
 
 def fail(msg: str) -> None:
     print(f"ERROR: {msg}", file=sys.stderr)
@@ -93,6 +105,18 @@ def main() -> None:
         if token not in obstruction:
             fail(f"H2 tame obstruction token missing: {token}")
 
+    archived_paper_rows = (
+        ROOT / "archive/EvenV11/V28Hard/D5M4H2PaperRows.lean"
+    ).read_text()
+    for token in BROAD_ROW_READ_BLOCKER_TOKENS:
+        if token not in archived_paper_rows:
+            fail(f"H2 broad row-read blocker token missing: {token}")
+
+    h2_plan = (ROOT / "docs/V28_H2_SKELETON_PLAN_20260607.md").read_text()
+    for token in DOC_ROW_READ_BLOCKER_TOKENS:
+        if token not in h2_plan:
+            fail(f"H2 plan no longer records broad row-read blocker: {token}")
+
     new_files = [ROOT / rel for rel in REQUIRED if rel.endswith(".lean")]
     bad_sorry = []
     for path in new_files:
@@ -109,6 +133,7 @@ def main() -> None:
     print(f"required files: {len(REQUIRED)}")
     print(f"active H2 tokens: {len(H2_TOKENS)}")
     print(f"tame obstruction tokens: {len(OBSTRUCTION_TOKENS)}")
+    print(f"broad row-read blocker tokens: {len(BROAD_ROW_READ_BLOCKER_TOKENS)}")
     print("archive-dependent H2/D7 checkpoint files are quarantined under archive/")
 
 
