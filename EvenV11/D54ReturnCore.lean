@@ -805,6 +805,91 @@ abbrev reservePoints : List D54ResetData.D54Point :=
 
 def q4 (x y : Nat) : Q4 := D54ResetData.d54q4 x y
 
+/-- Boolean equality on `Q4`, used by finite table certificates below. -/
+def q4EqBool (a b : Q4) : Bool :=
+  decide (a = b)
+
+def q4MemBool (q : Q4) (xs : List Q4) : Bool :=
+  xs.any (fun x => q4EqBool x q)
+
+def q4NodupBool : List Q4 → Bool
+  | [] => true
+  | x :: xs => !q4MemBool x xs && q4NodupBool xs
+
+def q4ListEqBool : List Q4 → List Q4 → Bool
+  | [], [] => true
+  | x :: xs, y :: ys => q4EqBool x y && q4ListEqBool xs ys
+  | _, _ => false
+
+def q4NonemptyBool : List Q4 → Bool
+  | [] => false
+  | _ :: _ => true
+
+def Q4UniverseList : List Q4 :=
+  [q4 0 0, q4 0 1, q4 0 2, q4 0 3,
+   q4 1 0, q4 1 1, q4 1 2, q4 1 3,
+   q4 2 0, q4 2 1, q4 2 2, q4 2 3,
+   q4 3 0, q4 3 1, q4 3 2, q4 3 3]
+
+/-- A finite orbit block check for a map on `Q4`.  Each listed block must be
+nonempty, have no repeated entries, and rotate under `f`. -/
+def q4CycleBlockOkBool (f : Q4 → Q4) (xs : List Q4) : Bool :=
+  q4NodupBool xs &&
+    q4NonemptyBool xs &&
+    q4ListEqBool (xs.map f) (xs.drop 1 ++ [xs.headD (q4 0 0)])
+
+def q4CycleBlockCertificate (f : Q4 → Q4) (blocks : List (List Q4)) : Prop :=
+  q4NodupBool (blocks.flatMap id) = true ∧
+    Q4UniverseList.all (fun q => q4MemBool q (blocks.flatMap id)) = true ∧
+    blocks.all (q4CycleBlockOkBool f) = true
+
+/-- Full cycle-type table for `F0 ∘ F1`; lengths are `(1,1,7,7)`. -/
+def terminalF0F1CycleBlocks : List (List Q4) :=
+  [[q4 0 2],
+   [q4 1 3],
+   [q4 0 0, q4 2 0, q4 2 1, q4 0 1, q4 1 1, q4 2 2, q4 3 3],
+   [q4 0 3, q4 1 0, q4 1 2, q4 2 3, q4 3 0, q4 3 1, q4 3 2]]
+
+/-- Full cycle-type table for `F0 ∘ F2`; lengths are `(1,1,3,11)`. -/
+def terminalF0F2CycleBlocks : List (List Q4) :=
+  [[q4 2 1],
+   [q4 3 2],
+   [q4 1 0, q4 2 0, q4 3 0],
+   [q4 0 0, q4 1 1, q4 1 2, q4 1 3, q4 3 3, q4 3 1,
+    q4 0 1, q4 0 2, q4 2 2, q4 2 3, q4 0 3]]
+
+/-- Full cycle-type table for `F1 ∘ F2`; lengths are `(8,8)`. -/
+def terminalF1F2CycleBlocks : List (List Q4) :=
+  [[q4 0 0, q4 2 0, q4 1 2, q4 3 2, q4 1 0, q4 3 3, q4 1 3, q4 0 2],
+   [q4 0 1, q4 2 1, q4 0 3, q4 3 1, q4 2 3, q4 1 1, q4 3 0, q4 2 2]]
+
+theorem terminalF0F1_cycleBlockCertificate :
+    q4CycleBlockCertificate terminalF0F1 terminalF0F1CycleBlocks := by
+  unfold q4CycleBlockCertificate
+  decide
+
+theorem terminalF0F2_cycleBlockCertificate :
+    q4CycleBlockCertificate terminalF0F2 terminalF0F2CycleBlocks := by
+  unfold q4CycleBlockCertificate
+  decide
+
+theorem terminalF1F2_cycleBlockCertificate :
+    q4CycleBlockCertificate terminalF1F2 terminalF1F2CycleBlocks := by
+  unfold q4CycleBlockCertificate
+  decide
+
+theorem terminalF0F1_cycleBlockLengths :
+    terminalF0F1CycleBlocks.map List.length = [1, 1, 7, 7] :=
+  rfl
+
+theorem terminalF0F2_cycleBlockLengths :
+    terminalF0F2CycleBlocks.map List.length = [1, 1, 3, 11] :=
+  rfl
+
+theorem terminalF1F2_cycleBlockLengths :
+    terminalF1F2CycleBlocks.map List.length = [8, 8] :=
+  rfl
+
 def c0 : Q4 := q4 0 3
 def c1 : Q4 := q4 3 0
 def c2 : Q4 := q4 3 3
@@ -1898,6 +1983,18 @@ structure D54ReturnLevelCore where
   terminalF1F2NoSmallerPositiveOrder :
     ∀ n : Nat, n ∈ List.range 8 → n ≠ 0 →
       ∃ q : Q4, (terminalF1F2^[n]) q ≠ q
+  terminalF0F1CycleBlockCertificate :
+    q4CycleBlockCertificate terminalF0F1 terminalF0F1CycleBlocks
+  terminalF0F1CycleBlockLengths :
+    terminalF0F1CycleBlocks.map List.length = [1, 1, 7, 7]
+  terminalF0F2CycleBlockCertificate :
+    q4CycleBlockCertificate terminalF0F2 terminalF0F2CycleBlocks
+  terminalF0F2CycleBlockLengths :
+    terminalF0F2CycleBlocks.map List.length = [1, 1, 3, 11]
+  terminalF1F2CycleBlockCertificate :
+    q4CycleBlockCertificate terminalF1F2 terminalF1F2CycleBlocks
+  terminalF1F2CycleBlockLengths :
+    terminalF1F2CycleBlocks.map List.length = [8, 8]
   twoStageLayerBijective :
     ∀ t : ZMod 4, ∀ c : TorusColor 5,
       Function.Bijective (seedTwoStageFullReturnLayer t c)
@@ -1925,6 +2022,18 @@ def d54ReturnLevelCore : D54ReturnLevelCore where
   terminalF1F2Order8 := terminalF1F2_iterate_8
   terminalF1F2NoSmallerPositiveOrder :=
     terminalF1F2_no_positive_iterate_lt8
+  terminalF0F1CycleBlockCertificate :=
+    terminalF0F1_cycleBlockCertificate
+  terminalF0F1CycleBlockLengths :=
+    terminalF0F1_cycleBlockLengths
+  terminalF0F2CycleBlockCertificate :=
+    terminalF0F2_cycleBlockCertificate
+  terminalF0F2CycleBlockLengths :=
+    terminalF0F2_cycleBlockLengths
+  terminalF1F2CycleBlockCertificate :=
+    terminalF1F2_cycleBlockCertificate
+  terminalF1F2CycleBlockLengths :=
+    terminalF1F2_cycleBlockLengths
   twoStageLayerBijective := seedTwoStageFullReturnLayer_bijective
   twoStageReturn_eq_Rhat := seedTwoStageFullReturnLayer_return_eq_Rhat
   twoStageReturnSingleCycle := seedTwoStageFullReturnLayer_return_singleCycle
