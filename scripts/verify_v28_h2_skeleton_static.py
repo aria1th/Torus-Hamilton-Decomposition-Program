@@ -46,6 +46,8 @@ H2_CORE_TOKENS = [
     "finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSingleton",
     "finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages",
     "finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages",
+    "structure TerminalA2M4SeedRowRealization",
+    "finalLowD5M4RootFlatCertificateFamily_of_paperAllSeedRowStages",
 ]
 
 OBSTRUCTION_TOKENS = [

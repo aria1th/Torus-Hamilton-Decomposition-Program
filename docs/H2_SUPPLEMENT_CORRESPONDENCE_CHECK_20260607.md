@@ -256,10 +256,11 @@ final low-base certificate.  It also exposes the stage-wise theorems
 `lowD5M4_of_paperStagesTwoStageSingleton`, the narrower
 `lowD5M4_of_paperStagesTwoStageLayerConjSingleton`,
 `lowD5M4_of_paperLayerConjStages`, and the seed-row endpoint
-`lowD5M4_of_paperSeedRowStages`.  The last one takes exactly: terminal
-realization, product-base seed-row realization, and a two-stage seed-row
-singleton-switch realization.  Thus the smallest current paper-realization
-target is
+`lowD5M4_of_paperSeedRowStages`, plus the all-seed-row endpoint
+`lowD5M4_of_paperAllSeedRowStages`.  The last one takes exactly: terminal
+seed-row realization, product-base seed-row realization, and a two-stage
+seed-row singleton-switch realization.  Thus the smallest current
+paper-realization target is
 
 ```lean
 H2.D54.D54FiveSwitchRealization
@@ -298,6 +299,7 @@ The seed-row bridge now goes one level closer to a literal row transcription:
 
 ```lean
 physicalRowsOfSeedRow_layerMap_conj
+H2.D54.TerminalA2M4SeedRowRealization
 H2.D54.D54ProductBaseSeedRowRealization
 H2.D54.D54TwoStageSeedRowRealization
 H2.D54.D54TwoStageSeedRowSingletonSwitchRealization
@@ -320,6 +322,7 @@ EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
 EvenV11.lowD5M4_of_paperSeedRowStages
+EvenV11.lowD5M4_of_paperAllSeedRowStages
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,

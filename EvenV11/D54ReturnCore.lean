@@ -1127,6 +1127,115 @@ def terminal_A2_m4_return_core : TerminalA2M4ReturnCore where
   selectorNodup := C4List_nodup
   resetSitesDisjointSelector := resetSites_disjoint_C4List
 
+/-- Seed-side row-equivalence table for the terminal A2 block. -/
+abbrev TerminalSeedRow :=
+  ZMod 4 → Q4 → TorusColor 3 ≃ TorusDirection 3
+
+def terminalScheduleOfSeedRow
+    (eT : Q4 ≃ TerminalRootState) (row : TerminalSeedRow) :
+    RootFlatSchedule (TorusColor 3) (TorusDirection 3) TerminalRootState 4 where
+  dir := fun t w c => row t (eT.symm w) c
+  step := terminalStandardRootStep
+
+def terminalSeedLayerOfRow
+    (seedStep : TorusDirection 3 → Q4 → Q4) (row : TerminalSeedRow) :
+    ZMod 4 → TorusColor 3 → Q4 → Q4 :=
+  fun t c q => seedStep ((row t q) c) q
+
+def terminalSeedLayerReturn
+    (layer : ZMod 4 → TorusColor 3 → Q4 → Q4)
+    (c : TorusColor 3) : Q4 → Q4 :=
+  fun q =>
+    (List.range 4).foldl
+      (fun x (t : Nat) => layer (t : ZMod 4) c x) q
+
+/-- Terminal version of the seed-row transport bridge. -/
+theorem terminalScheduleOfSeedRow_layerMap_conj
+    (eT : Q4 ≃ TerminalRootState) (row : TerminalSeedRow)
+    (seedStep : TorusDirection 3 → Q4 → Q4)
+    (hStep :
+      ∀ δ q, eT (seedStep δ q) = terminalStandardRootStep δ (eT q)) :
+    ∀ t c q,
+      (terminalScheduleOfSeedRow eT row).layerMap t c (eT q) =
+        eT (terminalSeedLayerOfRow seedStep row t c q) := by
+  intro t c q
+  simp [terminalScheduleOfSeedRow, Shared.RootFlatSchedule.layerMap,
+    terminalSeedLayerOfRow, hStep]
+
+theorem terminal_layerBijective_of_seedLayer_conj
+    (eT : Q4 ≃ TerminalRootState)
+    (rows : RootFlatSchedule
+      (TorusColor 3) (TorusDirection 3) TerminalRootState 4)
+    (layer : ZMod 4 → TorusColor 3 → Q4 → Q4)
+    (hSeed : ∀ t c, Function.Bijective (layer t c))
+    (hLayer : ∀ t c q, rows.layerMap t c (eT q) = eT (layer t c q)) :
+    rows.layerBijective := by
+  intro t c
+  constructor
+  · intro w₁ w₂ hw
+    apply eT.symm.injective
+    apply (hSeed t c).1
+    apply eT.injective
+    calc
+      eT (layer t c (eT.symm w₁))
+          = rows.layerMap t c (eT (eT.symm w₁)) := by
+            rw [hLayer t c (eT.symm w₁)]
+      _ = rows.layerMap t c w₁ := by simp
+      _ = rows.layerMap t c w₂ := hw
+      _ = rows.layerMap t c (eT (eT.symm w₂)) := by simp
+      _ = eT (layer t c (eT.symm w₂)) := hLayer t c (eT.symm w₂)
+  · intro w
+    rcases (hSeed t c).2 (eT.symm w) with ⟨q, hq⟩
+    refine ⟨eT q, ?_⟩
+    calc
+      rows.layerMap t c (eT q) = eT (layer t c q) := hLayer t c q
+      _ = eT (eT.symm w) := by rw [hq]
+      _ = w := by simp
+
+theorem terminal_returnMap_conj_of_seedLayerReturn_eq
+    (eT : Q4 ≃ TerminalRootState) (row : TerminalSeedRow)
+    (seedStep : TorusDirection 3 → Q4 → Q4)
+    (hStep :
+      ∀ δ q, eT (seedStep δ q) = terminalStandardRootStep δ (eT q)) :
+    ∀ c q,
+      eT.symm ((terminalScheduleOfSeedRow eT row).returnMap c (eT q)) =
+        terminalSeedLayerReturn
+          (terminalSeedLayerOfRow seedStep row) c q := by
+  intro c q
+  have hFold :
+      ∀ ts : List Nat, ∀ x : Q4,
+        ts.foldl
+            (fun y (t : Nat) =>
+              (terminalScheduleOfSeedRow eT row).layerMap
+                (t : ZMod 4) c y)
+            (eT x) =
+          eT
+            (ts.foldl
+              (fun y (t : Nat) =>
+                terminalSeedLayerOfRow seedStep row (t : ZMod 4) c y) x) := by
+    intro ts
+    induction ts with
+    | nil =>
+        intro x
+        rfl
+    | cons t ts ih =>
+        intro x
+        simp [List.foldl_cons,
+          terminalScheduleOfSeedRow_layerMap_conj
+            eT row seedStep hStep (t : ZMod 4) c x,
+          ih]
+  apply eT.injective
+  calc
+    eT (eT.symm ((terminalScheduleOfSeedRow eT row).returnMap c (eT q)))
+        = (terminalScheduleOfSeedRow eT row).returnMap c (eT q) := by
+          simp
+    _ =
+      eT
+        (terminalSeedLayerReturn
+          (terminalSeedLayerOfRow seedStep row) c q) := by
+          simpa [Shared.RootFlatSchedule.returnMap, terminalSeedLayerReturn]
+            using hFold (List.range 4) q
+
 /-- Paper-facing terminal A2 realization target at `m = 4`.  It says that an
 actual D3 root-flat schedule realizes the collapsed terminal returns `F_i`
 through a return-section equivalence.  The equivalence is deliberately a field:
@@ -1142,6 +1251,54 @@ structure TerminalA2M4PhysicalRealization where
   return_eq_F :
     ∀ c : TorusColor 3, ∀ q : Q4,
       eT.symm (rows.returnMap c (eT q)) = F c q
+
+/-- Seed-row form of the terminal A2 realization.  The caller supplies the
+paper's terminal seed row, a seed-side generator step, and the finite fold equal
+to `F_i`; Lean constructs the physical terminal schedule and RF2. -/
+structure TerminalA2M4SeedRowRealization where
+  eT : Q4 ≃ TerminalRootState
+  seedStep : TorusDirection 3 → Q4 → Q4
+  seedRow : TerminalSeedRow
+  stepConj :
+    ∀ δ q, eT (seedStep δ q) = terminalStandardRootStep δ (eT q)
+  seedLayerBijective :
+    ∀ t : ZMod 4, ∀ c : TorusColor 3,
+      Function.Bijective (terminalSeedLayerOfRow seedStep seedRow t c)
+  seedReturn_eq_F :
+    ∀ c q,
+      terminalSeedLayerReturn
+        (terminalSeedLayerOfRow seedStep seedRow) c q = F c q
+
+def TerminalA2M4SeedRowRealization.rows
+    (H : TerminalA2M4SeedRowRealization) :
+    RootFlatSchedule (TorusColor 3) (TorusDirection 3) TerminalRootState 4 :=
+  terminalScheduleOfSeedRow H.eT H.seedRow
+
+def TerminalA2M4SeedRowRealization.toPhysicalRealization
+    (H : TerminalA2M4SeedRowRealization) :
+    TerminalA2M4PhysicalRealization where
+  rows := H.rows
+  eT := H.eT
+  step_eq_standard := rfl
+  rowLatin := by
+    intro t w
+    exact (H.seedRow t (H.eT.symm w)).bijective
+  layerBijective :=
+    terminal_layerBijective_of_seedLayer_conj H.eT H.rows
+      (terminalSeedLayerOfRow H.seedStep H.seedRow)
+      H.seedLayerBijective
+      (terminalScheduleOfSeedRow_layerMap_conj
+        H.eT H.seedRow H.seedStep H.stepConj)
+  return_eq_F := by
+    intro c q
+    calc
+      H.eT.symm (H.rows.returnMap c (H.eT q))
+          =
+        terminalSeedLayerReturn
+          (terminalSeedLayerOfRow H.seedStep H.seedRow) c q :=
+          terminal_returnMap_conj_of_seedLayerReturn_eq
+            H.eT H.seedRow H.seedStep H.stepConj c q
+      _ = F c q := H.seedReturn_eq_F c q
 
 theorem TerminalA2M4PhysicalRealization.returnsSingleCycle
     (H : TerminalA2M4PhysicalRealization) :
@@ -2074,6 +2231,14 @@ def D54PaperRealizationLadder.ofSeedRowStages
     terminal productBase.toLayerConjRealization
     twoStageSwitch.toLayerConjSingletonSwitchRealization
 
+def D54PaperRealizationLadder.ofAllSeedRowStages
+    (terminal : TerminalA2M4SeedRowRealization)
+    (productBase : D54ProductBaseSeedRowRealization)
+    (twoStageSwitch : D54TwoStageSeedRowSingletonSwitchRealization) :
+    D54PaperRealizationLadder :=
+  D54PaperRealizationLadder.ofSeedRowStages
+    terminal.toPhysicalRealization productBase twoStageSwitch
+
 theorem D54PaperRealizationLadder.lowBaseFamily
     (H : D54PaperRealizationLadder) :
     FinalLowD5M4RootFlatCertificateFamily :=
@@ -2134,6 +2299,14 @@ theorem finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages
     (twoStageSwitch : D54TwoStageSeedRowSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   (D54PaperRealizationLadder.ofSeedRowStages
+    terminal productBase twoStageSwitch).lowBaseFamily
+
+theorem finalLowD5M4RootFlatCertificateFamily_of_paperAllSeedRowStages
+    (terminal : TerminalA2M4SeedRowRealization)
+    (productBase : D54ProductBaseSeedRowRealization)
+    (twoStageSwitch : D54TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  (D54PaperRealizationLadder.ofAllSeedRowStages
     terminal productBase twoStageSwitch).lowBaseFamily
 
 end D54

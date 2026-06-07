@@ -84,6 +84,9 @@ abbrev LowD5M4FiveSwitchRealization :=
 abbrev LowD5M4TerminalRealization :=
   H2.D54.TerminalA2M4PhysicalRealization
 
+abbrev LowD5M4TerminalSeedRowRealization :=
+  H2.D54.TerminalA2M4SeedRowRealization
+
 abbrev LowD5M4ProductBaseRealization :=
   H2.D54.D54ProductBaseRealization
 
@@ -132,6 +135,11 @@ theorem lowD5M4_of_conjugateDirectRFInput
     (input : LowD5M4ConjugateDirectRFInput) :
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
+
+def lowD5M4TerminalRealization_of_terminalSeedRowRealization
+    (input : LowD5M4TerminalSeedRowRealization) :
+    LowD5M4TerminalRealization :=
+  input.toPhysicalRealization
 
 def lowD5M4ProductBaseRealization_of_productBaseLayerConjRealization
     (input : LowD5M4ProductBaseLayerConjRealization) :
@@ -303,6 +311,14 @@ theorem lowD5M4_of_paperSeedRowStages
     (twoStageSwitch : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperSeedRowStages
+    terminal productBase twoStageSwitch
+
+theorem lowD5M4_of_paperAllSeedRowStages
+    (terminal : LowD5M4TerminalSeedRowRealization)
+    (productBase : LowD5M4ProductBaseSeedRowRealization)
+    (twoStageSwitch : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperAllSeedRowStages
     terminal productBase twoStageSwitch
 
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via
