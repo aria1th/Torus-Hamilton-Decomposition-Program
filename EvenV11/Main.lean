@@ -169,10 +169,20 @@ theorem lowD5M4RibbonData_of_paperRealization
     Nonempty LowD5M4RibbonData :=
   input.nonemptyRibbonData
 
+theorem lowD5M4_of_paperRealization
+    (input : LowD5M4PaperRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  input.lowBaseFamily
+
 theorem lowD5M4RibbonData_of_paperRealizationLadder
     (input : LowD5M4PaperRealizationLadder) :
     Nonempty LowD5M4RibbonData :=
   input.toPaperRealization.nonemptyRibbonData
+
+theorem lowD5M4_of_paperRealizationLadder
+    (input : LowD5M4PaperRealizationLadder) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  input.lowBaseFamily
 
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via
 `D54ConjugateDirectRFInput`, without using the still-open paper ribbon

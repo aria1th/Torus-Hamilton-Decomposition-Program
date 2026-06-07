@@ -246,8 +246,8 @@ EvenV11.H2.D54.finalLowD5M4RootFlatCertificateFamily_of_lowD5M4Finite
 For the paper-faithful route, once T8 is available:
 
 ```lean
-theorem H2_D54_root_flat_certificate :
-  FinalLowD5M4RootFlatCertificateFamily
+EvenV11.lowD5M4_of_paperRealization
+EvenV11.lowD5M4_of_paperRealizationLadder
 ```
 
 This theorem is already structurally proved in Lean from either the direct RF

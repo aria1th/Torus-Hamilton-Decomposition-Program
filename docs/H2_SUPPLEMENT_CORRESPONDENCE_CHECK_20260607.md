@@ -247,7 +247,9 @@ LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData
 2026-06-07 update: the finite reset/support fields are no longer live
 obligations in the active Lean interface.  `D54PaperRealization` can now be
 built from a `D54FiveSwitchRealization` by filling `D54ResetData`'s closed table
-certificate and avoidance facts.  Thus the smallest current paper-realization target is
+certificate and avoidance facts, and `EvenV11.Main` exposes
+`lowD5M4_of_paperRealization` / `lowD5M4_of_paperRealizationLadder` for the
+final low-base certificate.  Thus the smallest current paper-realization target is
 
 ```lean
 H2.D54.D54FiveSwitchRealization

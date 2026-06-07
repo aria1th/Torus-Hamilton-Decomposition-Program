@@ -317,7 +317,9 @@ facts are now packaged strongly enough for final assembly.  They are no longer
 a separate H2-closing obligation: `D54PaperRealization.ofFiveSwitchRealization`
 fills them from `D54ResetData.d54ResetTableCertificate`, the closed avoidance
 lemmas, and the named `NTList`/`NhatList` protected-neighborhood lemmas in
-`D54ReturnCore`.
+`D54ReturnCore`.  `EvenV11.Main` now also exposes
+`lowD5M4_of_paperRealization` and `lowD5M4_of_paperRealizationLadder`, so a
+paper payload directly yields `FinalLowD5M4RootFlatCertificateFamily`.
 
 The support payload now includes:
 
