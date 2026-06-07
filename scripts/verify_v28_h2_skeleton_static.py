@@ -99,6 +99,8 @@ TERMINAL_SEARCH_TOKENS = [
     "relation_signature",
     "common_conjugacy",
     "f0_forced_common_conjugacy",
+    "color_factorization_viability",
+    "has_color_factorization",
     "sample_four_layer_candidates",
     "two_layer_products",
 ]

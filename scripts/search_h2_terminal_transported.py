@@ -145,6 +145,7 @@ def row_layers() -> list[tuple[Layer, tuple[tuple[int, ...], ...]]]:
 class PairTable:
     layers: list[tuple[Layer, tuple[tuple[int, ...], ...]]]
     pair_index: dict[bytes, tuple[int, int]]
+    color_pair_maps: tuple[set[Perm], set[Perm], set[Perm]]
 
 
 def build_pair_table(verbose: bool = False) -> PairTable:
@@ -152,6 +153,7 @@ def build_pair_table(verbose: bool = False) -> PairTable:
     if verbose:
         print(f"terminal_rf_layers={len(layers)}", flush=True)
     pair_index: dict[bytes, tuple[int, int]] = {}
+    color_pair_maps: tuple[set[Perm], set[Perm], set[Perm]] = (set(), set(), set())
     for i, (left, _left_rows) in enumerate(layers):
         if verbose and i != 0 and i % 240 == 0:
             print(f"pair_table_progress={i}/{len(layers)}", flush=True)
@@ -161,8 +163,14 @@ def build_pair_table(verbose: bool = False) -> PairTable:
                 compose(right[1], left[1]),
                 compose(right[2], left[2]),
             )
+            for c in COLORS:
+                color_pair_maps[c].add(product_layer[c])
             pair_index.setdefault(pack_layer(product_layer), (i, j))
-    return PairTable(layers=layers, pair_index=pair_index)
+    return PairTable(
+        layers=layers,
+        pair_index=pair_index,
+        color_pair_maps=color_pair_maps,
+    )
 
 
 def target_triple_for_emap(emap: list[int]) -> Layer:
@@ -270,8 +278,36 @@ def f0_forced_common_conjugacy(
     return None
 
 
+def has_color_factorization(pair_maps: set[Perm], target: Perm) -> bool:
+    """Whether `target` factors as two terminal two-layer maps for one color."""
+    for first in pair_maps:
+        if compose(target, invert(first)) in pair_maps:
+            return True
+    return False
+
+
+def color_factorization_viability(table: PairTable, emap: list[int]) -> tuple[bool, bool, bool]:
+    """Necessary one-color factorization checks for a fixed `eT`.
+
+    A full terminal seed-row realization factors the conjugated triple into four
+    RF1/RF2 layers.  In particular, each individual color return must factor as
+    a product of two two-layer terminal color maps.  This check ignores RF1
+    coupling between colors, so failure is a cheap hard obstruction.
+    """
+    target = target_triple_for_emap(emap)
+    return tuple(
+        has_color_factorization(table.color_pair_maps[c], target[c])
+        for c in COLORS
+    )  # type: ignore[return-value]
+
+
 def factor_fixed_emap(table: PairTable, emap: list[int]) -> tuple[int, int, int, int] | None:
     target = target_triple_for_emap(emap)
+    if any(
+        not has_color_factorization(table.color_pair_maps[c], target[c])
+        for c in COLORS
+    ):
+        return None
     for first_blob, first_pair in table.pair_index.items():
         first = unpack_layer(first_blob)
         needed: Layer = (
@@ -411,6 +447,11 @@ def main() -> None:
 
     table = build_pair_table(verbose=True)
     print(f"two_layer_products={len(table.pair_index)}", flush=True)
+    print(
+        "single_color_two_layer_maps="
+        f"{[len(table.color_pair_maps[c]) for c in COLORS]}",
+        flush=True,
+    )
 
     candidates: list[tuple[str, list[int]]] = []
     if args.identity:
@@ -426,6 +467,8 @@ def main() -> None:
 
     for label, emap in candidates:
         print(f"checking={label}", flush=True)
+        viability = color_factorization_viability(table, emap)
+        print(f"color_factorization_viability={viability}", flush=True)
         factor = factor_fixed_emap(table, emap)
         if factor is None:
             print(f"[no] {label}: no four-layer RF1/RF2 factorization", flush=True)

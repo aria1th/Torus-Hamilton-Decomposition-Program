@@ -372,6 +372,14 @@ The common-conjugacy check now uses `F0` as the generator: once a candidate
 four-layer triple has a 16-cycle first return, the image of one point determines
 the entire `eT`, leaving only 16 maps to test against colors 1 and 2.
 
+The fixed-`eT` check now has a cheaper necessary prefilter.  Before running the
+full coupled RF1/RF2 meet-in-the-middle test, it checks each color separately:
+`eT F_i eT^{-1}` must factor as a product of two two-layer terminal color maps.
+Failure of this one-color test is already a hard obstruction.  In particular,
+the identity chart and the first five random origin-fixed charts at seed
+`20260609` all fail this one-color test in all three colors, so the search
+rejects them before the full four-layer coupling check.
+
 The most structured active paper target is now:
 
 ```lean
