@@ -15,13 +15,13 @@ The checks mirror:
   * `TerminalA2LowMod.terminalOmega` and `terminalReturn`,
   * `LowD5M4Seed.fullReturn`,
   * the standard D5(4) root-flat `rootStep`,
-  * active finite witnesses under `EvenV11/` and `archive/EvenV11/`.
+  * active finite witnesses under `EvenV11/`, with archive fallback.
 """
 
 from __future__ import annotations
 
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from itertools import product
 from pathlib import Path
 from typing import Callable, Iterable
@@ -329,6 +329,92 @@ def check_color_anchored_terminal_dir() -> None:
     print("[ok] color-anchored terminalDir is not RF1 at q=(0,0): row [1,2,2]")
 
 
+def compose_perm(p: tuple[int, ...], q: tuple[int, ...]) -> tuple[int, ...]:
+    """Permutation composition `p ∘ q`, represented by image tuples."""
+    return tuple(p[q[i]] for i in range(len(q)))
+
+
+def invert_perm(p: tuple[int, ...]) -> tuple[int, ...]:
+    out = [0] * len(p)
+    for i, j in enumerate(p):
+        out[j] = i
+    return tuple(out)
+
+
+def enumerate_terminal_layer_maps() -> list[tuple[tuple[int, ...], tuple[int, ...]]]:
+    """All bijective standard D3 root-flat layer maps `q ↦ q + a_{d(q)}`."""
+    q_index = {q: i for i, q in enumerate(Q_STATES)}
+    layer_edges = [
+        [q_index[root_step_d3(d, q)] for d in COLORS3]
+        for q in Q_STATES
+    ]
+    maps: list[tuple[tuple[int, ...], tuple[int, ...]]] = []
+    dirs: list[int | None] = [None] * len(Q_STATES)
+
+    def go(used: int) -> None:
+        if all(d is not None for d in dirs):
+            dir_tuple = tuple(d for d in dirs if d is not None)
+            perm = tuple(layer_edges[i][dir_tuple[i]] for i in range(len(Q_STATES)))
+            maps.append((perm, dir_tuple))
+            return
+
+        best = -1
+        best_choices: list[int] | None = None
+        for i, direction in enumerate(dirs):
+            if direction is not None:
+                continue
+            choices = [
+                d for d, target in enumerate(layer_edges[i])
+                if not ((used >> target) & 1)
+            ]
+            if best_choices is None or len(choices) < len(best_choices):
+                best = i
+                best_choices = choices
+                if len(choices) <= 1:
+                    break
+        assert best_choices is not None
+        for d in best_choices:
+            target = layer_edges[best][d]
+            dirs[best] = d
+            go(used | (1 << target))
+            dirs[best] = None
+
+    go(0)
+    return maps
+
+
+def check_standard_terminal_chart_not_four_layer_realization() -> None:
+    """The fixed chart `TerminalRootState ≃ Q4` is too rigid.
+
+    Even before coupling colors by RF1, no single `F_i` factors as four
+    standard D3 root-flat layer bijections.  The terminal realization theorem
+    therefore needs a genuine return-section equivalence, not the plain chart.
+    """
+    layer_maps = enumerate_terminal_layer_maps()
+    assert len(layer_maps) == 417
+
+    pair_products: dict[tuple[int, ...], int] = defaultdict(int)
+    for left, _left_dirs in layer_maps:
+        for right, _right_dirs in layer_maps:
+            pair_products[compose_perm(right, left)] += 1
+
+    q_index = {q: i for i, q in enumerate(Q_STATES)}
+    for c in COLORS3:
+        target = tuple(q_index[terminal_return(c, q)] for q in Q_STATES)
+        has_factorization = False
+        for first_pair in pair_products:
+            needed_second_pair = compose_perm(target, invert_perm(first_pair))
+            if needed_second_pair in pair_products:
+                has_factorization = True
+                break
+        assert not has_factorization, c
+
+    print(
+        "[ok] standard terminalRootEquiv target: no F_i has a 4-layer "
+        "standard-root bijective factorization"
+    )
+
+
 def parse_d3_even_m4_dir_words() -> dict[tuple[int, int, int], tuple[int, int, int]]:
     text = (REPO / "EvenV11/D3EvenM4.lean").read_text()
     body = text.split("def dirWordNat", 1)[1].split("def colorDir", 1)[0]
@@ -384,10 +470,12 @@ def parse_nat_array(path: Path, name: str) -> list[int]:
     return [int(x) for x in re.findall(r"\d+", match.group(1))]
 
 
-def check_archive_lowd5m4_finite_not_paper_conj() -> None:
-    path = REPO / "archive/EvenV11/LowD5M4Finite.lean"
+def check_lowd5m4_finite_not_paper_conj() -> None:
+    active = REPO / "EvenV11/LowD5M4Finite.lean"
+    archive = REPO / "archive/EvenV11/LowD5M4Finite.lean"
+    path = active if active.exists() else archive
     if not path.exists():
-        print("[skip] archive/EvenV11/LowD5M4Finite.lean is absent")
+        print("[skip] LowD5M4Finite.lean is absent")
         return
 
     dir_table = parse_nat_array(path, "dirTable")
@@ -427,16 +515,21 @@ def check_archive_lowd5m4_finite_not_paper_conj() -> None:
     actual = [lambda w, c=c: ret(c, w) for c in COLORS5]
     conj = common_conjugacy_count(ROOT_STATES, finite_states, target, actual, ROOT_STATES[0])
     assert conj == 0
-    print("[ok] archive LowD5M4Finite is RF-valid but has no common conjugacy to paper fullReturn")
+    location = "active" if path == active else "archive"
+    print(
+        f"[ok] {location} LowD5M4Finite is RF-valid and closes direct H2, "
+        "but has no common conjugacy to paper fullReturn"
+    )
 
 
 def main() -> None:
     check_abstract_full_return()
     check_naive_and_split_rows()
     check_color_anchored_terminal_dir()
+    check_standard_terminal_chart_not_four_layer_realization()
     check_d3_even_m4_not_terminal_f()
-    check_archive_lowd5m4_finite_not_paper_conj()
-    print("[ok] conclusion: H2 still needs a genuine terminal/ribbon realization theorem")
+    check_lowd5m4_finite_not_paper_conj()
+    print("[ok] conclusion: direct H2 is closed; paper-faithful H2 still needs a genuine terminal/ribbon realization theorem")
 
 
 if __name__ == "__main__":
