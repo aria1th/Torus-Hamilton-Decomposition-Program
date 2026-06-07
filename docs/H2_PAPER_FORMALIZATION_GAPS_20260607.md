@@ -297,10 +297,12 @@ The public stage-wise endpoint is now:
 ```lean
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
+EvenV11.lowD5M4_of_paperLayerConjStages
 ```
 
-so the remaining inputs are exactly terminal realization, product-base
-realization, and the two-stage layer-conjugacy singleton-switch realization.
+so the narrowest remaining inputs are exactly terminal realization,
+product-base layer-conjugacy realization, and the two-stage layer-conjugacy
+singleton-switch realization.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

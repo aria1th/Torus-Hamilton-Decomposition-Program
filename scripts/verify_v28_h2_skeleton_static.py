@@ -40,6 +40,7 @@ H2_CORE_TOKENS = [
     "structure D54TwoStageLayerConjRealization",
     "structure D54TwoStageLayerConjSingletonSwitchRealization",
     "finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSingleton",
+    "finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages",
 ]
 
 OBSTRUCTION_TOKENS = [

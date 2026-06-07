@@ -253,9 +253,10 @@ built from a `D54FiveSwitchRealization` by filling `D54ResetData`'s closed table
 certificate and avoidance facts, and `EvenV11.Main` exposes
 `lowD5M4_of_paperRealization` / `lowD5M4_of_paperRealizationLadder` for the
 final low-base certificate.  It also exposes the stage-wise theorems
-`lowD5M4_of_paperStagesTwoStageSingleton` and the narrower
-`lowD5M4_of_paperStagesTwoStageLayerConjSingleton`.  The latter takes exactly:
-terminal realization, product-base realization, and a two-stage
+`lowD5M4_of_paperStagesTwoStageSingleton`, the narrower
+`lowD5M4_of_paperStagesTwoStageLayerConjSingleton`, and the narrowest
+`lowD5M4_of_paperLayerConjStages`.  The last one takes exactly: terminal
+realization, product-base layer-conjugacy realization, and a two-stage
 layer-conjugacy singleton-switch realization.  Thus the smallest current
 paper-realization target is
 
@@ -302,6 +303,7 @@ H2.D54.D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
 H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
+EvenV11.lowD5M4_of_paperLayerConjStages
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,

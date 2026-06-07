@@ -1881,6 +1881,14 @@ def D54PaperRealizationLadder.ofStagesTwoStageLayerConjSingletonSwitch
     terminal productBase
     twoStageSwitch.toTwoStageSingletonSwitchRealization
 
+def D54PaperRealizationLadder.ofLayerConjStages
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseLayerConjRealization)
+    (twoStageSwitch : D54TwoStageLayerConjSingletonSwitchRealization) :
+    D54PaperRealizationLadder :=
+  D54PaperRealizationLadder.ofStagesTwoStageLayerConjSingletonSwitch
+    terminal productBase.toProductBaseRealization twoStageSwitch
+
 theorem D54PaperRealizationLadder.lowBaseFamily
     (H : D54PaperRealizationLadder) :
     FinalLowD5M4RootFlatCertificateFamily :=
@@ -1925,6 +1933,14 @@ theorem finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSin
     (twoStageSwitch : D54TwoStageLayerConjSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   (D54PaperRealizationLadder.ofStagesTwoStageLayerConjSingletonSwitch
+    terminal productBase twoStageSwitch).lowBaseFamily
+
+theorem finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseLayerConjRealization)
+    (twoStageSwitch : D54TwoStageLayerConjSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  (D54PaperRealizationLadder.ofLayerConjStages
     terminal productBase twoStageSwitch).lowBaseFamily
 
 end D54

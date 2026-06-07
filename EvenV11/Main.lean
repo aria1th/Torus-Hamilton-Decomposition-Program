@@ -250,6 +250,14 @@ theorem lowD5M4_of_paperStagesTwoStageLayerConjSingleton
   H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageLayerConjSingleton
     terminal productBase twoStageSwitch
 
+theorem lowD5M4_of_paperLayerConjStages
+    (terminal : LowD5M4TerminalRealization)
+    (productBase : LowD5M4ProductBaseLayerConjRealization)
+    (twoStageSwitch : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperLayerConjStages
+    terminal productBase twoStageSwitch
+
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via
 `D54ConjugateDirectRFInput`, without using the still-open paper ribbon
 realization interface above. -/

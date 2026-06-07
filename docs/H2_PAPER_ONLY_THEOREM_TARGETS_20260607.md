@@ -259,11 +259,12 @@ The public stage-wise assembly endpoint is:
 ```lean
 EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
+EvenV11.lowD5M4_of_paperLayerConjStages
 ```
 
-It takes exactly the three remaining construction stages: terminal realization,
-product-base realization, and two-stage layer-conjugacy singleton-switch
-realization.
+The narrowest version takes exactly the three remaining construction stages:
+terminal realization, product-base layer-conjugacy realization, and two-stage
+layer-conjugacy singleton-switch realization.
 
 ### T9. H2 Certificate Assembly
 
