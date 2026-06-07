@@ -1,5 +1,11 @@
 # v28 hard-parts code notes — 2026-06-06
 
+2026-06-07 cleanup note: `D5M4RibbonRows`, `D5M4H2Skeleton`,
+`D5M4H2PaperRows`, `D7FiniteToCycleData`, and `D7Checkpoint` are now historical
+staging files under `archive/EvenV11/V28Hard/`.  The active hard-part surface is
+`LowD5M4RibbonInterface` for H2 plus structural D7 inputs.  The notes below are
+kept as a record of the checkpoint patch, not as the active build plan.
+
 This patch adds an experimental hard-slot layer under `EvenV11/V28Hard/`.  The
 umbrella `EvenV11/V28Hard.lean` is intentionally **not** imported by
 `EvenV11.lean`; the default theorem spine remains unchanged.  The new files are

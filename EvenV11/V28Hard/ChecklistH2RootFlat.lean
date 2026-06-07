@@ -1,6 +1,5 @@
 import EvenV11.V28PaperInterface
-import EvenV11.V28Hard.D5M4H2Skeleton
-import EvenV11.V28Hard.D7Checkpoint
+import EvenV11.LowD5M4Structural
 import EvenV11.V28Hard.D3TerminalA2Parametric
 import EvenV11.V28Hard.D7TwoRailRelay
 import EvenV11.V28Hard.HighEvenEndpointPromotions
@@ -8,15 +7,8 @@ import EvenV11.V28Hard.HighEvenEndpointPromotions
 /-!
 # Checklist variant with H2 as direct root-flat cycle data
 
-`V28PaperInterface.PaperFaithfulChecklist` deliberately mirrors the current
-`Main.lean` H2 slot: `ResetPortH2RowEquivRibbonRealizationData`.  During H2
-repair, however, it is useful to use the weaker/healthier target
-`ResetPortH2RootFlatCycleData`: RF1, RF2, and RF3 for the actual reset-port
-root-flat schedule.
-
-This file records that alternate checklist.  It does not import into the default
-spine.  It is a staging target for the H2 work described in
-`D5M4H2Skeleton.lean`.
+This is an active, archive-free staging target.  It deliberately does not import
+the retired H2 paper-table skeleton or the generated D7 finite checkpoints.
 -/
 
 namespace EvenV11
@@ -24,35 +16,28 @@ namespace V28Hard
 namespace ChecklistH2RootFlat
 
 open V28PaperInterface
-open D5M4H2Skeleton
 
-/-- H2 input in the relaxed paper-faithful form: direct root-flat cycle data for
-`D₅(4)`, rather than the stronger return-realization equality. -/
+/-- H2 input in the relaxed form: direct RF1/RF2/RF3 data for the D5(4)
+root-flat schedule.  The main theorem still uses the stronger ribbon handoff,
+but this is useful as an intermediate H2 target. -/
 structure D5M4RootFlatResetInput where
   data : Nonempty LowD5M4Structural.ResetPortH2RootFlatCycleData
 
-/-- H2 input obtained from the skeleton's direct root-flat route. -/
-def d5m4RootFlatResetInput_of_route
-    (input : H2RootFlatRouteSkeleton) : D5M4RootFlatResetInput where
-  data := input.nonemptyCycleData
+def d5m4RootFlatResetInput_of_data
+    (data : LowD5M4Structural.ResetPortH2RootFlatCycleData) :
+    D5M4RootFlatResetInput where
+  data := ⟨data⟩
 
-/-- Current `V28PaperInterface` H2 slot obtained from the stronger
-ribbon-collapse route.  This is the drop-in replacement for
-`assume_lowD5M4RibbonRealizationData` once RF2 and the return-section
-realization have been filled. -/
-def currentD5M4ParityResetInput_of_ribbonCollapse
-    (input : H2RibbonCollapseInput) : D5M4ParityResetInput where
-  data := input.nonemptyRibbonData
-
-/-- H2 input obtained from the stronger ribbon-collapse route. -/
-def d5m4RootFlatResetInput_of_ribbonCollapse
-    (input : H2RibbonCollapseInput) : D5M4RootFlatResetInput where
+def d5m4RootFlatResetInput_of_ribbonData
+    (h2 :
+      Nonempty LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData) :
+    D5M4RootFlatResetInput where
   data :=
-    ⟨LowD5M4Structural.rootFlatCycleData_of_ribbonRealizationData
-      (LowD5M4Structural.ribbonRealizationData_of_rowEquivRibbonRealizationData
-        input.toRowEquivRibbonData)⟩
+    h2.elim fun data =>
+      ⟨LowD5M4Structural.rootFlatCycleData_of_ribbonRealizationData
+        (LowD5M4Structural.ribbonRealizationData_of_rowEquivRibbonRealizationData
+          data)⟩
 
-/-- Low-base family adapter for the relaxed H2 input. -/
 theorem d5m4RootFlatFamily_of_rootFlatResetInput
     (input : D5M4RootFlatResetInput) :
     FinalLowD5M4RootFlatCertificateFamily :=
@@ -60,7 +45,7 @@ theorem d5m4RootFlatFamily_of_rootFlatResetInput
     (Classical.choice input.data)
 
 /-- Six-obligation checklist with H2 relaxed to direct D5(4) root-flat cycle
-data.  H3/H4 remain structural D7 inputs, not generated finite facts. -/
+data.  H3/H4 remain structural D7 inputs. -/
 structure PaperFaithfulChecklistWithH2RootFlat where
   d3TerminalA2 : D3TerminalA2Input
   d5m4Reset : D5M4RootFlatResetInput
@@ -69,7 +54,6 @@ structure PaperFaithfulChecklistWithH2RootFlat where
   oddHighModulus : OddHighModulusInput
   oddEndpoint : OddEndpointInput
 
-/-- Low-base family package for the alternate checklist. -/
 theorem lowBaseRootFlatFamilies_of_h2RootFlatChecklist
     (checklist : PaperFaithfulChecklistWithH2RootFlat) :
     FinalLowBaseRootFlatCertificateFamilies where
@@ -77,7 +61,6 @@ theorem lowBaseRootFlatFamilies_of_h2RootFlatChecklist
   d7m4 := d7m4RootFlatFamily_of_input checklist.d7m4TwoRail
   d7m6 := d7m6RootFlatFamily_of_input checklist.d7m6TwoRail
 
-/-- Convert the alternate checklist into the existing final target checklist. -/
 theorem finalTargetChecklist_of_h2RootFlatChecklist
     (checklist : PaperFaithfulChecklistWithH2RootFlat) :
     FinalTargetCertificateChecklistWithD3AndLowRootFlat where
@@ -86,7 +69,6 @@ theorem finalTargetChecklist_of_h2RootFlatChecklist
   oddHighModulusPromotion := checklist.oddHighModulus.promotion
   oddEndpointPromotion := checklist.oddEndpoint.promotion
 
-/-- Final theorem from the alternate H2-root-flat checklist. -/
 theorem evenModulusToriAllDimensions_of_h2RootFlatChecklist
     (checklist : PaperFaithfulChecklistWithH2RootFlat) :
     V28EvenModulusToriAllDimensionsGoal := by
@@ -96,17 +78,16 @@ theorem evenModulusToriAllDimensions_of_h2RootFlatChecklist
     (finalTargetChecklist_of_h2RootFlatChecklist checklist)
     ⟨hd, hm4, r, by omega⟩
 
-/-- Practical checkpoint theorem: H2 uses the relaxed D5 root-flat skeleton;
-D7 uses the quarantined finite-backed checkpoint.  This is for wiring checks,
-not for the final paper-faithful theorem name. -/
-def checkpointChecklist_with_H2RootFlat_finiteBackedD7
-    (h2 : H2RootFlatRouteSkeleton) :
+def checkpointChecklist_with_H2RootFlat_structuralD7
+    (h2 : D5M4RootFlatResetInput)
+    (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
     PaperFaithfulChecklistWithH2RootFlat where
   d3TerminalA2 :=
     { family := D3TerminalA2Parametric.rootFlatCertificateFamily }
-  d5m4Reset := d5m4RootFlatResetInput_of_route h2
-  d7m4TwoRail := D7Checkpoint.generatedD7M4CheckpointInput
-  d7m6TwoRail := D7Checkpoint.generatedD7M6CheckpointInput
+  d5m4Reset := h2
+  d7m4TwoRail := { data := d7m4 }
+  d7m6TwoRail := { data := d7m6 }
   oddHighModulus :=
     { promotion :=
         HighEvenEndpointPromotions.oddHighModulusPromotion_of_engine
@@ -116,39 +97,13 @@ def checkpointChecklist_with_H2RootFlat_finiteBackedD7
         HighEvenEndpointPromotions.endpointTargetPromotion_of_engine
           HighEvenEndpointPromotions.candidate_oddEndpointPayloadEngine }
 
-/-- Full wiring theorem for the checkpoint route.  The name advertises both
-choices that are not final: relaxed H2 root-flat staging and finite-backed D7. -/
-theorem evenModulusToriAllDimensions_checkpoint_H2RootFlat_finiteBackedD7
-    (h2 : H2RootFlatRouteSkeleton) :
+theorem evenModulusToriAllDimensions_checkpoint_H2RootFlat_structuralD7
+    (h2 : D5M4RootFlatResetInput)
+    (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
     V28EvenModulusToriAllDimensionsGoal :=
   evenModulusToriAllDimensions_of_h2RootFlatChecklist
-    (checkpointChecklist_with_H2RootFlat_finiteBackedD7 h2)
-
-/-- Same checkpoint, but starting from the stronger current-spine ribbon-collapse
-H2 input. -/
-def checkpointChecklist_with_H2RibbonCollapse_finiteBackedD7
-    (h2 : H2RibbonCollapseInput) :
-    PaperFaithfulChecklistWithH2RootFlat where
-  d3TerminalA2 :=
-    { family := D3TerminalA2Parametric.rootFlatCertificateFamily }
-  d5m4Reset := d5m4RootFlatResetInput_of_ribbonCollapse h2
-  d7m4TwoRail := D7Checkpoint.generatedD7M4CheckpointInput
-  d7m6TwoRail := D7Checkpoint.generatedD7M6CheckpointInput
-  oddHighModulus :=
-    { promotion :=
-        HighEvenEndpointPromotions.oddHighModulusPromotion_of_engine
-          HighEvenEndpointPromotions.candidate_oddHighModulusEngine }
-  oddEndpoint :=
-    { promotion :=
-        HighEvenEndpointPromotions.endpointTargetPromotion_of_engine
-          HighEvenEndpointPromotions.candidate_oddEndpointPayloadEngine }
-
-/-- Full wiring theorem for the stronger H2 ribbon-collapse checkpoint route. -/
-theorem evenModulusToriAllDimensions_checkpoint_H2RibbonCollapse_finiteBackedD7
-    (h2 : H2RibbonCollapseInput) :
-    V28EvenModulusToriAllDimensionsGoal :=
-  evenModulusToriAllDimensions_of_h2RootFlatChecklist
-    (checkpointChecklist_with_H2RibbonCollapse_finiteBackedD7 h2)
+    (checkpointChecklist_with_H2RootFlat_structuralD7 h2 d7m4 d7m6)
 
 end ChecklistH2RootFlat
 end V28Hard

@@ -1,5 +1,23 @@
 # v28 H2 skeleton and D7 checkpoint isolation — 2026-06-07
 
+## 2026-06-07 active-surface cleanup
+
+이 문서는 `even_v28_h2_skeleton_checkpoint_patch_20260607.patch`의 역사적 기록을
+보존한다. 현재 active Lean surface에서는 아래 archive-dependent staging modules를
+직접 build target으로 쓰지 않는다.
+
+- `archive/EvenV11/V28Hard/D5M4RibbonRows.lean`
+- `archive/EvenV11/V28Hard/D5M4H2Skeleton.lean`
+- `archive/EvenV11/V28Hard/D5M4H2PaperRows.lean`
+- `archive/EvenV11/V28Hard/D7FiniteToCycleData.lean`
+- `archive/EvenV11/V28Hard/D7Checkpoint.lean`
+
+현재 H2 본선 target은 `EvenV11/LowD5M4RibbonInterface.lean`의
+`PhysicalRowsSingletonSwitchMapConjInput`이다. 또한
+`EvenV11/LowD5M4TameObstruction.lean`이 tame `seedRootEquiv` direct paperReturn
+route를 Lean에서 반례로 차단하므로, `PaperRowsDirectPath...`/`seedRootEquiv`
+형태의 shortcut은 본선 target이 아니다.
+
 ## 목적
 
 이번 패치는 Lean/Lake 빌드 없이도 다음 작업 단위를 코드 레벨에서 분리하기 위해 작성되었다.
@@ -293,25 +311,21 @@ theorem evenModulusToriAllDimensions_checkpoint_H2RibbonCollapse_finiteBackedD7
 
 ## 권장 다음 작업 순서
 
-1. `Main.lean`의 H2 open slot은 `LowD5M4RibbonCollapseInput`
-   (`LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`)으로 유지한다.
-2. `d54PaperProductRows`는 row-read sanity checkpoint로만 유지한다. 이 row table은
-   `not_d54PaperProductRows_layerBijective` 때문에 Main H2 target이 아니다.
-3. 논문 §11의 실제 four-layer row table을 새 `PaperLayeredBaseRows` 값으로 다시
-   전사한다. 실제 reset-port rows는 `resetPortRowOfBase rows.baseRow`다.
-4. RF2는 먼저 `ResetPortSingletonSwitchLayerData rows.baseRow` 형태로 닫고,
-   필요하면 `PaperBaseRowLayerEquivRF2Goal rows` 또는
-   `PaperBaseRowSkewProductRF2Goal rows`로 승격한다.
-5. RF3는 `ResetPortFullCoreYFirstZFirstTailRowWordGoals`가 아니라 paper의
-   ribbon-collapse/run-collapse conjugacy로 `returnRealization`을 직접 닫고,
-   완성된 input을 `PaperRowsLayerEquivRibbonCollapseInput.nonemptyMainH2Input` 또는
-   `PaperRowsSkewProductRibbonCollapseInput.nonemptyMainH2Input`으로
-   `Main.lean` H2 slot에 넣는다.
+1. `Main.lean`의 H2 open slot은
+   `LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData`로 유지한다.
+2. 구체적 closure target은
+   `LowD5M4RibbonInterface.PhysicalRowsSingletonSwitchMapConjInput`이다.
+3. 논문 §11의 실제 four-layer physical row table을 `PhysicalLayerRows` 값으로
+   전사한다.
+4. RF2는 `PhysicalSingletonSwitchLayerData rows`로 닫는다.
+5. RF3는 tame `seedRootEquiv`/`paperReturn` path가 아니라 paper의
+   ribbon-collapse/run-collapse가 주는 wild `e`에 대해
+   `PhysicalRowsReturnMapConjGoal rows e`를 직접 닫는다.
 
 ## 주의
 
-2026-06-07 현재 관련 Lean target은 빌드된다.
-`lake build EvenV11.Main EvenV11.LowD5M4H2PaperRow EvenV11.V28Hard.D5M4H2Skeleton EvenV11.V28Hard.D5M4H2PaperRows`
-가 통과했다. H2를 더 이상 하나의 거대한 `ResetPortH2PaperTableData` obligation이나
-impossible core-tail obligation으로 보지 않고, row-read sanity checks, RF2,
-RF3/ribbon-collapse로 분리한다.
+2026-06-07 cleanup 이후 active 관련 target은 다음으로 확인한다.
+`lake build EvenV11.Main EvenV11.LowD5M4RibbonInterface EvenV11.LowD5M4TameObstruction EvenV11.V28Hard`
+가 통과해야 한다. H2를 더 이상 하나의 거대한 `ResetPortH2PaperTableData`
+obligation이나 impossible tame path obligation으로 보지 않고, physical rows, RF2,
+wild-e RF3/ribbon-collapse로 분리한다.

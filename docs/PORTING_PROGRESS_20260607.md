@@ -62,7 +62,8 @@ Python 양쪽에서 확인됨. umbrella 통합, 전체 빌드 green.
 
 ## ✅ 완료: H2 direct-row ribbon handoff (`EvenV11/LowD5M4RibbonInterface.lean`)
 
-`V28Hard/D5M4H2Skeleton`의 archive 의존 없는 핵심을 active spine으로 승격:
+`V28Hard/D5M4H2Skeleton`에서 필요했던 archive 의존 없는 핵심을 active spine으로
+승격하고, archive-dependent skeleton 자체는 `archive/EvenV11/V28Hard/`로 분리:
 
 - `PhysicalLayerRows`: 논문 §11의 네 physical layer row를 직접 받는 row-equiv 인터페이스.
 - `PhysicalRowsRibbonCollapseInput`: RF2 + wild `e` + pointwise `returnRealization`이면
@@ -75,6 +76,11 @@ Python 양쪽에서 확인됨. umbrella 통합, 전체 빌드 green.
 추가로 `LowD5M4Structural.returnRealization_of_returnMap_conj`를 추가해 map-level
 conjugacy와 현재 H2 필드 방향을 연결했다. `lake build EvenV11.LowD5M4RibbonInterface`
 및 `lake build EvenV11.V28Hard` 통과.
+
+추가 cleanup: `LowD5M4TameObstruction`을 추가해 tame `seedRootEquiv`로
+`paperReturn`을 직접 네 layer root-step schedule로 실현하는 경로가 불가능함을 Lean에서
+닫았다. 따라서 H2의 남은 입력은 반드시 wild `e`를 포함한
+`PhysicalRowsSingletonSwitchMapConjInput`이어야 한다.
 
 ## 남은 것
 - (선택) terminal folded words W4/W6 m²-cycle 포팅(터미널 appendix, decide).

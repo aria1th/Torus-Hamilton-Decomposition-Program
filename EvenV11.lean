@@ -60,6 +60,7 @@ import EvenV11.FinalTargetLowBaseRootFlatCertificateBridge
 import EvenV11.D3EvenM4
 import EvenV11.LowD5M4Structural
 import EvenV11.LowD5M4RibbonInterface
+import EvenV11.LowD5M4TameObstruction
 import EvenV11.RootFlatCycleData
 import EvenV11.D2AntiDiagonal
 import EvenV11.D5D7SeedTables

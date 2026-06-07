@@ -16,11 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "EvenV11/V28Hard.lean",
     "EvenV11/V28Hard/D3TerminalA2Parametric.lean",
-    "EvenV11/V28Hard/D5M4RibbonRows.lean",
-    "EvenV11/V28Hard/D5M4H2Skeleton.lean",
-    "EvenV11/V28Hard/D5M4H2PaperRows.lean",
-    "EvenV11/V28Hard/D7FiniteToCycleData.lean",
-    "EvenV11/V28Hard/D7Checkpoint.lean",
+    "EvenV11/LowD5M4RibbonInterface.lean",
+    "EvenV11/LowD5M4TameObstruction.lean",
     "EvenV11/V28Hard/D7TwoRailRelay.lean",
     "EvenV11/V28Hard/HighEvenEndpointPromotions.lean",
     "EvenV11/V28Hard/ChecklistFromHardParts.lean",
@@ -51,6 +48,21 @@ def main() -> None:
     even_v11 = (ROOT / "EvenV11.lean").read_text()
     if "V28Hard" in even_v11:
         fail("EvenV11.lean imports the experimental V28Hard umbrella")
+
+    active_import_text = "\n".join(
+        path.read_text()
+        for path in (ROOT / "EvenV11/V28Hard").glob("*.lean")
+    )
+    for token in [
+        "EvenV11.LowD5M4H2PaperRow",
+        "EvenV11.LowD5M4Realization",
+        "EvenV11.V28Hard.D5M4H2Skeleton",
+        "EvenV11.V28Hard.D5M4RibbonRows",
+        "EvenV11.V28Hard.D7Checkpoint",
+        "EvenV11.V28Hard.D7FiniteToCycleData",
+    ]:
+        if token in active_import_text:
+            fail(f"active V28Hard surface imports archived token: {token}")
 
     d7 = (ROOT / "EvenV11/V28Hard/D7TwoRailRelay.lean").read_text()
     expected = {

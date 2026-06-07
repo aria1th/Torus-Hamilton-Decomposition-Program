@@ -1,4 +1,5 @@
 import EvenV11.FinalTargetLowBaseRootFlatCertificateBridge
+import EvenV11.LowD5M4RibbonInterface
 import EvenV11.LowD5M4Structural
 import EvenV11.RootFlatCycleData
 
@@ -58,6 +59,14 @@ transported from the proved `LowD5M4.fullReturn` 256-cycles by the wild
 return-section reindexing `e`. -/
 abbrev LowD5M4RibbonData :=
   LowD5M4Structural.ResetPortH2RowEquivRibbonRealizationData
+
+abbrev LowD5M4PhysicalRibbonInput :=
+  LowD5M4RibbonInterface.PhysicalRowsSingletonSwitchMapConjInput
+
+theorem lowD5M4RibbonData_of_physicalRibbonInput
+    (input : LowD5M4PhysicalRibbonInput) :
+    Nonempty LowD5M4RibbonData :=
+  input.nonemptyRibbonData
 
 theorem assume_lowD5M4RibbonData : Nonempty LowD5M4RibbonData := sorry
 
