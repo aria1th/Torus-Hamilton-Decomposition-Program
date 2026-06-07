@@ -85,6 +85,7 @@ TERMINAL_SEARCH_TOKENS = [
     "factor_fixed_emap",
     "relation_signature",
     "common_conjugacy",
+    "f0_forced_common_conjugacy",
     "sample_four_layer_candidates",
     "two_layer_products",
 ]

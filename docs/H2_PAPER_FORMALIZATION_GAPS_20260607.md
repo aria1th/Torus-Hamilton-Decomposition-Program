@@ -344,6 +344,9 @@ The corresponding Lean-side necessary order invariants are now exposed as
 terminal target has parallel wrappers, so a proposed
 `TerminalA2M4TransportedSeedRowRealization` can be checked against these
 necessary conditions without first unpacking it to the generic physical target.
+On the search side, common conjugacy is now generated from the `F0` orbit: a
+16-cycle first return leaves only 16 possible `eT` maps to test against the
+other two colors.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

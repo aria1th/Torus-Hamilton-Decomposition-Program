@@ -368,6 +368,9 @@ paper pair-relation signature
 there was no common-conjugacy witness.  This is not an obstruction theorem; it
 shows that a terminal `eT` witness is not likely to appear from an unstructured
 random section or random four-layer product.
+The common-conjugacy check now uses `F0` as the generator: once a candidate
+four-layer triple has a 16-cycle first return, the image of one point determines
+the entire `eT`, leaving only 16 maps to test against colors 1 and 2.
 
 The most structured active paper target is now:
 

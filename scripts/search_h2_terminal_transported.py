@@ -232,6 +232,44 @@ def common_conjugacy(target: Layer, actual: Layer, start: int = ORIGIN) -> list[
     return None
 
 
+def f0_forced_common_conjugacy(
+    target: Layer, actual: Layer, start: int = ORIGIN
+) -> list[int] | None:
+    """Find common conjugacy using the first color cycle as the generator.
+
+    If `actual` is conjugate to the paper terminal triple, then `actual[0]` is
+    a 16-cycle.  Once the image of one source point is chosen, the equation
+    `actual[0] (e x) = e (target[0] x)` determines all of `e`.  There are only
+    16 choices left; colors 1 and 2 then become a direct check.
+    """
+    if cycle_type(target[0]) != (N,) or cycle_type(actual[0]) != (N,):
+        return None
+
+    for image_start in range(N):
+        emap = [-1] * N
+        inv = [-1] * N
+        x = start
+        y = image_start
+        ok = True
+        for _ in range(N):
+            if emap[x] != -1 or inv[y] != -1:
+                ok = False
+                break
+            emap[x] = y
+            inv[y] = x
+            x = target[0][x]
+            y = actual[0][y]
+        if not ok or x != start or y != image_start:
+            continue
+        if all(
+            actual[c][emap[x0]] == emap[target[c][x0]]
+            for c in COLORS
+            for x0 in range(N)
+        ):
+            return emap
+    return None
+
+
 def factor_fixed_emap(table: PairTable, emap: list[int]) -> tuple[int, int, int, int] | None:
     target = target_triple_for_emap(emap)
     for first_blob, first_pair in table.pair_index.items():
@@ -328,7 +366,7 @@ def sample_four_layer_candidates(
         if all_single and full_signature:
             full_signature_hits += 1
         if all_single and full_signature:
-            emap = common_conjugacy(target, actual)
+            emap = f0_forced_common_conjugacy(target, actual)
             if emap is not None:
                 common_conj_hits += 1
                 first_pair = table.pair_index[first_blob]

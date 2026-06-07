@@ -293,6 +293,9 @@ Lean now exposes the order part of this signature through
 row candidates can be rejected before attempting the full H2 assembly.  The
 same checks are now available directly on
 `TerminalA2M4TransportedSeedRowRealization`.
+The search helper also derives candidate `eT` maps from the first color orbit:
+after `R0` is a 16-cycle, choosing one image point fixes the whole conjugacy,
+so only 16 maps remain to check for colors 1 and 2.
 
 ### T9. H2 Certificate Assembly
 
