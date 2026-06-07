@@ -1399,6 +1399,106 @@ theorem TerminalA2M4PhysicalRealization.return_eq_terminalReturn
   rw [← F_eq_terminalReturn c q]
   exact H.return_eq_F c q
 
+/-- Iterated form of the terminal return conjugacy.  This is the Lean version
+of the F0-forced conjugacy reduction used by the terminal search script: once a
+single-cycle return is fixed, iterating it determines the section equivalence on
+the whole orbit. -/
+theorem TerminalA2M4PhysicalRealization.return_iterate_conj
+    (H : TerminalA2M4PhysicalRealization) (c : TorusColor 3) :
+    ∀ n q,
+      H.eT.symm ((H.rows.returnMap c)^[n] (H.eT q)) =
+        ((F c)^[n]) q := by
+  intro n
+  induction n with
+  | zero =>
+      intro q
+      simp
+  | succ n ih =>
+      intro q
+      have hN := ih q
+      have hNmap :
+          (H.rows.returnMap c)^[n] (H.eT q) =
+            H.eT (((F c)^[n]) q) := by
+        apply H.eT.symm.injective
+        simpa using hN
+      calc
+        H.eT.symm ((H.rows.returnMap c)^[n + 1] (H.eT q))
+            =
+          H.eT.symm
+            (H.rows.returnMap c ((H.rows.returnMap c)^[n] (H.eT q))) := by
+              rw [Function.iterate_succ_apply']
+        _ =
+          H.eT.symm
+            (H.rows.returnMap c (H.eT (((F c)^[n]) q))) := by
+              rw [hNmap]
+        _ = F c (((F c)^[n]) q) :=
+              H.return_eq_F c (((F c)^[n]) q)
+        _ = ((F c)^[n + 1]) q := by
+              rw [Function.iterate_succ_apply']
+
+theorem TerminalA2M4PhysicalRealization.return_iterate_map_conj
+    (H : TerminalA2M4PhysicalRealization) (c : TorusColor 3)
+    (n : Nat) (q : Q4) :
+    (H.rows.returnMap c)^[n] (H.eT q) =
+      H.eT (((F c)^[n]) q) := by
+  apply H.eT.symm.injective
+  simpa using H.return_iterate_conj c n q
+
+/-- If `q` is reached from `q0` by iterating the first terminal return, then
+the section value `eT q` is forced by the physical color-0 return and `eT q0`.
+Since `F 0` is a single cycle, this determines `eT` from one image point. -/
+theorem TerminalA2M4PhysicalRealization.eT_eq_color0_return_iterate_of_F0_iterate
+    (H : TerminalA2M4PhysicalRealization) {q0 q : Q4} {n : Nat}
+    (h : ((F (0 : TorusColor 3))^[n]) q0 = q) :
+    H.eT q =
+      ((H.rows.returnMap (0 : TorusColor 3))^[n]) (H.eT q0) := by
+  rw [← h]
+  exact (H.return_iterate_map_conj (0 : TorusColor 3) n q0).symm
+
+theorem TerminalA2M4PhysicalRealization.eT_color0_forced_orbit
+    (H : TerminalA2M4PhysicalRealization) (q0 q : Q4) :
+    ∃ n : Nat,
+      H.eT q =
+        ((H.rows.returnMap (0 : TorusColor 3))^[n]) (H.eT q0) := by
+  rcases (F_cycle (0 : TorusColor 3)).2 q0 q with ⟨n, hn⟩
+  exact
+    ⟨n,
+      H.eT_eq_color0_return_iterate_of_F0_iterate
+        (q0 := q0) (q := q) hn⟩
+
+/-- Two terminal physical realizations with the same color-0 return and the
+same image of one seed point have the same return-section equivalence. -/
+theorem TerminalA2M4PhysicalRealization.eT_ext_of_color0_return_eq
+    (H K : TerminalA2M4PhysicalRealization)
+    (hReturn0 :
+      H.rows.returnMap (0 : TorusColor 3) =
+        K.rows.returnMap (0 : TorusColor 3))
+    {q0 : Q4} (hBase : H.eT q0 = K.eT q0) :
+    H.eT = K.eT := by
+  apply Equiv.ext
+  intro q
+  rcases (F_cycle (0 : TorusColor 3)).2 q0 q with ⟨n, hn⟩
+  calc
+    H.eT q
+        =
+      ((H.rows.returnMap (0 : TorusColor 3))^[n]) (H.eT q0) :=
+        H.eT_eq_color0_return_iterate_of_F0_iterate
+          (q0 := q0) (q := q) hn
+    _ =
+      ((K.rows.returnMap (0 : TorusColor 3))^[n]) (K.eT q0) := by
+        rw [hReturn0, hBase]
+    _ = K.eT q :=
+        (K.eT_eq_color0_return_iterate_of_F0_iterate
+          (q0 := q0) (q := q) hn).symm
+
+theorem TerminalA2M4PhysicalRealization.eT_ext_of_rows_eq
+    (H K : TerminalA2M4PhysicalRealization)
+    (hRows : H.rows = K.rows)
+    {q0 : Q4} (hBase : H.eT q0 = K.eT q0) :
+    H.eT = K.eT :=
+  H.eT_ext_of_color0_return_eq K
+    (by rw [hRows]) hBase
+
 /-- The actual two-letter terminal return relation on physical terminal root
 states.  It is the physical counterpart of `terminalF0F2 = F0 o F2`. -/
 def TerminalA2M4PhysicalRealization.actualF0F1
@@ -1686,6 +1786,38 @@ theorem TerminalA2M4TransportedSeedRowRealization.return_eq_terminalReturn
       H.eT.symm (H.toPhysicalRealization.rows.returnMap c (H.eT q)) =
         terminalReturn (m := 4) c q :=
   H.toPhysicalRealization.return_eq_terminalReturn
+
+theorem TerminalA2M4TransportedSeedRowRealization.return_iterate_conj
+    (H : TerminalA2M4TransportedSeedRowRealization) (c : TorusColor 3) :
+    ∀ n q,
+      H.eT.symm
+          ((H.toPhysicalRealization.rows.returnMap c)^[n] (H.eT q)) =
+        ((F c)^[n]) q :=
+  H.toPhysicalRealization.return_iterate_conj c
+
+theorem TerminalA2M4TransportedSeedRowRealization.eT_eq_color0_return_iterate_of_F0_iterate
+    (H : TerminalA2M4TransportedSeedRowRealization) {q0 q : Q4} {n : Nat}
+    (h : ((F (0 : TorusColor 3))^[n]) q0 = q) :
+    H.eT q =
+      ((H.toPhysicalRealization.rows.returnMap (0 : TorusColor 3))^[n])
+        (H.eT q0) :=
+  H.toPhysicalRealization.eT_eq_color0_return_iterate_of_F0_iterate h
+
+theorem TerminalA2M4TransportedSeedRowRealization.eT_color0_forced_orbit
+    (H : TerminalA2M4TransportedSeedRowRealization) (q0 q : Q4) :
+    ∃ n : Nat,
+      H.eT q =
+        ((H.toPhysicalRealization.rows.returnMap (0 : TorusColor 3))^[n])
+          (H.eT q0) :=
+  H.toPhysicalRealization.eT_color0_forced_orbit q0 q
+
+theorem TerminalA2M4TransportedSeedRowRealization.eT_ext_of_rows_eq
+    (H K : TerminalA2M4TransportedSeedRowRealization)
+    (hRows : H.toPhysicalRealization.rows = K.toPhysicalRealization.rows)
+    {q0 : Q4} (hBase : H.eT q0 = K.eT q0) :
+    H.eT = K.eT :=
+  H.toPhysicalRealization.eT_ext_of_rows_eq
+    K.toPhysicalRealization hRows hBase
 
 theorem TerminalA2M4TransportedSeedRowRealization.not_terminalRootEquivSection
     (H : TerminalA2M4TransportedSeedRowRealization) :
