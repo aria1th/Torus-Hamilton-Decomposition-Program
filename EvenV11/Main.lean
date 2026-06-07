@@ -87,6 +87,9 @@ abbrev LowD5M4TerminalRealization :=
 abbrev LowD5M4TerminalSeedRowRealization :=
   H2.D54.TerminalA2M4SeedRowRealization
 
+abbrev LowD5M4TerminalTransportedSeedRowRealization :=
+  H2.D54.TerminalA2M4TransportedSeedRowRealization
+
 abbrev LowD5M4ProductBaseRealization :=
   H2.D54.D54ProductBaseRealization
 
@@ -95,6 +98,9 @@ abbrev LowD5M4ProductBaseLayerConjRealization :=
 
 abbrev LowD5M4ProductBaseSeedRowRealization :=
   H2.D54.D54ProductBaseSeedRowRealization
+
+abbrev LowD5M4ProductBaseTransportedSeedRowRealization :=
+  H2.D54.D54ProductBaseTransportedSeedRowRealization
 
 abbrev LowD5M4TwoStageLayerModelRealization :=
   H2.D54.D54TwoStageLayerModelRealization
@@ -105,6 +111,9 @@ abbrev LowD5M4TwoStageLayerConjRealization :=
 abbrev LowD5M4TwoStageSeedRowRealization :=
   H2.D54.D54TwoStageSeedRowRealization
 
+abbrev LowD5M4TwoStageTransportedSeedRowRealization :=
+  H2.D54.D54TwoStageTransportedSeedRowRealization
+
 abbrev LowD5M4TwoStageSingletonSwitchRealization :=
   H2.D54.D54TwoStageSingletonSwitchRealization
 
@@ -113,6 +122,9 @@ abbrev LowD5M4TwoStageLayerConjSingletonSwitchRealization :=
 
 abbrev LowD5M4TwoStageSeedRowSingletonSwitchRealization :=
   H2.D54.D54TwoStageSeedRowSingletonSwitchRealization
+
+abbrev LowD5M4TwoStageTransportedSeedRowSingletonSwitchRealization :=
+  H2.D54.D54TwoStageTransportedSeedRowSingletonSwitchRealization
 
 abbrev LowD5M4FiveSwitchLayerModelRealization :=
   H2.D54.D54FiveSwitchLayerModelRealization
@@ -141,6 +153,11 @@ def lowD5M4TerminalRealization_of_terminalSeedRowRealization
     LowD5M4TerminalRealization :=
   input.toPhysicalRealization
 
+def lowD5M4TerminalSeedRowRealization_of_terminalTransportedSeedRowRealization
+    (input : LowD5M4TerminalTransportedSeedRowRealization) :
+    LowD5M4TerminalSeedRowRealization :=
+  input.toSeedRowRealization
+
 def lowD5M4ProductBaseRealization_of_productBaseLayerConjRealization
     (input : LowD5M4ProductBaseLayerConjRealization) :
     LowD5M4ProductBaseRealization :=
@@ -150,6 +167,11 @@ def lowD5M4ProductBaseLayerConjRealization_of_productBaseSeedRowRealization
     (input : LowD5M4ProductBaseSeedRowRealization) :
     LowD5M4ProductBaseLayerConjRealization :=
   input.toLayerConjRealization
+
+def lowD5M4ProductBaseSeedRowRealization_of_productBaseTransportedSeedRowRealization
+    (input : LowD5M4ProductBaseTransportedSeedRowRealization) :
+    LowD5M4ProductBaseSeedRowRealization :=
+  input.toSeedRowRealization
 
 theorem lowD5M4RibbonData_of_fiveSwitchRealization
     (input : LowD5M4FiveSwitchRealization) :
@@ -185,6 +207,11 @@ def lowD5M4TwoStageLayerConjRealization_of_seedRowRealization
     (input : LowD5M4TwoStageSeedRowRealization) :
     LowD5M4TwoStageLayerConjRealization :=
   input.toLayerConjRealization
+
+def lowD5M4TwoStageSeedRowRealization_of_transportedSeedRowRealization
+    (input : LowD5M4TwoStageTransportedSeedRowRealization) :
+    LowD5M4TwoStageSeedRowRealization :=
+  input.toSeedRowRealization
 
 theorem lowD5M4RibbonData_of_twoStageSingletonSwitchRealization
     (input : LowD5M4TwoStageSingletonSwitchRealization) :
@@ -226,6 +253,11 @@ def lowD5M4TwoStageLayerConjSingletonSwitchRealization_of_seedRowSingletonSwitch
     LowD5M4TwoStageLayerConjSingletonSwitchRealization :=
   input.toLayerConjSingletonSwitchRealization
 
+def lowD5M4TwoStageSeedRowSingletonSwitchRealization_of_transportedSeedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageTransportedSeedRowSingletonSwitchRealization) :
+    LowD5M4TwoStageSeedRowSingletonSwitchRealization :=
+  input.toSeedRowSingletonSwitchRealization
+
 def lowD5M4PaperRealization_of_twoStageSingletonSwitchRealization
     (input : LowD5M4TwoStageSingletonSwitchRealization) :
     LowD5M4PaperRealization :=
@@ -240,6 +272,11 @@ def lowD5M4PaperRealization_of_twoStageSeedRowSingletonSwitchRealization
     (input : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
     LowD5M4PaperRealization :=
   H2.D54.D54PaperRealization.ofTwoStageSeedRowSingletonSwitchRealization input
+
+def lowD5M4PaperRealization_of_twoStageTransportedSeedRowSingletonSwitchRealization
+    (input : LowD5M4TwoStageTransportedSeedRowSingletonSwitchRealization) :
+    LowD5M4PaperRealization :=
+  H2.D54.D54PaperRealization.ofTwoStageTransportedSeedRowSingletonSwitchRealization input
 
 theorem lowD5M4RibbonData_of_fiveSwitchLayerModelRealization
     (input : LowD5M4FiveSwitchLayerModelRealization) :
@@ -319,6 +356,14 @@ theorem lowD5M4_of_paperAllSeedRowStages
     (twoStageSwitch : LowD5M4TwoStageSeedRowSingletonSwitchRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperAllSeedRowStages
+    terminal productBase twoStageSwitch
+
+theorem lowD5M4_of_paperTransportedSeedRowStages
+    (terminal : LowD5M4TerminalTransportedSeedRowRealization)
+    (productBase : LowD5M4ProductBaseTransportedSeedRowRealization)
+    (twoStageSwitch : LowD5M4TwoStageTransportedSeedRowSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperTransportedSeedRowStages
     terminal productBase twoStageSwitch
 
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via

@@ -300,14 +300,17 @@ EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
 EvenV11.lowD5M4_of_paperSeedRowStages
 EvenV11.lowD5M4_of_paperAllSeedRowStages
+EvenV11.lowD5M4_of_paperTransportedSeedRowStages
 ```
 
-so the narrowest remaining inputs are exactly terminal seed-row realization,
-product-base seed-row realization, and the two-stage seed-row singleton-switch
-realization.  The bridge theorems `terminalScheduleOfSeedRow_layerMap_conj` and
-`physicalRowsOfSeedRow_layerMap_conj` construct the physical row layer-conjugacy
-from seed-side row tables and seed-side generator steps transported to the
-standard root steps.
+so the narrowest remaining inputs are exactly terminal transported seed-row
+realization, product-base transported seed-row realization, and the two-stage
+transported seed-row singleton-switch realization.  The transported variants fix
+the seed generator step as the pullback of the standard root step through the
+supplied equivalence.  The bridge theorems
+`terminalScheduleOfSeedRow_layerMap_conj` and
+`physicalRowsOfSeedRow_layerMap_conj` then construct the physical row
+layer-conjugacy.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

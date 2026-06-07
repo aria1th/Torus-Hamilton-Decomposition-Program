@@ -262,12 +262,15 @@ EvenV11.lowD5M4_of_paperStagesTwoStageLayerConjSingleton
 EvenV11.lowD5M4_of_paperLayerConjStages
 EvenV11.lowD5M4_of_paperSeedRowStages
 EvenV11.lowD5M4_of_paperAllSeedRowStages
+EvenV11.lowD5M4_of_paperTransportedSeedRowStages
 ```
 
 The narrowest version takes exactly the three remaining construction stages:
-terminal seed-row realization, product-base seed-row realization, and two-stage
-seed-row singleton-switch realization.  At this level T8 supplies seed-side row
-equivalence tables and generator-step conjugacy; Lean then derives the physical
+terminal transported seed-row realization, product-base transported seed-row
+realization, and two-stage transported seed-row singleton-switch realization.
+At this level T8 supplies seed-side row equivalence tables and fold/equality
+facts; the seed generator step is fixed as the pullback of the standard root
+step through the supplied equivalence.  Lean then derives the physical
 layer-conjugacy through `terminalScheduleOfSeedRow_layerMap_conj` and
 `physicalRowsOfSeedRow_layerMap_conj`.
 
