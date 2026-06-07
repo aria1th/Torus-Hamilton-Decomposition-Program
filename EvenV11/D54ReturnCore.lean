@@ -890,6 +890,53 @@ theorem terminalF1F2_cycleBlockLengths :
     terminalF1F2CycleBlocks.map List.length = [8, 8] :=
   rfl
 
+theorem terminalF0F1_cycleBlockStep :
+    ∀ xs, xs ∈ terminalF0F1CycleBlocks →
+      xs.map terminalF0F1 = xs.drop 1 ++ [xs.headD (q4 0 0)] := by
+  intro xs hxs
+  unfold terminalF0F1CycleBlocks at hxs
+  simp only [List.mem_cons, List.not_mem_nil] at hxs
+  rcases hxs with hxs | hxs | hxs | hxs | hxs
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · contradiction
+
+theorem terminalF0F2_cycleBlockStep :
+    ∀ xs, xs ∈ terminalF0F2CycleBlocks →
+      xs.map terminalF0F2 = xs.drop 1 ++ [xs.headD (q4 0 0)] := by
+  intro xs hxs
+  unfold terminalF0F2CycleBlocks at hxs
+  simp only [List.mem_cons, List.not_mem_nil] at hxs
+  rcases hxs with hxs | hxs | hxs | hxs | hxs
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · contradiction
+
+theorem terminalF1F2_cycleBlockStep :
+    ∀ xs, xs ∈ terminalF1F2CycleBlocks →
+      xs.map terminalF1F2 = xs.drop 1 ++ [xs.headD (q4 0 0)] := by
+  intro xs hxs
+  unfold terminalF1F2CycleBlocks at hxs
+  simp only [List.mem_cons, List.not_mem_nil] at hxs
+  rcases hxs with hxs | hxs | hxs
+  · subst xs
+    decide
+  · subst xs
+    decide
+  · contradiction
+
 def c0 : Q4 := q4 0 3
 def c1 : Q4 := q4 3 0
 def c2 : Q4 := q4 3 3
@@ -1601,6 +1648,11 @@ def TerminalA2M4PhysicalRealization.actualF1F2
     TerminalRootState → TerminalRootState :=
   fun w => H.rows.returnMap 1 (H.rows.returnMap 2 w)
 
+def terminalTransportedCycleBlocks
+    (eT : Q4 ≃ TerminalRootState) (blocks : List (List Q4)) :
+    List (List TerminalRootState) :=
+  blocks.map (fun xs => xs.map eT)
+
 theorem TerminalA2M4PhysicalRealization.actualF0F1_conj
     (H : TerminalA2M4PhysicalRealization) (q : Q4) :
     H.eT.symm (H.actualF0F1 (H.eT q)) = terminalF0F1 q := by
@@ -1636,6 +1688,111 @@ theorem TerminalA2M4PhysicalRealization.actualF1F2_conj
     simpa using h2sym
   rw [h2]
   exact H.return_eq_F (1 : TorusColor 3) (F 2 q)
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_map_eT
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.actualF0F1 (H.eT q) = H.eT (terminalF0F1 q) := by
+  apply H.eT.symm.injective
+  simpa using H.actualF0F1_conj q
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_map_eT
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.actualF0F2 (H.eT q) = H.eT (terminalF0F2 q) := by
+  apply H.eT.symm.injective
+  simpa using H.actualF0F2_conj q
+
+theorem TerminalA2M4PhysicalRealization.actualF1F2_map_eT
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.actualF1F2 (H.eT q) = H.eT (terminalF1F2 q) := by
+  apply H.eT.symm.injective
+  simpa using H.actualF1F2_conj q
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_cycleBlockStep
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ xs, xs ∈ terminalF0F1CycleBlocks →
+      (xs.map H.eT).map H.actualF0F1 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+  intro xs hxs
+  calc
+    (xs.map H.eT).map H.actualF0F1
+        = xs.map (fun q => H.actualF0F1 (H.eT q)) := by
+          rw [List.map_map]
+          rfl
+    _ = xs.map (fun q => H.eT (terminalF0F1 q)) := by
+          apply List.map_congr_left
+          intro q _hq
+          exact H.actualF0F1_map_eT q
+    _ = (xs.map terminalF0F1).map H.eT := by
+          rw [List.map_map]
+          rfl
+    _ = (xs.drop 1 ++ [xs.headD (q4 0 0)]).map H.eT := by
+          rw [terminalF0F1_cycleBlockStep xs hxs]
+    _ = (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+          simp
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_cycleBlockStep
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ xs, xs ∈ terminalF0F2CycleBlocks →
+      (xs.map H.eT).map H.actualF0F2 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+  intro xs hxs
+  calc
+    (xs.map H.eT).map H.actualF0F2
+        = xs.map (fun q => H.actualF0F2 (H.eT q)) := by
+          rw [List.map_map]
+          rfl
+    _ = xs.map (fun q => H.eT (terminalF0F2 q)) := by
+          apply List.map_congr_left
+          intro q _hq
+          exact H.actualF0F2_map_eT q
+    _ = (xs.map terminalF0F2).map H.eT := by
+          rw [List.map_map]
+          rfl
+    _ = (xs.drop 1 ++ [xs.headD (q4 0 0)]).map H.eT := by
+          rw [terminalF0F2_cycleBlockStep xs hxs]
+    _ = (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+          simp
+
+theorem TerminalA2M4PhysicalRealization.actualF1F2_cycleBlockStep
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ xs, xs ∈ terminalF1F2CycleBlocks →
+      (xs.map H.eT).map H.actualF1F2 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+  intro xs hxs
+  calc
+    (xs.map H.eT).map H.actualF1F2
+        = xs.map (fun q => H.actualF1F2 (H.eT q)) := by
+          rw [List.map_map]
+          rfl
+    _ = xs.map (fun q => H.eT (terminalF1F2 q)) := by
+          apply List.map_congr_left
+          intro q _hq
+          exact H.actualF1F2_map_eT q
+    _ = (xs.map terminalF1F2).map H.eT := by
+          rw [List.map_map]
+          rfl
+    _ = (xs.drop 1 ++ [xs.headD (q4 0 0)]).map H.eT := by
+          rw [terminalF1F2_cycleBlockStep xs hxs]
+    _ = (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] := by
+          simp
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_cycleBlockLengths
+    (H : TerminalA2M4PhysicalRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF0F1CycleBlocks).map
+        List.length = [1, 1, 7, 7] := by
+  rfl
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_cycleBlockLengths
+    (H : TerminalA2M4PhysicalRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF0F2CycleBlocks).map
+        List.length = [1, 1, 3, 11] := by
+  rfl
+
+theorem TerminalA2M4PhysicalRealization.actualF1F2_cycleBlockLengths
+    (H : TerminalA2M4PhysicalRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF1F2CycleBlocks).map
+        List.length = [8, 8] := by
+  rfl
 
 theorem TerminalA2M4PhysicalRealization.actualF0F1_iterate_conj
     (H : TerminalA2M4PhysicalRealization) :
@@ -1903,6 +2060,63 @@ theorem TerminalA2M4TransportedSeedRowRealization.eT_ext_of_rows_eq
     H.eT = K.eT :=
   H.toPhysicalRealization.eT_ext_of_rows_eq
     K.toPhysicalRealization hRows hBase
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F1_map_eT
+    (H : TerminalA2M4TransportedSeedRowRealization) (q : Q4) :
+    H.toPhysicalRealization.actualF0F1 (H.eT q) =
+      H.eT (terminalF0F1 q) :=
+  H.toPhysicalRealization.actualF0F1_map_eT q
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F2_map_eT
+    (H : TerminalA2M4TransportedSeedRowRealization) (q : Q4) :
+    H.toPhysicalRealization.actualF0F2 (H.eT q) =
+      H.eT (terminalF0F2 q) :=
+  H.toPhysicalRealization.actualF0F2_map_eT q
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF1F2_map_eT
+    (H : TerminalA2M4TransportedSeedRowRealization) (q : Q4) :
+    H.toPhysicalRealization.actualF1F2 (H.eT q) =
+      H.eT (terminalF1F2 q) :=
+  H.toPhysicalRealization.actualF1F2_map_eT q
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F1_cycleBlockStep
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ xs, xs ∈ terminalF0F1CycleBlocks →
+      (xs.map H.eT).map H.toPhysicalRealization.actualF0F1 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] :=
+  H.toPhysicalRealization.actualF0F1_cycleBlockStep
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F2_cycleBlockStep
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ xs, xs ∈ terminalF0F2CycleBlocks →
+      (xs.map H.eT).map H.toPhysicalRealization.actualF0F2 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] :=
+  H.toPhysicalRealization.actualF0F2_cycleBlockStep
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF1F2_cycleBlockStep
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ xs, xs ∈ terminalF1F2CycleBlocks →
+      (xs.map H.eT).map H.toPhysicalRealization.actualF1F2 =
+        (xs.drop 1).map H.eT ++ [H.eT (xs.headD (q4 0 0))] :=
+  H.toPhysicalRealization.actualF1F2_cycleBlockStep
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F1_cycleBlockLengths
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF0F1CycleBlocks).map
+        List.length = [1, 1, 7, 7] :=
+  H.toPhysicalRealization.actualF0F1_cycleBlockLengths
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F2_cycleBlockLengths
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF0F2CycleBlocks).map
+        List.length = [1, 1, 3, 11] :=
+  H.toPhysicalRealization.actualF0F2_cycleBlockLengths
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF1F2_cycleBlockLengths
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    (terminalTransportedCycleBlocks H.eT terminalF1F2CycleBlocks).map
+        List.length = [8, 8] :=
+  H.toPhysicalRealization.actualF1F2_cycleBlockLengths
 
 theorem TerminalA2M4TransportedSeedRowRealization.not_terminalRootEquivSection
     (H : TerminalA2M4TransportedSeedRowRealization) :
