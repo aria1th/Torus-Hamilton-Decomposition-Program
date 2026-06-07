@@ -127,12 +127,6 @@ def W : Q4 → Q4 :=
 def terminalF0F2 : Q4 → Q4 :=
   fun q => F 0 (F 2 q)
 
-set_option maxRecDepth 100000 in
-theorem seedTwoStageFullReturnLayer_return_eq_Rhat :
-    ∀ c : TorusColor 5, ∀ s : Seed,
-      seedLayerReturn seedTwoStageFullReturnLayer c s = Rhat c s := by
-  decide
-
 /-- Standard D3 root section coordinates for the terminal A2 block, written as
 the paper pair `Q4`. -/
 def terminalRootPair (w : TerminalRootState) : Q4 :=
@@ -371,6 +365,38 @@ theorem postBaseCarry_bijective (i : Fin 5) :
             (if s.1 = Rbase i (bSite i) then (1 : Zed4) else 0)),
         ?_⟩
     simp [postBaseCarry]
+
+/-- The two-stage seed model inserts the final carry immediately after the
+product-base return.  Testing the transported site `Rbase_i b_i` after the base
+move is equivalent to testing the original site `b_i` before the move. -/
+theorem postBaseCarry_after_RbaseNeutral_eq_Rhat
+    (i : Fin 5) (s : Seed) :
+    postBaseCarry i (RbaseNeutral i s) = Rhat i s := by
+  rcases s with ⟨x, z⟩
+  by_cases hx : x = bSite i
+  · simp [postBaseCarry, RbaseNeutral, Rhat, LowD5M4.fullReturn,
+      bSite, UnitCarry.additiveSkewMap, Shared.skewProductMap,
+      UnitCarry.pointCarry, hx]
+  · have hRx : Rbase i x ≠ Rbase i (bSite i) := by
+      intro h
+      exact hx ((Rbase_cycle i).1.1 h)
+    simp [postBaseCarry, RbaseNeutral, Rhat, LowD5M4.fullReturn,
+      bSite, UnitCarry.additiveSkewMap, Shared.skewProductMap,
+      UnitCarry.pointCarry, hx, hRx]
+
+set_option maxRecDepth 100000 in
+theorem seedLayerReturn_twoStageFullReturnLayer :
+    ∀ c : TorusColor 5, ∀ s : Seed,
+      seedLayerReturn seedTwoStageFullReturnLayer c s =
+        postBaseCarry c (RbaseNeutral c s) := by
+  decide
+
+theorem seedTwoStageFullReturnLayer_return_eq_Rhat :
+    ∀ c : TorusColor 5, ∀ s : Seed,
+      seedLayerReturn seedTwoStageFullReturnLayer c s = Rhat c s := by
+  intro c s
+  rw [seedLayerReturn_twoStageFullReturnLayer]
+  exact postBaseCarry_after_RbaseNeutral_eq_Rhat c s
 
 theorem seedTwoStageFullReturnLayer_bijective :
     ∀ t : ZMod 4, ∀ c : TorusColor 5,
