@@ -44,6 +44,8 @@ TerminalA2M4PhysicalRealization.step_eq_standard
 TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
 TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
 TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
+RbaseNeutral_not_singleCycle
+D54ProductBaseRealization.returnMap_not_singleCycle
 ```
 
 Thus the return-level `F_i` used by `LowD5M4.fullReturn` is no longer merely an
@@ -151,6 +153,18 @@ baseProductReturn =
 
 The paper does not spell out the row table or the product reindexing.  That is
 acceptable in prose, but it is a missing formal interface.
+
+This stage is necessary but not sufficient.  The neutral `Z` row means the
+product-base return preserves the `Z` coordinate, so it cannot be RF3 on the
+full `Seed = Q4 x Y x Z`.  Lean now records this no-go fact:
+
+```lean
+RbaseNeutral_not_singleCycle
+D54ProductBaseRealization.returnMap_not_singleCycle
+```
+
+Therefore the final five-switch stage is mathematically necessary, not merely a
+marked/reserve enhancement.
 
 ## Gap 4. "Rows Remain Latin and Layer Maps Remain Bijective" Needs Local Data
 

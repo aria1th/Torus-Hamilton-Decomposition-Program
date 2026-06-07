@@ -69,6 +69,8 @@ terminalF0F2_iterate_33
 terminalF0F2_no_positive_iterate_lt33
 TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
 TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
+RbaseNeutral_not_singleCycle
+D54ProductBaseRealization.returnMap_not_singleCycle
 D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
 D54PaperRealization.ofFiveSwitchSeedSwitchRealization
 ```
@@ -208,6 +210,18 @@ theorem D54_product_base_realization
   (T : H2.D54.TerminalA2M4PhysicalRealization) :
   H2.D54.D54ProductBaseRealization
 ```
+
+This stage is necessary but cannot close H2 by itself.  The pre-reset product
+return preserves the neutral `Z` coordinate, and Lean now records the no-go
+facts:
+
+```lean
+RbaseNeutral_not_singleCycle
+D54ProductBaseRealization.returnMap_not_singleCycle
+```
+
+Thus the five final local switches are not optional bookkeeping; they are the
+step that inserts the missing `Z` unit carry.
 
 ```lean
 theorem D54_five_switches_realize_fullReturn

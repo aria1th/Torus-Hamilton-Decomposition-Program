@@ -315,6 +315,31 @@ theorem RbaseNeutral_bijective (i : Fin 5) :
     rcases (Rbase_cycle i).1.2 s.1 with ⟨x, hx⟩
     exact ⟨(x, s.2), by simp [RbaseNeutral, hx]⟩
 
+theorem RbaseNeutral_iterate_z
+    (i : Fin 5) (n : Nat) (s : Seed) :
+    (((RbaseNeutral i)^[n]) s).2 = s.2 := by
+  induction n generalizing s with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      simpa [RbaseNeutral] using ih s
+
+/-- The product-base return cannot be the final H2 return: it preserves the
+neutral `Z` coordinate and therefore has four separate `Z` fibers.  The final
+five local switches are exactly what insert the missing unit carry. -/
+theorem RbaseNeutral_not_singleCycle
+    (i : Fin 5) :
+    ¬ Shared.IsSingleCycleMap (RbaseNeutral i) := by
+  intro hcycle
+  let x : Seed := ((((0 : Z4), (0 : Z4)), (0 : Z4)), (0 : Z4))
+  let y : Seed := ((((0 : Z4), (0 : Z4)), (0 : Z4)), (1 : Z4))
+  rcases hcycle.2 x y with ⟨n, hn⟩
+  have hz := congrArg Prod.snd hn
+  rw [RbaseNeutral_iterate_z i n x] at hz
+  have hne : (0 : Z4) ≠ (1 : Z4) := by decide
+  exact hne (by simpa [x, y] using hz)
+
 theorem postBaseCarry_bijective (i : Fin 5) :
     Function.Bijective (postBaseCarry i) := by
   constructor
@@ -1219,6 +1244,23 @@ def D54ProductBaseLayerModelRealization.toProductBaseRealization
     physical_returnMap_conj_of_seedLayerReturn_eq
       H.rows0 H.e0 H.seedLayer0 RbaseNeutral
       H.layerMapConj0 H.seedReturn_eq_RbaseNeutral
+
+/-- A product-base realization is not yet the final H2 realization: every
+product-base return map is conjugate to `RbaseNeutral`, hence still preserves
+the neutral `Z` fiber and is not a single cycle. -/
+theorem D54ProductBaseRealization.returnMap_not_singleCycle
+    (H : D54ProductBaseRealization) (c : TorusColor 5) :
+    ¬ Shared.IsSingleCycleMap
+      ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c) := by
+  intro hcycle
+  exact RbaseNeutral_not_singleCycle c
+    (Shared.single_cycle_of_equiv_conj H.e0.symm
+      (RbaseNeutral c)
+      ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c)
+      hcycle
+      (by
+        intro w
+        exact (H.returnMapConj_RbaseNeutral c w).symm))
 
 /-- Fixed two-stage seed-model realization target.  This is not a construction
 of the paper rows by itself; it is a useful narrowed handoff: once physical rows
