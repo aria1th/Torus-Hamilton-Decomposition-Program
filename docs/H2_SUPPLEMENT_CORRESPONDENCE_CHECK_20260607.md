@@ -63,6 +63,8 @@ Additional active bridge theorems in `EvenV11/D54ReturnCore.lean`:
 F_eq_terminalReturn
 terminalReturn4_singleCycle
 TerminalA2M4PhysicalRealization.return_eq_terminalReturn
+TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
+terminalStandardReturnMap_ne_fixedChartReturn_color1
 D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
 D54PaperRealization.ofFiveSwitchSeedSwitchRealization
 ```
@@ -76,7 +78,9 @@ there is no four-layer factorization of any paper terminal return `F_i` by
 standard D3 root-flat bijective layer maps in the plain `terminalRootEquiv`
 coordinates.  Thus `TerminalA2M4PhysicalRealization` must expose an equivalence
 `eT : Q4 ~= TerminalRootState`; asking for `terminalRootEquiv` directly would be
-too strong.
+too strong.  The Lean interface also records `step_eq_standard`, so the
+terminal physical schedule is tied to the standard D3 root step rather than an
+arbitrary `RootFlatSchedule.step`.
 
 ## Convention Note
 

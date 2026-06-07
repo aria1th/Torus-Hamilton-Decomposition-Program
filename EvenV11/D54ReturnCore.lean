@@ -1,5 +1,6 @@
 import EvenV11.D54ResetData
 import EvenV11.LowD5M4RibbonInterface
+import EvenV11.StandardRootFlatLift
 
 /-!
 # D5(4) H2 return core and paper-realization handoff
@@ -150,6 +151,77 @@ def terminalRootEquiv : TerminalRootState ≃ Q4 where
   invFun := terminalPairRoot
   left_inv := terminalPairRoot_terminalRootPair
   right_inv := terminalRootPair_terminalPairRoot
+
+/-- Standard D3 root step in the terminal root section.  Direction `0` and `1`
+increment the two root coordinates; direction `2` is the last torus direction
+and is neutral in the root chart. -/
+def terminalStandardRootStep
+    (d : TorusDirection 3) : TerminalRootState → TerminalRootState :=
+  StandardRootFlatLift.rootStep (n := 2) (m := 4) d
+
+/-- Standard D3 root-flat schedule built from an explicit terminal direction
+table. -/
+def terminalStandardSchedule
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    RootFlatSchedule (TorusColor 3) (TorusDirection 3) TerminalRootState 4 where
+  dir := dir
+  step := terminalStandardRootStep
+
+/-- The paper terminal return transported through the plain standard root
+coordinate chart.  This is a useful negative control: it is too rigid for the
+paper realization. -/
+def terminalFixedChartReturn
+    (c : TorusColor 3) : TerminalRootState → TerminalRootState :=
+  fun w =>
+    terminalRootEquiv.symm
+      (terminalReturn (m := 4) c (terminalRootEquiv w))
+
+def terminalFixedChartObstructionSource : TerminalRootState :=
+  terminalPairRoot (D54ResetData.d54q4 0 0)
+
+theorem no_four_terminalStandardRootSteps_to_fixedChartReturn_color1 :
+    ∀ d0 d1 d2 d3 : TorusDirection 3,
+      terminalStandardRootStep d3
+          (terminalStandardRootStep d2
+            (terminalStandardRootStep d1
+              (terminalStandardRootStep d0
+                terminalFixedChartObstructionSource))) ≠
+        terminalFixedChartReturn (1 : TorusColor 3)
+          terminalFixedChartObstructionSource := by
+  decide
+
+theorem terminalStandardReturnMap_ne_fixedChartReturn_color1
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    (terminalStandardSchedule dir).returnMap (1 : TorusColor 3)
+        terminalFixedChartObstructionSource ≠
+      terminalFixedChartReturn (1 : TorusColor 3)
+        terminalFixedChartObstructionSource := by
+  intro hReturn
+  let x1 :=
+    terminalStandardRootStep
+      (dir (0 : ZMod 4) terminalFixedChartObstructionSource
+        (1 : TorusColor 3))
+      terminalFixedChartObstructionSource
+  let x2 :=
+    terminalStandardRootStep
+      (dir (1 : ZMod 4) x1 (1 : TorusColor 3)) x1
+  let x3 :=
+    terminalStandardRootStep
+      (dir (2 : ZMod 4) x2 (1 : TorusColor 3)) x2
+  have hSteps :
+      terminalStandardRootStep
+          (dir (3 : ZMod 4) x3 (1 : TorusColor 3)) x3 =
+        terminalFixedChartReturn (1 : TorusColor 3)
+          terminalFixedChartObstructionSource := by
+    simpa [RootFlatSchedule.returnMap, RootFlatSchedule.layerMap,
+      terminalStandardSchedule, List.range, x1, x2, x3] using hReturn
+  exact no_four_terminalStandardRootSteps_to_fixedChartReturn_color1
+    (dir (0 : ZMod 4) terminalFixedChartObstructionSource
+      (1 : TorusColor 3))
+    (dir (1 : ZMod 4) x1 (1 : TorusColor 3))
+    (dir (2 : ZMod 4) x2 (1 : TorusColor 3))
+    (dir (3 : ZMod 4) x3 (1 : TorusColor 3))
+    hSteps
 
 /-- The tempting but wrong terminal row: read `omega(z-a_c)` separately for each
 source color `c`.  This is the color-anchored candidate used in an earlier H1/H2
@@ -903,6 +975,7 @@ structure TerminalA2M4PhysicalRealization where
   rows : RootFlatSchedule
     (TorusColor 3) (TorusDirection 3) TerminalRootState 4
   eT : Q4 ≃ TerminalRootState
+  step_eq_standard : rows.step = terminalStandardRootStep
   rowLatin : rows.rowLatin
   layerBijective : rows.layerBijective
   return_eq_F :
@@ -927,6 +1000,36 @@ theorem TerminalA2M4PhysicalRealization.return_eq_terminalReturn
   intro c q
   rw [← F_eq_terminalReturn c q]
   exact H.return_eq_F c q
+
+theorem TerminalA2M4PhysicalRealization.rows_eq_terminalStandardSchedule
+    (H : TerminalA2M4PhysicalRealization) :
+    H.rows = terminalStandardSchedule H.rows.dir := by
+  rcases H with ⟨rows, _eT, hstep, _hrow, _hlayer, _hret⟩
+  cases rows with
+  | mk dir step =>
+      dsimp [terminalStandardSchedule] at hstep ⊢
+      cases hstep
+      rfl
+
+theorem TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
+    (H : TerminalA2M4PhysicalRealization) :
+    H.eT ≠ terminalRootEquiv.symm := by
+  intro hEq
+  have hRet :=
+    H.return_eq_terminalReturn (1 : TorusColor 3)
+      (D54ResetData.d54q4 0 0)
+  have hMap :
+      H.rows.returnMap (1 : TorusColor 3)
+          terminalFixedChartObstructionSource =
+        terminalFixedChartReturn (1 : TorusColor 3)
+          terminalFixedChartObstructionSource := by
+    apply terminalRootEquiv.injective
+    simpa [hEq, terminalFixedChartObstructionSource,
+      terminalFixedChartReturn] using hRet
+  have hRows := H.rows_eq_terminalStandardSchedule
+  rw [hRows] at hMap
+  exact terminalStandardReturnMap_ne_fixedChartReturn_color1
+    H.rows.dir hMap
 
 theorem TerminalA2M4PhysicalRealization.not_colorAnchoredOriginRow
     (H : TerminalA2M4PhysicalRealization) :

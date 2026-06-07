@@ -40,6 +40,8 @@ F_fun_eq_terminalReturn
 terminalReturn4_singleCycle
 TerminalA2M4ReturnCore.terminalReturn_eq_paper
 TerminalA2M4PhysicalRealization.return_eq_terminalReturn
+TerminalA2M4PhysicalRealization.step_eq_standard
+TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
 ```
 
 Thus the return-level `F_i` used by `LowD5M4.fullReturn` is no longer merely an
@@ -80,7 +82,16 @@ eT : Q4 ~= TerminalRootState
 ```
 
 and prove the return equality through `eT`, rather than using the standard
-coordinate chart directly.
+coordinate chart directly.  This negative control is now also recorded in Lean:
+
+```lean
+terminalStandardReturnMap_ne_fixedChartReturn_color1
+TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
+```
+
+The terminal realization record also now explicitly requires the standard D3
+root step via `step_eq_standard`, so a future proof cannot satisfy the interface
+with an arbitrary non-root-flat `step`.
 
 ## Gap 2. Terminal First-Return Equals `F_i` Is Only Sketched
 

@@ -107,6 +107,7 @@ theorem terminal_A2_m4_physical_realization :
   ∃ eT : TerminalSeed 4 ≃ TerminalRootState 4,
     terminalRF1 rows ∧
     terminalRF2 rows ∧
+    terminalStep rows = standardD3RootStep ∧
     ∀ c w,
       terminalReturnMap rows c w =
         eT (terminalReturn (m := 4) c (eT.symm w))
@@ -117,6 +118,10 @@ For the full paper, prove the parametric version for every even `m >= 4`.
 The important point: the paper row word `omega_m(q)` is a physical elementary
 triangle matching.  It should be converted into an actual root-flat schedule by
 a theorem, not by reading `omega(qCoord w)` as a row at every root source.
+For the current Lean interface this standard-root requirement is the
+`TerminalA2M4PhysicalRealization.step_eq_standard` field.  The plain chart
+`eT = terminalRootEquiv.symm` is now ruled out by
+`TerminalA2M4PhysicalRealization.not_terminalRootEquivSection`.
 
 ### T5. Terminal A2 Cyclicity
 
