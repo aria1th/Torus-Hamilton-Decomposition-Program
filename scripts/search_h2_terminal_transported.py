@@ -19,6 +19,7 @@ import argparse
 import json
 import random
 from dataclasses import dataclass
+from math import lcm
 from pathlib import Path
 
 from verify_d5m4_h2_realization import Q_STATES, terminal_return, root_step_d3
@@ -43,6 +44,29 @@ def invert(p: Perm) -> Perm:
     for i, j in enumerate(p):
         out[j] = i
     return tuple(out)
+
+
+def cycle_type(p: Perm) -> tuple[int, ...]:
+    seen = [False] * N
+    lengths: list[int] = []
+    for i in range(N):
+        if seen[i]:
+            continue
+        j = i
+        length = 0
+        while not seen[j]:
+            seen[j] = True
+            length += 1
+            j = p[j]
+        lengths.append(length)
+    return tuple(sorted(lengths))
+
+
+def perm_order(p: Perm) -> int:
+    out = 1
+    for length in cycle_type(p):
+        out = lcm(out, length)
+    return out
 
 
 def pack_layer(layer: Layer) -> bytes:
@@ -160,6 +184,45 @@ def target_triple_for_emap(emap: list[int]) -> Layer:
     return (out[0], out[1], out[2])
 
 
+def terminal_target_triple() -> Layer:
+    q_index = {q: i for i, q in enumerate(Q_STATES)}
+    out: list[Perm] = []
+    for c in COLORS:
+        out.append(tuple(q_index[terminal_return(c, q)] for q in Q_STATES))
+    return (out[0], out[1], out[2])
+
+
+def common_conjugacy(target: Layer, actual: Layer, start: int = ORIGIN) -> list[int] | None:
+    """Return one bijection `e` with `actual_i(e x)=e(target_i x)`, if found."""
+    for image_start in range(N):
+        emap = [-1] * N
+        inv = [-1] * N
+        emap[start] = image_start
+        inv[image_start] = start
+        stack = [start]
+        ok = True
+        while stack and ok:
+            x = stack.pop()
+            wx = emap[x]
+            for target_c, actual_c in zip(target, actual):
+                y = target_c[x]
+                wy = actual_c[wx]
+                if emap[y] != -1:
+                    if emap[y] != wy:
+                        ok = False
+                        break
+                elif inv[wy] != -1:
+                    ok = False
+                    break
+                else:
+                    emap[y] = wy
+                    inv[wy] = y
+                    stack.append(y)
+        if ok and all(x != -1 for x in emap):
+            return emap
+    return None
+
+
 def factor_fixed_emap(table: PairTable, emap: list[int]) -> tuple[int, int, int, int] | None:
     target = target_triple_for_emap(emap)
     for first_blob, first_pair in table.pair_index.items():
@@ -205,12 +268,94 @@ def write_witness(
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
+def write_four_layer_witness(
+    path: Path,
+    table: PairTable,
+    emap: list[int],
+    first_pair: tuple[int, int],
+    second_pair: tuple[int, int],
+) -> None:
+    write_witness(path, table, emap, first_pair + second_pair)
+
+
+def sample_four_layer_candidates(
+    table: PairTable,
+    samples: int,
+    seed: int,
+    witness_out: Path | None,
+) -> None:
+    rng = random.Random(seed)
+    pair_blobs = list(table.pair_index.keys())
+    target = terminal_target_triple()
+    relation_hist: dict[int, int] = {}
+    single_relation_hist: dict[int, int] = {}
+    single_cycle_hits = 0
+    relation_33_hits = 0
+    filtered_checks = 0
+    common_conj_hits = 0
+
+    for k in range(samples):
+        first_blob = rng.choice(pair_blobs)
+        second_blob = rng.choice(pair_blobs)
+        first = unpack_layer(first_blob)
+        second = unpack_layer(second_blob)
+        actual: Layer = (
+            compose(second[0], first[0]),
+            compose(second[1], first[1]),
+            compose(second[2], first[2]),
+        )
+        relation_order = perm_order(compose(actual[0], actual[2]))
+        all_single = all(cycle_type(actual[c]) == (16,) for c in COLORS)
+        if all_single:
+            single_cycle_hits += 1
+            single_relation_hist[relation_order] = (
+                single_relation_hist.get(relation_order, 0) + 1
+            )
+        relation_hist[relation_order] = relation_hist.get(relation_order, 0) + 1
+        if relation_order == 33:
+            relation_33_hits += 1
+        if all_single and relation_order == 33:
+            filtered_checks += 1
+            emap = common_conjugacy(target, actual)
+            if emap is not None:
+                common_conj_hits += 1
+                first_pair = table.pair_index[first_blob]
+                second_pair = table.pair_index[second_blob]
+                print(
+                    "[yes] sampled four-layer common conjugacy: "
+                    f"sample={k} layer_indices={first_pair + second_pair}",
+                    flush=True,
+                )
+                print(f"emap={emap}", flush=True)
+                if witness_out is not None:
+                    write_four_layer_witness(
+                        witness_out, table, emap, first_pair, second_pair
+                    )
+                    print(f"witness_out={witness_out}", flush=True)
+                return
+        if (k + 1) % max(1, samples // 10) == 0:
+            print(f"sample_progress={k + 1}/{samples}", flush=True)
+
+    top_orders = sorted(relation_hist.items(), key=lambda kv: (-kv[1], kv[0]))[:12]
+    top_single_orders = sorted(
+        single_relation_hist.items(), key=lambda kv: (-kv[1], kv[0])
+    )[:12]
+    print(f"sampled_four_layer={samples}", flush=True)
+    print(f"sample_single_cycle_triples={single_cycle_hits}", flush=True)
+    print(f"sample_relation_order_33={relation_33_hits}", flush=True)
+    print(f"sample_single_cycle_and_relation_order_33={filtered_checks}", flush=True)
+    print(f"sample_common_conjugacy_hits={common_conj_hits}", flush=True)
+    print(f"sample_relation_order_hist_top={top_orders}", flush=True)
+    print(f"sample_single_cycle_relation_order_hist_top={top_single_orders}", flush=True)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--identity", action="store_true")
     parser.add_argument("--random", type=int, default=0)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--emap-json", type=Path)
+    parser.add_argument("--sample-four-layer", type=int, default=0)
     parser.add_argument("--witness-out", type=Path)
     args = parser.parse_args()
 
@@ -240,6 +385,11 @@ def main() -> None:
                 write_witness(args.witness_out, table, emap, factor)
                 print(f"witness_out={args.witness_out}", flush=True)
             return
+
+    if args.sample_four_layer:
+        sample_four_layer_candidates(
+            table, args.sample_four_layer, args.seed, args.witness_out
+        )
 
 
 if __name__ == "__main__":

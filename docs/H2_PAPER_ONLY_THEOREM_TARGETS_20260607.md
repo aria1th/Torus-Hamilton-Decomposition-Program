@@ -280,6 +280,12 @@ The terminal stage can now be attacked as a finite inner problem with
 4,662,609 products to test the four-layer return equations.  This confirms that
 the identity/standard chart cannot be T8's terminal input and gives a concrete
 path for turning a successful wild `eT` candidate into a Lean table certificate.
+It also has a random four-layer audit mode; with seed `20260608`, 20,000
+samples found no triple simultaneously matching the required single-cycle and
+`order(R0 o R2)=33` terminal invariants.  The next useful proof step is
+therefore not a larger blind random search, but extracting `eT` from the paper's
+run-collapse/ribbon section or deriving a structural obstruction for the
+transported seed-row target.
 
 ### T9. H2 Certificate Assembly
 

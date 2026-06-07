@@ -353,6 +353,14 @@ no such four-layer factorization, matching the Lean obstruction
 checks are only search evidence; a successful output should be promoted to a
 Lean table certificate for `TerminalA2M4TransportedSeedRowRealization`.
 
+The same helper can sample full four-layer triples and test common conjugacy to
+the paper terminal triple.  With seed `20260608`, 20,000 sampled four-layer
+triples produced 33 triples whose three color returns were all 16-cycles and
+253 triples with relation order `order(R0 o R2)=33`, but none satisfying both
+conditions and hence no common-conjugacy witness.  This is not an obstruction
+theorem; it shows that a terminal `eT` witness is not likely to appear from an
+unstructured random section or random four-layer product.
+
 The most structured active paper target is now:
 
 ```lean

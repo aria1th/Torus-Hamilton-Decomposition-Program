@@ -326,6 +326,14 @@ confirmed to have no four-layer RF1/RF2 factorization, in line with the Lean
 wild `eT`; it is the current inner checker for candidate sections and future
 Lean table extraction.
 
+The helper also samples unconjugated four-layer terminal triples and checks
+common conjugacy to the paper triple.  A 20,000-sample run with seed `20260608`
+found 33 triples with all three color returns single 16-cycles and 253 triples
+with `order(R0 o R2)=33`, but none in the intersection.  This remains search
+evidence only; the live mathematical gap is still the explicit paper
+run-collapse equivalence `eT` or a proof that the transported seed-row target is
+too narrow.
+
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 
 The paper's argument uses run-collapse/ribbon correspondence.  In Lean, the H2
