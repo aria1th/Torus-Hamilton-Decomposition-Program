@@ -138,13 +138,16 @@ Additional direct checks confirm:
   - row `y=3`: `120,201,012,012`
 - `C4 = {(0,3),(3,0),(3,3)}` has comparison order
   `(0,3) -> (3,0) -> (3,3) -> (0,3)` for `F2^-1 F1`.
-- The terminal relation invariant `order(F0 o F2) = 33` is now checked by
-  Python and by the Lean theorems `terminalF0F2_iterate_33` and
-  `terminalF0F2_no_positive_iterate_lt33`.  Any proposed
-  `TerminalA2M4PhysicalRealization` also carries this invariant through its
+- The terminal relation invariants are now checked by Python and by Lean.  The
+  paper triple has exact orders `order(F0 o F1)=7`, `order(F0 o F2)=33`, and
+  `order(F1 o F2)=8`, exposed as `terminalF0F1_iterate_7`,
+  `terminalF0F2_iterate_33`, and `terminalF1F2_iterate_8` plus the matching
+  no-smaller-positive-iterate theorems.  Any proposed
+  `TerminalA2M4PhysicalRealization` also carries these invariants through its
   section equivalence, via
-  `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33` and
-  `TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33`.
+  `TerminalA2M4PhysicalRealization.actualF0F1_iterate_7`,
+  `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33`, and
+  `TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.
 - The existing finite `D3EvenM4` schedule fails this same terminal relation
   test: its relation has `order(R0 o R2) = 63`, not `33`.  Thus its lack of a
   common conjugacy to the paper terminal `F_i` is not just a search miss.

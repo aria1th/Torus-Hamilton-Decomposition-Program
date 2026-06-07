@@ -335,6 +335,13 @@ pair-relation cycle-type signature
 mathematical gap is still the explicit paper run-collapse equivalence `eT` or a
 proof that the transported seed-row target is too narrow.
 
+The corresponding Lean-side necessary order invariants are now exposed as
+`terminalF0F1_iterate_7`, `terminalF0F2_iterate_33`,
+`terminalF1F2_iterate_8`, and the physical conjugate forms
+`TerminalA2M4PhysicalRealization.actualF0F1_iterate_7`,
+`TerminalA2M4PhysicalRealization.actualF0F2_iterate_33`,
+`TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.
+
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 
 The paper's argument uses run-collapse/ribbon correspondence.  In Lean, the H2

@@ -124,8 +124,14 @@ def W : Q4 → Q4 :=
 
 /-- A two-letter terminal relation used as a conjugacy-invariant audit target:
 `F0 ∘ F2` has exact order `33` on `Q4`. -/
+def terminalF0F1 : Q4 → Q4 :=
+  fun q => F 0 (F 1 q)
+
 def terminalF0F2 : Q4 → Q4 :=
   fun q => F 0 (F 2 q)
+
+def terminalF1F2 : Q4 → Q4 :=
+  fun q => F 1 (F 2 q)
 
 /-- Standard D3 root section coordinates for the terminal A2 block, written as
 the paper pair `Q4`. -/
@@ -275,6 +281,17 @@ theorem W_cycle : Shared.IsSingleCycleMap W := by
   exact terminalResetTrace4_singleCycle
 
 set_option maxRecDepth 20000 in
+theorem terminalF0F1_iterate_7 :
+    ∀ q : Q4, (terminalF0F1^[7]) q = q := by
+  decide
+
+set_option maxRecDepth 20000 in
+theorem terminalF0F1_no_positive_iterate_lt7 :
+    ∀ n : Nat, n ∈ List.range 7 → n ≠ 0 →
+      ∃ q : Q4, (terminalF0F1^[n]) q ≠ q := by
+  decide
+
+set_option maxRecDepth 20000 in
 theorem terminalF0F2_iterate_33 :
     ∀ q : Q4, (terminalF0F2^[33]) q = q := by
   decide
@@ -283,6 +300,17 @@ set_option maxRecDepth 20000 in
 theorem terminalF0F2_no_positive_iterate_lt33 :
     ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
       ∃ q : Q4, (terminalF0F2^[n]) q ≠ q := by
+  decide
+
+set_option maxRecDepth 20000 in
+theorem terminalF1F2_iterate_8 :
+    ∀ q : Q4, (terminalF1F2^[8]) q = q := by
+  decide
+
+set_option maxRecDepth 20000 in
+theorem terminalF1F2_no_positive_iterate_lt8 :
+    ∀ n : Nat, n ∈ List.range 8 → n ≠ 0 →
+      ∃ q : Q4, (terminalF1F2^[n]) q ≠ q := by
   decide
 
 theorem Rbase_cycle (i : Fin 5) :
@@ -1373,10 +1401,32 @@ theorem TerminalA2M4PhysicalRealization.return_eq_terminalReturn
 
 /-- The actual two-letter terminal return relation on physical terminal root
 states.  It is the physical counterpart of `terminalF0F2 = F0 o F2`. -/
+def TerminalA2M4PhysicalRealization.actualF0F1
+    (H : TerminalA2M4PhysicalRealization) :
+    TerminalRootState → TerminalRootState :=
+  fun w => H.rows.returnMap 0 (H.rows.returnMap 1 w)
+
 def TerminalA2M4PhysicalRealization.actualF0F2
     (H : TerminalA2M4PhysicalRealization) :
     TerminalRootState → TerminalRootState :=
   fun w => H.rows.returnMap 0 (H.rows.returnMap 2 w)
+
+def TerminalA2M4PhysicalRealization.actualF1F2
+    (H : TerminalA2M4PhysicalRealization) :
+    TerminalRootState → TerminalRootState :=
+  fun w => H.rows.returnMap 1 (H.rows.returnMap 2 w)
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_conj
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.eT.symm (H.actualF0F1 (H.eT q)) = terminalF0F1 q := by
+  unfold TerminalA2M4PhysicalRealization.actualF0F1 terminalF0F1
+  have h1sym := H.return_eq_F (1 : TorusColor 3) q
+  have h1 :
+      H.rows.returnMap (1 : TorusColor 3) (H.eT q) = H.eT (F 1 q) := by
+    apply H.eT.symm.injective
+    simpa using h1sym
+  rw [h1]
+  exact H.return_eq_F (0 : TorusColor 3) (F 1 q)
 
 theorem TerminalA2M4PhysicalRealization.actualF0F2_conj
     (H : TerminalA2M4PhysicalRealization) (q : Q4) :
@@ -1389,6 +1439,51 @@ theorem TerminalA2M4PhysicalRealization.actualF0F2_conj
     simpa using h2sym
   rw [h2]
   exact H.return_eq_F (0 : TorusColor 3) (F 2 q)
+
+theorem TerminalA2M4PhysicalRealization.actualF1F2_conj
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.eT.symm (H.actualF1F2 (H.eT q)) = terminalF1F2 q := by
+  unfold TerminalA2M4PhysicalRealization.actualF1F2 terminalF1F2
+  have h2sym := H.return_eq_F (2 : TorusColor 3) q
+  have h2 :
+      H.rows.returnMap (2 : TorusColor 3) (H.eT q) = H.eT (F 2 q) := by
+    apply H.eT.symm.injective
+    simpa using h2sym
+  rw [h2]
+  exact H.return_eq_F (1 : TorusColor 3) (F 2 q)
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_iterate_conj
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n q,
+      H.eT.symm ((H.actualF0F1)^[n] (H.eT q)) =
+        (terminalF0F1^[n]) q := by
+  intro n
+  induction n with
+  | zero =>
+      intro q
+      simp
+  | succ n ih =>
+      intro q
+      have hN := ih q
+      have hNmap :
+          (H.actualF0F1)^[n] (H.eT q) =
+            H.eT ((terminalF0F1^[n]) q) := by
+        apply H.eT.symm.injective
+        simpa using hN
+      calc
+        H.eT.symm ((H.actualF0F1)^[n + 1] (H.eT q))
+            =
+          H.eT.symm
+            (H.actualF0F1 ((H.actualF0F1)^[n] (H.eT q))) := by
+              rw [Function.iterate_succ_apply']
+        _ =
+          H.eT.symm
+            (H.actualF0F1 (H.eT ((terminalF0F1^[n]) q))) := by
+              rw [hNmap]
+        _ = terminalF0F1 ((terminalF0F1^[n]) q) :=
+              H.actualF0F1_conj ((terminalF0F1^[n]) q)
+        _ = (terminalF0F1^[n + 1]) q := by
+              rw [Function.iterate_succ_apply']
 
 theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_conj
     (H : TerminalA2M4PhysicalRealization) :
@@ -1423,6 +1518,51 @@ theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_conj
         _ = (terminalF0F2^[n + 1]) q := by
               rw [Function.iterate_succ_apply']
 
+theorem TerminalA2M4PhysicalRealization.actualF1F2_iterate_conj
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n q,
+      H.eT.symm ((H.actualF1F2)^[n] (H.eT q)) =
+        (terminalF1F2^[n]) q := by
+  intro n
+  induction n with
+  | zero =>
+      intro q
+      simp
+  | succ n ih =>
+      intro q
+      have hN := ih q
+      have hNmap :
+          (H.actualF1F2)^[n] (H.eT q) =
+            H.eT ((terminalF1F2^[n]) q) := by
+        apply H.eT.symm.injective
+        simpa using hN
+      calc
+        H.eT.symm ((H.actualF1F2)^[n + 1] (H.eT q))
+            =
+          H.eT.symm
+            (H.actualF1F2 ((H.actualF1F2)^[n] (H.eT q))) := by
+              rw [Function.iterate_succ_apply']
+        _ =
+          H.eT.symm
+            (H.actualF1F2 (H.eT ((terminalF1F2^[n]) q))) := by
+              rw [hNmap]
+        _ = terminalF1F2 ((terminalF1F2^[n]) q) :=
+              H.actualF1F2_conj ((terminalF1F2^[n]) q)
+        _ = (terminalF1F2^[n + 1]) q := by
+              rw [Function.iterate_succ_apply']
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_iterate_7
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ w : TerminalRootState, ((H.actualF0F1)^[7]) w = w := by
+  intro w
+  let q := H.eT.symm w
+  have hw : H.eT q = w := by
+    simp [q]
+  rw [← hw]
+  apply H.eT.symm.injective
+  rw [H.actualF0F1_iterate_conj 7 q]
+  simp [terminalF0F1_iterate_7]
+
 theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
     (H : TerminalA2M4PhysicalRealization) :
     ∀ w : TerminalRootState, ((H.actualF0F2)^[33]) w = w := by
@@ -1435,6 +1575,31 @@ theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
   rw [H.actualF0F2_iterate_conj 33 q]
   simp [terminalF0F2_iterate_33]
 
+theorem TerminalA2M4PhysicalRealization.actualF1F2_iterate_8
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ w : TerminalRootState, ((H.actualF1F2)^[8]) w = w := by
+  intro w
+  let q := H.eT.symm w
+  have hw : H.eT q = w := by
+    simp [q]
+  rw [← hw]
+  apply H.eT.symm.injective
+  rw [H.actualF1F2_iterate_conj 8 q]
+  simp [terminalF1F2_iterate_8]
+
+theorem TerminalA2M4PhysicalRealization.actualF0F1_no_positive_iterate_lt7
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n : Nat, n ∈ List.range 7 → n ≠ 0 →
+      ∃ w : TerminalRootState, ((H.actualF0F1)^[n]) w ≠ w := by
+  intro n hn hne
+  rcases terminalF0F1_no_positive_iterate_lt7 n hn hne with ⟨q, hq⟩
+  refine ⟨H.eT q, ?_⟩
+  intro hw
+  apply hq
+  have hconj := H.actualF0F1_iterate_conj n q
+  rw [hw] at hconj
+  simpa using hconj.symm
+
 theorem TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
     (H : TerminalA2M4PhysicalRealization) :
     ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
@@ -1445,6 +1610,19 @@ theorem TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
   intro hw
   apply hq
   have hconj := H.actualF0F2_iterate_conj n q
+  rw [hw] at hconj
+  simpa using hconj.symm
+
+theorem TerminalA2M4PhysicalRealization.actualF1F2_no_positive_iterate_lt8
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n : Nat, n ∈ List.range 8 → n ≠ 0 →
+      ∃ w : TerminalRootState, ((H.actualF1F2)^[n]) w ≠ w := by
+  intro n hn hne
+  rcases terminalF1F2_no_positive_iterate_lt8 n hn hne with ⟨q, hq⟩
+  refine ⟨H.eT q, ?_⟩
+  intro hw
+  apply hq
+  have hconj := H.actualF1F2_iterate_conj n q
   rw [hw] at hconj
   simpa using hconj.symm
 
@@ -1534,11 +1712,21 @@ structure D54ReturnLevelCore where
   baseSingleCycle : ∀ i : Fin 5, Shared.IsSingleCycleMap (Rbase i)
   fullSingleCycle : ∀ i : Fin 5, Shared.IsSingleCycleMap (Rhat i)
   fullReturn_eq_Rhat : ∀ i s, LowD5M4.fullReturn i s = Rhat i s
+  terminalF0F1Order7 :
+    ∀ q : Q4, (terminalF0F1^[7]) q = q
+  terminalF0F1NoSmallerPositiveOrder :
+    ∀ n : Nat, n ∈ List.range 7 → n ≠ 0 →
+      ∃ q : Q4, (terminalF0F1^[n]) q ≠ q
   terminalF0F2Order33 :
     ∀ q : Q4, (terminalF0F2^[33]) q = q
   terminalF0F2NoSmallerPositiveOrder :
     ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
       ∃ q : Q4, (terminalF0F2^[n]) q ≠ q
+  terminalF1F2Order8 :
+    ∀ q : Q4, (terminalF1F2^[8]) q = q
+  terminalF1F2NoSmallerPositiveOrder :
+    ∀ n : Nat, n ∈ List.range 8 → n ≠ 0 →
+      ∃ q : Q4, (terminalF1F2^[n]) q ≠ q
   twoStageLayerBijective :
     ∀ t : ZMod 4, ∀ c : TorusColor 5,
       Function.Bijective (seedTwoStageFullReturnLayer t c)
@@ -1557,9 +1745,15 @@ def d54ReturnLevelCore : D54ReturnLevelCore where
   baseSingleCycle := Rbase_cycle
   fullSingleCycle := Rhat_cycle
   fullReturn_eq_Rhat := D54_fullReturn_eq_Rhat
+  terminalF0F1Order7 := terminalF0F1_iterate_7
+  terminalF0F1NoSmallerPositiveOrder :=
+    terminalF0F1_no_positive_iterate_lt7
   terminalF0F2Order33 := terminalF0F2_iterate_33
   terminalF0F2NoSmallerPositiveOrder :=
     terminalF0F2_no_positive_iterate_lt33
+  terminalF1F2Order8 := terminalF1F2_iterate_8
+  terminalF1F2NoSmallerPositiveOrder :=
+    terminalF1F2_no_positive_iterate_lt8
   twoStageLayerBijective := seedTwoStageFullReturnLayer_bijective
   twoStageReturn_eq_Rhat := seedTwoStageFullReturnLayer_return_eq_Rhat
   twoStageReturnSingleCycle := seedTwoStageFullReturnLayer_return_singleCycle
