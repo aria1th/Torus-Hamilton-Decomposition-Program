@@ -274,6 +274,13 @@ step through the supplied equivalence.  Lean then derives the physical
 layer-conjugacy through `terminalScheduleOfSeedRow_layerMap_conj` and
 `physicalRowsOfSeedRow_layerMap_conj`.
 
+The terminal stage can now be attacked as a finite inner problem with
+`scripts/search_h2_terminal_transported.py`: for a fixed `eT`, it enumerates all
+2160 RF1/RF2 terminal layers and uses a two-layer meet-in-the-middle table of
+4,662,609 products to test the four-layer return equations.  This confirms that
+the identity/standard chart cannot be T8's terminal input and gives a concrete
+path for turning a successful wild `eT` candidate into a Lean table certificate.
+
 ### T9. H2 Certificate Assembly
 
 For the direct RF route, this is already active:

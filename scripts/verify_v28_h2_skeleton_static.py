@@ -20,6 +20,7 @@ REQUIRED = [
     "EvenV11/V28Hard/ChecklistH2RootFlat.lean",
     "EvenV11/V28Hard/ChecklistFromHardParts.lean",
     "docs/V28_H2_SKELETON_PLAN_20260607.md",
+    "scripts/search_h2_terminal_transported.py",
 ]
 
 H2_TOKENS = [
@@ -70,6 +71,13 @@ DOC_ROW_READ_BLOCKER_TOKENS = [
     "H2TableRouteSkeleton_false",
     "H2SkewProductPathRouteSkeleton",
     "H2RibbonCollapseInput",
+]
+
+TERMINAL_SEARCH_TOKENS = [
+    "TerminalA2M4TransportedSeedRowRealization",
+    "target_triple_for_emap",
+    "factor_fixed_emap",
+    "two_layer_products",
 ]
 
 
@@ -127,6 +135,11 @@ def main() -> None:
     for token in H2_CORE_TOKENS:
         if token not in h2_core:
             fail(f"active H2 core token missing: {token}")
+
+    terminal_search = (ROOT / "scripts/search_h2_terminal_transported.py").read_text()
+    for token in TERMINAL_SEARCH_TOKENS:
+        if token not in terminal_search:
+            fail(f"H2 terminal search token missing: {token}")
 
     obstruction = (ROOT / "EvenV11/LowD5M4TameObstruction.lean").read_text()
     for token in OBSTRUCTION_TOKENS:

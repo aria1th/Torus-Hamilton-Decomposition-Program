@@ -312,6 +312,20 @@ supplied equivalence.  The bridge theorems
 `physicalRowsOfSeedRow_layerMap_conj` then construct the physical row
 layer-conjugacy.
 
+The terminal transported seed-row slot now has a dedicated finite search helper:
+
+```text
+scripts/search_h2_terminal_transported.py
+```
+
+For a fixed `eT`, it enumerates all 2160 terminal RF1/RF2 layers and all
+4,662,609 two-layer products, then performs a meet-in-the-middle factorization
+test for the conjugated return triple `eT o F_i o eT^-1`.  The identity chart is
+confirmed to have no four-layer RF1/RF2 factorization, in line with the Lean
+`not_terminalRootEquivSection` obstruction.  This does not yet construct the
+wild `eT`; it is the current inner checker for candidate sections and future
+Lean table extraction.
+
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 
 The paper's argument uses run-collapse/ribbon correspondence.  In Lean, the H2

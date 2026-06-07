@@ -338,6 +338,21 @@ together with the paper's singleton-switch RF2 certificate for those rows,
 already supplies the final `D54FiveSwitchRealization`; the closed D54
 reset/support tables then package it as a `D54PaperRealization`.
 
+For the first of the three transported inputs, the active finite audit helper is
+
+```text
+scripts/search_h2_terminal_transported.py
+```
+
+It fixes a candidate `eT : Q4 ~= (Z/4)^2`, enumerates the 2160 terminal
+RF1/RF2 layers, builds the 4,662,609 two-layer products, and uses a
+meet-in-the-middle check to decide whether `eT o F_i o eT^-1` factors as four
+terminal layers for all three colors.  It confirms the plain identity chart has
+no such four-layer factorization, matching the Lean obstruction
+`TerminalA2M4PhysicalRealization.not_terminalRootEquivSection`.  Random section
+checks are only search evidence; a successful output should be promoted to a
+Lean table certificate for `TerminalA2M4TransportedSeedRowRealization`.
+
 The most structured active paper target is now:
 
 ```lean
