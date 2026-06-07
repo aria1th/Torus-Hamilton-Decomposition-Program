@@ -158,6 +158,12 @@ Here `baseProductReturn` is the paper product of:
 - the `Y` row word giving the `P0/P1` selector behavior,
 - neutral `Z`.
 
+This is only the pre-reset base.  The neutral `Z` coordinate is preserved, so
+this stage cannot prove RF3 on `Q4 x Y x Z`; Lean records this as
+`RbaseNeutral_not_singleCycle` and
+`D54ProductBaseRealization.returnMap_not_singleCycle`.  The final five-switch
+theorem is the stage that inserts the missing `Z` unit carry.
+
 This theorem should be stated at the same abstraction level as the paper.  Do
 not expand it into a guessed row such as `terminalStdBaseRowAtState`.
 
