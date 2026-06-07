@@ -263,7 +263,9 @@ intermediate target
 D54TwoStageSingletonSwitchRealization
 ```
 
-upgrades directly to `D54FiveSwitchRealization`.  Supplying
+upgrades directly to `D54FiveSwitchRealization`, and the closed D54 table facts
+then package it as `D54PaperRealization` via
+`D54PaperRealization.ofTwoStageSingletonSwitchRealization`.  Supplying
 `D54FiveSwitchSeedSwitchRealization` remains the more paper-faithful route
 because it exposes the seed-side singleton switch/ribbon mirror explicitly.
 

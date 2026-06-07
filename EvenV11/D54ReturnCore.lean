@@ -1611,6 +1611,11 @@ def D54PaperRealization.ofFiveSwitchSeedSwitchRealization
     D54PaperRealization :=
   D54PaperRealization.ofFiveSwitchRealization H.toFiveSwitchRealization
 
+def D54PaperRealization.ofTwoStageSingletonSwitchRealization
+    (H : D54TwoStageSingletonSwitchRealization) :
+    D54PaperRealization :=
+  D54PaperRealization.ofFiveSwitchRealization H.toFiveSwitchRealization
+
 theorem D54PaperRealization.lowBaseFamily
     (H : D54PaperRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
@@ -1668,6 +1673,14 @@ def D54PaperRealizationLadder.ofStages
   reserveAvoidFinalCylinders := reservePoints_avoid_finalCylinders
   reserveDisjointSelector := reservePoints_disjoint_ChatList
   reserveDisjointProtected := reservePoints_disjoint_NhatList
+
+def D54PaperRealizationLadder.ofStagesTwoStageSingletonSwitch
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseRealization)
+    (twoStageSwitch : D54TwoStageSingletonSwitchRealization) :
+    D54PaperRealizationLadder :=
+  D54PaperRealizationLadder.ofStages terminal productBase
+    twoStageSwitch.toFiveSwitchRealization
 
 theorem D54PaperRealizationLadder.lowBaseFamily
     (H : D54PaperRealizationLadder) :

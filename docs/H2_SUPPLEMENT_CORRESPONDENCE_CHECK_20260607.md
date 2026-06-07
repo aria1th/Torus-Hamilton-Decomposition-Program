@@ -72,6 +72,8 @@ TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
 RbaseNeutral_not_singleCycle
 D54ProductBaseRealization.returnMap_not_singleCycle
 D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
+D54PaperRealization.ofTwoStageSingletonSwitchRealization
+D54PaperRealizationLadder.ofStagesTwoStageSingletonSwitch
 D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
 D54PaperRealization.ofFiveSwitchSeedSwitchRealization
 ```
@@ -282,11 +284,13 @@ direct bridge:
 ```lean
 H2.D54.D54TwoStageSingletonSwitchRealization
 H2.D54.D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
+H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,
 together with the paper's singleton-switch RF2 certificate for those rows,
-already supplies the final `D54FiveSwitchRealization`.
+already supplies the final `D54FiveSwitchRealization`; the closed D54
+reset/support tables then package it as a `D54PaperRealization`.
 
 The most structured active paper target is now:
 

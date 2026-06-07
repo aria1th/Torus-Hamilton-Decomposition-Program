@@ -230,9 +230,10 @@ same rows satisfy:
 D54TwoStageSingletonSwitchRealization
 ```
 
-Lean now upgrades this directly to `D54FiveSwitchRealization`.  Alternatively,
-T8 can prove the equivalent singleton-switch seed fold and then identify it with
-this model.
+Lean now upgrades this directly to `D54FiveSwitchRealization` and then to
+`D54PaperRealization` with the closed D54 table facts.  Alternatively, T8 can
+prove the equivalent singleton-switch seed fold and then identify it with this
+model.
 
 ### T9. H2 Certificate Assembly
 

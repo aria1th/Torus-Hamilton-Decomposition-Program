@@ -139,6 +139,11 @@ theorem lowD5M4_of_twoStageSingletonSwitchRealization
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 
+def lowD5M4PaperRealization_of_twoStageSingletonSwitchRealization
+    (input : LowD5M4TwoStageSingletonSwitchRealization) :
+    LowD5M4PaperRealization :=
+  H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization input
+
 theorem lowD5M4RibbonData_of_fiveSwitchLayerModelRealization
     (input : LowD5M4FiveSwitchLayerModelRealization) :
     Nonempty LowD5M4RibbonData :=
