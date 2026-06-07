@@ -1017,6 +1017,83 @@ theorem TerminalA2M4PhysicalRealization.return_eq_terminalReturn
   rw [← F_eq_terminalReturn c q]
   exact H.return_eq_F c q
 
+/-- The actual two-letter terminal return relation on physical terminal root
+states.  It is the physical counterpart of `terminalF0F2 = F0 o F2`. -/
+def TerminalA2M4PhysicalRealization.actualF0F2
+    (H : TerminalA2M4PhysicalRealization) :
+    TerminalRootState → TerminalRootState :=
+  fun w => H.rows.returnMap 0 (H.rows.returnMap 2 w)
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_conj
+    (H : TerminalA2M4PhysicalRealization) (q : Q4) :
+    H.eT.symm (H.actualF0F2 (H.eT q)) = terminalF0F2 q := by
+  unfold TerminalA2M4PhysicalRealization.actualF0F2 terminalF0F2
+  have h2sym := H.return_eq_F (2 : TorusColor 3) q
+  have h2 :
+      H.rows.returnMap (2 : TorusColor 3) (H.eT q) = H.eT (F 2 q) := by
+    apply H.eT.symm.injective
+    simpa using h2sym
+  rw [h2]
+  exact H.return_eq_F (0 : TorusColor 3) (F 2 q)
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_conj
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n q,
+      H.eT.symm ((H.actualF0F2)^[n] (H.eT q)) =
+        (terminalF0F2^[n]) q := by
+  intro n
+  induction n with
+  | zero =>
+      intro q
+      simp
+  | succ n ih =>
+      intro q
+      have hN := ih q
+      have hNmap :
+          (H.actualF0F2)^[n] (H.eT q) =
+            H.eT ((terminalF0F2^[n]) q) := by
+        apply H.eT.symm.injective
+        simpa using hN
+      calc
+        H.eT.symm ((H.actualF0F2)^[n + 1] (H.eT q))
+            =
+          H.eT.symm
+            (H.actualF0F2 ((H.actualF0F2)^[n] (H.eT q))) := by
+              rw [Function.iterate_succ_apply']
+        _ =
+          H.eT.symm
+            (H.actualF0F2 (H.eT ((terminalF0F2^[n]) q))) := by
+              rw [hNmap]
+        _ = terminalF0F2 ((terminalF0F2^[n]) q) :=
+              H.actualF0F2_conj ((terminalF0F2^[n]) q)
+        _ = (terminalF0F2^[n + 1]) q := by
+              rw [Function.iterate_succ_apply']
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ w : TerminalRootState, ((H.actualF0F2)^[33]) w = w := by
+  intro w
+  let q := H.eT.symm w
+  have hw : H.eT q = w := by
+    simp [q]
+  rw [← hw]
+  apply H.eT.symm.injective
+  rw [H.actualF0F2_iterate_conj 33 q]
+  simp [terminalF0F2_iterate_33]
+
+theorem TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
+    (H : TerminalA2M4PhysicalRealization) :
+    ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
+      ∃ w : TerminalRootState, ((H.actualF0F2)^[n]) w ≠ w := by
+  intro n hn hne
+  rcases terminalF0F2_no_positive_iterate_lt33 n hn hne with ⟨q, hq⟩
+  refine ⟨H.eT q, ?_⟩
+  intro hw
+  apply hq
+  have hconj := H.actualF0F2_iterate_conj n q
+  rw [hw] at hconj
+  simpa using hconj.symm
+
 theorem TerminalA2M4PhysicalRealization.rows_eq_terminalStandardSchedule
     (H : TerminalA2M4PhysicalRealization) :
     H.rows = terminalStandardSchedule H.rows.dir := by

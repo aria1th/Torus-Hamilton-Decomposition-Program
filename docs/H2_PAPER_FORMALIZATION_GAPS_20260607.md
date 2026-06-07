@@ -42,11 +42,24 @@ TerminalA2M4ReturnCore.terminalReturn_eq_paper
 TerminalA2M4PhysicalRealization.return_eq_terminalReturn
 TerminalA2M4PhysicalRealization.step_eq_standard
 TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
+TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
+TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
 ```
 
 Thus the return-level `F_i` used by `LowD5M4.fullReturn` is no longer merely an
 internal `LowD5M4Seed` convention; it is theorem-linked to the paper-style
 `TerminalA2LowMod.terminalReturn (m := 4)`.
+
+The bridge now also records a conjugacy-invariant terminal relation: the
+two-letter relation `F0 o F2` has exact order `33`, and every
+`TerminalA2M4PhysicalRealization` must make the corresponding physical
+relation
+
+```lean
+fun w => rows.returnMap 0 (rows.returnMap 2 w)
+```
+
+have the same exact order through its section equivalence `eT`.
 
 ## Gap 1. Terminal A2 Row Word Is Not Expanded Into Root-Flat Rows
 

@@ -67,6 +67,8 @@ TerminalA2M4PhysicalRealization.not_terminalRootEquivSection
 terminalStandardReturnMap_ne_fixedChartReturn_color1
 terminalF0F2_iterate_33
 terminalF0F2_no_positive_iterate_lt33
+TerminalA2M4PhysicalRealization.actualF0F2_iterate_33
+TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33
 D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
 D54PaperRealization.ofFiveSwitchSeedSwitchRealization
 ```
@@ -131,9 +133,13 @@ Additional direct checks confirm:
   - row `y=3`: `120,201,012,012`
 - `C4 = {(0,3),(3,0),(3,3)}` has comparison order
   `(0,3) -> (3,0) -> (3,3) -> (0,3)` for `F2^-1 F1`.
-- The terminal relation invariant `order(F0 o F2) = 33` is now checked both by
+- The terminal relation invariant `order(F0 o F2) = 33` is now checked by
   Python and by the Lean theorems `terminalF0F2_iterate_33` and
-  `terminalF0F2_no_positive_iterate_lt33`.
+  `terminalF0F2_no_positive_iterate_lt33`.  Any proposed
+  `TerminalA2M4PhysicalRealization` also carries this invariant through its
+  section equivalence, via
+  `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33` and
+  `TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33`.
 - On `CX = C4 x {0}`, successor lengths are:
   - `T1`: `9, 1, 54`
   - `T2`: `57, 6, 1`
