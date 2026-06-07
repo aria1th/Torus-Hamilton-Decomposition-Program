@@ -281,6 +281,14 @@ then package it as `D54PaperRealization` via
 `D54PaperRealization.ofTwoStageSingletonSwitchRealization`.  Supplying
 `D54FiveSwitchSeedSwitchRealization` remains the more paper-faithful route
 because it exposes the seed-side singleton switch/ribbon mirror explicitly.
+The public stage-wise endpoint is now:
+
+```lean
+EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
+```
+
+so the remaining inputs are exactly terminal realization, product-base
+realization, and the two-stage singleton-switch realization.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

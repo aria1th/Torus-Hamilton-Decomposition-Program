@@ -248,6 +248,15 @@ Lean now upgrades this directly to `D54FiveSwitchRealization` and then to
 prove the equivalent singleton-switch seed fold and then identify it with this
 model.
 
+The public stage-wise assembly endpoint is:
+
+```lean
+EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
+```
+
+It takes exactly the three remaining construction stages: terminal realization,
+product-base realization, and two-stage singleton-switch realization.
+
 ### T9. H2 Certificate Assembly
 
 For the direct RF route, this is already active:

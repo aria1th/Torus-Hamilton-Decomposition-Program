@@ -1712,6 +1712,14 @@ theorem finalLowD5M4RootFlatCertificateFamily_of_paperRealizationLadder
     FinalLowD5M4RootFlatCertificateFamily :=
   H.lowBaseFamily
 
+theorem finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageSingleton
+    (terminal : TerminalA2M4PhysicalRealization)
+    (productBase : D54ProductBaseRealization)
+    (twoStageSwitch : D54TwoStageSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  (D54PaperRealizationLadder.ofStagesTwoStageSingletonSwitch
+    terminal productBase twoStageSwitch).lowBaseFamily
+
 end D54
 end H2
 end EvenV11

@@ -249,7 +249,10 @@ obligations in the active Lean interface.  `D54PaperRealization` can now be
 built from a `D54FiveSwitchRealization` by filling `D54ResetData`'s closed table
 certificate and avoidance facts, and `EvenV11.Main` exposes
 `lowD5M4_of_paperRealization` / `lowD5M4_of_paperRealizationLadder` for the
-final low-base certificate.  Thus the smallest current paper-realization target is
+final low-base certificate.  It also exposes the stage-wise theorem
+`lowD5M4_of_paperStagesTwoStageSingleton`, whose remaining inputs are exactly:
+terminal realization, product-base realization, and two-stage singleton-switch
+realization.  Thus the smallest current paper-realization target is
 
 ```lean
 H2.D54.D54FiveSwitchRealization
@@ -287,6 +290,7 @@ direct bridge:
 H2.D54.D54TwoStageSingletonSwitchRealization
 H2.D54.D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
 H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization
+EvenV11.lowD5M4_of_paperStagesTwoStageSingleton
 ```
 
 This means a proof of layerwise conjugacy to `seedTwoStageFullReturnLayer`,

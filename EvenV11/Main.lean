@@ -81,6 +81,12 @@ abbrev LowD5M4PaperRealizationLadder :=
 abbrev LowD5M4FiveSwitchRealization :=
   H2.D54.D54FiveSwitchRealization
 
+abbrev LowD5M4TerminalRealization :=
+  H2.D54.TerminalA2M4PhysicalRealization
+
+abbrev LowD5M4ProductBaseRealization :=
+  H2.D54.D54ProductBaseRealization
+
 abbrev LowD5M4TwoStageLayerModelRealization :=
   H2.D54.D54TwoStageLayerModelRealization
 
@@ -183,6 +189,14 @@ theorem lowD5M4_of_paperRealizationLadder
     (input : LowD5M4PaperRealizationLadder) :
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
+
+theorem lowD5M4_of_paperStagesTwoStageSingleton
+    (terminal : LowD5M4TerminalRealization)
+    (productBase : LowD5M4ProductBaseRealization)
+    (twoStageSwitch : LowD5M4TwoStageSingletonSwitchRealization) :
+    FinalLowD5M4RootFlatCertificateFamily :=
+  H2.D54.finalLowD5M4RootFlatCertificateFamily_of_paperStagesTwoStageSingleton
+    terminal productBase twoStageSwitch
 
 /-- H2 direct RF certificate.  This closes the `D5(4)` low-base obligation via
 `D54ConjugateDirectRFInput`, without using the still-open paper ribbon
