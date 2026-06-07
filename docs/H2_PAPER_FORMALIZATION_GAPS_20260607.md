@@ -340,7 +340,10 @@ The corresponding Lean-side necessary order invariants are now exposed as
 `terminalF1F2_iterate_8`, and the physical conjugate forms
 `TerminalA2M4PhysicalRealization.actualF0F1_iterate_7`,
 `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33`,
-`TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.
+`TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.  The transported
+terminal target has parallel wrappers, so a proposed
+`TerminalA2M4TransportedSeedRowRealization` can be checked against these
+necessary conditions without first unpacking it to the generic physical target.
 
 ## Gap 6. The Wild Reindexing `e` Is Not Constructed Explicitly
 

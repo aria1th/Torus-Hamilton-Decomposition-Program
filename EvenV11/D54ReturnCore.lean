@@ -1703,6 +1703,45 @@ theorem TerminalA2M4TransportedSeedRowRealization.not_colorAnchoredOriginRow
     simpa [TerminalA2M4SeedRowRealization.rows,
       terminalScheduleOfSeedRow] using hrow c)
 
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F1_iterate_7
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ w : TerminalRootState,
+      ((H.toPhysicalRealization.actualF0F1)^[7]) w = w :=
+  H.toPhysicalRealization.actualF0F1_iterate_7
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F2_iterate_33
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ w : TerminalRootState,
+      ((H.toPhysicalRealization.actualF0F2)^[33]) w = w :=
+  H.toPhysicalRealization.actualF0F2_iterate_33
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF1F2_iterate_8
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ w : TerminalRootState,
+      ((H.toPhysicalRealization.actualF1F2)^[8]) w = w :=
+  H.toPhysicalRealization.actualF1F2_iterate_8
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F1_no_positive_iterate_lt7
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ n : Nat, n ∈ List.range 7 → n ≠ 0 →
+      ∃ w : TerminalRootState,
+        ((H.toPhysicalRealization.actualF0F1)^[n]) w ≠ w :=
+  H.toPhysicalRealization.actualF0F1_no_positive_iterate_lt7
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF0F2_no_positive_iterate_lt33
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
+      ∃ w : TerminalRootState,
+        ((H.toPhysicalRealization.actualF0F2)^[n]) w ≠ w :=
+  H.toPhysicalRealization.actualF0F2_no_positive_iterate_lt33
+
+theorem TerminalA2M4TransportedSeedRowRealization.actualF1F2_no_positive_iterate_lt8
+    (H : TerminalA2M4TransportedSeedRowRealization) :
+    ∀ n : Nat, n ∈ List.range 8 → n ≠ 0 →
+      ∃ w : TerminalRootState,
+        ((H.toPhysicalRealization.actualF1F2)^[n]) w ≠ w :=
+  H.toPhysicalRealization.actualF1F2_no_positive_iterate_lt8
+
 /-- Completed return-level D54 core.  The only missing H2 part is now the
 physical row/ribbon realization that transports these maps to root-flat rows. -/
 structure D54ReturnLevelCore where

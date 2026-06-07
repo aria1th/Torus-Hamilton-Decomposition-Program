@@ -147,7 +147,10 @@ Additional direct checks confirm:
   section equivalence, via
   `TerminalA2M4PhysicalRealization.actualF0F1_iterate_7`,
   `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33`, and
-  `TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.
+  `TerminalA2M4PhysicalRealization.actualF1F2_iterate_8`.  The current
+  `TerminalA2M4TransportedSeedRowRealization` target exposes the same necessary
+  conditions directly through its `actualF0F1_iterate_7`,
+  `actualF0F2_iterate_33`, and `actualF1F2_iterate_8` wrappers.
 - The existing finite `D3EvenM4` schedule fails this same terminal relation
   test: its relation has `order(R0 o R2) = 63`, not `33`.  Thus its lack of a
   common conjugacy to the paper terminal `F_i` is not just a search miss.

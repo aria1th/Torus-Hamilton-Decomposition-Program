@@ -54,6 +54,8 @@ H2_CORE_TOKENS = [
     "terminalF1F2_iterate_8",
     "TerminalA2M4PhysicalRealization.actualF0F1_iterate_7",
     "TerminalA2M4PhysicalRealization.actualF1F2_iterate_8",
+    "TerminalA2M4TransportedSeedRowRealization.actualF0F1_iterate_7",
+    "TerminalA2M4TransportedSeedRowRealization.actualF1F2_iterate_8",
     "structure D54ProductBaseTransportedSeedRowRealization",
     "structure D54TwoStageTransportedSeedRowSingletonSwitchRealization",
     "finalLowD5M4RootFlatCertificateFamily_of_paperTransportedSeedRowStages",

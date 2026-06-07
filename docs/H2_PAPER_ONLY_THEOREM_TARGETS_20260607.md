@@ -290,7 +290,9 @@ transported seed-row target.
 Lean now exposes the order part of this signature through
 `terminalF0F1_iterate_7`, `terminalF0F2_iterate_33`,
 `terminalF1F2_iterate_8` and their physical conjugate forms, so future terminal
-row candidates can be rejected before attempting the full H2 assembly.
+row candidates can be rejected before attempting the full H2 assembly.  The
+same checks are now available directly on
+`TerminalA2M4TransportedSeedRowRealization`.
 
 ### T9. H2 Certificate Assembly
 
