@@ -122,6 +122,11 @@ def seedLayerReturn
 def W : Q4 → Q4 :=
   fun q => F 1 (F 2 (F 0 q))
 
+/-- A two-letter terminal relation used as a conjugacy-invariant audit target:
+`F0 ∘ F2` has exact order `33` on `Q4`. -/
+def terminalF0F2 : Q4 → Q4 :=
+  fun q => F 0 (F 2 q)
+
 set_option maxRecDepth 100000 in
 theorem seedTwoStageFullReturnLayer_return_eq_Rhat :
     ∀ c : TorusColor 5, ∀ s : Seed,
@@ -274,6 +279,17 @@ theorem W_eq_terminalResetTrace4 :
 theorem W_cycle : Shared.IsSingleCycleMap W := by
   rw [W_eq_terminalResetTrace4]
   exact terminalResetTrace4_singleCycle
+
+set_option maxRecDepth 20000 in
+theorem terminalF0F2_iterate_33 :
+    ∀ q : Q4, (terminalF0F2^[33]) q = q := by
+  decide
+
+set_option maxRecDepth 20000 in
+theorem terminalF0F2_no_positive_iterate_lt33 :
+    ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
+      ∃ q : Q4, (terminalF0F2^[n]) q ≠ q := by
+  decide
 
 theorem Rbase_cycle (i : Fin 5) :
     Shared.IsSingleCycleMap (Rbase i) := by
@@ -1059,6 +1075,11 @@ structure D54ReturnLevelCore where
   baseSingleCycle : ∀ i : Fin 5, Shared.IsSingleCycleMap (Rbase i)
   fullSingleCycle : ∀ i : Fin 5, Shared.IsSingleCycleMap (Rhat i)
   fullReturn_eq_Rhat : ∀ i s, LowD5M4.fullReturn i s = Rhat i s
+  terminalF0F2Order33 :
+    ∀ q : Q4, (terminalF0F2^[33]) q = q
+  terminalF0F2NoSmallerPositiveOrder :
+    ∀ n : Nat, n ∈ List.range 33 → n ≠ 0 →
+      ∃ q : Q4, (terminalF0F2^[n]) q ≠ q
   twoStageLayerBijective :
     ∀ t : ZMod 4, ∀ c : TorusColor 5,
       Function.Bijective (seedTwoStageFullReturnLayer t c)
@@ -1077,6 +1098,9 @@ def d54ReturnLevelCore : D54ReturnLevelCore where
   baseSingleCycle := Rbase_cycle
   fullSingleCycle := Rhat_cycle
   fullReturn_eq_Rhat := D54_fullReturn_eq_Rhat
+  terminalF0F2Order33 := terminalF0F2_iterate_33
+  terminalF0F2NoSmallerPositiveOrder :=
+    terminalF0F2_no_positive_iterate_lt33
   twoStageLayerBijective := seedTwoStageFullReturnLayer_bijective
   twoStageReturn_eq_Rhat := seedTwoStageFullReturnLayer_return_eq_Rhat
   twoStageReturnSingleCycle := seedTwoStageFullReturnLayer_return_singleCycle

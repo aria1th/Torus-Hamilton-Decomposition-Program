@@ -23,6 +23,7 @@ from __future__ import annotations
 import re
 from collections import Counter, defaultdict
 from itertools import product
+from math import lcm
 from pathlib import Path
 from typing import Callable, Iterable
 
@@ -341,6 +342,30 @@ def invert_perm(p: tuple[int, ...]) -> tuple[int, ...]:
     return tuple(out)
 
 
+def perm_order(p: tuple[int, ...]) -> int:
+    seen = [False] * len(p)
+    out = 1
+    for i in range(len(p)):
+        if seen[i]:
+            continue
+        j = i
+        length = 0
+        while not seen[j]:
+            seen[j] = True
+            length += 1
+            j = p[j]
+        out = lcm(out, length)
+    return out
+
+
+def check_terminal_relation_invariants() -> None:
+    q_index = {q: i for i, q in enumerate(Q_STATES)}
+    f0 = tuple(q_index[terminal_return(0, q)] for q in Q_STATES)
+    f2 = tuple(q_index[terminal_return(2, q)] for q in Q_STATES)
+    assert perm_order(compose_perm(f0, f2)) == 33
+    print("[ok] terminal relation invariant: order(F0 o F2) = 33")
+
+
 def enumerate_terminal_layer_maps() -> list[tuple[tuple[int, ...], tuple[int, ...]]]:
     """All bijective standard D3 root-flat layer maps `q ↦ q + a_{d(q)}`."""
     q_index = {q: i for i, q in enumerate(Q_STATES)}
@@ -526,6 +551,7 @@ def main() -> None:
     check_abstract_full_return()
     check_naive_and_split_rows()
     check_color_anchored_terminal_dir()
+    check_terminal_relation_invariants()
     check_standard_terminal_chart_not_four_layer_realization()
     check_d3_even_m4_not_terminal_f()
     check_lowd5m4_finite_not_paper_conj()
