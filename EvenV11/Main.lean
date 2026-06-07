@@ -124,6 +124,11 @@ theorem lowD5M4_of_conjugateDirectRFInput
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 
+def lowD5M4ProductBaseRealization_of_productBaseLayerConjRealization
+    (input : LowD5M4ProductBaseLayerConjRealization) :
+    LowD5M4ProductBaseRealization :=
+  input.toProductBaseRealization
+
 theorem lowD5M4RibbonData_of_fiveSwitchRealization
     (input : LowD5M4FiveSwitchRealization) :
     Nonempty LowD5M4RibbonData :=
@@ -174,10 +179,20 @@ theorem lowD5M4_of_twoStageLayerConjSingletonSwitchRealization
     FinalLowD5M4RootFlatCertificateFamily :=
   input.lowBaseFamily
 
+def lowD5M4TwoStageSingletonSwitchRealization_of_layerConjSingletonSwitchRealization
+    (input : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
+    LowD5M4TwoStageSingletonSwitchRealization :=
+  input.toTwoStageSingletonSwitchRealization
+
 def lowD5M4PaperRealization_of_twoStageSingletonSwitchRealization
     (input : LowD5M4TwoStageSingletonSwitchRealization) :
     LowD5M4PaperRealization :=
   H2.D54.D54PaperRealization.ofTwoStageSingletonSwitchRealization input
+
+def lowD5M4PaperRealization_of_twoStageLayerConjSingletonSwitchRealization
+    (input : LowD5M4TwoStageLayerConjSingletonSwitchRealization) :
+    LowD5M4PaperRealization :=
+  H2.D54.D54PaperRealization.ofTwoStageLayerConjSingletonSwitchRealization input
 
 theorem lowD5M4RibbonData_of_fiveSwitchLayerModelRealization
     (input : LowD5M4FiveSwitchLayerModelRealization) :

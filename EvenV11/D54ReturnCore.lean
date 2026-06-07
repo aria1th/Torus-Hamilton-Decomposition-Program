@@ -1366,6 +1366,19 @@ theorem D54ProductBaseRealization.returnMap_not_singleCycle
         intro w
         exact (H.returnMapConj_RbaseNeutral c w).symm))
 
+theorem D54ProductBaseLayerConjRealization.returnMapConj_RbaseNeutral
+    (H : D54ProductBaseLayerConjRealization) :
+    ∀ c : TorusColor 5, ∀ w : RootState,
+      (LowD5M4RibbonInterface.schedule H.rows0).returnMap c w =
+        H.e0 (RbaseNeutral c (H.e0.symm w)) :=
+  H.toProductBaseRealization.returnMapConj_RbaseNeutral
+
+theorem D54ProductBaseLayerConjRealization.returnMap_not_singleCycle
+    (H : D54ProductBaseLayerConjRealization) (c : TorusColor 5) :
+    ¬ Shared.IsSingleCycleMap
+      ((LowD5M4RibbonInterface.schedule H.rows0).returnMap c) :=
+  H.toProductBaseRealization.returnMap_not_singleCycle c
+
 /-- Fixed two-stage seed-model realization target.  This is not a construction
 of the paper rows by itself; it is a useful narrowed handoff: once physical rows
 are known to be layerwise conjugate to `seedTwoStageFullReturnLayer`, the return
@@ -1435,6 +1448,11 @@ theorem D54TwoStageLayerConjRealization.lowBaseFamily
     (H : D54TwoStageLayerConjRealization) :
     FinalLowD5M4RootFlatCertificateFamily :=
   H.toLayerModelRealization.lowBaseFamily
+
+theorem D54TwoStageLayerConjRealization.returnMapConj_Rhat
+    (H : D54TwoStageLayerConjRealization) :
+    PhysicalRowsReturnMapConjGoal H.rows H.e :=
+  H.toLayerModelRealization.toMapConjRibbonCollapseInput.returnMapConj
 
 /-- The five local switches after the product base has been built.  This is the
 precise row-level target needed by the current H2 handoff. -/
@@ -1674,6 +1692,11 @@ def D54TwoStageSingletonSwitchRealization.toFiveSwitchRealization
     D54FiveSwitchRealization :=
   H.toFiveSwitchLayerModelRealization.toFiveSwitchRealization
 
+def D54TwoStageLayerConjSingletonSwitchRealization.toFiveSwitchRealization
+    (H : D54TwoStageLayerConjSingletonSwitchRealization) :
+    D54FiveSwitchRealization :=
+  H.toTwoStageSingletonSwitchRealization.toFiveSwitchRealization
+
 def D54FiveSwitchSeedSwitchRealization.toFiveSwitchRealization
     (H : D54FiveSwitchSeedSwitchRealization) :
     D54FiveSwitchRealization :=
@@ -1776,6 +1799,12 @@ def D54PaperRealization.ofTwoStageSingletonSwitchRealization
     (H : D54TwoStageSingletonSwitchRealization) :
     D54PaperRealization :=
   D54PaperRealization.ofFiveSwitchRealization H.toFiveSwitchRealization
+
+def D54PaperRealization.ofTwoStageLayerConjSingletonSwitchRealization
+    (H : D54TwoStageLayerConjSingletonSwitchRealization) :
+    D54PaperRealization :=
+  D54PaperRealization.ofTwoStageSingletonSwitchRealization
+    H.toTwoStageSingletonSwitchRealization
 
 theorem D54PaperRealization.lowBaseFamily
     (H : D54PaperRealization) :
