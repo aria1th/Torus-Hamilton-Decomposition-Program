@@ -45,9 +45,11 @@ paper-faithful H2 handoff.
 4. `EvenV11/D3EvenM4.lean`.
 
    This finite D3 base is a valid RF certificate, but it has no common conjugacy
-   to the terminal paper returns `F_0,F_1,F_2`.  It cannot be reused as the paper
-   terminal A2 carrier for H2 without an additional bridge that changes the H2
-   target.
+   to the terminal paper returns `F_0,F_1,F_2`.  The obstruction is already
+   visible from a conjugacy invariant: for the finite D3 base,
+   `order(R0 o R2) = 63`, while the paper terminal returns satisfy
+   `order(F0 o F2) = 33`.  It cannot be reused as the paper terminal A2 carrier
+   for H2 without an additional bridge that changes the H2 target.
 
 5. `archive/EvenV11/LowD5M4Finite.lean`.
 
@@ -84,4 +86,3 @@ that produces the wild common reindexing `e`.
 
 4. Use the switching-ribbon/cut-splice theorem to build the wild `e` and close
    `PhysicalRowsReturnMapConjGoal`.
-

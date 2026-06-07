@@ -302,7 +302,9 @@ These statements are tempting but not the paper-faithful H2 theorem.
 5. The existing finite D3 m=4 schedule is the terminal A2 carrier.
 
    It is RF-valid, but it has no common conjugacy to the paper terminal
-   `F_i` returns.  It cannot replace T4.
+   `F_i` returns.  The computed relation invariant is already different:
+   `order(R0 o R2) = 63` for `D3EvenM4`, versus `order(F0 o F2) = 33` for the
+   paper terminal maps.  It cannot replace T4.
 
 ## Minimal H2 Proof Order
 

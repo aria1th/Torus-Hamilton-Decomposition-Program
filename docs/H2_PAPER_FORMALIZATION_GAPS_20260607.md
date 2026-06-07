@@ -108,6 +108,11 @@ The terminal realization record also now explicitly requires the standard D3
 root step via `step_eq_standard`, so a future proof cannot satisfy the interface
 with an arbitrary non-root-flat `step`.
 
+The existing finite `D3EvenM4` root-flat certificate also cannot simply be used
+as this terminal carrier.  Python now checks a conjugacy-invariant mismatch:
+`D3EvenM4` has `order(R0 o R2) = 63`, while the paper terminal maps have
+`order(F0 o F2) = 33`.
+
 ## Gap 2. Terminal First-Return Equals `F_i` Is Only Sketched
 
 The paper says the default word contributes the default fiber advance `Delta_i`,

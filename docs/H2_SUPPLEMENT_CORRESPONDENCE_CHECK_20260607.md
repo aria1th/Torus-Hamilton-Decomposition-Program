@@ -145,6 +145,9 @@ Additional direct checks confirm:
   section equivalence, via
   `TerminalA2M4PhysicalRealization.actualF0F2_iterate_33` and
   `TerminalA2M4PhysicalRealization.actualF0F2_no_positive_iterate_lt33`.
+- The existing finite `D3EvenM4` schedule fails this same terminal relation
+  test: its relation has `order(R0 o R2) = 63`, not `33`.  Thus its lack of a
+  common conjugacy to the paper terminal `F_i` is not just a search miss.
 - On `CX = C4 x {0}`, successor lengths are:
   - `T1`: `9, 1, 54`
   - `T2`: `57, 6, 1`

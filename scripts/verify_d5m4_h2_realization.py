@@ -483,9 +483,26 @@ def check_d3_even_m4_not_terminal_f() -> None:
 
     target = [lambda q, c=c: terminal_return(c, q) for c in COLORS3]
     actual = [lambda q, c=c: ret(c, q) for c in COLORS3]
+    q_index = {q: i for i, q in enumerate(Q_STATES)}
+    target_perm = [
+        tuple(q_index[terminal_return(c, q)] for q in Q_STATES)
+        for c in COLORS3
+    ]
+    actual_perm = [
+        tuple(q_index[ret(c, q)] for q in Q_STATES)
+        for c in COLORS3
+    ]
+    target_f0f2_order = perm_order(compose_perm(target_perm[0], target_perm[2]))
+    actual_f0f2_order = perm_order(compose_perm(actual_perm[0], actual_perm[2]))
+    assert target_f0f2_order == 33
+    assert actual_f0f2_order == 63
+
     conj = common_conjugacy_count(Q_STATES, Q_STATES, target, actual, Q_STATES[0])
     assert conj == 0
-    print("[ok] D3EvenM4 finite base is RF-valid but has no common conjugacy to terminal F_i")
+    print(
+        "[ok] D3EvenM4 finite base is RF-valid but has no common conjugacy "
+        "to terminal F_i; order(R0 o R2) = 63, not 33"
+    )
 
 
 def parse_nat_array(path: Path, name: str) -> list[int]:
