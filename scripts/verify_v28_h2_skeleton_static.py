@@ -55,6 +55,8 @@ H2_CORE_TOKENS = [
     "TerminalA2M4PhysicalRealization.actualF0F1_iterate_7",
     "TerminalA2M4PhysicalRealization.actualF1F2_iterate_8",
     "TerminalA2M4PhysicalRealization.eT_ext_of_color0_return_eq",
+    "terminalStandardReturnMap_ne_fixedChartReturn_color0",
+    "terminalStandardReturnMap_ne_fixedChartReturn_color2",
     "TerminalA2M4TransportedSeedRowRealization.actualF0F1_iterate_7",
     "TerminalA2M4TransportedSeedRowRealization.actualF1F2_iterate_8",
     "TerminalA2M4TransportedSeedRowRealization.eT_color0_forced_orbit",

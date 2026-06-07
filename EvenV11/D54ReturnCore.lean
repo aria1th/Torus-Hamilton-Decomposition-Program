@@ -181,8 +181,25 @@ def terminalFixedChartReturn
     terminalRootEquiv.symm
       (terminalReturn (m := 4) c (terminalRootEquiv w))
 
+def terminalFixedChartObstructionSource0 : TerminalRootState :=
+  terminalPairRoot (D54ResetData.d54q4 0 3)
+
 def terminalFixedChartObstructionSource : TerminalRootState :=
   terminalPairRoot (D54ResetData.d54q4 0 0)
+
+def terminalFixedChartObstructionSource2 : TerminalRootState :=
+  terminalPairRoot (D54ResetData.d54q4 0 2)
+
+theorem no_four_terminalStandardRootSteps_to_fixedChartReturn_color0 :
+    ∀ d0 d1 d2 d3 : TorusDirection 3,
+      terminalStandardRootStep d3
+          (terminalStandardRootStep d2
+            (terminalStandardRootStep d1
+              (terminalStandardRootStep d0
+                terminalFixedChartObstructionSource0))) ≠
+        terminalFixedChartReturn (0 : TorusColor 3)
+          terminalFixedChartObstructionSource0 := by
+  decide
 
 theorem no_four_terminalStandardRootSteps_to_fixedChartReturn_color1 :
     ∀ d0 d1 d2 d3 : TorusDirection 3,
@@ -195,38 +212,93 @@ theorem no_four_terminalStandardRootSteps_to_fixedChartReturn_color1 :
           terminalFixedChartObstructionSource := by
   decide
 
+theorem no_four_terminalStandardRootSteps_to_fixedChartReturn_color2 :
+    ∀ d0 d1 d2 d3 : TorusDirection 3,
+      terminalStandardRootStep d3
+          (terminalStandardRootStep d2
+            (terminalStandardRootStep d1
+              (terminalStandardRootStep d0
+                terminalFixedChartObstructionSource2))) ≠
+        terminalFixedChartReturn (2 : TorusColor 3)
+          terminalFixedChartObstructionSource2 := by
+  decide
+
+theorem terminalStandardReturnMap_ne_fixedChartReturn_of_no_four
+    (c : TorusColor 3) (source : TerminalRootState)
+    (hNo :
+      ∀ d0 d1 d2 d3 : TorusDirection 3,
+        terminalStandardRootStep d3
+            (terminalStandardRootStep d2
+              (terminalStandardRootStep d1
+                (terminalStandardRootStep d0 source))) ≠
+          terminalFixedChartReturn c source)
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    (terminalStandardSchedule dir).returnMap c source ≠
+      terminalFixedChartReturn c source := by
+  intro hReturn
+  let x1 :=
+    terminalStandardRootStep
+      (dir (0 : ZMod 4) source c)
+      source
+  let x2 :=
+    terminalStandardRootStep (dir (1 : ZMod 4) x1 c) x1
+  let x3 :=
+    terminalStandardRootStep (dir (2 : ZMod 4) x2 c) x2
+  have hSteps :
+      terminalStandardRootStep (dir (3 : ZMod 4) x3 c) x3 =
+        terminalFixedChartReturn c source := by
+    simpa [RootFlatSchedule.returnMap, RootFlatSchedule.layerMap,
+      terminalStandardSchedule, List.range, x1, x2, x3] using hReturn
+  exact hNo
+    (dir (0 : ZMod 4) source c)
+    (dir (1 : ZMod 4) x1 c)
+    (dir (2 : ZMod 4) x2 c)
+    (dir (3 : ZMod 4) x3 c)
+    hSteps
+
+theorem terminalStandardReturnMap_ne_fixedChartReturn_color0
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    (terminalStandardSchedule dir).returnMap (0 : TorusColor 3)
+        terminalFixedChartObstructionSource0 ≠
+      terminalFixedChartReturn (0 : TorusColor 3)
+        terminalFixedChartObstructionSource0 :=
+  terminalStandardReturnMap_ne_fixedChartReturn_of_no_four
+    (0 : TorusColor 3) terminalFixedChartObstructionSource0
+    no_four_terminalStandardRootSteps_to_fixedChartReturn_color0 dir
+
 theorem terminalStandardReturnMap_ne_fixedChartReturn_color1
     (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
     (terminalStandardSchedule dir).returnMap (1 : TorusColor 3)
         terminalFixedChartObstructionSource ≠
       terminalFixedChartReturn (1 : TorusColor 3)
-        terminalFixedChartObstructionSource := by
-  intro hReturn
-  let x1 :=
-    terminalStandardRootStep
-      (dir (0 : ZMod 4) terminalFixedChartObstructionSource
-        (1 : TorusColor 3))
-      terminalFixedChartObstructionSource
-  let x2 :=
-    terminalStandardRootStep
-      (dir (1 : ZMod 4) x1 (1 : TorusColor 3)) x1
-  let x3 :=
-    terminalStandardRootStep
-      (dir (2 : ZMod 4) x2 (1 : TorusColor 3)) x2
-  have hSteps :
-      terminalStandardRootStep
-          (dir (3 : ZMod 4) x3 (1 : TorusColor 3)) x3 =
-        terminalFixedChartReturn (1 : TorusColor 3)
-          terminalFixedChartObstructionSource := by
-    simpa [RootFlatSchedule.returnMap, RootFlatSchedule.layerMap,
-      terminalStandardSchedule, List.range, x1, x2, x3] using hReturn
-  exact no_four_terminalStandardRootSteps_to_fixedChartReturn_color1
-    (dir (0 : ZMod 4) terminalFixedChartObstructionSource
-      (1 : TorusColor 3))
-    (dir (1 : ZMod 4) x1 (1 : TorusColor 3))
-    (dir (2 : ZMod 4) x2 (1 : TorusColor 3))
-    (dir (3 : ZMod 4) x3 (1 : TorusColor 3))
-    hSteps
+        terminalFixedChartObstructionSource :=
+  terminalStandardReturnMap_ne_fixedChartReturn_of_no_four
+    (1 : TorusColor 3) terminalFixedChartObstructionSource
+    no_four_terminalStandardRootSteps_to_fixedChartReturn_color1 dir
+
+theorem terminalStandardReturnMap_ne_fixedChartReturn_color2
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    (terminalStandardSchedule dir).returnMap (2 : TorusColor 3)
+        terminalFixedChartObstructionSource2 ≠
+      terminalFixedChartReturn (2 : TorusColor 3)
+        terminalFixedChartObstructionSource2 :=
+  terminalStandardReturnMap_ne_fixedChartReturn_of_no_four
+    (2 : TorusColor 3) terminalFixedChartObstructionSource2
+    no_four_terminalStandardRootSteps_to_fixedChartReturn_color2 dir
+
+theorem terminalStandardReturnMap_ne_fixedChartReturn
+    (c : TorusColor 3)
+    (dir : ZMod 4 → TerminalRootState → TorusColor 3 → TorusDirection 3) :
+    ∃ source : TerminalRootState,
+      (terminalStandardSchedule dir).returnMap c source ≠
+        terminalFixedChartReturn c source := by
+  fin_cases c
+  · exact ⟨terminalFixedChartObstructionSource0,
+      terminalStandardReturnMap_ne_fixedChartReturn_color0 dir⟩
+  · exact ⟨terminalFixedChartObstructionSource,
+      terminalStandardReturnMap_ne_fixedChartReturn_color1 dir⟩
+  · exact ⟨terminalFixedChartObstructionSource2,
+      terminalStandardReturnMap_ne_fixedChartReturn_color2 dir⟩
 
 /-- The tempting but wrong terminal row: read `omega(z-a_c)` separately for each
 source color `c`.  This is the color-anchored candidate used in an earlier H1/H2
