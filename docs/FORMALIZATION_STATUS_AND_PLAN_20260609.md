@@ -1,5 +1,10 @@
 # 형식화 상태 점검 + 계획 (2026-06-09)
 
+> **갱신 (2026-06-09, audit 후)**: 논문 수치 전수 audit 완료 —
+> `PAPER_NUMERIC_AUDIT_20260609.md`. 값 불일치 1건(D7 stage 3 shifted pair) 수정
+> 완료, 게이트 green 유지. 1단계(H1a)의 세부 작업 순서는 audit 문서 §7의 확정판
+> (hdesc → active-set → recurrence 인스턴스 → full-carrier rank → 조립)을 따른다.
+
 방법: `scripts/check_evenv11_progress.sh` 실행(풀빌드 포함) + Main/구조 모듈 직접
 판독 + git 상태 확인으로 **검증된 사실**만 기록하고, 그 위에 닫힘 계획을 세운다.
 

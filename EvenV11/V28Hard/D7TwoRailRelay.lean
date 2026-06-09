@@ -146,7 +146,7 @@ def stageSkeletons : List StageSkeleton :=
       shiftedPair₂ := edge06 },
     { stage := 3, shift := L2,
       triple := (L0, L6, L2), pair₁ := edge15, pair₂ := edge34,
-      shiftedTriple := (L2, L1, L4), shiftedPair₁ := edge35,
+      shiftedTriple := (L2, L1, L4), shiftedPair₁ := edge03,
       shiftedPair₂ := edge56 },
     { stage := 4, shift := L3,
       triple := (L2, L5, L6), pair₁ := edge01, pair₂ := edge34,
@@ -221,6 +221,25 @@ theorem stageRows_length : stageRows.length = 14 := by
 
 /-- Fast sanity check: the five coarse relay stages are present. -/
 theorem stageSkeletons_length : stageSkeletons.length = 5 := by
+  decide
+
+/-- Apply the stage shift to an edge, renormalising to the ascending
+orientation used by the skeleton tables. -/
+def shiftEdge (s : Label) (e : Edge) : Edge :=
+  let a := e.1 + s
+  let b := e.2 + s
+  if a ≤ b then (a, b) else (b, a)
+
+/-- Transcription guard: the shifted columns of `stageSkeletons` are exactly
+the base columns moved by the stage shift, so a copy error in either column is
+caught by `decide` instead of surviving as silent data drift. -/
+theorem stageSkeletons_shift_consistent :
+    ∀ sk ∈ stageSkeletons,
+      sk.shiftedTriple =
+        (sk.triple.1 + sk.shift, sk.triple.2.1 + sk.shift,
+          sk.triple.2.2 + sk.shift) ∧
+      sk.shiftedPair₁ = shiftEdge sk.shift sk.pair₁ ∧
+      sk.shiftedPair₂ = shiftEdge sk.shift sk.pair₂ := by
   decide
 
 /-- Fast sanity check: one closure datum per color. -/
