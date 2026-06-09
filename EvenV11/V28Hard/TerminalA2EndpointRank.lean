@@ -1677,6 +1677,626 @@ theorem compressedEndpointImageMap_singleCycle_of_even_six_le_desc_rank_step
     hmEven hm rec c
     (compressedEndpoint_rank_step_of_desc_rank_step hm rec c hdesc)
 
+/-! Descriptor rank step.  The lemmas below show that `endpointDescSucc`
+advances the closed-form rank lists `endpoint*Desc` by exactly one rank label,
+which discharges the `hdesc` hypothesis of
+`compressedEndpointImageMap_singleCycle_of_even_six_le_desc_rank_step`. -/
+
+private theorem parityEven_succ (k : Nat) :
+    parityEven (k + 1) = !parityEven k := by
+  rcases Nat.even_or_odd k with hk | hk
+  · obtain ⟨t, rfl⟩ := hk
+    have h1 : t + t + 1 = 2 * t + 1 := by omega
+    have h2 : t + t = 2 * t := by omega
+    rw [h1, h2]
+    simp [parityEven]
+  · obtain ⟨t, rfl⟩ := hk
+    have h1 : 2 * t + 1 + 1 = 2 * (t + 1) := by omega
+    rw [h1]
+    simp [parityEven]
+
+private theorem parityEven_sub_three_of_even {m : Nat}
+    (hmEven : Even m) (hm : 4 ≤ m) :
+    parityEven (m - 3) = false := by
+  rcases hmEven with ⟨t, rfl⟩
+  have hsub : t + t - 3 = 2 * (t - 2) + 1 := by omega
+  rw [hsub]
+  simp [parityEven]
+
+private theorem negNat_m_sub_three_eq_three {m : Nat} [NeZero m]
+    (hm : 3 ≤ m) :
+    negNat (m := m) (m - 3) = (3 : ZMod m) := by
+  simp only [negNat]
+  rw [natCast_sub_eq_neg_natCast (m := m) (a := 3) hm, neg_neg]
+  norm_num
+
+private theorem negNat_ne_three_of_ne_m_sub_three {m k : Nat} [NeZero m]
+    (hm : 6 ≤ m) (hk : k < m) (hne : k ≠ m - 3) :
+    negNat (m := m) k ≠ (3 : ZMod m) := by
+  intro h
+  have h' : negNat (m := m) k = ((3 : Nat) : ZMod m) := by
+    simpa using h
+  exact hne (negNat_eq_natCast_of_pos_le (m := m) (k := k) (a := 3)
+    (by omega) (by omega) hk h')
+
+private theorem negNat_succ {m k : Nat} [NeZero m] :
+    negNat (m := m) (k + 1) = negNat (m := m) k - 1 := by
+  simp only [negNat, Nat.cast_add, Nat.cast_one]
+  ring
+
+private theorem two_sub_natCast_succ {m d : Nat} [NeZero m] :
+    (2 : ZMod m) - ((d + 1 : Nat) : ZMod m) =
+      ((2 : ZMod m) - (d : ZMod m)) - 1 := by
+  push_cast
+  ring
+
+private theorem four_add_natCast_succ {m d : Nat} [NeZero m] :
+    (4 : ZMod m) + ((d + 1 : Nat) : ZMod m) =
+      ((4 : ZMod m) + (d : ZMod m)) + 1 := by
+  push_cast
+  ring
+
+private theorem two_sub_natCast_eq_four_forces {m d : Nat} [NeZero m]
+    (hm : 6 ≤ m) (hd : d < m) :
+    ((2 : ZMod m) - (d : ZMod m) = (4 : ZMod m)) → d = m - 2 := by
+  intro h
+  apply zmod_natCast_inj_of_lt hd (by omega)
+  have hdneg : (d : ZMod m) = -(2 : ZMod m) := by
+    have h0 : (d : ZMod m) + (2 : ZMod m) = 0 := by
+      calc
+        (d : ZMod m) + (2 : ZMod m)
+            = (4 : ZMod m) - ((2 : ZMod m) - (d : ZMod m)) := by ring
+        _ = (4 : ZMod m) - (4 : ZMod m) := by rw [h]
+        _ = 0 := by simp
+    exact eq_neg_of_add_eq_zero_left h0
+  calc
+    (d : ZMod m) = -(2 : ZMod m) := hdneg
+    _ = ((m - 2 : Nat) : ZMod m) := by
+      simpa using (natCast_sub_eq_neg_natCast (m := m) (a := 2) (by omega)).symm
+
+private theorem two_sub_natCast_ne_four_of_lt_m_sub_two {m d : Nat}
+    [NeZero m] (hm : 6 ≤ m) (hd : d < m - 2) :
+    (2 : ZMod m) - (d : ZMod m) ≠ (4 : ZMod m) := by
+  intro h
+  have hd' := two_sub_natCast_eq_four_forces (m := m) (d := d) hm (by omega) h
+  omega
+
+private theorem four_add_natCast_ne_two_of_lt_m_sub_two {m d : Nat}
+    [NeZero m] (hm : 6 ≤ m) (hd : d < m - 2) :
+    (4 : ZMod m) + (d : ZMod m) ≠ (2 : ZMod m) := by
+  intro h
+  have hd' := four_add_natCast_eq_two_forces (m := m) (d := d) hm (by omega) h
+  omega
+
+private theorem two_sub_natCast_m_sub_two_eq_four {m : Nat} [NeZero m]
+    (hm : 2 ≤ m) :
+    (2 : ZMod m) - ((m - 2 : Nat) : ZMod m) = (4 : ZMod m) := by
+  rw [natCast_sub_eq_neg_natCast (m := m) (a := 2) hm, sub_neg_eq_add]
+  norm_num
+
+private theorem four_add_natCast_m_sub_two_eq_two {m : Nat} [NeZero m]
+    (hm : 2 ≤ m) :
+    (4 : ZMod m) + ((m - 2 : Nat) : ZMod m) = (2 : ZMod m) := by
+  rw [natCast_sub_eq_neg_natCast (m := m) (a := 2) hm]
+  norm_num
+
+private theorem four_add_natCast_m_sub_three_eq_one {m : Nat} [NeZero m]
+    (hm : 3 ≤ m) :
+    (4 : ZMod m) + ((m - 3 : Nat) : ZMod m) = (1 : ZMod m) := by
+  rw [natCast_sub_eq_neg_natCast (m := m) (a := 3) hm]
+  norm_num
+
+private theorem endpoint0Desc_eval_lo {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (h : n.val < m - 2) :
+    endpoint0Desc m n =
+      if parityEven n.val then EndpointDesc.A (negNat n.val)
+      else EndpointDesc.B (negNat n.val) := by
+  simp only [endpoint0Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpoint0Desc_eval_hi {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (hlo : m ≤ n.val) (hhi : n.val < 2 * m - 2) :
+    endpoint0Desc m n =
+      if parityEven (n.val - m) then EndpointDesc.B (negNat (n.val - m))
+      else EndpointDesc.A (negNat (n.val - m)) := by
+  simp only [endpoint0Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpoint1Desc_eval_lo {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (hlo : 0 < n.val) (hhi : n.val < m) :
+    endpoint1Desc m n =
+      if parityEven (n.val - 1) then
+        EndpointDesc.B ((2 : ZMod m) - ((n.val - 1 : Nat) : ZMod m))
+      else
+        EndpointDesc.A ((2 : ZMod m) - ((n.val - 1 : Nat) : ZMod m)) := by
+  simp only [endpoint1Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpoint1Desc_eval_hi {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (hlo : m < n.val) :
+    endpoint1Desc m n =
+      if parityEven (n.val - (m + 1)) then
+        EndpointDesc.A ((2 : ZMod m) - ((n.val - (m + 1) : Nat) : ZMod m))
+      else
+        EndpointDesc.B ((2 : ZMod m) - ((n.val - (m + 1) : Nat) : ZMod m)) := by
+  simp only [endpoint1Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpoint2Desc_eval_lo {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (hlo : 2 ≤ n.val) (hhi : n.val ≤ m) :
+    endpoint2Desc m n =
+      if parityEven (n.val - 2) then
+        EndpointDesc.A ((4 : ZMod m) + ((n.val - 2 : Nat) : ZMod m))
+      else
+        EndpointDesc.B ((4 : ZMod m) + ((n.val - 2 : Nat) : ZMod m)) := by
+  simp only [endpoint2Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpoint2Desc_eval_hi {m : Nat} [NeZero m]
+    {n : EndpointLabel m} (hlo : m + 1 < n.val) :
+    endpoint2Desc m n =
+      if parityEven (n.val - (m + 2)) then
+        EndpointDesc.B ((4 : ZMod m) + ((n.val - (m + 2) : Nat) : ZMod m))
+      else
+        EndpointDesc.A ((4 : ZMod m) + ((n.val - (m + 2) : Nat) : ZMod m)) := by
+  simp only [endpoint2Desc]
+  split_ifs <;> first | rfl | omega
+
+private theorem endpointDescSucc_zero_A {m : Nat} (r : ZMod m) :
+    endpointDescSucc (0 : TorusColor 3) (EndpointDesc.A r) =
+      if r = (3 : ZMod m) then EndpointDesc.Eminus
+      else EndpointDesc.B (r - 1) := rfl
+
+private theorem endpointDescSucc_zero_B {m : Nat} (r : ZMod m) :
+    endpointDescSucc (0 : TorusColor 3) (EndpointDesc.B r) =
+      if r = (3 : ZMod m) then EndpointDesc.Eplus
+      else EndpointDesc.A (r - 1) := rfl
+
+private theorem endpointDescSucc_zero_Eplus {m : Nat} :
+    endpointDescSucc (0 : TorusColor 3) (EndpointDesc.Eplus : EndpointDesc m) =
+      EndpointDesc.A (1 : ZMod m) := rfl
+
+private theorem endpointDescSucc_zero_Eminus {m : Nat} :
+    endpointDescSucc (0 : TorusColor 3) (EndpointDesc.Eminus : EndpointDesc m) =
+      EndpointDesc.B (1 : ZMod m) := rfl
+
+private theorem endpointDescSucc_one_A {m : Nat} (r : ZMod m) :
+    endpointDescSucc (1 : TorusColor 3) (EndpointDesc.A r) =
+      if r = (4 : ZMod m) then EndpointDesc.Eplus
+      else EndpointDesc.B (r - 1) := rfl
+
+private theorem endpointDescSucc_one_B {m : Nat} (r : ZMod m) :
+    endpointDescSucc (1 : TorusColor 3) (EndpointDesc.B r) =
+      if r = (4 : ZMod m) then EndpointDesc.Eminus
+      else EndpointDesc.A (r - 1) := rfl
+
+private theorem endpointDescSucc_one_Eplus {m : Nat} :
+    endpointDescSucc (1 : TorusColor 3) (EndpointDesc.Eplus : EndpointDesc m) =
+      EndpointDesc.B (2 : ZMod m) := rfl
+
+private theorem endpointDescSucc_one_Eminus {m : Nat} :
+    endpointDescSucc (1 : TorusColor 3) (EndpointDesc.Eminus : EndpointDesc m) =
+      EndpointDesc.A (2 : ZMod m) := rfl
+
+private theorem endpointDescSucc_two_A {m : Nat} (r : ZMod m) :
+    endpointDescSucc (2 : TorusColor 3) (EndpointDesc.A r) =
+      if r = (2 : ZMod m) then EndpointDesc.Eminus
+      else EndpointDesc.B (r + 1) := rfl
+
+private theorem endpointDescSucc_two_B {m : Nat} (r : ZMod m) :
+    endpointDescSucc (2 : TorusColor 3) (EndpointDesc.B r) =
+      if r = (2 : ZMod m) then EndpointDesc.Eplus
+      else EndpointDesc.A (r + 1) := rfl
+
+private theorem endpointDescSucc_two_Eplus {m : Nat} :
+    endpointDescSucc (2 : TorusColor 3) (EndpointDesc.Eplus : EndpointDesc m) =
+      EndpointDesc.A (4 : ZMod m) := rfl
+
+private theorem endpointDescSucc_two_Eminus {m : Nat} :
+    endpointDescSucc (2 : TorusColor 3) (EndpointDesc.Eminus : EndpointDesc m) =
+      EndpointDesc.B (4 : ZMod m) := rfl
+
+set_option maxHeartbeats 2000000 in
+private theorem endpoint0Desc_rank_step_aux {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n n' : EndpointLabel m)
+    (hsucc : n'.val = (n.val + 1) % (2 * m)) :
+    endpointDescSucc (0 : TorusColor 3) (endpoint0Desc m n) =
+      endpoint0Desc m n' := by
+  have hklt : n.val < 2 * m := n.isLt
+  have h13 : (1 : ZMod m) ≠ (3 : ZMod m) := by
+    intro h
+    exact zmod_small_ne_of_six_le (m := m) (a := 1) (b := 3) hm
+      (by omega) (by omega) (by omega) (by simpa using h)
+  by_cases hwrap : n.val = 2 * m - 1
+  · -- wrap-around step `B 1 ↦ A 0`
+    have h0 : n'.val = 0 := by
+      have h2m : n.val + 1 = 2 * m := by omega
+      rw [hsucc, h2m, Nat.mod_self]
+    have hL : endpoint0Desc m n = EndpointDesc.B (1 : ZMod m) := by
+      simp only [endpoint0Desc]
+      split_ifs <;> first | rfl | omega
+    have hlt0 : n'.val < m - 2 := by omega
+    have hR : endpoint0Desc m n' = EndpointDesc.A (negNat 0) := by
+      rw [endpoint0Desc_eval_lo hlt0, h0,
+        if_pos (by decide : parityEven 0 = true)]
+    rw [hL, hR, endpointDescSucc_zero_B, if_neg h13]
+    congr 1
+    simp [negNat]
+  · have hs : n'.val = n.val + 1 := by
+      rw [hsucc]
+      exact Nat.mod_eq_of_lt (by omega)
+    by_cases h1 : n.val = m - 2
+    · -- boundary step `E+ ↦ A 1`
+      have hL : endpoint0Desc m n = EndpointDesc.Eplus := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      have hR : endpoint0Desc m n' = EndpointDesc.A (1 : ZMod m) := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, endpointDescSucc_zero_Eplus]
+    by_cases h2 : n.val = m - 1
+    · -- boundary step `A 1 ↦ B 0`
+      have hL : endpoint0Desc m n = EndpointDesc.A (1 : ZMod m) := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      have hmle : m ≤ n'.val := by omega
+      have hmlt : n'.val < 2 * m - 2 := by omega
+      have hd0 : n'.val - m = 0 := by omega
+      have hR : endpoint0Desc m n' = EndpointDesc.B (negNat 0) := by
+        rw [endpoint0Desc_eval_hi hmle hmlt, hd0,
+          if_pos (by decide : parityEven 0 = true)]
+      rw [hL, hR, endpointDescSucc_zero_A, if_neg h13]
+      congr 1
+      simp [negNat]
+    by_cases h3 : n.val = 2 * m - 2
+    · -- boundary step `E− ↦ B 1`
+      have hL : endpoint0Desc m n = EndpointDesc.Eminus := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      have hR : endpoint0Desc m n' = EndpointDesc.B (1 : ZMod m) := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, endpointDescSucc_zero_Eminus]
+    by_cases h4 : n.val = m - 3
+    · -- boundary step `B 3 ↦ E+` (this is where `Even m` enters)
+      have hpar : parityEven n.val = false := by
+        rw [h4]
+        exact parityEven_sub_three_of_even hmEven (by omega)
+      have hparne : ¬(parityEven n.val = true) := by
+        simp [hpar]
+      have hlt : n.val < m - 2 := by omega
+      have hL : endpoint0Desc m n = EndpointDesc.B (negNat n.val) := by
+        rw [endpoint0Desc_eval_lo hlt, if_neg hparne]
+      have hr3 : negNat (m := m) n.val = (3 : ZMod m) := by
+        rw [h4]
+        exact negNat_m_sub_three_eq_three (by omega)
+      have hR : endpoint0Desc m n' = EndpointDesc.Eplus := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, hr3, endpointDescSucc_zero_B, if_pos rfl]
+    by_cases h5 : n.val = 2 * m - 3
+    · -- boundary step `A 3 ↦ E−` (this is where `Even m` enters)
+      have hd : n.val - m = m - 3 := by omega
+      have hpar : parityEven (n.val - m) = false := by
+        rw [hd]
+        exact parityEven_sub_three_of_even hmEven (by omega)
+      have hparne : ¬(parityEven (n.val - m) = true) := by
+        simp [hpar]
+      have hmle : m ≤ n.val := by omega
+      have hmlt : n.val < 2 * m - 2 := by omega
+      have hL : endpoint0Desc m n = EndpointDesc.A (negNat (n.val - m)) := by
+        rw [endpoint0Desc_eval_hi hmle hmlt, if_neg hparne]
+      have hr3 : negNat (m := m) (n.val - m) = (3 : ZMod m) := by
+        rw [hd]
+        exact negNat_m_sub_three_eq_three (by omega)
+      have hR : endpoint0Desc m n' = EndpointDesc.Eminus := by
+        simp only [endpoint0Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, hr3, endpointDescSucc_zero_A, if_pos rfl]
+    by_cases h6 : n.val < m - 2
+    · -- generic low segment
+      have hlt' : n'.val < m - 2 := by omega
+      have hr3 : negNat (m := m) n.val ≠ (3 : ZMod m) :=
+        negNat_ne_three_of_ne_m_sub_three hm (by omega) (by omega)
+      rw [endpoint0Desc_eval_lo h6, endpoint0Desc_eval_lo hlt', hs,
+        parityEven_succ, negNat_succ]
+      cases hpar : parityEven n.val <;>
+        simp [endpointDescSucc_zero_A, endpointDescSucc_zero_B, hr3]
+    · -- generic high segment
+      have hmle : m ≤ n.val := by omega
+      have hmlt : n.val < 2 * m - 2 := by omega
+      have hmle' : m ≤ n'.val := by omega
+      have hmlt' : n'.val < 2 * m - 2 := by omega
+      have hd : n'.val - m = (n.val - m) + 1 := by omega
+      have hr3 : negNat (m := m) (n.val - m) ≠ (3 : ZMod m) :=
+        negNat_ne_three_of_ne_m_sub_three hm (by omega) (by omega)
+      rw [endpoint0Desc_eval_hi hmle hmlt, endpoint0Desc_eval_hi hmle' hmlt',
+        hd, parityEven_succ, negNat_succ]
+      cases hpar : parityEven (n.val - m) <;>
+        simp [endpointDescSucc_zero_A, endpointDescSucc_zero_B, hr3]
+
+set_option maxHeartbeats 2000000 in
+private theorem endpoint1Desc_rank_step_aux {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n n' : EndpointLabel m)
+    (hsucc : n'.val = (n.val + 1) % (2 * m)) :
+    endpointDescSucc (1 : TorusColor 3) (endpoint1Desc m n) =
+      endpoint1Desc m n' := by
+  have hklt : n.val < 2 * m := n.isLt
+  by_cases hwrap : n.val = 2 * m - 1
+  · -- wrap-around step `A 4 ↦ E+` (this is where `Even m` enters)
+    have h0 : n'.val = 0 := by
+      have h2m : n.val + 1 = 2 * m := by omega
+      rw [hsucc, h2m, Nat.mod_self]
+    have hd : n.val - (m + 1) = m - 2 := by omega
+    have hpar : parityEven (n.val - (m + 1)) = true := by
+      rw [hd]
+      exact parityEven_sub_two_of_even hmEven (by omega)
+    have hmlt : m < n.val := by omega
+    have hL : endpoint1Desc m n =
+        EndpointDesc.A
+          ((2 : ZMod m) - ((n.val - (m + 1) : Nat) : ZMod m)) := by
+      rw [endpoint1Desc_eval_hi hmlt, if_pos hpar]
+    have hr4 : (2 : ZMod m) - ((n.val - (m + 1) : Nat) : ZMod m) =
+        (4 : ZMod m) := by
+      rw [hd]
+      exact two_sub_natCast_m_sub_two_eq_four (by omega)
+    have hR : endpoint1Desc m n' = EndpointDesc.Eplus := by
+      simp only [endpoint1Desc]
+      split_ifs <;> first | rfl | omega
+    rw [hL, hR, hr4, endpointDescSucc_one_A, if_pos rfl]
+  · have hs : n'.val = n.val + 1 := by
+      rw [hsucc]
+      exact Nat.mod_eq_of_lt (by omega)
+    by_cases h1 : n.val = 0
+    · -- boundary step `E+ ↦ B 2`
+      have hL : endpoint1Desc m n = EndpointDesc.Eplus := by
+        simp only [endpoint1Desc]
+        split_ifs <;> first | rfl | omega
+      have hlo : 0 < n'.val := by omega
+      have hhi : n'.val < m := by omega
+      have hd0 : n'.val - 1 = 0 := by omega
+      have hR : endpoint1Desc m n' =
+          EndpointDesc.B ((2 : ZMod m) - ((0 : Nat) : ZMod m)) := by
+        rw [endpoint1Desc_eval_lo hlo hhi, hd0,
+          if_pos (by decide : parityEven 0 = true)]
+      rw [hL, hR, endpointDescSucc_one_Eplus]
+      congr 1
+      simp
+    by_cases h2 : n.val = m
+    · -- boundary step `E− ↦ A 2`
+      have hL : endpoint1Desc m n = EndpointDesc.Eminus := by
+        simp only [endpoint1Desc]
+        split_ifs <;> first | rfl | omega
+      have hmlt : m < n'.val := by omega
+      have hd0 : n'.val - (m + 1) = 0 := by omega
+      have hR : endpoint1Desc m n' =
+          EndpointDesc.A ((2 : ZMod m) - ((0 : Nat) : ZMod m)) := by
+        rw [endpoint1Desc_eval_hi hmlt, hd0,
+          if_pos (by decide : parityEven 0 = true)]
+      rw [hL, hR, endpointDescSucc_one_Eminus]
+      congr 1
+      simp
+    by_cases h3 : n.val = m - 1
+    · -- boundary step `B 4 ↦ E−` (this is where `Even m` enters)
+      have hd : n.val - 1 = m - 2 := by omega
+      have hpar : parityEven (n.val - 1) = true := by
+        rw [hd]
+        exact parityEven_sub_two_of_even hmEven (by omega)
+      have hlo : 0 < n.val := by omega
+      have hhi : n.val < m := by omega
+      have hL : endpoint1Desc m n =
+          EndpointDesc.B ((2 : ZMod m) - ((n.val - 1 : Nat) : ZMod m)) := by
+        rw [endpoint1Desc_eval_lo hlo hhi, if_pos hpar]
+      have hr4 : (2 : ZMod m) - ((n.val - 1 : Nat) : ZMod m) =
+          (4 : ZMod m) := by
+        rw [hd]
+        exact two_sub_natCast_m_sub_two_eq_four (by omega)
+      have hR : endpoint1Desc m n' = EndpointDesc.Eminus := by
+        simp only [endpoint1Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, hr4, endpointDescSucc_one_B, if_pos rfl]
+    by_cases h4 : n.val < m
+    · -- generic low segment
+      have hlo : 0 < n.val := by omega
+      have hlo' : 0 < n'.val := by omega
+      have hhi' : n'.val < m := by omega
+      have hd : n'.val - 1 = (n.val - 1) + 1 := by omega
+      have hr4 : (2 : ZMod m) - ((n.val - 1 : Nat) : ZMod m) ≠
+          (4 : ZMod m) :=
+        two_sub_natCast_ne_four_of_lt_m_sub_two hm (by omega)
+      rw [endpoint1Desc_eval_lo hlo h4, endpoint1Desc_eval_lo hlo' hhi',
+        hd, parityEven_succ, two_sub_natCast_succ]
+      cases hpar : parityEven (n.val - 1) <;>
+        simp [endpointDescSucc_one_A, endpointDescSucc_one_B, hr4]
+    · -- generic high segment
+      have hmlt : m < n.val := by omega
+      have hmlt' : m < n'.val := by omega
+      have hd : n'.val - (m + 1) = (n.val - (m + 1)) + 1 := by omega
+      have hr4 : (2 : ZMod m) - ((n.val - (m + 1) : Nat) : ZMod m) ≠
+          (4 : ZMod m) :=
+        two_sub_natCast_ne_four_of_lt_m_sub_two hm (by omega)
+      rw [endpoint1Desc_eval_hi hmlt, endpoint1Desc_eval_hi hmlt',
+        hd, parityEven_succ, two_sub_natCast_succ]
+      cases hpar : parityEven (n.val - (m + 1)) <;>
+        simp [endpointDescSucc_one_A, endpointDescSucc_one_B, hr4]
+
+set_option maxHeartbeats 2000000 in
+private theorem endpoint2Desc_rank_step_aux {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n n' : EndpointLabel m)
+    (hsucc : n'.val = (n.val + 1) % (2 * m)) :
+    endpointDescSucc (2 : TorusColor 3) (endpoint2Desc m n) =
+      endpoint2Desc m n' := by
+  have hklt : n.val < 2 * m := n.isLt
+  by_cases hwrap : n.val = 2 * m - 1
+  · -- wrap-around step `A 1 ↦ B 2` (this is where `Even m` enters)
+    have h0 : n'.val = 0 := by
+      have h2m : n.val + 1 = 2 * m := by omega
+      rw [hsucc, h2m, Nat.mod_self]
+    have hd : n.val - (m + 2) = m - 3 := by omega
+    have hpar : parityEven (n.val - (m + 2)) = false := by
+      rw [hd]
+      exact parityEven_sub_three_of_even hmEven (by omega)
+    have hparne : ¬(parityEven (n.val - (m + 2)) = true) := by
+      simp [hpar]
+    have hmlt : m + 1 < n.val := by omega
+    have hL : endpoint2Desc m n =
+        EndpointDesc.A
+          ((4 : ZMod m) + ((n.val - (m + 2) : Nat) : ZMod m)) := by
+      rw [endpoint2Desc_eval_hi hmlt, if_neg hparne]
+    have hr1 : (4 : ZMod m) + ((n.val - (m + 2) : Nat) : ZMod m) =
+        (1 : ZMod m) := by
+      rw [hd]
+      exact four_add_natCast_m_sub_three_eq_one (by omega)
+    have h12 : (1 : ZMod m) ≠ (2 : ZMod m) := by
+      intro h
+      exact zmod_small_ne_of_six_le (m := m) (a := 1) (b := 2) hm
+        (by omega) (by omega) (by omega) (by simpa using h)
+    have hR : endpoint2Desc m n' = EndpointDesc.B (2 : ZMod m) := by
+      simp only [endpoint2Desc]
+      split_ifs <;> first | rfl | omega
+    rw [hL, hR, hr1, endpointDescSucc_two_A, if_neg h12]
+    congr 1
+    norm_num
+  · have hs : n'.val = n.val + 1 := by
+      rw [hsucc]
+      exact Nat.mod_eq_of_lt (by omega)
+    by_cases h1 : n.val = 0
+    · -- boundary step `B 2 ↦ E+`
+      have hL : endpoint2Desc m n = EndpointDesc.B (2 : ZMod m) := by
+        simp only [endpoint2Desc]
+        split_ifs <;> first | rfl | omega
+      have hR : endpoint2Desc m n' = EndpointDesc.Eplus := by
+        simp only [endpoint2Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, endpointDescSucc_two_B, if_pos rfl]
+    by_cases h2 : n.val = 1
+    · -- boundary step `E+ ↦ A 4`
+      have hL : endpoint2Desc m n = EndpointDesc.Eplus := by
+        simp only [endpoint2Desc]
+        split_ifs <;> first | rfl | omega
+      have hlo : 2 ≤ n'.val := by omega
+      have hhi : n'.val ≤ m := by omega
+      have hd0 : n'.val - 2 = 0 := by omega
+      have hR : endpoint2Desc m n' =
+          EndpointDesc.A ((4 : ZMod m) + ((0 : Nat) : ZMod m)) := by
+        rw [endpoint2Desc_eval_lo hlo hhi, hd0,
+          if_pos (by decide : parityEven 0 = true)]
+      rw [hL, hR, endpointDescSucc_two_Eplus]
+      congr 1
+      simp
+    by_cases h3 : n.val = m + 1
+    · -- boundary step `E− ↦ B 4`
+      have hL : endpoint2Desc m n = EndpointDesc.Eminus := by
+        simp only [endpoint2Desc]
+        split_ifs <;> first | rfl | omega
+      have hmlt : m + 1 < n'.val := by omega
+      have hd0 : n'.val - (m + 2) = 0 := by omega
+      have hR : endpoint2Desc m n' =
+          EndpointDesc.B ((4 : ZMod m) + ((0 : Nat) : ZMod m)) := by
+        rw [endpoint2Desc_eval_hi hmlt, hd0,
+          if_pos (by decide : parityEven 0 = true)]
+      rw [hL, hR, endpointDescSucc_two_Eminus]
+      congr 1
+      simp
+    by_cases h4 : n.val = m
+    · -- boundary step `A 2 ↦ E−` (this is where `Even m` enters)
+      have hd : n.val - 2 = m - 2 := by omega
+      have hpar : parityEven (n.val - 2) = true := by
+        rw [hd]
+        exact parityEven_sub_two_of_even hmEven (by omega)
+      have hlo : 2 ≤ n.val := by omega
+      have hhi : n.val ≤ m := by omega
+      have hL : endpoint2Desc m n =
+          EndpointDesc.A ((4 : ZMod m) + ((n.val - 2 : Nat) : ZMod m)) := by
+        rw [endpoint2Desc_eval_lo hlo hhi, if_pos hpar]
+      have hr2 : (4 : ZMod m) + ((n.val - 2 : Nat) : ZMod m) =
+          (2 : ZMod m) := by
+        rw [hd]
+        exact four_add_natCast_m_sub_two_eq_two (by omega)
+      have hR : endpoint2Desc m n' = EndpointDesc.Eminus := by
+        simp only [endpoint2Desc]
+        split_ifs <;> first | rfl | omega
+      rw [hL, hR, hr2, endpointDescSucc_two_A, if_pos rfl]
+    by_cases h5 : n.val < m
+    · -- generic low segment
+      have hlo : 2 ≤ n.val := by omega
+      have hhi : n.val ≤ m := by omega
+      have hlo' : 2 ≤ n'.val := by omega
+      have hhi' : n'.val ≤ m := by omega
+      have hd : n'.val - 2 = (n.val - 2) + 1 := by omega
+      have hr2 : (4 : ZMod m) + ((n.val - 2 : Nat) : ZMod m) ≠
+          (2 : ZMod m) :=
+        four_add_natCast_ne_two_of_lt_m_sub_two hm (by omega)
+      rw [endpoint2Desc_eval_lo hlo hhi, endpoint2Desc_eval_lo hlo' hhi',
+        hd, parityEven_succ, four_add_natCast_succ]
+      cases hpar : parityEven (n.val - 2) <;>
+        simp [endpointDescSucc_two_A, endpointDescSucc_two_B, hr2]
+    · -- generic high segment
+      have hmlt : m + 1 < n.val := by omega
+      have hmlt' : m + 1 < n'.val := by omega
+      have hd : n'.val - (m + 2) = (n.val - (m + 2)) + 1 := by omega
+      have hr2 : (4 : ZMod m) + ((n.val - (m + 2) : Nat) : ZMod m) ≠
+          (2 : ZMod m) :=
+        four_add_natCast_ne_two_of_lt_m_sub_two hm (by omega)
+      rw [endpoint2Desc_eval_hi hmlt, endpoint2Desc_eval_hi hmlt',
+        hd, parityEven_succ, four_add_natCast_succ]
+      cases hpar : parityEven (n.val - (m + 2)) <;>
+        simp [endpointDescSucc_two_A, endpointDescSucc_two_B, hr2]
+
+/-- Color-0 descriptor rank step: the paper endpoint successor advances the
+color-0 closed-form rank list by exactly one rank label. -/
+theorem endpoint0Desc_rank_step {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n : EndpointLabel m) :
+    endpointDescSucc (0 : TorusColor 3) (endpoint0Desc m n) =
+      endpoint0Desc m (endpointRankSucc m n) :=
+  endpoint0Desc_rank_step_aux hmEven hm n (endpointRankSucc m n) rfl
+
+/-- Color-1 descriptor rank step: the paper endpoint successor advances the
+color-1 closed-form rank list by exactly one rank label. -/
+theorem endpoint1Desc_rank_step {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n : EndpointLabel m) :
+    endpointDescSucc (1 : TorusColor 3) (endpoint1Desc m n) =
+      endpoint1Desc m (endpointRankSucc m n) :=
+  endpoint1Desc_rank_step_aux hmEven hm n (endpointRankSucc m n) rfl
+
+/-- Color-2 descriptor rank step: the paper endpoint successor advances the
+color-2 closed-form rank list by exactly one rank label. -/
+theorem endpoint2Desc_rank_step {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (n : EndpointLabel m) :
+    endpointDescSucc (2 : TorusColor 3) (endpoint2Desc m n) =
+      endpoint2Desc m (endpointRankSucc m n) :=
+  endpoint2Desc_rank_step_aux hmEven hm n (endpointRankSucc m n) rfl
+
+/-- Descriptor rank step for every color: the paper endpoint successor on
+descriptors advances each closed-form rank list by exactly one rank label.
+This discharges the `hdesc` hypothesis of
+`compressedEndpointImageMap_singleCycle_of_even_six_le_desc_rank_step`. -/
+theorem endpointDesc_rank_step {m : Nat} [NeZero m]
+    (hmEven : Even m) (hm : 6 ≤ m) (c : TorusColor 3)
+    (n : EndpointLabel m) :
+    endpointDescSucc c (endpointDesc m c n) =
+      endpointDesc m c (endpointRankSucc m n) := by
+  fin_cases c
+  · exact endpoint0Desc_rank_step hmEven hm n
+  · exact endpoint1Desc_rank_step hmEven hm n
+  · exact endpoint2Desc_rank_step hmEven hm n
+
+/-- The H1a endpoint-cycle target with no remaining rank-step hypothesis: for
+every even `m ≥ 6`, the paper endpoint recurrence map is a single cycle on each
+active endpoint image. -/
+theorem compressedEndpointImageMap_singleCycle_of_recurrence
+    {m : Nat} [NeZero m] (hmEven : Even m) (hm : 6 ≤ m)
+    (rec : D3TerminalA2Parametric.TerminalA2EndpointRecurrence m)
+    (c : TorusColor 3) :
+    Shared.IsSingleCycleMap
+      (endpointImageMapOfRankStep c
+        (D3TerminalA2Parametric.terminalCompressedEndpointReturn
+          (m := m) rec.exchange c)
+        (compressedEndpoint_rank_step_of_desc_rank_step hm rec c
+          (endpointDesc_rank_step hmEven hm c))) :=
+  compressedEndpointImageMap_singleCycle_of_even_six_le_desc_rank_step
+    hmEven hm rec c (endpointDesc_rank_step hmEven hm c)
+
 theorem endpointImageSucc_m6_singleCycle (c : TorusColor 3) :
     Shared.IsSingleCycleMap
       (endpointImageSucc 6 c (endpointPoint_m6_injective c)) :=
