@@ -14,6 +14,7 @@ import EvenV11.V28Hard.JsonProof
 import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.EndpointChart
 import EvenV11.V28Hard.CompletionTower
+import EvenV11.V28Hard.EndpointPortRoom
 
 /-!
 # v28 hard-slot experimental code
