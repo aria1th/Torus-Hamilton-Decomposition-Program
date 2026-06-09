@@ -12,6 +12,7 @@ import EvenV11.V28Hard.ChecklistH2RootFlat
 import EvenV11.V28Hard.ChecklistFromHardParts
 import EvenV11.V28Hard.JsonProof
 import EvenV11.V28Hard.PaperExactStructure
+import EvenV11.V28Hard.EndpointChart
 
 /-!
 # v28 hard-slot experimental code
