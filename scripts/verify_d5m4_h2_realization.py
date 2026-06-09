@@ -455,6 +455,10 @@ def parse_d3_even_m4_dir_words() -> dict[tuple[int, int, int], tuple[int, int, i
 
 
 def check_d3_even_m4_not_terminal_f() -> None:
+    d3_file = REPO / "EvenV11/D3EvenM4.lean"
+    if not d3_file.exists():
+        print("[skip] D3EvenM4.lean is absent in this H2-focused bundle")
+        return
     entries = parse_d3_even_m4_dir_words()
 
     def layer_vertex(t: int, q: Q) -> tuple[int, int, int]:

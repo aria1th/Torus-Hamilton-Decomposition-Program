@@ -1,8 +1,17 @@
 # 남은 hard 부분 감사 + 보조정리 요청 (순서대로 논문 대조, 2026-06-07)
 
+> **상태 갱신 (2026-06-08)**: H2·H3·H4는 **유한 존재성 witness(native_decide)**로
+> 닫혔다(`LowD5M4Finite`/`LowD7M4Finite`/`LowD7M6Finite`). 따라서 **현재 유효한 요청은
+> H1 계열(A + A-realization), H5=C+D, H6=E**다. 요청 B(ribbon realization)는 H2/H3/H4가 finite 경로로
+> 우회돼 더 이상 닫기에 필요하지 않으며, native_decide-free 구조 증명을 원할 때의
+> **선택적 장기 목표**로 보존한다. 자세한 검증 상태는
+> `CURRENT_STATE_GROUND_TRUTH_20260608.md` 참조.
+> H1은 다시 H1a(carrier cyclicity)와 H1b(root-flat realization)로 분리되어 있으므로
+> main 기준 열린 홀은 H1a/H1b/H5/H6 네 개다.
+
 엔진/골격은 완증(sorry-free). 6홀을 **순서대로** 논문과 대조해 남은 hard 부분을
-짚고, 사용자께 요청할 보조정리(A–E)를 형식화한다. 핵심: **요청 B(ribbon
-realization)가 H2·H3·H4를 동시에 닫는 최고 레버리지**.
+짚고, 사용자께 요청할 보조정리(A–E)를 형식화한다. (역사적 기록: 작성 시점엔
+요청 B가 H2·H3·H4 동시 해결의 최고 레버리지였음.)
 
 판정 근거: `Shared/MasterReturn.lean`·`SwitchCalculus.lean`은 cyclicity 판정
 (packet/flag-splice → 단일순환)만 제공. **추상 return → root-flat schedule 실현
@@ -14,7 +23,56 @@ realization)가 H2·H3·H4를 동시에 닫는 최고 레버리지**.
 
 - 논문: `prop:D3-base` ← `lem:terminal-cyclicity`.
 - Lean 현재: terminal carrier 정의(`TerminalA2LowMod`); F_i 유한순환 m=4(Seed)·
-  m=6(`TerminalFiniteCyclicity`); m≤12 Python 검증.
+  m=6(`TerminalFiniteCyclicity`); m≤12 Python 검증. 2026-06-08 현재 A2 payload는
+  `TerminalA2CarrierCyclicityFamily`와 `TerminalA2RootFlatRealizationFamily`로 분리했고,
+  realization은 `sectionEquiv : TerminalQ m ≃ RootState m`를 명시적으로 갖는다. 둘이
+  주어지면 `cycleDataFamily_of_carrierCyclicity_and_realization`이 H1
+  `D3EvenCycleDataFamily`를 닫는다. `rootPairEquiv` 고정 realization은 계산상 너무
+  강하므로 제외한다. 같은 분리를 단일 modulus로 쓴
+  `TerminalA2RootFlatRealizationAt`도 추가했고, H2의
+  `TerminalA2M4PhysicalRealization`은
+  `terminalA2M4RealizationAt_of_physical`로 이 pointwise interface에 연결된다.
+  또한 `D3M4DirectRootFlat.cycleData`로 `m=4` direct root-flat witness는
+  확정했다. 단 이것은 terminal `F_i` realization이 아니므로 H1의 parametric
+  paper-realization 입력을 대체하지 않는다.
+  2026-06-08 추가: `TerminalA2EndpointRank`에 paper endpoint order를
+  `EndpointLabel m = Fin (2*m)`로 기록했고, rank successor의 단일순환성과
+  injective endpoint image로의 transfer(`endpointImageSucc_singleCycle`)를 닫았다.
+  이어 `compressedEndpointImageMap_singleCycle_of_rank_step`으로
+  `TerminalA2EndpointRecurrence`의 compressed map이 rank list를 한 칸 전진시킨다는
+  pointwise table만 있으면 active endpoint image 위 단일순환이 자동으로 나오게 했다.
+  따라서 H1a는 이제 (a) recurrence fields를 closed-form rank list에 대입하는 rank-step,
+  (b) active interval-splice lemma, (c) m=4 finite base와 m≥6 generic split로 분해된다.
+  이후 `terminalEndpointA_injective`/`terminalEndpointB_injective`와
+  `terminalEndpointA_eq_B_forces_exception`도 닫아, no-collision의 좌표 핵심은
+  A/B within-tag injectivity와 cross-tag exceptional collision lemma로 분리됐다.
+  2026-06-09 추가: `EndpointDesc`/`endpointDescPoint` 층에서 valid descriptor의
+  point-level injectivity(`endpointDescPoint_injective_of_valid`)와
+  `endpointPoint_injective_of_desc_injective` bridge를 닫았다. 이어 color별
+  left-inverse proof로 `endpointDesc_injective_of_even_six_le`와
+  `endpointPoint_injective_of_even_six_le`까지 닫았다. 이 정리는 정확히
+  `Even m ∧ 6 ≤ m` 범위이며, 홀수 color 2 실패는
+  `endpoint2Point_odd_collision`/`endpointPoint_odd_color2_not_injective`로 Lean에
+  기록했다. 구체 `m=7` 반복도
+  `endpoint2Point_m7_collision`/`endpointPoint_m7_color2_not_injective`로 남겼다.
+  따라서 generic endpoint no-collision의 정확한 범위는 완료됐고, 남은 H1a는
+  recurrence rank-step 및 interval-splice 승격이다.
+  이어 `endpointImageSucc_singleCycle_of_even_six_le`와
+  `compressedEndpointImageMap_singleCycle_of_even_six_le_rank_step`도 추가해,
+  `Even m ∧ 6 ≤ m`에서는 no-collision 결과가 active endpoint image cyclicity
+  handoff까지 바로 공급된다. 이제 compressed endpoint image 쪽은 논문 recurrence의
+  pointwise rank-step table만 남았다.
+  2026-06-09 추가 수정: `TerminalA2EndpointRecurrence`의 boundary fields를
+  puncture endpoint를 건너뛰는 compressed form에서
+  `terminalEndpointEplus`/`terminalEndpointEminus`를 포함한 paper-faithful bridge form으로
+  바꿨다. 따라서 rank-step 목표는 실제 endpoint order의 `B3 -> E+ -> A1`,
+  `A3 -> E- -> B1` 타입 bridge와 정합된다.
+  이어 `endpointDescSucc`와 `terminalCompressedEndpointReturn_endpointDescSucc`를
+  닫아 recurrence record가 valid descriptor를 paper successor로 보냄을 증명했다.
+  `compressedEndpoint_rank_step_of_desc_rank_step`으로 raw pointwise rank-step은
+  이제 descriptor equality
+  `endpointDescSucc c (endpointDesc m c n) = endpointDesc m c (endpointRankSucc m n)`
+  하나로 축소됐다.
 - 남은 hard: (1) **parametric** terminal-cyclicity, (2) D3 realization(returnMap=F_i).
 
 > **요청 보조정리 A** (`lem:terminal-cyclicity`). 모든 짝수 m≥4, i∈{0,1,2}에서
@@ -104,12 +162,13 @@ realization)가 H2·H3·H4를 동시에 닫는 최고 레버리지**.
 
 | 요청 | 닫는 홀 | 성격 | 내 연결작업 |
 |---|---|---|---|
-| **B** (ribbon realization) | **H2 + H3 + H4** | hard, 최고 레버리지 | D7 인터페이스·(P1)-(P4) decide 포팅 |
-| A (terminal-cyclicity) | H1 | hard, parametric, 가장 clean | RF1/RF2 패턴(D2) 재사용 |
+| **A** (terminal-cyclicity) | **H1a** | hard, parametric, 현재 최단 닫힘 단위 | endpoint rank/image transfer 진행 중 |
+| A-realization | H1b | hard, paper-realization | common `sectionEquiv` + color translation lemma |
+| B (ribbon realization) | 선택적 structural H2/H3/H4 | hard, 장기 목표 | D7 인터페이스·(P1)-(P4) decide 포팅 |
 | C+D (anchors+growth) | H5 | hard, 섹션 전체 | 표 포팅됨 |
 | E (endpoint successor) | H6 | hard, 섹션 | bridge 준비됨 |
 
-**한 줄 결론**: 추상 cyclicity는 H1·H2·H3·H4 모두 Lean에 거의 다 있음(H2/H3/H4
-완료, H1은 유한·요청 A 남음). 남은 진짜 hard는 (1) **realization 브리지 B**
-(H2/H3/H4 공통), (2) **terminal-cyclicity A**(H1), (3) H5·H6 섹션(C/D/E). B가
-하나로 셋을 닫으므로 최우선 요청.
+**한 줄 결론**: H2/H3/H4는 finite witness로 main에서 닫혔고, 현재 닫힘 순서는
+(1) **terminal-cyclicity A**(H1a), (2) **terminal realization**(H1b), (3) H5·H6
+섹션(C/D/E)이다. B는 논문-faithful structural certificate를 원할 때 되살릴 장기
+목표다.

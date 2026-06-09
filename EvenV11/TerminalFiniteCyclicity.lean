@@ -11,7 +11,7 @@ Faithful Lean port of the finite terminal-word cyclicity verified by
 * the three terminal carriers `Fᵢ = terminalReturn` are `m²`-cycles at `m=6`;
 * the rank-three folded words `W₄ = F₁F₀²` (16-cycle, `m=4`) and
   `W₆ = F₁²F₀³` (36-cycle, `m=6`) are full cycles.
-Explicit orbits + `decide` (Seed pattern); no `sorry`, no `native_decide`.
+Explicit orbits + `decide` (Seed pattern); no proof holes, no `native_decide`.
 -/
 
 set_option maxRecDepth 8000
@@ -100,6 +100,117 @@ noncomputable def w6Coord : Shared.CycleCoordinate 36 W6 :=
 /-- `W6` is a single 36-cycle on `TerminalQ 6` (paper finite check). -/
 theorem w6_singleCycle : Shared.IsSingleCycleMap W6 :=
   Shared.CycleCoordinate.singleCycle w6Coord
+
+
+/-! ## `m = 4` terminal carriers (paper terminal A₂ finite check) -/
+
+/-- The color-0 carrier orbit at `m = 4`, transcribed from the terminal `A₂`
+appendix table. -/
+def f4c0Orbit : Fin 16 → TerminalQ 4
+  | 0 => (0, 0)
+  | 1 => (0, 1)
+  | 2 => (3, 2)
+  | 3 => (3, 3)
+  | 4 => (3, 0)
+  | 5 => (2, 1)
+  | 6 => (2, 2)
+  | 7 => (1, 3)
+  | 8 => (1, 0)
+  | 9 => (1, 1)
+  | 10 => (0, 2)
+  | 11 => (0, 3)
+  | 12 => (3, 1)
+  | 13 => (2, 3)
+  | 14 => (2, 0)
+  | _ => (1, 2)
+
+theorem f4c0Orbit_bijective : Function.Bijective f4c0Orbit := by
+  decide
+
+theorem f4c0Orbit_step : ∀ i : Fin 16, f4c0Orbit (i + 1) = (F4 0) (f4c0Orbit i) := by
+  decide
+
+noncomputable def f4c0Coord : Shared.CycleCoordinate 16 (F4 0) :=
+  Shared.CycleCoordinate.ofFinEquiv
+    (Equiv.ofBijective f4c0Orbit f4c0Orbit_bijective) f4c0Orbit_step
+
+/-- `(F4 0)` is a single 16-cycle on `TerminalQ 4` (paper finite check). -/
+theorem f4c0_singleCycle : Shared.IsSingleCycleMap (F4 0) :=
+  Shared.CycleCoordinate.singleCycle f4c0Coord
+
+/-- The color-1 carrier orbit at `m = 4`, transcribed from the terminal `A₂`
+appendix table. -/
+def f4c1Orbit : Fin 16 → TerminalQ 4
+  | 0 => (0, 0)
+  | 1 => (2, 3)
+  | 2 => (3, 3)
+  | 3 => (1, 2)
+  | 4 => (3, 1)
+  | 5 => (0, 1)
+  | 6 => (1, 0)
+  | 7 => (2, 0)
+  | 8 => (3, 0)
+  | 9 => (0, 3)
+  | 10 => (1, 3)
+  | 11 => (2, 2)
+  | 12 => (3, 2)
+  | 13 => (0, 2)
+  | 14 => (1, 1)
+  | _ => (2, 1)
+
+theorem f4c1Orbit_bijective : Function.Bijective f4c1Orbit := by
+  decide
+
+theorem f4c1Orbit_step : ∀ i : Fin 16, f4c1Orbit (i + 1) = (F4 1) (f4c1Orbit i) := by
+  decide
+
+noncomputable def f4c1Coord : Shared.CycleCoordinate 16 (F4 1) :=
+  Shared.CycleCoordinate.ofFinEquiv
+    (Equiv.ofBijective f4c1Orbit f4c1Orbit_bijective) f4c1Orbit_step
+
+/-- `(F4 1)` is a single 16-cycle on `TerminalQ 4` (paper finite check). -/
+theorem f4c1_singleCycle : Shared.IsSingleCycleMap (F4 1) :=
+  Shared.CycleCoordinate.singleCycle f4c1Coord
+
+/-- The color-2 carrier orbit at `m = 4`, transcribed from the terminal `A₂`
+appendix table. -/
+def f4c2Orbit : Fin 16 → TerminalQ 4
+  | 0 => (0, 0)
+  | 1 => (1, 0)
+  | 2 => (2, 3)
+  | 3 => (0, 2)
+  | 4 => (2, 1)
+  | 5 => (3, 0)
+  | 6 => (1, 3)
+  | 7 => (3, 2)
+  | 8 => (0, 1)
+  | 9 => (1, 1)
+  | 10 => (2, 0)
+  | 11 => (3, 3)
+  | 12 => (0, 3)
+  | 13 => (1, 2)
+  | 14 => (2, 2)
+  | _ => (3, 1)
+
+theorem f4c2Orbit_bijective : Function.Bijective f4c2Orbit := by
+  decide
+
+theorem f4c2Orbit_step : ∀ i : Fin 16, f4c2Orbit (i + 1) = (F4 2) (f4c2Orbit i) := by
+  decide
+
+noncomputable def f4c2Coord : Shared.CycleCoordinate 16 (F4 2) :=
+  Shared.CycleCoordinate.ofFinEquiv
+    (Equiv.ofBijective f4c2Orbit f4c2Orbit_bijective) f4c2Orbit_step
+
+/-- `(F4 2)` is a single 16-cycle on `TerminalQ 4` (paper finite check). -/
+theorem f4c2_singleCycle : Shared.IsSingleCycleMap (F4 2) :=
+  Shared.CycleCoordinate.singleCycle f4c2Coord
+
+/-- All three `m=4` terminal carriers are 16-cycles. -/
+theorem f4_all_singleCycle : ∀ i : Fin 3, Shared.IsSingleCycleMap (F4 i)
+  | 0 => f4c0_singleCycle
+  | 1 => f4c1_singleCycle
+  | 2 => f4c2_singleCycle
 
 /-! ## `m = 6` terminal carriers (small terminal parent) -/
 

@@ -1,5 +1,10 @@
 # 논문 수학 vs 현재 Lean 구현 — 정밀 비교 (2026-06-07)
 
+> **상태 갱신 (2026-06-08)**: 아래 "6홀"은 작성 시점 기준. 현재 **H2·H3·H4는 유한
+> 존재성 witness(native_decide: `LowD5M4Finite`/`LowD7M4Finite`/`LowD7M6Finite`)로
+> 닫혔고, 열린 홀은 H1·H5·H6 셋**이다. §2 표의 H2/H3/H4 행은 "닫힘(finite)"으로 읽을
+> 것. 검증 상태: `CURRENT_STATE_GROUND_TRUTH_20260608.md`.
+
 v28 논문(`even_modulus_directed_tori.tex`)의 증명 구조와 현재 Lean(`EvenV11`)을
 1:1 대조. 결론 먼저: **논문의 induction 골격과 두 cyclicity 엔진은 Lean에서
 sorry-free로 증명돼 있고, 남은 6홀은 정확히 induction의 per-range 수학 입력이다.**

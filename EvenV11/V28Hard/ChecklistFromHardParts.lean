@@ -14,7 +14,7 @@ paper-faithful handoff shape:
 * H2 is the active physical-row ribbon input
   `LowD5M4RibbonInterface.PhysicalRowsSingletonSwitchMapConjInput`.
 * H3/H4 are structural `RootFlatCycleData` inputs.
-* H5/H6 use the current endpoint-promotion candidates.
+* H5/H6 are supplied as explicit promotion inputs.
 -/
 
 namespace EvenV11
@@ -89,28 +89,33 @@ theorem evenModulusToriAllDimensions_structuralD7
   evenModulusToriAllDimensions_of_paperChecklist
     (paperChecklist_structuralD7 d3 d5 d7m4 d7m6 high endpoint)
 
-/-- Practical wiring checkpoint that keeps H2 explicit and leaves H3/H4 as
-structural inputs, while using the current D3/H5/H6 candidate modules. -/
-def paperChecklist_checkpoint_activeHardSurface
+/-- Practical wiring constructor that keeps H2 explicit, leaves H3/H4 as
+structural inputs, and also takes the terminal and promotion pieces explicitly. -/
+def paperChecklist_from_activeHardSurfaceComponents
+    (terminalA2 : D3TerminalA2Parametric.TerminalA2ParametricSolution)
     (h2 : H2PhysicalRibbonInput)
     (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
-    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6))
+    (engines : HighEvenEndpointPromotions.HardPromotionEngines) :
     PaperFaithfulChecklist :=
   paperChecklist_from_physicalH2_structuralD7
-    D3TerminalA2Parametric.rootFlatCertificateFamily
+    (D3TerminalA2Parametric.rootFlatCertificateFamily_of_solution terminalA2)
     h2 d7m4 d7m6
     (HighEvenEndpointPromotions.oddHighModulusPromotion_of_engine
-      HighEvenEndpointPromotions.candidate_oddHighModulusEngine)
+      engines.highEven)
     (HighEvenEndpointPromotions.endpointTargetPromotion_of_engine
-      HighEvenEndpointPromotions.candidate_oddEndpointPayloadEngine)
+      engines.endpoint)
 
-theorem evenModulusToriAllDimensions_checkpoint_activeHardSurface
+theorem evenModulusToriAllDimensions_from_activeHardSurfaceComponents
+    (terminalA2 : D3TerminalA2Parametric.TerminalA2ParametricSolution)
     (h2 : H2PhysicalRibbonInput)
     (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
-    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6))
+    (engines : HighEvenEndpointPromotions.HardPromotionEngines) :
     V28EvenModulusToriAllDimensionsGoal :=
   evenModulusToriAllDimensions_of_paperChecklist
-    (paperChecklist_checkpoint_activeHardSurface h2 d7m4 d7m6)
+    (paperChecklist_from_activeHardSurfaceComponents
+      terminalA2 h2 d7m4 d7m6 engines)
 
 end ChecklistFromHardParts
 end V28Hard

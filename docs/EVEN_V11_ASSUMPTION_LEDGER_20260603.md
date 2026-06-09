@@ -1,5 +1,11 @@
 # EvenV11 가정 원장 (Assumption Ledger) — 정직한 진행 추적
 
+> **상태 갱신 (2026-06-08)**: 기본 proof spine의 미증명 sorry 구멍은 이제
+> **H1·H5·H6 셋**(6/3 시점 6개에서 감소). H2·H3·H4는 유한 존재성 witness
+> (`LowD5M4Finite`/`LowD7M4Finite`/`LowD7M6Finite`, native_decide)로 닫혔다 —
+> sorryAx가 아니라 native_decide axiom에 의존. 검증 ground-truth:
+> `CURRENT_STATE_GROUND_TRUTH_20260608.md`.
+
 작성일: 2026-06-03. 측정 환경: `/root/.elan`, `lake build EvenV11` 성공(약 4초).
 업데이트: 2026-06-06 v28 방향 전환 이후 H3 `D7(4)`도 generated finite root-flat
 certificate 직접 사용에서 빠졌다. H2 `D5(4)`, H3 `D7(4)`, H4 `D7(6)`의 generated

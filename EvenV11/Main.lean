@@ -3,6 +3,9 @@ import EvenV11.LowD5M4RibbonInterface
 import EvenV11.LowD5M4Structural
 import EvenV11.D54DirectRF
 import EvenV11.RootFlatCycleData
+import EvenV11.V28Hard.PaperExactStructure
+import EvenV11.LowD7M4Finite
+import EvenV11.LowD7M6Finite
 
 /-!
 # Even-modulus directed tori: unconditional main theorem (paper-faithful skeleton)
@@ -46,10 +49,32 @@ def EvenModulusToriAllDimensionsGoal : Prop :=
 
 /-! ## Open obligations (uniform paper-faithful root-flat handoffs) -/
 
-/-- H1 — `D₃` even base, **all even `m ≥ 4`** (paper §5 terminal `A₂`).
-Parametric root-flat cycle-data: a `dir` on `Fin 2 → ZMod m` with RF1/RF2/RF3
-for every even `m ≥ 4` (RF3 = terminal cyclicity, unit-carry). -/
-theorem assume_d3CycleData : RootFlatCycle.D3EvenCycleDataFamily := sorry
+/-- H1a — terminal carrier cyclicity (paper `lem:terminal-cyclicity`).  For every
+even `m ≥ 4` the three collapsed terminal `A₂` carriers `Fᵢ = terminalReturn i`
+are single `m²`-cycles on `Qₘ = (ℤ/m)²`.  This is the parametric
+number-theoretic core (endpoint recurrence `Aʳ/Bʳ`); the low moduli `m = 4, 6`
+are already discharged finitely (`terminalA2M4/M6FiniteCyclicity`). -/
+theorem assume_d3TerminalCarrierCyclicity :
+    V28Hard.D3TerminalA2Parametric.TerminalA2CarrierCyclicityFamily := sorry
+
+/-- H1b — terminal `A₂` root-flat realization (paper terminal row expansion).  A
+standard root-flat schedule on `Fin 2 → ZMod m` whose first return is conjugate,
+through an explicit return-section equivalence `sectionEquiv : Qₘ ≃ RootState`, to
+the carriers `Fᵢ`, for every even `m ≥ 4` (RF1/RF2 plus the realization equation
+`sectionEquiv.symm ∘ returnMap c ∘ sectionEquiv = Fᵢ`).  The plain chart
+`rootPairEquiv` is too rigid; a run-collapse `sectionEquiv` is required. -/
+theorem assume_d3TerminalRealization :
+    Nonempty V28Hard.D3TerminalA2Parametric.TerminalA2RootFlatRealizationFamily :=
+  sorry
+
+/-- H1 — `D₃` even base, **all even `m ≥ 4`** (paper §5 terminal `A₂`).  Assembled
+from the two separated obligations above by the closed conjugacy adapter
+`cycleDataFamily_of_carrierCyclicity_and_realization`: carrier cyclicity supplies
+RF3 and the realization supplies RF1/RF2 + the conjugacy. -/
+theorem assume_d3CycleData : RootFlatCycle.D3EvenCycleDataFamily :=
+  V28Hard.D3TerminalA2Parametric.cycleDataFamily_of_carrierCyclicity_and_realization
+    assume_d3TerminalCarrierCyclicity
+    (Classical.choice assume_d3TerminalRealization)
 
 theorem assume_d3EvenRootFlat : FinalD3EvenRootFlatCertificateFamily :=
   RootFlatCycle.finalD3EvenRootFlatCertificateFamily_of_d3EvenCycleDataFamily
@@ -376,24 +401,24 @@ theorem lowD5M4_of_finiteRF :
 theorem assume_lowD5M4 : FinalLowD5M4RootFlatCertificateFamily :=
   lowD5M4_of_finiteRF
 
-/-- H3 — `D₇(4)` (paper App A/B two-rail relay): a `dir` on `Fin 6 → ZMod 4`
-with RF1/RF2/RF3. -/
+/-- H3 — `D₇(4)` (paper App A/B two-rail relay).  Closed by the finite root-flat
+**existence witness** `LowD7M4Finite`: a concrete `dir` on `Fin 4096` whose
+RF1/RF2/RF3 (`rowLatin`/`layerBijective`/`returnsSingleCycle`) are verified by
+`native_decide`.  This exhibits one valid schedule, i.e. settles the existence
+question for `D₇(4)`.  The structural cycle-data target is kept exposed for a
+future `native_decide`-free realization. -/
 abbrev LowD7M4RootFlatCycleData := RootFlatCycle.RootFlatCycleData 6 4
 
-theorem assume_lowD7M4CycleData : Nonempty LowD7M4RootFlatCycleData := sorry
-
 theorem assume_lowD7M4 : FinalLowD7M4RootFlatCertificateFamily :=
-  RootFlatCycle.finalLowD7M4RootFlatCertificateFamily_of_nonemptyCycleData
-    assume_lowD7M4CycleData
+  LowD7M4Finite.finalLowD7M4RootFlatCertificateFamily
 
-/-- H4 — `D₇(6)`: a `dir` on `Fin 6 → ZMod 6` with RF1/RF2/RF3. -/
+/-- H4 — `D₇(6)`.  Closed by the finite root-flat **existence witness**
+`LowD7M6Finite`: a concrete `dir` on `Fin 46656` with RF1/RF2/RF3 verified by
+`native_decide`. -/
 abbrev LowD7M6RootFlatCycleData := RootFlatCycle.RootFlatCycleData 6 6
 
-theorem assume_lowD7M6CycleData : Nonempty LowD7M6RootFlatCycleData := sorry
-
 theorem assume_lowD7M6 : FinalLowD7M6RootFlatCertificateFamily :=
-  RootFlatCycle.finalLowD7M6RootFlatCertificateFamily_of_nonemptyCycleData
-    assume_lowD7M6CycleData
+  LowD7M6Finite.finalLowD7M6RootFlatCertificateFamily
 
 /-- H5 — odd-dimension high-modulus branch (paper §6 coforest splice + §8 growth). -/
 theorem assume_oddHighModulus : FinalOddHighModulusTargetPromotion := sorry
@@ -421,5 +446,20 @@ theorem evenModulusToriAllDimensions : EvenModulusToriAllDimensionsGoal := by
   obtain ⟨r, hr⟩ := hm
   exact finalTargetCayley_from_d3AndLowRootFlatChecklist evenCertificateChecklist
     ⟨hd, hm4, r, by omega⟩
+
+/-! ## Paper-exact constructive adapter -/
+
+abbrev ConstructiveV28Solution :=
+  V28Hard.PaperExactStructure.ConstructiveV28Solution
+
+/-- Conditional version of the main theorem whose assumptions are the explicit
+H1--H6 manuscript handoffs from `V28Hard.PaperExactStructure`.  The existing
+unconditional theorem above is left unchanged; this adapter exposes the
+paper-facing record package imported from the JSON-proof bundle. -/
+theorem evenModulusToriAllDimensions_of_constructiveSolution
+    (solution : ConstructiveV28Solution) :
+    EvenModulusToriAllDimensionsGoal :=
+  V28Hard.PaperExactStructure.evenModulusToriAllDimensions_of_constructiveSolution
+    solution
 
 end EvenV11

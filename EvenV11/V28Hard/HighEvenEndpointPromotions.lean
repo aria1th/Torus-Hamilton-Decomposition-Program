@@ -22,10 +22,46 @@ namespace HighEvenEndpointPromotions
 
 open FinalTargetHighEvenCertificateBridge
 
+/-- Four-point growth row from the manuscript high-even growth step.  The row is
+`(s a)(b c)` with leaf `s`; the remaining fields record the quotient line,
+quotient plane, and unit carry created by the row. -/
+structure HighEvenFourPointGrowthRow (D : Nat) where
+  s : Fin D
+  delta : Fin D
+  a : Fin D
+  b : Fin D
+  c : Fin D
+  leaf : Fin D
+  rowWord : List (Fin D × Fin D)
+  rowWord_shape : rowWord = [(s, a), (b, c)]
+  leaf_eq : leaf = s
+  a_is_s_plus_delta : Prop
+  b_is_s_minus_delta : Prop
+  c_is_s_minus_two_delta : Prop
+  quotientLine : Prop
+  quotientPlane : Prop
+  inactiveFlagKilled : Prop
+  contributesUnitCarry : Prop
+
+/-- Endpoint-successor phase-product data.  This records the exact product-cycle
+criterion used in the paper: terminal exchanges over the three terminal colors,
+then completion rows whose exponent sum is a unit modulo the product period. -/
+structure EndpointSuccessorPhaseProductDatum (b m : Nat) where
+  four_le_b : 4 ≤ b
+  even_m : Even m
+  terminalColors : Fin 3 → Fin (2 * b + 1)
+  phaseCoordinateCount : Nat
+  phaseCoordinateCount_eq : phaseCoordinateCount = b - 1
+  terminalExchangeRows : List (Fin (2 * b + 1) × Fin (2 * b + 1))
+  completionRows : List (Fin (2 * b + 1) × Fin (2 * b + 1))
+  productExponentSum : Int
+  productExponentSum_unit : IsUnit (productExponentSum : ZMod m)
+  markedPayloadTransferred : Prop
+
 /-- The high-even branch should not directly manufacture the final target from
 opaque closed inputs.  It should expose the finite anchor/coforest audit, the
 projection kernel, and the guide-locality facts as separate arguments. -/
-structure OddHighModulusEngine : Prop where
+structure OddHighModulusEngine where
   run :
     ∀ {d m : Nat}, 5 ≤ d → (∃ b : Nat, d = 2 * b + 1) →
       EvenModulusRange m → d < m →
@@ -55,7 +91,7 @@ theorem oddHighModulusPromotion_of_engine
 /-- A more concrete proof plan for H5.  The hard parts are exactly the local
 support/quotient claims that make the Type-A splice invisible outside the guide
 boundary. -/
-structure OddHighModulusProofPlan : Prop where
+structure OddHighModulusProofPlan where
   finiteAnchor : HighEvenFiniteAnchorInput
   projectionKernel : HighEvenProjectionKernelInput
   guideLocality : HighEvenGuideLocalityInput
@@ -74,7 +110,7 @@ theorem oddHighModulusInput_of_engine
 /-- Endpoint successor engine in the stronger marked-payload form.  Unlike the
 current induction spine, this keeps the parent comparison selector/reserve alive
 while constructing the child payload. -/
-structure OddEndpointPayloadEngine : Prop where
+structure OddEndpointPayloadEngine where
   run :
     ∀ {b m : Nat}, 4 ≤ b → MarkedDimensionRange b m →
       FinalMarkedPayload b m →
@@ -104,7 +140,7 @@ theorem oddEndpointInput_of_engine
 underlying bridges already exist in `EndpointCompletion`, `PhaseProductSupport`,
 and `FinalTargetPhaseProductCertificateBridge`; the missing work is choosing and
 threading the marked payload. -/
-structure OddEndpointProofPlan : Prop where
+structure OddEndpointProofPlan where
   terminalInput : FinalTerminalInput
   markedTransferInput :
     EndpointMarkedTransferBridge.foldedEndpointMarkedTransferInputAudit
@@ -145,7 +181,7 @@ theorem phaseProductCertificateInputs_of_endpointPlan
 
 /-- A combined hard-promotion bundle.  This is the object that should eventually
 replace both H5 and H6 assumptions in `Main.lean`/`V28PaperInterface.lean`. -/
-structure HardPromotionEngines : Prop where
+structure HardPromotionEngines where
   highEven : OddHighModulusEngine
   endpoint : OddEndpointPayloadEngine
 
@@ -157,23 +193,13 @@ theorem paperGrowthInputs_of_engines
   ⟨oddHighModulusInput_of_engine engines.highEven,
    oddEndpointInput_of_engine engines.endpoint⟩
 
-/-- Candidate H5 theorem.  The body is intentionally the exact construction site:
-instantiate the coforest splice, projection kernel, and guide-locality lemmas. -/
-theorem candidate_oddHighModulusEngine :
-    OddHighModulusEngine := by
-  sorry
-
-/-- Candidate H6 theorem.  The body is intentionally the exact construction site:
-thread a real marked payload through endpoint completion and phase-product
-support instead of using the weak payload adapter. -/
-theorem candidate_oddEndpointPayloadEngine :
-    OddEndpointPayloadEngine := by
-  sorry
-
-/-- Candidate growth-promotion bundle. -/
-theorem candidate_hardPromotionEngines : HardPromotionEngines where
-  highEven := candidate_oddHighModulusEngine
-  endpoint := candidate_oddEndpointPayloadEngine
+/-- Convert supplied hard-promotion engines to a combined package. -/
+theorem hardPromotionEngines_of_components
+    (highEven : OddHighModulusEngine)
+    (endpoint : OddEndpointPayloadEngine) :
+    HardPromotionEngines where
+  highEven := highEven
+  endpoint := endpoint
 
 end HighEvenEndpointPromotions
 end V28Hard

@@ -1,4 +1,6 @@
 import EvenV11.RootFlatCycleData
+import EvenV11.FiniteAudit
+import EvenV11.FiniteAuditBridge
 
 /-!
 # Hard slots H3/H4: D7 two-rail relay blueprint
@@ -74,7 +76,7 @@ structure RelayRow where
   stage : Nat
   support : List Edge
   active : List Edge
-  deriving Repr
+  deriving DecidableEq, Repr
 
 /-- Shifted D7 two-rail row table, transcribed from the paper/finite audit. -/
 def stageRows : List RelayRow :=
@@ -131,7 +133,7 @@ structure StageSkeleton where
   shiftedTriple : Label × Label × Label
   shiftedPair₁ : Edge
   shiftedPair₂ : Edge
-  deriving Repr
+  deriving DecidableEq, Repr
 
 def stageSkeletons : List StageSkeleton :=
   [ { stage := 1, shift := L0,
@@ -163,7 +165,7 @@ structure ColorClosureDatum where
   isolated : Label
   closing : Edge
   sign : Int
-  deriving Repr
+  deriving DecidableEq, Repr
 
 def colorClosureData : List ColorClosureDatum :=
   [ { color := L0,
@@ -200,7 +202,7 @@ structure TerminalAlignment where
   row₃ : Int × Int
   permutation : Label × Label × Label
   signs : Int × Int × Int
-  deriving Repr
+  deriving DecidableEq, Repr
 
 def terminalAlignment : TerminalAlignment :=
   { terminalTriple := (L0, L2, L3)
@@ -225,8 +227,178 @@ theorem stageSkeletons_length : stageSkeletons.length = 5 := by
 theorem colorClosureData_length : colorClosureData.length = 7 := by
   decide
 
+/-! ## Bridge to the JSON / Python finite audit -/
+
+/-- Forget the `Fin 7` endpoints to the natural-number edge format used by the
+JSON/Python audit. -/
+def edgeToAudit (e : Edge) : FiniteAudit.AuditEdge :=
+  FiniteAudit.edge e.1.val e.2.val
+
+/-- The relay support row, in the exact audit schema of
+`FiniteAudit.d7SupportRows`. -/
+def relayRowToSupportDatum (row : RelayRow) : FiniteAudit.SupportRowDatum :=
+  FiniteAudit.supportDatum row.stage
+    (row.support.map edgeToAudit)
+    (row.active.map edgeToAudit)
+
+/-- Closing-edge orientation as stored in the determinant audit.  Most closing
+edges use the displayed orientation.  Colors `0` and `1` are reversed in the
+finite-audit table because the sign is attached to that oriented closing
+column. -/
+def closingEdgeToAudit (datum : ColorClosureDatum) : FiniteAudit.AuditEdge :=
+  match datum.color.val with
+  | 0 => FiniteAudit.edge 6 0
+  | 1 => FiniteAudit.edge 5 1
+  | _ => edgeToAudit datum.closing
+
+/-- The spanning-tree witnesses attached to the seven D7 closing rows in the
+finite audit JSON. -/
+def closureWitness : Nat → FiniteAudit.TreeWitness
+  | 0 => FiniteAudit.treeWitness 0 [(1, 0), (3, 1), (2, 1), (4, 3), (5, 0)]
+  | 1 => FiniteAudit.treeWitness 1 [(2, 1), (4, 2), (6, 4), (3, 4), (0, 3)]
+  | 2 => FiniteAudit.treeWitness 0 [(2, 0), (1, 0), (3, 1), (5, 1), (4, 2)]
+  | 3 => FiniteAudit.treeWitness 3 [(4, 3), (5, 4), (6, 5), (0, 6), (1, 5)]
+  | 4 => FiniteAudit.treeWitness 3 [(4, 3), (2, 3), (5, 2), (6, 5), (0, 6)]
+  | 5 => FiniteAudit.treeWitness 5 [(6, 5), (0, 6), (3, 0), (2, 3), (1, 2)]
+  | 6 => FiniteAudit.treeWitness 5 [(6, 5), (0, 6), (4, 6), (1, 4), (2, 5)]
+  | _ => FiniteAudit.treeWitness 0 []
+
+/-- The relay closing row, in the exact audit schema of
+`FiniteAudit.d7ForestClosingData`. -/
+def closureDatumToForestClosingDatum
+    (datum : ColorClosureDatum) : FiniteAudit.ForestClosingDatum :=
+  FiniteAudit.forestDatum datum.color.val
+    (datum.coforest.map edgeToAudit)
+    datum.isolated.val
+    (closingEdgeToAudit datum)
+    datum.sign
+    (closureWitness datum.color.val)
+
+/-- The Lean relay rows are definitionally the D7 support rows from the finite
+JSON audit. -/
+theorem stageRows_match_finiteAudit_d7SupportRows :
+    stageRows.map relayRowToSupportDatum = FiniteAudit.d7SupportRows := by
+  decide
+
+/-- The Lean closure rows are definitionally the D7 forest-closing rows from the
+finite JSON audit, including the primitive determinant witnesses. -/
+theorem colorClosureData_match_finiteAudit_d7ForestClosingData :
+    colorClosureData.map closureDatumToForestClosingDatum =
+      FiniteAudit.d7ForestClosingData := by
+  decide
+
+def stageRowsActiveLengthBool : Bool :=
+  stageRows.all (fun row => decide (row.active.length ≤ row.support.length))
+
+theorem stageRowsActiveLengthBool_true :
+    stageRowsActiveLengthBool = true := by
+  decide
+
+theorem stageRows_active_length_le_support_length
+    (row : RelayRow) (hmem : row ∈ stageRows) :
+    row.active.length ≤ row.support.length := by
+  have h := stageRowsActiveLengthBool_true
+  unfold stageRowsActiveLengthBool at h
+  have hrow := List.all_eq_true.mp h row hmem
+  exact of_decide_eq_true hrow
+
+def colorClosureDataCoforestLengthBool : Bool :=
+  colorClosureData.all (fun datum => decide (datum.coforest.length = 5))
+
+theorem colorClosureDataCoforestLengthBool_true :
+    colorClosureDataCoforestLengthBool = true := by
+  decide
+
+theorem colorClosureData_coforest_length
+    (datum : ColorClosureDatum) (hmem : datum ∈ colorClosureData) :
+    datum.coforest.length = 5 := by
+  have h := colorClosureDataCoforestLengthBool_true
+  unfold colorClosureDataCoforestLengthBool at h
+  have hdatum := List.all_eq_true.mp h datum hmem
+  exact of_decide_eq_true hdatum
+
+def colorClosureDataPrimitiveSignBool : Bool :=
+  colorClosureData.all (fun datum => decide (datum.sign = 1 ∨ datum.sign = -1))
+
+theorem colorClosureDataPrimitiveSignBool_true :
+    colorClosureDataPrimitiveSignBool = true := by
+  decide
+
+theorem colorClosureData_primitive_sign
+    (datum : ColorClosureDatum) (hmem : datum ∈ colorClosureData) :
+    datum.sign = 1 ∨ datum.sign = -1 := by
+  have h := colorClosureDataPrimitiveSignBool_true
+  unfold colorClosureDataPrimitiveSignBool at h
+  have hdatum := List.all_eq_true.mp h datum hmem
+  exact of_decide_eq_true hdatum
+
+/-- Finite arithmetic audit needed by the two D7 relays.  These are the exact
+paper-table facts checked by the companion Python script: the displayed rows,
+coforest closures, primitive closing columns, support containment, reserve
+separation, and the terminal alignment used by the low-base glue.  Unlike the
+previous placeholder version, every non-RF field below is an actual proposition
+proved from the imported JSON/audit data. -/
+structure RelayFiniteAuditEvidence where
+  rows_length : stageRows.length = 14
+  skeletons_length : stageSkeletons.length = 5
+  closures_length : colorClosureData.length = 7
+  terminal_triple : terminalAlignment.terminalTriple = (L0, L2, L3)
+  active_edges_supported : ∀ row ∈ stageRows, row.active.length ≤ row.support.length
+  coforest_supports_rooted : ∀ datum ∈ colorClosureData, datum.coforest.length = 5
+  closing_columns_primitive : ∀ datum ∈ colorClosureData, datum.sign = 1 ∨ datum.sign = -1
+  stageRows_match_supportJson :
+    stageRows.map relayRowToSupportDatum = FiniteAudit.d7SupportRows
+  colorClosures_match_forestJson :
+    colorClosureData.map closureDatumToForestClosingDatum =
+      FiniteAudit.d7ForestClosingData
+  d7ForestClosingAudit : FiniteAudit.d7ForestClosingAuditBool = true
+  d7SupportAudit : FiniteAudit.d7SupportAuditBool = true
+  d7ReservePlaneAudit : FiniteAudit.d7ReservePlaneAuditBool = true
+  d7HighEvenAnchorAudit : FiniteAuditBridge.d7HighEvenAnchorAuditBool = true
+  forestClosingPayload :
+    ∀ datum ∈ FiniteAudit.d7ForestClosingData,
+      FiniteAudit.ClosingMatrixPayload 7 datum
+  supportRows_active_supported_inBounds :
+    ∀ row ∈ FiniteAudit.d7SupportRows,
+      ∀ e ∈ row.active,
+        ∃ f ∈ row.support,
+          FiniteAudit.EdgeUndirectedEquivalent e f ∧ f.tail < 7 ∧ f.head < 7
+  folded_word_m4_matches_terminal_block :
+    Shared.IsSingleCycleMap
+      (wordEval (terminalSymbolStep 4)
+        (FoldedSiteTrace.chronologicalTrace 4 foldedSites4))
+  folded_word_m6_matches_terminal_block :
+    Shared.IsSingleCycleMap
+      (wordEval (terminalSymbolStep 6)
+        (FoldedSiteTrace.chronologicalTrace 6 foldedSites6))
+
+/-- Closed D7 finite-audit package obtained from the JSON values already ported
+into `FiniteAudit.lean`.  This does not prove RF1/RF2/RF3 for the D7 relay, but
+it closes the table/JSON side of H3/H4 without a placeholder proposition. -/
+def relayFiniteAuditEvidence : RelayFiniteAuditEvidence where
+  rows_length := stageRows_length
+  skeletons_length := stageSkeletons_length
+  closures_length := colorClosureData_length
+  terminal_triple := by decide
+  active_edges_supported := stageRows_active_length_le_support_length
+  coforest_supports_rooted := colorClosureData_coforest_length
+  closing_columns_primitive := colorClosureData_primitive_sign
+  stageRows_match_supportJson := stageRows_match_finiteAudit_d7SupportRows
+  colorClosures_match_forestJson := colorClosureData_match_finiteAudit_d7ForestClosingData
+  d7ForestClosingAudit := FiniteAudit.d7ForestClosingAudit
+  d7SupportAudit := FiniteAudit.d7SupportAudit
+  d7ReservePlaneAudit := FiniteAudit.d7ReservePlaneAudit
+  d7HighEvenAnchorAudit := FiniteAuditBridge.d7HighEvenAnchorAudit
+  forestClosingPayload := fun _datum hmem =>
+    FiniteAudit.d7ForestClosingData_closingMatrixPayload hmem
+  supportRows_active_supported_inBounds := fun _row hmem =>
+    FiniteAudit.d7SupportRows_active_supported_inBounds hmem
+  folded_word_m4_matches_terminal_block := FiniteAudit.foldedTerminalWordAudit.1
+  folded_word_m6_matches_terminal_block := FiniteAudit.foldedTerminalWordAudit.2
+
 /-- The actual paper proof should construct this object for `m = 4` and `m = 6`.
-All fields below are mathematical, not generated-array, obligations. -/
+All fields below are mathematical RF1/RF2/RF3 obligations.  The JSON/audit
+provenance is carried separately by `RelayFiniteAuditEvidence`. -/
 structure TwoRailRelayRealization (m : Nat) [NeZero m] where
   dir : ZMod m → RootState 6 m → Color → Dir
   /-- RF1: each visible row is a Latin row.  Expected proof: every row is a
@@ -239,13 +411,6 @@ structure TwoRailRelayRealization (m : Nat) [NeZero m] where
   proof: splice the two rails using `stageRows`, then close with
   `colorClosureData`. -/
   returnsSingleCycle : (RootFlatCycle.schedule dir).returnsSingleCycle
-  /-- The `dir` is obtained from the five-stage shifted relay table, not from a
-  generated array.  This field is intentionally weak (`True`) so that the proof
-  can be refined without changing downstream signatures. -/
-  usesStageSkeletons : True
-  usesStageRows : True
-  usesColorClosures : True
-  usesTerminalAlignment : True
 
 /-- Convert a paper D7 two-rail realization into the generic low-base handoff. -/
 def cycleData_of_realization {m : Nat} [NeZero m]
@@ -255,6 +420,39 @@ def cycleData_of_realization {m : Nat} [NeZero m]
   rowLatin := R.rowLatin
   layerBijective := R.layerBijective
   returnsSingleCycle := R.returnsSingleCycle
+
+
+/-- Constructive low-base package for the two D7 relays.  The two fields are
+ordinary RF1/RF2/RF3 realizations over the standard root-flat lift, one at
+`m = 4` and one at `m = 6`. -/
+structure TwoRailRelaySolutions where
+  finiteAudit : RelayFiniteAuditEvidence
+  d7m4 : TwoRailRelayRealization 4
+  d7m6 : TwoRailRelayRealization 6
+
+/-- H3 cycle-data handoff produced from a supplied two-rail realization. -/
+theorem d7m4CycleData_of_realization
+    (R : TwoRailRelayRealization 4) :
+    Nonempty (RootFlatCycle.RootFlatCycleData 6 4) :=
+  ⟨cycleData_of_realization R⟩
+
+/-- H4 cycle-data handoff produced from a supplied two-rail realization. -/
+theorem d7m6CycleData_of_realization
+    (R : TwoRailRelayRealization 6) :
+    Nonempty (RootFlatCycle.RootFlatCycleData 6 6) :=
+  ⟨cycleData_of_realization R⟩
+
+/-- H3 cycle-data handoff produced from the supplied D7 package. -/
+theorem d7m4CycleData_of_solutions
+    (solutions : TwoRailRelaySolutions) :
+    Nonempty (RootFlatCycle.RootFlatCycleData 6 4) :=
+  d7m4CycleData_of_realization solutions.d7m4
+
+/-- H4 cycle-data handoff produced from the supplied D7 package. -/
+theorem d7m6CycleData_of_solutions
+    (solutions : TwoRailRelaySolutions) :
+    Nonempty (RootFlatCycle.RootFlatCycleData 6 6) :=
+  d7m6CycleData_of_realization solutions.d7m6
 
 /-- D7(4) replacement target for H3. -/
 theorem finalLowD7M4RootFlatCertificateFamily_of_twoRail
@@ -270,32 +468,12 @@ theorem finalLowD7M6RootFlatCertificateFamily_of_twoRail
   RootFlatCycle.finalLowD7M6RootFlatCertificateFamily_of_cycleData
     (cycleData_of_realization R)
 
-/-- A repair-oriented list of the genuine proof obligations for RF2.  This is
-kept as a separate structure so that local determinant/unit-carry work can be
-ported from the odd-dimensional code. -/
-structure RelayLayerBijectiveProofPlan (m : Nat) [NeZero m] where
-  stageTriangularMapsAreBijective :
-    ∀ row ∈ stageRows, True
-  colorLayerMapsFactorThroughStages :
-    ∀ t : ZMod m, ∀ c : Color, True
-  determinantUnits :
-    ∀ row ∈ stageRows, IsUnit (1 : ZMod m)
-
-/-- A repair-oriented list of the genuine proof obligations for RF3. -/
-structure RelayReturnCycleProofPlan (m : Nat) [NeZero m] where
-  railCycles : ∀ c : Color, True
-  spliceEdgesPresent : ∀ row ∈ stageRows, row.active.length ≤ row.support.length
-  colorClosuresPresent : colorClosureData.length = 7
-  terminalGlueMatches : terminalAlignment.terminalTriple = (L0, L2, L3)
-
-/-- Final paper-faithful target: the two local proof plans are converted into the
-single realization object.  The hard content is carried by the RF1/RF2/RF3
-arguments supplied to this constructor. -/
-def realization_of_relayProofPlans {m : Nat} [NeZero m]
+/-- Final paper-faithful constructor for a D7 relay.  The finite JSON side is
+closed by `relayFiniteAuditEvidence`; the only remaining local input here is the
+actual RF1/RF2/RF3 proof of the displayed direction table. -/
+def realization_of_relayProofs {m : Nat} [NeZero m]
     (dir : ZMod m → RootState 6 m → Color → Dir)
     (hRow : (RootFlatCycle.schedule dir).rowLatin)
-    (layerPlan : RelayLayerBijectiveProofPlan m)
-    (cyclePlan : RelayReturnCycleProofPlan m)
     (hLayer : (RootFlatCycle.schedule dir).layerBijective)
     (hReturn : (RootFlatCycle.schedule dir).returnsSingleCycle) :
     TwoRailRelayRealization m where
@@ -303,10 +481,6 @@ def realization_of_relayProofPlans {m : Nat} [NeZero m]
   rowLatin := hRow
   layerBijective := hLayer
   returnsSingleCycle := hReturn
-  usesStageSkeletons := trivial
-  usesStageRows := trivial
-  usesColorClosures := trivial
-  usesTerminalAlignment := trivial
 
 end D7TwoRailRelay
 end V28Hard

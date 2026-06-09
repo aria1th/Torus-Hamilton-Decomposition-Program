@@ -78,32 +78,38 @@ theorem evenModulusToriAllDimensions_of_h2RootFlatChecklist
     (finalTargetChecklist_of_h2RootFlatChecklist checklist)
     ⟨hd, hm4, r, by omega⟩
 
-def checkpointChecklist_with_H2RootFlat_structuralD7
+def checklist_with_H2RootFlat_structuralD7_components
+    (terminalA2 : D3TerminalA2Parametric.TerminalA2ParametricSolution)
     (h2 : D5M4RootFlatResetInput)
     (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
-    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6))
+    (engines : HighEvenEndpointPromotions.HardPromotionEngines) :
     PaperFaithfulChecklistWithH2RootFlat where
   d3TerminalA2 :=
-    { family := D3TerminalA2Parametric.rootFlatCertificateFamily }
+    { family := D3TerminalA2Parametric.rootFlatCertificateFamily_of_solution
+        terminalA2 }
   d5m4Reset := h2
   d7m4TwoRail := { data := d7m4 }
   d7m6TwoRail := { data := d7m6 }
   oddHighModulus :=
     { promotion :=
         HighEvenEndpointPromotions.oddHighModulusPromotion_of_engine
-          HighEvenEndpointPromotions.candidate_oddHighModulusEngine }
+          engines.highEven }
   oddEndpoint :=
     { promotion :=
         HighEvenEndpointPromotions.endpointTargetPromotion_of_engine
-          HighEvenEndpointPromotions.candidate_oddEndpointPayloadEngine }
+          engines.endpoint }
 
-theorem evenModulusToriAllDimensions_checkpoint_H2RootFlat_structuralD7
+theorem evenModulusToriAllDimensions_H2RootFlat_structuralD7_components
+    (terminalA2 : D3TerminalA2Parametric.TerminalA2ParametricSolution)
     (h2 : D5M4RootFlatResetInput)
     (d7m4 : Nonempty (RootFlatCycle.RootFlatCycleData 6 4))
-    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6)) :
+    (d7m6 : Nonempty (RootFlatCycle.RootFlatCycleData 6 6))
+    (engines : HighEvenEndpointPromotions.HardPromotionEngines) :
     V28EvenModulusToriAllDimensionsGoal :=
   evenModulusToriAllDimensions_of_h2RootFlatChecklist
-    (checkpointChecklist_with_H2RootFlat_structuralD7 h2 d7m4 d7m6)
+    (checklist_with_H2RootFlat_structuralD7_components
+      terminalA2 h2 d7m4 d7m6 engines)
 
 end ChecklistH2RootFlat
 end V28Hard

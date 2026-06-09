@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "EvenV11/V28Hard.lean",
     "EvenV11/V28Hard/D3TerminalA2Parametric.lean",
+    "EvenV11/V28Hard/TerminalA2EndpointRank.lean",
+    "EvenV11/V28Hard/D3TerminalA2M4Bridge.lean",
+    "EvenV11/V28Hard/D3M4DirectRootFlat.lean",
     "EvenV11/LowD5M4RibbonInterface.lean",
     "EvenV11/LowD5M4TameObstruction.lean",
     "EvenV11/V28Hard/D7TwoRailRelay.lean",
@@ -24,6 +27,58 @@ REQUIRED = [
     "EvenV11/V28Hard/ChecklistH2RootFlat.lean",
     "docs/V28_HARD_PARTS_CODE_NOTES_20260606.md",
     "docs/V28_H2_SKELETON_PLAN_20260607.md",
+]
+
+A2_TOKENS = [
+    "structure TerminalA2LowModFiniteBundle",
+    "terminalA2LowModFiniteBundle",
+    "abbrev TerminalA2CarrierCyclicityFamily",
+    "def terminalEndpointEplus",
+    "def terminalEndpointEminus",
+    "boundary0_Eplus",
+    "boundary1_Eminus",
+    "boundary2_Eplus",
+    "structure TerminalA2RootFlatRealizationAt",
+    "structure TerminalA2RootFlatRealizationFamily",
+    "sectionEquiv",
+    "cycleData_of_finiteCyclicity_and_realizationAt",
+    "cycleDataFamily_of_carrierCyclicity_and_realization",
+    "terminalA2ParametricSolution_of_realization",
+]
+
+BRIDGE_TOKENS = [
+    "terminalA2M4RealizationAt_of_physical",
+    "terminalA2M4CycleData_of_physical",
+]
+
+D3_M4_DIRECT_TOKENS = [
+    "namespace D3M4DirectRootFlat",
+    "def cycleData",
+    "theorem nonemptyCycleData",
+]
+
+ENDPOINT_RANK_TOKENS = [
+    "namespace TerminalA2EndpointRank",
+    "def endpoint0Point",
+    "def endpoint1Point",
+    "def endpoint2Point",
+    "theorem endpointPoint_m6_injective",
+    "theorem terminalEndpointA_eq_B_forces_exception",
+    "theorem terminalEndpointA_injective",
+    "theorem endpointDescPoint_injective_of_valid",
+    "theorem endpointPoint_injective_of_desc_injective",
+    "theorem endpointDesc_injective_of_even_six_le",
+    "theorem endpointPoint_injective_of_even_six_le",
+    "theorem endpointPoint_odd_color2_not_injective",
+    "theorem endpointPoint_m7_color2_not_injective",
+    "def endpointDescSucc",
+    "theorem terminalCompressedEndpointReturn_endpointDescSucc",
+    "theorem endpointImageSucc_singleCycle",
+    "theorem compressedEndpoint_rank_step_of_desc_rank_step",
+    "theorem compressedEndpointImageMap_singleCycle_of_rank_step",
+    "theorem endpointImageSucc_singleCycle_of_even_six_le",
+    "theorem compressedEndpointImageMap_singleCycle_of_even_six_le_rank_step",
+    "theorem compressedEndpointImageMap_singleCycle_of_even_six_le_desc_rank_step",
 ]
 
 
@@ -65,6 +120,23 @@ def main() -> None:
             fail(f"active V28Hard surface imports archived token: {token}")
 
     d7 = (ROOT / "EvenV11/V28Hard/D7TwoRailRelay.lean").read_text()
+    a2 = (ROOT / "EvenV11/V28Hard/D3TerminalA2Parametric.lean").read_text()
+    endpoint_rank = (ROOT / "EvenV11/V28Hard/TerminalA2EndpointRank.lean").read_text()
+    a2_m4 = (ROOT / "EvenV11/V28Hard/D3TerminalA2M4Bridge.lean").read_text()
+    d3_m4_direct = (ROOT / "EvenV11/V28Hard/D3M4DirectRootFlat.lean").read_text()
+    for token in A2_TOKENS:
+        if token not in a2:
+            fail(f"terminal A2 payload token missing: {token}")
+    for token in BRIDGE_TOKENS:
+        if token not in a2_m4:
+            fail(f"terminal A2 m=4 bridge token missing: {token}")
+    for token in D3_M4_DIRECT_TOKENS:
+        if token not in d3_m4_direct:
+            fail(f"D3 m=4 direct root-flat token missing: {token}")
+    for token in ENDPOINT_RANK_TOKENS:
+        if token not in endpoint_rank:
+            fail(f"terminal A2 endpoint-rank token missing: {token}")
+
     expected = {
         "stageRows": 14,
         "stageSkeletons": 5,
@@ -86,6 +158,10 @@ def main() -> None:
                 sorry_sites.append(f"{path.relative_to(ROOT)}:{lineno}: {stripped}")
     print("v28 hard-parts static checks passed")
     print(f"tracked hard files: {len(hard_files)}")
+    print(f"terminal A2 payload tokens: {len(A2_TOKENS)}")
+    print(f"terminal A2 m=4 bridge tokens: {len(BRIDGE_TOKENS)}")
+    print(f"D3 m=4 direct root-flat tokens: {len(D3_M4_DIRECT_TOKENS)}")
+    print(f"terminal A2 endpoint-rank tokens: {len(ENDPOINT_RANK_TOKENS)}")
     print(f"explicit sorry sites: {len(sorry_sites)}")
     for site in sorry_sites:
         print(f"  {site}")

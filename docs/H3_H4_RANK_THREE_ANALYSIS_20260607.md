@@ -1,5 +1,12 @@
 # H3/H4 (D7(4), D7(6)) — 논문 정밀 분석 (2026-06-07)
 
+> **상태 갱신 (2026-06-08)**: H3·H4는 **유한 존재성 witness**로 닫혔다 —
+> `LowD7M4Finite`(Fin 4096)·`LowD7M6Finite`(Fin 46656)의 구체 `dir`가 RF1/RF2/RF3를
+> native_decide로 만족(`Main.assume_lowD7M4/M6`에 배선). 아래 분석의 ribbon
+> realization 경로(요청 B)는 **닫기에 필요하지 않게 됐고**, native_decide-free 구조
+> 증명을 원할 때의 선택적 장기 목표로 남는다. 검증:
+> `CURRENT_STATE_GROUND_TRUTH_20260608.md`.
+
 요청: H3/H4를 논문에서 더 파봄. 결론: **H3/H4는 H2/D5(4)와 구조적으로 동일**하며,
 유일한 새 터미널 입력(W4/W6)은 이미 포팅됐다. 남은 hard core는 H2와 같은
 **ribbon realization** 하나.
