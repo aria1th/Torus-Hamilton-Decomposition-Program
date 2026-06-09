@@ -13,6 +13,7 @@ import EvenV11.V28Hard.ChecklistFromHardParts
 import EvenV11.V28Hard.JsonProof
 import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.EndpointChart
+import EvenV11.V28Hard.CompletionTower
 
 /-!
 # v28 hard-slot experimental code
