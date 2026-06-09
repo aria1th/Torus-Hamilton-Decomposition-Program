@@ -4,6 +4,7 @@ import EvenV11.LowD5M4Structural
 import EvenV11.D54DirectRF
 import EvenV11.RootFlatCycleData
 import EvenV11.V28Hard.PaperExactStructure
+import EvenV11.V28Hard.TerminalA2IntervalSplice
 import EvenV11.LowD7M4Finite
 import EvenV11.LowD7M6Finite
 
@@ -51,11 +52,13 @@ def EvenModulusToriAllDimensionsGoal : Prop :=
 
 /-- H1a — terminal carrier cyclicity (paper `lem:terminal-cyclicity`).  For every
 even `m ≥ 4` the three collapsed terminal `A₂` carriers `Fᵢ = terminalReturn i`
-are single `m²`-cycles on `Qₘ = (ℤ/m)²`.  This is the parametric
-number-theoretic core (endpoint recurrence `Aʳ/Bʳ`); the low moduli `m = 4, 6`
-are already discharged finitely (`terminalA2M4/M6FiniteCyclicity`). -/
+are single `m²`-cycles on `Qₘ = (ℤ/m)²`.  CLOSED: the generic even `m ≥ 6` case
+is the interval-splice argument (`V28Hard.TerminalA2IntervalSplice`), splicing
+the straight fiber intervals along the endpoint recurrence `Aʳ/Bʳ` rank list;
+`m = 4` is the finite orbit certificate (`terminalA2M4FiniteCyclicity`). -/
 theorem assume_d3TerminalCarrierCyclicity :
-    V28Hard.D3TerminalA2Parametric.TerminalA2CarrierCyclicityFamily := sorry
+    V28Hard.D3TerminalA2Parametric.TerminalA2CarrierCyclicityFamily :=
+  V28Hard.TerminalA2IntervalSplice.terminalA2CarrierCyclicityFamily
 
 /-- H1b — terminal `A₂` root-flat realization (paper terminal row expansion).  A
 standard root-flat schedule on `Fin 2 → ZMod m` whose first return is conjugate,
