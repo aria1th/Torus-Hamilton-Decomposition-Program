@@ -18,6 +18,7 @@ import EvenV11.V28Hard.CompletionTower
 import EvenV11.V28Hard.EndpointPortRoom
 import EvenV11.V28Hard.EndpointParentCycle
 import EvenV11.V28Hard.EndpointSeedReturns
+import EvenV11.V28Hard.EndpointRealization
 
 /-!
 # v28 hard-slot experimental code

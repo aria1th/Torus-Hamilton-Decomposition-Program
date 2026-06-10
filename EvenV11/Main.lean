@@ -5,6 +5,7 @@ import EvenV11.D54DirectRF
 import EvenV11.RootFlatCycleData
 import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.TerminalA2IntervalSplice
+import EvenV11.V28Hard.EndpointRealization
 import EvenV11.LowD7M4Finite
 import EvenV11.LowD7M6Finite
 
@@ -29,7 +30,10 @@ root-flat certificate.
   paper-faithful ribbon handoff `ResetPortH2RowEquivRibbonRealizationData`
   remains exposed below as a stronger realization target, but it is no longer
   an axiom of the main theorem.
-* H5/H6 are the parametric odd-branch promotions.
+* H5/H6 are the parametric odd-branch promotions.  H6's engine reduction is
+  closed (`V28Hard.EndpointRealization`, E6c): the remaining H6 hole is exactly
+  the per-color run-collapse realization family
+  `EndpointRunCollapseRealization` (`docs/E6_DESIGN_20260610.md` §6).
 
 The retired Route E, the tame `paperReturn` / `resetPortRowOfBase` H2
 scaffolding, and `Status` live under `archive/EvenV11/`;
@@ -426,8 +430,26 @@ theorem assume_lowD7M6 : FinalLowD7M6RootFlatCertificateFamily :=
 /-- H5 — odd-dimension high-modulus branch (paper §6 coforest splice + §8 growth). -/
 theorem assume_oddHighModulus : FinalOddHighModulusTargetPromotion := sorry
 
-/-- H6 — odd-dimension endpoint branch (paper §9–§10 endpoint successor). -/
-theorem assume_oddEndpoint : FinalOddEndpointPhaseProductTargetPromotion := sorry
+/-- H6 — endpoint run-collapse realization (paper §9–§10 localized rows).  The
+endpoint seed returns are closed (E6b, `V28Hard.EndpointSeedReturns`: active
+cores, completion-tower attachment, μ-class L-MONO) and the engine reduction is
+closed sorry-free (E6c, `V28Hard.EndpointRealization`: realization →
+cycle-data → certificate → marked payload).  The remaining obligation is
+exactly the per-color run-collapse realization of the child schedule: for each
+endpoint range instance and parent payload, a physical child `dir` with RF1/RF2
+whose first returns are conjugate, through per-color wild reindexings
+`collapse c`, to the §5 seed models.  See `docs/E6_DESIGN_20260610.md` §6 and
+the three walls of §4 (firing-fiber budget, localized full-row `C_h`
+substitutions violate RF2, partner/donation deadlock for lane colors) for why
+the tame charts cannot fill this; it is the family version of H1b's wild-`e`
+problem, weakened to per-color reindexings. -/
+theorem assume_oddEndpointRealization :
+    V28Hard.EndpointRealization.EndpointRealizationFamily := sorry
+
+/-- H6 — closed adapter from the realization family. -/
+theorem assume_oddEndpoint : FinalOddEndpointPhaseProductTargetPromotion :=
+  V28Hard.EndpointRealization.oddEndpointTargetPromotion_of_realizationFamily
+    assume_oddEndpointRealization
 
 /-! ## Assembly -/
 
