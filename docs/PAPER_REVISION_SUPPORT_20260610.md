@@ -110,3 +110,35 @@ finite-audit 소스 기준) / 상태 / 기계 검증 anchor / 개정 방향 제�
   D7 stage-5 행은 chronological (0,2,3)|(1,6),(4,5)로 확정.
 - 동반 자료: `scripts/anchor_certs/` (D5_m6/m8, D7_m8 seed + 검증 출력,
   rank7 규약 + affine-base 확장) — 개정판 동반 패키지에 병합 권장.
+
+## E. 추가 개선 기회 (2026-06-10 저녁 — 정정 아닌 품질 향상)
+
+### E1. 재시작 corollary 단순화
+`cor:modulus-free-restart`의 D₀ = m−1 경유는 불필요: m ≥ 8 ⟹ m > 7이므로
+HED(7,m)이 D7 anchor에서 직접 나오고, 7에서 위로 성장하며 D = m 선을
+지나면 끝. 가동 부품 하나가 줄고 증명문이 한 문장 짧아진다.
+(growth 엔진 설계 검증에서 확인.)
+
+### E2. parity 부기를 "이유" 서사로 승격 — 저자 우려(가독성·이유 제시) 직격
+기계 발견된 parity 법칙 2개가 구성들의 모양을 설명한다:
+- line-support layer는 홀치환 ⟺ |U|/m 홀수; 단일순환 return은 홀치환이므로
+  **각 색은 홀수 개의 line-support layer가 필요** → anchor 표의 support-rank
+  countdown D−r−1이 왜 그 모양인지의 이유.
+- D3-even은 pair-swap만으로는 영원히 불가(3색-얽힘 seam이 홀수 개 필요) →
+  terminal 블록/seam이 왜 존재해야 하는지의 이유.
+§7(coforest splice algebra)에 "parity bookkeeping" 소절 하나(보조정리 2개 +
+remark)를 넣으면 독자가 표를 따라가는 부담이 크게 준다.
+
+### E3. 강건성(slack) remark
+RF3는 carrier slot 배정 6종·word offset m²종 전체에 불변(1296/1296 전수 확인);
+κ/row-band 값은 분리·reserve 절에서만 load-bearing. "어떤 선택이 본질이고
+어떤 것이 관례인지"를 한 remark로 명시하면 검증 서사가 가벼워진다.
+
+### E4. 동반 패키지 확장
+`scripts/anchor_certs/`(D5 m=6/8, D7 m=8)를 개정판 certificates/에 병합하고,
+균일성 증거로 anchor당 큰 m 하나(예: m=12)를 추가 수록. 재구성형 검증기
+규약은 rank7과 동일 + affine-base 확장(문서화됨).
+
+### E5. 표 캡션 확정 사항
+D7 stage-5 행은 chronological (0,2,3)|(1,6),(4,5)로 기계 확정 — 캡션에 반영.
+(B4의 slot-label 규칙과 함께 부록 표 캡션 일괄 정비.)
