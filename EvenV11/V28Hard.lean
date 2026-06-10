@@ -26,6 +26,7 @@ import EvenV11.V28Hard.EndpointParentCycle
 import EvenV11.V28Hard.EndpointSeedReturns
 import EvenV11.V28Hard.EndpointRealization
 import EvenV11.V28Hard.EndpointChRowObstruction
+import EvenV11.V28Hard.OddLowClosureBridge
 
 /-!
 # v28 hard-slot experimental code

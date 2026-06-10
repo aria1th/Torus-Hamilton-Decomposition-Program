@@ -7,7 +7,7 @@ import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.TerminalA2IntervalSplice
 import EvenV11.V28Hard.D3TerminalA2PerColor
 import EvenV11.V28Hard.D3EvenRailWiring
-import EvenV11.V28Hard.EndpointRealization
+import EvenV11.V28Hard.OddLowClosureBridge
 import EvenV11.LowD7M4Finite
 import EvenV11.LowD7M6Finite
 
@@ -32,10 +32,20 @@ root-flat certificate.
   paper-faithful ribbon handoff `ResetPortH2RowEquivRibbonRealizationData`
   remains exposed below as a stronger realization target, but it is no longer
   an axiom of the main theorem.
-* H5/H6 are the parametric odd-branch promotions.  H6's engine reduction is
-  closed (`V28Hard.EndpointRealization`, E6c): the remaining H6 hole is exactly
-  the per-color run-collapse realization family
-  `EndpointRunCollapseRealization` (`docs/E6_DESIGN_20260610.md` §6).
+* H5 is the parametric odd high-modulus promotion; it now also powers the
+  modulus-free restart of H6′ below.
+* H6 follows the REWRITTEN paper architecture
+  (`/data/angel/repos/etc/even_modulus_rewrite_20260610/`,
+  `subtex/high_even_growth.tex` + `subtex/final_induction_framework.tex`):
+  the odd low-modulus range is closed by chain propagation from the certified
+  dimension-7 bases (`cor:odd-chain-propagation`, `m ∈ {4, 6}`) plus the
+  modulus-free restart of the high-even closure at `D₀ = m − 1`
+  (`cor:modulus-free-restart`, even `8 ≤ m ≤ d`).  The single hole is
+  `V28Hard.OddLowClosureBridge.OddLowClosure`; the old endpoint interface is
+  derived from it sorry-free (`oddEndpointPromotion_of_oddLowClosure`), so the
+  checklist below is unchanged.  The endpoint-successor scaffolding of the
+  earlier manuscript (EndpointChart/PortRoom/RowSchedule/SeedReturns/
+  ParentCycle/Realization, E6) stays off-spine under `EvenV11.V28Hard`.
 
 The retired Route E, the tame `paperReturn` / `resetPortRowOfBase` H2
 scaffolding, and `Status` live under `archive/EvenV11/`;
@@ -439,29 +449,36 @@ abbrev LowD7M6RootFlatCycleData := RootFlatCycle.RootFlatCycleData 6 6
 theorem assume_lowD7M6 : FinalLowD7M6RootFlatCertificateFamily :=
   LowD7M6Finite.finalLowD7M6RootFlatCertificateFamily
 
-/-- H5 — odd-dimension high-modulus branch (paper §6 coforest splice + §8 growth). -/
+/-- H5 — odd-dimension high-modulus branch (paper §6 coforest splice + §8
+growth).  In the rewritten architecture this promotion also feeds the
+modulus-free restart route of H6′: the odd low-modulus pair `(d, m)` with even
+`8 ≤ m ≤ d` is closed by restarting the high-even closure at `D₀ = m − 1` and
+growing past `D = m` (`cor:modulus-free-restart`). -/
 theorem assume_oddHighModulus : FinalOddHighModulusTargetPromotion := sorry
 
-/-- H6 — endpoint run-collapse realization (paper §9–§10 localized rows).  The
-endpoint seed returns are closed (E6b, `V28Hard.EndpointSeedReturns`: active
-cores, completion-tower attachment, μ-class L-MONO) and the engine reduction is
-closed sorry-free (E6c, `V28Hard.EndpointRealization`: realization →
-cycle-data → certificate → marked payload).  The remaining obligation is
-exactly the per-color run-collapse realization of the child schedule: for each
-endpoint range instance and parent payload, a physical child `dir` with RF1/RF2
-whose first returns are conjugate, through per-color wild reindexings
-`collapse c`, to the §5 seed models.  See `docs/E6_DESIGN_20260610.md` §6 and
-the three walls of §4 (firing-fiber budget, localized full-row `C_h`
-substitutions violate RF2, partner/donation deadlock for lane colors) for why
-the tame charts cannot fill this; it is the family version of H1b's wild-`e`
-problem, weakened to per-color reindexings. -/
-theorem assume_oddEndpointRealization :
-    V28Hard.EndpointRealization.EndpointRealizationFamily := sorry
+/-- H6′ — odd low-modulus closure of the REWRITTEN paper
+(`/data/angel/repos/etc/even_modulus_rewrite_20260610/subtex/high_even_growth.tex`):
+chain propagation from the certified dimension-7 bases
+(`cor:odd-chain-propagation`) plus the modulus-free restart
+(`cor:modulus-free-restart`).  The endpoint-successor route of the earlier
+manuscript is retired: its Lean scaffolding
+(EndpointChart/PortRoom/RowSchedule/SeedReturns/ParentCycle/Realization and
+the E6d obstruction theorems) is preserved off-spine as supporting material
+and as machine-checked errata anchors. -/
+theorem assume_oddLowClosure : V28Hard.OddLowClosureBridge.OddLowClosure :=
+  sorry
 
-/-- H6 — closed adapter from the realization family. -/
+/-- H6 interface discharged from the new architecture (closed adapter):
+the old endpoint promotion is derivable because `MarkedDimensionRange b m`
+forces even `4 ≤ m ≤ 2b + 1`, so `m ∈ {4, 6}` (chain propagation from the H3/H4
+finite witnesses) or `8 ≤ m ≤ 2b + 1` (restart via H5). -/
 theorem assume_oddEndpoint : FinalOddEndpointPhaseProductTargetPromotion :=
-  V28Hard.EndpointRealization.oddEndpointTargetPromotion_of_realizationFamily
-    assume_oddEndpointRealization
+  V28Hard.OddLowClosureBridge.oddEndpointPromotion_of_oddLowClosure
+    assume_oddLowClosure assume_oddHighModulus
+    (finalLowD7M4Target_of_rootFlatCertificateFamily assume_lowD7M4
+      finalLowD7M4ClosedInputs_holds)
+    (finalLowD7M6Target_of_rootFlatCertificateFamily assume_lowD7M6
+      finalLowD7M6ClosedInputs_holds)
 
 /-! ## Assembly -/
 
