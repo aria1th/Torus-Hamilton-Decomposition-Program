@@ -5,6 +5,7 @@ import EvenV11.D54DirectRF
 import EvenV11.RootFlatCycleData
 import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.TerminalA2IntervalSplice
+import EvenV11.V28Hard.D3TerminalA2PerColor
 import EvenV11.V28Hard.EndpointRealization
 import EvenV11.LowD7M4Finite
 import EvenV11.LowD7M6Finite
@@ -64,22 +65,31 @@ theorem assume_d3TerminalCarrierCyclicity :
     V28Hard.D3TerminalA2Parametric.TerminalA2CarrierCyclicityFamily :=
   V28Hard.TerminalA2IntervalSplice.terminalA2CarrierCyclicityFamily
 
-/-- H1b — terminal `A₂` root-flat realization (paper terminal row expansion).  A
-standard root-flat schedule on `Fin 2 → ZMod m` whose first return is conjugate,
-through an explicit return-section equivalence `sectionEquiv : Qₘ ≃ RootState`, to
-the carriers `Fᵢ`, for every even `m ≥ 4` (RF1/RF2 plus the realization equation
-`sectionEquiv.symm ∘ returnMap c ∘ sectionEquiv = Fᵢ`).  The plain chart
-`rootPairEquiv` is too rigid; a run-collapse `sectionEquiv` is required. -/
+/-- H1b — terminal `A₂` root-flat realization (paper terminal row expansion),
+**per-color form**.  A standard root-flat schedule on `Fin 2 → ZMod m` whose
+first return is conjugate, through an explicit per-color return-section
+equivalence `sectionEquiv c : Qₘ ≃ RootState`, to the carrier `Fᵢ`, for every
+even `m ≥ 4` (RF1/RF2 plus the realization equation
+`(sectionEquiv c).symm ∘ returnMap c ∘ sectionEquiv c = Fᵢ`).  The plain chart
+`rootPairEquiv` is too rigid; a wild run-collapse `sectionEquiv` is required
+(`docs/H1B_REALIZATION_OBSTRUCTION_20260609.md`).  The former common-section
+target `TerminalA2RootFlatRealizationFamily` demanded ONE equivalence
+conjugating all three colors simultaneously — a potentially
+unsatisfiable-shaped over-constraint (cf. the H2 precedent in
+`docs/H2_REALIZATION_BLOCKER_20260605.md`); per-color equivalences suffice for
+the only payoff (RF3 by per-color transport), match the H6 interface shape
+(`EndpointRunCollapseRealization.collapse`), and are the shape targeted by the
+wild run-collapse design. -/
 theorem assume_d3TerminalRealization :
-    Nonempty V28Hard.D3TerminalA2Parametric.TerminalA2RootFlatRealizationFamily :=
+    Nonempty V28Hard.D3TerminalA2PerColor.TerminalA2PerColorRealizationFamily :=
   sorry
 
 /-- H1 — `D₃` even base, **all even `m ≥ 4`** (paper §5 terminal `A₂`).  Assembled
 from the two separated obligations above by the closed conjugacy adapter
-`cycleDataFamily_of_carrierCyclicity_and_realization`: carrier cyclicity supplies
-RF3 and the realization supplies RF1/RF2 + the conjugacy. -/
+`cycleDataFamily_of_carrierCyclicity_and_perColorRealization`: carrier cyclicity
+supplies RF3 and the realization supplies RF1/RF2 + the per-color conjugacy. -/
 theorem assume_d3CycleData : RootFlatCycle.D3EvenCycleDataFamily :=
-  V28Hard.D3TerminalA2Parametric.cycleDataFamily_of_carrierCyclicity_and_realization
+  V28Hard.D3TerminalA2PerColor.cycleDataFamily_of_carrierCyclicity_and_perColorRealization
     assume_d3TerminalCarrierCyclicity
     (Classical.choice assume_d3TerminalRealization)
 
