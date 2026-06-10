@@ -459,11 +459,12 @@ def init_tables(m, mode, rng):
 # closed-form parametric construction ("rail-seam" schedule)
 #
 # Layers 0..m-2 are the constant Latin rows
+#     id    : color c reads direction c
 #     rho+  : color c reads direction c+1 (mod 3)
 #     rho++ : color c reads direction c+2 (mod 3)
-# with multiplicities (#rho+, #rho++) =
-#     (1, m-2)              if 3 does not divide m
-#     (2m/3 - 1, m/3)       if 3 divides m
+# with multiplicities (#id, #rho+, #rho++) =
+#     (0, 1, m-2)           if 3 does not divide m   [drifts u=((1,1),(m-2,1),(1,m-2))]
+#     (m-5, 1, 3)           if 3 divides m           [drifts u=((m-4,1),(3,m-4),(1,3))]
 # Layer m-1 is the wild "rail seam" layer: base id (color c reads c) except on
 # the 3m-cell support  P (01-swap), Q (02-swap), S (12-swap):
 #     P = antidiagonal {x+y=0} with cells x=1,2 replaced by (1,m-2),(2,m-1)
@@ -500,8 +501,8 @@ def construct(m, out=None, quiet=False):
         counts = [(rho_plus, 1), (rho_pp, m - 2)]
         u = ((1, 1), (m - 2, 1), (1, m - 2))
     else:
-        counts = [(rho_plus, 2 * m // 3 - 1), (rho_pp, m // 3)]
-        u = ((1, 2 * m // 3 - 1), (m // 3, 1), (2 * m // 3 - 1, m // 3))
+        counts = [(ID, m - 5), (rho_plus, 1), (rho_pp, 3)]
+        u = ((m - 4, 1), (3, m - 4), (1, 3))
     layers = []
     for sigma, k in counts:
         layers += [constant_layer(sigma, m)] * k
