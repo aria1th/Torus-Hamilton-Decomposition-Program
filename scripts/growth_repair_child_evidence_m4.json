@@ -1,0 +1,19 @@
+{
+ "m": 4,
+ "rf1": true,
+ "rf2": true,
+ "old_single": true,
+ "placement_strict": true,
+ "nonstrict_colors": [],
+ "leaf_alphabet": [
+  6,
+  7,
+  8
+ ],
+ "saturation": true,
+ "leaf_cycle_counts": [
+  65452,
+  65515
+ ],
+ "ok": true
+}

@@ -1,0 +1,257 @@
+{
+ "question": "child schedule for chained 7->9 with R1+R2+R3-old(EQUAL growthDir returns)+R3-new(both leaf returns single m^8 cycles)?",
+ "verdict": "INFEASIBLE",
+ "argument": "displacement-budget saturation: L1 count-vector uniqueness (fixed-point-free returns determine per-direction read totals) + L2 (totals are return invariants) + L3 (base Latin rows saturate every x-direction: D_i = m*K) => new colors get x-read budget 0, leaf returns preserve x-fibers, >= m^6 cycles each; uniform in d and m, kills every chained step under R3-old equality",
+ "bases": {
+  "(7,4)": {
+   "K": 4096,
+   "base_displacement_totals_Di": [
+    16384,
+    16384,
+    16384,
+    16384,
+    16384,
+    16384
+   ],
+   "m_times_K": 16384,
+   "saturated": true,
+   "growth_placement_strict_unsatisfiable_colors": [],
+   "child": {
+    "K2": 65536,
+    "slots_per_direction": 262144,
+    "old_x_reads": [
+     262144,
+     262144,
+     262144,
+     262144,
+     262144,
+     262144
+    ],
+    "new_x_budget": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_leaf_cycles": 4096,
+    "old_z0_reads": 112,
+    "old_z1_reads": 28
+   },
+   "generic_fiber_freedom": 16,
+   "relaxation_necessary": {
+    "min_shed_per_x_direction": 8,
+    "min_shed_total": 48,
+    "min_changed_points_per_modified_old_color": 3
+   }
+  },
+  "(7,6)": {
+   "K": 46656,
+   "base_displacement_totals_Di": [
+    279936,
+    279936,
+    279936,
+    279936,
+    279936,
+    279936
+   ],
+   "m_times_K": 279936,
+   "saturated": true,
+   "growth_placement_strict_unsatisfiable_colors": [
+    0,
+    1,
+    4
+   ],
+   "child": {
+    "K2": 1679616,
+    "slots_per_direction": 10077696,
+    "old_x_reads": [
+     10077696,
+     10077696,
+     10077696,
+     10077696,
+     10077696,
+     10077696
+    ],
+    "new_x_budget": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "min_leaf_cycles": 46656,
+    "old_z0_reads": 252,
+    "old_z1_reads": 42
+   },
+   "generic_fiber_freedom": null,
+   "relaxation_necessary": {
+    "min_shed_per_x_direction": 12,
+    "min_shed_total": 72,
+    "min_changed_points_per_modified_old_color": 3
+   }
+  }
+ },
+ "records": [
+  {
+   "info": "L1 m=4: 487 residue classes over 495 count vectors (1 ambiguous class(es))"
+  },
+  {
+   "name": "m=4 L1: displacement residues determine trajectory step counts except at fixed points (residue 0: m zero-steps or m equal steps -- both mean R(p) = p)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=4 base: RF1 (rows Latin over the 7 directions)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=4 base: RF3 (all 7 returns single 4096-cycles; proper reconstruction incl. seed `stages`)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=4 base: returns fixed-point-free (L1 applies)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=4 base: displacement totals D_i = sum_c sum_x ((R_c x - x)_i mod m) = [16384, 16384, 16384, 16384, 16384, 16384]; m*K = 16384"
+  },
+  {
+   "name": "m=4 base: SATURATION D_i = m*K for every x-direction i (forced by L1 + Latin rows + fixed-point-freeness)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=4 base: load_seed reconstruction matches the proper one (no stages in this seed)"
+  },
+  {
+   "info": "m=4 base: last-read layers per color: {0: [0, 1, 2, 3], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2, 3], 4: [0, 1, 2, 3], 5: [0, 1, 2, 3], 6: [0, 1, 2, 3]}"
+  },
+  {
+   "info": "m=4 base: GrowthPlacement strict order (t1 < t0) satisfiable for every color"
+  },
+  {
+   "info": "m=4 child: K2 = 65536; per-direction read slots m*K2 = 262144"
+  },
+  {
+   "info": "m=4 child: old-color x-read totals (pinned by R3-old via L1/L2) = [262144, 262144, 262144, 262144, 262144, 262144]"
+  },
+  {
+   "name": "m=4 child: new-color x-read budget B_i = m*K2 - m^2*D_i is ZERO for every x-direction -> leaf colors never move x",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=4 child: z-read totals -- old colors z0: 112 (one z0-plane per color, m^2 points), z1: 28 (one z0-pinned line per color, m points); leaf colors absorb z0: 262032, z1: 262116, zero-step: 140 of 262144"
+  },
+  {
+   "name": "m=4 child: KILL -- leaf returns preserve every x-fiber {x} x (Z/m)^2, so each has >= K2/m^2 = 4096 cycles; R3-new demands 1",
+   "ok": false,
+   "detail": "INFEASIBLE: 4096 >> 1 (this clause records the decisive negative; FAIL is the verdict)"
+  },
+  {
+   "info": "m=4: generic-fiber freedom = 16 legal leaf-bit fields of 2^16 = 65536 per (t, x)-fiber; every choice keeps the leaf returns inside the 16-point fiber (max cycle 16 << K2) -- the freedom is real but useless for R3-new"
+  },
+  {
+   "info": "m=4 relaxation (R3-old conjugate, i.e. old returns single 65536-cycles with growthDir carry shape but not pointwise equal): NECESSARY budget conditions --"
+  },
+  {
+   "info": "  (a) each leaf color needs >= m direction-i transitions per x-direction i (a single cycle visits all 4 values of coordinate i across >= 4 constant blocks), so the old colors must shed >= 2m = 8 i-reads per direction, >= 12m = 48 in total; R3-old-equal sheds 0"
+  },
+  {
+   "info": "  (b) parity: a modified old return R'' with R'' single differs from the growthDir return by an EVEN permutation, so every modified old color changes on >= 3 points"
+  },
+  {
+   "info": "  (c) O3 (recorded machine fact) still applies: leaf reads must be z-gated, else (z0,z1)-monodromy order <= m gives >= m cycles per leaf color"
+  },
+  {
+   "info": "  (d) the rotor constellation in growth_step_replay.py is the minimal known shape satisfying (a)-(c); its Lean cost is rebuilding the old-color return proofs (oldReturns_eq is not reusable verbatim at ANY chained step, by the same saturation argument at d -> d+2)"
+  },
+  {
+   "info": "L1 m=6: 2995 residue classes over 3003 count vectors (1 ambiguous class(es))"
+  },
+  {
+   "name": "m=6 L1: displacement residues determine trajectory step counts except at fixed points (residue 0: m zero-steps or m equal steps -- both mean R(p) = p)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=6 base: RF1 (rows Latin over the 7 directions)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=6 base: RF3 (all 7 returns single 46656-cycles; proper reconstruction incl. seed `stages`)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "m=6 base: returns fixed-point-free (L1 applies)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=6 base: displacement totals D_i = sum_c sum_x ((R_c x - x)_i mod m) = [279936, 279936, 279936, 279936, 279936, 279936]; m*K = 279936"
+  },
+  {
+   "name": "m=6 base: SATURATION D_i = m*K for every x-direction i (forced by L1 + Latin rows + fixed-point-freeness)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=6 base: load_seed reconstruction DIFFERS from the proper one (seed stages ignored by load_seed: recorded m=6 ledgers used a broken base)"
+  },
+  {
+   "info": "m=6 base: last-read layers per color: {0: [3], 1: [2], 2: [3, 4], 3: [2, 4, 5], 4: [0], 5: [1, 4], 6: [0, 1]}"
+  },
+  {
+   "info": "m=6 base: GrowthPlacement strict order (t1 < t0) UNSATISFIABLE for colors [0, 1, 4] (single-layer last-reads): growthDir cannot be instantiated over this base; the R3-old-equality question is vacuous here, the budget kill below is placement-independent"
+  },
+  {
+   "info": "m=6 child: K2 = 1679616; per-direction read slots m*K2 = 10077696"
+  },
+  {
+   "info": "m=6 child: old-color x-read totals (pinned by R3-old via L1/L2) = [10077696, 10077696, 10077696, 10077696, 10077696, 10077696]"
+  },
+  {
+   "name": "m=6 child: new-color x-read budget B_i = m*K2 - m^2*D_i is ZERO for every x-direction -> leaf colors never move x",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "info": "m=6 child: z-read totals -- old colors z0: 252 (one z0-plane per color, m^2 points), z1: 42 (one z0-pinned line per color, m points); leaf colors absorb z0: 10077444, z1: 10077654, zero-step: 294 of 10077696"
+  },
+  {
+   "name": "m=6 child: KILL -- leaf returns preserve every x-fiber {x} x (Z/m)^2, so each has >= K2/m^2 = 46656 cycles; R3-new demands 1",
+   "ok": false,
+   "detail": "INFEASIBLE: 46656 >> 1 (this clause records the decisive negative; FAIL is the verdict)"
+  },
+  {
+   "info": "m=6: generic-fiber freedom enumeration skipped (2^(m^2) too large); the m=4 count plus the fiber bound covers the argument at every m"
+  },
+  {
+   "info": "m=6 relaxation (R3-old conjugate, i.e. old returns single 1679616-cycles with growthDir carry shape but not pointwise equal): NECESSARY budget conditions --"
+  },
+  {
+   "info": "  (a) each leaf color needs >= m direction-i transitions per x-direction i (a single cycle visits all 6 values of coordinate i across >= 6 constant blocks), so the old colors must shed >= 2m = 12 i-reads per direction, >= 12m = 72 in total; R3-old-equal sheds 0"
+  },
+  {
+   "info": "  (b) parity: a modified old return R'' with R'' single differs from the growthDir return by an EVEN permutation, so every modified old color changes on >= 3 points"
+  },
+  {
+   "info": "  (c) O3 (recorded machine fact) still applies: leaf reads must be z-gated, else (z0,z1)-monodromy order <= m gives >= m cycles per leaf color"
+  },
+  {
+   "info": "  (d) the rotor constellation in growth_step_replay.py is the minimal known shape satisfying (a)-(c); its Lean cost is rebuilding the old-color return proofs (oldReturns_eq is not reusable verbatim at ANY chained step, by the same saturation argument at d -> d+2)"
+  }
+ ],
+ "unexpected_failures": [],
+ "child_evidence": "direct cross-checks: scripts/growth_repair_child_evidence_m{4,6}.json (m=4: strict placement, all clauses PASS incl. old returns single; m=6: strict GrowthPlacement.order unsatisfiable for colors [0,1,4], same-layer fallback still gives RF1+RF2+old returns single 1679616-cycles, leaf alphabet {6,7,8}, saturation exact)",
+ "finding_growth_placement_7_6": "GrowthPlacement.order (t1 < t0 strict, GrowthStepCore.lean:407) is unsatisfiable over the proper (7,6) base: colors 0/1/4 have last-reads in a single layer (3/2/0).  Relaxing order to pairwise site-distinctness is numerically sufficient for the old-color side",
+ "finding_load_seed": "growth_step_replay.load_seed ignores seed `stages`; D7_m6_seed reconstructed through it fails RF3 (cycle counts 7776/7669/7655/7671 per color) -- recorded m=6 ledgers in check_oldgens_span*.py used that broken base; this gate uses the proper reconstruction (RF1/RF2/RF3 PASS)"
+}

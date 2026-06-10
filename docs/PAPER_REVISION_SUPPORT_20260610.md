@@ -74,6 +74,12 @@ finite-audit 소스 기준) / 상태 / 기계 검증 anchor / 개정 방향 제�
   정확히 줌: **z-gated(leaf 좌표를 읽는) 단어 + 6개 old 좌표 전부를 움직이는
   작용**. rail-seam 전례대로 제약 기반 탐색이 다음 관문(feasibility gate
   선행).
+- **Gate 판정 (2026-06-10 후속)**: budget 논증이 결정적 — old return을
+  유지하는 수선은 모든 chained 단계에서 불가능(old 색이 모든 x-read 슬롯을
+  포화, 새 색 x-예산 = 0 ⟹ ≥ m⁶ 순환). **모든 수선은 old 색 행동의 양도를
+  포함해야 함**(방향당 ≥ 2m x-read). 상세:
+  `docs/GROWTH_REPAIR_GATE_20260610.md`. 개정 시 chained 단계는 국소
+  수선이 아니라 old-색 재배선을 동반한 재설계가 필요.
 
 ## B. 재서술 필요 (메커니즘은 생존)
 
