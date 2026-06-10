@@ -159,3 +159,13 @@ AI-assisted풍 어휘·문장 / 부자연스러운 전개 / 리터러처 리뷰 
 E2(parity 소절) 초안부터 적용 — 정리와 한 문장 증명 아이디어를 앞세우고
 예시를 들며 비계 언어를 제거. 리터러처 리뷰 적정성 검사를 polish 단계
 점검 항목에 추가(현 §1.2 ~24편 — 커버리지 감사).
+
+### B6. 𝒢⁻_r(chain item 3)의 기반 검증 공백 (G4 발견, 2026-06-10)
+growth step 형식화에서 기계 확정: 새 색(leaf)의 단일순환 return은 black-box
+schedule + oldGens 리스트만으로는 구성 불가(≤m-글자 부분어 전수 0/9576,
+0/28, 0/252 + donated-cycle parity 항등식). 닫으려면 witness가
+`lem:growth-old-generator-invariant`의 span 구조(𝒢⁻_r가 H⁻_r를 생성한다는
+사실)를 증명 수준으로 운반해야 함. 그런데 **개정판 동반 검증기
+`check_hed_clauses.py`도 (7,4)/(7,6) 기반에서 𝒢⁻_r 절을 검증하지 않음**
+(rows 10–15는 chart/carrier/사이트 분리만 확인). 개정 시: chain datum
+item 3의 검증 가능 형태를 명시하고 동반 검증기에 해당 검사를 추가할 것.

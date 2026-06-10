@@ -30,6 +30,7 @@ import EvenV11.V28Hard.MultiSwapRowSchedule
 import EvenV11.V28Hard.OddLowClosureBridge
 import EvenV11.V28Hard.HEDWitness
 import EvenV11.V28Hard.HEDBaseWitnesses
+import EvenV11.V28Hard.GrowthStepCore
 
 /-!
 # v28 hard-slot experimental code
