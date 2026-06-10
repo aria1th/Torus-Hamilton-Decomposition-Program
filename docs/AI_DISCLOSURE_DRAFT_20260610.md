@@ -70,3 +70,22 @@
 - 인용 가능한 고정점이 필요하면: 저장소의 태그/커밋 해시(rail-seam 완결 커밋)
   + Lean 정리 이름(`completionRow_substitution_not_bijective` 등)을 각주로.
 - [repository URL], Section \ref 빈칸은 새 판 구조 확정 후 채움.
+
+## 갱신 (2026-06-10, 저자 지시 반영 — 모델별 정확 귀속)
+
+재작성 트리(`even_modulus_rewrite_20260610`, 커밋 `f8f198e`)에 삽입된 최종
+문안은 단일-모델 귀속이 아니라 실제 워크플로를 명시한다:
+
+- **GPT 5.5 Pro** (OpenAI): 논문 재작업·증명 제시/탐색/확립 보조 — 초안 및
+  원안 작성.
+- **GPT 5.5 Codex** (OpenAI): Lean 4 형식화 초기 작업(증명 골격·유한 witness
+  인프라).
+- **Claude Fable 5** (Anthropic): Lean 형식화 인계·확장(terminal-block
+  cyclicity 완전 검증, 표 전수 감사), 정확 기준 스트레스 테스트로 개정 대상
+  오류 발견(반례 박제), 저자가 제시한 이전 버전(pass38)을 통합한 재작성
+  수행(인증서 복구·재검증 56/56).
+- **Human oversight**: 전 단계 지휘·경로 선택·이전 버전 제공·전적 책임.
+  3단 검증 위계(Lean kernel / 재구성형 검증기 / 저자 유도).
+
+향후 polish·review 단계(GPT 5.5 Pro + Claude Fable 5 예정)는 수행 후
+disclosure에 추가한다 — 미수행 계획은 논문에 기재하지 않는다.
