@@ -1,5 +1,14 @@
 # 저자 질문서 — W2: `lem:completion-fiber-bijectivity`의 RF2 (2026-06-10)
 
+> **상태 갱신 (2026-06-10, 저자 확인)**: 반례 검토 결과 **논문 수정 필요로
+> 확정**. 해당 부분(`def:lifted-completion-fiber` +
+> `lem:completion-fiber-bijectivity` + `lem:endpoint-local-row-realization`의
+> C_h 행)의 증명은 실제 certificate를 반영하지 못한다. 형식화 측 조치:
+> (i) C_h-fiber 국소화 경로를 설계에서 제외, completion carry는 two-color
+> swap 경로(아래 Q3)로 재설계; (ii) b=4 반례를 Lean negative theorem으로
+> 박제(`EndpointChRowObstruction`); (iii) endpoint 섹션의 나머지 realization
+> 주장을 동일 기준으로 전수 검수.
+
 대상: `even_modulus_directed_tori.tex` v28, `subtex/endpoint_successor.tex`
 (`def:cyclic-completion-rows` :114–123, `def:lifted-completion-fiber` :265–281,
 `lem:completion-fiber-bijectivity` :283–298, `lem:endpoint-local-row-realization`
