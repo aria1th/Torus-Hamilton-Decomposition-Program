@@ -343,7 +343,7 @@ def parity_report(d, m):
         rows.append((codim, size, idx, idx % 2 == 1))
     return rows
 
-def main():
+def legacy_main():
     out = []
     print('parity ledger (codim, |U|, |U|/m, odd-layer?) for D5 m=6:',
           parity_report(5, 6))
@@ -354,6 +354,392 @@ def main():
     print(json.dumps([{k: v for k, v in o.items() if k != 'placements'} for o in out], indent=1))
     print('NOTE: rf3=False here is the documented PARTIAL status; '
           'RF1/RF2/budget passing is the de-risk content of this run.')
+
+# ======================================================================
+# v2 (2026-06-10): full RF3 reconstruction.
+#
+# Two mechanisms added on top of the v1 harness (see STATUS in docstring):
+#   (i)  the rank-countdown support tower: each splice row at stage r is
+#        substituted on an affine coset  base + <alpha_e : e in M_{r,P}>
+#        of rank D-r-1 (the printed support forests, slot labels), with
+#        the exterior fibers pinned by the kappa values of
+#        tab:anchor-affine-lift-dictionary (omitted contracted component
+#        per affected color) plus free "row-band" values;
+#   (ii) the terminal A2 block: the final triple (t,0,1) is NOT a
+#        constant-row substitution; the three carrier colors are given
+#        the pointwise terminal row word omega_m on a rank-2 affine
+#        block Pi = x0 + <v1,v2> (v_i = differences of the carrier slot
+#        step vectors), exterior fibers pinned; color of block index i
+#        reads the word at the triangle base q = x - a_i (the eta
+#        convention of subtex/terminal_A2_block.tex).
+# ======================================================================
+
+TERM_WORDS = dict(default=(0, 1, 2), t02=(2, 1, 0), t12=(0, 2, 1),
+                  t01=(1, 0, 2), chip=(1, 2, 0), chim=(2, 0, 1))
+
+def terminal_word_table(m):
+    """omega_m of subtex/terminal_A2_block.tex eq:terminal-word, as a dict
+    (z1,z2) -> word tuple (head index per block color); default rows omitted.
+    Verified against the printed m=4 orbits of lem:terminal-m4-finite-check."""
+    p = (1, 2)
+    tab = {}
+    lines = [((1, 0), 't02', 'chim', 'chip'),       # H: p-eH chi-, p+eH chi+
+             ((0, 1), 't12', 'chip', 'chim'),       # V: p-eV chi+, p+eV chi-
+             ((m - 1, 1), 't01', 'chim', 'chip')]   # D: p-eD chi-, p+eD chi+
+    for vec, gen, minus, plus in lines:
+        for t in range(1, m):
+            z = ((p[0] + t * vec[0]) % m, (p[1] + t * vec[1]) % m)
+            tab[z] = TERM_WORDS[plus if t == 1 else (minus if t == m - 1 else gen)]
+    return tab
+
+TERM_A = [(1, 0), (0, 1), (0, 0)]   # a_0, a_1, a_2 block steps
+
+def alpha_vec(d, i, j):
+    """u_j - u_i in the (d-1)-coordinate chart (label d-1 steps 0)."""
+    r = d - 1
+    v = [0] * r
+    if i < r: v[i] -= 1
+    if j < r: v[j] += 1
+    return v
+
+def step_vec(d, label):
+    r = d - 1
+    v = [0] * r
+    if label < r: v[label] = 1
+    return v
+
+# --- anchor tower configurations -------------------------------------
+# comps: (stage, affected chronological colors, support forest M (slot
+# labels), base-point function(params, m) -> coords).  Base points encode
+# the kappa pins of tab:anchor-affine-lift-dictionary; b* are the free
+# row-band values, default 0.
+
+def _g(prm, k):
+    return prm.get(k, 0)
+
+D5_TOWER = dict(
+    d=5,
+    shifted_rows=D5_SHIFTED_ROWS,
+    stage_shifts=[0, 1, 2],
+    missing=[3, 4],
+    comps=[
+        # stage 1 (h=0): triple (0,2,1) kappa 0; pair (3,4) kappa 1
+        dict(stage=0, colors=[0, 2, 1], M=[(0, 1), (0, 2), (0, 3)],
+             base=lambda prm, m: (0, 0, 0, 0)),                       # Sum x = 0
+        dict(stage=0, colors=[3, 4], M=[(0, 1), (0, 3), (3, 4)],
+             base=lambda prm, m: (0, 0, 1, 0)),                       # x2 = 1
+        # stage 2 (h=1): triple (0,4,3) kappa 0; pair (1,2) kappa 1
+        dict(stage=1, colors=[0, 4, 3], M=[(0, 1), (0, 4)],
+             base=lambda prm, m: (0, 0, 0, 0)),                       # x2 = x3 = 0
+        dict(stage=1, colors=[1, 2], M=[(0, 2), (2, 3)],
+             base=lambda prm, m: (0, _g(prm, 'b1'), 0,
+                                  (-1 - _g(prm, 'b1')) % m)),         # Sum x = -1, x1 = b1
+        # stage 3 (h=2): final pair (0,2) kappa 0
+        dict(stage=2, colors=[0, 2], M=[(2, 4)],
+             base=lambda prm, m: (0, _g(prm, 'b2'), 0, 0)),           # x0 = x3 = 0, x1 = b2
+    ],
+    terminal=dict(stage=2, slots=(3, 0, 1),
+                  base=lambda prm, m: ((-_g(prm, 'pb') - _g(prm, 'pa')) % m, 0,
+                                       _g(prm, 'pa'), 0)),            # x2 = pa, x4 = pb
+)
+
+D7_TOWER = dict(
+    d=7,
+    shifted_rows=D7_SHIFTED_ROWS,
+    stage_shifts=[0, 1, 2, 3, 5],
+    missing=[4, 6],
+    comps=[
+        # stage 1 (h=0): kappa 0;1;2
+        dict(stage=0, colors=[0, 1, 2], M=[(0, 1), (0, 2), (0, 3), (0, 4), (0, 5)],
+             base=lambda prm, m: (0, 0, 0, 0, 0, 0)),                 # Sum x = 0
+        dict(stage=0, colors=[3, 4], M=[(0, 1), (0, 2), (0, 3), (0, 5), (3, 4)],
+             base=lambda prm, m: ((-1) % m, 0, 0, 0, 0, 0)),          # Sum x = -1
+        dict(stage=0, colors=[5, 6], M=[(0, 1), (0, 2), (0, 3), (0, 5), (5, 6)],
+             base=lambda prm, m: (0, 0, 0, 0, 2, 0)),                 # x4 = 2
+        # stage 2 (h=1): kappa 0;1;2
+        dict(stage=1, colors=[1, 3, 4], M=[(0, 1), (0, 3), (2, 4), (2, 5)],
+             base=lambda prm, m: ((-_g(prm, 's2t')) % m, 0, _g(prm, 's2t'), 0, 0, 0)),
+        dict(stage=1, colors=[0, 2], M=[(0, 4), (0, 5), (1, 2), (1, 3)],
+             base=lambda prm, m: (_g(prm, 's2p1'), (-1 - _g(prm, 's2p1')) % m, 0, 0, 0, 0)),
+        dict(stage=1, colors=[5, 6], M=[(0, 1), (0, 2), (0, 3), (0, 6)],
+             base=lambda prm, m: (0, 0, 0, 0, 2, _g(prm, 's2p2'))),
+        # stage 3 (h=2): kappa 0;1;2
+        dict(stage=2, colors=[0, 6, 2], M=[(1, 2), (1, 4), (1, 5)],
+             base=lambda prm, m: (_g(prm, 's3t'), (-_g(prm, 's3t')) % m, 0, 0, 0, 0)),
+        dict(stage=2, colors=[1, 5], M=[(0, 1), (0, 3), (2, 5)],
+             base=lambda prm, m: ((-2 - _g(prm, 's3p1')) % m, 0, _g(prm, 's3p1'), 0, 1, 0)),
+        dict(stage=2, colors=[3, 4], M=[(0, 2), (0, 3), (5, 6)],
+             base=lambda prm, m: ((-2 - _g(prm, 's3p2a') - _g(prm, 's3p2b')) % m, 2, 0, 0,
+                                  _g(prm, 's3p2a'), _g(prm, 's3p2b'))),
+        # stage 4 (h=3): kappa 0;1;2
+        dict(stage=3, colors=[2, 5, 6], M=[(1, 2), (1, 5)],
+             base=lambda prm, m: (_g(prm, 's4t'), (-_g(prm, 's4t')) % m, 0, 0, 0, 0)),
+        dict(stage=3, colors=[0, 1], M=[(0, 5), (3, 4)],
+             base=lambda prm, m: ((-1 - _g(prm, 's4p1a') - _g(prm, 's4p1b') - _g(prm, 's4p1c')) % m,
+                                  _g(prm, 's4p1b'), _g(prm, 's4p1c'), _g(prm, 's4p1a'), 0, 0)),
+        dict(stage=3, colors=[3, 4], M=[(0, 6), (2, 3)],
+             base=lambda prm, m: (0, 2, _g(prm, 's4p2a'), 0, _g(prm, 's4p2b'), _g(prm, 's4p2c'))),
+        # stage 5 (h=4): final pairs, kappa 0;1
+        dict(stage=4, colors=[1, 6], M=[(4, 6)],
+             base=lambda prm, m: (_g(prm, 's5p1a'), _g(prm, 's5p1b'), _g(prm, 's5p1c'), 0, 0, 0)),
+        dict(stage=4, colors=[4, 5], M=[(2, 3)],
+             base=lambda prm, m: (_g(prm, 's5p2a'), 1, _g(prm, 's5p2c'), 0, 1, _g(prm, 's5p2b'))),
+    ],
+    terminal=dict(stage=4, slots=(5, 0, 1),
+                  base=lambda prm, m: ((-_g(prm, 'p4') - _g(prm, 'p1') - _g(prm, 'p2') - _g(prm, 'p3')) % m,
+                                       0, _g(prm, 'p1'), _g(prm, 'p2'), _g(prm, 'p3'), 0)),
+)
+
+class TowerAnchor:
+    """Builds and checks one anchor schedule under the tower+terminal reading.
+
+    params (all default 0 unless noted):
+      b*/s*  row-band values of splice supports;
+      pa,pb / p1..p4  exterior pins of the terminal block plane;
+      phi    (f1,f2) word-table offset inside the block;
+      assign permutation of the carrier slots: block color i <-> slot L[i];
+      eta    1 = word read at triangle base q = x - a_i (paper eta
+             convention), 0 = word read at the point itself.
+    """
+
+    def __init__(self, cfg, m):
+        self.cfg = cfg
+        self.d = cfg['d']
+        self.m = m
+        self.r = self.d - 1
+        self.K = m ** self.r
+        add, powm = build_add_dirs(self.d, m)
+        self.ADD = [list(a) for a in add]
+        self.powm = powm
+        nstage = len(cfg['stage_shifts'])
+        assert m >= nstage + len(cfg['missing'])
+        self.layer_shifts = list(cfg['stage_shifts']) + list(cfg['missing']) + \
+            [0] * (m - nstage - len(cfg['missing']))
+        self.sigmas = [perm_from_cycles(self.d, [st['triple']] + [list(p) for p in st['pairs']])
+                       for st in cfg['shifted_rows']]
+        self.word_tab = terminal_word_table(m)
+        ts = cfg['terminal']
+        self.tslots = ts['slots']
+        self.theight = ts['stage']
+        s_term = cfg['stage_shifts'][ts['stage']]
+        self.carrier = [(L - s_term) % self.d for L in self.tslots]  # chrono colors by slot order
+        self._patch_cache = {}
+
+    def enc_pt(self, coords):
+        return enc(coords, self.m)
+
+    def support_points(self, comp, prm):
+        base = tuple(a % self.m for a in comp['base'](prm, self.m))
+        key = (id(comp), base)
+        cached = self._patch_cache.get(key)
+        if cached is not None:
+            return cached
+        basis = [alpha_vec(self.d, i, j) for (i, j) in comp['M']]
+        offs = span_offsets(basis, self.m, self.r)
+        pts = [self.enc_pt([(a + b) % self.m for a, b in zip(off, base)]) for off in offs]
+        self._patch_cache[key] = pts
+        return pts
+
+    def stage_patch(self, comp, c, prm):
+        """dict x -> direction for color c on comp's support."""
+        st = comp['stage']
+        s = self.cfg['stage_shifts'][st]
+        slot = (c + s) % self.d
+        newdir = self.sigmas[st][slot]
+        return {x: newdir for x in self.support_points(comp, prm)}
+
+    def terminal_patch(self, prm):
+        """per chrono carrier color: dict x -> direction (non-default only)."""
+        m, d = self.m, self.d
+        L = prm.get('assign', tuple(self.tslots))
+        x0 = [a % m for a in self.cfg['terminal']['base'](prm, m)]
+        v1 = alpha_vec(d, L[2], L[0])
+        v2 = alpha_vec(d, L[2], L[1])
+        steps = [step_vec(d, l) for l in L]
+        f1, f2 = prm.get('phi', (0, 0))
+        eta = prm.get('eta', 1)
+        out = {}
+        for i in range(3):
+            c = (L[i] - self.cfg['stage_shifts'][self.theight]) % d
+            patch = {}
+            for z1 in range(m):
+                for z2 in range(m):
+                    w = self.word_tab.get(((z1 + f1) % m, (z2 + f2) % m))
+                    if w is None or w[i] == i:
+                        continue
+                    q = [(x0[k] + z1 * v1[k] + z2 * v2[k]) % m for k in range(self.r)]
+                    if eta:
+                        q = [(q[k] + steps[i][k]) % m for k in range(self.r)]
+                    patch[self.enc_pt(q)] = L[w[i]]
+            out[c] = patch
+        return out
+
+    def color_layers(self, c, prm, term_patch=None):
+        """list of layer maps for color c: ('perm', list) or ('patch', basearr, dict)."""
+        m, d = self.m, self.d
+        if term_patch is None:
+            term_patch = self.terminal_patch(prm)
+        layers = []
+        for t in range(m):
+            s = self.layer_shifts[t]
+            slot = (c + s) % d
+            base = self.ADD[slot]
+            patch = {}
+            for comp in self.cfg['comps']:
+                if comp['stage'] == t and t < len(self.cfg['stage_shifts']) and c in comp['colors']:
+                    patch.update(self.stage_patch(comp, c, prm))
+            if t == self.theight and c in self.carrier:
+                patch.update(term_patch[c])
+            if patch:
+                arr = list(base)
+                for x, dr in patch.items():
+                    arr[x] = self.ADD[dr][x]
+                layers.append(arr)
+            else:
+                layers.append(base)
+        return layers
+
+    def color_return(self, c, prm, term_patch=None):
+        R = list(range(self.K))
+        for P in self.color_layers(c, prm, term_patch):
+            R = [P[v] for v in R]
+        return R
+
+    def is_perm(self, arr):
+        seen = bytearray(self.K)
+        for y in arr:
+            if seen[y]:
+                return False
+            seen[y] = 1
+        return True
+
+    def cycle_type(self, R):
+        return sorted(cycle_lengths(R), reverse=True)
+
+    def single_cycle(self, R):
+        x = R[0]
+        n = 1
+        while x != 0:
+            x = R[x]
+            n += 1
+            if n > self.K:
+                return False
+        return n == self.K
+
+    def build_dirs(self, prm):
+        """full dirs[t][c][x] for the existing verify()."""
+        m, d, K = self.m, self.d, self.K
+        dirs = [[bytearray([(c + s) % d]) * K for c in range(d)] for s in self.layer_shifts]
+        for comp in self.cfg['comps']:
+            t = comp['stage']
+            s = self.cfg['stage_shifts'][t]
+            pts = self.support_points(comp, prm)
+            for c in comp['colors']:
+                slot = (c + s) % d
+                nd = self.sigmas[t][slot]
+                for x in pts:
+                    dirs[t][c][x] = nd
+        tp = self.terminal_patch(prm)
+        for c, patch in tp.items():
+            for x, dr in patch.items():
+                dirs[self.theight][c][x] = dr
+        return dirs
+
+# ---------------------------------------------------------------- search
+
+def d5_screen(m, verbose=True):
+    """Deterministic staged search for the D5 fan at modulus m.
+    Returns (params, verify-result) on success, else None."""
+    anchor = TowerAnchor(D5_TOWER, m)
+    K = anchor.K
+    # carrier colors by slot order (3,0,1) -> chrono (1,3,4); colors 3,4 are
+    # band-free, color 1 sees band b1; pair colors 0,2 see b1/b2.
+    slots = list(anchor.tslots)
+    assigns = []
+    for pm in itertools.permutations(slots):
+        assigns.append(pm)
+    base_prm = dict()
+    # precompute PRE/POST compositions for the band-free carrier colors
+    def pre_post(c, prm):
+        layers = anchor.color_layers(c, prm, term_patch={cc: {} for cc in anchor.carrier})
+        PRE = list(range(K))
+        for P in layers[:anchor.theight]:
+            PRE = [P[v] for v in PRE]
+        POST = list(range(K))
+        for P in layers[anchor.theight + 1:]:
+            POST = [P[v] for v in POST]
+        base_term = layers[anchor.theight]
+        return PRE, POST, base_term
+    found = []
+    tried = 0
+    for eta in (1, 0):
+        for assign in assigns:
+            prm0 = dict(base_prm, assign=assign, eta=eta)
+            screen_colors = [c for c in anchor.carrier if c in (3, 4)]
+            pp = {c: pre_post(c, prm0) for c in screen_colors}
+            for pa in range(m):
+                for pb in range(m):
+                    for f1 in range(m):
+                        for f2 in range(m):
+                            prm = dict(prm0, pa=pa, pb=pb, phi=(f1, f2))
+                            tried += 1
+                            tp = anchor.terminal_patch(prm)
+                            ok = True
+                            for c in screen_colors:
+                                PRE, POST, bt = pp[c]
+                                patch = tp[c]
+                                R = [POST[patch_get(patch, v, bt)] for v in PRE]
+                                if not anchor.single_cycle(R):
+                                    ok = False
+                                    break
+                            if not ok:
+                                continue
+                            # color 1 (carrier, sees band b1)
+                            for b1 in range(m):
+                                prm2 = dict(prm, b1=b1)
+                                R1 = anchor.color_return(1, prm2, tp)
+                                if not anchor.single_cycle(R1):
+                                    continue
+                                for b2 in range(m):
+                                    prm3 = dict(prm2, b2=b2)
+                                    R0 = anchor.color_return(0, prm3, tp)
+                                    if not anchor.single_cycle(R0):
+                                        continue
+                                    R2 = anchor.color_return(2, prm3, tp)
+                                    if not anchor.single_cycle(R2):
+                                        continue
+                                    found.append(prm3)
+                                    if verbose:
+                                        print(f'[D5 m={m}] candidate after {tried} screens: {fmt_prm(prm3)}')
+                                    dirs = anchor.build_dirs(prm3)
+                                    res = verify(5, m, dirs)
+                                    if res.get('rf1') and res.get('rf2') and res.get('rf3'):
+                                        return prm3, res
+                                    if verbose:
+                                        print(f'  full verify failed: {res}')
+    if verbose:
+        print(f'[D5 m={m}] screen exhausted ({tried} terminal placements), no RF3 candidate')
+    return None
+
+def patch_get(patch, v, base):
+    w = patch.get(v)
+    return base[v] if w is None else w
+
+def fmt_prm(prm):
+    return {k: v for k, v in sorted(prm.items()) if not callable(v)}
+
+def main():
+    if '--legacy' in sys.argv or len(sys.argv) == 1:
+        legacy_main()
+        return
+    if '--tower-d5' in sys.argv:
+        m = int(sys.argv[sys.argv.index('--tower-d5') + 1])
+        out = d5_screen(m)
+        if out:
+            prm, res = out
+            print(f'[D5 m={m}] RF1/RF2/RF3 PASS  params={fmt_prm(prm)}')
+            print(f'  cycle lengths: {res["lens"]}')
+        return
 
 if __name__ == '__main__':
     main()
