@@ -42,8 +42,17 @@ terminal A2  ──(H1a family: F_i 단일순환, 전 짝수 m)─────�
 | E3 | Reset common-image (parametric) | `r₀+δ_{p₁⁻} = r₁+δ_{p₂⁻} = I`의 `(ℤ/m)^{b−1}` 판 + row list `𝒫 ∈ E^{b+4}` 분리 (가설 `1<m`뿐) | **완료** `f13fee3` (`EndpointPortRoom.lean`) |
 | E4 | Renewal capacity + 역할 분할 | `2b+4 < 4^{b−1} ≤ m^{b−1}` + `RenewalRole`(3⊕2b⊕1, card 2b+4) + base-m digit 단사 슬롯 | **완료** `f13fee3` (동일 파일) |
 | E5 | Child schedule + RF1/RF2 | `rowSchedule`(행=치환 → RF1 무료), RF2 = swap-on-cylinder의 평행이동 불변 `U+(e_β−e_α)=U` 환원, `LayerDesc` plan | **완료** `4508ce6` (`EndpointRowSchedule.lean`) |
-| E6 | RF3 | layer plan 구체 선택(어느 layer가 N/X_i/R/C_h + support) → returnMap 계산 → product-cycle exponent(`UnitCarry` 닫힘) + H1a family(`terminalA2CarrierCyclicityFamily`) + E2 tower 합성으로 `returnsSingleCycle` | **다음 작업** |
-| E7 | 조립 | `RootFlatCycleData (2b) m` → `finalRootFlatTorusCertificate_of_cycleData` → `OddEndpointPayloadEngine.run`, Main `assume_oddEndpoint` 제거 | E6 후 |
+| E6 | RF3 | **설계 검증 결과 OBSTRUCTED** (`E6_DESIGN_20260610.md` W1–W3: firing-fiber 예산 / C_h 국소 치환 RF2 불가(논문 갭 후보) / lane 기증 교착). 회수 조각으로 분해: E6a 부모 cycle 추출(`29a4ea6`), E6b 추상 seed return — activeT/activeD/μ 전부 기존 기계로 닫힘, L-MONO도 pointCarry 역할 교환으로 신규 0줄(`ced224b`) | **완료(회수분)** |
+| E7 | 조립 | E6c로 대체: `EndpointRunCollapseRealization`(색별 collapse, H1b 공통-e보다 약함) + sorry-free 환원 → Main H6 홀을 정밀 입력 `assume_oddEndpointRealization`으로 재성형(`5027665`). 잔여 의무 = realization family 하나 | **완료(인터페이스)** |
+
+### Phase 결론 (2026-06-10)
+
+E1–E6c 완료. H6의 잔여 수학 = `EndpointRunCollapseRealization` family 구성
+하나로 수렴했고, 이는 H1b의 wild-e 문제의 (색별로 완화된) family 판이다.
+**남은 세 홀의 실체**: ① H1b + H6-realization = 단일 wild run-collapse 설계
+문제(원료: H1a interval 좌표), ② H5 = 섹션 이식(요청 C+D; seed realization
+부분은 같은 wild 문제에 부딪힐 것으로 예상 — 착수 시 displacement 예산 검사
+선행). W2(논문 `lem:completion-fiber-bijectivity` 갭 후보)는 저자 확인 대기.
 
 ### E6 설계 메모 (2026-06-10 시점 핸드오프)
 
