@@ -29,6 +29,7 @@ import EvenV11.V28Hard.EndpointChRowObstruction
 import EvenV11.V28Hard.MultiSwapRowSchedule
 import EvenV11.V28Hard.OddLowClosureBridge
 import EvenV11.V28Hard.HEDWitness
+import EvenV11.V28Hard.HEDBaseWitnesses
 
 /-!
 # v28 hard-slot experimental code

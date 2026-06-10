@@ -31,6 +31,10 @@ for witness in LowD5M4Finite LowD7M4Finite LowD7M6Finite; do
 done
 [[ -f "EvenV11/V28Hard/D3M4DirectRootFlat.lean" ]] ||
   fail "inventoried finite witness missing: EvenV11/V28Hard/D3M4DirectRootFlat.lean"
+# G3 HED base witnesses: native_decide audits over the inventoried
+# LowD7M4Finite/LowD7M6Finite dir blobs (selector closure + reserve clauses).
+[[ -f "EvenV11/V28Hard/HEDBaseWitnesses.lean" ]] ||
+  fail "inventoried finite witness missing: EvenV11/V28Hard/HEDBaseWitnesses.lean"
 unexpected_finite_imports="$(
   grep -rnE '^import[[:space:]]+EvenV11\.Low.*Finite([[:space:]]|$)' \
     EvenV11.lean EvenV11/ \
@@ -61,6 +65,7 @@ native_excludes=(
   --exclude='LowD5M4Finite.lean'
   --exclude='LowD7M4Finite.lean'
   --exclude='LowD7M6Finite.lean'
+  --exclude='HEDBaseWitnesses.lean'
 )
 
 echo "== scanning structural modules for native_decide =="
