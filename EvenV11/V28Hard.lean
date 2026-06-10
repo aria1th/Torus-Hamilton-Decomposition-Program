@@ -2,6 +2,7 @@ import EvenV11.V28Hard.D3TerminalA2Parametric
 import EvenV11.V28Hard.D3TerminalA2PerColor
 import EvenV11.V28Hard.D3EvenRailSeam
 import EvenV11.V28Hard.D3EvenRailSchedule
+import EvenV11.V28Hard.D3EvenRailCore3Free
 import EvenV11.V28Hard.TerminalA2EndpointRank
 import EvenV11.V28Hard.TerminalA2RecurrenceInstance
 import EvenV11.V28Hard.TerminalA2ActiveSet

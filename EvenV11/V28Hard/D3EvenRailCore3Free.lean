@@ -55,6 +55,8 @@ open TerminalA2IntervalSplice
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
+set_option linter.unusedTactic false
+set_option linter.unreachableTactic false
 
 /-! ## Cast toolkit: every coordinate is a `Nat`-cast -/
 
@@ -963,7 +965,7 @@ end TableEval
 
 section Specs
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (k : Fin (2 * m)) : SpecAt 0 m k := by
   have hk := k.isLt
@@ -976,8 +978,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_anti hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = k.val + m / 2 + 1 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m / 2 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = k.val + m / 2 + 1 :=
+      sig0_eq hm he (Or.inl ⟨by omega, by omega⟩)
+    have hlen : len0 m k.val = m / 2 :=
+      len0_eq hm he (Or.inl ⟨by omega, by omega⟩)
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1000,8 +1004,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_anti hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = m / 2 - 1 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = m / 2 - 1 :=
+      sig0_eq hm he (Or.inr (Or.inl ⟨by omega, by omega⟩))
+    have hlen : len0 m k.val = m :=
+      len0_eq hm he (Or.inr (Or.inl ⟨by omega, by omega⟩))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1024,8 +1030,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_anti hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = 2 * k.val + 3 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m - 2 - k.val := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = 2 * k.val + 3 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))
+    have hlen : len0 m k.val = m - 2 - k.val :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1048,8 +1056,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_mid hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = 2 * m - 2 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = 1 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = 2 * m - 2 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
+    have hlen : len0 m k.val = 1 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1072,8 +1082,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_row hm4 (by omega) (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = 2 * m - 1 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = 1 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = 2 * m - 1 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
+    have hlen : len0 m k.val = 1 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1096,8 +1108,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_row hm4 (by omega) (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = 0 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = 1 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = 0 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
+    have hlen : len0 m k.val = 1 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1120,8 +1134,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_rowEnd hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = m - 1 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m - 1 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = m - 1 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
+    have hlen : len0 m k.val = m - 1 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1144,8 +1160,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_last hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = m := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m - 1 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = m :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
+    have hlen : len0 m k.val = m - 1 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1167,8 +1185,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_anti hm4 (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = m / 2 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m / 2 := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = m / 2 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))))
+    have hlen : len0 m k.val = m / 2 :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1191,8 +1211,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp0_row hm4 (by omega) (by omega)]
       rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig0 m k.val = k.val + 1 := sig0_eq hm he (by omega)
-    have hlen : len0 m k.val = m := len0_eq hm he (by omega)
+    have hsig : sig0 m k.val = k.val + 1 :=
+      sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))))))))))
+    have hlen : len0 m k.val = m :=
+      len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_zero, hlen] at hi
@@ -1214,8 +1236,10 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     rw [hs, sp0_row hm4 (by omega) (by omega)]
     rw [show (uVec m 0 : TerminalQ m) = cpt 1 1 from rfl, cpt_add]
     all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-  have hsig : sig0 m k.val = (k.val - m) / 2 := sig0_eq hm he (by omega)
-  have hlen : len0 m k.val = (k.val - m) / 2 + 1 := len0_eq hm he (by omega)
+  have hsig : sig0 m k.val = (k.val - m) / 2 :=
+    sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩)))))))))))
+  have hlen : len0 m k.val = (k.val - m) / 2 + 1 :=
+    len0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩)))))))))))
   refine ⟨?_, ?_⟩
   · intro i hi
     rw [lenNat_zero, hlen] at hi
@@ -1231,7 +1255,7 @@ private theorem spec0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     rw [sp0_anti hm4 (by omega)]
     all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (k : Fin (2 * m)) : SpecAt 1 m k := by
   have hk := k.isLt
@@ -1244,8 +1268,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_one hm4 (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = m + 2 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m - 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = m + 2 :=
+      sig1_eq hm he (Or.inl ⟨by omega, by omega⟩)
+    have hlen : len1 m k.val = m - 1 :=
+      len1_eq hm he (Or.inl ⟨by omega, by omega⟩)
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1268,8 +1294,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_two hm4 (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = m + 3 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m - 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = m + 3 :=
+      sig1_eq hm he (Or.inr (Or.inl ⟨by omega, by omega⟩))
+    have hlen : len1 m k.val = m - 1 :=
+      len1_eq hm he (Or.inr (Or.inl ⟨by omega, by omega⟩))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1292,8 +1320,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_col hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = k.val + m / 2 + 1 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m / 2 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = k.val + m / 2 + 1 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))
+    have hlen : len1 m k.val = m / 2 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1319,8 +1349,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_col hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = m / 2 + 2 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = m / 2 + 2 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
+    have hlen : len1 m k.val = m :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1343,8 +1375,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_col hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = 2 * k.val := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m + 1 - k.val := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = 2 * k.val :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
+    have hlen : len1 m k.val = m + 1 - k.val :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1367,8 +1401,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_colEnd hm4 (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = 0 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = 0 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
+    have hlen : len1 m k.val = 1 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1391,8 +1427,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_hop hm4 (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = 1 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = 1 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
+    have hlen : len1 m k.val = 1 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1415,8 +1453,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_anti hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = 2 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = 2 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
+    have hlen : len1 m k.val = 1 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1439,8 +1479,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_anti hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = 3 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = 3 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
+    have hlen : len1 m k.val = 1 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1462,8 +1504,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_zero hm4 (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = m / 2 + 1 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m / 2 - 1 := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = m / 2 + 1 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
+    have hlen : len1 m k.val = m / 2 - 1 :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1486,8 +1530,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp1_anti hm4 (by omega) (by omega)]
       rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig1 m k.val = k.val + 1 := sig1_eq hm he (by omega)
-    have hlen : len1 m k.val = m := len1_eq hm he (by omega)
+    have hsig : sig1 m k.val = k.val + 1 :=
+      sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))))))))
+    have hlen : len1 m k.val = m :=
+      len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_one, hlen] at hi
@@ -1509,8 +1555,10 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     rw [hs, sp1_anti hm4 (by omega) (by omega)]
     rw [show (uVec m 1 : TerminalQ m) = cpt (2 * m - 2) 1 from rfl, cpt_add]
     all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-  have hsig : sig1 m k.val = (k.val - m + 3) / 2 := sig1_eq hm he (by omega)
-  have hlen : len1 m k.val = (k.val - m - 1) / 2 := len1_eq hm he (by omega)
+  have hsig : sig1 m k.val = (k.val - m + 3) / 2 :=
+    sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩)))))))))
+  have hlen : len1 m k.val = (k.val - m - 1) / 2 :=
+    len1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩)))))))))
   refine ⟨?_, ?_⟩
   · intro i hi
     rw [lenNat_one, hlen] at hi
@@ -1526,7 +1574,7 @@ private theorem spec1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     rw [sp1_col hm4 (by omega) (by omega)]
     all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (k : Fin (2 * m)) : SpecAt 2 m k := by
   have hk := k.isLt
@@ -1539,8 +1587,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_col hm4 (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = m := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = 1 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = m :=
+      sig2_eq hm he (Or.inl ⟨by omega, by omega⟩)
+    have hlen : len2 m k.val = 1 :=
+      len2_eq hm he (Or.inl ⟨by omega, by omega⟩)
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1564,8 +1614,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
         rw [hs, sp2_col hm4 (by omega)]
         rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
         all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-      have hsig : sig2 m k.val = k.val + 1 := sig2_eq hm he (by omega)
-      have hlen : len2 m k.val = m := len2_eq hm he (by omega)
+      have hsig : sig2 m k.val = k.val + 1 :=
+        sig2_eq hm he (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
+      have hlen : len2 m k.val = m :=
+        len2_eq hm he (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
       refine ⟨?_, ?_⟩
       · intro i hi
         rw [lenNat_two, hlen] at hi
@@ -1587,8 +1639,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
         rw [hs, sp2_col hm4 (by omega)]
         rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
         all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-      have hsig : sig2 m k.val = k.val / 2 + m := sig2_eq hm he (by omega)
-      have hlen : len2 m k.val = k.val / 2 + 1 := len2_eq hm he (by omega)
+      have hsig : sig2 m k.val = k.val / 2 + m :=
+        sig2_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))
+      have hlen : len2 m k.val = k.val / 2 + 1 :=
+        len2_eq hm he (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))
       refine ⟨?_, ?_⟩
       · intro i hi
         rw [lenNat_two, hlen] at hi
@@ -1611,8 +1665,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_col hm4 (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = 2 * m - 1 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = m - 1 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = 2 * m - 1 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
+    have hlen : len2 m k.val = m - 1 :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1635,8 +1691,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_hop hm4 (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = 0 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = m - 1 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = 0 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
+    have hlen : len2 m k.val = m - 1 :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1659,8 +1717,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_row hm4 (by omega) (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = m + m / 2 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = m / 2 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = m + m / 2 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
+    have hlen : len2 m k.val = m / 2 :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1683,8 +1743,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_row hm4 (by omega) (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = k.val + m / 2 + 1 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = m / 2 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = k.val + m / 2 + 1 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))))
+    have hlen : len2 m k.val = m / 2 :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1713,8 +1775,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_row hm4 (by omega) (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = k.val + 1 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = m := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = k.val + 1 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
+    have hlen : len2 m k.val = m :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1744,8 +1808,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
         all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
       · rw [hs, sp2_preLast hm4 (by omega), cpt_add]
         all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = 2 * k.val + 3 - 3 * m := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = 2 * m - 2 - k.val := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = 2 * k.val + 3 - 3 * m :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))))))
+    have hlen : len2 m k.val = 2 * m - 2 - k.val :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1769,8 +1835,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [hs, sp2_last hm4 (by omega)]
       rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
       all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-    have hsig : sig2 m k.val = m - 2 := sig2_eq hm he (by omega)
-    have hlen : len2 m k.val = 1 := len2_eq hm he (by omega)
+    have hsig : sig2 m k.val = m - 2 :=
+      sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))))
+    have hlen : len2 m k.val = 1 :=
+      len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))))
     refine ⟨?_, ?_⟩
     · intro i hi
       rw [lenNat_two, hlen] at hi
@@ -1791,8 +1859,10 @@ private theorem spec2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     rw [hs, sp2_col hm4 (by omega)]
     rw [show (uVec m 2 : TerminalQ m) = cpt 1 (2 * m - 2) from rfl, cpt_add]
     all_goals exact cpt_congr (castMod (by omega)) (castMod (by omega))
-  have hsig : sig2 m k.val = m - 1 := sig2_eq hm he (by omega)
-  have hlen : len2 m k.val = 1 := len2_eq hm he (by omega)
+  have hsig : sig2 m k.val = m - 1 :=
+    sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega⟩)))))))))))
+  have hlen : len2 m k.val = 1 :=
+    len2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega⟩)))))))))))
   refine ⟨?_, ?_⟩
   · intro i hi
     rw [lenNat_two, hlen] at hi
@@ -1854,25 +1924,24 @@ private theorem memS_col_cpt (hm : 4 ≤ m) {x y : Nat}
   push_cast
   ring
 
+private theorem exists_cpt_rep (w : TerminalQ m) :
+    ∃ a b : Nat, a < m ∧ b < m ∧ w = cpt a b :=
+  ⟨w.1.val, w.2.val, ZMod.val_lt w.1, ZMod.val_lt w.2, by
+    unfold cpt
+    rw [ZMod.natCast_zmod_val, ZMod.natCast_zmod_val]⟩
+
 /-- Color 0 (`u₀ = (1,1)`): ride to the row `y = −1`; the only inactive
-landings `x ∈ {1}` are fixed by riding `m/2` further onto the
-anti-diagonal. -/
+landing `x = 1` is fixed by riding `m/2` further onto the anti-diagonal. -/
 private theorem hit0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (w : TerminalQ m) : ∃ j : Nat, activePred 0 (w + j • uVec m 0) := by
   have hm4 : 4 ≤ m := by omega
-  have ha := ZMod.val_lt w.1
-  have hb := ZMod.val_lt w.2
-  have hw : w = cpt w.1.val w.2.val := by
-    unfold cpt
-    rw [ZMod.natCast_zmod_val, ZMod.natCast_zmod_val]
-  have hx1 := val_cases4m (m := m)
-    (a := w.1.val + (m - 1 - w.2.val)) (by omega)
-  by_cases h2 : ((w.1.val + (m - 1 - w.2.val) : Nat) : ZMod m).val = 2
-  · refine ⟨m - 1 - w.2.val, ?_⟩
-    rw [hw, cpt_add_u0 hm4]
+  obtain ⟨a, b, ha, hb, rfl⟩ := exists_cpt_rep w
+  have hx1 := val_cases4m (m := m) (a := a + (m - 1 - b)) (by omega)
+  by_cases h2 : ((a + (m - 1 - b) : Nat) : ZMod m).val = 2
+  · refine ⟨m - 1 - b, ?_⟩
+    rw [cpt_add_u0 hm4]
     refine Or.inl (Or.inr (Or.inr (Or.inr ?_)))
-    show (cpt (w.1.val + (m - 1 - w.2.val))
-        (w.2.val + (m - 1 - w.2.val)) : TerminalQ m) = (2, -1)
+    show (cpt (a + (m - 1 - b)) (b + (m - 1 - b)) : TerminalQ m) = (2, -1)
     unfold cpt
     rw [Prod.mk.injEq]
     constructor
@@ -1881,18 +1950,18 @@ private theorem hit0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
       rw [h3]
       push_cast
       ring
-    · rw [show w.2.val + (m - 1 - w.2.val) = m - 1 by omega]
+    · rw [show b + (m - 1 - b) = m - 1 by omega]
       exact (neg_one_cast hm4).symm
-  by_cases h1 : ((w.1.val + (m - 1 - w.2.val) : Nat) : ZMod m).val = 1
-  · refine ⟨m - 1 - w.2.val + m / 2, ?_⟩
-    rw [hw, cpt_add_u0 hm4]
+  by_cases h1 : ((a + (m - 1 - b) : Nat) : ZMod m).val = 1
+  · refine ⟨m - 1 - b + m / 2, ?_⟩
+    rw [cpt_add_u0 hm4]
     have hx2 := val_cases4m (m := m)
-      (a := w.1.val + (m - 1 - w.2.val + m / 2)) (by omega)
+      (a := a + (m - 1 - b + m / 2)) (by omega)
     exact Or.inl (memP_anti_cpt hm4 (by omega) (by omega))
-  · refine ⟨m - 1 - w.2.val, ?_⟩
-    rw [hw, cpt_add_u0 hm4]
+  · refine ⟨m - 1 - b, ?_⟩
+    rw [cpt_add_u0 hm4]
     refine Or.inr (memQ_row_cpt hm4 ?_ ?_)
-    · rw [show w.2.val + (m - 1 - w.2.val) = m - 1 by omega]
+    · rw [show b + (m - 1 - b) = m - 1 by omega]
       exact valNat_lt (by omega)
     · omega
 
@@ -1902,47 +1971,43 @@ private theorem hit0 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
 private theorem hit1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (w : TerminalQ m) : ∃ j : Nat, activePred 1 (w + j • uVec m 1) := by
   have hm4 : 4 ≤ m := by omega
-  have ha := ZMod.val_lt w.1
-  have hb := ZMod.val_lt w.2
-  have hw : w = cpt w.1.val w.2.val := by
-    unfold cpt
-    rw [ZMod.natCast_zmod_val, ZMod.natCast_zmod_val]
-  by_cases hpar : w.1.val % 2 = 1
+  obtain ⟨a, b, ha, hb, rfl⟩ := exists_cpt_rep w
+  by_cases hpar : a % 2 = 1
   · -- odd abscissa: ride to the anti-diagonal
-    set j := if w.1.val + w.2.val ≤ m then w.1.val + w.2.val
-      else w.1.val + w.2.val - m with hjdef
-    have hj : j ≤ m ∧ (w.1.val + w.2.val = j ∨ w.1.val + w.2.val = j + m) := by
+    refine ⟨if a + b ≤ m then a + b else a + b - m, ?_⟩
+    set j := if a + b ≤ m then a + b else a + b - m with hjdef
+    have hj : j ≤ m ∧ (a + b = j ∨ a + b = j + m) := by
       rw [hjdef]
       split_ifs <;> omega
-    have hsum : w.1.val + (2 * m - 2 * j) + (w.2.val + j) = 2 * m
-        ∨ w.1.val + (2 * m - 2 * j) + (w.2.val + j) = 3 * m := by
+    have hsum : a + (2 * m - 2 * j) + (b + j) = m
+        ∨ a + (2 * m - 2 * j) + (b + j) = 2 * m
+        ∨ a + (2 * m - 2 * j) + (b + j) = 3 * m := by
       omega
-    refine ⟨j, ?_⟩
-    rw [hw, cpt_add_u1 hm4 _ _ j hj.1]
-    have hxv := val_cases4m (m := m)
-      (a := w.1.val + (2 * m - 2 * j)) (by omega)
-    by_cases hX1 : ((w.1.val + (2 * m - 2 * j) : Nat) : ZMod m).val = 1
+    rw [cpt_add_u1 hm4 _ _ j hj.1]
+    have hxv := val_cases4m (m := m) (a := a + (2 * m - 2 * j)) (by omega)
+    by_cases hX1 : ((a + (2 * m - 2 * j) : Nat) : ZMod m).val = 1
     · -- the landing is the `S` patch `(1, −1)`
       refine Or.inr (Or.inr (Or.inl ?_))
-      show (cpt (w.1.val + (2 * m - 2 * j)) (w.2.val + j) : TerminalQ m)
-          = (1, -1)
+      show (cpt (a + (2 * m - 2 * j)) (b + j) : TerminalQ m) = (1, -1)
       unfold cpt
       rw [Prod.mk.injEq]
       have hv1 : (((1 : Nat)) : ZMod m).val = 1 := valNat_lt (by omega)
-      have hX : ((w.1.val + (2 * m - 2 * j) : Nat) : ZMod m)
+      have hX : ((a + (2 * m - 2 * j) : Nat) : ZMod m)
           = ((1 : Nat) : ZMod m) :=
         ZMod.val_injective m (hX1.trans hv1.symm)
       constructor
       · rw [hX]
         push_cast
         ring
-      · have h0 : ((w.1.val + (2 * m - 2 * j) : Nat) : ZMod m)
-            + ((w.2.val + j : Nat) : ZMod m) = 0 := by
-          rw [show ((w.1.val + (2 * m - 2 * j) : Nat) : ZMod m)
-              + ((w.2.val + j : Nat) : ZMod m)
-              = ((w.1.val + (2 * m - 2 * j) + (w.2.val + j) : Nat) : ZMod m)
+      · have h0 : ((a + (2 * m - 2 * j) : Nat) : ZMod m)
+            + ((b + j : Nat) : ZMod m) = 0 := by
+          rw [show ((a + (2 * m - 2 * j) : Nat) : ZMod m)
+              + ((b + j : Nat) : ZMod m)
+              = ((a + (2 * m - 2 * j) + (b + j) : Nat) : ZMod m)
             by push_cast; ring]
-          rcases hsum with h | h
+          rcases hsum with h | h | h
+          · rw [castShift (b := 0) 1 (by omega)]
+            exact Nat.cast_zero
           · rw [castShift (b := 0) 2 (by omega)]
             exact Nat.cast_zero
           · rw [castShift (b := 0) 3 (by omega)]
@@ -1951,30 +2016,28 @@ private theorem hit1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
         linear_combination h0 - hX - h1c
     · exact Or.inl (memP_anti_cpt hm4 hsum (by omega))
   · -- even abscissa: ride onto the `S` column `x = 2`
-    set j1 := (w.1.val + m - 2) / 2 with hj1def
-    have hj1 : 2 * j1 = w.1.val + m - 2 ∧ j1 ≤ m := by omega
-    have hyv := val_cases4m (m := m) (a := w.2.val + j1) (by omega)
-    by_cases hbad : ((w.2.val + j1 : Nat) : ZMod m).val ≤ m - 3
-    · refine ⟨j1, ?_⟩
-      rw [hw, cpt_add_u1 hm4 _ _ j1 hj1.2]
+    have hyv := val_cases4m (m := m)
+      (a := b + (a + m - 2) / 2) (by omega)
+    by_cases hbad : ((b + (a + m - 2) / 2 : Nat) : ZMod m).val ≤ m - 3
+    · refine ⟨(a + m - 2) / 2, ?_⟩
+      rw [cpt_add_u1 hm4 _ _ ((a + m - 2) / 2) (by omega)]
       refine Or.inr (memS_col_cpt hm4 ?_ hbad)
-      rw [show w.1.val + (2 * m - 2 * j1) = 2 + m by omega]
+      rw [show a + (2 * m - 2 * ((a + m - 2) / 2)) = 2 + m by omega]
       exact castShift (b := 2) 1 (by omega)
     · -- dodge: the half-period shift lands at depth `≤ m − 3`
-      by_cases h0 : w.1.val = 0
+      by_cases h0 : a = 0
       · refine ⟨m - 1, ?_⟩
-        rw [hw, cpt_add_u1 hm4 _ _ (m - 1) (by omega)]
-        have hyv2 := val_cases4m (m := m)
-          (a := w.2.val + (m - 1)) (by omega)
+        rw [cpt_add_u1 hm4 _ _ (m - 1) (by omega)]
+        have hyv2 := val_cases4m (m := m) (a := b + (m - 1)) (by omega)
         refine Or.inr (memS_col_cpt hm4 ?_ (by omega))
-        rw [show w.1.val + (2 * m - 2 * (m - 1)) = 2 by omega]
-      · refine ⟨(w.1.val - 2) / 2, ?_⟩
-        rw [hw, cpt_add_u1 hm4 _ _ ((w.1.val - 2) / 2) (by omega)]
+        rw [show a + (2 * m - 2 * (m - 1)) = a + 2 by omega,
+          show a + 2 = 2 by omega]
+      · refine ⟨(a - 2) / 2, ?_⟩
+        rw [cpt_add_u1 hm4 _ _ ((a - 2) / 2) (by omega)]
         have hyv2 := val_cases4m (m := m)
-          (a := w.2.val + (w.1.val - 2) / 2) (by omega)
+          (a := b + (a - 2) / 2) (by omega)
         refine Or.inr (memS_col_cpt hm4 ?_ (by omega))
-        rw [show w.1.val + (2 * m - 2 * ((w.1.val - 2) / 2)) = 2 + 2 * m
-          by omega]
+        rw [show a + (2 * m - 2 * ((a - 2) / 2)) = 2 + 2 * m by omega]
         exact castShift (b := 2) 2 (by omega)
 
 /-- Color 2 (`u₂ = (1,−2)`): odd ordinates ride onto the `Q` row `y = −1`
@@ -1984,58 +2047,46 @@ private theorem hit1 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
 private theorem hit2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
     (w : TerminalQ m) : ∃ j : Nat, activePred 2 (w + j • uVec m 2) := by
   have hm4 : 4 ≤ m := by omega
-  have ha := ZMod.val_lt w.1
-  have hb := ZMod.val_lt w.2
-  have hw : w = cpt w.1.val w.2.val := by
-    unfold cpt
-    rw [ZMod.natCast_zmod_val, ZMod.natCast_zmod_val]
-  by_cases hpar : w.2.val % 2 = 1
+  obtain ⟨a, b, ha, hb, rfl⟩ := exists_cpt_rep w
+  by_cases hpar : b % 2 = 1
   · -- odd ordinate: ride to the row `y = −1`
-    set j1 := (w.2.val + 1) / 2 with hj1def
-    have hj1 : 2 * j1 = w.2.val + 1 ∧ j1 ≤ m := by omega
-    have hxv := val_cases4m (m := m) (a := w.1.val + j1) (by omega)
-    by_cases hbad : ((w.1.val + j1 : Nat) : ZMod m).val = 1
-        ∨ ((w.1.val + j1 : Nat) : ZMod m).val = 2
-    · refine ⟨j1 + m / 2, ?_⟩
-      rw [hw, cpt_add_u2 hm4 _ _ (j1 + m / 2) (by omega)]
+    have hxv := val_cases4m (m := m) (a := a + (b + 1) / 2) (by omega)
+    by_cases hbad : ((a + (b + 1) / 2 : Nat) : ZMod m).val = 1
+        ∨ ((a + (b + 1) / 2 : Nat) : ZMod m).val = 2
+    · refine ⟨(b + 1) / 2 + m / 2, ?_⟩
+      rw [cpt_add_u2 hm4 _ _ ((b + 1) / 2 + m / 2) (by omega)]
       have hxv2 := val_cases4m (m := m)
-        (a := w.1.val + (j1 + m / 2)) (by omega)
+        (a := a + ((b + 1) / 2 + m / 2)) (by omega)
       refine Or.inl (memQ_row_cpt hm4 ?_ (by omega))
-      rw [show w.2.val + (2 * m - 2 * (j1 + m / 2)) = m - 1 by omega]
+      rw [show b + (2 * m - 2 * ((b + 1) / 2 + m / 2)) = m - 1 by omega]
       exact valNat_lt (by omega)
-    · refine ⟨j1, ?_⟩
-      rw [hw, cpt_add_u2 hm4 _ _ j1 hj1.2]
+    · refine ⟨(b + 1) / 2, ?_⟩
+      rw [cpt_add_u2 hm4 _ _ ((b + 1) / 2) (by omega)]
       refine Or.inl (memQ_row_cpt hm4 ?_ (by omega))
-      rw [show w.2.val + (2 * m - 2 * j1) = 2 * m - 1 by omega]
-      rw [castShift (b := m - 1) 1 (by omega)]
+      rw [show b + (2 * m - 2 * ((b + 1) / 2)) = 2 * m - 1 by omega,
+        castShift (a := 2 * m - 1) (b := m - 1) 1 (by omega)]
       exact valNat_lt (by omega)
   · -- even ordinate: ride onto the `S` column `x = 2`
-    set j1 := if w.1.val ≤ 2 then 2 - w.1.val else 2 + m - w.1.val
-      with hj1def
-    have hj1 : w.1.val + j1 = 2 ∨ w.1.val + j1 = 2 + m := by
-      rw [hj1def]
-      split_ifs <;> omega
-    have hj1m : j1 ≤ m := by
-      rw [hj1def]
+    refine ⟨if a ≤ 2 then 2 - a else 2 + m - a, ?_⟩
+    set j := if a ≤ 2 then 2 - a else 2 + m - a with hjdef
+    have hj : (a + j = 2 ∨ a + j = 2 + m) ∧ j ≤ m := by
+      rw [hjdef]
       split_ifs <;> omega
     have hyv := val_cases4m (m := m)
-      (a := w.2.val + (2 * m - 2 * j1)) (by omega)
-    refine ⟨j1, ?_⟩
-    rw [hw, cpt_add_u2 hm4 _ _ j1 hj1m]
-    by_cases hbad : ((w.2.val + (2 * m - 2 * j1) : Nat) : ZMod m).val
-        = m - 2
+      (a := b + (2 * m - 2 * j)) (by omega)
+    rw [cpt_add_u2 hm4 _ _ j hj.2]
+    by_cases hbad : ((b + (2 * m - 2 * j) : Nat) : ZMod m).val = m - 2
     · -- the landing is the `Q` patch `(2, −2)`
       refine Or.inl (Or.inr (Or.inr ?_))
-      show (cpt (w.1.val + j1) (w.2.val + (2 * m - 2 * j1)) : TerminalQ m)
-          = (2, -2)
+      show (cpt (a + j) (b + (2 * m - 2 * j)) : TerminalQ m) = (2, -2)
       unfold cpt
       rw [Prod.mk.injEq]
       constructor
-      · rcases hj1 with h | h
+      · rcases hj.1 with h | h
         · rw [h]
           push_cast
           ring
-        · rw [h, castShift (b := 2) 1 (by omega)]
+        · rw [h, castShift (a := 2 + m) (b := 2) 1 (by omega)]
           push_cast
           ring
       · have hv2 : (((m - 2 : Nat)) : ZMod m).val = m - 2 :=
@@ -2043,7 +2094,7 @@ private theorem hit2 {m : Nat} [NeZero m] (hm : 8 ≤ m) (he : m % 2 = 0)
         exact (ZMod.val_injective m (hbad.trans hv2.symm)).trans
           (neg_two_cast hm4).symm
     · refine Or.inr (memS_col_cpt hm4 ?_ (by omega))
-      rcases hj1 with h | h
+      rcases hj.1 with h | h
       · rw [h]
       · rw [h]
         exact castShift (b := 2) 1 (by omega)
@@ -2162,7 +2213,7 @@ private theorem addThree_singleCycle (n : Nat) [NeZero n]
 
 end LevelTwo
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem chain0 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (t : ZMod (m / 2)) :
     (sigF 0 m)^[4] (iota 0 m t) = iota 0 m (t + 3) := by
@@ -2171,122 +2222,233 @@ private theorem chain0 {m : Nat} [NeZero m] [NeZero (m / 2)]
   have hiter : (sigF 0 m)^[4] (iota 0 m t)
       = sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))) :=
     rfl
-  by_cases hc : t.val ≤ m / 2 - 5
-  · have v0 : (iota 0 m t).val = t.val := by
+  by_cases hc : t.val + 5 ≤ m / 2
+  · have h10c1 : t.val ≤ m / 2 - 2 := by omega
+    have h10v : t.val = t.val := by
+      omega
+    have v0 : (iota 0 m t).val = t.val := by
       rw [iota_val hm]
-      exact iota0_eq hm (by omega)
+      exact iota0_eq hm (Or.inl ⟨h10c1, h10v⟩)
+    have h11c1 : t.val ≤ m / 2 - 3 := by omega
+    have h11v : t.val + m / 2 + 1 = t.val + m / 2 + 1 := by
+      omega
     have v1 : (sigF 0 m (iota 0 m t)).val
         = t.val + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inl ⟨h11c1, h11v⟩)
+    have h12c1 : m / 2 - 1 ≤ (t.val + m / 2 + 1) := by omega
+    have h12c2 : (t.val + m / 2 + 1) ≤ m - 3 := by omega
+    have h12v : 2 * t.val + m + 5 = 2 * (t.val + m / 2 + 1) + 3 := by
+      omega
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m t))).val
         = 2 * t.val + m + 5 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inl ⟨h12c1, h12c2, h12v⟩)))
+    have h13c1 : m + 1 ≤ (2 * t.val + m + 5) := by omega
+    have h13c2 : (2 * t.val + m + 5) ≤ 2 * m - 4 := by omega
+    have h13c3 : (2 * t.val + m + 5) % 2 = 1 := by omega
+    have h13v : 2 * t.val + m + 6 = (2 * t.val + m + 5) + 1 := by
+      omega
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))).val
         = 2 * t.val + m + 6 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h13c1, h13c2, h13c3, h13v⟩))))))))))
+    have h14c1 : m + 2 ≤ (2 * t.val + m + 6) := by omega
+    have h14c2 : (2 * t.val + m + 6) ≤ 2 * m - 4 := by omega
+    have h14c3 : (2 * t.val + m + 6) % 2 = 0 := by omega
+    have h14v : t.val + 3 = ((2 * t.val + m + 6) - m) / 2 := by
+      omega
     have v4 : (sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t))))).val
         = t.val + 3 := by
       rw [sigF_val hm he, sigNat_zero, v3]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h14c1, h14c2, h14c3, h14v⟩)))))))))))
+    have h1fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h1fv : t.val + 3 = (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota0_eq hm (by omega)).symm
+    symm
+    exact iota0_eq hm (Or.inl ⟨h1fc1, h1fv⟩)
   by_cases hc : t.val = m / 2 - 4
-  · have v0 : (iota 0 m t).val = t.val := by
+  · have h20c1 : t.val ≤ m / 2 - 2 := by omega
+    have h20v : t.val = t.val := by
+      omega
+    have v0 : (iota 0 m t).val = t.val := by
       rw [iota_val hm]
-      exact iota0_eq hm (by omega)
+      exact iota0_eq hm (Or.inl ⟨h20c1, h20v⟩)
+    have h21c1 : t.val ≤ m / 2 - 3 := by omega
+    have h21v : m - 3 = t.val + m / 2 + 1 := by
+      omega
     have v1 : (sigF 0 m (iota 0 m t)).val
         = m - 3 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inl ⟨h21c1, h21v⟩)
+    have h22c1 : m / 2 - 1 ≤ (m - 3) := by omega
+    have h22c2 : (m - 3) ≤ m - 3 := by omega
+    have h22v : 2 * m - 3 = 2 * (m - 3) + 3 := by
+      omega
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m t))).val
         = 2 * m - 3 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inl ⟨h22c1, h22c2, h22v⟩)))
+    have h23c1 : (2 * m - 3) = 2 * m - 3 := by omega
+    have h23v : m - 1 = m - 1 := by
+      omega
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))).val
         = m - 1 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h23c1, h23v⟩)))))))
+    have h24c1 : (m - 1) = m - 1 := by omega
+    have h24v : 2 * m - 1 = 2 * m - 1 := by
+      omega
     have v4 : (sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t))))).val
         = 2 * m - 1 := by
       rw [sigF_val hm he, sigNat_zero, v3]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h24c1, h24v⟩)))))
+    have h2fc1 : m / 2 - 2 < (t + 3).val := by omega
+    have h2fv : 2 * m - 1 = 2 * m - 1 := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota0_eq hm (by omega)).symm
+    symm
+    exact iota0_eq hm (Or.inr (⟨h2fc1, h2fv⟩))
   by_cases hc : t.val = m / 2 - 3
-  · have v0 : (iota 0 m t).val = t.val := by
+  · have h30c1 : t.val ≤ m / 2 - 2 := by omega
+    have h30v : t.val = t.val := by
+      omega
+    have v0 : (iota 0 m t).val = t.val := by
       rw [iota_val hm]
-      exact iota0_eq hm (by omega)
+      exact iota0_eq hm (Or.inl ⟨h30c1, h30v⟩)
+    have h31c1 : t.val ≤ m / 2 - 3 := by omega
+    have h31v : m - 2 = t.val + m / 2 + 1 := by
+      omega
     have v1 : (sigF 0 m (iota 0 m t)).val
         = m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inl ⟨h31c1, h31v⟩)
+    have h32c1 : (m - 2) = m - 2 := by omega
+    have h32v : 2 * m - 2 = 2 * m - 2 := by
+      omega
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m t))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨h32c1, h32v⟩))))
+    have h33c1 : (2 * m - 2) = 2 * m - 2 := by omega
+    have h33v : m = m := by
+      omega
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))).val
         = m := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h33c1, h33v⟩))))))))
+    have h34c1 : m = m := by omega
+    have h34v : 0 = 0 := by
+      omega
     have v4 : (sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t))))).val
         = 0 := by
       rw [sigF_val hm he, sigNat_zero, v3]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h34c1, h34v⟩))))))
+    have h3fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h3fv : 0 = (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota0_eq hm (by omega)).symm
+    symm
+    exact iota0_eq hm (Or.inl ⟨h3fc1, h3fv⟩)
   by_cases hc : t.val = m / 2 - 2
-  · have v0 : (iota 0 m t).val = t.val := by
+  · have h40c1 : t.val ≤ m / 2 - 2 := by omega
+    have h40v : t.val = t.val := by
+      omega
+    have v0 : (iota 0 m t).val = t.val := by
       rw [iota_val hm]
-      exact iota0_eq hm (by omega)
+      exact iota0_eq hm (Or.inl ⟨h40c1, h40v⟩)
+    have h41c1 : t.val = m / 2 - 2 := by omega
+    have h41v : m / 2 - 1 = m / 2 - 1 := by
+      omega
     have v1 : (sigF 0 m (iota 0 m t)).val
         = m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inl ⟨h41c1, h41v⟩))
+    have h42c1 : m / 2 - 1 ≤ (m / 2 - 1) := by omega
+    have h42c2 : (m / 2 - 1) ≤ m - 3 := by omega
+    have h42v : m + 1 = 2 * (m / 2 - 1) + 3 := by
+      omega
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m t))).val
         = m + 1 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inl ⟨h42c1, h42c2, h42v⟩)))
+    have h43c1 : m + 1 ≤ (m + 1) := by omega
+    have h43c2 : (m + 1) ≤ 2 * m - 4 := by omega
+    have h43c3 : (m + 1) % 2 = 1 := by omega
+    have h43v : m + 2 = (m + 1) + 1 := by
+      omega
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h43c1, h43c2, h43c3, h43v⟩))))))))))
+    have h44c1 : m + 2 ≤ (m + 2) := by omega
+    have h44c2 : (m + 2) ≤ 2 * m - 4 := by omega
+    have h44c3 : (m + 2) % 2 = 0 := by omega
+    have h44v : 1 = ((m + 2) - m) / 2 := by
+      omega
     have v4 : (sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t))))).val
         = 1 := by
       rw [sigF_val hm he, sigNat_zero, v3]
-      exact sig0_eq hm he (by omega)
+      exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h44c1, h44c2, h44c3, h44v⟩)))))))))))
+    have h4fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h4fv : 1 = (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota0_eq hm (by omega)).symm
+    symm
+    exact iota0_eq hm (Or.inl ⟨h4fc1, h4fv⟩)
+  have h50c1 : m / 2 - 2 < t.val := by omega
+  have h50v : 2 * m - 1 = 2 * m - 1 := by
+    omega
   have v0 : (iota 0 m t).val = 2 * m - 1 := by
     rw [iota_val hm]
-    exact iota0_eq hm (by omega)
+    exact iota0_eq hm (Or.inr (⟨h50c1, h50v⟩))
+  have h51c1 : (2 * m - 1) = 2 * m - 1 := by omega
+  have h51v : m / 2 = m / 2 := by
+    omega
   have v1 : (sigF 0 m (iota 0 m t)).val
       = m / 2 := by
     rw [sigF_val hm he, sigNat_zero, v0]
-    exact sig0_eq hm he (by omega)
+    exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h51c1, h51v⟩)))))))))
+  have h52c1 : m / 2 - 1 ≤ (m / 2) := by omega
+  have h52c2 : (m / 2) ≤ m - 3 := by omega
+  have h52v : m + 3 = 2 * (m / 2) + 3 := by
+    omega
   have v2 : (sigF 0 m (sigF 0 m (iota 0 m t))).val
       = m + 3 := by
     rw [sigF_val hm he, sigNat_zero, v1]
-    exact sig0_eq hm he (by omega)
+    exact sig0_eq hm he (Or.inr (Or.inr (Or.inl ⟨h52c1, h52c2, h52v⟩)))
+  have h53c1 : m + 1 ≤ (m + 3) := by omega
+  have h53c2 : (m + 3) ≤ 2 * m - 4 := by omega
+  have h53c3 : (m + 3) % 2 = 1 := by omega
+  have h53v : m + 4 = (m + 3) + 1 := by
+    omega
   have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t)))).val
       = m + 4 := by
     rw [sigF_val hm he, sigNat_zero, v2]
-    exact sig0_eq hm he (by omega)
+    exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h53c1, h53c2, h53c3, h53v⟩))))))))))
+  have h54c1 : m + 2 ≤ (m + 4) := by omega
+  have h54c2 : (m + 4) ≤ 2 * m - 4 := by omega
+  have h54c3 : (m + 4) % 2 = 0 := by omega
+  have h54v : 2 = ((m + 4) - m) / 2 := by
+    omega
   have v4 : (sigF 0 m (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m t))))).val
       = 2 := by
     rw [sigF_val hm he, sigNat_zero, v3]
-    exact sig0_eq hm he (by omega)
+    exact sig0_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h54c1, h54c2, h54c3, h54v⟩)))))))))))
+  have h5fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+  have h5fv : 2 = (t + 3).val := by
+    omega
   refine Fin.ext ?_
   rw [hiter, v4, iota_val hm]
-  exact (iota0_eq hm (by omega)).symm
+  symm
+  exact iota0_eq hm (Or.inl ⟨h5fc1, h5fv⟩)
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem chain1 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (t : ZMod (m / 2)) :
     (sigF 1 m)^[4] (iota 1 m t) = iota 1 m (t + 3) := by
@@ -2296,150 +2458,299 @@ private theorem chain1 {m : Nat} [NeZero m] [NeZero (m / 2)]
       = sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))) :=
     rfl
   by_cases hc : t.val = 0
-  · have v0 : (iota 1 m t).val = 0 := by
+  · have h10c1 : t.val ≤ 1 := by omega
+    have h10v : 0 = t.val := by
+      omega
+    have v0 : (iota 1 m t).val = 0 := by
       rw [iota_val hm]
-      exact iota1_eq hm (by omega)
+      exact iota1_eq hm (Or.inl ⟨h10c1, h10v⟩)
+    have h11c1 : 0 = 0 := by omega
+    have h11v : m + 2 = m + 2 := by
+      omega
     have v1 : (sigF 1 m (iota 1 m t)).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inl ⟨h11c1, h11v⟩)
+    have h12c1 : m ≤ (m + 2) := by omega
+    have h12c2 : (m + 2) ≤ m + 3 := by omega
+    have h12v : 2 = (m + 2) - m := by
+      omega
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
         = 2 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h12c1, h12c2, h12v⟩))))))
+    have h13c1 : 2 ≤ 2 := by omega
+    have h13c2 : 2 ≤ m / 2 := by omega
+    have h13v : m / 2 + 3 = 2 + m / 2 + 1 := by
+      omega
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
         = m / 2 + 3 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨h13c1, h13c2, h13v⟩)))
+    have h14c1 : m / 2 + 2 ≤ (m / 2 + 3) := by omega
+    have h14c2 : (m / 2 + 3) ≤ m - 1 := by omega
+    have h14v : m + 6 = 2 * (m / 2 + 3) := by
+      omega
     have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val
         = m + 6 := by
       rw [sigF_val hm he, sigNat_one, v3]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h14c1, h14c2, h14v⟩)))))
+    have h1fc1 : 2 ≤ (t + 3).val := by omega
+    have h1fv : m + 6 = m + 2 * (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota1_eq hm (by omega)).symm
+    symm
+    exact iota1_eq hm (Or.inr (⟨h1fc1, h1fv⟩))
   by_cases hc : t.val = 1
-  · have v0 : (iota 1 m t).val = 1 := by
+  · have h20c1 : t.val ≤ 1 := by omega
+    have h20v : 1 = t.val := by
+      omega
+    have v0 : (iota 1 m t).val = 1 := by
       rw [iota_val hm]
-      exact iota1_eq hm (by omega)
+      exact iota1_eq hm (Or.inl ⟨h20c1, h20v⟩)
+    have h21c1 : 1 = 1 := by omega
+    have h21v : m + 3 = m + 3 := by
+      omega
     have v1 : (sigF 1 m (iota 1 m t)).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inl ⟨h21c1, h21v⟩))
+    have h22c1 : m ≤ (m + 3) := by omega
+    have h22c2 : (m + 3) ≤ m + 3 := by omega
+    have h22v : 3 = (m + 3) - m := by
+      omega
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
         = 3 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h22c1, h22c2, h22v⟩))))))
+    have h23c1 : 2 ≤ 3 := by omega
+    have h23c2 : 3 ≤ m / 2 := by omega
+    have h23v : m / 2 + 4 = 3 + m / 2 + 1 := by
+      omega
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
         = m / 2 + 4 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨h23c1, h23c2, h23v⟩)))
     by_cases hh : m / 2 = 4
-    · have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val = 0 := by
+    · have h24ac1 : m ≤ (m / 2 + 4) := by omega
+      have h24ac2 : (m / 2 + 4) ≤ m + 3 := by omega
+      have h24av : 0 = (m / 2 + 4) - m := by
+        omega
+      have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val = 0 := by
         rw [sigF_val hm he, sigNat_one, v3]
-        exact sig1_eq hm he (by omega)
+        exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h24ac1, h24ac2, h24av⟩))))))
+      have h2fac1 : (t + 3).val ≤ 1 := by omega
+      have h2fav : 0 = (t + 3).val := by
+        omega
       refine Fin.ext ?_
       rw [hiter, v4, iota_val hm]
-      exact (iota1_eq hm (by omega)).symm
-    · have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val = m + 8 := by
+      symm
+      exact iota1_eq hm (Or.inl ⟨h2fac1, h2fav⟩)
+    · have h24bc1 : m / 2 + 2 ≤ (m / 2 + 4) := by omega
+      have h24bc2 : (m / 2 + 4) ≤ m - 1 := by omega
+      have h24bv : m + 8 = 2 * (m / 2 + 4) := by
+        omega
+      have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val = m + 8 := by
         rw [sigF_val hm he, sigNat_one, v3]
-        exact sig1_eq hm he (by omega)
+        exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h24bc1, h24bc2, h24bv⟩)))))
+      have h2fbc1 : 2 ≤ (t + 3).val := by omega
+      have h2fbv : m + 8 = m + 2 * (t + 3).val := by
+        omega
       refine Fin.ext ?_
       rw [hiter, v4, iota_val hm]
-      exact (iota1_eq hm (by omega)).symm
+      symm
+      exact iota1_eq hm (Or.inr (⟨h2fbc1, h2fbv⟩))
   by_cases hc : t.val ≤ m / 2 - 4
-  · have v0 : (iota 1 m t).val = m + 2 * t.val := by
+  · have h30c1 : 2 ≤ t.val := by omega
+    have h30v : m + 2 * t.val = m + 2 * t.val := by
+      omega
+    have v0 : (iota 1 m t).val = m + 2 * t.val := by
       rw [iota_val hm]
-      exact iota1_eq hm (by omega)
+      exact iota1_eq hm (Or.inr (⟨h30c1, h30v⟩))
+    have h31c1 : m + 4 ≤ (m + 2 * t.val) := by omega
+    have h31c2 : (m + 2 * t.val) ≤ 2 * m - 2 := by omega
+    have h31c3 : (m + 2 * t.val) % 2 = 0 := by omega
+    have h31v : m + 2 * t.val + 1 = (m + 2 * t.val) + 1 := by
+      omega
     have v1 : (sigF 1 m (iota 1 m t)).val
         = m + 2 * t.val + 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h31c1, h31c2, h31c3, h31v⟩))))))))
+    have h32c1 : m + 5 ≤ (m + 2 * t.val + 1) := by omega
+    have h32c2 : (m + 2 * t.val + 1) ≤ 2 * m - 3 := by omega
+    have h32c3 : (m + 2 * t.val + 1) % 2 = 1 := by omega
+    have h32v : t.val + 2 = ((m + 2 * t.val + 1) - m + 3) / 2 := by
+      omega
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
         = t.val + 2 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h32c1, h32c2, h32c3, h32v⟩)))))))))
+    have h33c1 : 2 ≤ (t.val + 2) := by omega
+    have h33c2 : (t.val + 2) ≤ m / 2 := by omega
+    have h33v : t.val + m / 2 + 3 = (t.val + 2) + m / 2 + 1 := by
+      omega
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
         = t.val + m / 2 + 3 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨h33c1, h33c2, h33v⟩)))
+    have h34c1 : m / 2 + 2 ≤ (t.val + m / 2 + 3) := by omega
+    have h34c2 : (t.val + m / 2 + 3) ≤ m - 1 := by omega
+    have h34v : 2 * t.val + m + 6 = 2 * (t.val + m / 2 + 3) := by
+      omega
     have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val
         = 2 * t.val + m + 6 := by
       rw [sigF_val hm he, sigNat_one, v3]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h34c1, h34c2, h34v⟩)))))
+    have h3fc1 : 2 ≤ (t + 3).val := by omega
+    have h3fv : 2 * t.val + m + 6 = m + 2 * (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota1_eq hm (by omega)).symm
+    symm
+    exact iota1_eq hm (Or.inr (⟨h3fc1, h3fv⟩))
   by_cases hc : t.val = m / 2 - 3
-  · have v0 : (iota 1 m t).val = m + 2 * t.val := by
+  · have h40c1 : 2 ≤ t.val := by omega
+    have h40v : m + 2 * t.val = m + 2 * t.val := by
+      omega
+    have v0 : (iota 1 m t).val = m + 2 * t.val := by
       rw [iota_val hm]
-      exact iota1_eq hm (by omega)
+      exact iota1_eq hm (Or.inr (⟨h40c1, h40v⟩))
+    have h41c1 : m + 4 ≤ (m + 2 * t.val) := by omega
+    have h41c2 : (m + 2 * t.val) ≤ 2 * m - 2 := by omega
+    have h41c3 : (m + 2 * t.val) % 2 = 0 := by omega
+    have h41v : 2 * m - 5 = (m + 2 * t.val) + 1 := by
+      omega
     have v1 : (sigF 1 m (iota 1 m t)).val
         = 2 * m - 5 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h41c1, h41c2, h41c3, h41v⟩))))))))
+    have h42c1 : m + 5 ≤ (2 * m - 5) := by omega
+    have h42c2 : (2 * m - 5) ≤ 2 * m - 3 := by omega
+    have h42c3 : (2 * m - 5) % 2 = 1 := by omega
+    have h42v : m / 2 - 1 = ((2 * m - 5) - m + 3) / 2 := by
+      omega
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
         = m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h42c1, h42c2, h42c3, h42v⟩)))))))))
+    have h43c1 : 2 ≤ (m / 2 - 1) := by omega
+    have h43c2 : (m / 2 - 1) ≤ m / 2 := by omega
+    have h43v : m = (m / 2 - 1) + m / 2 + 1 := by
+      omega
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
         = m := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨h43c1, h43c2, h43v⟩)))
+    have h44c1 : m ≤ m := by omega
+    have h44c2 : m ≤ m + 3 := by omega
+    have h44v : 0 = m - m := by
+      omega
     have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val
         = 0 := by
       rw [sigF_val hm he, sigNat_one, v3]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h44c1, h44c2, h44v⟩))))))
+    have h4fc1 : (t + 3).val ≤ 1 := by omega
+    have h4fv : 0 = (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota1_eq hm (by omega)).symm
+    symm
+    exact iota1_eq hm (Or.inl ⟨h4fc1, h4fv⟩)
   by_cases hc : t.val = m / 2 - 2
-  · have v0 : (iota 1 m t).val = m + 2 * t.val := by
+  · have h50c1 : 2 ≤ t.val := by omega
+    have h50v : m + 2 * t.val = m + 2 * t.val := by
+      omega
+    have v0 : (iota 1 m t).val = m + 2 * t.val := by
       rw [iota_val hm]
-      exact iota1_eq hm (by omega)
+      exact iota1_eq hm (Or.inr (⟨h50c1, h50v⟩))
+    have h51c1 : m + 4 ≤ (m + 2 * t.val) := by omega
+    have h51c2 : (m + 2 * t.val) ≤ 2 * m - 2 := by omega
+    have h51c3 : (m + 2 * t.val) % 2 = 0 := by omega
+    have h51v : 2 * m - 3 = (m + 2 * t.val) + 1 := by
+      omega
     have v1 : (sigF 1 m (iota 1 m t)).val
         = 2 * m - 3 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h51c1, h51c2, h51c3, h51v⟩))))))))
+    have h52c1 : m + 5 ≤ (2 * m - 3) := by omega
+    have h52c2 : (2 * m - 3) ≤ 2 * m - 3 := by omega
+    have h52c3 : (2 * m - 3) % 2 = 1 := by omega
+    have h52v : m / 2 = ((2 * m - 3) - m + 3) / 2 := by
+      omega
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
         = m / 2 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h52c1, h52c2, h52c3, h52v⟩)))))))))
+    have h53c1 : 2 ≤ (m / 2) := by omega
+    have h53c2 : (m / 2) ≤ m / 2 := by omega
+    have h53v : m + 1 = (m / 2) + m / 2 + 1 := by
+      omega
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
         = m + 1 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inl ⟨h53c1, h53c2, h53v⟩)))
+    have h54c1 : m ≤ (m + 1) := by omega
+    have h54c2 : (m + 1) ≤ m + 3 := by omega
+    have h54v : 1 = (m + 1) - m := by
+      omega
     have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val
         = 1 := by
       rw [sigF_val hm he, sigNat_one, v3]
-      exact sig1_eq hm he (by omega)
+      exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h54c1, h54c2, h54v⟩))))))
+    have h5fc1 : (t + 3).val ≤ 1 := by omega
+    have h5fv : 1 = (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota1_eq hm (by omega)).symm
+    symm
+    exact iota1_eq hm (Or.inl ⟨h5fc1, h5fv⟩)
+  have h60c1 : 2 ≤ t.val := by omega
+  have h60v : 2 * m - 2 = m + 2 * t.val := by
+    omega
   have v0 : (iota 1 m t).val = 2 * m - 2 := by
     rw [iota_val hm]
-    exact iota1_eq hm (by omega)
+    exact iota1_eq hm (Or.inr (⟨h60c1, h60v⟩))
+  have h61c1 : m + 4 ≤ (2 * m - 2) := by omega
+  have h61c2 : (2 * m - 2) ≤ 2 * m - 2 := by omega
+  have h61c3 : (2 * m - 2) % 2 = 0 := by omega
+  have h61v : 2 * m - 1 = (2 * m - 2) + 1 := by
+    omega
   have v1 : (sigF 1 m (iota 1 m t)).val
       = 2 * m - 1 := by
     rw [sigF_val hm he, sigNat_one, v0]
-    exact sig1_eq hm he (by omega)
+    exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h61c1, h61c2, h61c3, h61v⟩))))))))
+  have h62c1 : (2 * m - 1) = 2 * m - 1 := by omega
+  have h62v : m / 2 + 1 = m / 2 + 1 := by
+    omega
   have v2 : (sigF 1 m (sigF 1 m (iota 1 m t))).val
       = m / 2 + 1 := by
     rw [sigF_val hm he, sigNat_one, v1]
-    exact sig1_eq hm he (by omega)
+    exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h62c1, h62v⟩)))))))
+  have h63c1 : (m / 2 + 1) = m / 2 + 1 := by omega
+  have h63v : m / 2 + 2 = m / 2 + 2 := by
+    omega
   have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t)))).val
       = m / 2 + 2 := by
     rw [sigF_val hm he, sigNat_one, v2]
-    exact sig1_eq hm he (by omega)
+    exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨h63c1, h63v⟩))))
+  have h64c1 : m / 2 + 2 ≤ (m / 2 + 2) := by omega
+  have h64c2 : (m / 2 + 2) ≤ m - 1 := by omega
+  have h64v : m + 4 = 2 * (m / 2 + 2) := by
+    omega
   have v4 : (sigF 1 m (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m t))))).val
       = m + 4 := by
     rw [sigF_val hm he, sigNat_one, v3]
-    exact sig1_eq hm he (by omega)
+    exact sig1_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h64c1, h64c2, h64v⟩)))))
+  have h6fc1 : 2 ≤ (t + 3).val := by omega
+  have h6fv : m + 4 = m + 2 * (t + 3).val := by
+    omega
   refine Fin.ext ?_
   rw [hiter, v4, iota_val hm]
-  exact (iota1_eq hm (by omega)).symm
+  symm
+  exact iota1_eq hm (Or.inr (⟨h6fc1, h6fv⟩))
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem chain2 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (t : ZMod (m / 2)) :
     (sigF 2 m)^[4] (iota 2 m t) = iota 2 m (t + 3) := by
@@ -2449,150 +2760,296 @@ private theorem chain2 {m : Nat} [NeZero m] [NeZero (m / 2)]
       = sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))) :=
     rfl
   by_cases hc : t.val = 0
-  · have v0 : (iota 2 m t).val = 0 := by
+  · have h10c1 : t.val ≤ m / 2 - 2 := by omega
+    have h10v : 0 = 2 * t.val := by
+      omega
+    have v0 : (iota 2 m t).val = 0 := by
       rw [iota_val hm]
-      exact iota2_eq hm (by omega)
+      exact iota2_eq hm (Or.inl ⟨h10c1, h10v⟩)
+    have h11c1 : 0 = 0 := by omega
+    have h11v : m = m := by
+      omega
     have v1 : (sigF 2 m (iota 2 m t)).val
         = m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inl ⟨h11c1, h11v⟩)
+    have h12c1 : m ≤ m := by omega
+    have h12c2 : m ≤ m + m / 2 - 3 := by omega
+    have h12v : m + m / 2 + 1 = m + m / 2 + 1 := by
+      omega
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
         = m + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h12c1, h12c2, h12v⟩)))))))
+    have h13c1 : m + m / 2 - 1 ≤ (m + m / 2 + 1) := by omega
+    have h13c2 : (m + m / 2 + 1) ≤ 2 * m - 3 := by omega
+    have h13v : 5 = 2 * (m + m / 2 + 1) + 3 - 3 * m := by
+      omega
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
         = 5 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h13c1, h13c2, h13v⟩)))))))))
     by_cases hh : m / 2 = 4
-    · have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val = 2 * m - 1 := by
+    · have h14ac1 : 5 = m - 3 := by omega
+      have h14av : 2 * m - 1 = 2 * m - 1 := by
+        omega
+      have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val = 2 * m - 1 := by
         rw [sigF_val hm he, sigNat_two, v3]
-        exact sig2_eq hm he (by omega)
+        exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨h14ac1, h14av⟩))))
+      have h1fac1 : m / 2 - 2 < (t + 3).val := by omega
+      have h1fav : 2 * m - 1 = 2 * m - 1 := by
+        omega
       refine Fin.ext ?_
       rw [hiter, v4, iota_val hm]
-      exact (iota2_eq hm (by omega)).symm
-    · have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val = 6 := by
+      symm
+      exact iota2_eq hm (Or.inr (⟨h1fac1, h1fav⟩))
+    · have h14bc1 : 1 ≤ 5 := by omega
+      have h14bc2 : 5 ≤ m - 4 := by omega
+      have h14bc3 : 5 % 2 = 1 := by omega
+      have h14bv : 6 = 5 + 1 := by
+        omega
+      have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val = 6 := by
         rw [sigF_val hm he, sigNat_two, v3]
-        exact sig2_eq hm he (by omega)
+        exact sig2_eq hm he (Or.inr (Or.inl ⟨h14bc1, h14bc2, h14bc3, h14bv⟩))
+      have h1fbc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+      have h1fbv : 6 = 2 * (t + 3).val := by
+        omega
       refine Fin.ext ?_
       rw [hiter, v4, iota_val hm]
-      exact (iota2_eq hm (by omega)).symm
-  by_cases hc : t.val ≤ m / 2 - 5
-  · have v0 : (iota 2 m t).val = 2 * t.val := by
+      symm
+      exact iota2_eq hm (Or.inl ⟨h1fbc1, h1fbv⟩)
+  by_cases hc : t.val + 5 ≤ m / 2
+  · have h20c1 : t.val ≤ m / 2 - 2 := by omega
+    have h20v : 2 * t.val = 2 * t.val := by
+      omega
+    have v0 : (iota 2 m t).val = 2 * t.val := by
       rw [iota_val hm]
-      exact iota2_eq hm (by omega)
+      exact iota2_eq hm (Or.inl ⟨h20c1, h20v⟩)
+    have h21c1 : 2 ≤ (2 * t.val) := by omega
+    have h21c2 : (2 * t.val) ≤ m - 4 := by omega
+    have h21c3 : (2 * t.val) % 2 = 0 := by omega
+    have h21v : t.val + m = (2 * t.val) / 2 + m := by
+      omega
     have v1 : (sigF 2 m (iota 2 m t)).val
         = t.val + m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inl ⟨h21c1, h21c2, h21c3, h21v⟩)))
+    have h22c1 : m ≤ (t.val + m) := by omega
+    have h22c2 : (t.val + m) ≤ m + m / 2 - 3 := by omega
+    have h22v : t.val + m + m / 2 + 1 = (t.val + m) + m / 2 + 1 := by
+      omega
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
         = t.val + m + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h22c1, h22c2, h22v⟩)))))))
+    have h23c1 : m + m / 2 - 1 ≤ (t.val + m + m / 2 + 1) := by omega
+    have h23c2 : (t.val + m + m / 2 + 1) ≤ 2 * m - 3 := by omega
+    have h23v : 2 * t.val + 5 = 2 * (t.val + m + m / 2 + 1) + 3 - 3 * m := by
+      omega
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
         = 2 * t.val + 5 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h23c1, h23c2, h23v⟩)))))))))
+    have h24c1 : 1 ≤ (2 * t.val + 5) := by omega
+    have h24c2 : (2 * t.val + 5) ≤ m - 4 := by omega
+    have h24c3 : (2 * t.val + 5) % 2 = 1 := by omega
+    have h24v : 2 * t.val + 6 = (2 * t.val + 5) + 1 := by
+      omega
     have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val
         = 2 * t.val + 6 := by
       rw [sigF_val hm he, sigNat_two, v3]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inl ⟨h24c1, h24c2, h24c3, h24v⟩))
+    have h2fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h2fv : 2 * t.val + 6 = 2 * (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota2_eq hm (by omega)).symm
+    symm
+    exact iota2_eq hm (Or.inl ⟨h2fc1, h2fv⟩)
   by_cases hc : t.val = m / 2 - 4
-  · have v0 : (iota 2 m t).val = 2 * t.val := by
+  · have h30c1 : t.val ≤ m / 2 - 2 := by omega
+    have h30v : 2 * t.val = 2 * t.val := by
+      omega
+    have v0 : (iota 2 m t).val = 2 * t.val := by
       rw [iota_val hm]
-      exact iota2_eq hm (by omega)
+      exact iota2_eq hm (Or.inl ⟨h30c1, h30v⟩)
+    have h31c1 : 2 ≤ (2 * t.val) := by omega
+    have h31c2 : (2 * t.val) ≤ m - 4 := by omega
+    have h31c3 : (2 * t.val) % 2 = 0 := by omega
+    have h31v : m + m / 2 - 4 = (2 * t.val) / 2 + m := by
+      omega
     have v1 : (sigF 2 m (iota 2 m t)).val
         = m + m / 2 - 4 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inl ⟨h31c1, h31c2, h31c3, h31v⟩)))
+    have h32c1 : m ≤ (m + m / 2 - 4) := by omega
+    have h32c2 : (m + m / 2 - 4) ≤ m + m / 2 - 3 := by omega
+    have h32v : 2 * m - 3 = (m + m / 2 - 4) + m / 2 + 1 := by
+      omega
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
         = 2 * m - 3 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h32c1, h32c2, h32v⟩)))))))
+    have h33c1 : m + m / 2 - 1 ≤ (2 * m - 3) := by omega
+    have h33c2 : (2 * m - 3) ≤ 2 * m - 3 := by omega
+    have h33v : m - 3 = 2 * (2 * m - 3) + 3 - 3 * m := by
+      omega
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
         = m - 3 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h33c1, h33c2, h33v⟩)))))))))
+    have h34c1 : (m - 3) = m - 3 := by omega
+    have h34v : 2 * m - 1 = 2 * m - 1 := by
+      omega
     have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val
         = 2 * m - 1 := by
       rw [sigF_val hm he, sigNat_two, v3]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inl ⟨h34c1, h34v⟩))))
+    have h3fc1 : m / 2 - 2 < (t + 3).val := by omega
+    have h3fv : 2 * m - 1 = 2 * m - 1 := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota2_eq hm (by omega)).symm
+    symm
+    exact iota2_eq hm (Or.inr (⟨h3fc1, h3fv⟩))
   by_cases hc : t.val = m / 2 - 3
-  · have v0 : (iota 2 m t).val = 2 * t.val := by
+  · have h40c1 : t.val ≤ m / 2 - 2 := by omega
+    have h40v : 2 * t.val = 2 * t.val := by
+      omega
+    have v0 : (iota 2 m t).val = 2 * t.val := by
       rw [iota_val hm]
-      exact iota2_eq hm (by omega)
+      exact iota2_eq hm (Or.inl ⟨h40c1, h40v⟩)
+    have h41c1 : 2 ≤ (2 * t.val) := by omega
+    have h41c2 : (2 * t.val) ≤ m - 4 := by omega
+    have h41c3 : (2 * t.val) % 2 = 0 := by omega
+    have h41v : m + m / 2 - 3 = (2 * t.val) / 2 + m := by
+      omega
     have v1 : (sigF 2 m (iota 2 m t)).val
         = m + m / 2 - 3 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inl ⟨h41c1, h41c2, h41c3, h41v⟩)))
+    have h42c1 : m ≤ (m + m / 2 - 3) := by omega
+    have h42c2 : (m + m / 2 - 3) ≤ m + m / 2 - 3 := by omega
+    have h42v : 2 * m - 2 = (m + m / 2 - 3) + m / 2 + 1 := by
+      omega
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h42c1, h42c2, h42v⟩)))))))
+    have h43c1 : (2 * m - 2) = 2 * m - 2 := by omega
+    have h43v : m - 2 = m - 2 := by
+      omega
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
         = m - 2 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h43c1, h43v⟩))))))))))
+    have h44c1 : (m - 2) = m - 2 := by omega
+    have h44v : 0 = 0 := by
+      omega
     have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val
         = 0 := by
       rw [sigF_val hm he, sigNat_two, v3]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h44c1, h44v⟩)))))
+    have h4fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h4fv : 0 = 2 * (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota2_eq hm (by omega)).symm
+    symm
+    exact iota2_eq hm (Or.inl ⟨h4fc1, h4fv⟩)
   by_cases hc : t.val = m / 2 - 2
-  · have v0 : (iota 2 m t).val = m - 4 := by
+  · have h50c1 : t.val ≤ m / 2 - 2 := by omega
+    have h50v : m - 4 = 2 * t.val := by
+      omega
+    have v0 : (iota 2 m t).val = m - 4 := by
       rw [iota_val hm]
-      exact iota2_eq hm (by omega)
+      exact iota2_eq hm (Or.inl ⟨h50c1, h50v⟩)
+    have h51c1 : 2 ≤ (m - 4) := by omega
+    have h51c2 : (m - 4) ≤ m - 4 := by omega
+    have h51c3 : (m - 4) % 2 = 0 := by omega
+    have h51v : m + m / 2 - 2 = (m - 4) / 2 + m := by
+      omega
     have v1 : (sigF 2 m (iota 2 m t)).val
         = m + m / 2 - 2 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inl ⟨h51c1, h51c2, h51c3, h51v⟩)))
+    have h52c1 : (m + m / 2 - 2) = m + m / 2 - 2 := by omega
+    have h52v : m + m / 2 - 1 = (m + m / 2 - 2) + 1 := by
+      omega
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
         = m + m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h52c1, h52v⟩))))))))
+    have h53c1 : m + m / 2 - 1 ≤ (m + m / 2 - 1) := by omega
+    have h53c2 : (m + m / 2 - 1) ≤ 2 * m - 3 := by omega
+    have h53v : 1 = 2 * (m + m / 2 - 1) + 3 - 3 * m := by
+      omega
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
         = 1 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h53c1, h53c2, h53v⟩)))))))))
+    have h54c1 : 1 ≤ 1 := by omega
+    have h54c2 : 1 ≤ m - 4 := by omega
+    have h54c3 : 1 % 2 = 1 := by omega
+    have h54v : 2 = 1 + 1 := by
+      omega
     have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val
         = 2 := by
       rw [sigF_val hm he, sigNat_two, v3]
-      exact sig2_eq hm he (by omega)
+      exact sig2_eq hm he (Or.inr (Or.inl ⟨h54c1, h54c2, h54c3, h54v⟩))
+    have h5fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+    have h5fv : 2 = 2 * (t + 3).val := by
+      omega
     refine Fin.ext ?_
     rw [hiter, v4, iota_val hm]
-    exact (iota2_eq hm (by omega)).symm
+    symm
+    exact iota2_eq hm (Or.inl ⟨h5fc1, h5fv⟩)
+  have h60c1 : m / 2 - 2 < t.val := by omega
+  have h60v : 2 * m - 1 = 2 * m - 1 := by
+    omega
   have v0 : (iota 2 m t).val = 2 * m - 1 := by
     rw [iota_val hm]
-    exact iota2_eq hm (by omega)
+    exact iota2_eq hm (Or.inr (⟨h60c1, h60v⟩))
+  have h61c1 : (2 * m - 1) = 2 * m - 1 := by omega
+  have h61v : m - 1 = m - 1 := by
+    omega
   have v1 : (sigF 2 m (iota 2 m t)).val
       = m - 1 := by
     rw [sigF_val hm he, sigNat_two, v0]
-    exact sig2_eq hm he (by omega)
+    exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨h61c1, h61v⟩)))))))))))
+  have h62c1 : (m - 1) = m - 1 := by omega
+  have h62v : m + m / 2 = m + m / 2 := by
+    omega
   have v2 : (sigF 2 m (sigF 2 m (iota 2 m t))).val
       = m + m / 2 := by
     rw [sigF_val hm he, sigNat_two, v1]
-    exact sig2_eq hm he (by omega)
+    exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h62c1, h62v⟩))))))
+  have h63c1 : m + m / 2 - 1 ≤ (m + m / 2) := by omega
+  have h63c2 : (m + m / 2) ≤ 2 * m - 3 := by omega
+  have h63v : 3 = 2 * (m + m / 2) + 3 - 3 * m := by
+    omega
   have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t)))).val
       = 3 := by
     rw [sigF_val hm he, sigNat_two, v2]
-    exact sig2_eq hm he (by omega)
+    exact sig2_eq hm he (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨h63c1, h63c2, h63v⟩)))))))))
+  have h64c1 : 1 ≤ 3 := by omega
+  have h64c2 : 3 ≤ m - 4 := by omega
+  have h64c3 : 3 % 2 = 1 := by omega
+  have h64v : 4 = 3 + 1 := by
+    omega
   have v4 : (sigF 2 m (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m t))))).val
       = 4 := by
     rw [sigF_val hm he, sigNat_two, v3]
-    exact sig2_eq hm he (by omega)
+    exact sig2_eq hm he (Or.inr (Or.inl ⟨h64c1, h64c2, h64c3, h64v⟩))
+  have h6fc1 : (t + 3).val ≤ m / 2 - 2 := by omega
+  have h6fv : 4 = 2 * (t + 3).val := by
+    omega
   refine Fin.ext ?_
   rw [hiter, v4, iota_val hm]
-  exact (iota2_eq hm (by omega)).symm
+  symm
+  exact iota2_eq hm (Or.inl ⟨h6fc1, h6fv⟩)
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem cover0 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (k : Fin (2 * m)) :
     ∃ t : ZMod (m / 2), ∃ j : Nat, j < 4 ∧ (sigF 0 m)^[j] (iota 0 m t) = k := by
@@ -2603,273 +3060,313 @@ private theorem cover0 {m : Nat} [NeZero m] [NeZero (m / 2)]
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((k.val : Nat) : ZMod (m / 2)))).val = k.val := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 0 m)^[0] (iota 0 m (((k.val : Nat) : ZMod (m / 2))))
         = iota 0 m (((k.val : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 2 * m - 1
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 0, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have hit : (sigF 0 m)^[0] (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2 - 1
   · refine ⟨((m / 2 - 2 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((m / 2 - 2 : Nat) : ZMod (m / 2))).val = m / 2 - 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))).val = m / 2 - 2 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))).val
         = m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have hit : (sigF 0 m)^[1] (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))
         = sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m / 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
     have hit : (sigF 0 m)^[1] (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m - 2
   · refine ⟨((k.val - m / 2 - 1 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((k.val - m / 2 - 1 : Nat) : ZMod (m / 2))).val = k.val - m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((k.val - m / 2 - 1 : Nat) : ZMod (m / 2)))).val = k.val - m / 2 - 1 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((k.val - m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 0 m)^[1] (iota 0 m (((k.val - m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 0 m (iota 0 m (((k.val - m / 2 - 1 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m - 1
   · refine ⟨((m / 2 - 4 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 4 : Nat) : ZMod (m / 2))).val = m / 2 - 4 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2)))).val = m / 2 - 4 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2))))).val
         = m - 3 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2)))))).val
         = 2 * m - 3 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2))))))).val
         = m - 1 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
     have hit : (sigF 0 m)^[3] (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 4 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m
   · refine ⟨((m / 2 - 3 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 3 : Nat) : ZMod (m / 2))).val = m / 2 - 3 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))).val = m / 2 - 3 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))).val
         = m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))))).val
         = m := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
     have hit : (sigF 0 m)^[3] (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 1
   · refine ⟨((m / 2 - 2 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 2 : Nat) : ZMod (m / 2))).val = m / 2 - 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))).val = m / 2 - 2 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))).val
         = m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))).val
         = m + 1 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 0 m)^[2] (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 2
   · refine ⟨((m / 2 - 2 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 2 : Nat) : ZMod (m / 2))).val = m / 2 - 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))).val = m / 2 - 2 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))).val
         = m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))).val
         = m + 1 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))))).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))))
     have hit : (sigF 0 m)^[3] (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 3
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m / 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 0 m)^[2] (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 4
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m / 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))))
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))))).val
         = m + 4 := by
       rw [sigF_val hm he, sigNat_zero, v2]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))))
     have hit : (sigF 0 m)^[3] (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 2 * m - 2
   · refine ⟨((m / 2 - 3 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 3 : Nat) : ZMod (m / 2))).val = m / 2 - 3 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))).val = m / 2 - 3 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))).val
         = m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))
     have hit : (sigF 0 m)^[2] (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (iota 0 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val % 2 = 1
   · refine ⟨(((k.val - m - 5) / 2 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2))).val = (k.val - m - 5) / 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 0 m ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2)))).val = (k.val - m - 5) / 2 := by
       rw [iota_val hm, hts]
-      exact iota0_eq hm (by omega)
+      apply iota0_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 0 m (iota 0 m ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2))))).val
         = (k.val - m - 5) / 2 + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_zero, v0]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 0 m (sigF 0 m (iota 0 m ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2)))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_zero, v1]
-      exact sig0_eq hm he (by omega)
+      apply sig0_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 0 m)^[2] (iota 0 m ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2))))
         = sigF 0 m (sigF 0 m (iota 0 m ((((k.val - m - 5) / 2 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   refine ⟨(((k.val - m - 6) / 2 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
   have hts : ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2))).val = (k.val - m - 6) / 2 :=
     ZMod.val_natCast_of_lt (by omega)
   have v0 : (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2)))).val = (k.val - m - 6) / 2 := by
     rw [iota_val hm, hts]
-    exact iota0_eq hm (by omega)
+    apply iota0_eq hm
+    exact Or.inl ⟨by omega, by omega⟩
   have v1 : (sigF 0 m (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2))))).val
       = (k.val - m - 6) / 2 + m / 2 + 1 := by
     rw [sigF_val hm he, sigNat_zero, v0]
-    exact sig0_eq hm he (by omega)
+    apply sig0_eq hm he
+    exact Or.inl ⟨by omega, by omega⟩
   have v2 : (sigF 0 m (sigF 0 m (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2)))))).val
       = 2 * ((k.val - m - 6) / 2) + m + 5 := by
     rw [sigF_val hm he, sigNat_zero, v1]
-    exact sig0_eq hm he (by omega)
+    apply sig0_eq hm he
+    exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
   have v3 : (sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2))))))).val
       = k.val := by
     rw [sigF_val hm he, sigNat_zero, v2]
-    exact sig0_eq hm he (by omega)
+    apply sig0_eq hm he
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))))
   have hit : (sigF 0 m)^[3] (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2))))
       = sigF 0 m (sigF 0 m (sigF 0 m (iota 0 m ((((k.val - m - 6) / 2 : Nat) : ZMod (m / 2)))))) := rfl
   refine Fin.ext ?_
   rw [hit, v3]
-  omega
+  all_goals omega
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem cover1 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (k : Fin (2 * m)) :
     ∃ t : ZMod (m / 2), ∃ j : Nat, j < 4 ∧ (sigF 1 m)^[j] (iota 1 m t) = k := by
@@ -2880,277 +3377,316 @@ private theorem cover1 {m : Nat} [NeZero m] [NeZero (m / 2)]
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 1 m)^[0] (iota 1 m (((0 : Nat) : ZMod (m / 2))))
         = iota 1 m (((0 : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 1
   · refine ⟨((1 : Nat) : ZMod (m / 2)), 0, by omega, ?_⟩
     have hts : (((1 : Nat) : ZMod (m / 2))).val = 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((1 : Nat) : ZMod (m / 2)))).val = 1 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 1 m)^[0] (iota 1 m (((1 : Nat) : ZMod (m / 2))))
         = iota 1 m (((1 : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 2
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2))))).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2)))))).val
         = 2 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
     have hit : (sigF 1 m)^[2] (iota 1 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 3
   · refine ⟨((1 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((1 : Nat) : ZMod (m / 2))).val = 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((1 : Nat) : ZMod (m / 2)))).val = 1 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2))))).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2)))))).val
         = 3 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
     have hit : (sigF 1 m)^[2] (iota 1 m (((1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m / 2
   · refine ⟨((k.val - 2 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((k.val - 2 : Nat) : ZMod (m / 2))).val = k.val - 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((k.val - 2 : Nat) : ZMod (m / 2)))).val = m + 2 * (k.val - 2) := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 1 m (iota 1 m (((k.val - 2 : Nat) : ZMod (m / 2))))).val
         = m + 2 * (k.val - 2) + 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((k.val - 2 : Nat) : ZMod (m / 2)))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩))))))))
     have hit : (sigF 1 m)^[2] (iota 1 m (((k.val - 2 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (iota 1 m (((k.val - 2 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2 + 1
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 2 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = 2 * m - 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
     have hit : (sigF 1 m)^[2] (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2 + 2
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 2 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = 2 * m - 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩))))))
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))))).val
         = m / 2 + 2 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))
     have hit : (sigF 1 m)^[3] (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2 + 3
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2))))).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2)))))).val
         = 2 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2))))))).val
         = m / 2 + 3 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 1 m)^[3] (iota 1 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m / 2 + 4
   · refine ⟨((1 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((1 : Nat) : ZMod (m / 2))).val = 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((1 : Nat) : ZMod (m / 2)))).val = 1 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2))))).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2)))))).val
         = 3 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩)))))
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2))))))).val
         = m / 2 + 4 := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 1 m)^[3] (iota 1 m (((1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m + 1
   · refine ⟨((k.val - m / 2 - 3 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2))).val = k.val - m / 2 - 3 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2)))).val = m + 2 * (k.val - m / 2 - 3) := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 1 m (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2))))).val
         = m + 2 * (k.val - m / 2 - 3) + 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
     have v2 : (sigF 1 m (sigF 1 m (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2)))))).val
         = k.val - m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_one, v1]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega, by omega, by omega⟩))))))))
     have v3 : (sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2))))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_one, v2]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))
     have hit : (sigF 1 m)^[3] (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2))))
         = sigF 1 m (sigF 1 m (sigF 1 m (iota 1 m (((k.val - m / 2 - 3 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 2
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2))))).val
         = m + 2 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 1 m)^[1] (iota 1 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 1 m (iota 1 m (((0 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + 3
   · refine ⟨((1 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((1 : Nat) : ZMod (m / 2))).val = 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((1 : Nat) : ZMod (m / 2)))).val = 1 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2))))).val
         = m + 3 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inl ⟨by omega, by omega⟩)
     have hit : (sigF 1 m)^[1] (iota 1 m (((1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (iota 1 m (((1 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 2 * m - 1
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 2 := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = 2 * m - 1 := by
       rw [sigF_val hm he, sigNat_one, v0]
-      exact sig1_eq hm he (by omega)
+      apply sig1_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
     have hit : (sigF 1 m)^[1] (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 1 m (iota 1 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val % 2 = 0
   · refine ⟨(((k.val - m) / 2 : Nat) : ZMod (m / 2)), 0, by omega, ?_⟩
     have hts : ((((k.val - m) / 2 : Nat) : ZMod (m / 2))).val = (k.val - m) / 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 1 m ((((k.val - m) / 2 : Nat) : ZMod (m / 2)))).val = m + 2 * ((k.val - m) / 2) := by
       rw [iota_val hm, hts]
-      exact iota1_eq hm (by omega)
+      apply iota1_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have hit : (sigF 1 m)^[0] (iota 1 m ((((k.val - m) / 2 : Nat) : ZMod (m / 2))))
         = iota 1 m ((((k.val - m) / 2 : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   refine ⟨(((k.val - m - 1) / 2 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
   have hts : ((((k.val - m - 1) / 2 : Nat) : ZMod (m / 2))).val = (k.val - m - 1) / 2 :=
     ZMod.val_natCast_of_lt (by omega)
   have v0 : (iota 1 m ((((k.val - m - 1) / 2 : Nat) : ZMod (m / 2)))).val = m + 2 * ((k.val - m - 1) / 2) := by
     rw [iota_val hm, hts]
-    exact iota1_eq hm (by omega)
+    apply iota1_eq hm
+    exact Or.inr (⟨by omega, by omega⟩)
   have v1 : (sigF 1 m (iota 1 m ((((k.val - m - 1) / 2 : Nat) : ZMod (m / 2))))).val
       = k.val := by
     rw [sigF_val hm he, sigNat_one, v0]
-    exact sig1_eq hm he (by omega)
+    apply sig1_eq hm he
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩)))))))
   have hit : (sigF 1 m)^[1] (iota 1 m ((((k.val - m - 1) / 2 : Nat) : ZMod (m / 2))))
       = sigF 1 m (iota 1 m ((((k.val - m - 1) / 2 : Nat) : ZMod (m / 2)))) := rfl
   refine Fin.ext ?_
   rw [hit, v1]
-  omega
+  all_goals omega
 
-set_option maxHeartbeats 16000000 in
+set_option maxHeartbeats 1600000 in
 private theorem cover2 {m : Nat} [NeZero m] [NeZero (m / 2)]
     (hm : 8 ≤ m) (he : m % 2 = 0) (k : Fin (2 * m)) :
     ∃ t : ZMod (m / 2), ∃ j : Nat, j < 4 ∧ (sigF 2 m)^[j] (iota 2 m t) = k := by
@@ -3161,291 +3697,334 @@ private theorem cover2 {m : Nat} [NeZero m] [NeZero (m / 2)]
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))).val = m - 4 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))).val
         = m + m / 2 - 2 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))))).val
         = 1 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))))
     have hit : (sigF 2 m)^[3] (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 3
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m - 1 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega⟩))))))))))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))))).val
         = 3 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))))
     have hit : (sigF 2 m)^[3] (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 5
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2))))).val
         = m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2))))))).val
         = 5 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))))
     have hit : (sigF 2 m)^[3] (iota 2 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m - 3 ∧ k.val % 2 = 0
   · refine ⟨((k.val / 2 : Nat) : ZMod (m / 2)), 0, by omega, ?_⟩
     have hts : (((k.val / 2 : Nat) : ZMod (m / 2))).val = k.val / 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((k.val / 2 : Nat) : ZMod (m / 2)))).val = 2 * (k.val / 2) := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 2 m)^[0] (iota 2 m (((k.val / 2 : Nat) : ZMod (m / 2))))
         = iota 2 m (((k.val / 2 : Nat) : ZMod (m / 2))) := rfl
     refine Fin.ext ?_
     rw [hit, v0]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m - 3
   · refine ⟨(((k.val - 5) / 2 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : ((((k.val - 5) / 2 : Nat) : ZMod (m / 2))).val = (k.val - 5) / 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2)))).val = 2 * ((k.val - 5) / 2) := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2))))).val
         = (k.val - 5) / 2 + m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2)))))).val
         = (k.val - 5) / 2 + m + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2))))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))))
     have hit : (sigF 2 m)^[3] (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m ((((k.val - 5) / 2 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m - 2
   · refine ⟨((m / 2 - 3 : Nat) : ZMod (m / 2)), 3, by omega, ?_⟩
     have hts : (((m / 2 - 3 : Nat) : ZMod (m / 2))).val = m / 2 - 3 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))).val = m - 6 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))).val
         = m + m / 2 - 3 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have v3 : (sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))))).val
         = m - 2 := by
       rw [sigF_val hm he, sigNat_two, v2]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))))
     have hit : (sigF 2 m)^[3] (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))) := rfl
     refine Fin.ext ?_
     rw [hit, v3]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m - 1
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m - 1 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega⟩))))))))))
     have hit : (sigF 2 m)^[1] (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2))))).val
         = m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have hit : (sigF 2 m)^[1] (iota 2 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ m + m / 2 - 2
   · refine ⟨((k.val - m : Nat) : ZMod (m / 2)), 1, by omega, ?_⟩
     have hts : (((k.val - m : Nat) : ZMod (m / 2))).val = k.val - m :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((k.val - m : Nat) : ZMod (m / 2)))).val = 2 * (k.val - m) := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((k.val - m : Nat) : ZMod (m / 2))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have hit : (sigF 2 m)^[1] (iota 2 m (((k.val - m : Nat) : ZMod (m / 2))))
         = sigF 2 m (iota 2 m (((k.val - m : Nat) : ZMod (m / 2)))) := rfl
     refine Fin.ext ?_
     rw [hit, v1]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + m / 2 - 1
   · refine ⟨((m / 2 - 2 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 2 : Nat) : ZMod (m / 2))).val = m / 2 - 2 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))).val = m - 4 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))).val
         = m + m / 2 - 2 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))))
     have hit : (sigF 2 m)^[2] (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 2 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + m / 2
   · refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inr (⟨by omega, by omega⟩)
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = m - 1 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (⟨by omega, by omega⟩))))))))))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega⟩)))))
     have hit : (sigF 2 m)^[2] (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = m + m / 2 + 1
   · refine ⟨((0 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((0 : Nat) : ZMod (m / 2))).val = 0 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((0 : Nat) : ZMod (m / 2)))).val = 0 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2))))).val
         = m := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inl ⟨by omega, by omega⟩
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2)))))).val
         = m + m / 2 + 1 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have hit : (sigF 2 m)^[2] (iota 2 m (((0 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (iota 2 m (((0 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val ≤ 2 * m - 3
   · refine ⟨((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2))).val = k.val - m - m / 2 - 1 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * (k.val - m - m / 2 - 1) := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2))))).val
         = k.val - m / 2 - 1 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2)))))).val
         = k.val := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have hit : (sigF 2 m)^[2] (iota 2 m (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (iota 2 m (((k.val - m - m / 2 - 1 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   by_cases hcc : k.val = 2 * m - 2
   · refine ⟨((m / 2 - 3 : Nat) : ZMod (m / 2)), 2, by omega, ?_⟩
     have hts : (((m / 2 - 3 : Nat) : ZMod (m / 2))).val = m / 2 - 3 :=
       ZMod.val_natCast_of_lt (by omega)
     have v0 : (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))).val = m - 6 := by
       rw [iota_val hm, hts]
-      exact iota2_eq hm (by omega)
+      apply iota2_eq hm
+      exact Or.inl ⟨by omega, by omega⟩
     have v1 : (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))).val
         = m + m / 2 - 3 := by
       rw [sigF_val hm he, sigNat_two, v0]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega, by omega⟩))
     have v2 : (sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2)))))).val
         = 2 * m - 2 := by
       rw [sigF_val hm he, sigNat_two, v1]
-      exact sig2_eq hm he (by omega)
+      apply sig2_eq hm he
+      exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl ⟨by omega, by omega, by omega⟩))))))
     have hit : (sigF 2 m)^[2] (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))
         = sigF 2 m (sigF 2 m (iota 2 m (((m / 2 - 3 : Nat) : ZMod (m / 2))))) := rfl
     refine Fin.ext ?_
     rw [hit, v2]
-    omega
+    all_goals omega
   refine ⟨((m / 2 - 1 : Nat) : ZMod (m / 2)), 0, by omega, ?_⟩
   have hts : (((m / 2 - 1 : Nat) : ZMod (m / 2))).val = m / 2 - 1 :=
     ZMod.val_natCast_of_lt (by omega)
   have v0 : (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2)))).val = 2 * m - 1 := by
     rw [iota_val hm, hts]
-    exact iota2_eq hm (by omega)
+    apply iota2_eq hm
+    exact Or.inr (⟨by omega, by omega⟩)
   have hit : (sigF 2 m)^[0] (iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))))
       = iota 2 m (((m / 2 - 1 : Nat) : ZMod (m / 2))) := rfl
   refine Fin.ext ?_
   rw [hit, v0]
-  omega
+  all_goals omega
 
 /-- **Level-2 conclusion**: each per-color label successor is a single
 `2m`-cycle.  The hypothesis `3 ∤ m` enters exactly here. -/
@@ -3453,11 +4032,14 @@ private theorem sigF_singleCycle {m : Nat} [NeZero m] (hm : 8 ≤ m)
     (he : m % 2 = 0) (h3 : m % 3 ≠ 0) (c : Fin 3) :
     IsSingleCycleMap (sigF c m) := by
   haveI : NeZero (m / 2) := ⟨by omega⟩
-  have hcop : Nat.Coprime 3 (m / 2) :=
-    (Nat.Prime.coprime_iff_not_dvd Nat.prime_three).mpr
-      (fun hdvd => by
-        obtain ⟨c', hc'⟩ := hdvd
-        omega)
+  have hcop : Nat.Coprime 3 (m / 2) := by
+    refine (Nat.Prime.coprime_iff_not_dvd Nat.prime_three).mpr ?_
+    intro hdvd
+    obtain ⟨c', hc'⟩ := hdvd
+    have hm6 : m = 6 * c' := by omega
+    refine h3 ?_
+    rw [hm6]
+    omega
   have hchain : ∀ t : ZMod (m / 2),
       (sigF c m)^[4] (iota c m t) = iota c m (t + 3) := by
     rcases fin3_cases c with rfl | rfl | rfl
@@ -3472,7 +4054,7 @@ private theorem sigF_singleCycle {m : Nat} [NeZero m] (hm : 8 ≤ m)
     · exact cover2 hm he
   exact single_cycle_of_interval_splice (sigF c m)
     (fun t : ZMod (m / 2) => t + 3) (iota c m) (fun _ => 4)
-    (fun _ => by omega) hchain (addThree_singleCycle _ hcop) hcover
+    (fun _ => Nat.succ_pos 3) hchain (addThree_singleCycle _ hcop) hcover
 
 /-! ## Assembly: the per-color core single cycles -/
 
