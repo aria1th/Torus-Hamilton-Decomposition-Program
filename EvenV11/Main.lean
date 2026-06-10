@@ -6,6 +6,7 @@ import EvenV11.RootFlatCycleData
 import EvenV11.V28Hard.PaperExactStructure
 import EvenV11.V28Hard.TerminalA2IntervalSplice
 import EvenV11.V28Hard.D3TerminalA2PerColor
+import EvenV11.V28Hard.D3EvenRailWiring
 import EvenV11.V28Hard.EndpointRealization
 import EvenV11.LowD7M4Finite
 import EvenV11.LowD7M6Finite
@@ -66,23 +67,24 @@ theorem assume_d3TerminalCarrierCyclicity :
   V28Hard.TerminalA2IntervalSplice.terminalA2CarrierCyclicityFamily
 
 /-- H1b — terminal `A₂` root-flat realization (paper terminal row expansion),
-**per-color form**.  A standard root-flat schedule on `Fin 2 → ZMod m` whose
-first return is conjugate, through an explicit per-color return-section
-equivalence `sectionEquiv c : Qₘ ≃ RootState`, to the carrier `Fᵢ`, for every
-even `m ≥ 4` (RF1/RF2 plus the realization equation
-`(sectionEquiv c).symm ∘ returnMap c ∘ sectionEquiv c = Fᵢ`).  The plain chart
-`rootPairEquiv` is too rigid; a wild run-collapse `sectionEquiv` is required
-(`docs/H1B_REALIZATION_OBSTRUCTION_20260609.md`).  The former common-section
-target `TerminalA2RootFlatRealizationFamily` demanded ONE equivalence
-conjugating all three colors simultaneously — a potentially
-unsatisfiable-shaped over-constraint (cf. the H2 precedent in
-`docs/H2_REALIZATION_BLOCKER_20260605.md`); per-color equivalences suffice for
-the only payoff (RF3 by per-color transport), match the H6 interface shape
-(`EndpointRunCollapseRealization.collapse`), and are the shape targeted by the
-wild run-collapse design. -/
+**per-color form**.  CLOSED via the rail-seam schedule
+(`docs/WILDE_SEARCH_20260610.md`): module 1 (`V28Hard.D3EvenRailSeam`) builds
+the wild seam layer, module 2 (`V28Hard.D3EvenRailSchedule`) installs it into
+a standard root-flat schedule with RF1/RF2 and reduces the first return to a
+conjugated core map, and module 3 closes RF3 for both drift cases —
+`V28Hard.D3EvenRailCore3Free` (`3 ∤ m`) and `V28Hard.D3EvenRailCore3Dvd`
+(`3 ∣ m`) — by two-level interval splices (numeric ground truth:
+`scripts/search_d3_even_dir.py core3free` / `core3dvd`).  The per-color wild
+run-collapse `sectionEquiv` demanded here (the plain chart `rootPairEquiv` is
+too rigid, `docs/H1B_REALIZATION_OBSTRUCTION_20260609.md`) is CONSTRUCTED in
+`V28Hard.D3EvenRailWiring.perColorRealization_of_cycleData` by composing the
+orbit-rank enumerations of the schedule first returns (RF3) and of the proven
+terminal carriers (H1a). -/
 theorem assume_d3TerminalRealization :
     Nonempty V28Hard.D3TerminalA2PerColor.TerminalA2PerColorRealizationFamily :=
-  sorry
+  V28Hard.D3EvenRailWiring.perColorRealization_of_cycleData
+    V28Hard.D3EvenRailWiring.railCycleDataFamily
+    assume_d3TerminalCarrierCyclicity
 
 /-- H1 — `D₃` even base, **all even `m ≥ 4`** (paper §5 terminal `A₂`).  Assembled
 from the two separated obligations above by the closed conjugacy adapter

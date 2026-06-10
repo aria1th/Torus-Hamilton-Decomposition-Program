@@ -782,6 +782,262 @@ def core3free_scan(mmax):
 
 
 # ---------------------------------------------------------------------------
+# core3dvd: reconnaissance for module 3b (EvenV11/V28Hard/D3EvenRailCore3Dvd)
+#
+# For 3 | m the conjugated per-color core map is G_c = T_{u_c} o rho_c with
+# u = ((m-4,1), (3,m-4), (1,3)).  Same interval anatomy as core3free: 2m
+# straight u-rays cut by the seam zigzag, label successor sigma_c with
+# interval lengths len_c.  This subcommand prints the sigma/len tables,
+# checks them against the closed forms formalized in Lean (valid for
+# 3 | m, m >= 12; m = 6 is the finite-orbit exception), verifies that
+# sigma_c is a single 2m-cycle, and verifies the level-2 splice: the
+# first-return of sigma_c to the (m/3 - 1)-element transversal iota_c
+# (iota skips the two labels d-4 and d-1, d = m/3, then shifts by the
+# per-color offset (0, 3, m)) is exactly +2 on Z/(m/3 - 1), a single
+# cycle because m even makes m/3 - 1 odd.  Interval lengths on the
+# transversal are (6, ..., 6, 11, 7, 7, 6, 5) (generic regime m >= 18;
+# m = 12 closes sigma by a 24-point rank table instead).
+# ---------------------------------------------------------------------------
+
+
+def core3dvd_sigma_closed(m, c, k):
+    """Closed forms of sigma/len formalized in Lean (m >= 12, even, 3 | m)."""
+    d = m // 3
+
+    def base(k):
+        # color 0; colors 1/2 are the rank rotations by +3 / +m below
+        if k + 3 <= 2 * d:
+            return k + d + 1, d
+        if k + 2 == 2 * d:
+            return d - 1, 2 * d
+        if k + 3 <= m:
+            return 4 * m - 7 - 3 * k, m - 2 - k
+        if k + 2 == m:
+            return m + 3, 1
+        if k + 1 == m:
+            return m, m
+        if k == m:
+            return m + 1, m
+        if k == m + 2:
+            return m - 1, m - 1
+        if k + 6 == 2 * m:
+            return 2 * m - 1, 1
+        if k + 2 == 2 * m:
+            return 2 * m - 5, m - 1
+        if k + 1 == 2 * m:
+            return d, d
+        if k % 3 == 1:
+            return (2 * m - 5 - k) // 3, (2 * m - 2 - k) // 3
+        return k + 1, m
+
+    if c == 0:
+        return base(k)
+    sh = 3 if c == 1 else m
+    s, ln = base((k - sh) % (2 * m))
+    return (s + sh) % (2 * m), ln
+
+
+def core3dvd_sigma_closed_direct(m, c, k):
+    """Per-color closed forms exactly as written in the Lean tables
+    (sig0d/sig1d/sig2d, len0d/len1d/len2d)."""
+    d = m // 3
+    if c == 0:
+        return core3dvd_sigma_closed(m, 0, k)
+    if c == 1:
+        if k == 0:
+            return 1, m
+        if k == 1:
+            return 2 * m - 2, m - 1
+        if k == 2:
+            return d + 3, d
+        if k <= 2 * d:
+            return k + d + 1, d
+        if k == 2 * d + 1:
+            return d + 2, 2 * d
+        if k <= m:
+            return 4 * m + 5 - 3 * k, m + 1 - k
+        if k == m + 1:
+            return m + 6, 1
+        if k == m + 2:
+            return m + 3, m
+        if k == m + 3:
+            return m + 4, m
+        if k == m + 5:
+            return m + 2, m - 1
+        if k + 3 == 2 * m:
+            return 2, 1
+        if k + 1 == 2 * m:
+            return 0, m
+        if k % 3 == 1:
+            return (2 * m - 2 - k) // 3 + 3, (2 * m + 1 - k) // 3
+        return k + 1, m
+    if k == 0:
+        return 1, m
+    if k == 2:
+        return 2 * m - 1, m - 1
+    if k + 6 == m:
+        return m - 1, 1
+    if k + 2 == m:
+        return m - 5, m - 1
+    if k + 1 == m:
+        return m + d, d
+    if k + 3 <= m:
+        if k % 3 == 1:
+            return (m - 5 - k) // 3 + m, (m - 2 - k) // 3
+        return k + 1, m
+    if k + 3 <= 2 * d + m:
+        return k + d + 1, d
+    if k + 2 == 2 * d + m:
+        return m + d - 1, 2 * d
+    if k + 3 <= 2 * m:
+        return 6 * m - 7 - 3 * k, 2 * m - 2 - k
+    if k + 2 == 2 * m:
+        return 3, 1
+    return 0, m
+
+
+def core3dvd_iota(m, c, t):
+    d = m // 3
+    base = t if t + 5 <= d else (t + 1 if t + 3 <= d else t + 2)
+    sh = (0, 3, m)[c]
+    return (base + sh) % (2 * m)
+
+
+def core3dvd_lenL(m, t):
+    d = m // 3
+    if t + 6 == d:
+        return 11
+    if t + 5 == d:
+        return 7
+    if t + 4 == d:
+        return 7
+    if t + 3 == d:
+        return 6
+    if t + 2 == d:
+        return 5
+    return 6
+
+
+def core3dvd(m, verbose=True):
+    assert m % 2 == 0 and m >= 6 and m % 3 == 0
+    P, Q, S = canonical_seam(m)
+    P, Q, S = set(P), set(Q), set(S)
+    actives = [P | Q, P | S, Q | S]
+    drifts = [((m - 4) % m, 1), (3, (m - 4) % m), (1, 3)]
+    sps = seam_points(m)
+    d = m // 3
+    allok = True
+    for c in range(3):
+        act, u, sp = actives[c], drifts[c], sps[c]
+        rank = {sp(k): k for k in range(2 * m)}
+        assert len(rank) == 2 * m and set(rank) == act
+        sig, ln = [], []
+        for k in range(2 * m):
+            x, y = sp((k + 1) % (2 * m))
+            cur = ((x + u[0]) % m, (y + u[1]) % m)
+            j = 0
+            while cur not in act:
+                cur = ((cur[0] + u[0]) % m, (cur[1] + u[1]) % m)
+                j += 1
+            sig.append(rank[cur])
+            ln.append(j + 1)
+        # single 2m-cycle?
+        seen, curk = set(), 0
+        for _ in range(2 * m):
+            seen.add(curk)
+            curk = sig[curk]
+        single = len(seen) == 2 * m and curk == 0
+        # closed forms (general regime m >= 12), both the rotation form
+        # and the direct per-color tables written in Lean
+        closed_ok = m < 12 or all(
+            (sig[k], ln[k]) == core3dvd_sigma_closed(m, c, k)
+            and (sig[k], ln[k]) == core3dvd_sigma_closed_direct(m, c, k)
+            for k in range(2 * m))
+        # level-2 splice: first-return of sigma to iota = +2 on Z/(d-1),
+        # with the closed-form interval lengths (generic regime m >= 18)
+        lvl2_ok = True
+        if m >= 18:
+            n = d - 1
+            T = {core3dvd_iota(m, c, t) for t in range(n)}
+            cov = set()
+            for t in range(n):
+                k = core3dvd_iota(m, c, t)
+                steps = 0
+                while True:
+                    cov.add(k)
+                    k = sig[k]
+                    steps += 1
+                    if k in T:
+                        break
+                if k != core3dvd_iota(m, c, (t + 2) % n):
+                    lvl2_ok = False
+                if steps != core3dvd_lenL(m, t):
+                    lvl2_ok = False
+            lvl2_ok = lvl2_ok and len(cov) == 2 * m
+        if verbose:
+            print(f"m={m} c={c}: sum(len)={sum(ln)} (m^2={m * m}) "
+                  f"sigma single 2m-cycle: {single}  closed forms: "
+                  f"{'ok' if closed_ok else 'MISMATCH'}  level-2 (+2 on "
+                  f"Z/{d - 1}): {'ok' if lvl2_ok else 'FAIL'}")
+            print(f"  sigma: {sig}")
+            print(f"  len  : {ln}")
+        allok = allok and single and closed_ok and lvl2_ok and \
+            sum(ln) == m * m
+    if m in (6, 12) and verbose:
+        # finite certificates: m = 6 full G_c orbit ranks (index 6x+y);
+        # m = 12 sigma orbit ranks (the level-1 splice still applies)
+        if m == 6:
+            for c in range(3):
+                act, u = actives[c], drifts[c]
+                wild = {w: ({**{p: (1, 0, 2) for p in P},
+                             **{q: (2, 1, 0) for q in Q},
+                             **{s: (0, 2, 1) for s in S}}.get(w, (0, 1, 2)))
+                        for w in states(m)}
+                G = {}
+                for w in states(m):
+                    dd = wild[w][c]
+                    e, eb = EV[dd], EV[c]
+                    rw = ((w[0] + e[0] - eb[0]) % m, (w[1] + e[1] - eb[1]) % m)
+                    G[w] = ((rw[0] + u[0]) % m, (rw[1] + u[1]) % m)
+                rk, cur = {}, (0, 0)
+                for i in range(m * m):
+                    rk[cur] = i
+                    cur = G[cur]
+                assert cur == (0, 0) and len(rk) == m * m
+                print(f"  m=6 c={c} orbit rank (index 6x+y): "
+                      f"{[rk[(x, y)] for x in range(6) for y in range(6)]}")
+        else:
+            for c in range(3):
+                act, u, sp = actives[c], drifts[c], sps[c]
+                rank = {sp(k): k for k in range(2 * m)}
+                sig = []
+                for k in range(2 * m):
+                    x, y = sp((k + 1) % (2 * m))
+                    cur = ((x + u[0]) % m, (y + u[1]) % m)
+                    while cur not in act:
+                        cur = ((cur[0] + u[0]) % m, (cur[1] + u[1]) % m)
+                    sig.append(rank[cur])
+                rk, cur = {}, 0
+                for i in range(2 * m):
+                    rk[cur] = i
+                    cur = sig[cur]
+                assert cur == 0 and len(rk) == 2 * m
+                print(f"  m=12 c={c} sigma orbit rank: "
+                      f"{[rk[k] for k in range(2 * m)]}")
+    return allok
+
+
+def core3dvd_scan(mmax):
+    allok = True
+    for m in range(6, mmax + 1, 6):
+        ok = core3dvd(m, verbose=False)
+        print(f"m={m}: {'OK' if ok else 'FAIL'} "
+              "(sigma single cycle, closed forms, level-2 splice)")
+        allok = allok and ok
+    return allok
+
+
+# ---------------------------------------------------------------------------
 
 
 def main():
@@ -823,6 +1079,12 @@ def main():
     p = sub.add_parser("core3free-scan")
     p.add_argument("--mmax", type=int, default=34)
 
+    p = sub.add_parser("core3dvd")
+    p.add_argument("--m", type=int, required=True)
+
+    p = sub.add_parser("core3dvd-scan")
+    p.add_argument("--mmax", type=int, default=42)
+
     args = ap.parse_args()
     if args.cmd == "verify":
         layers, m = load_cert(args.cert)
@@ -849,6 +1111,11 @@ def main():
         sys.exit(0 if ok else 1)
     elif args.cmd == "core3free-scan":
         sys.exit(0 if core3free_scan(args.mmax) else 1)
+    elif args.cmd == "core3dvd":
+        ok = core3dvd(args.m)
+        sys.exit(0 if ok else 1)
+    elif args.cmd == "core3dvd-scan":
+        sys.exit(0 if core3dvd_scan(args.mmax) else 1)
     elif args.cmd == "construct-scan":
         allok = True
         for m in range(4, args.mmax + 1, 2):
