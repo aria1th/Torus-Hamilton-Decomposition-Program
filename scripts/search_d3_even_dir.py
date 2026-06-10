@@ -561,6 +561,226 @@ def analyze(layers, m):
         print(f"   total rho-cycles {ncyc_total} ({'odd: wild seam' if ncyc_total % 2 else 'even'})")
 
 
+
+
+# ---------------------------------------------------------------------------
+# core3free: reconnaissance for module 3a (EvenV11/V28Hard/D3EvenRailCore3Free)
+#
+# For 3 !| m the conjugated per-color core map is G_c = T_{u_c} o rho_c with
+# u = ((1,1), (m-2,1), (1,m-2)).  Its orbit splits into 2m straight u-rays cut
+# by the seam zigzag seamPoint_c (module 1): interval k starts at
+# head k = seamPoint_c(k+1) + u, runs until the first active ray point
+# seamPoint_c(sigma_c(k)), and one rho_c-kick later reaches head(sigma_c(k)).
+# This subcommand prints the sigma/len tables, checks them against the
+# closed forms formalized in Lean, verifies that sigma_c is a single
+# 2m-cycle, and verifies the level-2 splice sigma_c^4 o iota_c = iota_c o (+3)
+# on the m/2-element transversal iota_c (single cycle of +3 because 3 !| m).
+# ---------------------------------------------------------------------------
+
+
+def seam_points(m):
+    def sp0(k):
+        if k == m - 1:
+            return (1, (m - 2) % m)
+        if k == 2 * m - 2:
+            return (2, m - 1)
+        if k == 2 * m - 1:
+            return (1, 0)
+        if k < m - 1:
+            return ((-k) % m, k % m)
+        return ((-k) % m, m - 1)
+
+    def sp1(k):
+        if k == 0:
+            return (0, 0)
+        if k == 1:
+            return (1, m - 1)
+        if k == 2:
+            return (1, m - 2)
+        if k == m + 1:
+            return (2, m - 1)
+        if k == m + 2:
+            return (3, m - 2)
+        if k <= m:
+            return (2, (-k) % m)
+        return (k % m, (-k) % m)
+
+    def sp2(k):
+        if k == m - 1:
+            return (3, m - 2)
+        if k == 2 * m - 3:
+            return (0, m - 1)
+        if k == 2 * m - 2:
+            return (1, m - 1)
+        if k == 2 * m - 1:
+            return (1, 0)
+        if k <= m - 2:
+            return (2, k % m)
+        return ((k + 3) % m, m - 1)
+
+    return [sp0, sp1, sp2]
+
+
+def core3free_sigma_closed(m, c, k):
+    """Closed forms of sigma/len formalized in Lean (m >= 8, even, 3 !| m)."""
+    h = m // 2
+    if c == 0:
+        if k <= h - 3:
+            return k + h + 1, h
+        if k == h - 2:
+            return h - 1, m
+        if k <= m - 3:
+            return 2 * k + 3, m - 2 - k
+        if k == m - 2:
+            return 2 * m - 2, 1
+        if k == m - 1:
+            return 2 * m - 1, 1
+        if k == m:
+            return 0, 1
+        if k == 2 * m - 3:
+            return m - 1, m - 1
+        if k == 2 * m - 2:
+            return m, m - 1
+        if k == 2 * m - 1:
+            return h, h
+        if k % 2 == 1:
+            return k + 1, m
+        return (k - m) // 2, (k - m) // 2 + 1
+    if c == 1:
+        if k == 0:
+            return m + 2, m - 1
+        if k == 1:
+            return m + 3, m - 1
+        if k <= h:
+            return k + h + 1, h
+        if k == h + 1:
+            return h + 2, m
+        if k <= m - 1:
+            return 2 * k, m + 1 - k
+        if k <= m + 3:
+            return k - m, 1
+        if k == 2 * m - 1:
+            return h + 1, h - 1
+        if k % 2 == 0:
+            return k + 1, m
+        return (k - m + 3) // 2, (k - m - 1) // 2
+    if k == 0:
+        return m, 1
+    if k <= m - 4:
+        return (k + 1, m) if k % 2 == 1 else (k // 2 + m, k // 2 + 1)
+    if k == m - 3:
+        return 2 * m - 1, m - 1
+    if k == m - 2:
+        return 0, m - 1
+    if k == m - 1:
+        return m + m // 2, m // 2
+    if k <= m + m // 2 - 3:
+        return k + m // 2 + 1, m // 2
+    if k == m + m // 2 - 2:
+        return k + 1, m
+    if k <= 2 * m - 3:
+        return 2 * k + 3 - 3 * m, 2 * m - 2 - k
+    if k == 2 * m - 2:
+        return m - 2, 1
+    return m - 1, 1
+
+
+def core3free_iota(m, c, t):
+    h = m // 2
+    if c == 0:
+        return t if t <= h - 2 else 2 * m - 1
+    if c == 1:
+        return t if t <= 1 else m + 2 * t
+    return 2 * t if t <= h - 2 else 2 * m - 1
+
+
+def core3free(m, verbose=True):
+    assert m % 2 == 0 and m >= 4 and m % 3 != 0
+    P, Q, S = canonical_seam(m)
+    P, Q, S = set(P), set(Q), set(S)
+    actives = [P | Q, P | S, Q | S]
+    drifts = [(1, 1), (m - 2, 1), (1, m - 2)]
+    sps = seam_points(m)
+    allok = True
+    for c in range(3):
+        act, u, sp = actives[c], drifts[c], sps[c]
+        rank = {sp(k): k for k in range(2 * m)}
+        assert len(rank) == 2 * m and set(rank) == act
+        sig, ln = [], []
+        for k in range(2 * m):
+            x, y = sp((k + 1) % (2 * m))
+            cur = ((x + u[0]) % m, (y + u[1]) % m)
+            j = 0
+            while cur not in act:
+                cur = ((cur[0] + u[0]) % m, (cur[1] + u[1]) % m)
+                j += 1
+            sig.append(rank[cur])
+            ln.append(j + 1)
+        # single 2m-cycle?
+        seen, curk = set(), 0
+        for _ in range(2 * m):
+            seen.add(curk)
+            curk = sig[curk]
+        single = len(seen) == 2 * m and curk == 0
+        # closed forms (general regime m >= 8)
+        closed_ok = m < 8 or all(
+            (sig[k], ln[k]) == core3free_sigma_closed(m, c, k)
+            for k in range(2 * m))
+        # level-2 splice: sigma^4 o iota = iota o (+3) on Z/(m/2)
+        h = m // 2
+        lvl2_ok = True
+        if m >= 8:
+            for t in range(h):
+                k = core3free_iota(m, c, t)
+                for _ in range(4):
+                    k = sig[k]
+                if k != core3free_iota(m, c, (t + 3) % h):
+                    lvl2_ok = False
+        if verbose:
+            print(f"m={m} c={c}: sum(len)={sum(ln)} (m^2={m * m}) "
+                  f"sigma single 2m-cycle: {single}  closed forms: "
+                  f"{'ok' if closed_ok else 'MISMATCH'}  level-2 (+3): "
+                  f"{'ok' if lvl2_ok else 'FAIL'}")
+            print(f"  sigma: {sig}")
+            print(f"  len  : {ln}")
+        allok = allok and single and closed_ok and lvl2_ok and \
+            sum(ln) == m * m
+    if m == 4 and verbose:
+        # the m = 4 finite certificate: full G_c orbit ranks (index 4x+y)
+        for c in range(3):
+            act, u = actives[c], drifts[c]
+            wild = {w: ({**{p: (1, 0, 2) for p in P},
+                         **{q: (2, 1, 0) for q in Q},
+                         **{s: (0, 2, 1) for s in S}}.get(w, (0, 1, 2)))
+                    for w in states(m)}
+            G = {}
+            for w in states(m):
+                d = wild[w][c]
+                e, eb = EV[d], EV[c]
+                rw = ((w[0] + e[0] - eb[0]) % m, (w[1] + e[1] - eb[1]) % m)
+                G[w] = ((rw[0] + u[0]) % m, (rw[1] + u[1]) % m)
+            rk, cur = {}, (0, 0)
+            for i in range(m * m):
+                rk[cur] = i
+                cur = G[cur]
+            assert cur == (0, 0) and len(rk) == m * m
+            print(f"  m=4 c={c} orbit rank (index 4x+y): "
+                  f"{[rk[(x, y)] for x in range(4) for y in range(4)]}")
+    return allok
+
+
+def core3free_scan(mmax):
+    allok = True
+    for m in range(4, mmax + 1, 2):
+        if m % 3 == 0:
+            continue
+        ok = core3free(m, verbose=False)
+        print(f"m={m}: {'OK' if ok else 'FAIL'} "
+              "(sigma single cycle, closed forms, level-2 splice)")
+        allok = allok and ok
+    return allok
+
+
 # ---------------------------------------------------------------------------
 
 
@@ -597,6 +817,12 @@ def main():
     p = sub.add_parser("construct-scan")
     p.add_argument("--mmax", type=int, default=24)
 
+    p = sub.add_parser("core3free")
+    p.add_argument("--m", type=int, required=True)
+
+    p = sub.add_parser("core3free-scan")
+    p.add_argument("--mmax", type=int, default=34)
+
     args = ap.parse_args()
     if args.cmd == "verify":
         layers, m = load_cert(args.cert)
@@ -618,6 +844,11 @@ def main():
     elif args.cmd == "construct":
         ok = construct(args.m, out=args.out, quiet=args.quiet)
         sys.exit(0 if ok else 1)
+    elif args.cmd == "core3free":
+        ok = core3free(args.m)
+        sys.exit(0 if ok else 1)
+    elif args.cmd == "core3free-scan":
+        sys.exit(0 if core3free_scan(args.mmax) else 1)
     elif args.cmd == "construct-scan":
         allok = True
         for m in range(4, args.mmax + 1, 2):
