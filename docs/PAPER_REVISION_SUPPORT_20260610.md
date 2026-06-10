@@ -93,3 +93,20 @@ finite-audit 소스 기준) / 상태 / 기계 검증 anchor / 개정 방향 제�
    필요 시 인터페이스 조정 (현 홀 모양은 메커니즘-중립이라 대부분 무변경 예상).
 3. audit 문서들의 paper line 참조 갱신.
 4. 신규/변경 수치 표가 있으면 값 단위 재대조.
+
+## 추가 (2026-06-10 저녁, anchor 재구성 완결에서 나온 §6/§8 정밀화 항목)
+
+재구성 스크립트가 D5 fan(m=6/8/10/12)·D7 two-rail(m=8/10)의 RF1/2/3 전면
+통과를 달성하며 확정한 산문 정밀화 2건 (기계 반례 포함):
+
+- **B4. support forest의 label 독해는 slot**: chronological 독해는 RF2를
+  깨뜨림(기계 반례: m=6, height 1, color 1). §8/부록 표 캡션에 명시 필요.
+- **B5. terminal 블록 layer 표는 공유-점 ω 평가**: 세 carrier 색이 같은
+  점에서 ω를 읽어야 pointwise Latin (per-color η 평가는 m=6에서 12개
+  비-Latin 점 발생 — η는 collapsed-return 분석 전용임을 §6에 명시).
+  cf. Lean의 `terminalDir_m4_plainChartNot_rowLatin`(같은 함정의 D3 판).
+- placement 자유도: RF3는 carrier slot 배정 6종·word offset m²종 전부에
+  불변(1296/1296) — κ/row-band 값은 분리·reserve 절에서만 load-bearing.
+  D7 stage-5 행은 chronological (0,2,3)|(1,6),(4,5)로 확정.
+- 동반 자료: `scripts/anchor_certs/` (D5_m6/m8, D7_m8 seed + 검증 출력,
+  rank7 규약 + affine-base 확장) — 개정판 동반 패키지에 병합 권장.

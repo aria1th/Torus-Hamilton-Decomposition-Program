@@ -118,17 +118,28 @@ parity-correct mixed tower (one odd line layer per color at the last stage).
 This is the same phenomenon as WILDE_SEARCH §1's parity calculus for H1b —
 now identified as load-bearing for the anchors too.
 
-**Honest status of the numeric reconstruction.** RF1/RF2/forests/budget all
-verify; RF3 did not yet close because the simplified model omits (i) the
-rank-countdown support tower with per-color contracted-fiber freedom and
-(ii) the terminal-A2 block realization of the final triple. Randomized search
-over the simplified families is structurally blocked by parity (now
-understood), not by an exact-criterion wall. **Gate before G6 Lean work:
-finish the reconstruction with (i)+(ii) integrated** — this is mechanical now
-that the two missing mechanisms are identified, but it is unfinished, and the
-project rule (precise negative > wishful design) requires saying so: the
-anchor RF3 realization is the one place where the printed ledger's point
-semantics have not yet been machine-replayed end to end.
+**Honest status of the numeric reconstruction.** ~~RF3 did not yet close~~
+**RESOLVED (2026-06-10, same day): RF3 PASSES end to end.** Integrating
+(i) the rank-countdown support tower (splice row of component `P` at stage
+`r` substituted on the affine coset `base + ⟨α_e : e ∈ M_{r,P}⟩` of rank
+`D−r−1`, support forests read in SLOT labels, exterior fibers per the κ
+dictionary) and (ii) the terminal-A2 block (ω_m of
+`subtex/terminal_A2_block.tex` on a rank-2 affine block over the carrier
+slots, all three carrier colors reading the word at the SAME point — the
+per-color η-offset of the F_i analysis is return-level only, it is not
+pointwise row-Latin) gives, at the CANONICAL all-zero placement with no
+search: D5 anchor m=6 and m=8 (also 10, 12) and D7 anchor m=8 (also 10):
+RF1+RF2+RF3 PASS, every color a single m^{D−1}-cycle, with the closing-column
+unit carry realized as an actual `+1` translation on each `K/⟨F_c⟩` (marked
+ledger). Both mechanisms are machine-confirmed load-bearing: dropping (ii)
+strands the carrier colors at exactly `m` cycles of length `m^{D−2}`;
+shrinking (i) to active-basis-only supports starves at ~150–176 cycles even
+with (ii). The verdict is insensitive to all carrier-slot assignments, all
+word offsets φ, and the full scanned band/pin family (1296/1296 at D5 m=6) —
+κ/row-band values matter for separation/reserve, not RF3. Certificates +
+JSON-only re-verification: `scripts/anchor_certs/` (script subcommands
+`--tower`, `--certs`, `--verify-certs`). **The G6 gate is open**; the
+placement reading above is the G6 witness-constant spec.
 
 ### 1.2 Four-point growth rows `σ_{s,δ} = (s a)(b c)` — grade: NEEDS-PROOF-BUT-FEASIBLE
 
@@ -208,6 +219,9 @@ anticipated.
 point-semantics reconstruction is unfinished (1.1, with the two missing
 mechanisms precisely identified and no exact-criterion violation anywhere).
 Module G6 is gated on closing it numerically first.
+*(Update 2026-06-10: the yellow flag is CLEARED — see the resolved status in
+1.1; the G6 numeric gate is open with certificates in
+`scripts/anchor_certs/`.)*
 
 ---
 

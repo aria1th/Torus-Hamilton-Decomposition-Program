@@ -1,0 +1,128 @@
+{
+  "D5_fan_m6": {
+    "ok": true,
+    "d": 5,
+    "m": 6,
+    "root_flat_size": 1296,
+    "rf1": true,
+    "rf2": true,
+    "rf3": true,
+    "return_cycle_lengths": [
+      [
+        1296
+      ],
+      [
+        1296
+      ],
+      [
+        1296
+      ],
+      [
+        1296
+      ],
+      [
+        1296
+      ]
+    ],
+    "params": {
+      "assign": [
+        3,
+        0,
+        1
+      ],
+      "eta": 0,
+      "phi": [
+        0,
+        0
+      ]
+    },
+    "seed_file": "D5_fan_m6_seed.json",
+    "sha256": "389edd5c09e668851b6f1fcefb01f1cf562f395649374f8a607a0af83f5376f0"
+  },
+  "D5_fan_m8": {
+    "ok": true,
+    "d": 5,
+    "m": 8,
+    "root_flat_size": 4096,
+    "rf1": true,
+    "rf2": true,
+    "rf3": true,
+    "return_cycle_lengths": [
+      [
+        4096
+      ],
+      [
+        4096
+      ],
+      [
+        4096
+      ],
+      [
+        4096
+      ],
+      [
+        4096
+      ]
+    ],
+    "params": {
+      "assign": [
+        3,
+        0,
+        1
+      ],
+      "eta": 0,
+      "phi": [
+        0,
+        0
+      ]
+    },
+    "seed_file": "D5_fan_m8_seed.json",
+    "sha256": "b6b3156d61efe48fbbd3401156d2289a83263b405ecbf12ca3b103f0724d09b2"
+  },
+  "D7_two_rail_m8": {
+    "ok": true,
+    "d": 7,
+    "m": 8,
+    "root_flat_size": 262144,
+    "rf1": true,
+    "rf2": true,
+    "rf3": true,
+    "return_cycle_lengths": [
+      [
+        262144
+      ],
+      [
+        262144
+      ],
+      [
+        262144
+      ],
+      [
+        262144
+      ],
+      [
+        262144
+      ],
+      [
+        262144
+      ],
+      [
+        262144
+      ]
+    ],
+    "params": {
+      "assign": [
+        5,
+        0,
+        1
+      ],
+      "eta": 0,
+      "phi": [
+        0,
+        0
+      ]
+    },
+    "seed_file": "D7_two_rail_m8_seed.json",
+    "sha256": "d7b854407dbef96923c40755ba8a61b88d3b97b1dc9727abf08fa0b015627103"
+  }
+}

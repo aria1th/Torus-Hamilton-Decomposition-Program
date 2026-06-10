@@ -50,6 +50,59 @@ STATUS (2026-06-10, see docs/GROWTH_ENGINE_DESIGN_20260610.md Part 1.1):
   Integrating (1)+(2) is the identified next step for a full RF3
   reconstruction; no exact-criterion (RF2) wall was found anywhere.
 
+RESOLVED (2026-06-10, v2 -- see the `--tower`/`--certs` subcommands):
+  Integrating (1)+(2) closes RF3.  Verdicts (deterministic, canonical
+  placement, no search needed):
+    * D5 terminal fan, m=6:  RF1+RF2+RF3 PASS, all five returns single
+      1296-cycles; realized unit carry +1 on K/<F_c> for every color.
+    * D5 terminal fan, m=8:  PASS (single 4096-cycles); also replayed at
+      m=10, 12 (uniform in m, as the paper claims).
+    * D7 two-rail anchor, m=8:  RF1+RF2+RF3 PASS, all seven returns
+      single 262144-cycles, realized unit carries +1; also replayed at
+      m=10 per color.
+  The working placement reading (the G6 spec):
+    (a) Rank-countdown supports.  The splice row of component P at stage
+        r is substituted (full shifted stage row on the affected colors)
+        on the affine coset  base_{r,P} + <alpha_e : e in M_{r,P}>  of
+        rank D-r-1, where M_{r,P} is the printed support forest read in
+        SLOT labels at that stage's height, and the exterior fibers of
+        the base point realize the kappa dictionary of
+        tab:anchor-affine-lift-dictionary (the omitted contracted
+        component of each affected color sits at level kappa_{r,P}; the
+        remaining row-band levels are free).  Substituting only the
+        active basis (no countdown) starves at ~150-176 cycles per
+        color even with the terminal block; the countdown is
+        load-bearing exactly as the parity calculus predicts.
+    (b) Terminal A2 block.  The final triple (t,0,1) is realized as the
+        pointwise word omega_m (subtex/terminal_A2_block.tex,
+        eq:terminal-word; encoding cross-checked against the printed
+        m=4 orbits) on the rank-2 affine block
+        Pi = x0 + <step(L0)-step(L2), step(L1)-step(L2)>, where
+        (L0,L1,L2) assigns block colors to the carrier slots; exterior
+        fibers of x0 pinned.  At a block point with word w, the carrier
+        color of block index i reads direction L_{w_i}.  All three
+        carrier colors must read omega at the SAME root-flat point
+        (their common triangle base); the per-color eta-offset
+        convention of the F_i analysis (word at x - a_i) reproduces the
+        same single-cycle returns but is NOT pointwise row-Latin (12
+        non-Latin points at m=6), so the layer table must use the
+        shared-point convention.  Without the block the carrier colors
+        plateau at exactly m cycles of length m^{D-2} (the H_{c,2}
+        levels), machine-confirming mechanism (2).
+  Robustness (recorded for paper section 8 precision): at D5 m=6 the
+  RF3 verdict is insensitive to all six carrier-slot assignments, all
+  m^2 word offsets phi, and the scanned band/pin placements -- the
+  kappa/row-band values are load-bearing for the separation and reserve
+  clauses, not for RF3 itself at these moduli.  The only genuine
+  prose ambiguity found (slot-vs-chronological labels for the support
+  forests) resolves to SLOT labels: chronological-label spans break the
+  active-basis containment, hence RF2.
+  Certificates: scripts/anchor_certs/*.json (rank7 root-flat seed
+  conventions + affine 'base' extension on supports; terminal block as
+  a point-major layer_override on the carrier colors), with
+  verification_output.json carrying cycle types and sha256; rebuild via
+  `--certs`, re-verify from JSON alone via `--verify-certs`.
+
 Stdlib only.
 """
 from __future__ import annotations
@@ -672,7 +725,7 @@ def d5_screen(m, verbose=True):
         return PRE, POST, base_term
     found = []
     tried = 0
-    for eta in (1, 0):
+    for eta in (0, 1):   # eta=0 (shared-point word) is the row-Latin reading
         for assign in assigns:
             prm0 = dict(base_prm, assign=assign, eta=eta)
             screen_colors = [c for c in anchor.carrier if c in (3, 4)]
@@ -685,10 +738,12 @@ def d5_screen(m, verbose=True):
                             tried += 1
                             tp = anchor.terminal_patch(prm)
                             ok = True
+                            ADD = anchor.ADD
                             for c in screen_colors:
                                 PRE, POST, bt = pp[c]
                                 patch = tp[c]
-                                R = [POST[patch_get(patch, v, bt)] for v in PRE]
+                                R = [POST[bt[v] if v not in patch else ADD[patch[v]][v]]
+                                     for v in PRE]
                                 if not anchor.single_cycle(R):
                                     ok = False
                                     break
@@ -721,25 +776,231 @@ def d5_screen(m, verbose=True):
         print(f'[D5 m={m}] screen exhausted ({tried} terminal placements), no RF3 candidate')
     return None
 
-def patch_get(patch, v, base):
-    w = patch.get(v)
-    return base[v] if w is None else w
-
 def fmt_prm(prm):
     return {k: v for k, v in sorted(prm.items()) if not callable(v)}
 
+# ------------------------------------------------------------ certificates
+
+def realized_unit_carries(cfg, m, dirs, iota):
+    """Marked-ledger check: the final one-isolate quotient K/<F_c> ~ Z/m is
+    coordinatized by lambda_c(x) = x_{iota_c} (the isolated label is avoided
+    by every forest edge).  The realized return must translate this quotient
+    coordinate by a constant unit +-1 -- the closing-column unit carry as
+    actual return cyclicity.  Returns {c: carry} or {c: None} on failure."""
+    d = cfg['d']; r = d - 1; K = m ** r
+    add_dir, _ = build_add_dirs(d, m)
+    out = {}
+    for c in range(d):
+        R = array('I', range(K))
+        for t in range(m):
+            dc = dirs[t][c]
+            for x in range(K):
+                R[x] = add_dir[dc[R[x]]][R[x]]
+        i = iota[c]
+        def lam(x):
+            co = dec(x, m, r)
+            return co[i] % m if i < r else (-sum(co)) % m
+        carries = {(lam(R[x]) - lam(x)) % m for x in range(K)}
+        if len(carries) == 1:
+            v = carries.pop()
+            out[c] = v if v in (1, m - 1) else None
+        else:
+            out[c] = None
+    return out
+
+CANONICAL_PRM = dict(eta=0, phi=(0, 0))   # all bands/pins 0; assign = (t,0,1)
+
+def canonical_params(cfg):
+    return dict(CANONICAL_PRM, assign=tuple(cfg['terminal']['slots']))
+
+def make_seed(cfg, m, prm):
+    """JSON seed in the conventions of even_modulus_rewrite_20260610/
+    certificates (verify_rank7_rootflat_certificates.py), with one format
+    extension: each support carries an affine 'base' point.  The terminal
+    A2 block ships both structurally ('terminal_block') and as a standard
+    point-major zlib+base64 layer override on the carrier colors."""
+    import base64, zlib
+    d = cfg['d']
+    anchor = TowerAnchor(cfg, m)
+    dirs = anchor.build_dirs(prm)
+    stages = []
+    for st_idx, st in enumerate(cfg['shifted_rows']):
+        s = cfg['stage_shifts'][st_idx]
+        # chronological row permutation T_r (verifier reads dirs as (T[c]+shift)%d)
+        T = [(anchor.sigmas[st_idx][(c + s) % d] - s) % d for c in range(d)]
+        sups = []
+        for comp in cfg['comps']:
+            if comp['stage'] != st_idx:
+                continue
+            base = [a % m for a in comp['base'](prm, m)]
+            sups.append(dict(colors=list(comp['colors']),
+                             basis=[alpha_vec(d, i, j) for (i, j) in comp['M']],
+                             base=base,
+                             support_forest=[list(e) for e in comp['M']]))
+        stages.append(dict(layer=st_idx, shift=s, sigma=T, supports=sups))
+    K = anchor.K
+    carrier = sorted(anchor.carrier)
+    raw = bytearray()
+    for x in range(K):
+        for c in carrier:
+            raw.append(dirs[anchor.theight][c][x])
+    ts = cfg['terminal']
+    L = prm.get('assign', tuple(ts['slots']))
+    seed = dict(
+        d=d, m=m,
+        status='reconstructed high-even anchor schedule (RF1+RF2+RF3 verified)',
+        certificate_type='high_even_anchor_tower_terminalA2',
+        format_note=('rank7 root-flat seed conventions; extension: supports are affine '
+                     '(field "base"); the terminal triple is realized by the omega_m '
+                     'terminal A2 block (subtex/terminal_A2_block.tex) on the carrier '
+                     'colors, shipped as the layer_overrides entry below'),
+        layer_shifts=anchor.layer_shifts,
+        stages=stages,
+        layer_overrides=[dict(layer=anchor.theight, colors=carrier,
+                              encoding='zlib+base64', order='point-major',
+                              data=base64.b64encode(zlib.compress(bytes(raw), 9)).decode())],
+        terminal_block=dict(slots=list(ts['slots']),
+                            assign=list(L),
+                            plane_base=[a % m for a in ts['base'](prm, m)],
+                            v1=alpha_vec(d, L[2], L[0]),
+                            v2=alpha_vec(d, L[2], L[1]),
+                            phi=list(prm.get('phi', (0, 0))),
+                            eta_convention=prm.get('eta', 0),
+                            word='omega_m of terminal_A2_block.tex eq:terminal-word'),
+        params={k: list(v) if isinstance(v, tuple) else v for k, v in fmt_prm(prm).items()},
+    )
+    return seed, dirs
+
+def reconstruct_seed(seed):
+    """Reconstruct dirs from a seed JSON alone (affine-support extension of
+    the rank7 verifier's reconstruct_rootflat)."""
+    import base64, zlib
+    d = int(seed['d']); m = int(seed['m']); r = d - 1; K = m ** r
+    layer_shifts = seed['layer_shifts']
+    dirs = [[bytearray([(c + s) % d]) * K for c in range(d)] for s in layer_shifts]
+    for st in seed['stages']:
+        layer = int(st['layer']); shift = int(st['shift']); sig = st['sigma']
+        for sup in st.get('supports', []):
+            offs = span_offsets(sup['basis'], m, r)
+            base = sup.get('base', [0] * r)
+            for off in offs:
+                x = enc([(a + b) % m for a, b in zip(off, base)], m)
+                for c in sup['colors']:
+                    dirs[layer][c][x] = (sig[c] + shift) % d
+    for ov in seed.get('layer_overrides', []):
+        layer = int(ov['layer']); colors = [int(c) for c in ov['colors']]
+        raw = zlib.decompress(base64.b64decode(ov['data']))
+        assert len(raw) == K * len(colors)
+        pos = 0
+        for x in range(K):
+            for c in colors:
+                dirs[layer][c][x] = raw[pos]; pos += 1
+    return dirs
+
+def run_tower_case(name, cfg, m, prm=None):
+    import hashlib
+    prm = prm or canonical_params(cfg)
+    print(f'[{name} m={m}] tower+terminal reconstruction, params={fmt_prm(prm)}')
+    seed, dirs = make_seed(cfg, m, prm)
+    # round-trip: dirs reconstructed from the JSON alone must agree
+    dirs2 = reconstruct_seed(seed)
+    rt = all(dirs[t][c] == dirs2[t][c] for t in range(m) for c in range(cfg['d']))
+    res = verify(cfg['d'], m, dirs2)
+    iota = D5_IOTA if cfg['d'] == 5 else D7_IOTA
+    okb, rep = closing_budget(cfg['d'], m, cfg['shifted_rows'],
+                              cfg['missing'] + [0] * (m - len(cfg['stage_shifts']) - len(cfg['missing'])),
+                              iota)
+    res['closing_budget_unit'] = okb
+    res['closing_budget'] = rep
+    carries = realized_unit_carries(cfg, m, dirs2, iota)
+    res['realized_unit_carries'] = carries
+    print(f'  closing-column ledger (iota class, crossings): {rep}  unit-ok={okb}')
+    print(f'  realized unit carries on K/<F_c> (must be +-1 units): {carries}')
+    print(f'  seed round-trip={rt}  RF1={res.get("rf1")} RF2={res.get("rf2")} RF3={res.get("rf3")}')
+    print(f'  return cycle lengths: {res.get("lens")}')
+    ok = rt and res.get('rf1') and res.get('rf2') and res.get('rf3')
+    return ok, seed, res
+
+def write_certs(with_d7=True):
+    import hashlib, os
+    here = __file__.rsplit('/', 1)[0]
+    outdir = here + '/anchor_certs'
+    os.makedirs(outdir, exist_ok=True)
+    cases = [('D5_fan', D5_TOWER, 6), ('D5_fan', D5_TOWER, 8)]
+    if with_d7:
+        cases.append(('D7_two_rail', D7_TOWER, 8))
+    report = {}
+    allok = True
+    for name, cfg, m in cases:
+        ok, seed, res = run_tower_case(name, cfg, m)
+        allok = allok and ok
+        fname = f'{name}_m{m}_seed.json'
+        path = f'{outdir}/{fname}'
+        with open(path, 'w') as f:
+            json.dump(seed, f, separators=(',', ':'))
+        sha = hashlib.sha256(open(path, 'rb').read()).hexdigest()
+        report[f'{name}_m{m}'] = dict(
+            ok=bool(ok), d=cfg['d'], m=m, root_flat_size=m ** (cfg['d'] - 1),
+            rf1=bool(res.get('rf1')), rf2=bool(res.get('rf2')), rf3=bool(res.get('rf3')),
+            return_cycle_lengths=res.get('lens'),
+            params=seed['params'], seed_file=fname, sha256=sha)
+        print(f'  wrote {path}  sha256={sha}')
+    with open(f'{outdir}/verification_output.json', 'w') as f:
+        json.dump(report, f, indent=2)
+    print(f'[certs] all ok = {allok}; report at {outdir}/verification_output.json')
+    return allok
+
+def verify_certs():
+    import hashlib, os
+    here = __file__.rsplit('/', 1)[0]
+    outdir = here + '/anchor_certs'
+    report = json.load(open(f'{outdir}/verification_output.json'))
+    allok = True
+    for key, rec in report.items():
+        path = f'{outdir}/{rec["seed_file"]}'
+        sha = hashlib.sha256(open(path, 'rb').read()).hexdigest()
+        seed = json.load(open(path))
+        dirs = reconstruct_seed(seed)
+        res = verify(seed['d'], seed['m'], dirs)
+        ok = (sha == rec['sha256'] and res.get('rf1') and res.get('rf2')
+              and res.get('rf3'))
+        allok = allok and ok
+        print(f'[{key}] sha-match={sha == rec["sha256"]} rf1={res.get("rf1")} '
+              f'rf2={res.get("rf2")} rf3={res.get("rf3")} lens={res.get("lens")}')
+    print(f'[verify-certs] all ok = {allok}')
+    return allok
+
+def tower_main(argv):
+    cases = [(D5_TOWER, 6), (D5_TOWER, 8)]
+    if '--d7' in argv:
+        cases.append((D7_TOWER, 8))
+    for cfg, m in cases:
+        name = 'D5-fan' if cfg['d'] == 5 else 'D7-two-rail'
+        run_tower_case(name, cfg, m)
+
 def main():
-    if '--legacy' in sys.argv or len(sys.argv) == 1:
+    argv = sys.argv[1:]
+    if not argv or '--legacy' in argv:
         legacy_main()
         return
-    if '--tower-d5' in sys.argv:
-        m = int(sys.argv[sys.argv.index('--tower-d5') + 1])
+    if '--tower' in argv:
+        tower_main(argv)
+        return
+    if '--certs' in argv:
+        ok = write_certs(with_d7='--no-d7' not in argv)
+        sys.exit(0 if ok else 1)
+    if '--verify-certs' in argv:
+        ok = verify_certs()
+        sys.exit(0 if ok else 1)
+    if '--screen-d5' in argv:
+        m = int(argv[argv.index('--screen-d5') + 1])
         out = d5_screen(m)
         if out:
             prm, res = out
             print(f'[D5 m={m}] RF1/RF2/RF3 PASS  params={fmt_prm(prm)}')
             print(f'  cycle lengths: {res["lens"]}')
         return
+    legacy_main()
 
 if __name__ == '__main__':
     main()
