@@ -1,0 +1,53 @@
+{
+ "m": 4,
+ "verdict": "FAIL",
+ "fails": [
+  "m=4 C1: new color 0 can reach a single-cycle alphabet under the two displayed row words (any supports)",
+  "m=4 C1: new color 1 likewise",
+  "m=4 C2: canonical shift transport is well defined (0 fallback points)",
+  "m=4 C2: RF2 of the transported child",
+  "m=4 C2: the two leaf returns are single K-cycles under the canonical transport"
+ ],
+ "records": [
+  {
+   "info": "C1: reachable head alphabet of new color 0: [0, 1, 2, 8]; of new color 1: [0, 1, 2, 8]"
+  },
+  {
+   "info": "C1: new color 0 can move x-coordinates [0] and leaves [0, 1]; new color 1 can move x-coordinates [0] and leaves [0, 1]"
+  },
+  {
+   "name": "m=4 C1: new color 0 can reach a single-cycle alphabet under the two displayed row words (any supports)",
+   "ok": false,
+   "detail": "invariant coordinates: x [1, 2, 3, 4, 5], leaves [] -> return is never a single cycle for ANY placement"
+  },
+  {
+   "name": "m=4 C1: new color 1 likewise",
+   "ok": false,
+   "detail": "invariant coordinates: x [1, 2, 3, 4, 5], leaves []"
+  },
+  {
+   "info": "C2 m=4: shift-rereading fallback points (Latin failure of the canonical transport): 7008 of 16384"
+  },
+  {
+   "name": "m=4 C2: canonical shift transport is well defined (0 fallback points)",
+   "ok": false,
+   "detail": "the wild base rows do not extend along the chart Z_7 -> Z_9 \\ {0,1}: no canonical re-realized skeleton exists over this base"
+  },
+  {
+   "name": "m=4 C2: RF2 of the transported child",
+   "ok": false,
+   "detail": "non-bijective (layer, child color) pairs: [(0, 0), (0, 1), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8)]..."
+  },
+  {
+   "info": "C2 m=4: child return cycle counts per color {0: 16004, 1: 19284, 2: 16, 3: 15528, 4: 15388, 5: 19156, 6: 21524, 7: 22424, 8: 21128}"
+  },
+  {
+   "name": "m=4 C2: the two leaf returns are single K-cycles under the canonical transport",
+   "ok": false,
+   "detail": "new color 0: 16004 cycles [(64, 4), (56, 4), (48, 8)]; new color 1: 19284 cycles [(132, 4), (68, 4), (64, 4)].  Structural cause: the transported reads are (z0,z1)-independent, so every return is a double translation skew over its x-part and its (z0,z1)-monodromy order divides m = 4; at least m = 4 cycles per color, for EVERY such transport"
+  },
+  {
+   "info": "C3: growth_step_replay --growth-step: under growthDir the two new-color returns have cycle type m x (K*m); --core-findings: 0/9576 same-layer m-letter role products, 0/28 dropped-letter words, 0/252 donated two-layer words single; donated-cycles parity identity refutes single-partner handovers."
+  }
+ ]
+}

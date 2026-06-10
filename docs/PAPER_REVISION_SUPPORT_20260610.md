@@ -37,6 +37,44 @@ finite-audit 소스 기준) / 상태 / 기계 검증 anchor / 개정 방향 제�
   `ENDPOint_REAUDIT_SANS_CH_20260610.md` §1a (파일명 대소문자 주의:
   `ENDPOINT_REAUDIT_SANS_CH_20260610.md`).
 
+### A3. chained 7→9 성장 단계 — 기반에서 기계 반증 (G5a 발견, 2026-06-10)
+
+- 위치: `subtex/high_even_growth.tex`(chained 인터페이스 전반,
+  `lem:growth-old-generator-invariant` chained 행,
+  `def:growth-midpoint-translate`), `subtex/high_even_chain_datum.tex`.
+- 내용: B6이 지목한 미검증 절을 두 독립 구현(메인 레포 Lean witness 재생 /
+  rewrite 레포 동반 검증기 G7 family)으로 검사한 결과, **chained 단계의 새 색
+  return이 실제 기반 (7,4)·(7,6) 위에서 단일순환이 될 수 없음**이 세 가지
+  독립 장애로 확정:
+  1. **알파벳 감금**: old 색이 old read를 유지하는 임의 배치에서, 표시된 두
+     행 단어 `(0 2)(7 5)`, `(1 2)(0 8)`의 닫힘은 `{0,1,2,8}` — 좌표
+     `e₁..e₅` 불변 ⟹ 모든 배치에서 ≥ m⁵ 순환.
+  2. **skeleton 수송 불능**: 단계가 전제하는 cyclic skeleton 재실현이 실제
+     wild 기반(pass38 pointwise certificate)에서는 정의 불능(m=4:
+     16384점 중 7008점 Latin-확장 불가) 또는 RF2 파괴(m=6).
+  3. **z-단조성 한계**: leaf 좌표를 읽지 않는 모든 child는 색마다 ≥ m 순환
+     (monodromy 차수 ≤ m < m²) — z-독립 수송 전면 배제.
+  또한 `def:growth-midpoint-translate`의 **문자 그대로의 midpoint 공식**은
+  인증된 phase에서도 방전 실패(양 기반·양 행) — Lean의 endpoint-collision
+  형식(GuideLocality)은 정합(centers가 window 전체를 회피, 방전이 자명).
+  공식 서술이 느슨한 지점.
+- 실패 모드는 W2와 동형: **증명이 실제 certificate(wild, skeleton 없음)를
+  반영하지 못함.** pass38에는 chained 단계가 없고(odd-low는 endpoint
+  successor 경로 = W2로 이미 절제), chained 단계는 pass16 계열 발명 —
+  따라서 현재 odd-low m∈{4,6}, 홀수 d≥9 범위의 두 역사적 경로가 모두 무효.
+  주정리의 무조건성이 이 범위에서 수선 전까지 미결.
+- 기계 anchor: 메인 레포 `scripts/check_oldgens_span.py`,
+  `check_oldgens_span_newcolor.py` + JSON(`oldgens_span_gate_summary.json`,
+  `oldgens_newcolor_replay_m{4,6}.json`); rewrite 레포
+  `certificates/scripts/check_hed_clauses.py` G7 family(78개 중 6 FAIL,
+  ledger-도출 𝒢⁻의 ±3 차이 line이 center 5로 (2,8)에 Θ=±1 투영; 7라벨
+  chart 식별 5040가지 전수 — 구제 식별 없음).
+- 개정 방향: (i) translate 규칙을 endpoint-collision 형식으로 재서술(문구
+  수정, 어느 경우든 필요); (ii) 새 색 행의 재구성 — 장애 분석이 요구 조건을
+  정확히 줌: **z-gated(leaf 좌표를 읽는) 단어 + 6개 old 좌표 전부를 움직이는
+  작용**. rail-seam 전례대로 제약 기반 탐색이 다음 관문(feasibility gate
+  선행).
+
 ## B. 재서술 필요 (메커니즘은 생존)
 
 ### B1. Reset 행 — 2-점이 아니라 m-점 직선
@@ -169,3 +207,8 @@ schedule + oldGens 리스트만으로는 구성 불가(≤m-글자 부분어 전
 `check_hed_clauses.py`도 (7,4)/(7,6) 기반에서 𝒢⁻_r 절을 검증하지 않음**
 (rows 10–15는 chart/carrier/사이트 분리만 확인). 개정 시: chain datum
 item 3의 검증 가능 형태를 명시하고 동반 검증기에 해당 검사를 추가할 것.
+
+**후속 (2026-06-10)**: 동반 검증기에 G7 family(old-generator span, 6개 절)
+추가 완료 — 기존 실측 54/54(문서의 "56/56"은 info 줄 2개 오산입)에서 78개로
+확장, **72 PASS / 6 FAIL**. FAIL은 검증기 버그가 아니라 진짜 발견 → A3으로
+승격. cert 파일에 chain_datum 블록 신설(원래 𝒢⁻_r 데이터 자체가 부재).

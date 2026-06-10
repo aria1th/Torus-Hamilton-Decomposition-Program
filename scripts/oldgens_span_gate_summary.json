@@ -1,0 +1,288 @@
+{
+ "verdict": "PASS",
+ "fails": 0,
+ "findings": [
+  "m=4 row0: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading) :: nonzero non-exempt landings (diff, center, landing, value): [(2, 8, (0, 7), -1), (7, 8, (7, 0), 1)]",
+  "m=4 row1: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading) :: nonzero non-exempt landings (diff, center, landing, value): [(1, 6, (2, 1), 1), (3, 5, (2, 8), 1), (6, 5, (8, 2), -1), (8, 6, (1, 2), -1)]",
+  "m=6 row0: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading) :: nonzero non-exempt landings (diff, center, landing, value): [(2, 8, (0, 7), -1), (7, 8, (7, 0), 1)]",
+  "m=6 row1: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading) :: nonzero non-exempt landings (diff, center, landing, value): [(1, 6, (2, 1), 1), (3, 5, (2, 8), 1), (6, 5, (8, 2), -1), (8, 6, (1, 2), -1)]"
+ ],
+ "records": [
+  {
+   "name": "row0.support == [s, s+d, s-d, s-2d] = [0, 2, 7, 5]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.leafLine == (s, s+d)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.quotientGen == (s-d, s-2d) (the raw quotient edge)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.cutVisible == quotientGen.fst",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.cutZeroSide == window old labels minus visible = [2, 5]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.boundary == {visible} + zeroSide",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.oldGens == SymmetricEndpointPairs(visible, zeroSide)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row0.boundary subset of support",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.support == [s, s+d, s-d, s-2d] = [1, 2, 0, 8]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.leafLine == (s, s+d)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1 raw local edge (s-d, s-2d) == (0, 8)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.quotientGen == (leafLine0.snd, s-2d) = (2, 8)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "triangular identity u_0 - u_8 = (u_0 - u_2) + (u_2 - u_8) in the child lattice Z^8",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.cutVisible == quotientGen.fst",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.cutZeroSide == window old labels minus visible = [8]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.boundary == {visible} + zeroSide",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.oldGens == SymmetricEndpointPairs(visible, zeroSide)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "row1.boundary subset of support",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "carrier {3,4,6} == old labels minus used row labels (used=[2, 5, 7, 8])",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "newLabels == (0, 1), oldLabel i -> i+2 covers Z9 minus {0,1}",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=4: old-incidence ledger has 42 oriented pairs, differences mod 9 present: [1, 2, 3, 4, 5, 6, 7, 8]"
+  },
+  {
+   "info": "m=4: ledger saturates all 42 ordered old-label pairs"
+  },
+  {
+   "info": "m=4 row0: rank H_in = 6, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+  },
+  {
+   "info": "m=4 row1: rank H_in = 6, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+  },
+  {
+   "name": "m=4 row0: phase boundary-avoiding G_(r,rho)=[8, 1, 3] disjoint from B_r=[2, 7, 5] (chainedHighEvenBoundaryAvoidingPhaseChoice_spec reading)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=4 row0: guide centers avoid the WHOLE window G_(r,rho)=[8, 1, 3] disjoint from A_r=[0, 2, 7, 5] (the stronger fact making the endpoint-translate test vacuous at the certified phases)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=4 row0: endpoint reading tested 0 in-window translates; zero-valued 0, leaf-exempt 0, offending 0"
+  },
+  {
+   "name": "m=4 row0: ENDPOINT-translate discharge: every tested old translate has zero cut value (earlier leaf lines exempt, lem:triangular-two-leaf) [vacuous: no in-window translate at the certified phase]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=4 row0: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading)",
+   "ok": false,
+   "detail": "nonzero non-exempt landings (diff, center, landing, value): [(2, 8, (0, 7), -1), (7, 8, (7, 0), 1)]",
+   "severity": "finding"
+  },
+  {
+   "name": "m=4 row0: cut normalisation Theta(e_0) = 0, Theta(g_0) = 1",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=4 row1: phase boundary-avoiding G_(r,rho)=[4, 5, 6] disjoint from B_r=[2, 8] (chainedHighEvenBoundaryAvoidingPhaseChoice_spec reading)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=4 row1: guide centers avoid the WHOLE window G_(r,rho)=[4, 5, 6] disjoint from A_r=[1, 2, 0, 8] (the stronger fact making the endpoint-translate test vacuous at the certified phases)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=4 row1: endpoint reading tested 0 in-window translates; zero-valued 0, leaf-exempt 0, offending 0"
+  },
+  {
+   "name": "m=4 row1: ENDPOINT-translate discharge: every tested old translate has zero cut value (earlier leaf lines exempt, lem:triangular-two-leaf) [vacuous: no in-window translate at the certified phase]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=4 row1: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading)",
+   "ok": false,
+   "detail": "nonzero non-exempt landings (diff, center, landing, value): [(1, 6, (2, 1), 1), (3, 5, (2, 8), 1), (6, 5, (8, 2), -1), (8, 6, (1, 2), -1)]",
+   "severity": "finding"
+  },
+  {
+   "name": "m=4 row1: triangular cut normalisation theta(s) = 0, Theta(g_1) = 1, raw edge (0,8) on the zero side",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=6: old-incidence ledger has 6 oriented pairs, differences mod 9 present: [1, 2, 3, 6, 7, 8]"
+  },
+  {
+   "info": "m=6: ledger does NOT saturate all 42 ordered old-label pairs"
+  },
+  {
+   "info": "m=6 row0: rank H_in = 2, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+  },
+  {
+   "info": "m=6 row1: rank H_in = 2, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+  },
+  {
+   "name": "m=6 row0: phase boundary-avoiding G_(r,rho)=[8, 1, 3] disjoint from B_r=[2, 7, 5] (chainedHighEvenBoundaryAvoidingPhaseChoice_spec reading)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=6 row0: guide centers avoid the WHOLE window G_(r,rho)=[8, 1, 3] disjoint from A_r=[0, 2, 7, 5] (the stronger fact making the endpoint-translate test vacuous at the certified phases)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=6 row0: endpoint reading tested 0 in-window translates; zero-valued 0, leaf-exempt 0, offending 0"
+  },
+  {
+   "name": "m=6 row0: ENDPOINT-translate discharge: every tested old translate has zero cut value (earlier leaf lines exempt, lem:triangular-two-leaf) [vacuous: no in-window translate at the certified phase]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=6 row0: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading)",
+   "ok": false,
+   "detail": "nonzero non-exempt landings (diff, center, landing, value): [(2, 8, (0, 7), -1), (7, 8, (7, 0), 1)]",
+   "severity": "finding"
+  },
+  {
+   "name": "m=6 row0: cut normalisation Theta(e_0) = 0, Theta(g_0) = 1",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=6 row1: phase boundary-avoiding G_(r,rho)=[4, 5, 6] disjoint from B_r=[2, 8] (chainedHighEvenBoundaryAvoidingPhaseChoice_spec reading)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=6 row1: guide centers avoid the WHOLE window G_(r,rho)=[4, 5, 6] disjoint from A_r=[1, 2, 0, 8] (the stronger fact making the endpoint-translate test vacuous at the certified phases)",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "info": "m=6 row1: endpoint reading tested 0 in-window translates; zero-valued 0, leaf-exempt 0, offending 0"
+  },
+  {
+   "name": "m=6 row1: ENDPOINT-translate discharge: every tested old translate has zero cut value (earlier leaf lines exempt, lem:triangular-two-leaf) [vacuous: no in-window translate at the certified phase]",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  },
+  {
+   "name": "m=6 row1: MIDPOINT-translate discharge (literal def:growth-midpoint-translate reading)",
+   "ok": false,
+   "detail": "nonzero non-exempt landings (diff, center, landing, value): [(1, 6, (2, 1), 1), (3, 5, (2, 8), 1), (6, 5, (8, 2), -1), (8, 6, (1, 2), -1)]",
+   "severity": "finding"
+  },
+  {
+   "name": "m=6 row1: triangular cut normalisation theta(s) = 0, Theta(g_1) = 1, raw edge (0,8) on the zero side",
+   "ok": true,
+   "detail": "",
+   "severity": "gate"
+  }
+ ]
+}
