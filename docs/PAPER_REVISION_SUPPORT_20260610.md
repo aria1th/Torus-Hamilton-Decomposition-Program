@@ -81,6 +81,43 @@ finite-audit 소스 기준) / 상태 / 기계 검증 anchor / 개정 방향 제�
   `docs/GROWTH_REPAIR_GATE_20260610.md`. 개정 시 chained 단계는 국소
   수선이 아니라 old-색 재배선을 동반한 재설계가 필요.
 
+### A4. 외부 리뷰 resp_1 통합 (2026-06-11) — 사람 증명 완료분 + C_r 공식
+
+`docs/REVIEW_RESP1_20260611.md` (원본 `/data/angel/repos/etc/resp_1.md`).
+오케스트레이터가 핵심 보조정리 재검산 완료 — 전부 정확.
+
+1. **사람 증명 완료 (무조건 정리로 승격)**: parity ledger 정리(2색
+   exchange의 부호 보존 — A가 h=f⁻¹g-궤도 합집합이어야 RF2-legal,
+   f_A=f∘ψ_A, g_A=g∘ψ_A⁻¹; ledger 등식 Π_t N_t = Π_c sgn R_c = (−1)^d)와
+   budget 포화 정리(L1을 잔차 논리로 — 전수조사보다 강함; L2 prefix
+   전단사; L3; kill). 브리핑 목표 1·2 닫힘.
+2. **midpoint 실패의 올바른 일반형 (브리핑 목표 5의 답)**: 피해야 할
+   집합은 endpoint boundary B_r이 아니라 **midpoint collision set**
+   `C_r = {(a+b)/2 : a,b ∈ W_r, ϑ(a) ≠ ϑ(b)}`. 정리:
+   `G_{r,ρ} ∩ C_r = ∅ ⟹ Θ(H⁻_r) = 0` (한 줄 대우 증명: 비영 사영이면
+   endpoint 쌍이 cut 양쪽, 그 midpoint가 guide center). **산술 검증
+   완료**: row 1 C_r(old)={0,6}, literal 추가 8 — ρ=1의 G={8,1,3}이
+   old는 통과·literal은 실패(G5a 판독과 일치); row 2 C_r={5}=(2+8)/2,
+   boundary-avoiding이 강제한 ρ∈{4,5,6}이 전부 5를 포함(검증기 판독과
+   일치). 즉 두 검사 갈래의 판독 차이가 완전히 화해됨. **단, C_r 수정은
+   ordinary 인터페이스 서술용이고 chained 단계를 살리지 못함**(budget
+   정리가 우선).
+3. **leaf 병목의 정확한 형태**: skew product (x,z)↦(Tx, A_x z)에서 base
+   일주 holonomy가 (Z/m)² 위에서 m²-primitive여야 하는데 **순수
+   translation은 order ≤ m** ⟹ carry/snake/rail-seam류 비선형 조각이
+   구조적으로 필수. annealer 바닥(15, 7)은 parity가 아니라 holonomy
+   orbit index일 가능성 — 진단 항목 5종(§4.4) 제시됨.
+4. **감사 판정**: 주정리는 현재 **조건부**. 닫힌 범위 d_odd ∈ {1,3,5,7};
+   미결 core는 "홀수 9차원을 여는 첫 성장 단계" 하나로 압축. 무조건화
+   산출물 A(conjugate 수선 정리)/B(일양 HED(9,m) family — 유한 m=4,6으로
+   부족)/C(rail-seam 고차원화).
+5. **원고 권고**: 삭제/강등 — prop:chained-two-hole 증명,
+   endpoint-boundary discharge, HED(7,4/6) growth-usable 무조건 주장,
+   final induction의 m∈{4,6}·d≥9 closure, chained 의존 odd high-even
+   closure. 유지 — root-flat 기준, D3 base, phase doubling, D5
+   anchor/reset, D7 pointwise certificates. 신설 — parity ledger 절,
+   budget kill 절, C_r 보정 보조정리, G7 실패의 정직한 부록.
+
 ## B. 재서술 필요 (메커니즘은 생존)
 
 ### B1. Reset 행 — 2-점이 아니라 m-점 직선
