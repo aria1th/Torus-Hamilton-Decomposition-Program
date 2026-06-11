@@ -2659,5 +2659,196 @@
    },
    "fleet_size_observed": 181
   }
+ },
+ "cpp_phase": {
+  "validation": {
+   "date": "2026-06-11",
+   "binary": "scripts/fast_growth_conjugate_seam_search (g++ -O2, stdlib only)",
+   "base_dump": "scripts/dump_growth_conjugate_base.py -> growth_conjugate_base_m{4,6}.bin",
+   "checked_plans": [
+    "s1010",
+    "s2222",
+    "s3333",
+    "s4242",
+    "polish4242"
+   ],
+   "result": "byte-exact agreement with a fresh Python Engine.evaluate on all 5 plans: identical ncyc vectors, signs, skipped counts (incl. skipped=13 and skipped=1 cases) and E at leaf-weight 1",
+   "python_reference": "/tmp/gcv/python_eval.txt vs /tmp/gcv/cpp_eval.txt"
+  },
+  "fleet": {
+   "note": "in progress",
+   "procs": "180 C++ annealers from launch (96+84), later +polish/basin swarms; parallel v2 fleet (derivative binary by co-agent) joined",
+   "per_proc_speed": "median 162 evals/s under full load (Python: ~13 evals/s/proc)",
+   "progress_snapshots": [
+    {
+     "t": "+10min",
+     "E_floor": 66
+    },
+    {
+     "t": "+35min",
+     "E_floor": 60
+    },
+    {
+     "t": "+55min",
+     "E_floor": 42
+    },
+    {
+     "t": "+75min",
+     "E_floor": 30
+    },
+    {
+     "t": "+95min",
+     "E_floor": 24
+    },
+    {
+     "t": "+115min",
+     "E_floor": 12
+    },
+    {
+     "t": "+135min",
+     "E_floor": 6,
+     "ncyc_best": [
+      1,
+      1,
+      1,
+      3,
+      1,
+      1,
+      1,
+      5,
+      1
+     ]
+    },
+    {
+     "t": "+200min",
+     "E_floor": 6,
+     "ncyc_best": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      7,
+      1
+     ],
+     "note": "eight singles; nu0=7 resists; 2-opt local minimum certified by deterministic polish (4059-single-move catalog, 80-deep pairs)"
+    }
+   ]
+  },
+  "leaf_floor_observations": {
+   "python_era": {
+    "nu0_min": 15,
+    "nu1_min": 11
+   },
+   "cpp_phase": "floors collapsed steadily: nu0 and nu1 BOTH reached 1 (simultaneously, with all-old-single companions in neighboring plans); no constant in-family leaf floor exists",
+   "two_opt_local_minima": [
+    [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     7,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     3
+    ],
+    [
+     1,
+     1,
+     1,
+     3,
+     1,
+     1,
+     1,
+     5,
+     1
+    ],
+    [
+     1,
+     1,
+     3,
+     3,
+     1,
+     1,
+     5,
+     1,
+     3
+    ]
+   ]
+  },
+  "frontier_20260611_0630": {
+   "best_plans": {
+    "cpp_zf1088 (tau_s=2)": {
+     "E_lw1": 6,
+     "ncyc": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      7,
+      1
+     ]
+    },
+    "cpp_zf1089 (tau_s=3)": {
+     "E_lw1": 6,
+     "ncyc": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      3,
+      3
+     ]
+    },
+    "cpp_f1060  (tau_s=1)": {
+     "E_lw1": 6,
+     "ncyc": [
+      1,
+      1,
+      1,
+      3,
+      1,
+      1,
+      1,
+      5,
+      1
+     ]
+    }
+   },
+   "two_opt_certificates": "deterministic --polish mode: no single move out of ~4100-4600 (all donation re-offsets/drops/densifies, fresh orbit adds at active (t,c), one old-old trade per closure class, wild lay/sigma/site variants, line re-sites, sampled stairs) improves E=6; 80-deep pair lookahead also fails on 4 basins (200-deep pending)",
+   "nu0_structure_zf1088": {
+    "cycle_lengths": [
+     65098,
+     346,
+     65,
+     13,
+     6,
+     4,
+     4
+    ],
+    "note": "one giant cycle covering 99.3% of the 65536 states, all 4096 x-columns, all z0/z1 classes; six parasite cycles confined to 3-266 x-columns each, also spanning all z classes -> NO confinement/congruence invariant visible; the obstruction is combinatorial splicing, not an in-family conservation law"
+   },
+   "leaf_floor_verdict": "nu0 and nu1 both reached 1 (also simultaneously); the Python-era floors (15/11) were compute artifacts, not invariants"
+  }
  }
 }

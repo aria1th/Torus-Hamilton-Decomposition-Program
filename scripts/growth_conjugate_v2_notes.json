@@ -1,0 +1,58 @@
+{
+ "date": "2026-06-11",
+ "context": "v2 of the C++ conjugate 7->9 growth-repair seam annealer (m=4); design-route guidance from growth_seam_design_ledger_m4.json wired into the move generator",
+ "source": "scripts/fast_growth_conjugate_seam_search_v2.cpp (copy of v1; v1 untouched)",
+ "build": "g++ -O2 -o fast_growth_conjugate_seam_search_v2 fast_growth_conjugate_seam_search_v2.cpp",
+ "v2_features": {
+  "G3_parity_early_reject": "per-(layer,color) permutation signs cached by row hash; sign(return_c) = prod_t sign(L_{t,c}) is exact, so parity penalty (3000/+1 sign) + 400*skipped lower-bounds the proposal energy before any compose-count; Metropolis draw shared between bound test and full test (statistically identical acceptance); predicted signs cross-checked against the evaluator on every full eval (signmis counter)",
+  "G2_keep_coverage_repair": "move post-condition repair pass: donation cell conflicts re-offset to free storeys (or dropped), stairs moved off donated columns, gated donor keep-coverage (every (z0,z1) storey of every donated column keeps >= 1 ungated movable layer for its donor color) repaired by dropping an offending donation",
+  "G1_color_purity_bias": "new donations prefer the target leaf's dominant donated color (p=0.7); deletions prefer minority colors (p=0.6) - ledger T2b: full mixed-color leaf words are never single",
+  "M_leaf_merge_move": "with prob --merge-prob (default 0.10): build current plan, label the worst leaf's return cycles, take the PARASITE columns (x-support of the non-giant cycles) as the candidate set and enumerate stairs (t != tau_s, x in parasite cols, all b) whose m gated cells straddle >= 2 distinct return cycles (cell i at stage t is on the cycle of its forward image through layers t..m-1); propose a PAIR of such boundary stairs (one stair flips the sign of both leaf returns - the v1 parity-pair rule - so lone stairs are parity-dead, measured 0/726 accepted; with only one boundary stair found, compensate by deleting an existing stair or adding a random one)"
+ },
+ "lessons_machine_checked": {
+  "stair_parity": "a single leaf stair flips sign of BOTH leaf returns: merge proposals must come in parity pairs (counter evidence: merges=0/726 then 0/50211 accepted before the pair fix; sign probe on the E=6 plan: every single block stair gives leaf7 5->4, leaf8 1->2, dE=0 but +6000 parity)",
+  "static_keep_coverage_too_strict": "the per-(z0,z1)-storey static gated keep-coverage test is NOT a necessary condition - fiber coordinates evolve through the layer word, so statically fully-gated storeys can still be traversed; the clean E=6 plan violates the static test on 3 columns (deleting them exploded E to 1898); pass 3 now enforces only the safe condition: column dead iff EVERY movable layer carries a full gate mask on one axis",
+  "uniform_x_scan_useless": "boundary stairs live on a handful of parasite columns (4 of 4096 at the E=6 state); uniform-x candidate scans found one in ~7 percent of attempts, the parasite-column enumeration finds all of them deterministically"
+ },
+ "plan_format": "UNCHANGED from v1 (donations/stairs/wilds/lines/oswaps + cross0/cross1 + tau_s); hit path scripts/growth_conjugate_hit_m4.json, atomic write, cache-free re-verify before writing - copied verbatim from v1",
+ "validation": {
+  "method": "--check-plan on saved best plans (snapshots in /tmp/gcv/v2val_*.json + the 149-donation E(lw1)=6 frontier plan), v1 vs v2 binary, diff of full stdout",
+  "result": "BYTE-EQUAL on all 8 (E(lw1), ncyc, signs, skipped identical, including one skipped=1 plan and the 149-don plan)",
+  "plans": ["cpp_f1060 E34", "cpp_f1078 E30", "cpp_f1124 E34", "cpp_rpolish808 E48", "cpp_rs5252 E38", "polish4242 E478 skipped=1", "s808 E72", "seed_e6_frozen E6"],
+  "resume_check": "v2 --anneal --resume of E(lw1)=30/34/6 snapshots re-evaluates to the same E with skipped=0 after the G2 repair pass (repair is a no-op on clean plans)",
+  "perf_fix": "first repairPlan draft used hash sets and collapsed to ~8 it/s on 149-donation plans; rewritten with flat claim-bitmap / storey-mask scratch + free-layer prefilter; timed 5000-iter pairs on the 149-don E=6 seed under full machine load: full-v2 39s = v1-equivalent (--no-repair --merge-prob 0 --no-early-reject) 39s, i.e. ~128 it/s, feature cost fully offset by parity early-rejects",
+  "sign_mismatch_counter": "watched via signmis= in every progress line; alarm monitor armed; 0 observed"
+ },
+ "fleet_reconfig": {
+  "v1_before": 180,
+  "v1_killed": 74,
+  "kill_rule": "stored best-file E > 100 AND fresh E(lw1) > 72 AND tag not in {rs808, rs5252, rs4141}; kill list /tmp/gcv/v2_kill.txt, E(lw1) ranking /tmp/gcv/v2_elw1.txt",
+  "v1_survivors": 106,
+  "v2_launched": 85,
+  "v2_config": "54 resume runs (top-18 plans E(lw1)=34..48, 3 configs each: lw/merge-prob (1,0.10),(4,0.15),(2,0.05)) + 31 fresh (lw mix 1/4/2/8, merge-prob 0.05..0.20, tau rotation); 1.5M iters x 3 restarts; seeds 20001..20054, 21001..21031",
+  "launcher": "/tmp/gcv/launch_fleet_v2.sh",
+  "logs": "/tmp/fastseam2_*.log",
+  "resume_seeds": "/tmp/gcv/resume2/*.json (frozen snapshots)"
+ },
+ "baseline_at_launch": "global best E(lw1)=34 (f1060/f1102/f1124) at v2 launch (02:36), down from 42 at task start; while v2 was being validated the surviving v1 fleet (helped by the 74 freed cores) collapsed the frontier 34->30->20->12->6; a collaborator agent dropped the E=6 plan into /tmp/gcv/resume2/f1060e6.json (149 donations, new plan generation)",
+ "fleet_v2b_relaunch": "after the repair-pass perf fix the v2 fleet was relaunched (03:17) as 85 procs seeded from the frozen E(lw1)=6..20 frontier (/tmp/gcv/resume3: f1060 E6, f1074 E12, f1050 E14, f1078/f1143 E16, f1022/f1033/f1062/f1124 E18, f1007/f1044/f1102 E20; 5 configs each: lw/merge-prob (1,.10),(4,.15),(2,.05),(1,.25),(8,.10)) + 25 fresh; tags v2w*/v2g*, launcher /tmp/gcv/launch_fleet_v2b.sh, 1.5M iters x 3 restarts",
+ "best_trajectory_v2": {
+  "global_E_lw1": "72 -> 58 -> 54 -> 48 -> 42 (task start) -> 34 (v2 launch) -> 30 -> 20 -> 12 -> 6 (current floor, ncyc=[1,1,1,3,1,1,1,5,1]); the 34->6 collapse happened across the combined fleet after the 74 weak v1 procs were culled",
+  "v2b_state_at_first_checkpoint": "85 procs seeded E=6..20; fresh-start runs at 191-256 evals/s (vs 160 for v1 under same load), earlyrej up to 14221/100000 iters, merge proposals ~10% of iters as configured, signmis=0 on every checkpoint (parity predictor exact)",
+  "ecosystem": "other agents launched additional v1-binary fleets (tags g*, p*, w*) after the cull; machine oversubscribed ~1.4x (load 272/192)"
+ },
+ "frontier_structure_E6": {
+  "tool": "scripts/analyze_growth_conjugate_leaf_cycles.py (new; rebuilds a plan via search_growth_conjugate_repair.rebuild_from_witness and decomposes all nine returns with x-support / fiber-factor / gated-crossing-parity per cycle)",
+  "plan": "/tmp/gcv/seed_e6_frozen.json, ncyc=[1,1,1,3,1,1,1,5,1]",
+  "old_color_3": "giant 65456-cycle + two PURE-X parasites (len 50 on 50 cols, len 30 on 30 cols, fiber factor exactly 1.0): closed x-word loops detached from the giant component - donor keep-coverage shape, treatable by re-offsetting/removing donations on those columns (G2 family) or an oswap",
+  "leaf_7": "giant 65504-cycle + FOUR 8-cycles, each supported on exactly 4 columns with fiber factor 2.0 (each column visited twice): tiny gated rotor loops; exactly the shape the leaf-merge stair move splices (a stair on a boundary column straddling parasite and giant)",
+  "note": "residual cycles are NOT skew-pure fiber failures (x-supports are proper subsets), so the fix lives in the x-word/gating layer, consistent with the ledger's named missing ingredient"
+ },
+ "pinned_invariant": {
+  "statement": "at the E=6 frontier the four residual leaf-7 cycles all live on ONE 4-column base-orbit block x in {2644,2645,2646,2647} and are exact z1-TRANSLATES of a single closed gated loop (cycle k = cycle 0 shifted by T_(0,k) in the fiber): a fiber-coset family, not four independent defects",
+  "evidence": "/tmp/gcv/e6_deep.txt (machine output: states of the four 8-cycles listed; identical column support; (x,z0,z1) state sets related by z1 += k mod 4; block columns are multiply donated by colors 0,1,3,6 at layers 2,3 on both axes)",
+  "consequence": "one z1-asymmetry on the block boundary (a leaf stair at a donation-free layer of those columns, e.g. t=0, or a re-offset of one gating donation) breaks the translation symmetry and merges the whole coset family with the giant cycle; the v2 leaf-merge move class proposes exactly such stairs, and stairs at layers 0 remain admissible there (donations on the block sit at layers 2,3 only)",
+  "status": "frontier diagnosis, not a family-killing floor: the obstruction is a movable coset defect, no conserved quantity prevents E=0"
+ },
+ "hit": null
+}
