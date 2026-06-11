@@ -1,0 +1,39 @@
+OK: D9 active-anchor graph certificate verified
+rows_shifted:
+  1: triple (6, 3, 0) pairs [(4, 7), (2, 8), (1, 5)] shift 2
+  2: triple (7, 4, 5) pairs [(2, 3), (0, 1), (6, 8)] shift 1
+  3: triple (1, 4, 6) pairs [(3, 8), (2, 5), (0, 7)] shift 8
+  4: triple (4, 6, 0) pairs [(1, 8), (3, 5), (2, 7)] shift 0
+  5: triple (0, 5, 2) pairs [(1, 3), (4, 8), (6, 7)] shift 5
+  6: triple (1, 4, 2) pairs [(5, 6), (7, 8), (0, 3)] shift 4
+  7: triple (6, 0, 1) pairs [(2, 4), (5, 7), (3, 8)] shift 7
+color forests:
+  color 0: isolate 6, closing 6->0, edges 28,01,38,04,25,24,57
+  color 1: isolate 4, closing 4->1, edges 03,23,07,18,67,56,38
+  color 2: isolate 8, closing 8->2, edges 47,23,14,27,67,56,01
+  color 3: isolate 0, closing 0->3, edges 15,45,25,35,48,78,16
+  color 4: isolate 1, closing 1->4, edges 36,57,38,46,05,78,24
+  color 5: isolate 2, closing 2->5, edges 47,68,46,35,13,03,38
+  color 6: isolate 3, closing 3->6, edges 28,47,25,06,02,14,24
+  color 7: isolate 4, closing 4->7, edges 06,68,16,27,13,12,57
+  color 8: isolate 2, closing 2->8, edges 15,01,07,18,48,03,06
+OK: D9 affine splice-placement ledger verified
+stage 1: active edges 03,06,15,28,47; band w=[0, 1, 2, 0, 3, 1, 0, 3, 2]; part values=[0, 1, 2, 3]
+stage 2: active edges 01,23,45,47,68; band w=[0, 0, 1, 1, 2, 2, 3, 2, 3]; part values=[0, 1, 2, 3]
+stage 3: active edges 07,16,17,25,38; band w=[0, 0, 1, 2, 3, 1, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 4: active edges 04,06,18,27,35; band w=[0, 1, 2, 3, 0, 3, 0, 2, 1]; part values=[0, 1, 2, 3]
+stage 5: active edges 07,13,26,48,67; band w=[0, 1, 0, 1, 2, 3, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 6: active edges 03,07,15,56,78; band w=[0, 1, 2, 0, 3, 1, 1, 0, 0]; part values=[0, 1, 2, 3]
+stage 7: active edges 02,24,38,57; band w=[0, 1, 0, 2, 0, 3, 4, 3, 2]; part values=[0, 1, 2, 3]
+OK: generated splice ledger matches certificate stages
+OK: D9 terminal/reserve frame verified
+terminal base= [0, 0, 2, 2, -4, 0, 0, 0, 0] edges= ['06', '01'] separations= 28
+reserve base= [3, 4, 3, 5, -15, 0, 0, 0, 0] edges= ['24', '35'] separations= 29 sites= 12
+terminal alignment= {'terminal_triple_chronological': [8, 2, 3], 'height_shift': 7, 'root_vertices': [6, 0, 1], 'basis_edges': ['06', '01'], 'rows': [[-1, 0], [1, 1], [0, -1]], 'permutation': [0, 1, 2], 'signs': [1, 1, -1]}
+max terminal sep diff= 4
+max reserve sep diff= 9
+OK: D9 low-modulus finite placement verified
+m=4: 28 splice supports verified; terminal size=16 reserve size=16; reserve sites=12
+m=6: 28 splice supports verified; terminal size=36 reserve size=36; reserve sites=12
+m=8: 28 splice supports verified; terminal size=64 reserve size=64; reserve sites=12
+ALL D9 ALL-EVEN CERTIFICATES VERIFIED

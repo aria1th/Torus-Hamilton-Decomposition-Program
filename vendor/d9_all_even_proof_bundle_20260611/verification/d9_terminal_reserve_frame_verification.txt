@@ -1,0 +1,6 @@
+OK: D9 terminal/reserve frame verified
+terminal base= [0, 0, 2, 2, -4, 0, 0, 0, 0] edges= ['06', '01'] separations= 28
+reserve base= [3, 4, 3, 5, -15, 0, 0, 0, 0] edges= ['24', '35'] separations= 29 sites= 12
+terminal alignment= {'terminal_triple_chronological': [8, 2, 3], 'height_shift': 7, 'root_vertices': [6, 0, 1], 'basis_edges': ['06', '01'], 'rows': [[-1, 0], [1, 1], [0, -1]], 'permutation': [0, 1, 2], 'signs': [1, 1, -1]}
+max terminal sep diff= 4
+max reserve sep diff= 9

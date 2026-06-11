@@ -1,0 +1,5 @@
+OK: D9 low-modulus finite placement verified
+m=4: 28 splice supports verified; terminal size=16 reserve size=16; reserve sites=12
+m=6: 28 splice supports verified; terminal size=36 reserve size=36; reserve sites=12
+m=8: 28 splice supports verified; terminal size=64 reserve size=64; reserve sites=12
+

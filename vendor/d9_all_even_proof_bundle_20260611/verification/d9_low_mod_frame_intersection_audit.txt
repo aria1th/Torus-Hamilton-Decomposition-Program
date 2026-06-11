@@ -1,0 +1,35 @@
+m 4
+ T size 16 R size 16 T∩R 0
+ bad count 3
+[('R', 'r1_p0', 1), ('R', 'r2_p1', 1), ('R', 'r5_p1', 1)]
+m 6
+ T size 36 R size 36 T∩R 0
+ bad count 1
+[('R', 'r1_p3', 1)]
+m 8
+ T size 64 R size 64 T∩R 0
+ bad count 0
+[]
+m 10
+ T size 100 R size 100 T∩R 0
+ bad count 0
+[]
+
+--- same-height splice support intersections ---
+m=4: 8 same-height splice intersections
+  ('r2_p0', 'r5_p0', 1, 1)
+  ('r2_p1', 'r5_p1', 1, 1)
+  ('r3_p0', 'r4_p0', 0, 1)
+  ('r3_p0', 'r6_p0', 0, 1)
+  ('r4_p0', 'r6_p0', 0, 1)
+  ('r4_p1', 'r6_p1', 0, 1)
+  ('r4_p2', 'r6_p2', 0, 1)
+  ('r4_p3', 'r6_p3', 0, 1)
+m=6: 5 same-height splice intersections
+  ('r1_p0', 'r3_p0', 2, 1)
+  ('r2_p0', 'r7_p0', 1, 1)
+  ('r2_p1', 'r7_p0', 1, 1)
+  ('r2_p2', 'r7_p0', 1, 1)
+  ('r2_p3', 'r7_p0', 1, 1)
+m=8: 1 same-height splice intersections
+  ('r3_p0', 'r4_p0', 0, 1)

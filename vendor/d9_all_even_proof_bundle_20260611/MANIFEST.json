@@ -1,0 +1,135 @@
+{
+  "bundle": "d9_all_even_proof_bundle_20260611",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 792,
+      "sha256": "18842afae2123c8c702af5ae7470722977338e08eff727f880e432a7ef58820c"
+    },
+    {
+      "path": "appendix/d9_affine_splice_placement_appendix_insert.tex",
+      "size": 1403,
+      "sha256": "fa2a919401ffc4d9e801b8bb6e121625b6effd23394276a1a5321c2224715837"
+    },
+    {
+      "path": "appendix/d9_terminal_reserve_frame_appendix_insert.tex",
+      "size": 2310,
+      "sha256": "5f082eab5e2f2e64f15ddffe8edefceecebc7a211f81d0fa10e1912ce61c02b0"
+    },
+    {
+      "path": "certificates/d9_active_anchor_candidate_v1.json",
+      "size": 21435,
+      "sha256": "a26e460e90f971178533408e2ead593f1d96f5686365acb01c4e9f2752959d56"
+    },
+    {
+      "path": "certificates/d9_affine_splice_placement_ledger.json",
+      "size": 141154,
+      "sha256": "c565c4833892aee268a70a990316d30f3acbd11fffd7d34581973495317de311"
+    },
+    {
+      "path": "certificates/d9_lowmod_finite_placement_candidate.json",
+      "size": 50435,
+      "sha256": "896cd4ab42f574f67f8edf8057c585159e7ba627816232608b06107844ed8055"
+    },
+    {
+      "path": "certificates/d9_terminal_reserve_frame_candidate.json",
+      "size": 52632,
+      "sha256": "3cb706ea83cef4b5e11299a39c26992bbe6de7a7a2e01f7f1e8f27181373202f"
+    },
+    {
+      "path": "legacy_audits/audit_d9_pair_active_identity.py",
+      "size": 3655,
+      "sha256": "e2c3e8c4f87a6bc079acc063a4c2cd636fe398f0aeb5c054a55cf2fbd48f2293"
+    },
+    {
+      "path": "legacy_audits/stage5_triple_obstruction_details.py",
+      "size": 4731,
+      "sha256": "962b240f9b4c5f014c86ddcc5c1d4f2e7a87a98f137f8e76a995cf0214c52bd7"
+    },
+    {
+      "path": "legacy_audits/stage5_triple_obstruction_details.txt",
+      "size": 1151,
+      "sha256": "b2f8e6919913d0579b8081bc2b963794290d8f1828d1469e7453470575ab5c55"
+    },
+    {
+      "path": "proof/MAIN_PROOF_SUMMARY.md",
+      "size": 770,
+      "sha256": "365bc9dd06181988c1be3f1de4c344541b7fa80421ba85d62d60d9d2c224780d"
+    },
+    {
+      "path": "proof/d9_active_anchor_proof_note_20260611.md",
+      "size": 3401,
+      "sha256": "acacbfbf20fb5e868e39a62f2c4af9db8042c5c3b47290be0ea7a8e97674d144"
+    },
+    {
+      "path": "proof/d9_affine_splice_placement_note_20260611.md",
+      "size": 5754,
+      "sha256": "d2e797d3392e4a4ce7bf9130997d09142536f311c12b52977daa89a95bd387a8"
+    },
+    {
+      "path": "proof/d9_all_even_anchor_theorem_20260611.md",
+      "size": 2286,
+      "sha256": "0b998962f8144772cc61e0224edaab2919884e4e3babeded81e723b622ad8738"
+    },
+    {
+      "path": "proof/d9_high_even_anchor_theorem_20260611.md",
+      "size": 4581,
+      "sha256": "c6f9cc01d023649f07cb0b53ee2010b01d4ecf6cab0bce04b4f1e94825a6449f"
+    },
+    {
+      "path": "proof/d9_lowmod_finite_placement_note_20260611.md",
+      "size": 4526,
+      "sha256": "1e5c2b8146dfe75be7728aa0efb71aad265d81fc2a7b4ed576eefe2be1124aab"
+    },
+    {
+      "path": "proof/d9_placement_realization_reduction_20260611.md",
+      "size": 3449,
+      "sha256": "10b1557e50f96aa45ef2dd5627b5922a0c95c82117e9023a017d31b2f1bffc7d"
+    },
+    {
+      "path": "proof/d9_terminal_reserve_frame_note_20260611.md",
+      "size": 2408,
+      "sha256": "9dadd525a042465a6460fce8d4610436f4c4f832bdc22d1cb9ab95675b96c4ca"
+    },
+    {
+      "path": "proof/unconditionality_reduction_note_20260611.md",
+      "size": 2112,
+      "sha256": "599626efeccf12357e1e7728a2d63fb4cb3e633540214fa29a06085fd47d0acf"
+    },
+    {
+      "path": "scripts/compare_generated_splice_ledger.py",
+      "size": 534,
+      "sha256": "6b9ed6c57b9e2a5138d48a06855d095dcf961a61c800453394a52a21a6e2dd56"
+    },
+    {
+      "path": "scripts/run_all_verifications.sh",
+      "size": 1210,
+      "sha256": "253b8a48277ea1b106a2f7af01d48111ee5c62a138d4c2670cd853e3fc5ed341"
+    },
+    {
+      "path": "scripts/verify_d9_active_anchor_candidate.py",
+      "size": 8377,
+      "sha256": "83c6b171012900ca05221e3288607091bfc8659d20919091b6c1fede7af0369e"
+    },
+    {
+      "path": "scripts/verify_d9_affine_splice_placement.py",
+      "size": 9693,
+      "sha256": "fffed22d86627af6818643cc4d6e101a4e49730691b9ff9862ec53c61f01dd95"
+    },
+    {
+      "path": "scripts/verify_d9_lowmod_finite_placement.py",
+      "size": 9098,
+      "sha256": "ac1fb20636a085c0732d7cd85d0a7e739f56d40aafba2aa0d9557894eef4ae17"
+    },
+    {
+      "path": "scripts/verify_d9_terminal_reserve_frame.py",
+      "size": 5331,
+      "sha256": "b2b730453b78aa9aa6c5586af93e2d620204464dd9183da5a23cd31d6506d68a"
+    },
+    {
+      "path": "verification/d9_low_mod_frame_intersection_audit.txt",
+      "size": 819,
+      "sha256": "6b21ec8677b4b51b692123e1d870e69fd6979f6885e2494678e478a78f7f67ee"
+    }
+  ]
+}

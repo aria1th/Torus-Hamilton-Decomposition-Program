@@ -1,0 +1,12 @@
+\subsection{D9 affine splice-placement ledger}
+For the dimension-nine active anchor, the following row-band functionals separate the simultaneous splice supports at each used height.  In stage $r$, the four physical parts are placed in the fibers $w_r=0,1,2,3$.  The verifier checks that $w_r$ vanishes on every active support direction at that height, and that the inactive descendant coordinates and omitted-component coordinate are constant on the active support cylinder for every affected color.
+\begin{center}\scriptsize\begin{tabular}{c c p{0.25\linewidth} p{0.36\linewidth}}\toprule stage & height & active directions & $w_r$ \\ \midrule
+1 & 2 & 03, 06, 15, 28, 47 & $[0, 1, 2, 0, 3, 1, 0, 3, 2]$ \
+2 & 1 & 01, 23, 45, 47, 68 & $[0, 0, 1, 1, 2, 2, 3, 2, 3]$ \
+3 & 8 & 07, 16, 17, 25, 38 & $[0, 0, 1, 2, 3, 1, 0, 0, 2]$ \
+4 & 0 & 04, 06, 18, 27, 35 & $[0, 1, 2, 3, 0, 3, 0, 2, 1]$ \
+5 & 5 & 07, 13, 26, 48, 67 & $[0, 1, 0, 1, 2, 3, 0, 0, 2]$ \
+6 & 4 & 03, 07, 15, 56, 78 & $[0, 1, 2, 0, 3, 1, 1, 0, 0]$ \
+7 & 7 & 02, 24, 38, 57 & $[0, 1, 0, 2, 0, 3, 4, 3, 2]$ \
+\bottomrule\end{tabular}\end{center}
+The detailed basepoints, support edges, descendant-coordinate constants, and active vectors are recorded in the machine-readable ledger \texttt{d9\_affine\_splice\_placement\_ledger.json}.  The companion verifier recomputes all conditions from the active-anchor certificate and prints \texttt{OK}.

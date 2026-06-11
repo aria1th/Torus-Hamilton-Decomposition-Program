@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+mkdir -p "$ROOT/verification"
+python "$ROOT/scripts/verify_d9_active_anchor_candidate.py" "$ROOT/certificates/d9_active_anchor_candidate_v1.json" > "$ROOT/verification/d9_active_anchor_candidate_v1_verification.txt"
+python "$ROOT/scripts/verify_d9_affine_splice_placement.py" > "$ROOT/verification/generated_d9_affine_splice_placement_stdout.txt"
+python "$ROOT/scripts/compare_generated_splice_ledger.py" > "$ROOT/verification/compare_generated_splice_ledger_output.txt"
+python "$ROOT/scripts/verify_d9_terminal_reserve_frame.py" > "$ROOT/verification/d9_terminal_reserve_frame_verification.txt"
+python "$ROOT/scripts/verify_d9_lowmod_finite_placement.py" > "$ROOT/verification/d9_lowmod_finite_placement_verification_stdout.txt"
+cat "$ROOT/verification/d9_active_anchor_candidate_v1_verification.txt"
+cat "$ROOT/verification/generated_d9_affine_splice_placement_verification.txt"
+cat "$ROOT/verification/compare_generated_splice_ledger_output.txt"
+cat "$ROOT/verification/d9_terminal_reserve_frame_verification.txt"
+cat "$ROOT/verification/d9_lowmod_finite_placement_verification.txt"
+echo "ALL D9 ALL-EVEN CERTIFICATES VERIFIED"
