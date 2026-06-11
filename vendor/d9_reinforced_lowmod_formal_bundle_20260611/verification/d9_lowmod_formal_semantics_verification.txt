@@ -1,0 +1,4 @@
+OK: D9 low-modulus formal finite semantics verified
+m=4: formal finite semantics OK; supports=28, terminal=16, reserve=16, reserve_sites=12, folded_heights=[0, 1, 2, 3]
+m=6: formal finite semantics OK; supports=28, terminal=36, reserve=36, reserve_sites=12, folded_heights=[0, 1, 2, 4, 5]
+m=8: formal finite semantics OK; supports=28, terminal=64, reserve=64, reserve_sites=12, folded_heights=[0, 1, 2, 4, 5, 7]

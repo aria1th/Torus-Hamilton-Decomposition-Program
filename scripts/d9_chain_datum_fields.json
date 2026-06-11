@@ -1,0 +1,106 @@
+{
+  "description": "D9 chain-datum field table for the HED(9,m) promotion (audit reinforcement task 3, docs/D9_ADVERSARIAL_AUDIT_20260611.md item 7). Field semantics: def:high-even-chain-datum (high_even_chain_datum.tex), lem:growth-old-generator-invariant / tab:growth-row-projection-data (high_even_growth.tex), G7g midpoint-collision machinery (even_modulus_rewrite_20260610/certificates/scripts/check_hed_clauses.py, REVIEW_RESP1_20260611). Every numeric entry is validated by scripts/verify_d9_marked_reserve.py --chain-fields.",
+  "D": 9,
+  "modulus_scope": "all even m >= 4 (m > 9 symbolic frame; m in {4,6,8} lowmod finite placement)",
+  "label_chart": {
+    "W_D": "Z/9",
+    "labels": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "source": "DERIVED: d9_active_anchor_candidate_v1.json uses labels 0..8; chain-datum item 2"
+  },
+  "growth_interface": {
+    "step": "ordinary paired growth D=9 -> D=11 (prop:paired-growth)",
+    "output_chart": "Z/11",
+    "new_labels": [0, 3],
+    "old_label_set": [1, 2, 4, 5, 6, 7, 8, 9, 10],
+    "relabelling_W9_to_W11": {
+      "map": {"0": 1, "1": 2, "2": 4, "3": 5, "4": 6, "5": 7, "6": 8, "7": 9, "8": 10},
+      "rule": "order-preserving enumeration of Z/11 \\ {0,3}",
+      "source": "UNDERIVABLE - needs author: the bundle (d9_high_even_anchor_theorem) says only 'the standard relabelling into Z/11 \\ {0,3}'; def:high-even-chain-datum fixes the label sets but not the map. The order-preserving enumeration is proposed here, matching the contiguous +2 relabelling of the chained 7->9 step."
+    },
+    "inv2_mod_11": 6,
+    "rows": [
+      {
+        "name": "ordinary 1",
+        "row_word": "(0 1)(-1 -2) = (0 1)(10 9)",
+        "s": 0,
+        "delta": 1,
+        "window": [0, 1, 10, 9],
+        "leaf_line": [0, 1],
+        "quotient_direction": [10, 9],
+        "theta": {"0": 0, "1": 0, "10": 1, "9": 0},
+        "reduce_map": {},
+        "boundary_set_B": [1, 9, 10],
+        "G_minus": [[1, 2], [1, 4], [1, 5], [1, 6], [1, 8], [1, 9], [2, 5], [2, 7], [2, 8], [2, 9], [2, 10], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [5, 7], [5, 10], [6, 7], [6, 9], [6, 10], [7, 8], [7, 9], [8, 9], [8, 10], [9, 10]],
+        "H_minus": "span(G_minus_1)",
+        "C_old_endpoint": [0, 4],
+        "C_literal": [0, 4, 5],
+        "unrealized_cut_pairs": [],
+        "boundary_avoiding_phases": [3, 4, 5, 6, 7],
+        "discharging_phases_old_endpoint": [2, 6, 7, 8, 9],
+        "discharging_phases_literal": [2, 7, 8, 9],
+        "collision_lemma_counterexamples": 0,
+        "recommended_phase": 7
+      },
+      {
+        "name": "ordinary 2",
+        "row_word": "(3 4)(2 1)",
+        "s": 3,
+        "delta": 1,
+        "window": [3, 4, 2, 1],
+        "leaf_line": [3, 4],
+        "quotient_direction": [2, 1],
+        "theta": {"3": 0, "4": 0, "2": 1, "1": 0},
+        "reduce_map": {"0": 1},
+        "boundary_set_B": [1, 2, 4],
+        "G_minus": [[1, 2], [1, 4], [1, 5], [1, 6], [1, 8], [1, 9], [2, 5], [2, 7], [2, 8], [2, 9], [2, 10], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [5, 7], [5, 10], [6, 7], [6, 9], [6, 10], [7, 8], [7, 9], [8, 9], [8, 10], [9, 10]],
+        "H_minus": "span(G_minus_2) + <u0 - u1>  (earlier leaf line adjoined, lem:chain-old-span)",
+        "C_old_endpoint": [3, 7],
+        "C_literal": [3, 7, 8],
+        "unrealized_cut_pairs": [],
+        "boundary_avoiding_phases": [6, 7, 8, 9, 10],
+        "discharging_phases_old_endpoint": [0, 1, 5, 9, 10],
+        "discharging_phases_literal": [0, 1, 5, 10],
+        "collision_lemma_counterexamples": 0,
+        "recommended_phase": 10
+      }
+    ],
+    "G_minus_derivation": {
+      "rule": "distinct active edges of every part of every stage of the D9 affine splice-placement ledger (d9_affine_splice_placement_ledger.json), as W9 label pairs, mapped into Z/11 by the relabelling",
+      "W9_edges": [[0, 1], [0, 2], [0, 3], [0, 4], [0, 6], [0, 7], [1, 3], [1, 5], [1, 6], [1, 7], [1, 8], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [3, 5], [3, 8], [4, 5], [4, 7], [4, 8], [5, 6], [5, 7], [6, 7], [6, 8], [7, 8]],
+      "count": 27,
+      "source": "DERIVED per the D7 precedent (tab:D7-chain-datum-fields: 'the distinct old-head edges of the placement ledger', cf. LEDGER_D7_EDGES in check_hed_clauses.py); inclusion of the stage-7 (terminal) ledger active edges (02, 24, 38, 57 in W9) is interpretive: UNDERIVABLE - needs author"
+    },
+    "midpoint_collision_semantics": "C_r = {(a+b)/2 : a,b in window, theta(a) != theta(b), pair realized by a G^-_r translate}; old-endpoint reading restricts to pairs with both endpoints old labels; discharge: G_(r,rho) cap C_r = empty => every translated old generator visible through the guide centers {rho-delta, rho, rho+delta} has zero image in P/L (corrected lemma, REVIEW_RESP1_20260611 sections 3/6; verified by enumeration over all 11 phases per row)"
+  },
+  "terminal_carrier": {
+    "anchor_carrier_labels_W9": [6, 0, 1],
+    "anchor_carrier_plane": "q_T + <06,01>, q_T = [0,0,2,2,-4,0,0,0,0] (m>9); lowmod bases per d9_lowmod_finite_placement_candidate.json",
+    "output_chart_carrier_labels": [5, 6, 7],
+    "unused_old_labels_in_growth": [5, 6, 7, 8],
+    "growth_window_labels": [0, 1, 2, 3, 4, 9, 10],
+    "disjoint_from_growth_window": true,
+    "source": "carrier label set {5,6,7}: paper example value (ex:D11-ordinary-growth); any 3-subset of the unused old labels {5,6,7,8} is admissible. UNDERIVABLE - needs author: the relocation of the marked selector from the anchor carrier (labels {1,2,8} under the proposed relabelling, which meets the growth window) onto the new carrier summand is the growth-restart terminal-exchange step at U0,U1,U2 and is not represented in the bundle certificates."
+  },
+  "reserve_transport_form": {
+    "incoming_reserve_plane": "q_R + <24,35>, q_R = [3,4,3,5,-15,0,0,0,0] (m>9); lowmod bases per d9_lowmod_finite_placement_candidate.json",
+    "incoming_family": ["U0", "U1", "U2", "U1_c", "U2_c", "U3_c", "U4_c", "U5_c", "U6_c", "U7_c", "U8_c", "U_star"],
+    "incoming_coefficient_grid": "{0,1,2,3} x {0,1,2}, row-major naming (d=9: 3 terminal + 8 renewal + 1 next-reserve = 12 = d+3)",
+    "transport_rule": "all incoming sites carried with old coordinates; the two new leaf coordinates (labels 0 and 3 of Z/11) fixed at value 2 (lem:growth-leaf-fiber-room)",
+    "leaf_trace_values": [0, 1],
+    "transported_leaf_value": 2,
+    "new_site_leaf_value": 3,
+    "new_renewal_sites": [
+      {"name": "U9_c", "leaf_fiber_of_label": 0},
+      {"name": "U10_c", "leaf_fiber_of_label": 3}
+    ],
+    "output_family_size": 14,
+    "output_family_size_check": "D+2+3 = 11+3 = 14 = 12 transported + 2 new",
+    "value_distinctness": "0,1,2,3 pairwise distinct mod m for every even m >= 4",
+    "source": "DERIVED: tab:growth-reserve-transport + lem:growth-leaf-fiber-room (values 2 and 3), incoming family from d9_terminal_reserve_frame_candidate.json"
+  },
+  "underivable_entries": [
+    "growth_interface.relabelling_W9_to_W11.map (proposed order-preserving enumeration; paper fixes only the label sets)",
+    "growth_interface.G_minus_derivation: inclusion of the stage-7 terminal ledger actives in G^-_r (D7 precedent includes the final-stage pair actives; the D9 terminal triple's ledger row has active edge 02)",
+    "terminal_carrier.output_chart_carrier_labels (choice among unused old labels {5,6,7,8}; {5,6,7} is the paper example) and the selector-relocation mechanism via terminal exchanges at U0,U1,U2"
+  ]
+}

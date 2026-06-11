@@ -1,0 +1,8 @@
+OK: D9 affine splice-placement ledger verified
+stage 1: active edges 03,06,15,28,47; band w=[0, 1, 2, 0, 3, 1, 0, 3, 2]; part values=[0, 1, 2, 3]
+stage 2: active edges 01,23,45,47,68; band w=[0, 0, 1, 1, 2, 2, 3, 2, 3]; part values=[0, 1, 2, 3]
+stage 3: active edges 07,16,17,25,38; band w=[0, 0, 1, 2, 3, 1, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 4: active edges 04,06,18,27,35; band w=[0, 1, 2, 3, 0, 3, 0, 2, 1]; part values=[0, 1, 2, 3]
+stage 5: active edges 07,13,26,48,67; band w=[0, 1, 0, 1, 2, 3, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 6: active edges 03,07,15,56,78; band w=[0, 1, 2, 0, 3, 1, 1, 0, 0]; part values=[0, 1, 2, 3]
+stage 7: active edges 02,24,38,57; band w=[0, 1, 0, 2, 0, 3, 4, 3, 2]; part values=[0, 1, 2, 3]

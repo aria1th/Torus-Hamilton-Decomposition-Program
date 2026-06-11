@@ -1,0 +1,66 @@
+
+\subsection{The D9 terminal carrier and endpoint reserve frame}
+\label{app:D9-terminal-reserve-frame}
+
+This subsection records the symbolic high-even terminal/reserve frame for the
+new $D=9$ active anchor.  It is valid for every even $m>9$; the low moduli
+$m=4,6,8$ are left to the finite pointwise certificates.
+
+Use the root-flat chart
+\[
+K_{9,m}=\{x\in(\mathbb Z/m\mathbb Z)^9:\sum_i x_i=0\},\qquad ij=u_j-u_i.
+\]
+The last stage has height $s_7=7$.  The chronological terminal triple is
+$(8,2,3)$, hence the shifted root vertices are
+\[
+(8,2,3)+7=(6,0,1).
+\]
+Thus the terminal carrier is the affine $A_2$-plane
+\[
+Q_T=q_T+\langle 06,01\rangle,
+\qquad q_T=(0,0,2,2,-4,0,0,0,0).
+\]
+The terminal alignment table is
+\[
+\begin{array}{c|c}
+\text{item}&\text{value}\\\hline
+\text{terminal triple}&(8,2,3)\\
+\text{root vertices}&(6,0,1)\\
+\text{basis edges}&(0,6),(0,1)\\
+\text{rows}&(-1,0),(1,1),(0,-1)\\
+\text{permutation}&(0,1,2)\\
+\text{signs}&(1,1,-1).
+\end{array}
+\]
+This is the same terminal $A_2$ alignment used for the $D=5$ and $D=7$ anchors,
+with $t=6$.
+
+The endpoint reserve is placed on the affine rank-two plane
+\[
+Q_R=q_R+\langle 24,35\rangle,
+\qquad q_R=(3,4,3,5,-15,0,0,0,0).
+\]
+The $D+3=12$ reserve singletons are obtained from the coefficient grid
+$(a,b)\in\{0,1,2,3\}\times\{0,1,2\}$:
+\[
+U_{a,b}=q_R+a(24)+b(35).
+\]
+The coefficient differences have entries of absolute value $<10$, so the twelve
+sites are pairwise distinct for every even $m>9$.
+
+The disjointness checks use the following elementary separation criterion.  If
+$A=a+\langle V\rangle$ and $B=b+\langle W\rangle$ are two affine subspaces of
+$K_{9,m}$, and if an integer functional $\ell$ satisfies
+\[
+\ell(V)=\ell(W)=0,\qquad 0<|\ell(a-b)|<m,
+\]
+then $A\cap B=\varnothing$ modulo $m$.  The machine ledger supplies such a
+functional for each pair consisting of $Q_T$ and a splice support, and for each
+pair consisting of $Q_R$ and either a splice support or $Q_T$.  The largest
+absolute difference is $4$ for terminal-vs-splice checks and $9$ for
+reserve-vs-forbidden checks.  Hence all these spaces are disjoint for every
+$m>9$.
+
+The JSON ledger \texttt{d9\_terminal\_reserve\_frame\_candidate.json} and the
+script \texttt{verify\_d9\_terminal\_reserve\_frame.py} recompute all separating
+functionals and the twelve reserve sites.

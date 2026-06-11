@@ -1,0 +1,77 @@
+== D9 reinforced verification run ==
+UTC 2026-06-11 05:58:37
+
+[1/8] active graph/coforest anchor
+OK: D9 active-anchor graph certificate verified
+rows_shifted:
+  1: triple (6, 3, 0) pairs [(4, 7), (2, 8), (1, 5)] shift 2
+  2: triple (7, 4, 5) pairs [(2, 3), (0, 1), (6, 8)] shift 1
+  3: triple (1, 4, 6) pairs [(3, 8), (2, 5), (0, 7)] shift 8
+  4: triple (4, 6, 0) pairs [(1, 8), (3, 5), (2, 7)] shift 0
+  5: triple (0, 5, 2) pairs [(1, 3), (4, 8), (6, 7)] shift 5
+  6: triple (1, 4, 2) pairs [(5, 6), (7, 8), (0, 3)] shift 4
+  7: triple (6, 0, 1) pairs [(2, 4), (5, 7), (3, 8)] shift 7
+color forests:
+  color 0: isolate 6, closing 6->0, edges 28,01,38,04,25,24,57
+  color 1: isolate 4, closing 4->1, edges 03,23,07,18,67,56,38
+  color 2: isolate 8, closing 8->2, edges 47,23,14,27,67,56,01
+  color 3: isolate 0, closing 0->3, edges 15,45,25,35,48,78,16
+  color 4: isolate 1, closing 1->4, edges 36,57,38,46,05,78,24
+  color 5: isolate 2, closing 2->5, edges 47,68,46,35,13,03,38
+  color 6: isolate 3, closing 3->6, edges 28,47,25,06,02,14,24
+  color 7: isolate 4, closing 4->7, edges 06,68,16,27,13,12,57
+  color 8: isolate 2, closing 2->8, edges 15,01,07,18,48,03,06
+
+[2/8] symbolic affine splice placement
+OK: D9 affine splice-placement ledger verified
+stage 1: active edges 03,06,15,28,47; band w=[0, 1, 2, 0, 3, 1, 0, 3, 2]; part values=[0, 1, 2, 3]
+stage 2: active edges 01,23,45,47,68; band w=[0, 0, 1, 1, 2, 2, 3, 2, 3]; part values=[0, 1, 2, 3]
+stage 3: active edges 07,16,17,25,38; band w=[0, 0, 1, 2, 3, 1, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 4: active edges 04,06,18,27,35; band w=[0, 1, 2, 3, 0, 3, 0, 2, 1]; part values=[0, 1, 2, 3]
+stage 5: active edges 07,13,26,48,67; band w=[0, 1, 0, 1, 2, 3, 0, 0, 2]; part values=[0, 1, 2, 3]
+stage 6: active edges 03,07,15,56,78; band w=[0, 1, 2, 0, 3, 1, 1, 0, 0]; part values=[0, 1, 2, 3]
+stage 7: active edges 02,24,38,57; band w=[0, 1, 0, 2, 0, 3, 4, 3, 2]; part values=[0, 1, 2, 3]
+
+wrote /tmp/d9_rf/d9_reinforced_bundle/verification/generated_d9_affine_splice_placement_ledger.json
+
+[3/8] terminal/reserve frame separation
+OK: D9 terminal/reserve frame verified
+terminal base= [0, 0, 2, 2, -4, 0, 0, 0, 0] edges= ['06', '01'] separations= 28
+reserve base= [3, 4, 3, 5, -15, 0, 0, 0, 0] edges= ['24', '35'] separations= 29 sites= 12
+terminal alignment= {'terminal_triple_chronological': [8, 2, 3], 'height_shift': 7, 'root_vertices': [6, 0, 1], 'basis_edges': ['06', '01'], 'rows': [[-1, 0], [1, 1], [0, -1]], 'permutation': [0, 1, 2], 'signs': [1, 1, -1]}
+max terminal sep diff= 4
+max reserve sep diff= 9
+
+[4/8] low-modulus finite placement
+OK: D9 low-modulus finite placement verified
+m=4: 28 splice supports verified; terminal size=16 reserve size=16; reserve sites=12
+m=6: 28 splice supports verified; terminal size=36 reserve size=36; reserve sites=12
+m=8: 28 splice supports verified; terminal size=64 reserve size=64; reserve sites=12
+
+
+[5/8] low-modulus formal finite semantics
+OK: D9 low-modulus formal finite semantics verified
+m=4: formal finite semantics OK; supports=28, terminal=16, reserve=16, reserve_sites=12, folded_heights=[0, 1, 2, 3]
+m=6: formal finite semantics OK; supports=28, terminal=36, reserve=36, reserve_sites=12, folded_heights=[0, 1, 2, 4, 5]
+m=8: formal finite semantics OK; supports=28, terminal=64, reserve=64, reserve_sites=12, folded_heights=[0, 1, 2, 4, 5, 7]
+
+[6/8] terminal A2 semantics
+OK: D9 terminal A2 block semantics verified
+terminal shifted triple: [6, 0, 1] height: 7 chronological: [8, 2, 3]
+terminal basis: ['06', '01'] A2 rows: [(-1, 0), (1, 1), (0, -1)]
+sample terminal returns checked for m= [4, 6, 8, 10, 12, 14]
+
+[7/8] marked comparison / endpoint reserve semantics
+OK: D9 marked comparison and endpoint-reserve semantics verified
+reserve roles: U0,U1,U2,U1_c,U2_c,U3_c,U4_c,U5_c,U6_c,U7_c,U8_c,U_star
+high-even protected neighborhood: terminal carrier plane; all separator diffs < 10
+low moduli checked: 4,6,8
+
+[8/8] D9 -> D11 chain fields
+OK: D9 high-even chain fields verified
+old-label embedding: {0: 6, 1: 7, 2: 1, 3: 2, 4: 4, 5: 8, 6: 5, 7: 9, 8: 10}
+terminal carrier target labels: [5, 6, 7]
+ordinary_row_0: C=[0, 4] phase=6 centers=[5, 6, 7]
+ordinary_row_1: C=[3, 7] phase=10 centers=[9, 10, 0]
+
+ALL D9 REINFORCED CERTIFICATES VERIFIED

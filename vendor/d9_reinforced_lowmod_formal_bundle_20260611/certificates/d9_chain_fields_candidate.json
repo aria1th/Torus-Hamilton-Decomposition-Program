@@ -1,0 +1,149 @@
+{
+  "D": 9,
+  "description": "D9 high-even chain-field assembly for the next ordinary paired growth 9->11. This replaces the old chained 7->9 interface.",
+  "endpoint_reserve_transport": {
+    "form": "fixed old-label summand; new labels 0 and 3 fixed outside the finite growth traces",
+    "reserve_roles": [
+      "U0",
+      "U1",
+      "U2",
+      "U1_c",
+      "U2_c",
+      "U3_c",
+      "U4_c",
+      "U5_c",
+      "U6_c",
+      "U7_c",
+      "U8_c",
+      "U_star"
+    ],
+    "source_plane_edges": [
+      "24",
+      "35"
+    ],
+    "target_plane_edges": [
+      "14",
+      "28"
+    ]
+  },
+  "label_chart": {
+    "new_labels": [
+      0,
+      3
+    ],
+    "old_label_embedding": {
+      "0": 6,
+      "1": 7,
+      "2": 1,
+      "3": 2,
+      "4": 4,
+      "5": 8,
+      "6": 5,
+      "7": 9,
+      "8": 10
+    },
+    "old_labels_in_target": [
+      6,
+      7,
+      1,
+      2,
+      4,
+      8,
+      5,
+      9,
+      10
+    ],
+    "source": "Z/9Z labels of the D9 active anchor",
+    "target": "Z/11Z with new labels 0 and 3"
+  },
+  "midpoint_translate_rule": {
+    "formula": "endpoints lambda \u00b1 (i-j)/2 in Z/11Z; a row tests centers {rho-1,rho,rho+1}",
+    "inverse_of_2_mod_11": 6
+  },
+  "next_D": 11,
+  "ordinary_paired_growth_interface": [
+    {
+      "chosen_phase": 6,
+      "cut_one_side_old": [
+        10
+      ],
+      "cut_zero_side_old": [
+        1,
+        9
+      ],
+      "labels_mod_11": [
+        0,
+        1,
+        10,
+        9
+      ],
+      "leaf_line": [
+        "0",
+        "1"
+      ],
+      "midpoint_collision_set": [
+        0,
+        4
+      ],
+      "name": "ordinary_row_0",
+      "phase_centers": [
+        5,
+        6,
+        7
+      ],
+      "quotient_direction": [
+        "10",
+        "9"
+      ],
+      "row_word": "(0 1)(-1 -2)"
+    },
+    {
+      "chosen_phase": 10,
+      "cut_one_side_old": [
+        2
+      ],
+      "cut_zero_side_old": [
+        4,
+        1
+      ],
+      "labels_mod_11": [
+        3,
+        4,
+        2,
+        1
+      ],
+      "leaf_line": [
+        "3",
+        "4"
+      ],
+      "midpoint_collision_set": [
+        3,
+        7
+      ],
+      "name": "ordinary_row_1",
+      "phase_centers": [
+        9,
+        10,
+        0
+      ],
+      "quotient_direction": [
+        "2",
+        "1"
+      ],
+      "row_word": "(3 4)(2 1)"
+    }
+  ],
+  "terminal_carrier": {
+    "required_disjoint_from_growth_window": true,
+    "source_labels": [
+      6,
+      0,
+      1
+    ],
+    "target_labels": [
+      5,
+      6,
+      7
+    ]
+  }
+}

@@ -1,0 +1,5620 @@
+{
+  "D": 9,
+  "source": "/mnt/data/d9_active_anchor_candidate_v1.json",
+  "scope": "splice placement only for high-even D=9 anchor; reserve/terminal selector low-modulus RF2 not included",
+  "stages": [
+    {
+      "stage": 1,
+      "height_shift": 2,
+      "band_functional": [
+        0,
+        1,
+        2,
+        0,
+        3,
+        1,
+        0,
+        3,
+        2
+      ],
+      "active_graph_edges": [
+        "03",
+        "06",
+        "15",
+        "28",
+        "47"
+      ],
+      "band_components": [
+        [
+          0,
+          3,
+          6
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          4,
+          7
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            4,
+            1,
+            7
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07"
+          ],
+          "active_edges": [
+            "03",
+            "06"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 4,
+              "tail_slot": 6,
+              "head_slot": 3,
+              "physical_increment": "6->3",
+              "previous_forest": [],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 1
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                -1
+              ]
+            },
+            {
+              "color": 1,
+              "tail_slot": 3,
+              "head_slot": 0,
+              "physical_increment": "3->0",
+              "previous_forest": [],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 1
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1,
+                0
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 0,
+              "head_slot": 6,
+              "physical_increment": "0->6",
+              "previous_forest": [],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 1
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            2,
+            5
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "47"
+          ],
+          "active_edges": [
+            "47"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 2,
+              "tail_slot": 4,
+              "head_slot": 7,
+              "physical_increment": "4->7",
+              "previous_forest": [],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "47",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 5,
+              "tail_slot": 7,
+              "head_slot": 4,
+              "physical_increment": "7->4",
+              "previous_forest": [],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "47",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "47": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            0,
+            6
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "28"
+          ],
+          "active_edges": [
+            "28"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 0,
+              "tail_slot": 2,
+              "head_slot": 8,
+              "physical_increment": "2->8",
+              "previous_forest": [],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    7
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "28",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 6,
+              "tail_slot": 8,
+              "head_slot": 2,
+              "physical_increment": "8->2",
+              "previous_forest": [],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    7
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "28": 0
+                  }
+                },
+                {
+                  "edge": "28",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "28": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            8,
+            3
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "06",
+            "08",
+            "15"
+          ],
+          "active_edges": [
+            "15"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 8,
+              "tail_slot": 1,
+              "head_slot": 5,
+              "physical_increment": "1->5",
+              "previous_forest": [],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 4,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "15",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 3,
+              "tail_slot": 5,
+              "head_slot": 1,
+              "physical_increment": "5->1",
+              "previous_forest": [],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 4,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "15",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "15": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "height_shift": 1,
+      "band_functional": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        2,
+        3
+      ],
+      "active_graph_edges": [
+        "01",
+        "23",
+        "45",
+        "47",
+        "68"
+      ],
+      "band_components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          7
+        ],
+        [
+          6,
+          8
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            6,
+            3,
+            4
+          ],
+          "support_edges": [
+            "12",
+            "13",
+            "45",
+            "46",
+            "47",
+            "48"
+          ],
+          "active_edges": [
+            "45",
+            "47"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 6,
+              "tail_slot": 7,
+              "head_slot": 4,
+              "physical_increment": "7->4",
+              "previous_forest": [
+                "28"
+              ],
+              "omitted_labels": [
+                0
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "13",
+                  "descendant_labels": [
+                    0,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "45",
+                  "descendant_labels": [
+                    0,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 1,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "46",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "47",
+                  "descendant_labels": [
+                    0,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 1
+                  }
+                },
+                {
+                  "edge": "48",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                -1
+              ]
+            },
+            {
+              "color": 3,
+              "tail_slot": 4,
+              "head_slot": 5,
+              "physical_increment": "4->5",
+              "previous_forest": [
+                "15"
+              ],
+              "omitted_labels": [
+                0
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    0,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "13",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "45",
+                  "descendant_labels": [
+                    0,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "45": -1,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "46",
+                  "descendant_labels": [
+                    0,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "47",
+                  "descendant_labels": [
+                    0,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 1
+                  }
+                },
+                {
+                  "edge": "48",
+                  "descendant_labels": [
+                    0,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1,
+                0
+              ]
+            },
+            {
+              "color": 4,
+              "tail_slot": 5,
+              "head_slot": 7,
+              "physical_increment": "5->7",
+              "previous_forest": [
+                "36"
+              ],
+              "omitted_labels": [
+                0
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    0,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "13",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "45",
+                  "descendant_labels": [
+                    0,
+                    5
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "45": 1,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "46",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                },
+                {
+                  "edge": "47",
+                  "descendant_labels": [
+                    0,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 1
+                  }
+                },
+                {
+                  "edge": "48",
+                  "descendant_labels": [
+                    0,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "45": 0,
+                    "47": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1,
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            1,
+            2
+          ],
+          "support_edges": [
+            "01",
+            "04",
+            "05",
+            "06",
+            "23",
+            "27"
+          ],
+          "active_edges": [
+            "23"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 1,
+              "tail_slot": 2,
+              "head_slot": 3,
+              "physical_increment": "2->3",
+              "previous_forest": [
+                "03"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "23",
+                  "descendant_labels": [
+                    2,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "23": -1
+                  }
+                },
+                {
+                  "edge": "27",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 2,
+              "tail_slot": 3,
+              "head_slot": 2,
+              "physical_increment": "3->2",
+              "previous_forest": [
+                "47"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": -1,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                },
+                {
+                  "edge": "23",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "23": 1
+                  }
+                },
+                {
+                  "edge": "27",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": -1,
+                  "active_direction_values": {
+                    "23": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            8,
+            0
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "06",
+            "58"
+          ],
+          "active_edges": [
+            "01"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 8,
+              "tail_slot": 0,
+              "head_slot": 1,
+              "physical_increment": "0->1",
+              "previous_forest": [
+                "15"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "01": -1
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    7
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "58",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 1,
+              "head_slot": 0,
+              "physical_increment": "1->0",
+              "previous_forest": [
+                "28"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "01": 1
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                },
+                {
+                  "edge": "58",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "01": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            5,
+            7
+          ],
+          "support_edges": [
+            "01",
+            "02",
+            "04",
+            "05",
+            "67",
+            "68"
+          ],
+          "active_edges": [
+            "68"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 5,
+              "tail_slot": 6,
+              "head_slot": 8,
+              "physical_increment": "6->8",
+              "previous_forest": [
+                "47"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "67",
+                  "descendant_labels": [
+                    3,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "68",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "68": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 8,
+              "head_slot": 6,
+              "physical_increment": "8->6",
+              "previous_forest": [
+                "06"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    3,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "67",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "68": 0
+                  }
+                },
+                {
+                  "edge": "68",
+                  "descendant_labels": [
+                    3,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "68": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 3,
+      "height_shift": 8,
+      "band_functional": [
+        0,
+        0,
+        1,
+        2,
+        3,
+        1,
+        0,
+        0,
+        2
+      ],
+      "active_graph_edges": [
+        "07",
+        "16",
+        "17",
+        "25",
+        "38"
+      ],
+      "band_components": [
+        [
+          0,
+          1,
+          6,
+          7
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            2,
+            5,
+            7
+          ],
+          "support_edges": [
+            "02",
+            "04",
+            "05",
+            "16",
+            "17"
+          ],
+          "active_edges": [
+            "16",
+            "17"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 2,
+              "tail_slot": 1,
+              "head_slot": 4,
+              "physical_increment": "1->4",
+              "previous_forest": [
+                "47",
+                "23"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "16",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 1,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "17",
+                  "descendant_labels": [
+                    1,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                -1
+              ]
+            },
+            {
+              "color": 5,
+              "tail_slot": 4,
+              "head_slot": 6,
+              "physical_increment": "4->6",
+              "previous_forest": [
+                "47",
+                "68"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    1,
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "16",
+                  "descendant_labels": [
+                    3,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 1,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "17",
+                  "descendant_labels": [
+                    1,
+                    3,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                1
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 6,
+              "head_slot": 1,
+              "physical_increment": "6->1",
+              "previous_forest": [
+                "06",
+                "68"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    3,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "16",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 1,
+                    "17": 0
+                  }
+                },
+                {
+                  "edge": "17",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "16": 0,
+                    "17": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            4,
+            0
+          ],
+          "support_edges": [
+            "02",
+            "04",
+            "05",
+            "06",
+            "38"
+          ],
+          "active_edges": [
+            "38"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 4,
+              "tail_slot": 3,
+              "head_slot": 8,
+              "physical_increment": "3->8",
+              "previous_forest": [
+                "36",
+                "57"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    1,
+                    3,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "38",
+                  "descendant_labels": [
+                    1,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 8,
+              "head_slot": 3,
+              "physical_increment": "8->3",
+              "previous_forest": [
+                "28",
+                "01"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 0
+                  }
+                },
+                {
+                  "edge": "38",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            3,
+            6
+          ],
+          "support_edges": [
+            "01",
+            "03",
+            "06",
+            "08",
+            "25"
+          ],
+          "active_edges": [
+            "25"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 3,
+              "tail_slot": 2,
+              "head_slot": 5,
+              "physical_increment": "2->5",
+              "previous_forest": [
+                "15",
+                "45"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    2,
+                    4,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "25",
+                  "descendant_labels": [
+                    2,
+                    7
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "25": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 6,
+              "tail_slot": 5,
+              "head_slot": 2,
+              "physical_increment": "5->2",
+              "previous_forest": [
+                "28",
+                "47"
+              ],
+              "omitted_labels": [
+                4,
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    2,
+                    4,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "25": 0
+                  }
+                },
+                {
+                  "edge": "25",
+                  "descendant_labels": [
+                    4,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "25": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            1,
+            8
+          ],
+          "support_edges": [
+            "04",
+            "06",
+            "07",
+            "08",
+            "12"
+          ],
+          "active_edges": [
+            "07"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            0,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 1,
+              "tail_slot": 0,
+              "head_slot": 7,
+              "physical_increment": "0->7",
+              "previous_forest": [
+                "03",
+                "23"
+              ],
+              "omitted_labels": [
+                5
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    5,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 1
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 8,
+              "tail_slot": 7,
+              "head_slot": 0,
+              "physical_increment": "7->0",
+              "previous_forest": [
+                "15",
+                "01"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    3,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    3,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 1
+                  }
+                },
+                {
+                  "edge": "08",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                },
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "07": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 4,
+      "height_shift": 0,
+      "band_functional": [
+        0,
+        1,
+        2,
+        3,
+        0,
+        3,
+        0,
+        2,
+        1
+      ],
+      "active_graph_edges": [
+        "04",
+        "06",
+        "18",
+        "27",
+        "35"
+      ],
+      "band_components": [
+        [
+          0,
+          4,
+          6
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            4,
+            6,
+            0
+          ],
+          "support_edges": [
+            "02",
+            "04",
+            "06",
+            "35"
+          ],
+          "active_edges": [
+            "04",
+            "06"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 4,
+              "tail_slot": 4,
+              "head_slot": 6,
+              "physical_increment": "4->6",
+              "previous_forest": [
+                "36",
+                "57",
+                "38"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": -1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    1,
+                    3,
+                    5,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 1
+                  }
+                },
+                {
+                  "edge": "35",
+                  "descendant_labels": [
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                1
+              ]
+            },
+            {
+              "color": 6,
+              "tail_slot": 6,
+              "head_slot": 0,
+              "physical_increment": "6->0",
+              "previous_forest": [
+                "28",
+                "47",
+                "25"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    1,
+                    2,
+                    3,
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": -1
+                  }
+                },
+                {
+                  "edge": "35",
+                  "descendant_labels": [
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                1
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 0,
+              "head_slot": 4,
+              "physical_increment": "0->4",
+              "previous_forest": [
+                "28",
+                "01",
+                "38"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3,
+                    5,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 1,
+                    "06": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 1
+                  }
+                },
+                {
+                  "edge": "35",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "04": 0,
+                    "06": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            1,
+            8
+          ],
+          "support_edges": [
+            "04",
+            "06",
+            "12",
+            "18"
+          ],
+          "active_edges": [
+            "18"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 1,
+              "tail_slot": 1,
+              "head_slot": 8,
+              "physical_increment": "1->8",
+              "previous_forest": [
+                "03",
+                "23",
+                "07"
+              ],
+              "omitted_labels": [
+                5
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    5,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": -1,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "18",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 8,
+              "tail_slot": 8,
+              "head_slot": 1,
+              "physical_increment": "8->1",
+              "previous_forest": [
+                "15",
+                "01",
+                "07"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "04",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    3,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "12",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": 0
+                  }
+                },
+                {
+                  "edge": "18",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "18": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            3,
+            5
+          ],
+          "support_edges": [
+            "01",
+            "06",
+            "35",
+            "37"
+          ],
+          "active_edges": [
+            "35"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 3,
+              "tail_slot": 3,
+              "head_slot": 5,
+              "physical_increment": "3->5",
+              "previous_forest": [
+                "15",
+                "45",
+                "25"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": -2,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                },
+                {
+                  "edge": "35",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": 1
+                  }
+                },
+                {
+                  "edge": "37",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 5,
+              "tail_slot": 5,
+              "head_slot": 3,
+              "physical_increment": "5->3",
+              "previous_forest": [
+                "47",
+                "68",
+                "46"
+              ],
+              "omitted_labels": [
+                2
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                },
+                {
+                  "edge": "35",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": -1
+                  }
+                },
+                {
+                  "edge": "37",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "35": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            2,
+            7
+          ],
+          "support_edges": [
+            "02",
+            "05",
+            "27",
+            "36"
+          ],
+          "active_edges": [
+            "27"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 2,
+              "tail_slot": 2,
+              "head_slot": 7,
+              "physical_increment": "2->7",
+              "previous_forest": [
+                "47",
+                "23",
+                "14"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": -3,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                },
+                {
+                  "edge": "27",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 3,
+                  "active_direction_values": {
+                    "27": 1
+                  }
+                },
+                {
+                  "edge": "36",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 7,
+              "head_slot": 2,
+              "physical_increment": "7->2",
+              "previous_forest": [
+                "06",
+                "68",
+                "16"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                },
+                {
+                  "edge": "27",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": -1
+                  }
+                },
+                {
+                  "edge": "36",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "27": 0
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 5,
+      "height_shift": 5,
+      "band_functional": [
+        0,
+        1,
+        0,
+        1,
+        2,
+        3,
+        0,
+        0,
+        2
+      ],
+      "active_graph_edges": [
+        "07",
+        "13",
+        "26",
+        "48",
+        "67"
+      ],
+      "band_components": [
+        [
+          0,
+          2,
+          6,
+          7
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          5
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            4,
+            0,
+            6
+          ],
+          "support_edges": [
+            "03",
+            "07",
+            "26"
+          ],
+          "active_edges": [
+            "07",
+            "26"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 4,
+              "tail_slot": 0,
+              "head_slot": 5,
+              "physical_increment": "0->5",
+              "previous_forest": [
+                "36",
+                "57",
+                "38",
+                "46"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    1,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 1,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "26",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                0
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 5,
+              "head_slot": 2,
+              "physical_increment": "5->2",
+              "previous_forest": [
+                "28",
+                "01",
+                "38",
+                "04"
+              ],
+              "omitted_labels": [
+                5
+              ],
+              "omitted_value_at_base": 1,
+              "support_coordinates": [
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    2,
+                    3,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 1,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "26",
+                  "descendant_labels": [
+                    5,
+                    6
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1,
+                -1
+              ]
+            },
+            {
+              "color": 6,
+              "tail_slot": 2,
+              "head_slot": 0,
+              "physical_increment": "2->0",
+              "previous_forest": [
+                "28",
+                "47",
+                "25",
+                "06"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 1,
+                    "26": 0
+                  }
+                },
+                {
+                  "edge": "26",
+                  "descendant_labels": [
+                    1,
+                    2,
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0,
+                    "26": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            5,
+            7
+          ],
+          "support_edges": [
+            "02",
+            "05",
+            "13"
+          ],
+          "active_edges": [
+            "13"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 5,
+              "tail_slot": 1,
+              "head_slot": 3,
+              "physical_increment": "1->3",
+              "previous_forest": [
+                "47",
+                "68",
+                "46",
+                "35"
+              ],
+              "omitted_labels": [
+                4,
+                6,
+                7,
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "13": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": -1,
+                  "active_direction_values": {
+                    "13": 0
+                  }
+                },
+                {
+                  "edge": "13",
+                  "descendant_labels": [
+                    1,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "13": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 3,
+              "head_slot": 1,
+              "physical_increment": "3->1",
+              "previous_forest": [
+                "06",
+                "68",
+                "16",
+                "27"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "13": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "13": 0
+                  }
+                },
+                {
+                  "edge": "13",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "13": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            8,
+            3
+          ],
+          "support_edges": [
+            "02",
+            "06",
+            "48"
+          ],
+          "active_edges": [
+            "48"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 8,
+              "tail_slot": 4,
+              "head_slot": 8,
+              "physical_increment": "4->8",
+              "previous_forest": [
+                "15",
+                "01",
+                "07",
+                "18"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    3
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "48": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    3,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "48": 0
+                  }
+                },
+                {
+                  "edge": "48",
+                  "descendant_labels": [
+                    3,
+                    4
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "48": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 3,
+              "tail_slot": 8,
+              "head_slot": 4,
+              "physical_increment": "8->4",
+              "previous_forest": [
+                "15",
+                "45",
+                "25",
+                "35"
+              ],
+              "omitted_labels": [
+                7
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": -2,
+                  "active_direction_values": {
+                    "48": 0
+                  }
+                },
+                {
+                  "edge": "06",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "48": 0
+                  }
+                },
+                {
+                  "edge": "48",
+                  "descendant_labels": [
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "48": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            1,
+            2
+          ],
+          "support_edges": [
+            "01",
+            "05",
+            "67"
+          ],
+          "active_edges": [
+            "67"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 1,
+              "tail_slot": 6,
+              "head_slot": 7,
+              "physical_increment": "6->7",
+              "previous_forest": [
+                "03",
+                "23",
+                "07",
+                "18"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": -2,
+                  "active_direction_values": {
+                    "67": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "67": 0
+                  }
+                },
+                {
+                  "edge": "67",
+                  "descendant_labels": [
+                    4,
+                    6
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "67": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 2,
+              "tail_slot": 7,
+              "head_slot": 6,
+              "physical_increment": "7->6",
+              "previous_forest": [
+                "47",
+                "23",
+                "14",
+                "27"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": -3,
+                  "active_direction_values": {
+                    "67": 0
+                  }
+                },
+                {
+                  "edge": "05",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "67": 0
+                  }
+                },
+                {
+                  "edge": "67",
+                  "descendant_labels": [
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "67": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 6,
+      "height_shift": 4,
+      "band_functional": [
+        0,
+        1,
+        2,
+        0,
+        3,
+        1,
+        1,
+        0,
+        0
+      ],
+      "active_graph_edges": [
+        "03",
+        "07",
+        "15",
+        "56",
+        "78"
+      ],
+      "band_components": [
+        [
+          0,
+          3,
+          7,
+          8
+        ],
+        [
+          1,
+          5,
+          6
+        ],
+        [
+          2
+        ],
+        [
+          4
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            6,
+            0,
+            7
+          ],
+          "support_edges": [
+            "07",
+            "15"
+          ],
+          "active_edges": [
+            "07",
+            "15"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 6,
+              "tail_slot": 1,
+              "head_slot": 4,
+              "physical_increment": "1->4",
+              "previous_forest": [
+                "28",
+                "47",
+                "25",
+                "06",
+                "02"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    3,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 1,
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "15",
+                  "descendant_labels": [
+                    1,
+                    3
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "07": 0,
+                    "15": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                -1
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 4,
+              "head_slot": 2,
+              "physical_increment": "4->2",
+              "previous_forest": [
+                "28",
+                "01",
+                "38",
+                "04",
+                "25"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 1,
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "15",
+                  "descendant_labels": [
+                    2,
+                    3,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0,
+                    "15": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                0,
+                1
+              ]
+            },
+            {
+              "color": 7,
+              "tail_slot": 2,
+              "head_slot": 1,
+              "physical_increment": "2->1",
+              "previous_forest": [
+                "06",
+                "68",
+                "16",
+                "27",
+                "13"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "07",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    3,
+                    4,
+                    5,
+                    6,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": -1,
+                    "15": 0
+                  }
+                },
+                {
+                  "edge": "15",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "07": 0,
+                    "15": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            1,
+            2
+          ],
+          "support_edges": [
+            "01",
+            "56"
+          ],
+          "active_edges": [
+            "56"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 1,
+              "tail_slot": 5,
+              "head_slot": 6,
+              "physical_increment": "5->6",
+              "previous_forest": [
+                "03",
+                "23",
+                "07",
+                "18",
+                "67"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "56": 0
+                  }
+                },
+                {
+                  "edge": "56",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "56": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 2,
+              "tail_slot": 6,
+              "head_slot": 5,
+              "physical_increment": "6->5",
+              "previous_forest": [
+                "47",
+                "23",
+                "14",
+                "27",
+                "67"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    8
+                  ],
+                  "old_head_value_at_base": -1,
+                  "active_direction_values": {
+                    "56": 0
+                  }
+                },
+                {
+                  "edge": "56",
+                  "descendant_labels": [
+                    5,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "56": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            3,
+            4
+          ],
+          "support_edges": [
+            "01",
+            "78"
+          ],
+          "active_edges": [
+            "78"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 3,
+              "tail_slot": 7,
+              "head_slot": 8,
+              "physical_increment": "7->8",
+              "previous_forest": [
+                "15",
+                "45",
+                "25",
+                "35",
+                "48"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    0,
+                    6
+                  ],
+                  "old_head_value_at_base": -2,
+                  "active_direction_values": {
+                    "78": 0
+                  }
+                },
+                {
+                  "edge": "78",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "78": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 4,
+              "tail_slot": 8,
+              "head_slot": 7,
+              "physical_increment": "8->7",
+              "previous_forest": [
+                "36",
+                "57",
+                "38",
+                "46",
+                "05"
+              ],
+              "omitted_labels": [
+                2
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "01",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "78": 0
+                  }
+                },
+                {
+                  "edge": "78",
+                  "descendant_labels": [
+                    0,
+                    1,
+                    2,
+                    5,
+                    7
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "78": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            5,
+            8
+          ],
+          "support_edges": [
+            "02",
+            "03"
+          ],
+          "active_edges": [
+            "03"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 5,
+              "tail_slot": 0,
+              "head_slot": 3,
+              "physical_increment": "0->3",
+              "previous_forest": [
+                "47",
+                "68",
+                "46",
+                "35",
+                "13"
+              ],
+              "omitted_labels": [
+                4,
+                6,
+                7,
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": -2,
+                  "active_direction_values": {
+                    "03": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 8,
+              "tail_slot": 3,
+              "head_slot": 0,
+              "physical_increment": "3->0",
+              "previous_forest": [
+                "15",
+                "01",
+                "07",
+                "18",
+                "48"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "03": 0
+                  }
+                },
+                {
+                  "edge": "03",
+                  "descendant_labels": [
+                    3,
+                    6
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "03": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 7,
+      "height_shift": 7,
+      "band_functional": [
+        0,
+        1,
+        0,
+        2,
+        0,
+        3,
+        4,
+        3,
+        2
+      ],
+      "active_graph_edges": [
+        "02",
+        "24",
+        "38",
+        "57"
+      ],
+      "band_components": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          1
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          6
+        ]
+      ],
+      "parts": [
+        {
+          "part_index": 0,
+          "P": [
+            8,
+            2,
+            3
+          ],
+          "support_edges": [
+            "02"
+          ],
+          "active_edges": [
+            "02"
+          ],
+          "band_value": 0,
+          "basepoint": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 8,
+              "tail_slot": 6,
+              "head_slot": 0,
+              "physical_increment": "6->0",
+              "previous_forest": [
+                "15",
+                "01",
+                "07",
+                "18",
+                "48",
+                "03"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 1,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    2,
+                    6
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "02": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 2,
+              "tail_slot": 0,
+              "head_slot": 1,
+              "physical_increment": "0->1",
+              "previous_forest": [
+                "47",
+                "23",
+                "14",
+                "27",
+                "67",
+                "56"
+              ],
+              "omitted_labels": [
+                8
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    8
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "02": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 3,
+              "tail_slot": 1,
+              "head_slot": 6,
+              "physical_increment": "1->6",
+              "previous_forest": [
+                "15",
+                "45",
+                "25",
+                "35",
+                "48",
+                "78"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "02",
+                  "descendant_labels": [
+                    0,
+                    6
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "02": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 1,
+          "P": [
+            4,
+            6
+          ],
+          "support_edges": [
+            "24"
+          ],
+          "active_edges": [
+            "24"
+          ],
+          "band_value": 1,
+          "basepoint": [
+            -1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 4,
+              "tail_slot": 2,
+              "head_slot": 4,
+              "physical_increment": "2->4",
+              "previous_forest": [
+                "36",
+                "57",
+                "38",
+                "46",
+                "05",
+                "78"
+              ],
+              "omitted_labels": [
+                1
+              ],
+              "omitted_value_at_base": 1,
+              "support_coordinates": [
+                {
+                  "edge": "24",
+                  "descendant_labels": [
+                    1,
+                    2
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "24": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 6,
+              "tail_slot": 4,
+              "head_slot": 2,
+              "physical_increment": "4->2",
+              "previous_forest": [
+                "28",
+                "47",
+                "25",
+                "06",
+                "02",
+                "14"
+              ],
+              "omitted_labels": [
+                3
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "24",
+                  "descendant_labels": [
+                    1,
+                    3,
+                    4,
+                    7
+                  ],
+                  "old_head_value_at_base": 2,
+                  "active_direction_values": {
+                    "24": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 2,
+          "P": [
+            7,
+            0
+          ],
+          "support_edges": [
+            "57"
+          ],
+          "active_edges": [
+            "57"
+          ],
+          "band_value": 2,
+          "basepoint": [
+            -2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 7,
+              "tail_slot": 5,
+              "head_slot": 7,
+              "physical_increment": "5->7",
+              "previous_forest": [
+                "06",
+                "68",
+                "16",
+                "27",
+                "13",
+                "12"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "57",
+                  "descendant_labels": [
+                    4,
+                    5
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "57": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            },
+            {
+              "color": 0,
+              "tail_slot": 7,
+              "head_slot": 5,
+              "physical_increment": "7->5",
+              "previous_forest": [
+                "28",
+                "01",
+                "38",
+                "04",
+                "25",
+                "24"
+              ],
+              "omitted_labels": [
+                6
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "57",
+                  "descendant_labels": [
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": 1,
+                  "active_direction_values": {
+                    "57": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                -1
+              ]
+            }
+          ]
+        },
+        {
+          "part_index": 3,
+          "P": [
+            5,
+            1
+          ],
+          "support_edges": [
+            "38"
+          ],
+          "active_edges": [
+            "38"
+          ],
+          "band_value": 3,
+          "basepoint": [
+            -3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "colors": [
+            {
+              "color": 5,
+              "tail_slot": 3,
+              "head_slot": 8,
+              "physical_increment": "3->8",
+              "previous_forest": [
+                "47",
+                "68",
+                "46",
+                "35",
+                "13",
+                "03"
+              ],
+              "omitted_labels": [
+                2
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "38",
+                  "descendant_labels": [
+                    2,
+                    4,
+                    6,
+                    7,
+                    8
+                  ],
+                  "old_head_value_at_base": 0,
+                  "active_direction_values": {
+                    "38": 1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            },
+            {
+              "color": 1,
+              "tail_slot": 8,
+              "head_slot": 3,
+              "physical_increment": "8->3",
+              "previous_forest": [
+                "03",
+                "23",
+                "07",
+                "18",
+                "67",
+                "56"
+              ],
+              "omitted_labels": [
+                4
+              ],
+              "omitted_value_at_base": 0,
+              "support_coordinates": [
+                {
+                  "edge": "38",
+                  "descendant_labels": [
+                    0,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                  ],
+                  "old_head_value_at_base": -3,
+                  "active_direction_values": {
+                    "38": -1
+                  }
+                }
+              ],
+              "active_vector": [
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
