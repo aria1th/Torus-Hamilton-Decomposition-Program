@@ -1,0 +1,234 @@
+{
+ "m": 10,
+ "row_budget_ledger": {
+  "m": 10,
+  "stage_shifts": [
+   2,
+   1,
+   8,
+   0,
+   5,
+   4,
+   7
+  ],
+  "distinct_stage_types": 7,
+  "closing_classes_needed": [
+   3,
+   6
+  ],
+  "rows_needed_by_rule": 9,
+  "rows_available": 10,
+  "rule_feasible": true,
+  "folded_rows": {},
+  "free_rows": [
+   3,
+   6,
+   9
+  ],
+  "closing_classes_unhostable": []
+ },
+ "switch_closure_violations": [
+  {
+   "stage": 3,
+   "part": 0,
+   "color": 2,
+   "tail": 1,
+   "head": 4,
+   "M": [
+    "02",
+    "04",
+    "05",
+    "16",
+    "17"
+   ],
+   "active": [
+    "16",
+    "17"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 3,
+   "part": 0,
+   "color": 5,
+   "tail": 4,
+   "head": 6,
+   "M": [
+    "02",
+    "04",
+    "05",
+    "16",
+    "17"
+   ],
+   "active": [
+    "16",
+    "17"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 5,
+   "part": 0,
+   "color": 4,
+   "tail": 0,
+   "head": 5,
+   "M": [
+    "03",
+    "07",
+    "26"
+   ],
+   "active": [
+    "07",
+    "26"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 5,
+   "part": 0,
+   "color": 0,
+   "tail": 5,
+   "head": 2,
+   "M": [
+    "03",
+    "07",
+    "26"
+   ],
+   "active": [
+    "07",
+    "26"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 5,
+   "part": 0,
+   "color": 6,
+   "tail": 2,
+   "head": 0,
+   "M": [
+    "03",
+    "07",
+    "26"
+   ],
+   "active": [
+    "07",
+    "26"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 6,
+   "part": 0,
+   "color": 6,
+   "tail": 1,
+   "head": 4,
+   "M": [
+    "07",
+    "15"
+   ],
+   "active": [
+    "07",
+    "15"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 6,
+   "part": 0,
+   "color": 0,
+   "tail": 4,
+   "head": 2,
+   "M": [
+    "07",
+    "15"
+   ],
+   "active": [
+    "07",
+    "15"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 6,
+   "part": 0,
+   "color": 7,
+   "tail": 2,
+   "head": 1,
+   "M": [
+    "07",
+    "15"
+   ],
+   "active": [
+    "07",
+    "15"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "genuine RF2 obstruction for the support-tube switch reading, every m"
+  },
+  {
+   "stage": 7,
+   "part": 0,
+   "color": 8,
+   "tail": 6,
+   "head": 0,
+   "M": [
+    "02"
+   ],
+   "active": [
+    "02"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "terminal triple: realized by the A2 block, not a switch \u2014 not an RF2 obstruction"
+  },
+  {
+   "stage": 7,
+   "part": 0,
+   "color": 2,
+   "tail": 0,
+   "head": 1,
+   "M": [
+    "02"
+   ],
+   "active": [
+    "02"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "terminal triple: realized by the A2 block, not a switch \u2014 not an RF2 obstruction"
+  },
+  {
+   "stage": 7,
+   "part": 0,
+   "color": 3,
+   "tail": 1,
+   "head": 6,
+   "M": [
+    "02"
+   ],
+   "active": [
+    "02"
+   ],
+   "in_span_M": false,
+   "in_span_active": false,
+   "note": "terminal triple: realized by the A2 block, not a switch \u2014 not an RF2 obstruction"
+  }
+ ],
+ "witnesses": []
+}
