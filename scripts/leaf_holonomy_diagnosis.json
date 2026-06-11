@@ -1,0 +1,8945 @@
+{
+ "m": 4,
+ "d_parent": 7,
+ "K": 4096,
+ "K2": 65536,
+ "review": "docs/REVIEW_RESP1_20260611.md S4.3-4.4, S6(list), S7",
+ "evaluator": "search_growth_conjugate_repair.Engine (read-only import)",
+ "plans": [
+  {
+   "tag": "cpp_f1078",
+   "file": "/tmp/gcv/v2val_growth_conjugate_best_m4_cpp_f1078.json",
+   "sha256_16": "826028babb0c404e",
+   "plan_snapshot": {
+    "m": 4,
+    "tau_s": 2,
+    "donations": [
+     [
+      0,
+      3,
+      1,
+      0,
+      1
+     ],
+     [
+      0,
+      3,
+      3,
+      1,
+      1
+     ],
+     [
+      0,
+      3,
+      3,
+      0,
+      2
+     ],
+     [
+      0,
+      3,
+      3,
+      11,
+      1
+     ],
+     [
+      1,
+      3,
+      6,
+      0,
+      3
+     ],
+     [
+      1,
+      1,
+      1,
+      0,
+      2
+     ],
+     [
+      1,
+      1,
+      4,
+      1,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      0,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      11,
+      1
+     ],
+     [
+      1,
+      1,
+      6,
+      1,
+      2
+     ],
+     [
+      0,
+      3,
+      1,
+      32,
+      3
+     ],
+     [
+      0,
+      3,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      1,
+      2,
+      1
+     ],
+     [
+      0,
+      3,
+      2,
+      2234,
+      1
+     ],
+     [
+      1,
+      1,
+      6,
+      27,
+      2
+     ],
+     [
+      0,
+      1,
+      6,
+      51,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      180,
+      3
+     ],
+     [
+      1,
+      2,
+      0,
+      1027,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      208,
+      0
+     ],
+     [
+      0,
+      1,
+      6,
+      512,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      3,
+      1
+     ],
+     [
+      1,
+      3,
+      0,
+      6,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      3894,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      114,
+      3
+     ],
+     [
+      0,
+      0,
+      5,
+      2529,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      3,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      3
+     ],
+     [
+      0,
+      0,
+      0,
+      915,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      306,
+      0
+     ],
+     [
+      1,
+      3,
+      0,
+      425,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      154,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      68,
+      0
+     ],
+     [
+      0,
+      2,
+      2,
+      309,
+      1
+     ],
+     [
+      0,
+      3,
+      1,
+      240,
+      3
+     ],
+     [
+      0,
+      1,
+      1,
+      40,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      1
+     ],
+     [
+      0,
+      3,
+      1,
+      1042,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      1793,
+      3
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      0
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      3
+     ],
+     [
+      0,
+      2,
+      2,
+      57,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      345,
+      3
+     ],
+     [
+      0,
+      1,
+      6,
+      51,
+      2
+     ],
+     [
+      0,
+      0,
+      6,
+      471,
+      0
+     ],
+     [
+      0,
+      2,
+      5,
+      431,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      1160,
+      1
+     ],
+     [
+      1,
+      2,
+      3,
+      42,
+      1
+     ],
+     [
+      0,
+      2,
+      2,
+      57,
+      2
+     ],
+     [
+      0,
+      0,
+      1,
+      2976,
+      1
+     ],
+     [
+      0,
+      0,
+      1,
+      2976,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      2131,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      3854,
+      2
+     ],
+     [
+      0,
+      2,
+      3,
+      293,
+      0
+     ],
+     [
+      0,
+      3,
+      1,
+      240,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      168,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      2227,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      3341,
+      0
+     ],
+     [
+      0,
+      1,
+      5,
+      350,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      591,
+      0
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      3
+     ],
+     [
+      0,
+      2,
+      0,
+      1160,
+      0
+     ],
+     [
+      0,
+      2,
+      1,
+      1761,
+      2
+     ],
+     [
+      0,
+      1,
+      1,
+      40,
+      1
+     ],
+     [
+      0,
+      2,
+      3,
+      293,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      203,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      2529,
+      1
+     ],
+     [
+      0,
+      1,
+      3,
+      3340,
+      2
+     ],
+     [
+      0,
+      0,
+      3,
+      1316,
+      1
+     ],
+     [
+      0,
+      1,
+      5,
+      1235,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      11,
+      3
+     ],
+     [
+      1,
+      3,
+      0,
+      6,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      3854,
+      1
+     ],
+     [
+      0,
+      0,
+      5,
+      2529,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      3854,
+      3
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      2
+     ],
+     [
+      0,
+      2,
+      3,
+      293,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      3228,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      11,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      3894,
+      1
+     ],
+     [
+      0,
+      2,
+      5,
+      431,
+      3
+     ],
+     [
+      0,
+      2,
+      0,
+      1160,
+      2
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      1
+     ],
+     [
+      0,
+      1,
+      2,
+      51,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      396,
+      1
+     ],
+     [
+      1,
+      3,
+      3,
+      178,
+      2
+     ],
+     [
+      0,
+      1,
+      6,
+      51,
+      3
+     ],
+     [
+      0,
+      0,
+      1,
+      275,
+      1
+     ],
+     [
+      0,
+      0,
+      0,
+      2274,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      203,
+      2
+     ],
+     [
+      0,
+      3,
+      2,
+      283,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      2274,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      1326,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      203,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      1143,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      11,
+      1
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      3
+     ]
+    ],
+    "stairs": [],
+    "wilds": [
+     [
+      0,
+      3416,
+      6,
+      0,
+      [
+       8,
+       7,
+       6
+      ]
+     ]
+    ],
+    "lines": [
+     [
+      0,
+      2537,
+      0,
+      6
+     ]
+    ],
+    "oswaps": [],
+    "cross0": {
+     "0": [
+      1,
+      1
+     ],
+     "1": [
+      1,
+      52
+     ],
+     "2": [
+      1,
+      0
+     ],
+     "3": [
+      1,
+      5
+     ],
+     "4": [
+      1,
+      7
+     ],
+     "5": [
+      1,
+      4
+     ],
+     "6": [
+      1,
+      6
+     ]
+    },
+    "cross1": {
+     "0": [
+      0,
+      0,
+      0
+     ],
+     "1": [
+      0,
+      6,
+      0
+     ],
+     "2": [
+      0,
+      4,
+      0
+     ],
+     "3": [
+      0,
+      14,
+      0
+     ],
+     "4": [
+      0,
+      3,
+      0
+     ],
+     "5": [
+      0,
+      1,
+      0
+     ],
+     "6": [
+      0,
+      9,
+      0
+     ]
+    },
+    "E": 54,
+    "ncyc": [
+     3,
+     5,
+     3,
+     3,
+     7,
+     3,
+     5,
+     3,
+     7
+    ]
+   },
+   "tau_s": 2,
+   "E_lw1": 30,
+   "ncyc": [
+    3,
+    5,
+    3,
+    3,
+    7,
+    3,
+    5,
+    3,
+    7
+   ],
+   "signs": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "skipped": 0,
+   "rf1": true,
+   "rf2": true,
+   "n_donations": 103,
+   "n_stairs": 0,
+   "n_wilds": 1,
+   "n_lines": 1,
+   "n_oswaps": 0,
+   "leaves": [
+    {
+     "leaf": "nu0",
+     "color": 7,
+     "ncyc": 3,
+     "sign": -1,
+     "cycle_lengths": [
+      26683,
+      26275,
+      12578
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 41168,
+      "leaf_x_read_points": 41168,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4008,
+       3846,
+       3384
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 3137,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": 0,
+      "first_return": {
+       "holonomy": {
+        "cycle_type": [
+         12,
+         2,
+         2
+        ],
+        "order": 12,
+        "kind": "nonlinear",
+        "displacement_set": [
+         [
+          0,
+          1
+         ],
+         [
+          0,
+          3
+         ],
+         [
+          1,
+          1
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          3,
+          1
+         ]
+        ],
+        "is_m2_cycle": false
+       },
+       "n_orbits": 3,
+       "orbit_partition_sizes": [
+        12,
+        2,
+        2
+       ],
+       "orbit_partition": [
+        [
+         [
+          0,
+          0
+         ],
+         [
+          0,
+          1
+         ],
+         [
+          0,
+          2
+         ],
+         [
+          0,
+          3
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          1,
+          1
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          2,
+          0
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          3
+         ]
+        ],
+        [
+         [
+          1,
+          2
+         ],
+         [
+          3,
+          0
+         ]
+        ],
+        [
+         [
+          3,
+          1
+         ],
+         [
+          3,
+          2
+         ]
+        ]
+       ],
+       "orbit_partition_is_coset_partition": false,
+       "coset_subgroup": null,
+       "displacement_subgroup_order": 16,
+       "displacement_subgroup_gens": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         0
+        ]
+       ],
+       "return_time_min": 1,
+       "return_time_max": 16757,
+       "matches_ncyc": true
+      },
+      "orbits_label_cycles_exactly": true
+     },
+     "main_circuit": {
+      "longest_cycle_length": 26683,
+      "fiber": 1189,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         1
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    },
+    {
+     "leaf": "nu1",
+     "color": 8,
+     "ncyc": 7,
+     "sign": -1,
+     "cycle_lengths": [
+      65211,
+      228,
+      81,
+      4,
+      4,
+      4,
+      4
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 2,
+      "isolated_fibers": 1,
+      "isolated_fiber_ids": [
+       3710
+      ],
+      "move_events": 46544,
+      "leaf_x_read_points": 46544,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "n_scc": 2,
+      "scc_sizes_top": [
+       4095,
+       1
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4095,
+       120,
+       42,
+       1,
+       1,
+       1,
+       1
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 4,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 65211,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         0
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 2,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0",
+        "1",
+        "1",
+        "1",
+        "1"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    }
+   ],
+   "variants": [
+    {
+     "variant": "without_wild_seam",
+     "dropped": "wilds",
+     "ncyc": [
+      3,
+      5,
+      3,
+      3,
+      7,
+      3,
+      6,
+      4,
+      10
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "wilds on nu0",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 12,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 8,
+        "z0-z1 mod 2": 8,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "wilds on nu1",
+       "modified_cells": 8,
+       "class_flips": {
+        "z0 mod 2": 4,
+        "z1 mod 2": 8,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 4,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 10,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_correction_line",
+     "dropped": "lines",
+     "ncyc": [
+      3,
+      5,
+      3,
+      3,
+      7,
+      3,
+      2,
+      3,
+      8
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "lines on nu0",
+       "modified_cells": 0,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 0,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "lines on nu1",
+       "modified_cells": 4,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 3,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 8,
+       "preserved_z": []
+      }
+     ]
+    }
+   ],
+   "coverage_patch_experiment": [
+    {
+     "leaf": "nu1",
+     "isolated_fiber": 3710,
+     "candidates_tried": 96,
+     "best": {
+      "donation": [
+       1,
+       1,
+       4,
+       3662,
+       2
+      ],
+      "E_lw1": 30,
+      "ncyc": [
+       3,
+       5,
+       3,
+       3,
+       9,
+       3,
+       5,
+       3,
+       5
+      ],
+      "signs": [
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1
+      ]
+     }
+    }
+   ],
+   "six_requirements": {
+    "1_old_cyclicity": {
+     "ok": false,
+     "old_ncyc": [
+      3,
+      5,
+      3,
+      3,
+      7,
+      3,
+      5
+     ]
+    },
+    "2_donation_volume": {
+     "ok": true,
+     "nu0_x_reads": 41168,
+     "nu1_x_reads": 46544,
+     "floor": 4096
+    },
+    "3_rf2_ribbon_closure": {
+     "ok": true
+    },
+    "4_spanning_connectivity": {
+     "ok": false,
+     "nu0": [
+      1,
+      0
+     ],
+     "nu1": [
+      2,
+      1
+     ]
+    },
+    "5_holonomy_primitivity": {
+     "ok": true,
+     "nu0_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        1
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     },
+     "nu1_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     }
+    },
+    "6_parity": {
+     "ok": true,
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ]
+    }
+   }
+  },
+  {
+   "tag": "cpp_f1060",
+   "file": "/tmp/gcv/v2val_growth_conjugate_best_m4_cpp_f1060.json",
+   "sha256_16": "22e7d76b108aea10",
+   "plan_snapshot": {
+    "m": 4,
+    "tau_s": 1,
+    "donations": [
+     [
+      0,
+      3,
+      6,
+      0,
+      1
+     ],
+     [
+      1,
+      2,
+      6,
+      0,
+      1
+     ],
+     [
+      1,
+      2,
+      3,
+      1,
+      1
+     ],
+     [
+      1,
+      3,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      6,
+      40,
+      2
+     ],
+     [
+      0,
+      3,
+      3,
+      11,
+      3
+     ],
+     [
+      0,
+      3,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      3,
+      1,
+      3
+     ],
+     [
+      0,
+      2,
+      3,
+      145,
+      2
+     ],
+     [
+      0,
+      3,
+      3,
+      178,
+      1
+     ],
+     [
+      1,
+      3,
+      1,
+      32,
+      2
+     ],
+     [
+      1,
+      2,
+      6,
+      21,
+      2
+     ],
+     [
+      0,
+      3,
+      4,
+      100,
+      3
+     ],
+     [
+      1,
+      3,
+      1,
+      2,
+      0
+     ],
+     [
+      0,
+      2,
+      6,
+      18,
+      3
+     ],
+     [
+      0,
+      2,
+      6,
+      10,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      11,
+      3
+     ],
+     [
+      0,
+      2,
+      6,
+      84,
+      0
+     ],
+     [
+      1,
+      2,
+      6,
+      5,
+      3
+     ],
+     [
+      1,
+      0,
+      6,
+      5,
+      0
+     ],
+     [
+      0,
+      3,
+      6,
+      8,
+      1
+     ],
+     [
+      1,
+      3,
+      0,
+      0,
+      3
+     ],
+     [
+      0,
+      0,
+      1,
+      133,
+      0
+     ],
+     [
+      0,
+      3,
+      6,
+      11,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      177,
+      3
+     ],
+     [
+      1,
+      0,
+      6,
+      441,
+      0
+     ],
+     [
+      1,
+      3,
+      0,
+      528,
+      2
+     ],
+     [
+      0,
+      1,
+      4,
+      3,
+      1
+     ],
+     [
+      0,
+      3,
+      6,
+      11,
+      1
+     ],
+     [
+      0,
+      0,
+      5,
+      780,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      18,
+      2
+     ],
+     [
+      1,
+      2,
+      3,
+      154,
+      3
+     ],
+     [
+      0,
+      3,
+      3,
+      178,
+      0
+     ],
+     [
+      0,
+      3,
+      3,
+      178,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      208,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      3272,
+      2
+     ],
+     [
+      0,
+      0,
+      2,
+      345,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      177,
+      1
+     ],
+     [
+      0,
+      3,
+      2,
+      394,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      780,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      73,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      2116,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      50,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      208,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      99,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      1458,
+      3
+     ],
+     [
+      0,
+      0,
+      5,
+      780,
+      2
+     ],
+     [
+      1,
+      3,
+      2,
+      2234,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      2700,
+      1
+     ],
+     [
+      0,
+      1,
+      5,
+      100,
+      3
+     ],
+     [
+      1,
+      1,
+      2,
+      2370,
+      2
+     ],
+     [
+      1,
+      0,
+      2,
+      162,
+      1
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      1
+     ],
+     [
+      0,
+      0,
+      0,
+      915,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      1155,
+      2
+     ],
+     [
+      0,
+      1,
+      2,
+      51,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      3,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      1900,
+      0
+     ],
+     [
+      1,
+      1,
+      6,
+      51,
+      1
+     ],
+     [
+      0,
+      2,
+      3,
+      42,
+      3
+     ],
+     [
+      0,
+      0,
+      0,
+      915,
+      2
+     ],
+     [
+      0,
+      3,
+      6,
+      8,
+      3
+     ],
+     [
+      0,
+      0,
+      3,
+      73,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      68,
+      1
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      1
+     ],
+     [
+      0,
+      1,
+      0,
+      332,
+      0
+     ],
+     [
+      0,
+      3,
+      6,
+      10,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      2227,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      3428,
+      1
+     ],
+     [
+      1,
+      1,
+      2,
+      2370,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      16,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      437,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      1900,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      2639,
+      3
+     ],
+     [
+      0,
+      0,
+      4,
+      2993,
+      0
+     ],
+     [
+      0,
+      1,
+      5,
+      3428,
+      2
+     ],
+     [
+      1,
+      1,
+      3,
+      65,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      1235,
+      2
+     ],
+     [
+      0,
+      2,
+      2,
+      1843,
+      2
+     ],
+     [
+      0,
+      3,
+      3,
+      3776,
+      3
+     ],
+     [
+      0,
+      1,
+      2,
+      1042,
+      3
+     ],
+     [
+      1,
+      1,
+      3,
+      65,
+      3
+     ],
+     [
+      0,
+      2,
+      0,
+      1900,
+      3
+     ],
+     [
+      0,
+      1,
+      2,
+      3266,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      26,
+      3
+     ],
+     [
+      0,
+      2,
+      4,
+      3378,
+      1
+     ],
+     [
+      1,
+      3,
+      5,
+      3341,
+      1
+     ],
+     [
+      0,
+      0,
+      0,
+      915,
+      3
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      1
+     ],
+     [
+      0,
+      0,
+      2,
+      1155,
+      3
+     ],
+     [
+      1,
+      3,
+      4,
+      2130,
+      3
+     ],
+     [
+      0,
+      2,
+      2,
+      35,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      1316,
+      1
+     ],
+     [
+      0,
+      1,
+      2,
+      3266,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      3
+     ],
+     [
+      0,
+      0,
+      2,
+      1155,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      1316,
+      0
+     ],
+     [
+      1,
+      3,
+      4,
+      267,
+      1
+     ],
+     [
+      0,
+      0,
+      3,
+      73,
+      3
+     ],
+     [
+      0,
+      3,
+      0,
+      191,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      0
+     ],
+     [
+      1,
+      1,
+      2,
+      1564,
+      2
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      1235,
+      1
+     ],
+     [
+      0,
+      1,
+      5,
+      3428,
+      3
+     ],
+     [
+      0,
+      1,
+      0,
+      332,
+      3
+     ],
+     [
+      0,
+      1,
+      4,
+      1016,
+      2
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      2
+     ],
+     [
+      1,
+      1,
+      2,
+      1564,
+      3
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      2
+     ],
+     [
+      1,
+      0,
+      1,
+      1345,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      1316,
+      3
+     ],
+     [
+      1,
+      3,
+      0,
+      528,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      3
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      1874,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      1923,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      2274,
+      0
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      546,
+      3
+     ],
+     [
+      1,
+      0,
+      0,
+      1125,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      1874,
+      3
+     ],
+     [
+      0,
+      1,
+      1,
+      1874,
+      2
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      3
+     ],
+     [
+      1,
+      2,
+      5,
+      1537,
+      0
+     ],
+     [
+      1,
+      3,
+      0,
+      528,
+      3
+     ]
+    ],
+    "stairs": [
+     [
+      0,
+      2415,
+      3
+     ],
+     [
+      0,
+      2647,
+      3
+     ]
+    ],
+    "wilds": [
+     [
+      0,
+      1197,
+      5,
+      0,
+      [
+       5,
+       7,
+       8
+      ]
+     ]
+    ],
+    "lines": [
+     [
+      0,
+      1193,
+      2,
+      5
+     ]
+    ],
+    "oswaps": [],
+    "cross0": {
+     "0": [
+      1,
+      1
+     ],
+     "1": [
+      1,
+      52
+     ],
+     "2": [
+      1,
+      0
+     ],
+     "3": [
+      1,
+      5
+     ],
+     "4": [
+      1,
+      7
+     ],
+     "5": [
+      1,
+      4
+     ],
+     "6": [
+      1,
+      6
+     ]
+    },
+    "cross1": {
+     "0": [
+      0,
+      0,
+      0
+     ],
+     "1": [
+      0,
+      6,
+      0
+     ],
+     "2": [
+      0,
+      4,
+      0
+     ],
+     "3": [
+      0,
+      14,
+      0
+     ],
+     "4": [
+      0,
+      3,
+      0
+     ],
+     "5": [
+      0,
+      1,
+      0
+     ],
+     "6": [
+      0,
+      9,
+      0
+     ]
+    },
+    "E": 76,
+    "ncyc": [
+     3,
+     5,
+     5,
+     7,
+     3,
+     5,
+     7,
+     5,
+     3
+    ]
+   },
+   "tau_s": 1,
+   "E_lw1": 34,
+   "ncyc": [
+    3,
+    5,
+    5,
+    7,
+    3,
+    5,
+    7,
+    5,
+    3
+   ],
+   "signs": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "skipped": 0,
+   "rf1": true,
+   "rf2": true,
+   "n_donations": 126,
+   "n_stairs": 2,
+   "n_wilds": 1,
+   "n_lines": 1,
+   "n_oswaps": 0,
+   "leaves": [
+    {
+     "leaf": "nu0",
+     "color": 7,
+     "ncyc": 5,
+     "sign": -1,
+     "cycle_lengths": [
+      62893,
+      2619,
+      8,
+      8,
+      8
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 32464,
+      "leaf_x_read_points": 32464,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4096,
+       1125,
+       4,
+       4,
+       4
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 62893,
+      "fiber": 1,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         2
+        ],
+        [
+         2,
+         0
+        ],
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         1
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    },
+    {
+     "leaf": "nu1",
+     "color": 8,
+     "ncyc": 3,
+     "sign": -1,
+     "cycle_lengths": [
+      61392,
+      4023,
+      121
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 45904,
+      "leaf_x_read_points": 45904,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4096,
+       1856,
+       81
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 34,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": 26,
+      "first_return": {
+       "holonomy": {
+        "cycle_type": [
+         14,
+         1,
+         1
+        ],
+        "order": 14,
+        "kind": "nonlinear",
+        "displacement_set": [
+         [
+          0,
+          0
+         ],
+         [
+          0,
+          1
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          2,
+          0
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          3,
+          3
+         ]
+        ],
+        "is_m2_cycle": false
+       },
+       "n_orbits": 3,
+       "orbit_partition_sizes": [
+        14,
+        1,
+        1
+       ],
+       "orbit_partition": [
+        [
+         [
+          0,
+          0
+         ]
+        ],
+        [
+         [
+          0,
+          1
+         ],
+         [
+          0,
+          2
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          1,
+          1
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          2,
+          0
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          3,
+          2
+         ],
+         [
+          3,
+          3
+         ]
+        ],
+        [
+         [
+          0,
+          3
+         ]
+        ]
+       ],
+       "orbit_partition_is_coset_partition": false,
+       "coset_subgroup": null,
+       "displacement_subgroup_order": 16,
+       "displacement_subgroup_gens": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         0
+        ]
+       ],
+       "return_time_min": 1,
+       "return_time_max": 15292,
+       "matches_ncyc": true
+      },
+      "orbits_label_cycles_exactly": true
+     },
+     "main_circuit": {
+      "longest_cycle_length": 61392,
+      "fiber": 256,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         1
+        ],
+        [
+         0,
+         2
+        ],
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         0
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    }
+   ],
+   "variants": [
+    {
+     "variant": "without_wild_seam",
+     "dropped": "wilds",
+     "ncyc": [
+      3,
+      5,
+      5,
+      7,
+      3,
+      4,
+      7,
+      10,
+      4
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "wilds on nu0",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 12,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 8,
+        "z0-z1 mod 2": 8,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "wilds on nu1",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 8,
+        "z1 mod 2": 12,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 10,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 4,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_correction_line",
+     "dropped": "lines",
+     "ncyc": [
+      3,
+      5,
+      5,
+      7,
+      3,
+      4,
+      7,
+      5,
+      6
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "lines on nu0",
+       "modified_cells": 0,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 0,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "lines on nu1",
+       "modified_cells": 4,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 5,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 6,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_stairs",
+     "dropped": "stairs",
+     "ncyc": [
+      3,
+      5,
+      5,
+      7,
+      3,
+      5,
+      7,
+      7,
+      3
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "stairs on nu0",
+       "modified_cells": 8,
+       "class_flips": {
+        "z0 mod 2": 8,
+        "z1 mod 2": 8,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "stairs on nu1",
+       "modified_cells": 8,
+       "class_flips": {
+        "z0 mod 2": 8,
+        "z1 mod 2": 8,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 7,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 3,
+       "preserved_z": []
+      }
+     ]
+    }
+   ],
+   "coverage_patch_experiment": [],
+   "six_requirements": {
+    "1_old_cyclicity": {
+     "ok": false,
+     "old_ncyc": [
+      3,
+      5,
+      5,
+      7,
+      3,
+      5,
+      7
+     ]
+    },
+    "2_donation_volume": {
+     "ok": true,
+     "nu0_x_reads": 32464,
+     "nu1_x_reads": 45904,
+     "floor": 4096
+    },
+    "3_rf2_ribbon_closure": {
+     "ok": true
+    },
+    "4_spanning_connectivity": {
+     "ok": true,
+     "nu0": [
+      1,
+      0
+     ],
+     "nu1": [
+      1,
+      0
+     ]
+    },
+    "5_holonomy_primitivity": {
+     "ok": true,
+     "nu0_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        2
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        1
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     },
+     "nu1_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        1
+       ],
+       [
+        0,
+        2
+       ],
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     }
+    },
+    "6_parity": {
+     "ok": true,
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ]
+    }
+   }
+  },
+  {
+   "tag": "cpp_f1124",
+   "file": "/tmp/gcv/v2val_growth_conjugate_best_m4_cpp_f1124.json",
+   "sha256_16": "38acc6350766cd5c",
+   "plan_snapshot": {
+    "m": 4,
+    "tau_s": 3,
+    "donations": [
+     [
+      0,
+      0,
+      6,
+      11,
+      1
+     ],
+     [
+      0,
+      3,
+      4,
+      3,
+      0
+     ],
+     [
+      0,
+      3,
+      5,
+      35,
+      3
+     ],
+     [
+      0,
+      3,
+      5,
+      5,
+      2
+     ],
+     [
+      1,
+      2,
+      4,
+      0,
+      2
+     ],
+     [
+      0,
+      0,
+      0,
+      1,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      2
+     ],
+     [
+      1,
+      3,
+      3,
+      0,
+      2
+     ],
+     [
+      0,
+      2,
+      6,
+      0,
+      2
+     ],
+     [
+      0,
+      0,
+      0,
+      5,
+      2
+     ],
+     [
+      0,
+      0,
+      6,
+      2,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      1,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      0,
+      1
+     ],
+     [
+      1,
+      3,
+      3,
+      1,
+      1
+     ],
+     [
+      0,
+      0,
+      6,
+      1,
+      0
+     ],
+     [
+      0,
+      3,
+      5,
+      8,
+      2
+     ],
+     [
+      1,
+      2,
+      4,
+      2,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      25,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      4,
+      2
+     ],
+     [
+      1,
+      3,
+      3,
+      11,
+      0
+     ],
+     [
+      1,
+      3,
+      0,
+      6,
+      1
+     ],
+     [
+      0,
+      0,
+      3,
+      2,
+      1
+     ],
+     [
+      1,
+      3,
+      3,
+      11,
+      1
+     ],
+     [
+      1,
+      3,
+      3,
+      1,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      1
+     ],
+     [
+      0,
+      3,
+      5,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      5,
+      80,
+      3
+     ],
+     [
+      0,
+      3,
+      4,
+      25,
+      2
+     ],
+     [
+      1,
+      2,
+      4,
+      4,
+      1
+     ],
+     [
+      0,
+      3,
+      5,
+      14,
+      3
+     ],
+     [
+      1,
+      2,
+      4,
+      13,
+      1
+     ],
+     [
+      1,
+      1,
+      0,
+      11,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      33,
+      0
+     ],
+     [
+      0,
+      3,
+      4,
+      1,
+      2
+     ],
+     [
+      0,
+      1,
+      6,
+      78,
+      2
+     ],
+     [
+      0,
+      0,
+      6,
+      2,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      65,
+      1
+     ],
+     [
+      0,
+      1,
+      6,
+      78,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      545,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      89,
+      3
+     ],
+     [
+      0,
+      1,
+      2,
+      1564,
+      1
+     ],
+     [
+      0,
+      1,
+      5,
+      322,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      1316,
+      2
+     ],
+     [
+      0,
+      3,
+      5,
+      1143,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      51,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      0
+     ],
+     [
+      0,
+      2,
+      2,
+      270,
+      2
+     ],
+     [
+      1,
+      1,
+      1,
+      1327,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      26,
+      1
+     ],
+     [
+      0,
+      3,
+      4,
+      2130,
+      0
+     ],
+     [
+      0,
+      1,
+      6,
+      78,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      1805,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      206,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      2061,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      1326,
+      3
+     ],
+     [
+      0,
+      3,
+      1,
+      240,
+      3
+     ],
+     [
+      1,
+      2,
+      5,
+      386,
+      0
+     ],
+     [
+      1,
+      0,
+      1,
+      2976,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      386,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      2227,
+      1
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      73,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      161,
+      0
+     ],
+     [
+      1,
+      2,
+      1,
+      3228,
+      0
+     ],
+     [
+      0,
+      3,
+      4,
+      567,
+      1
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      1
+     ],
+     [
+      1,
+      0,
+      4,
+      1805,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      1035,
+      2
+     ],
+     [
+      1,
+      3,
+      4,
+      494,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      3662,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      2529,
+      0
+     ],
+     [
+      0,
+      2,
+      6,
+      1540,
+      3
+     ],
+     [
+      0,
+      3,
+      3,
+      178,
+      3
+     ],
+     [
+      1,
+      1,
+      4,
+      1016,
+      3
+     ],
+     [
+      1,
+      2,
+      3,
+      293,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      3
+     ],
+     [
+      1,
+      0,
+      5,
+      780,
+      1
+     ],
+     [
+      1,
+      0,
+      2,
+      99,
+      2
+     ],
+     [
+      1,
+      0,
+      1,
+      2622,
+      0
+     ],
+     [
+      0,
+      2,
+      1,
+      89,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      915,
+      3
+     ],
+     [
+      1,
+      0,
+      1,
+      2976,
+      0
+     ],
+     [
+      1,
+      0,
+      1,
+      1040,
+      0
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      1540,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      1900,
+      1
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      2
+     ],
+     [
+      0,
+      2,
+      2,
+      306,
+      3
+     ],
+     [
+      0,
+      1,
+      0,
+      437,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      1540,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      437,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      68,
+      1
+     ],
+     [
+      1,
+      0,
+      1,
+      2976,
+      3
+     ],
+     [
+      0,
+      2,
+      2,
+      306,
+      2
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      3
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      1316,
+      1
+     ],
+     [
+      0,
+      1,
+      6,
+      3388,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      1540,
+      1
+     ],
+     [
+      0,
+      2,
+      0,
+      1326,
+      2
+     ],
+     [
+      0,
+      3,
+      0,
+      425,
+      1
+     ],
+     [
+      0,
+      3,
+      4,
+      567,
+      0
+     ],
+     [
+      1,
+      1,
+      1,
+      3718,
+      1
+     ],
+     [
+      0,
+      1,
+      3,
+      2976,
+      2
+     ]
+    ],
+    "stairs": [],
+    "wilds": [
+     [
+      1,
+      1505,
+      6,
+      1,
+      [
+       8,
+       6,
+       7
+      ]
+     ]
+    ],
+    "lines": [
+     [
+      1,
+      3803,
+      1,
+      6
+     ]
+    ],
+    "oswaps": [],
+    "cross0": {
+     "0": [
+      1,
+      1
+     ],
+     "1": [
+      1,
+      52
+     ],
+     "2": [
+      1,
+      0
+     ],
+     "3": [
+      1,
+      5
+     ],
+     "4": [
+      1,
+      7
+     ],
+     "5": [
+      1,
+      4
+     ],
+     "6": [
+      1,
+      6
+     ]
+    },
+    "cross1": {
+     "0": [
+      0,
+      0,
+      0
+     ],
+     "1": [
+      0,
+      6,
+      0
+     ],
+     "2": [
+      0,
+      4,
+      0
+     ],
+     "3": [
+      0,
+      14,
+      0
+     ],
+     "4": [
+      0,
+      3,
+      0
+     ],
+     "5": [
+      0,
+      1,
+      0
+     ],
+     "6": [
+      0,
+      9,
+      0
+     ]
+    },
+    "E": 90,
+    "ncyc": [
+     5,
+     3,
+     3,
+     5,
+     5,
+     5,
+     7,
+     5,
+     5
+    ]
+   },
+   "tau_s": 3,
+   "E_lw1": 34,
+   "ncyc": [
+    5,
+    3,
+    3,
+    5,
+    5,
+    5,
+    7,
+    5,
+    5
+   ],
+   "signs": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "skipped": 0,
+   "rf1": true,
+   "rf2": true,
+   "n_donations": 106,
+   "n_stairs": 0,
+   "n_wilds": 1,
+   "n_lines": 1,
+   "n_oswaps": 0,
+   "leaves": [
+    {
+     "leaf": "nu0",
+     "color": 7,
+     "ncyc": 5,
+     "sign": -1,
+     "cycle_lengths": [
+      65518,
+      6,
+      5,
+      5,
+      2
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 78576,
+      "leaf_x_read_points": 78576,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4096,
+       4,
+       3,
+       2,
+       2
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 65518,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         2
+        ],
+        [
+         1,
+         0
+        ],
+        [
+         1,
+         1
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         2,
+         2
+        ],
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    },
+    {
+     "leaf": "nu1",
+     "color": 8,
+     "ncyc": 5,
+     "sign": -1,
+     "cycle_lengths": [
+      65428,
+      53,
+      41,
+      8,
+      6
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 56384,
+      "leaf_x_read_points": 56384,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4096,
+       34,
+       29,
+       6,
+       3
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 65428,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         2
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         3,
+         1
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    }
+   ],
+   "variants": [
+    {
+     "variant": "without_wild_seam",
+     "dropped": "wilds",
+     "ncyc": [
+      5,
+      3,
+      3,
+      5,
+      5,
+      5,
+      8,
+      6,
+      6
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "wilds on nu0",
+       "modified_cells": 8,
+       "class_flips": {
+        "z0 mod 2": 8,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "wilds on nu1",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 4,
+        "z1 mod 2": 12,
+        "z0+z1 mod 2": 8,
+        "z0-z1 mod 2": 8,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 6,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 6,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_correction_line",
+     "dropped": "lines",
+     "ncyc": [
+      5,
+      3,
+      3,
+      5,
+      5,
+      5,
+      8,
+      5,
+      6
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "lines on nu0",
+       "modified_cells": 0,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 0,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "lines on nu1",
+       "modified_cells": 4,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 5,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 6,
+       "preserved_z": []
+      }
+     ]
+    }
+   ],
+   "coverage_patch_experiment": [],
+   "six_requirements": {
+    "1_old_cyclicity": {
+     "ok": false,
+     "old_ncyc": [
+      5,
+      3,
+      3,
+      5,
+      5,
+      5,
+      7
+     ]
+    },
+    "2_donation_volume": {
+     "ok": true,
+     "nu0_x_reads": 78576,
+     "nu1_x_reads": 56384,
+     "floor": 4096
+    },
+    "3_rf2_ribbon_closure": {
+     "ok": true
+    },
+    "4_spanning_connectivity": {
+     "ok": true,
+     "nu0": [
+      1,
+      0
+     ],
+     "nu1": [
+      1,
+      0
+     ]
+    },
+    "5_holonomy_primitivity": {
+     "ok": true,
+     "nu0_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        1,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        2,
+        2
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     },
+     "nu1_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        3,
+        1
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     }
+    },
+    "6_parity": {
+     "ok": true,
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ]
+    }
+   }
+  },
+  {
+   "tag": "cpp_rs5252",
+   "file": "/tmp/gcv/v2val_growth_conjugate_best_m4_cpp_rs5252.json",
+   "sha256_16": "df9fd684100a36ef",
+   "plan_snapshot": {
+    "m": 4,
+    "tau_s": 1,
+    "donations": [
+     [
+      1,
+      3,
+      3,
+      0,
+      0
+     ],
+     [
+      1,
+      3,
+      3,
+      1,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      11,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      8,
+      0
+     ],
+     [
+      0,
+      2,
+      3,
+      1,
+      1
+     ],
+     [
+      0,
+      0,
+      0,
+      1,
+      1
+     ],
+     [
+      0,
+      0,
+      5,
+      2,
+      2
+     ],
+     [
+      0,
+      2,
+      3,
+      1,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      0,
+      2
+     ],
+     [
+      1,
+      3,
+      5,
+      5,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      35,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      14,
+      1
+     ],
+     [
+      1,
+      3,
+      5,
+      18,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      0,
+      3
+     ],
+     [
+      0,
+      3,
+      6,
+      0,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      1,
+      1
+     ],
+     [
+      0,
+      2,
+      6,
+      0,
+      3
+     ],
+     [
+      0,
+      0,
+      5,
+      2,
+      3
+     ],
+     [
+      0,
+      3,
+      0,
+      31,
+      3
+     ],
+     [
+      1,
+      0,
+      0,
+      12,
+      0
+     ],
+     [
+      0,
+      2,
+      5,
+      68,
+      2
+     ],
+     [
+      0,
+      3,
+      0,
+      31,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      129,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      80,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      168,
+      1
+     ],
+     [
+      1,
+      1,
+      3,
+      129,
+      3
+     ],
+     [
+      0,
+      2,
+      3,
+      145,
+      1
+     ],
+     [
+      1,
+      0,
+      0,
+      915,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      168,
+      3
+     ],
+     [
+      0,
+      0,
+      2,
+      140,
+      2
+     ],
+     [
+      1,
+      1,
+      5,
+      100,
+      1
+     ],
+     [
+      1,
+      0,
+      1,
+      133,
+      2
+     ],
+     [
+      1,
+      0,
+      1,
+      275,
+      2
+     ],
+     [
+      1,
+      3,
+      5,
+      546,
+      1
+     ],
+     [
+      0,
+      3,
+      1,
+      250,
+      3
+     ],
+     [
+      1,
+      2,
+      2,
+      35,
+      2
+     ],
+     [
+      1,
+      2,
+      4,
+      71,
+      2
+     ],
+     [
+      1,
+      1,
+      3,
+      2061,
+      1
+     ],
+     [
+      1,
+      0,
+      2,
+      162,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      2229,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      178,
+      1
+     ],
+     [
+      1,
+      2,
+      4,
+      387,
+      1
+     ],
+     [
+      0,
+      3,
+      1,
+      1042,
+      3
+     ],
+     [
+      0,
+      3,
+      2,
+      2955,
+      1
+     ],
+     [
+      1,
+      2,
+      4,
+      387,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      380,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      2639,
+      2
+     ],
+     [
+      0,
+      3,
+      2,
+      1004,
+      0
+     ],
+     [
+      1,
+      1,
+      0,
+      437,
+      1
+     ],
+     [
+      0,
+      1,
+      4,
+      3,
+      1
+     ],
+     [
+      1,
+      3,
+      4,
+      267,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      2803,
+      0
+     ],
+     [
+      0,
+      3,
+      2,
+      3404,
+      3
+     ],
+     [
+      1,
+      1,
+      4,
+      2639,
+      3
+     ],
+     [
+      1,
+      0,
+      5,
+      3354,
+      0
+     ],
+     [
+      1,
+      0,
+      5,
+      2529,
+      2
+     ],
+     [
+      1,
+      3,
+      5,
+      3341,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      162,
+      3
+     ],
+     [
+      1,
+      2,
+      1,
+      3234,
+      3
+     ],
+     [
+      0,
+      3,
+      4,
+      494,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      168,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      288,
+      2
+     ],
+     [
+      0,
+      3,
+      2,
+      2076,
+      0
+     ],
+     [
+      0,
+      3,
+      1,
+      1042,
+      1
+     ],
+     [
+      0,
+      3,
+      2,
+      283,
+      2
+     ],
+     [
+      1,
+      2,
+      4,
+      1151,
+      0
+     ],
+     [
+      1,
+      1,
+      2,
+      2370,
+      1
+     ],
+     [
+      0,
+      1,
+      4,
+      26,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      0,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      42,
+      1
+     ],
+     [
+      1,
+      1,
+      3,
+      2061,
+      0
+     ],
+     [
+      1,
+      1,
+      5,
+      350,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      3894,
+      2
+     ],
+     [
+      1,
+      1,
+      3,
+      3340,
+      2
+     ],
+     [
+      1,
+      1,
+      5,
+      3647,
+      3
+     ],
+     [
+      1,
+      2,
+      2,
+      57,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      3354,
+      3
+     ],
+     [
+      1,
+      1,
+      0,
+      332,
+      1
+     ],
+     [
+      1,
+      1,
+      3,
+      161,
+      2
+     ],
+     [
+      1,
+      2,
+      1,
+      1035,
+      3
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      0
+     ],
+     [
+      1,
+      1,
+      6,
+      51,
+      1
+     ],
+     [
+      0,
+      3,
+      4,
+      2130,
+      0
+     ],
+     [
+      1,
+      1,
+      5,
+      350,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      35,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      1458,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      168,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      83,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      3225,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      1326,
+      1
+     ],
+     [
+      1,
+      2,
+      1,
+      3228,
+      1
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      3
+     ],
+     [
+      1,
+      0,
+      1,
+      133,
+      1
+     ],
+     [
+      1,
+      0,
+      1,
+      2622,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      380,
+      2
+     ],
+     [
+      1,
+      2,
+      5,
+      1537,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      1143,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      57,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      3
+     ],
+     [
+      0,
+      1,
+      2,
+      1042,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      309,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      16,
+      3
+     ],
+     [
+      1,
+      1,
+      0,
+      332,
+      2
+     ],
+     [
+      0,
+      3,
+      2,
+      3404,
+      1
+     ],
+     [
+      1,
+      2,
+      1,
+      1035,
+      2
+     ],
+     [
+      0,
+      1,
+      1,
+      3718,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      1458,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      65,
+      3
+     ],
+     [
+      0,
+      3,
+      2,
+      3404,
+      2
+     ],
+     [
+      0,
+      3,
+      0,
+      425,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      2131,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      380,
+      3
+     ],
+     [
+      1,
+      2,
+      4,
+      740,
+      2
+     ],
+     [
+      1,
+      0,
+      1,
+      1345,
+      3
+     ],
+     [
+      1,
+      0,
+      1,
+      3058,
+      0
+     ],
+     [
+      1,
+      0,
+      2,
+      1155,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      1
+     ],
+     [
+      0,
+      1,
+      2,
+      51,
+      3
+     ],
+     [
+      0,
+      3,
+      2,
+      2234,
+      3
+     ],
+     [
+      1,
+      1,
+      3,
+      3340,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      396,
+      3
+     ],
+     [
+      1,
+      0,
+      0,
+      1125,
+      3
+     ],
+     [
+      1,
+      1,
+      0,
+      332,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      1185,
+      3
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      2
+     ],
+     [
+      0,
+      3,
+      6,
+      11,
+      3
+     ],
+     [
+      1,
+      2,
+      4,
+      3378,
+      2
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      3
+     ],
+     [
+      1,
+      1,
+      3,
+      3340,
+      0
+     ],
+     [
+      1,
+      3,
+      2,
+      706,
+      2
+     ],
+     [
+      1,
+      0,
+      2,
+      99,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      129,
+      1
+     ],
+     [
+      1,
+      1,
+      5,
+      1128,
+      2
+     ],
+     [
+      1,
+      0,
+      2,
+      99,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      35,
+      1
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      1
+     ],
+     [
+      0,
+      1,
+      3,
+      3928,
+      3
+     ],
+     [
+      1,
+      2,
+      0,
+      68,
+      2
+     ],
+     [
+      1,
+      1,
+      5,
+      350,
+      3
+     ],
+     [
+      1,
+      1,
+      3,
+      161,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      3854,
+      3
+     ],
+     [
+      1,
+      2,
+      5,
+      1537,
+      2
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      3
+     ],
+     [
+      1,
+      3,
+      5,
+      546,
+      0
+     ],
+     [
+      1,
+      3,
+      5,
+      1143,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      26,
+      3
+     ],
+     [
+      1,
+      2,
+      5,
+      380,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      3225,
+      3
+     ],
+     [
+      0,
+      1,
+      6,
+      512,
+      1
+     ],
+     [
+      0,
+      1,
+      1,
+      1327,
+      3
+     ],
+     [
+      0,
+      1,
+      1,
+      1327,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      68,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      203,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      293,
+      2
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      2
+     ],
+     [
+      1,
+      2,
+      0,
+      1025,
+      3
+     ],
+     [
+      1,
+      0,
+      5,
+      3354,
+      2
+     ],
+     [
+      0,
+      1,
+      2,
+      51,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      3718,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      203,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      591,
+      1
+     ],
+     [
+      0,
+      1,
+      1,
+      1327,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      2192,
+      1
+     ],
+     [
+      0,
+      1,
+      1,
+      1874,
+      1
+     ],
+     [
+      1,
+      2,
+      2,
+      3854,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      2227,
+      1
+     ],
+     [
+      1,
+      2,
+      5,
+      1537,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      1025,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      1326,
+      2
+     ],
+     [
+      1,
+      0,
+      5,
+      2529,
+      0
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      2087,
+      3
+     ],
+     [
+      0,
+      1,
+      0,
+      108,
+      0
+     ],
+     [
+      1,
+      2,
+      2,
+      35,
+      3
+     ],
+     [
+      1,
+      2,
+      0,
+      76,
+      3
+     ],
+     [
+      1,
+      2,
+      2,
+      1843,
+      1
+     ],
+     [
+      1,
+      2,
+      0,
+      1326,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      42,
+      2
+     ],
+     [
+      0,
+      1,
+      5,
+      322,
+      1
+     ],
+     [
+      1,
+      2,
+      3,
+      42,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      1185,
+      1
+     ],
+     [
+      1,
+      0,
+      0,
+      1125,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      3746,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      178,
+      2
+     ],
+     [
+      1,
+      0,
+      0,
+      1185,
+      0
+     ],
+     [
+      0,
+      1,
+      4,
+      26,
+      1
+     ],
+     [
+      1,
+      0,
+      2,
+      825,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      1
+     ],
+     [
+      0,
+      1,
+      1,
+      288,
+      0
+     ],
+     [
+      1,
+      2,
+      0,
+      1025,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      386,
+      0
+     ],
+     [
+      1,
+      0,
+      5,
+      3342,
+      2
+     ],
+     [
+      1,
+      2,
+      2,
+      192,
+      2
+     ],
+     [
+      1,
+      0,
+      2,
+      825,
+      2
+     ]
+    ],
+    "stairs": [],
+    "wilds": [
+     [
+      3,
+      3808,
+      5,
+      1,
+      [
+       8,
+       7,
+       5
+      ]
+     ]
+    ],
+    "lines": [
+     [
+      3,
+      3776,
+      1,
+      5
+     ]
+    ],
+    "oswaps": [],
+    "cross0": {
+     "0": [
+      1,
+      1
+     ],
+     "1": [
+      1,
+      52
+     ],
+     "2": [
+      1,
+      0
+     ],
+     "3": [
+      1,
+      5
+     ],
+     "4": [
+      1,
+      7
+     ],
+     "5": [
+      1,
+      4
+     ],
+     "6": [
+      1,
+      6
+     ]
+    },
+    "cross1": {
+     "0": [
+      0,
+      0,
+      0
+     ],
+     "1": [
+      0,
+      6,
+      0
+     ],
+     "2": [
+      0,
+      4,
+      0
+     ],
+     "3": [
+      0,
+      14,
+      0
+     ],
+     "4": [
+      0,
+      3,
+      0
+     ],
+     "5": [
+      0,
+      1,
+      0
+     ],
+     "6": [
+      0,
+      9,
+      0
+     ]
+    },
+    "E": 68,
+    "ncyc": [
+     1,
+     3,
+     3,
+     3,
+     5,
+     5,
+     15,
+     7,
+     5
+    ]
+   },
+   "tau_s": 1,
+   "E_lw1": 38,
+   "ncyc": [
+    1,
+    3,
+    3,
+    3,
+    5,
+    5,
+    15,
+    7,
+    5
+   ],
+   "signs": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "skipped": 0,
+   "rf1": true,
+   "rf2": true,
+   "n_donations": 198,
+   "n_stairs": 0,
+   "n_wilds": 1,
+   "n_lines": 1,
+   "n_oswaps": 0,
+   "leaves": [
+    {
+     "leaf": "nu0",
+     "color": 7,
+     "ncyc": 7,
+     "sign": -1,
+     "cycle_lengths": [
+      64599,
+      819,
+      102,
+      4,
+      4,
+      4,
+      4
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 2,
+      "isolated_fibers": 1,
+      "isolated_fiber_ids": [
+       3209
+      ],
+      "move_events": 93280,
+      "leaf_x_read_points": 93280,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "n_scc": 2,
+      "scc_sizes_top": [
+       4095,
+       1
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4095,
+       599,
+       79,
+       1,
+       1,
+       1,
+       1
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 4,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 64599,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         1
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 2,
+       "exact": false,
+       "values_per_cycle": [
+        "1",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    },
+    {
+     "leaf": "nu1",
+     "color": 8,
+     "ncyc": 5,
+     "sign": -1,
+     "cycle_lengths": [
+      62835,
+      2681,
+      16,
+      2,
+      2
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 2,
+      "isolated_fibers": 1,
+      "isolated_fiber_ids": [
+       3776
+      ],
+      "move_events": 35328,
+      "leaf_x_read_points": 35328,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "n_scc": 2,
+      "scc_sizes_top": [
+       4095,
+       1
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4095,
+       1137,
+       1,
+       1,
+       1
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 3,
+      "trapped_on_isolated_fibers": false
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 62835,
+      "fiber": 586,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         1
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         1
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 2,
+       "exact": false,
+       "values_per_cycle": [
+        "1",
+        "1",
+        "0",
+        "1",
+        "1"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    }
+   ],
+   "variants": [
+    {
+     "variant": "without_wild_seam",
+     "dropped": "wilds",
+     "ncyc": [
+      1,
+      3,
+      3,
+      3,
+      5,
+      8,
+      15,
+      12,
+      6
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "wilds on nu0",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 12,
+        "z1 mod 2": 8,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "wilds on nu1",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 4,
+        "z1 mod 2": 12,
+        "z0+z1 mod 2": 8,
+        "z0-z1 mod 2": 8,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 12,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 6,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_correction_line",
+     "dropped": "lines",
+     "ncyc": [
+      1,
+      3,
+      3,
+      3,
+      5,
+      6,
+      15,
+      7,
+      8
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "lines on nu0",
+       "modified_cells": 0,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 0,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "lines on nu1",
+       "modified_cells": 4,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 7,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 8,
+       "preserved_z": []
+      }
+     ]
+    }
+   ],
+   "coverage_patch_experiment": [
+    {
+     "leaf": "nu0",
+     "isolated_fiber": 3209,
+     "candidates_tried": 96,
+     "best": {
+      "donation": [
+       0,
+       2,
+       5,
+       0,
+       0
+      ],
+      "E_lw1": 50,
+      "ncyc": [
+       1,
+       3,
+       3,
+       3,
+       5,
+       7,
+       15,
+       17,
+       5
+      ],
+      "signs": [
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1
+      ]
+     }
+    },
+    {
+     "leaf": "nu1",
+     "isolated_fiber": 3776,
+     "candidates_tried": 96,
+     "best": null
+    }
+   ],
+   "six_requirements": {
+    "1_old_cyclicity": {
+     "ok": false,
+     "old_ncyc": [
+      1,
+      3,
+      3,
+      3,
+      5,
+      5,
+      15
+     ]
+    },
+    "2_donation_volume": {
+     "ok": true,
+     "nu0_x_reads": 93280,
+     "nu1_x_reads": 35328,
+     "floor": 4096
+    },
+    "3_rf2_ribbon_closure": {
+     "ok": true
+    },
+    "4_spanning_connectivity": {
+     "ok": false,
+     "nu0": [
+      2,
+      1
+     ],
+     "nu1": [
+      2,
+      1
+     ]
+    },
+    "5_holonomy_primitivity": {
+     "ok": true,
+     "nu0_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        1
+       ]
+      ],
+      "is_m2_cycle": true
+     },
+     "nu1_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        1
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        2,
+        1
+       ]
+      ],
+      "is_m2_cycle": true
+     }
+    },
+    "6_parity": {
+     "ok": true,
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ]
+    }
+   }
+  },
+  {
+   "tag": "cpp_rs1010",
+   "file": "/data/angel/repos/etc/Torus-Hamilton-Decomposition-Program/scripts/growth_conjugate_best_m4_cpp_rs1010.json",
+   "sha256_16": "4f8932f1e66a9c7d",
+   "plan_snapshot": {
+    "m": 4,
+    "tau_s": 2,
+    "donations": [
+     [
+      1,
+      3,
+      2,
+      0,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      1,
+      1
+     ],
+     [
+      1,
+      3,
+      3,
+      1,
+      0
+     ],
+     [
+      1,
+      3,
+      3,
+      0,
+      1
+     ],
+     [
+      1,
+      1,
+      2,
+      2,
+      3
+     ],
+     [
+      1,
+      2,
+      1,
+      0,
+      3
+     ],
+     [
+      0,
+      3,
+      1,
+      0,
+      2
+     ],
+     [
+      0,
+      3,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      1,
+      1
+     ],
+     [
+      1,
+      3,
+      2,
+      394,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      0,
+      3
+     ],
+     [
+      1,
+      3,
+      3,
+      11,
+      0
+     ],
+     [
+      1,
+      0,
+      1,
+      47,
+      1
+     ],
+     [
+      0,
+      3,
+      1,
+      0,
+      3
+     ],
+     [
+      0,
+      0,
+      3,
+      4,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      75,
+      1
+     ],
+     [
+      1,
+      0,
+      6,
+      441,
+      0
+     ],
+     [
+      0,
+      1,
+      6,
+      27,
+      3
+     ],
+     [
+      0,
+      0,
+      3,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      1,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      16,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      1793,
+      1
+     ],
+     [
+      1,
+      0,
+      1,
+      1345,
+      3
+     ],
+     [
+      1,
+      0,
+      3,
+      305,
+      1
+     ],
+     [
+      0,
+      1,
+      6,
+      51,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      1923,
+      3
+     ],
+     [
+      1,
+      1,
+      1,
+      1874,
+      2
+     ],
+     [
+      1,
+      0,
+      5,
+      1793,
+      3
+     ],
+     [
+      0,
+      2,
+      1,
+      1035,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      911,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      3228,
+      3
+     ],
+     [
+      0,
+      2,
+      0,
+      16,
+      3
+     ],
+     [
+      0,
+      2,
+      0,
+      68,
+      0
+     ],
+     [
+      0,
+      3,
+      1,
+      1189,
+      0
+     ],
+     [
+      0,
+      2,
+      1,
+      3228,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      2116,
+      0
+     ],
+     [
+      1,
+      0,
+      1,
+      1523,
+      3
+     ],
+     [
+      1,
+      0,
+      1,
+      1523,
+      2
+     ],
+     [
+      0,
+      2,
+      3,
+      1995,
+      0
+     ],
+     [
+      1,
+      1,
+      4,
+      2700,
+      1
+     ],
+     [
+      0,
+      2,
+      0,
+      2116,
+      3
+     ],
+     [
+      0,
+      1,
+      5,
+      322,
+      2
+     ],
+     [
+      1,
+      2,
+      3,
+      293,
+      1
+     ],
+     [
+      0,
+      2,
+      0,
+      1326,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      1326,
+      3
+     ],
+     [
+      1,
+      3,
+      4,
+      2312,
+      1
+     ],
+     [
+      1,
+      3,
+      2,
+      3404,
+      2
+     ],
+     [
+      1,
+      1,
+      4,
+      2229,
+      3
+     ],
+     [
+      1,
+      1,
+      4,
+      3662,
+      0
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      1016,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      2087,
+      0
+     ],
+     [
+      0,
+      2,
+      1,
+      3228,
+      0
+     ],
+     [
+      0,
+      1,
+      3,
+      591,
+      2
+     ],
+     [
+      1,
+      0,
+      4,
+      1063,
+      0
+     ],
+     [
+      0,
+      1,
+      5,
+      322,
+      1
+     ],
+     [
+      1,
+      3,
+      2,
+      2076,
+      2
+     ],
+     [
+      0,
+      1,
+      3,
+      161,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      3
+     ],
+     [
+      0,
+      2,
+      5,
+      1537,
+      1
+     ],
+     [
+      1,
+      1,
+      4,
+      2229,
+      2
+     ],
+     [
+      1,
+      3,
+      2,
+      2955,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      1326,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      1035,
+      0
+     ],
+     [
+      1,
+      2,
+      5,
+      386,
+      3
+     ],
+     [
+      0,
+      2,
+      2,
+      1458,
+      3
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      2
+     ],
+     [
+      1,
+      3,
+      2,
+      1570,
+      3
+     ],
+     [
+      0,
+      1,
+      0,
+      437,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      293,
+      3
+     ],
+     [
+      0,
+      1,
+      5,
+      1128,
+      1
+     ],
+     [
+      1,
+      0,
+      1,
+      1345,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      1793,
+      2
+     ],
+     [
+      0,
+      2,
+      1,
+      3234,
+      1
+     ],
+     [
+      1,
+      0,
+      3,
+      206,
+      1
+     ],
+     [
+      1,
+      0,
+      5,
+      1923,
+      2
+     ],
+     [
+      1,
+      1,
+      6,
+      512,
+      0
+     ],
+     [
+      1,
+      1,
+      2,
+      51,
+      0
+     ],
+     [
+      1,
+      0,
+      1,
+      1345,
+      2
+     ],
+     [
+      1,
+      3,
+      1,
+      240,
+      0
+     ],
+     [
+      0,
+      2,
+      5,
+      2227,
+      2
+     ],
+     [
+      0,
+      2,
+      3,
+      1995,
+      2
+     ],
+     [
+      0,
+      2,
+      0,
+      2116,
+      2
+     ],
+     [
+      1,
+      0,
+      5,
+      1923,
+      0
+     ],
+     [
+      1,
+      1,
+      3,
+      2087,
+      3
+     ],
+     [
+      0,
+      1,
+      3,
+      3928,
+      2
+     ],
+     [
+      1,
+      1,
+      2,
+      51,
+      1
+     ],
+     [
+      0,
+      2,
+      2,
+      35,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      2131,
+      2
+     ],
+     [
+      1,
+      0,
+      3,
+      206,
+      2
+     ],
+     [
+      1,
+      3,
+      2,
+      3404,
+      0
+     ],
+     [
+      1,
+      1,
+      2,
+      51,
+      3
+     ],
+     [
+      1,
+      1,
+      6,
+      3388,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      1874,
+      3
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      3
+     ],
+     [
+      1,
+      3,
+      2,
+      3404,
+      3
+     ],
+     [
+      0,
+      2,
+      5,
+      380,
+      0
+     ],
+     [
+      0,
+      1,
+      2,
+      2370,
+      3
+     ],
+     [
+      1,
+      3,
+      2,
+      2955,
+      2
+     ],
+     [
+      1,
+      0,
+      4,
+      2500,
+      0
+     ],
+     [
+      0,
+      1,
+      2,
+      2370,
+      2
+     ],
+     [
+      1,
+      1,
+      1,
+      40,
+      2
+     ],
+     [
+      1,
+      1,
+      5,
+      4043,
+      1
+     ]
+    ],
+    "stairs": [],
+    "wilds": [
+     [
+      1,
+      2110,
+      4,
+      0,
+      [
+       7,
+       4,
+       8
+      ]
+     ]
+    ],
+    "lines": [
+     [
+      1,
+      724,
+      1,
+      4
+     ]
+    ],
+    "oswaps": [],
+    "cross0": {
+     "0": [
+      1,
+      1
+     ],
+     "1": [
+      1,
+      52
+     ],
+     "2": [
+      1,
+      0
+     ],
+     "3": [
+      1,
+      5
+     ],
+     "4": [
+      1,
+      7
+     ],
+     "5": [
+      1,
+      4
+     ],
+     "6": [
+      1,
+      6
+     ]
+    },
+    "cross1": {
+     "0": [
+      0,
+      0,
+      0
+     ],
+     "1": [
+      0,
+      6,
+      0
+     ],
+     "2": [
+      0,
+      4,
+      0
+     ],
+     "3": [
+      0,
+      14,
+      0
+     ],
+     "4": [
+      0,
+      3,
+      0
+     ],
+     "5": [
+      0,
+      1,
+      0
+     ],
+     "6": [
+      0,
+      9,
+      0
+     ]
+    },
+    "E": 44,
+    "ncyc": [
+     1,
+     5,
+     5,
+     7,
+     1,
+     1,
+     7,
+     7,
+     1
+    ]
+   },
+   "tau_s": 2,
+   "E_lw1": 26,
+   "ncyc": [
+    1,
+    5,
+    5,
+    7,
+    1,
+    1,
+    7,
+    7,
+    1
+   ],
+   "signs": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "skipped": 0,
+   "rf1": true,
+   "rf2": true,
+   "n_donations": 105,
+   "n_stairs": 0,
+   "n_wilds": 1,
+   "n_lines": 1,
+   "n_oswaps": 0,
+   "leaves": [
+    {
+     "leaf": "nu0",
+     "color": 7,
+     "ncyc": 7,
+     "sign": -1,
+     "cycle_lengths": [
+      65510,
+      5,
+      5,
+      4,
+      4,
+      4,
+      4
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 2,
+      "isolated_fibers": 1,
+      "isolated_fiber_ids": [
+       3209
+      ],
+      "move_events": 76752,
+      "leaf_x_read_points": 76752,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "n_scc": 2,
+      "scc_sizes_top": [
+       4095,
+       1
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4095,
+       3,
+       3,
+       1,
+       1,
+       1,
+       1
+      ],
+      "pairwise_disjoint": false,
+      "all_equal": false,
+      "common_fibers": 0,
+      "single_fiber_trapped_cycles": 4,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": null,
+      "first_return": null,
+      "note": "no single fiber meets all cycles: leaf cycles are separated by fibers (x-block system)"
+     },
+     "main_circuit": {
+      "longest_cycle_length": 65510,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         1
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         2,
+         0
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 2,
+       "exact": false,
+       "values_per_cycle": [
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "1",
+        "1"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": []
+    },
+    {
+     "leaf": "nu1",
+     "color": 8,
+     "ncyc": 1,
+     "sign": -1,
+     "cycle_lengths": [
+      65536
+     ],
+     "G_nu": {
+      "n_fibers": 4096,
+      "n_components": 1,
+      "isolated_fibers": 0,
+      "isolated_fiber_ids": [],
+      "move_events": 43232,
+      "leaf_x_read_points": 43232,
+      "x_read_floor_m6": 4096,
+      "meets_volume_floor": true
+     },
+     "x_projection": {
+      "functional": false,
+      "out_degrees": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "n_scc": 1,
+      "scc_sizes_top": [
+       4096
+      ]
+     },
+     "cycle_fiber_sets": {
+      "sizes": [
+       4096
+      ],
+      "pairwise_disjoint": true,
+      "all_equal": true,
+      "common_fibers": 4096,
+      "single_fiber_trapped_cycles": 0,
+      "trapped_on_isolated_fibers": true
+     },
+     "holonomy": {
+      "method": "x-projection not functional: holonomy probed via the first-return permutation h_{x0} of R on a basepoint fiber met by every leaf cycle (its orbit partition = the holonomy orbit index)",
+      "basepoint_fiber": 0,
+      "first_return": {
+       "holonomy": {
+        "cycle_type": [
+         16
+        ],
+        "order": 16,
+        "kind": "nonlinear",
+        "displacement_set": [
+         [
+          0,
+          3
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          2,
+          0
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          3,
+          2
+         ]
+        ],
+        "is_m2_cycle": true
+       },
+       "n_orbits": 1,
+       "orbit_partition_sizes": [
+        16
+       ],
+       "orbit_partition": [
+        [
+         [
+          0,
+          0
+         ],
+         [
+          0,
+          1
+         ],
+         [
+          0,
+          2
+         ],
+         [
+          0,
+          3
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          1,
+          1
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          1,
+          3
+         ],
+         [
+          2,
+          0
+         ],
+         [
+          2,
+          1
+         ],
+         [
+          2,
+          2
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          0
+         ],
+         [
+          3,
+          1
+         ],
+         [
+          3,
+          2
+         ],
+         [
+          3,
+          3
+         ]
+        ]
+       ],
+       "orbit_partition_is_coset_partition": true,
+       "coset_subgroup": [
+        [
+         0,
+         0
+        ],
+        [
+         0,
+         1
+        ],
+        [
+         0,
+         2
+        ],
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         0
+        ],
+        [
+         1,
+         1
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         0
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         2,
+         2
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         1
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ],
+       "displacement_subgroup_order": 16,
+       "displacement_subgroup_gens": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         0
+        ]
+       ],
+       "return_time_min": 1,
+       "return_time_max": 14462,
+       "matches_ncyc": true
+      },
+      "orbits_label_cycles_exactly": true
+     },
+     "main_circuit": {
+      "longest_cycle_length": 65536,
+      "fiber": 0,
+      "visits_of_fiber_by_longest_cycle": 16,
+      "holonomy": {
+       "cycle_type": [
+        16
+       ],
+       "order": 16,
+       "kind": "nonlinear",
+       "displacement_set": [
+        [
+         0,
+         3
+        ],
+        [
+         1,
+         0
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         0
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         0
+        ],
+        [
+         3,
+         2
+        ]
+       ],
+       "is_m2_cycle": true
+      },
+      "translation_trap": false
+     },
+     "invariants": [
+      {
+       "name": "x-fiber id",
+       "preserved": false
+      },
+      {
+       "name": "G_nu component of x",
+       "preserved": true,
+       "n_values": 1,
+       "exact": true,
+       "values_per_cycle": [
+        "0"
+       ]
+      },
+      {
+       "name": "z0 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 2",
+       "preserved": false
+      },
+      {
+       "name": "z0 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0+z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "z0-z1 mod 4",
+       "preserved": false
+      },
+      {
+       "name": "(z0,z1) mod 2",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0+z1 mod 2)",
+       "preserved": false
+      },
+      {
+       "name": "(component, z0-z1 mod 2)",
+       "preserved": false
+      }
+     ],
+     "preserved": [
+      "G_nu component of x"
+     ],
+     "exact": [
+      "G_nu component of x"
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "variant": "without_wild_seam",
+     "dropped": "wilds",
+     "ncyc": [
+      1,
+      5,
+      5,
+      7,
+      4,
+      1,
+      7,
+      10,
+      2
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "wilds on nu0",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 12,
+        "z1 mod 2": 8,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "wilds on nu1",
+       "modified_cells": 12,
+       "class_flips": {
+        "z0 mod 2": 8,
+        "z1 mod 2": 12,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 10,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 2,
+       "preserved_z": []
+      }
+     ]
+    },
+    {
+     "variant": "without_correction_line",
+     "dropped": "lines",
+     "ncyc": [
+      1,
+      5,
+      5,
+      7,
+      2,
+      1,
+      7,
+      7,
+      2
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1,
+      -1,
+      -1,
+      1
+     ],
+     "skipped": 0,
+     "piece_effects": [
+      {
+       "piece": "lines on nu0",
+       "modified_cells": 0,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 0,
+        "z0+z1 mod 2": 0,
+        "z0-z1 mod 2": 0,
+        "x-move": 0
+       }
+      },
+      {
+       "piece": "lines on nu1",
+       "modified_cells": 4,
+       "class_flips": {
+        "z0 mod 2": 0,
+        "z1 mod 2": 4,
+        "z0+z1 mod 2": 4,
+        "z0-z1 mod 2": 4,
+        "x-move": 0
+       }
+      }
+     ],
+     "leaves": [
+      {
+       "leaf": "nu0",
+       "ncyc": 7,
+       "preserved_z": []
+      },
+      {
+       "leaf": "nu1",
+       "ncyc": 2,
+       "preserved_z": []
+      }
+     ]
+    }
+   ],
+   "coverage_patch_experiment": [
+    {
+     "leaf": "nu0",
+     "isolated_fiber": 3209,
+     "candidates_tried": 96,
+     "best": {
+      "donation": [
+       0,
+       0,
+       2,
+       0,
+       2
+      ],
+      "E_lw1": 30,
+      "ncyc": [
+       1,
+       5,
+       7,
+       7,
+       1,
+       1,
+       7,
+       9,
+       1
+      ],
+      "signs": [
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1,
+       -1
+      ]
+     }
+    }
+   ],
+   "six_requirements": {
+    "1_old_cyclicity": {
+     "ok": false,
+     "old_ncyc": [
+      1,
+      5,
+      5,
+      7,
+      1,
+      1,
+      7
+     ]
+    },
+    "2_donation_volume": {
+     "ok": true,
+     "nu0_x_reads": 76752,
+     "nu1_x_reads": 43232,
+     "floor": 4096
+    },
+    "3_rf2_ribbon_closure": {
+     "ok": true
+    },
+    "4_spanning_connectivity": {
+     "ok": false,
+     "nu0": [
+      2,
+      1
+     ],
+     "nu1": [
+      1,
+      0
+     ]
+    },
+    "5_holonomy_primitivity": {
+     "ok": true,
+     "nu0_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        2
+       ],
+       [
+        3,
+        3
+       ]
+      ],
+      "is_m2_cycle": true
+     },
+     "nu1_main_holonomy": {
+      "cycle_type": [
+       16
+      ],
+      "order": 16,
+      "kind": "nonlinear",
+      "displacement_set": [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        0
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        1,
+        3
+       ],
+       [
+        2,
+        0
+       ],
+       [
+        2,
+        1
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        0
+       ],
+       [
+        3,
+        2
+       ]
+      ],
+      "is_m2_cycle": true
+     }
+    },
+    "6_parity": {
+     "ok": true,
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ]
+    }
+   }
+  }
+ ],
+ "fleet": {
+  "n_plans": 215,
+  "E_min": 24,
+  "E_top10": [
+   24,
+   28,
+   32,
+   32,
+   32,
+   34,
+   34,
+   34,
+   36,
+   36
+  ],
+  "min_old_ncyc": 1,
+  "min_nu0": 1,
+  "min_nu1": 1,
+  "plans_with_some_single_color": 89,
+  "note": "E(lw1) ranking of all fleet plans (cpp checker, /tmp/gcv/rank.txt); per-color minima show every color class individually reaches a single cycle in-family"
+ },
+ "synthesis": {
+  "verdict": [
+   "PASS everywhere: donation volume (R1/4.2), RF2 ribbon closure (RF1+RF2 verified on every rebuilt child), parity ledger (all nine signs -1 in every analyzed plan).",
+   "PASS everywhere (overturning the review S7 suspicion): base-circuit z-holonomy is NOT in the translation trap -- in all 10 leaf instances the first-return holonomy on the main circuit fiber is a NONLINEAR m^2-cycle (full 16-cycle on Z, displacement subgroup = all of (Z/m)^2).  The wild (z0,z1)-ingredient the review demands is already present and doing its job.",
+   "FAIL (shallow, 3/5 plans): spanning coverage -- mutation drift left exactly ONE x-fiber with zero donated x-reads; that fiber is invariant and contributes a tower of m=4 trapped z-translation 4-cycles (the [...,4,4,4,4] tails).  One extra in-family donation through the fiber removes the tower (coverage_patch_experiment) but back-reacts on the donor old color, so coverage must be guarded, not post-repaired.",
+   "FAIL (all plans, the real floor): SIMULTANEITY, not a leaf invariant.  No candidate chi(x,z) is preserved by any leaf return (no x-block system: cycles overlap heavily on fibers; no z-congruence mod 2 or 4; holonomy orbit partitions are not coset partitions; displacement groups are full).  Moreover cpp_rs1010 has nu1 a SINGLE m^8-cycle and cpp_rs5252 has an old color single, so no per-color in-family obstruction exists.  What never happens is all nine simultaneously: the donations that merge the leaf cycles back-react on the donor old colors (old ncyc 3..7 in every best plan), and the fleet floor E(lw1) (see the fleet block; it dropped 30 -> 24 while this diagnosis ran) is an annealing plateau of the coarse move class (whole-ribbon re-offsets move thousands of points per step), not a conserved quantity."
+  ],
+  "floor_mechanism": {
+   "odd_counts": "parity: every analyzed return has sign -1, so ncyc is odd; the ODDNESS of the floor sequence is the ledger, exactly as the review says.",
+   "magnitude": "the >1 magnitude is NOT a holonomy orbit index of a preserved congruence: it is (a) one uncovered fiber (+m trapped cycles) when present, plus (b) 2-6 residual unmerged cycles with no separating invariant -- i.e. a search/move-granularity plateau."
+  },
+  "proposed_ingredient": [
+   "(i) coverage guard: keep a donated orbit through every x-fiber as a hard plan invariant (reject mutations that orphan a fiber).  The coverage_patch_experiment shows a single extra in-family donation through the orphaned fiber removes the trapped tower (e.g. cpp_f1078: nu1 7 -> 5 at unchanged E) but BACK-REACTS on the donor old color (c4 7 -> 9 there) -- guarding coverage during the anneal is cheaper than repairing it afterwards.",
+   "(ii) surgical merge moves: the family lacks any fine-grained RF2-closed exchange.  Every current move re-offsets a whole q-wound ribbon (>= 2m cells, m points each).  A minimal pair move -- exchange two donated staircase cells of the SAME donor orbit at two offsets (an L^{-1}D-closed 2-cell swap), or a one-column leaf stair conditioned on hitting two different leaf cycles -- acts as a near-transposition on one return and can merge the last 2-6 cycles without touching parity (pairs) or coverage.  Since NO preserved invariant separates the residual cycles, nothing obstructs such merges in principle.",
+   "(iii) donor-aware acceptance: weight old-color cycle counts with the same priority as leaves (the floor now sits in the old colors as much as the leaves)."
+  ],
+  "obstruction_candidate": "NONE supportable: an in-family obstruction statement of the form \"every plan preserves a chi(x,z) with >= k classes on a leaf\" is FALSIFIED by cpp_rs1010 (nu1 single m^8-cycle, in-family, skipped=0, RF1/RF2 PASS).  If anything is to be proved, the correct target is the POSITIVE statement: the seam family already realizes every single-return requirement separately; what remains is a finite combinatorial assembly (all nine at once), for which the fine move class (ii) is the missing ingredient, not a new invariant-breaking layer piece."
+ },
+ "elapsed_s": 63.5
+}
