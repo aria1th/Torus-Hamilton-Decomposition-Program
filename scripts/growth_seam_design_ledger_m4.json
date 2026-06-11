@@ -1,0 +1,40 @@
+{
+ "date": "2026-06-11",
+ "context": "DESIGN route for the conjugate-relaxation 7->9 growth repair (companion to search_growth_conjugate_repair.py); base = proper (7,4) blob via growth_step_replay.load_seed",
+ "skew_factorization": {
+  "statement": "with only z-free pieces (full-orbit column donations, D0/D1-planes) and x-local z-gated pieces (lines, wild seam), EVERY child return is an exact skew product R(x,z) = (pi(x), phi_x(z)); RF3 factorizes: pi single K-cycle AND fiber holonomy Phi single m^2-cycle",
+  "consequence": "the 65536-state problem splits into nine 4096-perm word conditions and nine 16-perm fiber conditions; the fiber layer is solved EXACTLY by translation conjugacy + finite tables"
+ },
+ "fiber_ledger_closed": {
+  "good_drift_tables": "for each d3-even wild layer and cert color, the set of u with T_u o f single 16-cycle was computed exactly (growth_seam_design_base_m4.json); leaves need (A0,0)/(0,B1) cells which exist for all three wild layers in suitable sigma assignments",
+  "odometer": "T_(alpha,beta) o one gated line kick is a single 16-cycle for EVERY unit alpha, every beta, every gate, both signs (verified exhaustively)",
+  "drift_tuning": "orbit lengths of all 293 base layer-map orbits are == 0 mod 4 (telescoping), so donations contribute nothing mod m to any drift; planes are the only drift knobs and suffice",
+  "parity_solution": "1 wild seam (trio flip) + 5 old-old lines (pair flips, partners always donors at donated columns) gives all nine returns odd parity with leaf fibers PURE T_u o rho (no leaf-side kicks)"
+ },
+ "template_verdicts_so_far": {
+  "T0_growthDir_shape": "dead (R3b nu0 all-even layers; known)",
+  "T1_staircase_rotor_family": "the stochastic agent's family; design analysis: with tau_s role swap the leaf z1-holonomy around the (x,z0)-rotor loop is structurally 0 mod m unless z1-gated pieces interleave -- explains the persistent ~4k leaf cycle floor patterns in the seam search logs",
+  "T2_7slot_one_donor_per_color": "LEDGER-DEAD (new): donor words need even frozen counts, leaf words need odd donated counts; with each color donating in exactly one slot both leaf sums are forced even -- parity-impossible. At least one color must donate odd counts to BOTH leaves",
+  "T2b_full_mixed_words": "LEDGER-DEAD (new, exhaustive): among all 7^4 full-layer mixed-color words over the (7,4) base, the ONLY single 4096-cycles are the 7 pure base returns (min mixed cycle count 6); leaf words must be near-single-color words",
+  "T3_two_color_exchange": "LEDGER-DEAD at (7,4) (new, machine-checked): the z-free donation atoms are exactly full L_{t,c}-orbits (RF2 forces L-invariance on both sides of a donation); an atom is donatable only if it avoids the exactly-1 columns of its own color (donor keep-coverage); at (7,4) 72/293 atoms are pinned and 193 columns lie in NO donatable atom (622 more have a single (t,c) option and cannot serve both leaves) -- leaf coverage is impossible for EVERY variant (exchange, helpers, multi-color)",
+  "T3_surgery_repair": "DEAD at (7,4): old-old x-read trades (old_swap_closure shape) could reshape the orbit atlas, but 0/2000 sampled closures even exist -- the ~14% zero-read density poisons every closure under two layer maps",
+  "T3_at_proper_7_6": "FEASIBLE (new): at the proper (7,6) base the same budget is green -- 248967 orbit instances, 0 pinned, 0 no-option columns, 0 single-(t,c) columns; the skew-pure exchange template remains the live design route at the proper base; the m=4 witness blob is the anomaly (fat zero-read sets create the uncoverable columns)"
+ },
+ "necessary_count_identities": [
+  "sign(pi_leaf) = (-1)^{#donated instances} (orbit cycles are even length): leaf words need ODD donated instance counts",
+  "sign(pi_donor) = -(-1)^{#frozen}: donor words need EVEN frozen counts",
+  "N_c := #nontrivial orbit instances of color c over all layers is ODD for every color (it equals the parity of the single base return)",
+  "every column is movable by cA at >=1 layer and the all-4-fixed set is empty for every color; exactly-1 columns (32..53 per color) are forced KEEP and need cross coverage"
+ ],
+ "named_missing_ingredient_at_7_4": "sub-orbit donation atoms, i.e. z-GATED staircase ribbons (the stochastic seam family's shape).  This SHARPENS budget item R2: z-gating is NECESSARY at (7,4), not merely the minimal RF2-closed gated shape -- no z-free repair exists.  Transferable guidance for the ribbon family: (i) leaf x-graphs must stay near single-color words (full mixed words are never single); (ii) donor coverage must hold at gated granularity (the analogue of keep-coverage: every column must keep, for each donor, at least one ungated (z,layer) slot per needed storey); (iii) instance-count parities (leaf odd / donor even) have exact ribbon analogues via the deviation-cycle signs",
+ "fiber_layer_status": "fully closed at both moduli and INDEPENDENT of the x-word question: good-drift tables for all d3-even wild layers, line-kick odometer lemma, drift tuning by plane counts (orbit lengths == 0 mod m), parity ledger = 1 wild + 5 old-old lines with pure leaf fibers; this fiber layer plugs verbatim onto ANY x-word solution, including ribbon-based ones after the skew factorization is replaced by section/monodromy analysis",
+ "artifacts": {
+  "script": "scripts/design_growth_seam_closed_form.py (--analyze, --budget, --design, --verify, --chain)",
+  "base_analysis": "scripts/growth_seam_design_base_m4.json",
+  "budget": [
+   "scripts/growth_seam_design_budget_m4.json",
+   "scripts/growth_seam_design_budget_m6.json"
+  ],
+  "result": "scripts/growth_seam_design_result_m4.json (TEMPLATE-DEAD verdict with the budget payload)"
+ }
+}

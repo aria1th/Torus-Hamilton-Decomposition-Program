@@ -1,0 +1,23 @@
+{
+ "K": 4096,
+ "instances": 293,
+ "pinned": 72,
+ "no_option_columns": 193,
+ "no_option_sample": [
+  9,
+  20,
+  34,
+  37,
+  86,
+  111,
+  113,
+  146,
+  167,
+  204,
+  265,
+  338
+ ],
+ "single_tc_columns": 622,
+ "feasible": false,
+ "note": "no_option_columns > 0 kills every z-free full-orbit donation template (exchange, helpers, multi-color alike); single_tc columns cannot serve both leaves"
+}

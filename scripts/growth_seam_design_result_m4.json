@@ -1,0 +1,32 @@
+{
+ "m": 4,
+ "seed": 1,
+ "template": "two-color-exchange",
+ "odometer_ok": true,
+ "attempts": [],
+ "orbit_atom_budget": {
+  "K": 4096,
+  "instances": 293,
+  "pinned": 72,
+  "no_option_columns": 193,
+  "no_option_sample": [
+   9,
+   20,
+   34,
+   37,
+   86,
+   111,
+   113,
+   146,
+   167,
+   204,
+   265,
+   338
+  ],
+  "single_tc_columns": 622,
+  "feasible": false,
+  "note": "no_option_columns > 0 kills every z-free full-orbit donation template (exchange, helpers, multi-color alike); single_tc columns cannot serve both leaves"
+ },
+ "verdict": "TEMPLATE-DEAD (orbit-atom budget): 193 columns have no donatable z-free atom; the skew-pure full-orbit donation class cannot cover the leaves",
+ "missing_ingredient": "donation atoms finer than full layer-map orbits: either z-gated staircase ribbons (the stochastic seam family; breaks skew purity, needs rotor/splice analysis) or z-free orbit SURGERY first (old-old x-read trades on closed sets reshape the orbit atlas so every column gains a donatable atom)"
+}
