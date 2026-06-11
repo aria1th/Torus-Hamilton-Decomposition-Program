@@ -81,20 +81,62 @@ def build_add(d, m):
         add.append(arr)
     return add
 
+def span_points(basis, m, r):
+    """all points of the sublattice spanned by `basis` in (Z/m)^r."""
+    pts = {0}
+    for raw in basis:
+        vec = [v % m for v in raw]
+        new = set()
+        for p in pts:
+            cur = list(dec(p, m, r))
+            for _ in range(m):
+                new.add(enc(cur, m))
+                cur = [(a + v) % m for a, v in zip(cur, vec)]
+        pts = new
+    return pts
+
 def load_seed(m):
+    """proper base reconstruction, mirroring the rewrite repo's
+    certificates/scripts/verify_rank7_rootflat_certificates.py
+    (reconstruct_rootflat): constant shifted rows -> stage substitutions on
+    lattice spans / local tables -> layer overrides.  (Until 2026-06-10 this
+    loader IGNORED the seed `stages` field: a no-op for D7_m4_seed.json,
+    which has no stages, but the m=6 base it produced failed RF3 -- see
+    docs/GROWTH_REPAIR_GATE_20260610.md finding 1.)"""
     seed = json.loads((CERTS / f'D7_m{m}_seed.json').read_text())
     d = seed['d']; assert seed['m'] == m
     r = d - 1; K = m ** r
     dirs = [[bytearray([(c + s) % d]) * K for c in range(d)]
             for s in seed['layer_shifts']]
+    for st in seed.get('stages', []):
+        layer, shift, sig = st['layer'], st['shift'], st['sigma']
+        for sup in st.get('supports', []):
+            Q = span_points(sup['basis'], m, r)
+            for x in Q:
+                for c in sup['colors']:
+                    dirs[layer][c][x] = (sig[c] + shift) % d
+        if 'local_table' in st:
+            lt = st['local_table']
+            colors, coords, table = lt['colors'], lt['coordinates'], lt['table']
+            for x in range(K):
+                co = dec(x, m, r)
+                a, b = co[coords[0]], co[coords[1]]
+                for j, c in enumerate(colors):
+                    dirs[layer][c][x] = table[j][a][b]
     for ov in seed.get('layer_overrides', []):
         t = ov['layer']; colors = ov['colors']
-        raw = zlib.decompress(base64.b64decode(ov['data']))
+        raw = (zlib.decompress(base64.b64decode(ov['data']))
+               if ov.get('encoding', 'zlib+base64') == 'zlib+base64'
+               else base64.b64decode(ov['data']))
         assert len(raw) == K * len(colors)
         pos = 0
-        for x in range(K):
+        if ov.get('order', 'point-major') == 'point-major':
+            for x in range(K):
+                for c in colors:
+                    dirs[t][c][x] = raw[pos]; pos += 1
+        else:                                   # color-major
             for c in colors:
-                dirs[t][c][x] = raw[pos]; pos += 1
+                dirs[t][c][:] = raw[pos:pos + K]; pos += K
     return d, dirs
 
 # ------------------------------------------------------------ verification
@@ -499,6 +541,7 @@ def growth_step(m=4, verbose=True):
     # trajectory (the placement Props of GrowthPlacement).
     used = set()
     cross0, cross1 = {}, {}
+    nonstrict = []
     for c in range(d):
         pick1 = pick0 = None
         for (t, x) in lam[c]:
@@ -510,10 +553,23 @@ def growth_step(m=4, verbose=True):
                 pick1 = (t, x); used.add((t, x)); continue
             if pick0 is None and pick1 is not None and t > pick1[0]:
                 pick0 = (t, x); used.add((t, x)); break
-        assert pick0 and pick1, f'no crossing pair for color {c}'
+        if not (pick0 and pick1):
+            # same-layer site-distinct fallback (GrowthPlacement.order is
+            # unsatisfiable over the proper (7,6) base for colors 0/1/4:
+            # single-layer last-reads -- gate doc finding 2)
+            free = [(t, x) for (t, x) in lam[c] if (t, x) not in used
+                    and not (c in marked and prefix(c, t, sel) == x)]
+            assert len(free) >= 2, f'no crossing pair for color {c}'
+            pick1, pick0 = free[0], free[1]
+            used.update((pick1, pick0))
+            nonstrict.append(c)
         xi = 1 if (c in marked) else 0        # pin off the selector z0-value 2
         cross0[c] = pick0
         cross1[c] = (pick1[0], pick1[1], xi)
+    if nonstrict:
+        print(f'[placement] strict t1 < t0 impossible for colors {nonstrict}: '
+              'same-layer site-distinct fallback (their G4 decomposition '
+              'check is skipped; single-cycle check still applies)')
     print(f'[placement] cross0 (z0-planes): {cross0}')
     print(f'[placement] cross1 (z0-pinned z1-lines): {cross1}')
 
@@ -527,8 +583,14 @@ def growth_step(m=4, verbose=True):
           '(x,z0,z1) -> (R_c x, z0 + carry0(x), z1 + carry1(x,z0)):')
     ok_old = True
     for c in range(d):
-        base, c0, c1, xi = predict_old_color(d, m, dirs, c, cross0, cross1)
         R = res['returns'][c]
+        single = cycle_lengths(R) == [K2]
+        if c in nonstrict:
+            print(f'    color {c}: decomposition=SKIP (same-layer fallback, '
+                  f't1 = t0) single-{K2}-cycle={single}')
+            ok_old = ok_old and single
+            continue
+        base, c0, c1, xi = predict_old_color(d, m, dirs, c, cross0, cross1)
         good = True
         for z1 in range(m):
             for z0 in range(m):
@@ -540,7 +602,6 @@ def growth_step(m=4, verbose=True):
                         good = False; break
                 if not good: break
             if not good: break
-        single = cycle_lengths(R) == [K2]
         print(f'    color {c}: decomposition={"OK " if good else "FAIL"} '
               f'single-{K2}-cycle={single} carry-sums=({sum(c0)},{sum(c1)})')
         ok_old = ok_old and good and single

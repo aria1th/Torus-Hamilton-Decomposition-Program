@@ -127,7 +127,12 @@
    "detail": ""
   },
   {
-   "info": "m=4 base: load_seed reconstruction matches the proper one (no stages in this seed)"
+   "info": "m=4 base: load_seed reconstruction matches the proper one (load_seed applies seed stages since 2026-06-10)"
+  },
+  {
+   "name": "m=4 base: load_seed == proper reconstruction (the 2026-06-10 stages fix)",
+   "ok": true,
+   "detail": ""
   },
   {
    "info": "m=4 base: last-read layers per color: {0: [0, 1, 2, 3], 1: [0, 1, 2, 3], 2: [0, 1, 2, 3], 3: [0, 1, 2, 3], 4: [0, 1, 2, 3], 5: [0, 1, 2, 3], 6: [0, 1, 2, 3]}"
@@ -204,7 +209,12 @@
    "detail": ""
   },
   {
-   "info": "m=6 base: load_seed reconstruction DIFFERS from the proper one (seed stages ignored by load_seed: recorded m=6 ledgers used a broken base)"
+   "info": "m=6 base: load_seed reconstruction matches the proper one (load_seed applies seed stages since 2026-06-10)"
+  },
+  {
+   "name": "m=6 base: load_seed == proper reconstruction (the 2026-06-10 stages fix)",
+   "ok": true,
+   "detail": ""
   },
   {
    "info": "m=6 base: last-read layers per color: {0: [3], 1: [2], 2: [3, 4], 3: [2, 4, 5], 4: [0], 5: [1, 4], 6: [0, 1]}"

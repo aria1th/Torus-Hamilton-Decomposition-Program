@@ -278,7 +278,9 @@ def base_gate(res, m):
                for t in range(m) for c in range(d))
     res.info(f'm={m} base: load_seed reconstruction '
              f'{"matches" if same else "DIFFERS from"} the proper one '
-             f'{"(no stages in this seed)" if same else "(seed stages ignored by load_seed: recorded m=6 ledgers used a broken base)"}')
+             f'{"(load_seed applies seed stages since 2026-06-10)" if same else "(seed stages ignored by load_seed: recorded m=6 ledgers used a broken base)"}')
+    res.clause(f'm={m} base: load_seed == proper reconstruction '
+               '(the 2026-06-10 stages fix)', same)
     # GrowthPlacement satisfiability (strict order t1 < t0 at last-reads)
     lam = last_reads(d, m, dirs)
     lam_layers = [sorted({t for (t, _x) in lam[c]}) for c in range(d)]

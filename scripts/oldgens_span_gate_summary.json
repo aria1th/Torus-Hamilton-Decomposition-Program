@@ -207,16 +207,16 @@
    "severity": "gate"
   },
   {
-   "info": "m=6: old-incidence ledger has 6 oriented pairs, differences mod 9 present: [1, 2, 3, 6, 7, 8]"
+   "info": "m=6: old-incidence ledger has 25 oriented pairs, differences mod 9 present: [1, 2, 3, 4, 5, 6, 7, 8]"
   },
   {
    "info": "m=6: ledger does NOT saturate all 42 ordered old-label pairs"
   },
   {
-   "info": "m=6 row0: rank H_in = 2, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+   "info": "m=6 row0: rank H_in = 6, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
   },
   {
-   "info": "m=6 row1: rank H_in = 2, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
+   "info": "m=6 row1: rank H_in = 6, rank <oldGens, earlier leaf lines> = 2 (the chain-datum span is the WINDOW-LOCAL flag, not the full lattice: the row only ever tests window translates)"
   },
   {
    "name": "m=6 row0: phase boundary-avoiding G_(r,rho)=[8, 1, 3] disjoint from B_r=[2, 7, 5] (chainedHighEvenBoundaryAvoidingPhaseChoice_spec reading)",

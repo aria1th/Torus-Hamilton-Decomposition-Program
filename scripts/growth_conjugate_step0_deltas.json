@@ -1,0 +1,32 @@
+{
+ "step": "STEP 0 -- load_seed stages fix and m=6 ledger re-derivation (2026-06-11)",
+ "loader_fix": {
+  "file": "scripts/growth_step_replay.py:load_seed",
+  "change": "applies the seed `stages` field (lattice-span sigma substitutions, local_table) and override order/encoding, mirroring even_modulus_rewrite_20260610/certificates/scripts/verify_rank7_rootflat_certificates.py:reconstruct_rootflat; previously stages were ignored",
+  "m4_effect": "none (D7_m4_seed.json has no stages); --growth-step m=4 unchanged: RF1/RF2 PASS, 7 old returns single 65536-cycles with G4 decomposition, witness transports PASS",
+  "m6_effect": "base now passes RF1/RF2/RF3 (single 46656-cycles per color; the broken loader gave 7776/7669/7655/7671 cycles)",
+  "cross_check": "search_growth_newcolor_repair.py --budget-gate clause 'load_seed == proper reconstruction' PASS at m=4 and m=6"
+ },
+ "growth_step_replay_m6": {
+  "subcommand": "python3 scripts/growth_step_replay.py --growth-step --m 6",
+  "placement": "strict t1 < t0 impossible for colors [0, 1, 4] (single-layer last-reads; gate finding 2) -- same-layer site-distinct fallback added to the replay placement",
+  "result": "child RF1/RF2 PASS; ALL SEVEN old returns single 1679616-cycles (colors 2,3,5,6 additionally match the G4 carry decomposition with carry sums (1,1); decomposition check skipped for fallback colors 0,1,4 where t1 = t0)",
+  "note": "this makes the placement-relaxation reconfirmation a reproducible subcommand; same facts also via search_growth_newcolor_repair.py --child-evidence --m 6 (PASS)"
+ },
+ "m6_ledger_deltas_broken_vs_proper_base": {
+  "old_incidence_ledger (check_oldgens_span.py --span-gate)": {
+   "oriented_pairs": {"broken": 6, "proper": 25},
+   "differences_mod_9": {"broken": [1, 2, 3, 6, 7, 8], "proper": [1, 2, 3, 4, 5, 6, 7, 8]},
+   "rank_H_in": {"broken": 2, "proper": 6},
+   "rank_window_local_span": {"broken": 2, "proper": 2},
+   "clause_verdicts": "UNCHANGED: span-gate still PASS overall; MIDPOINT-translate discharge still FAILS as a finding at both rows with the SAME offending landings (row0: diffs {2,7} on (0,7)/(7,0) center 8; row1: diffs {1,3,6,8} on (2,1)/(2,8)/(8,2)/(1,2))"
+  },
+  "C2_transport_ledger (check_oldgens_span.py --new-color-replay --m 6)": {
+   "latin_fallback_points": {"broken": 120, "proper": 13551},
+   "rf2_bad_layer_color_pairs": {"broken": [[4, 1], [4, 8]], "proper": "[(0,0),(0,1),(0,4),(0,5),(0,7),(0,8),(1,0),(1,1),...]"},
+   "leaf_cycle_counts": {"broken": [276336, 277452], "proper": [196020, 181746]},
+   "clause_verdicts": "UNCHANGED: all three C2 clauses still FAIL (transport not well defined, RF2 broken, leaves nowhere near single); C1 alphabet confinement is base-independent and unchanged"
+  },
+  "conclusion": "every structural A3 conclusion survives the loader fix (most get STRONGER: the canonical transport is far more broken over the proper base); only the incidence numbers change, as predicted in GROWTH_REPAIR_GATE_20260610.md finding 1"
+ }
+}

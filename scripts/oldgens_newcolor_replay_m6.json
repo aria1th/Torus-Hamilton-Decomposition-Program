@@ -26,7 +26,7 @@
    "detail": "invariant coordinates: x [1, 2, 3, 4, 5], leaves []"
   },
   {
-   "info": "C2 m=6: shift-rereading fallback points (Latin failure of the canonical transport): 120 of 279936"
+   "info": "C2 m=6: shift-rereading fallback points (Latin failure of the canonical transport): 13551 of 279936"
   },
   {
    "name": "m=6 C2: canonical shift transport is well defined (0 fallback points)",
@@ -36,15 +36,15 @@
   {
    "name": "m=6 C2: RF2 of the transported child",
    "ok": false,
-   "detail": "non-bijective (layer, child color) pairs: [(4, 1), (4, 8)]"
+   "detail": "non-bijective (layer, child color) pairs: [(0, 0), (0, 1), (0, 4), (0, 5), (0, 7), (0, 8), (1, 0), (1, 1)]..."
   },
   {
-   "info": "C2 m=6: child return cycle counts per color {0: 276336, 1: 277452, 2: 279936, 3: 279936, 4: 275940, 5: 277740, 6: 279936, 7: 276156, 8: 275616}"
+   "info": "C2 m=6: child return cycle counts per color {0: 196020, 1: 181746, 2: 36, 3: 8274, 4: 165894, 5: 107520, 6: 163770, 7: 193854, 8: 38076}"
   },
   {
    "name": "m=6 C2: the two leaf returns are single K-cycles under the canonical transport",
    "ok": false,
-   "detail": "new color 0: 276336 cycles [(36, 720), (6, 275616)]; new color 1: 277452 cycles [(72, 24), (60, 24), (36, 84)].  Structural cause: the transported reads are (z0,z1)-independent, so every return is a double translation skew over its x-part and its (z0,z1)-monodromy order divides m = 6; at least m = 6 cycles per color, for EVERY such transport"
+   "detail": "new color 0: 196020 cycles [(408, 6), (216, 6), (210, 6)]; new color 1: 181746 cycles [(246, 6), (240, 6), (222, 6)].  Structural cause: the transported reads are (z0,z1)-independent, so every return is a double translation skew over its x-part and its (z0,z1)-monodromy order divides m = 6; at least m = 6 cycles per color, for EVERY such transport"
   },
   {
    "info": "C3: growth_step_replay --growth-step: under growthDir the two new-color returns have cycle type m x (K*m); --core-findings: 0/9576 same-layer m-letter role products, 0/28 dropped-letter words, 0/252 donated two-layer words single; donated-cycles parity identity refutes single-partner handovers."

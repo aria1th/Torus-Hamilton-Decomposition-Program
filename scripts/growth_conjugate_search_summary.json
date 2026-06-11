@@ -1,0 +1,877 @@
+{
+ "budget_refinement": {
+  "(7,4)": {
+   "records": [
+    {
+     "name": "m=4 base: RF1+RF2+RF3 over the FIXED load_seed (stages applied)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R1 (exit bound): a single K2-cycle return must leave every x-column {x}x(Z/m)^2, so each leaf color needs >= K = 4096 x-reads in total (vs the gate's 6*2m = 48 aggregate bound): the old colors must shed >= 2K = 8192 x-reads, a constant fraction of one full color"
+    },
+    {
+     "name": "m=4 R1 side-check: base single returns are everywhere-moving (min moved points 4096 = K)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=4 R2 (slice-gating rigidity): the only z0-slice gate patterns with bijective induced z0-map are the constants (0 = no exchange anywhere, all = the sketched rotor)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R2 consequence: the leaf x-action must be gated at sub-slice (x-dependent) granularity; RF2 then forces donated cells to close into staircase chains along donor layer-map orbits (slope -1, q-winding, donor receives the gated z-step) -- the RIBBON shape is the minimal RF2-closed z-gated donation"
+    },
+    {
+     "info": "R3 parity ledger (layer-map signs per color): [('c0', [-1, 1, 1, 1]), ('c1', [-1, 1, 1, 1]), ('c2', [-1, 1, 1, 1]), ('c3', [-1, 1, 1, 1]), ('c4', [-1, 1, 1, 1]), ('c5', [-1, 1, 1, 1]), ('c6', [-1, 1, 1, 1]), ('c7', [1, 1, 1, 1]), ('c8', [-1, 1, 1, 1])]"
+    },
+    {
+     "name": "m=4 R3a: old colors have odd return parity (single K2-cycles are odd; one z0-pinned line each)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=4 R3b KILL of the growthDir shape: nu0 has ALL-EVEN layer maps (lifted maps and z-free plane deviations are even; only z-lines/staircases are odd) -> nu0 return is an EVEN permutation -> never a single K2-cycle, for EVERY placement",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=4 R3c: nu1 parity is odd (7 donated lines) -- parity alone does not kill nu1; the z-translation order does",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R6 (block confinement): a leaf return moves x only at its donated cells, so its trajectories stay inside the union graph of the donated orbits; a single K2-cycle therefore needs that union graph CONNECTED and SPANNING all K columns. A single donation layer confines x to one donor orbit forever (>= #orbits cycles); donations at >= 2 layers with interleaving orbit partitions are necessary."
+    },
+    {
+     "info": "R7: per-layer color sign products N_t of the growthDir child: [1, 1, 1, 1]; nine single returns need prod_t N_t = -1"
+    },
+    {
+     "name": "m=4 R7a: growthDir child has N_t = +1 for every layer (total +1, but the target needs -1)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=4 R7b: every 2-color read swap multiplies N_t by sign(dev_a)*sign(dev_b) where the two deviations are mutually inverse up to relabeling -- equal signs, so N_t is conserved by the ENTIRE 2-swap catalog (planes, lines, ribbons, stairs); a >= 3-color-entangled layer piece is NECESSARY.  The d3-even rail-seam certificate supplies 3 wild (N = -1) (Z/m)^2-layers reusable on zero-read columns",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R7 wild layer per-color signs: [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]; one wild seam at a zero-read column flips (nu0, nu1, c); one extra z1-line for c then flips exactly nu0 -- the unique parity repair in this catalog"
+    },
+    {
+     "info": "R4 (class-A refinement): if every modified old return keeps the strict product carry shape (B_c x, z0+c0(x), z1+gated), L1/L2 give S_i(old c) = m^2 * D_i(B_c) with m | D_i(B_c), so the leaf absorption S_i(nu0)+S_i(nu1) = m*K2 - m^2*Sum_c D_i(B_c) is a positive multiple of m^3: >= 64 per x-direction (>= 384 total).  The ribbon family escapes class A (donor x-parts become z-gated, class B), where R1/R6 are the binding constraints."
+    },
+    {
+     "name": "m=4 R5 KILL of the sketched rotor (no crossings): nu0 z0-displacement is constantly m-2, so the z0-parity classes are invariant and nu0 has >= 2 cycles for EVERY (tau0, tau1, r0, r1)",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "fails": []
+  },
+  "(7,6)": {
+   "records": [
+    {
+     "name": "m=6 base: RF1+RF2+RF3 over the FIXED load_seed (stages applied)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R1 (exit bound): a single K2-cycle return must leave every x-column {x}x(Z/m)^2, so each leaf color needs >= K = 46656 x-reads in total (vs the gate's 6*2m = 72 aggregate bound): the old colors must shed >= 2K = 93312 x-reads, a constant fraction of one full color"
+    },
+    {
+     "name": "m=6 R1 side-check: base single returns are everywhere-moving (min moved points 46656 = K)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=6 R2 (slice-gating rigidity): the only z0-slice gate patterns with bijective induced z0-map are the constants (0 = no exchange anywhere, all = the sketched rotor)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R2 consequence: the leaf x-action must be gated at sub-slice (x-dependent) granularity; RF2 then forces donated cells to close into staircase chains along donor layer-map orbits (slope -1, q-winding, donor receives the gated z-step) -- the RIBBON shape is the minimal RF2-closed z-gated donation"
+    },
+    {
+     "info": "R3 parity ledger (layer-map signs per color): [('c0', [1, 1, 1, -1, 1, 1]), ('c1', [1, 1, -1, 1, 1, 1]), ('c2', [1, 1, 1, -1, 1, 1]), ('c3', [1, 1, -1, 1, 1, 1]), ('c4', [-1, 1, 1, 1, 1, 1]), ('c5', [1, -1, 1, 1, 1, 1]), ('c6', [-1, 1, 1, 1, 1, 1]), ('c7', [1, 1, 1, 1, 1, 1]), ('c8', [1, -1, 1, 1, 1, 1])]"
+    },
+    {
+     "name": "m=6 R3a: old colors have odd return parity (single K2-cycles are odd; one z0-pinned line each)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=6 R3b KILL of the growthDir shape: nu0 has ALL-EVEN layer maps (lifted maps and z-free plane deviations are even; only z-lines/staircases are odd) -> nu0 return is an EVEN permutation -> never a single K2-cycle, for EVERY placement",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=6 R3c: nu1 parity is odd (7 donated lines) -- parity alone does not kill nu1; the z-translation order does",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R6 (block confinement): a leaf return moves x only at its donated cells, so its trajectories stay inside the union graph of the donated orbits; a single K2-cycle therefore needs that union graph CONNECTED and SPANNING all K columns. A single donation layer confines x to one donor orbit forever (>= #orbits cycles); donations at >= 2 layers with interleaving orbit partitions are necessary."
+    },
+    {
+     "info": "R7: per-layer color sign products N_t of the growthDir child: [1, 1, 1, 1, 1, 1]; nine single returns need prod_t N_t = -1"
+    },
+    {
+     "name": "m=6 R7a: growthDir child has N_t = +1 for every layer (total +1, but the target needs -1)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "m=6 R7b: every 2-color read swap multiplies N_t by sign(dev_a)*sign(dev_b) where the two deviations are mutually inverse up to relabeling -- equal signs, so N_t is conserved by the ENTIRE 2-swap catalog (planes, lines, ribbons, stairs); a >= 3-color-entangled layer piece is NECESSARY.  The d3-even rail-seam certificate supplies 1 wild (N = -1) (Z/m)^2-layers reusable on zero-read columns",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "info": "R7 wild layer per-color signs: [[-1, -1, -1]]; one wild seam at a zero-read column flips (nu0, nu1, c); one extra z1-line for c then flips exactly nu0 -- the unique parity repair in this catalog"
+    },
+    {
+     "info": "R4 (class-A refinement): if every modified old return keeps the strict product carry shape (B_c x, z0+c0(x), z1+gated), L1/L2 give S_i(old c) = m^2 * D_i(B_c) with m | D_i(B_c), so the leaf absorption S_i(nu0)+S_i(nu1) = m*K2 - m^2*Sum_c D_i(B_c) is a positive multiple of m^3: >= 216 per x-direction (>= 1296 total).  The ribbon family escapes class A (donor x-parts become z-gated, class B), where R1/R6 are the binding constraints."
+    },
+    {
+     "name": "m=6 R5 KILL of the sketched rotor (no crossings): nu0 z0-displacement is constantly m-2, so the z0-parity classes are invariant and nu0 has >= 2 cycles for EVERY (tau0, tau1, r0, r1)",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "fails": []
+  }
+ },
+ "seam_search": [
+  {
+   "m": 4,
+   "iters": 120,
+   "restarts": 3,
+   "seed": 1,
+   "candidates": 363,
+   "conflicts_skipped": 4129,
+   "best": [
+    {
+     "restart": 0,
+     "singles": 4,
+     "ncyc": [
+      5,
+      1,
+      21,
+      3,
+      1,
+      1,
+      1,
+      28,
+      15287
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1
+     ],
+     "tau_s": 1,
+     "lay0": 3,
+     "lay1": 0
+    },
+    {
+     "restart": 1,
+     "singles": 5,
+     "ncyc": [
+      1,
+      1,
+      5,
+      1,
+      1,
+      1,
+      3,
+      575,
+      2332
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1
+     ],
+     "tau_s": 2,
+     "lay0": 0,
+     "lay1": 3
+    },
+    {
+     "restart": 2,
+     "singles": 6,
+     "ncyc": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      1,
+      2448,
+      14983
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      -1
+     ],
+     "tau_s": 2,
+     "lay0": 3,
+     "lay1": 0
+    }
+   ],
+   "hit": null,
+   "elapsed_s": 196.3
+  },
+  {
+   "m": 4,
+   "iters": 25,
+   "restarts": 1,
+   "seed": 5,
+   "candidates": 25,
+   "best": [
+    {
+     "restart": 0,
+     "E": 2326,
+     "ncyc": [
+      1,
+      13,
+      7,
+      15,
+      1,
+      13,
+      25,
+      1647,
+      263
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 2
+    }
+   ],
+   "hit": null,
+   "elapsed_s": 2.9
+  },
+  {
+   "m": 4,
+   "iters": 60,
+   "restarts": 2,
+   "seed": 5,
+   "candidates": 120,
+   "best": [
+    {
+     "restart": 0,
+     "E": 3044,
+     "ncyc": [
+      17,
+      1,
+      5,
+      1,
+      1,
+      3,
+      11,
+      345,
+      2119
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 2
+    },
+    {
+     "restart": 1,
+     "E": 780,
+     "ncyc": [
+      7,
+      29,
+      1,
+      1,
+      1,
+      9,
+      17,
+      69,
+      305
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 1
+    }
+   ],
+   "hit": null,
+   "elapsed_s": 10.1
+  },
+  {
+   "m": 4,
+   "iters": 250,
+   "restarts": 2,
+   "seed": 11,
+   "candidates": 500,
+   "best": [
+    {
+     "restart": 0,
+     "E": 108,
+     "ncyc": [
+      7,
+      13,
+      17,
+      1,
+      23,
+      1,
+      9,
+      33,
+      13
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 3
+    },
+    {
+     "restart": 1,
+     "E": 550,
+     "ncyc": [
+      5,
+      1,
+      1,
+      3,
+      15,
+      1,
+      13,
+      348,
+      22
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      1
+     ],
+     "tau_s": 0
+    }
+   ],
+   "hit": null,
+   "elapsed_s": 43.5
+  },
+  {
+   "m": 4,
+   "iters": 1500,
+   "restarts": 8,
+   "seed": 23,
+   "candidates": 12000,
+   "best": [
+    {
+     "restart": 0,
+     "E": 104,
+     "ncyc": [
+      1,
+      1,
+      5,
+      3,
+      21,
+      17,
+      1,
+      29,
+      35
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 2
+    },
+    {
+     "restart": 1,
+     "E": 96,
+     "ncyc": [
+      17,
+      3,
+      13,
+      13,
+      1,
+      9,
+      9,
+      19,
+      21
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 3
+    },
+    {
+     "restart": 2,
+     "E": 2736,
+     "ncyc": [
+      1,
+      3,
+      13,
+      1,
+      7,
+      5,
+      13,
+      39,
+      1863
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 2
+    },
+    {
+     "restart": 3,
+     "E": 82,
+     "ncyc": [
+      1,
+      17,
+      5,
+      17,
+      1,
+      1,
+      1,
+      27,
+      21
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 3
+    },
+    {
+     "restart": 4,
+     "E": 84,
+     "ncyc": [
+      1,
+      7,
+      7,
+      1,
+      13,
+      17,
+      1,
+      25,
+      21
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 1
+    },
+    {
+     "restart": 5,
+     "E": 126,
+     "ncyc": [
+      13,
+      21,
+      1,
+      1,
+      29,
+      3,
+      9,
+      18,
+      40
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      1
+     ],
+     "tau_s": 0
+    },
+    {
+     "restart": 6,
+     "E": 80,
+     "ncyc": [
+      1,
+      3,
+      5,
+      5,
+      7,
+      5,
+      15,
+      25,
+      23
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 1
+    },
+    {
+     "restart": 7,
+     "E": 518,
+     "ncyc": [
+      1,
+      17,
+      11,
+      7,
+      13,
+      5,
+      21,
+      25,
+      27
+     ],
+     "signs": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "tau_s": 2
+    }
+   ],
+   "hit": null,
+   "elapsed_s": 1031.0
+  }
+ ],
+ "seam_search_live_snapshot": [
+  {
+   "log": "/tmp/seam_m6probe.log",
+   "iters_seen": 93,
+   "last": "[it 93] E=23876 ncyc=[4749, 737, 1105, 5, 79, 21, 3, 2459, 407] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_polish4242.log",
+   "iters_seen": 177,
+   "last": "[it 177] E=1086 ncyc=[7, 21, 13, 25, 3, 19, 5, 41, 11] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s101.log",
+   "iters_seen": 312,
+   "last": "[it 312] E=182 ncyc=[3, 1, 5, 15, 15, 9, 1, 27, 115] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s1010.log",
+   "iters_seen": 388,
+   "last": "[it 388] E=624 ncyc=[23, 5, 17, 11, 13, 5, 41, 57, 61] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s1111.log",
+   "iters_seen": 3363,
+   "last": "[it 3363] E=436 ncyc=[17, 5, 5, 7, 15, 7, 11, 165, 213] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s1212.log",
+   "iters_seen": 916,
+   "last": "[it 916] E=810 ncyc=[11, 1, 25, 21, 33, 19, 3, 584, 122] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  },
+  {
+   "log": "/tmp/seam_s1313.log",
+   "iters_seen": 1141,
+   "last": "[it 1141] E=474 ncyc=[27, 9, 15, 5, 3, 23, 3, 301, 97] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s1414.log",
+   "iters_seen": 3705,
+   "last": "[it 3705] E=452 ncyc=[11, 27, 3, 17, 19, 9, 9, 300, 66] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  },
+  {
+   "log": "/tmp/seam_s202.log",
+   "iters_seen": 913,
+   "last": "[it 913] E=618 ncyc=[3, 19, 25, 1, 3, 17, 3, 447, 109] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s2121.log",
+   "iters_seen": 2004,
+   "last": "[it 2004] E=3090 ncyc=[45, 7, 3, 9, 21, 13, 7, 77, 299] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s2222.log",
+   "iters_seen": 209,
+   "last": "[it 209] E=480 ncyc=[19, 9, 9, 27, 1, 15, 23, 23, 27] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s303.log",
+   "iters_seen": 1188,
+   "last": "[it 1188] E=238 ncyc=[5, 5, 15, 11, 1, 5, 5, 62, 138] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  },
+  {
+   "log": "/tmp/seam_s3131.log",
+   "iters_seen": 308,
+   "last": "[it 308] E=3278 ncyc=[21, 5, 11, 37, 9, 3, 19, 70, 62] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  },
+  {
+   "log": "/tmp/seam_s3232.log",
+   "iters_seen": 662,
+   "last": "[it 662] E=1388 ncyc=[29, 17, 5, 31, 5, 31, 21, 38, 40] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  },
+  {
+   "log": "/tmp/seam_s3333.log",
+   "iters_seen": 780,
+   "last": "[it 780] E=5794 ncyc=[5, 9, 15, 23, 23, 21, 37, 35, 45] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s404.log",
+   "iters_seen": 582,
+   "last": "[it 582] E=828 ncyc=[5, 3, 23, 1, 3, 21, 17, 275, 89] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s4141.log",
+   "iters_seen": 2607,
+   "last": "[it 2607] E=934 ncyc=[31, 29, 17, 7, 5, 27, 5, 51, 21] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s4242.log",
+   "iters_seen": 1598,
+   "last": "[it 1598] E=850 ncyc=[5, 17, 15, 9, 3, 19, 5, 55, 11] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s4343.log",
+   "iters_seen": 7028,
+   "last": "[it 7028] E=6293 ncyc=[9, 11, 23, 13, 7, 14, 11, 53, 351] signs=[-1, -1, -1, -1, -1, 1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s4444.log",
+   "iters_seen": 6247,
+   "last": "[it 6247] E=1560 ncyc=[13, 23, 19, 7, 19, 15, 15, 29, 149] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s505.log",
+   "iters_seen": 1317,
+   "last": "[it 1317] E=488 ncyc=[15, 19, 23, 13, 13, 11, 7, 331, 65] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s5151.log",
+   "iters_seen": 2931,
+   "last": "[it 2931] E=5912 ncyc=[11, 7, 7, 15, 9, 27, 15, 645, 195] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s5252.log",
+   "iters_seen": 11,
+   "last": "[it 11] E=2816 ncyc=[25, 11, 17, 1, 1, 39, 1, 295, 95] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s606.log",
+   "iters_seen": 458,
+   "last": "[it 458] E=162 ncyc=[1, 19, 21, 23, 13, 7, 5, 29, 53] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s707.log",
+   "iters_seen": 119,
+   "last": "[it 119] E=210 ncyc=[9, 1, 5, 15, 3, 5, 33, 123, 25] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s808.log",
+   "iters_seen": 20,
+   "last": "[it 20] E=2250 ncyc=[1, 27, 17, 21, 9, 25, 3, 89, 67] signs=[-1, -1, -1, -1, -1, -1, -1, -1, -1]"
+  },
+  {
+   "log": "/tmp/seam_s909.log",
+   "iters_seen": 5611,
+   "last": "[it 5611] E=146 ncyc=[7, 13, 5, 5, 11, 3, 7, 44, 60] signs=[-1, -1, -1, -1, -1, -1, -1, 1, 1]"
+  }
+ ],
+ "step0": {
+  "step": "STEP 0 -- load_seed stages fix and m=6 ledger re-derivation (2026-06-11)",
+  "loader_fix": {
+   "file": "scripts/growth_step_replay.py:load_seed",
+   "change": "applies the seed `stages` field (lattice-span sigma substitutions, local_table) and override order/encoding, mirroring even_modulus_rewrite_20260610/certificates/scripts/verify_rank7_rootflat_certificates.py:reconstruct_rootflat; previously stages were ignored",
+   "m4_effect": "none (D7_m4_seed.json has no stages); --growth-step m=4 unchanged: RF1/RF2 PASS, 7 old returns single 65536-cycles with G4 decomposition, witness transports PASS",
+   "m6_effect": "base now passes RF1/RF2/RF3 (single 46656-cycles per color; the broken loader gave 7776/7669/7655/7671 cycles)",
+   "cross_check": "search_growth_newcolor_repair.py --budget-gate clause 'load_seed == proper reconstruction' PASS at m=4 and m=6"
+  },
+  "growth_step_replay_m6": {
+   "subcommand": "python3 scripts/growth_step_replay.py --growth-step --m 6",
+   "placement": "strict t1 < t0 impossible for colors [0, 1, 4] (single-layer last-reads; gate finding 2) -- same-layer site-distinct fallback added to the replay placement",
+   "result": "child RF1/RF2 PASS; ALL SEVEN old returns single 1679616-cycles (colors 2,3,5,6 additionally match the G4 carry decomposition with carry sums (1,1); decomposition check skipped for fallback colors 0,1,4 where t1 = t0)",
+   "note": "this makes the placement-relaxation reconfirmation a reproducible subcommand; same facts also via search_growth_newcolor_repair.py --child-evidence --m 6 (PASS)"
+  },
+  "m6_ledger_deltas_broken_vs_proper_base": {
+   "old_incidence_ledger (check_oldgens_span.py --span-gate)": {
+    "oriented_pairs": {
+     "broken": 6,
+     "proper": 25
+    },
+    "differences_mod_9": {
+     "broken": [
+      1,
+      2,
+      3,
+      6,
+      7,
+      8
+     ],
+     "proper": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ]
+    },
+    "rank_H_in": {
+     "broken": 2,
+     "proper": 6
+    },
+    "rank_window_local_span": {
+     "broken": 2,
+     "proper": 2
+    },
+    "clause_verdicts": "UNCHANGED: span-gate still PASS overall; MIDPOINT-translate discharge still FAILS as a finding at both rows with the SAME offending landings (row0: diffs {2,7} on (0,7)/(7,0) center 8; row1: diffs {1,3,6,8} on (2,1)/(2,8)/(8,2)/(1,2))"
+   },
+   "C2_transport_ledger (check_oldgens_span.py --new-color-replay --m 6)": {
+    "latin_fallback_points": {
+     "broken": 120,
+     "proper": 13551
+    },
+    "rf2_bad_layer_color_pairs": {
+     "broken": [
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       8
+      ]
+     ],
+     "proper": "[(0,0),(0,1),(0,4),(0,5),(0,7),(0,8),(1,0),(1,1),...]"
+    },
+    "leaf_cycle_counts": {
+     "broken": [
+      276336,
+      277452
+     ],
+     "proper": [
+      196020,
+      181746
+     ]
+    },
+    "clause_verdicts": "UNCHANGED: all three C2 clauses still FAIL (transport not well defined, RF2 broken, leaves nowhere near single); C1 alphabet confinement is base-independent and unchanged"
+   },
+   "conclusion": "every structural A3 conclusion survives the loader fix (most get STRONGER: the canonical transport is far more broken over the proper base); only the incidence numbers change, as predicted in GROWTH_REPAIR_GATE_20260610.md finding 1"
+  }
+ },
+ "negative_scope": {
+  "family": "ribbon/staircase/wild-seam conjugate repairs over the growthDir child: full leaf-role swap layer + staircase orbit donations (q-winding, slope -1, conflict-free offsets) + leaf staircases + one d3-even wild seam + compensating z1-line + old-old closed trades; placement = replay crossings (same-layer fallback)",
+  "base": "(7,4) proper base (stages-fixed loader), K2 = 65536",
+  "candidates_evaluated_approx": 57696,
+  "best_unweighted_E": 80,
+  "best_state_ncyc": "[1, 3, 5, 5, 7, 5, 15, 25, 23] (5 old singles, leaves 25/23)",
+  "min_leaf_cycle_counts": {
+   "nu0": 15,
+   "nu1": 11
+  },
+  "no_hit": "no state with all nine returns single found yet",
+  "no_obstruction": "no invariant blocking E = 0 identified inside the family: all nine signs odd simultaneously reachable, connectivity/coverage/exit bounds satisfiable, leaf cycle counts continue to decrease at run end",
+  "what_would_decide": "longer annealing (current pure-Python evaluator ~0.3-1 s/candidate at m=4; a C++ port in the house fast_*.cpp style gives ~100x, putting 10^6-move anneals and the (7,6) verification within hours), or a designed leaf closed form replacing the stochastic offset search"
+ }
+}
