@@ -101,13 +101,13 @@ The shortcut proof route is:
 
 ```mermaid
 flowchart TD
-    Base[one-part multitorus T_m(d)]
-    Fiber[m-fibered decomposition invariant]
-    Balance[replicated clone balancing]
-    Split[cyclic splitting lift]
-    Iterate[iterated split to T_m(1,...,1)]
-    Bridge[standard Cayley torus bridge]
-    Final[all d >= 2, odd m >= 3]
+    Base["one-part multitorus T_m(d)"]
+    Fiber["m-fibered decomposition invariant"]
+    Balance["replicated clone balancing"]
+    Split["cyclic splitting lift"]
+    Iterate["iterated split to T_m(1,...,1)"]
+    Bridge["standard Cayley torus bridge"]
+    Final["all d >= 2, odd m >= 3"]
 
     Base --> Fiber
     Fiber --> Balance
@@ -121,11 +121,11 @@ The older V75 proof path organizes the proof into two large branches.
 
 ```mermaid
 flowchart TD
-    Seeds[D2, D3, D5, D7 seeds]
-    High[High-modulus prefix-count branch]
-    Successor[Small-modulus successor branch]
-    Dispatch[Product and seed-semigroup dispatcher]
-    Final[All d >= 2, odd m >= 3]
+    Seeds["D2, D3, D5, D7 seeds"]
+    High["high-modulus prefix-count branch"]
+    Successor["small-modulus successor branch"]
+    Dispatch["product and seed-semigroup dispatcher"]
+    Final["all d >= 2, odd m >= 3"]
 
     Seeds --> Dispatch
     High --> Dispatch
@@ -138,12 +138,12 @@ finite-Hall route:
 
 ```mermaid
 flowchart TD
-    Cyl[active-block cylinder]
-    Lift[primitive lower-triangular active lift]
-    Res[compatible residue scheduling]
-    Swap[zero/nonzero local swaps]
-    Arith[three-buffer reservoir arithmetic]
-    Goal[V75 direct modular-trade blocks]
+    Cyl["active-block cylinder"]
+    Lift["primitive lower-triangular active lift"]
+    Res["compatible residue scheduling"]
+    Swap["zero/nonzero local swaps"]
+    Arith["three-buffer reservoir arithmetic"]
+    Goal["V75 direct modular-trade blocks"]
 
     Cyl --> Lift
     Res --> Swap
@@ -559,10 +559,18 @@ Recommended order:
 
 ## AI Disclosure
 
-This formalization project used autonomous AI assistance during proof planning,
-Lean implementation, code review, documentation, and audit work.  In particular,
-OpenAI Codex 5.5 with `xhigh` reasoning and OpenAI GPT-5.5 Pro with `xhigh`
-reasoning were used as autonomous formalization assistants.
+This proof and formalization project used autonomous AI assistance during proof
+planning, Lean implementation, code review, documentation, and audit work.  The
+main roles were:
+
+- Odd-modulus mathematics and the main proof line: OpenAI GPT-5.5 Pro with
+  `xhigh` reasoning.
+- Odd-modulus Lean formalization completion, including both the shortcut
+  cyclic-splitting route and the main odd-modulus formalization route:
+  OpenAI GPT-5.5 Codex with `xhigh` reasoning.
+- Even-modulus Lean formalization attempts: initially developed with OpenAI
+  GPT-5.5 Codex and Fable 5 (Claude) working together; later continued and
+  consolidated by OpenAI GPT-5.5 Codex.
 
 The mathematical statements, proof strategy, accepted code changes, and final
 repository contents remain subject to human review and responsibility.
