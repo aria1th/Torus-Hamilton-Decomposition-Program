@@ -18,10 +18,43 @@ paper-facing endpoint cuts for the all-dimensional theorem.
 
 ## Current Status
 
-Snapshot: 2026-05-06.
+Snapshot: 2026-06-19.
 
 Latest stable release:
 [`0.0.3-allodd`](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.0.3-allodd).
+
+The all-odd endpoint is now also closed by a short cyclic-splitting route for
+odd multitori.  This route formalizes the proof architecture
+
+```text
+replicated clone balancing
+  -> cyclic splitting of one parallel direction
+  -> iteration from T_m(d) to T_m(1,...,1) = D_d(m)
+```
+
+The closed Lean theorem is:
+
+```lean
+Shared.OddMultitori.oddDirectedTorusGoal_replicated_shortcut_closed
+```
+
+It proves `Shared.OddMultitori.OddDirectedTorusGoal`, i.e. for every
+`d >= 2` and every odd `m >= 3`, the directed basis Cayley torus
+`Cay((ZMod m)^d, {e_0, ..., e_{d-1}})` has a decomposition into `d` directed
+Hamilton cycles.
+
+Primary files for the shortcut formalization:
+
+```text
+Shared/OddMultitoriSplit.lean
+Shared/SkewProductHolonomy.lean
+docs/ODD_MULTITORI_SPLIT_FORMALIZATION_20260618.md
+```
+
+The manuscript source `directed_tori_cyclic_splitting.tex` is outside this
+Lean repository, but its release artifact records the correspondence between
+the paper proof and the Lean theorem.  The pushed Lean commit for that appendix
+snapshot is `7e96c0e1ed81354fd8cb0cde454b95d47fd6149b`.
 
 ```text
 All odd m, all d >= 2
@@ -58,13 +91,33 @@ RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75
 RoundComposite.Concrete.oddModulusToriAllDimensionsGoal_v75
 ```
 
-Cleanup work now focuses on reducing obsolete route noise, synchronizing the
-paper-facing theorem names, and keeping historical branches clearly separated
-from the current proof path.
+The V75 endpoint remains the latest tagged release path.  The cyclic-splitting
+shortcut is the current short proof path for the `directed_tori_cyclic_splitting`
+manuscript line.
 
 ## Proof Map
 
-The repository currently organizes the proof into two large branches.
+The shortcut proof route is:
+
+```mermaid
+flowchart TD
+    Base[one-part multitorus T_m(d)]
+    Fiber[m-fibered decomposition invariant]
+    Balance[replicated clone balancing]
+    Split[cyclic splitting lift]
+    Iterate[iterated split to T_m(1,...,1)]
+    Bridge[standard Cayley torus bridge]
+    Final[all d >= 2, odd m >= 3]
+
+    Base --> Fiber
+    Fiber --> Balance
+    Balance --> Split
+    Split --> Iterate
+    Iterate --> Bridge
+    Bridge --> Final
+```
+
+The older V75 proof path organizes the proof into two large branches.
 
 ```mermaid
 flowchart TD
@@ -100,6 +153,21 @@ flowchart TD
 ```
 
 ## Main Lean Endpoints
+
+Shortcut endpoint:
+
+```lean
+Shared.OddMultitori.oddDirectedTorusGoal_replicated_shortcut_closed
+```
+
+Shortcut intermediate endpoints:
+
+```lean
+Shared.OddMultitori.OddDirectedTorusGoal
+Shared.OddMultitori.mFiberedSplittingFromReplicatedBalancingGoal
+Shared.OddMultitori.rootedBranchComponentBlockResiduePatternUnitAssignmentGoal_closed
+Shared.single_cycle_skewProduct_additive_unit_sum
+```
 
 Seed endpoints:
 
@@ -429,6 +497,9 @@ lake build RoundComposite.V75Endpoints
 Useful focused checks:
 
 ```bash
+lake env lean Shared/OddMultitoriSplit.lean
+lake env lean Shared.lean
+lake build Shared
 lake env lean Shared/D3Seed.lean
 lake env lean RoundComposite/BaseTailTrades.lean
 lake env lean RoundComposite/V75Endpoints.lean
@@ -444,8 +515,16 @@ leanprover-community/mathlib v4.30.0-rc2
 
 ## Reading Guide
 
-For the mathematical story, start with the latest manuscript bundle and the V75
-goal note in `docs/`.  For Lean work, start from
+For the cyclic-splitting shortcut, start from:
+
+```text
+1. Shared/OddMultitoriSplit.lean
+2. Shared/SkewProductHolonomy.lean
+3. docs/ODD_MULTITORI_SPLIT_FORMALIZATION_20260618.md
+```
+
+For the older V75 mathematical story, start with the latest manuscript bundle
+and the V75 goal note in `docs/`.  For V75 Lean work, start from
 `RoundComposite/V75Endpoints.lean` and follow the hypotheses downward.
 
 Recommended order:
@@ -463,13 +542,18 @@ Recommended order:
 
 - The root README is intentionally short.  Historical handoff details live in
   `docs/` or in module comments.
-- The current main route is the V75 direct modular-trade route, not the older
-  abstract de Werra/Hall endpoint.
+- The cyclic-splitting shortcut is the current short route for the odd
+  directed-torus theorem.  The V75 direct modular-trade route remains the latest
+  tagged release path and should be kept clearly separated from the shortcut.
+- The shortcut proof uses a replicated-block balancing formulation.  The older
+  `SplittingLemmaGoal` and `BalancingLemmaGoal` names in
+  `Shared/OddMultitoriSplit.lean` are retained as comparison targets, not as
+  assumptions of the closed final theorem.
 - Avoid treating every `*Goal : Prop` as an unfinished theorem.  Many are
   named interfaces or adapters used to keep the proof graph readable.
 - The active cleanup task is to keep obsolete branches quarantined, preserve
-  reusable certificate-calculus components, and synchronize the manuscript with
-  the closed V75 endpoint.
+  reusable certificate-calculus components, and synchronize manuscripts with
+  the corresponding closed Lean endpoints.
 - Release tag links should be updated only after a matching GitHub release is
   created; until then, the README keeps the latest public stable tag.
 
