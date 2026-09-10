@@ -184,7 +184,7 @@ theorem all_dimensions_of_seeds_and_successor (C : ModulusClass)
 
 수락 기준: `Odd` 문자열이 파일에 없음. 기존 홀수 endpoint의 의미가 바뀌지 않음.
 
-### E2. D_3(짝수) (`TorusEven/D3/`)
+### E2. D_3(짝수) (`TorusEven/D3/`) — **완료 2026-09-10** (아래 원안 대신 Park3 Route E Lean 코드를 vendoring; docs/EVEN_AXIOM_LEDGER.md 참조)
 
 원고 §6 anchored cyclic-star(prop:anchor, lem:star, Appendix A의 `3∤m`/`3|m` 분기).
 - `RootFlatSchedule`로 세 색의 높이층 방향표를 정의(높이 = 한 좌표, root = `(ZMod m)^2`).

@@ -30,3 +30,14 @@ milestones close (see docs/EVEN_AXIOM_LEDGER.md once created).
 - `lake build RoundComposite.V75Endpoints RoundComposite.ConcreteEndpoints`: success (8396 jobs).
 - `#print axioms`: see docs/EVEN_AXIOM_LEDGER.md.
 - `python3 scripts/check_even_isolation.py`: passed (5 main-path files, 4 attic files, 2 registered native leaves).
+
+## Vendored D_3 even formalization (E2)
+
+| Item | Value |
+|---|---|
+| Source | https://github.com/aria1th/Torus-Hamilton-Decomposition, directory `formal/`, commit `753cbe37dc6428b15f5109b801301115ec61eb5d` (2026-05-01) |
+| Files | `TorusD3Even/{Counting,Splice,Color0,Color1,Color2}.lean`, `TorusD3Odometer/*.lean` (11 files), roots `TorusD3Even.lean`, `TorusD3Odometer.lean` |
+| Source toolchain | leanprover/lean4:v4.28.0, mathlib v4.28.0 |
+| Port changes | `TorusD3Even/Color1.lean`: 6 proof repairs for simp-normal-form drift (lines ~369-919); `TorusD3Odometer/Lift.lean`: inlined `iterate_add_mul_slicePoint` (the external `Shared/ReturnLift.lean` differs from ours); `TorusD3Even/TorusD3Even_Color1_patched.lean` not vendored (unused duplicate) |
+| Mathematical source | arXiv:2603.24708 (Park), Section 4 Route E, Appendix D (`m = 4` table) |
+| D_3(4) | `TorusEven/D3/Four.lean`, kernel `decide` (no native leaf), table transcribed from Appendix D and re-verified in Python |

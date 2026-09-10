@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MAIN = ROOT / "TorusEven"
 ATTIC = ROOT / "TorusEvenAttic"
 ALLOWED_IMPORT_PREFIXES = ("Shared.", "TorusEven.", "Mathlib",
-                           "D5Odd.EvenRouteEM4", "D5Odd.EvenLambdaE")
+                           "D5Odd.EvenRouteEM4", "D5Odd.EvenLambdaE",
+                           "TorusD3Even.", "TorusD3Odometer.", "TorusD4.",
+                           "TorusD3Even", "TorusD3Odometer", "TorusD4")
 FORBIDDEN_IMPORT_PREFIXES = ("TorusEvenAttic", "RoundComposite.OddCore",
                              "RoundComposite.PrefixCount", "RoundComposite.ActiveHall",
                              "RoundComposite.V75Endpoints")
@@ -31,6 +33,7 @@ STATUS_RE = re.compile(r"^-- STATUS: (main-path|conditional|evidence|attic)\b")
 NATIVE_DECIDE_LEAVES = {
     "D5Odd/EvenRouteEM4.lean": "D_5(4) schedule: exact cover, Latin, rank tables (ZMod 256)",
     "D5Odd/EvenLambdaE.lean": "Lambda_E row table: bijectivity and cyclic shift",
+    "TorusD3Even/Color2.lean": "D_3 Route E colour 2, small moduli m = 6, 8 first-return checks",
 }
 STATUS_REQUIRED = [MAIN, ATTIC, ROOT / "D5Odd" / "EvenRouteEM4.lean",
                    ROOT / "D5Odd" / "EvenLambdaE.lean"]

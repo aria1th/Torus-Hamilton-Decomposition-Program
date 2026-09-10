@@ -6,3 +6,6 @@ import TorusEven.Goals
 import TorusEven.D5Four
 import TorusEven.Endpoints
 import TorusEven.D5.ChronologicalTransversalGoal
+import TorusEven.D3.Four
+import TorusEven.D3.RouteE
+import TorusEven.D3

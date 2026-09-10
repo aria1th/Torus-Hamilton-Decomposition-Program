@@ -40,3 +40,11 @@ name = "TorusEven"
 # by a proof path, and is not a default target.
 [[lean_lib]]
 name = "TorusEvenAttic"
+
+# Even-modulus D_3 (Route E) formalization, vendored from
+# https://github.com/aria1th/Torus-Hamilton-Decomposition (formal/), same author.
+[[lean_lib]]
+name = "TorusD3Even"
+
+[[lean_lib]]
+name = "TorusD3Odometer"
