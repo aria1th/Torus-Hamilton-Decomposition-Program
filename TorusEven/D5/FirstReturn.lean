@@ -257,5 +257,51 @@ theorem seg_eq_orbitSet_of_unique {w : α} (hw : w ∈ U)
     · exact ⟨n % Function.minimalPeriod S w, Nat.pos_of_ne_zero h0, (Nat.mod_lt _ hpos).le,
         iterate_mod_minimalPeriod_eq⟩
 
+/-- If the orbit of `w ∈ U` meets `U` exactly in `{w, w'}` with `w' ≠ w`, the first return is
+`w'`. -/
+theorem ret_eq_of_pair {w w' : α} (hw : w ∈ U) (hw' : w' ∈ U) (hne : w' ≠ w)
+    (horb : w' ∈ orbitSet S w)
+    (huniq : ∀ y ∈ orbitSet S w, y ∈ U → y = w ∨ y = w') : ret S U w = w' := by
+  have hmem : ret S U w ∈ U := ret_mem S U hw
+  have horb' : ret S U w ∈ orbitSet S w := iterate_mem_orbitSet S w _
+  rcases huniq _ horb' hmem with h | h
+  · exfalso
+    -- `w'` is reached strictly before the first return
+    obtain ⟨k, hk⟩ := horb
+    simp only at hk
+    have hpos := minimalPeriod_pos_of_mem_periodicPts (S.injective.mem_periodicPts w)
+    have hper : IsPeriodicPt S (retTime S U w) w := h
+    have hle : Function.minimalPeriod S w ≤ retTime S U w :=
+      IsPeriodicPt.minimalPeriod_le (retTime_pos S U hw) hper
+    set k' := k % Function.minimalPeriod S w with hk'
+    have hk'lt : k' < Function.minimalPeriod S w := Nat.mod_lt _ hpos
+    have hk'eq : S^[k'] w = w' := by rw [hk', iterate_mod_minimalPeriod_eq, hk]
+    have hk'pos : 0 < k' := by
+      rcases Nat.eq_zero_or_pos k' with h0 | h0
+      · exfalso
+        apply hne
+        rw [← hk'eq, h0]
+        rfl
+      · exact h0
+    exact not_mem_of_lt_retTime S U hw hk'pos (lt_of_lt_of_le hk'lt hle) (hk'eq ▸ hw')
+  · exact h
+
+/-- `⋃_{w ∈ U} seg w = univ` when every orbit meets `U`. -/
+theorem iUnion_seg_eq_univ (hmeet : ∀ x, ∃ w ∈ U, w ∈ orbitSet S x) :
+    ⋃ w ∈ U, seg S U w = Set.univ := by
+  ext x
+  simp only [Set.mem_univ, iff_true]
+  obtain ⟨w, hwU, hw⟩ := hmeet x
+  have hx : x ∈ orbitSet S w := mem_orbitSet_symm S.injective hw
+  have h := orbitSet_comp_eq S U id (fun _ _ => rfl) (fun _ h => h) Function.bijective_id hwU
+  have hid : (⇑S ∘ id) = ⇑S := rfl
+  rw [hid] at h
+  rw [h] at hx
+  obtain ⟨v, hv, hxv⟩ := Set.mem_iUnion₂.1 hx
+  obtain ⟨j, rfl⟩ := hv
+  refine Set.mem_iUnion₂.2 ⟨_, ?_, hxv⟩
+  show (afterRet S U id)^[j] w ∈ U
+  exact afterRet_iterate_mem S U id (fun _ h => h) hwU j
+
 end Surgery
 end TorusEven

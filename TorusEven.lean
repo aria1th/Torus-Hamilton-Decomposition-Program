@@ -21,3 +21,5 @@ import TorusEven.D5.Lattice
 import TorusEven.D5.LayerEval
 import TorusEven.D5.Preterminal
 import TorusEven.D5.ReturnFull
+import TorusEven.D5.Endpoint
+import TorusEven.D5.Terminal
