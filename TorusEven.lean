@@ -9,3 +9,6 @@ import TorusEven.D5.ChronologicalTransversalGoal
 import TorusEven.D3.Four
 import TorusEven.D3.RouteE
 import TorusEven.D3
+import TorusEven.D5.Chart
+import TorusEven.D5.FirstReturn
+import TorusEven.D5.Chronological
