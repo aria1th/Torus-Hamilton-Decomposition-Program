@@ -14,4 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - name: Even-path isolation checks
+        run: python3 scripts/check_even_isolation.py
       - uses: leanprover/lean-action@v1
+      - name: Build attic (must still compile, never on a proof path)
+        run: lake build TorusEvenAttic

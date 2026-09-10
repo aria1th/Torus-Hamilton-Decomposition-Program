@@ -1,4 +1,6 @@
-import D5Odd.EvenRouteE
+-- STATUS: main-path (kernel-checked D_5(4) leaf; native_decide registered in the isolation checker)
+import D5Odd.EvenLambdaE
+import D5Odd.Cayley
 import Shared.RankCycle
 
 namespace D5Odd
@@ -203,117 +205,18 @@ theorem m4RouteESchedule_allColorHamiltonian :
   intro c
   exact colorReturn_m4RouteESchedule_single_cycle c
 
-theorem D5EvenRouteEM4FiniteTarget_unconditional :
-    D5EvenRouteEM4FiniteTarget := by
-  exact ⟨m4RouteESchedule, m4RouteESchedule_exact, m4RouteESchedule_latin,
+theorem D5_even_m4_hamiltonDecomposition : HamiltonDecompositionD5 4 :=
+  ⟨m4RouteESchedule, m4RouteESchedule_exact, m4RouteESchedule_latin,
     m4RouteESchedule_allColorHamiltonian⟩
 
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_large_unconditional_m4
-    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_large_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+theorem D5_even_m4_torus : TorusHamiltonDecompositionD5 4 :=
+  torusHamiltonDecomposition_of_model D5_even_m4_hamiltonDecomposition
 
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_unconditional_m4
-    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_nonopen_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+theorem D5_even_m4_cayley : CayleyHamiltonDecompositionD5 4 :=
+  cayleyHamiltonDecomposition_of_torus D5_even_m4_torus
 
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_theta_unconditional_m4
-    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_theta_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_ranked_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_ranked_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenHamiltonTarget.of_ranked_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenHamiltonTarget :=
-  D5EvenRouteEAllEvenHamiltonTarget.of_ranked_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_large_unconditional_m4
-    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_large_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_nonopen_unconditional_m4
-    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_nonopen_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_theta_unconditional_m4
-    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_theta_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_ranked_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_ranked_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenTorusTarget.of_ranked_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenTorusTarget :=
-  D5EvenRouteEAllEvenTorusTarget.of_ranked_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_large_unconditional_m4
-    (hlarge : D5EvenRouteEAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_large_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_nonopen_unconditional_m4
-    (hlarge : D5EvenRouteENonopenAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_nonopen_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_theta_unconditional_m4
-    (hlarge : D5EvenRouteEThetaAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_theta_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_ranked_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_ranked_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
-
-theorem D5EvenRouteEAllEvenCayleyTarget.of_ranked_piecewise_unconditional_m4
-    (hlarge : D5EvenRouteEThetaRankedPiecewiseAllLargeEvenTarget) :
-    D5EvenRouteEAllEvenCayleyTarget :=
-  D5EvenRouteEAllEvenCayleyTarget.of_ranked_piecewise_and_m4
-    D5EvenRouteEM4FiniteTarget_unconditional hlarge
+/-- The degree-five, modulus-four leaf in the shared Cayley interface. -/
+theorem D5_even_m4_shared_cayley : Shared.CayleyHamiltonDecomposition 5 4 :=
+  sharedCayleyHamiltonDecomposition_of_cayley D5_even_m4_cayley
 
 end D5Odd

@@ -1,3 +1,4 @@
+-- STATUS: attic (conditional D7 root-flat adapter; no even-specific content)
 import D7Odd.Cayley
 import D7Odd.Handoff.PrimeCanonicalBridge
 

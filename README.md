@@ -217,8 +217,19 @@ TorusD3Odd/
   Direct D3 odd formalization used by Shared/D3Seed.lean.
 
 D5Odd/
-  Odd D5 construction and Cayley wrapper.  Some even-modulus/Route-E files are
-  retained as related work but are not the current all-odd main path.
+  Odd D5 construction and Cayley wrapper.  `EvenRouteEM4.lean` is the
+  kernel-checked D_5(4) leaf reused by the even path.
+
+TorusEven/
+  Even-modulus main path (parity-neutral dimension dispatcher, goal
+  statements, D_5(4) leaf).  See docs/EVEN_MODULUS_FORMALIZATION_PLAN_20260910.md.
+
+TorusEvenAttic/, attic/
+  Retired even-modulus attempts (Route E).  Compiled by CI, imported by nothing.
+  Ledger: docs/EVEN_ATTIC_LEDGER.md.
+
+evidence/
+  Finite Python checkers and certificates (grade E/C), never cited as proofs.
 
 D7Odd/
   Odd D7 construction, including handoff and bridge modules.

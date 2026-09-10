@@ -1,0 +1,4938 @@
+{
+  "scope": "New chronological-transversal and endpoint audit; not a Lean proof.",
+  "formal_kernel_run": false,
+  "universal_conclusions_from_finite_tests": false,
+  "all_passed": true,
+  "integer_certificates": [
+    {
+      "component": 0,
+      "color": 0,
+      "rank_before": 1,
+      "neutral_direction": 0,
+      "changed_direction": 2,
+      "edge": [
+        -1,
+        0,
+        1,
+        0
+      ],
+      "H_before": [
+        [
+          -4,
+          1,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          -4,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "component": 0,
+      "color": 1,
+      "rank_before": 1,
+      "neutral_direction": 1,
+      "changed_direction": 0,
+      "edge": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          -4,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          -4,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        -1,
+        0,
+        0
+      ]
+    },
+    {
+      "component": 0,
+      "color": 2,
+      "rank_before": 1,
+      "neutral_direction": 2,
+      "changed_direction": 1,
+      "edge": [
+        0,
+        1,
+        -1,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          -4,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        1,
+        -1,
+        0
+      ]
+    },
+    {
+      "component": 1,
+      "color": 3,
+      "rank_before": 1,
+      "neutral_direction": 3,
+      "changed_direction": 4,
+      "edge": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          -4
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          -4,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "component": 1,
+      "color": 4,
+      "rank_before": 1,
+      "neutral_direction": 4,
+      "changed_direction": 3,
+      "edge": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "component": 2,
+      "color": 0,
+      "rank_before": 2,
+      "neutral_direction": 1,
+      "changed_direction": 0,
+      "edge": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          -4,
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          -4,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        -1,
+        0
+      ]
+    },
+    {
+      "component": 2,
+      "color": 3,
+      "rank_before": 2,
+      "neutral_direction": 4,
+      "changed_direction": 1,
+      "edge": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          -4
+        ],
+        [
+          0,
+          0,
+          0,
+          -1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          -1
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          -4,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        1,
+        -1
+      ]
+    },
+    {
+      "component": 2,
+      "color": 4,
+      "rank_before": 2,
+      "neutral_direction": 0,
+      "changed_direction": 4,
+      "edge": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          -1
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        0,
+        1
+      ]
+    },
+    {
+      "component": 3,
+      "color": 1,
+      "rank_before": 2,
+      "neutral_direction": 2,
+      "changed_direction": 3,
+      "edge": [
+        0,
+        0,
+        -1,
+        1
+      ],
+      "H_before": [
+        [
+          1,
+          -4,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          1,
+          -1,
+          0
+        ],
+        [
+          -4,
+          -1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        0,
+        1
+      ]
+    },
+    {
+      "component": 3,
+      "color": 2,
+      "rank_before": 2,
+      "neutral_direction": 3,
+      "changed_direction": 2,
+      "edge": [
+        0,
+        0,
+        1,
+        -1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          -4,
+          1
+        ],
+        [
+          0,
+          1,
+          -1,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          -4,
+          -1,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        -1
+      ]
+    },
+    {
+      "component": 4,
+      "color": 0,
+      "rank_before": 3,
+      "neutral_direction": 2,
+      "changed_direction": 4,
+      "edge": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "H_before": [
+        [
+          -4,
+          1,
+          1,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          -4,
+          -1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        1
+      ]
+    },
+    {
+      "component": 4,
+      "color": 2,
+      "rank_before": 3,
+      "neutral_direction": 4,
+      "changed_direction": 2,
+      "edge": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          -4,
+          1
+        ],
+        [
+          0,
+          1,
+          -1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          -4,
+          -1,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1,
+          0
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        -1
+      ]
+    }
+  ],
+  "mod4_certificates": [
+    {
+      "component": 0,
+      "color": 0,
+      "rank_before": 1,
+      "neutral_direction": 0,
+      "changed_direction": 2,
+      "edge": [
+        -1,
+        0,
+        1,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          0,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": 3,
+      "W_coordinates": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "component": 0,
+      "color": 1,
+      "rank_before": 1,
+      "neutral_direction": 1,
+      "changed_direction": 0,
+      "edge": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          0,
+          1,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          0,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": 3,
+      "W_coordinates": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "component": 0,
+      "color": 2,
+      "rank_before": 1,
+      "neutral_direction": 2,
+      "changed_direction": 1,
+      "edge": [
+        0,
+        1,
+        -1,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": 3,
+      "W_coordinates": [
+        1,
+        3,
+        0
+      ]
+    },
+    {
+      "component": 1,
+      "color": 3,
+      "rank_before": 1,
+      "neutral_direction": 3,
+      "changed_direction": 4,
+      "edge": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "component": 1,
+      "color": 4,
+      "rank_before": 1,
+      "neutral_direction": 4,
+      "changed_direction": 3,
+      "edge": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        0,
+        0,
+        3
+      ]
+    },
+    {
+      "component": 2,
+      "color": 0,
+      "rank_before": 2,
+      "neutral_direction": 1,
+      "changed_direction": 0,
+      "edge": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "determinant": -1,
+      "W_coordinates": [
+        3,
+        0
+      ]
+    },
+    {
+      "component": 2,
+      "color": 2,
+      "rank_before": 2,
+      "neutral_direction": 4,
+      "changed_direction": 1,
+      "edge": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          -1,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          -1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        1,
+        3
+      ]
+    },
+    {
+      "component": 2,
+      "color": 4,
+      "rank_before": 2,
+      "neutral_direction": 0,
+      "changed_direction": 4,
+      "edge": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          -1
+        ],
+        [
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        0,
+        1
+      ]
+    },
+    {
+      "component": 3,
+      "color": 1,
+      "rank_before": 2,
+      "neutral_direction": 3,
+      "changed_direction": 2,
+      "edge": [
+        0,
+        0,
+        1,
+        -1
+      ],
+      "H_before": [
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          0,
+          1,
+          -1,
+          0
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "determinant": -3,
+      "W_coordinates": [
+        0,
+        3
+      ]
+    },
+    {
+      "component": 3,
+      "color": 3,
+      "rank_before": 2,
+      "neutral_direction": 2,
+      "changed_direction": 3,
+      "edge": [
+        0,
+        0,
+        -1,
+        1
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          -1
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          0,
+          -1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          0,
+          1
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        0,
+        1
+      ]
+    },
+    {
+      "component": 4,
+      "color": 0,
+      "rank_before": 3,
+      "neutral_direction": 4,
+      "changed_direction": 2,
+      "edge": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "H_before": [
+        [
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ]
+      ],
+      "matrix": [
+        [
+          1,
+          -1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          -1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        3
+      ]
+    },
+    {
+      "component": 4,
+      "color": 1,
+      "rank_before": 3,
+      "neutral_direction": 2,
+      "changed_direction": 4,
+      "edge": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "H_before": [
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          -1
+        ]
+      ],
+      "matrix": [
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          -1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1,
+          0
+        ]
+      ],
+      "determinant": 1,
+      "W_coordinates": [
+        1
+      ]
+    }
+  ],
+  "symbolic_endpoint_moduli": [
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120,
+    122,
+    124,
+    126,
+    128,
+    130,
+    132,
+    134,
+    136,
+    138,
+    140,
+    142,
+    144,
+    146,
+    148,
+    150,
+    152,
+    154,
+    156,
+    158,
+    160,
+    162,
+    164,
+    166,
+    168,
+    170,
+    172,
+    174,
+    176,
+    178,
+    180,
+    182,
+    184,
+    186,
+    188,
+    190,
+    192,
+    194,
+    196,
+    198,
+    200,
+    202,
+    204,
+    206,
+    208,
+    210,
+    212,
+    214,
+    216,
+    218,
+    220,
+    222,
+    224,
+    226,
+    228,
+    230,
+    232,
+    234,
+    236,
+    238,
+    240,
+    242,
+    244,
+    246,
+    248,
+    250,
+    252,
+    254,
+    256
+  ],
+  "finite_cases": [
+    {
+      "m": 4,
+      "root_vertices": 256,
+      "physical_vertices": 1024,
+      "stage_checks": [
+        {
+          "color": 0,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 64,
+          "new_cycles": 16,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 16,
+          "new_cycles": 4,
+          "pulledback_source_count": 16,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 4,
+          "new_cycles": 1,
+          "pulledback_source_count": 4,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 64,
+          "new_cycles": 16,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 16,
+          "new_cycles": 4,
+          "pulledback_source_count": 16,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 4,
+          "new_cycles": 1,
+          "pulledback_source_count": 4,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 64,
+          "new_cycles": 16,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 16,
+          "new_cycles": 4,
+          "pulledback_source_count": 16,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 64,
+          "new_cycles": 16,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 16,
+          "new_cycles": 4,
+          "pulledback_source_count": 16,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 64,
+          "new_cycles": 16,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 16,
+          "new_cycles": 4,
+          "pulledback_source_count": 16,
+          "prefix_translation": true,
+          "comparison_identity": true
+        }
+      ],
+      "endpoint_checks": [
+        {
+          "color": 2,
+          "endpoint_count": 8,
+          "cuts_per_old_cycle": [
+            2,
+            3,
+            2,
+            1
+          ],
+          "return_times": {
+            "(0, 2)": 21,
+            "(0, 3)": 38,
+            "(1, 1)": 17,
+            "(1, 3)": 43,
+            "(2, 1)": 21,
+            "(2, 2)": 47,
+            "(3, 0)": 64,
+            "(3, 2)": 5
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                3,
+                0
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "color": 3,
+          "endpoint_count": 8,
+          "cuts_per_old_cycle": [
+            2,
+            3,
+            2,
+            1
+          ],
+          "return_times": {
+            "(0, 2)": 47,
+            "(0, 3)": 47,
+            "(1, 0)": 64,
+            "(1, 1)": 30,
+            "(1, 3)": 17,
+            "(2, 1)": 17,
+            "(2, 2)": 17,
+            "(3, 0)": 17
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                3,
+                0
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "color": 4,
+          "endpoint_count": 8,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 20,
+            "(0, 3)": 40,
+            "(1, 0)": 40,
+            "(1, 1)": 44,
+            "(1, 3)": 20,
+            "(2, 1)": 24,
+            "(2, 2)": 44,
+            "(3, 2)": 24
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "physical_terminal_lengths": [
+        [
+          1024
+        ],
+        [
+          1024
+        ],
+        [
+          1024
+        ],
+        [
+          1024
+        ],
+        [
+          1024
+        ]
+      ],
+      "full_terminal_colored_arc_observations": 5120
+    },
+    {
+      "m": 6,
+      "root_vertices": 1296,
+      "physical_vertices": 7776,
+      "stage_checks": [
+        {
+          "color": 0,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 216,
+          "new_cycles": 36,
+          "pulledback_source_count": 216,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 36,
+          "new_cycles": 6,
+          "pulledback_source_count": 36,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 6,
+          "new_cycles": 1,
+          "pulledback_source_count": 6,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 216,
+          "new_cycles": 36,
+          "pulledback_source_count": 216,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 36,
+          "new_cycles": 6,
+          "pulledback_source_count": 36,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 216,
+          "new_cycles": 36,
+          "pulledback_source_count": 216,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 36,
+          "new_cycles": 6,
+          "pulledback_source_count": 36,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 6,
+          "new_cycles": 1,
+          "pulledback_source_count": 6,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 216,
+          "new_cycles": 36,
+          "pulledback_source_count": 216,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 36,
+          "new_cycles": 6,
+          "pulledback_source_count": 36,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 216,
+          "new_cycles": 36,
+          "pulledback_source_count": 216,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 36,
+          "new_cycles": 6,
+          "pulledback_source_count": 36,
+          "prefix_translation": true,
+          "comparison_identity": true
+        }
+      ],
+      "endpoint_checks": [
+        {
+          "color": 1,
+          "endpoint_count": 12,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 6,
+            "(0, 3)": 210,
+            "(1, 1)": 12,
+            "(1, 3)": 204,
+            "(2, 1)": 6,
+            "(2, 2)": 210,
+            "(3, 0)": 12,
+            "(3, 2)": 204,
+            "(4, 2)": 18,
+            "(4, 5)": 198,
+            "(5, 2)": 12,
+            "(5, 4)": 204
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                5,
+                2
+              ],
+              [
+                5,
+                4
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 3,
+          "endpoint_count": 12,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 168,
+            "(0, 3)": 210,
+            "(1, 0)": 132,
+            "(1, 1)": 174,
+            "(1, 3)": 6,
+            "(1, 4)": 48,
+            "(1, 5)": 90,
+            "(2, 1)": 42,
+            "(2, 2)": 48,
+            "(3, 0)": 84,
+            "(4, 5)": 126,
+            "(5, 4)": 168
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                5,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 4,
+          "endpoint_count": 12,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 42,
+            "(0, 3)": 84,
+            "(1, 0)": 168,
+            "(1, 1)": 174,
+            "(1, 3)": 42,
+            "(1, 4)": 84,
+            "(1, 5)": 126,
+            "(2, 1)": 132,
+            "(2, 2)": 174,
+            "(3, 2)": 132,
+            "(4, 2)": 90,
+            "(5, 2)": 48
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                5,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                4,
+                2
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "physical_terminal_lengths": [
+        [
+          7776
+        ],
+        [
+          7776
+        ],
+        [
+          7776
+        ],
+        [
+          7776
+        ],
+        [
+          7776
+        ]
+      ],
+      "full_terminal_colored_arc_observations": 38880
+    },
+    {
+      "m": 8,
+      "root_vertices": 4096,
+      "physical_vertices": 32768,
+      "stage_checks": [
+        {
+          "color": 0,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 512,
+          "new_cycles": 64,
+          "pulledback_source_count": 512,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 64,
+          "new_cycles": 8,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 8,
+          "new_cycles": 1,
+          "pulledback_source_count": 8,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 512,
+          "new_cycles": 64,
+          "pulledback_source_count": 512,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 64,
+          "new_cycles": 8,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 512,
+          "new_cycles": 64,
+          "pulledback_source_count": 512,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 64,
+          "new_cycles": 8,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 8,
+          "new_cycles": 1,
+          "pulledback_source_count": 8,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 512,
+          "new_cycles": 64,
+          "pulledback_source_count": 512,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 64,
+          "new_cycles": 8,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 512,
+          "new_cycles": 64,
+          "pulledback_source_count": 512,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 64,
+          "new_cycles": 8,
+          "pulledback_source_count": 64,
+          "prefix_translation": true,
+          "comparison_identity": true
+        }
+      ],
+      "endpoint_checks": [
+        {
+          "color": 1,
+          "endpoint_count": 16,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 8,
+            "(0, 3)": 504,
+            "(1, 1)": 16,
+            "(1, 3)": 496,
+            "(2, 1)": 8,
+            "(2, 2)": 504,
+            "(3, 0)": 16,
+            "(3, 2)": 496,
+            "(4, 2)": 488,
+            "(4, 7)": 24,
+            "(5, 2)": 480,
+            "(5, 6)": 32,
+            "(6, 2)": 24,
+            "(6, 5)": 488,
+            "(7, 2)": 16,
+            "(7, 4)": 496
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                2
+              ],
+              [
+                5,
+                6
+              ]
+            ],
+            [
+              [
+                6,
+                2
+              ],
+              [
+                6,
+                5
+              ]
+            ],
+            [
+              [
+                7,
+                2
+              ],
+              [
+                7,
+                4
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 3,
+          "endpoint_count": 16,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 432,
+            "(0, 3)": 504,
+            "(1, 0)": 368,
+            "(1, 1)": 440,
+            "(1, 3)": 8,
+            "(1, 4)": 80,
+            "(1, 5)": 152,
+            "(1, 6)": 224,
+            "(1, 7)": 296,
+            "(2, 1)": 72,
+            "(2, 2)": 80,
+            "(3, 0)": 144,
+            "(4, 7)": 216,
+            "(5, 6)": 288,
+            "(6, 5)": 360,
+            "(7, 4)": 432
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                7,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                6,
+                5
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                5,
+                6
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                4,
+                7
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 4,
+          "endpoint_count": 16,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 72,
+            "(0, 3)": 144,
+            "(1, 0)": 432,
+            "(1, 1)": 440,
+            "(1, 3)": 72,
+            "(1, 4)": 144,
+            "(1, 5)": 216,
+            "(1, 6)": 288,
+            "(1, 7)": 360,
+            "(2, 1)": 368,
+            "(2, 2)": 440,
+            "(3, 2)": 368,
+            "(4, 2)": 296,
+            "(5, 2)": 224,
+            "(6, 2)": 152,
+            "(7, 2)": 80
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                7,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                4,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                5,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                6,
+                2
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "physical_terminal_lengths": [
+        [
+          32768
+        ],
+        [
+          32768
+        ],
+        [
+          32768
+        ],
+        [
+          32768
+        ],
+        [
+          32768
+        ]
+      ],
+      "full_terminal_colored_arc_observations": 163840
+    },
+    {
+      "m": 10,
+      "root_vertices": 10000,
+      "physical_vertices": 100000,
+      "stage_checks": [
+        {
+          "color": 0,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1000,
+          "new_cycles": 100,
+          "pulledback_source_count": 1000,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 100,
+          "new_cycles": 10,
+          "pulledback_source_count": 100,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 10,
+          "new_cycles": 1,
+          "pulledback_source_count": 10,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1000,
+          "new_cycles": 100,
+          "pulledback_source_count": 1000,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 100,
+          "new_cycles": 10,
+          "pulledback_source_count": 100,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1000,
+          "new_cycles": 100,
+          "pulledback_source_count": 1000,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 100,
+          "new_cycles": 10,
+          "pulledback_source_count": 100,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 10,
+          "new_cycles": 1,
+          "pulledback_source_count": 10,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 1000,
+          "new_cycles": 100,
+          "pulledback_source_count": 1000,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 100,
+          "new_cycles": 10,
+          "pulledback_source_count": 100,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 1000,
+          "new_cycles": 100,
+          "pulledback_source_count": 1000,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 100,
+          "new_cycles": 10,
+          "pulledback_source_count": 100,
+          "prefix_translation": true,
+          "comparison_identity": true
+        }
+      ],
+      "endpoint_checks": [
+        {
+          "color": 1,
+          "endpoint_count": 20,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 10,
+            "(0, 3)": 990,
+            "(1, 1)": 20,
+            "(1, 3)": 980,
+            "(2, 1)": 10,
+            "(2, 2)": 990,
+            "(3, 0)": 20,
+            "(3, 2)": 980,
+            "(4, 2)": 970,
+            "(4, 9)": 30,
+            "(5, 2)": 960,
+            "(5, 8)": 40,
+            "(6, 2)": 950,
+            "(6, 7)": 50,
+            "(7, 2)": 940,
+            "(7, 6)": 60,
+            "(8, 2)": 30,
+            "(8, 5)": 970,
+            "(9, 2)": 20,
+            "(9, 4)": 980
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                9
+              ]
+            ],
+            [
+              [
+                5,
+                2
+              ],
+              [
+                5,
+                8
+              ]
+            ],
+            [
+              [
+                6,
+                2
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            [
+              [
+                7,
+                2
+              ],
+              [
+                7,
+                6
+              ]
+            ],
+            [
+              [
+                8,
+                2
+              ],
+              [
+                8,
+                5
+              ]
+            ],
+            [
+              [
+                9,
+                2
+              ],
+              [
+                9,
+                4
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              8
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              9,
+              2
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              4,
+              9
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 3,
+          "endpoint_count": 20,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 880,
+            "(0, 3)": 990,
+            "(1, 0)": 780,
+            "(1, 1)": 890,
+            "(1, 3)": 10,
+            "(1, 4)": 120,
+            "(1, 5)": 230,
+            "(1, 6)": 340,
+            "(1, 7)": 450,
+            "(1, 8)": 560,
+            "(1, 9)": 670,
+            "(2, 1)": 110,
+            "(2, 2)": 120,
+            "(3, 0)": 220,
+            "(4, 9)": 330,
+            "(5, 8)": 440,
+            "(6, 7)": 550,
+            "(7, 6)": 660,
+            "(8, 5)": 770,
+            "(9, 4)": 880
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                9,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                8,
+                5
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                7,
+                6
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                6,
+                7
+              ]
+            ],
+            [
+              [
+                1,
+                8
+              ],
+              [
+                5,
+                8
+              ]
+            ],
+            [
+              [
+                1,
+                9
+              ],
+              [
+                4,
+                9
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              9
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              5,
+              8
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 4,
+          "endpoint_count": 20,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 110,
+            "(0, 3)": 220,
+            "(1, 0)": 880,
+            "(1, 1)": 890,
+            "(1, 3)": 110,
+            "(1, 4)": 220,
+            "(1, 5)": 330,
+            "(1, 6)": 440,
+            "(1, 7)": 550,
+            "(1, 8)": 660,
+            "(1, 9)": 770,
+            "(2, 1)": 780,
+            "(2, 2)": 890,
+            "(3, 2)": 780,
+            "(4, 2)": 670,
+            "(5, 2)": 560,
+            "(6, 2)": 450,
+            "(7, 2)": 340,
+            "(8, 2)": 230,
+            "(9, 2)": 120
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                9,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                4,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                5,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                6,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                8
+              ],
+              [
+                7,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                9
+              ],
+              [
+                8,
+                2
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              9,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "physical_terminal_lengths": [
+        [
+          100000
+        ],
+        [
+          100000
+        ],
+        [
+          100000
+        ],
+        [
+          100000
+        ],
+        [
+          100000
+        ]
+      ],
+      "full_terminal_colored_arc_observations": 500000
+    },
+    {
+      "m": 12,
+      "root_vertices": 20736,
+      "physical_vertices": 248832,
+      "stage_checks": [
+        {
+          "color": 0,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1728,
+          "new_cycles": 144,
+          "pulledback_source_count": 1728,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 144,
+          "new_cycles": 12,
+          "pulledback_source_count": 144,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 0,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 12,
+          "new_cycles": 1,
+          "pulledback_source_count": 12,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1728,
+          "new_cycles": 144,
+          "pulledback_source_count": 1728,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 1,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 144,
+          "new_cycles": 12,
+          "pulledback_source_count": 144,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 0,
+          "rank_before": 1,
+          "old_cycles": 1728,
+          "new_cycles": 144,
+          "pulledback_source_count": 1728,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 3,
+          "rank_before": 2,
+          "old_cycles": 144,
+          "new_cycles": 12,
+          "pulledback_source_count": 144,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 2,
+          "component": 4,
+          "rank_before": 3,
+          "old_cycles": 12,
+          "new_cycles": 1,
+          "pulledback_source_count": 12,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 1728,
+          "new_cycles": 144,
+          "pulledback_source_count": 1728,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 3,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 144,
+          "new_cycles": 12,
+          "pulledback_source_count": 144,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 1,
+          "rank_before": 1,
+          "old_cycles": 1728,
+          "new_cycles": 144,
+          "pulledback_source_count": 1728,
+          "prefix_translation": true,
+          "comparison_identity": true
+        },
+        {
+          "color": 4,
+          "component": 2,
+          "rank_before": 2,
+          "old_cycles": 144,
+          "new_cycles": 12,
+          "pulledback_source_count": 144,
+          "prefix_translation": true,
+          "comparison_identity": true
+        }
+      ],
+      "endpoint_checks": [
+        {
+          "color": 1,
+          "endpoint_count": 24,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 12,
+            "(0, 3)": 1716,
+            "(1, 1)": 24,
+            "(1, 3)": 1704,
+            "(2, 1)": 12,
+            "(2, 2)": 1716,
+            "(3, 0)": 24,
+            "(3, 2)": 1704,
+            "(4, 2)": 1692,
+            "(4, 11)": 36,
+            "(5, 2)": 1680,
+            "(5, 10)": 48,
+            "(6, 2)": 1668,
+            "(6, 9)": 60,
+            "(7, 2)": 1656,
+            "(7, 8)": 72,
+            "(8, 2)": 1644,
+            "(8, 7)": 84,
+            "(9, 2)": 1632,
+            "(9, 6)": 96,
+            "(10, 2)": 36,
+            "(10, 5)": 1692,
+            "(11, 2)": 24,
+            "(11, 4)": 1704
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                11
+              ]
+            ],
+            [
+              [
+                5,
+                2
+              ],
+              [
+                5,
+                10
+              ]
+            ],
+            [
+              [
+                6,
+                2
+              ],
+              [
+                6,
+                9
+              ]
+            ],
+            [
+              [
+                7,
+                2
+              ],
+              [
+                7,
+                8
+              ]
+            ],
+            [
+              [
+                8,
+                2
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            [
+              [
+                9,
+                2
+              ],
+              [
+                9,
+                6
+              ]
+            ],
+            [
+              [
+                10,
+                2
+              ],
+              [
+                10,
+                5
+              ]
+            ],
+            [
+              [
+                11,
+                2
+              ],
+              [
+                11,
+                4
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              11,
+              4
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              9,
+              6
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              10
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              11,
+              2
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              9,
+              2
+            ],
+            [
+              8,
+              7
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              4,
+              11
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 3,
+          "endpoint_count": 24,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 1560,
+            "(0, 3)": 1716,
+            "(1, 0)": 1416,
+            "(1, 1)": 1572,
+            "(1, 3)": 12,
+            "(1, 4)": 168,
+            "(1, 5)": 324,
+            "(1, 6)": 480,
+            "(1, 7)": 636,
+            "(1, 8)": 792,
+            "(1, 9)": 948,
+            "(1, 10)": 1104,
+            "(1, 11)": 1260,
+            "(2, 1)": 156,
+            "(2, 2)": 168,
+            "(3, 0)": 312,
+            "(4, 11)": 468,
+            "(5, 10)": 624,
+            "(6, 9)": 780,
+            "(7, 8)": 936,
+            "(8, 7)": 1092,
+            "(9, 6)": 1248,
+            "(10, 5)": 1404,
+            "(11, 4)": 1560
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                11,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                10,
+                5
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                9,
+                6
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                8,
+                7
+              ]
+            ],
+            [
+              [
+                1,
+                8
+              ],
+              [
+                7,
+                8
+              ]
+            ],
+            [
+              [
+                1,
+                9
+              ],
+              [
+                6,
+                9
+              ]
+            ],
+            [
+              [
+                1,
+                10
+              ],
+              [
+                5,
+                10
+              ]
+            ],
+            [
+              [
+                1,
+                11
+              ],
+              [
+                4,
+                11
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              4,
+              11
+            ],
+            [
+              1,
+              10
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              8,
+              7
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              11
+            ],
+            [
+              5,
+              10
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              9,
+              6
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              11,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "color": 4,
+          "endpoint_count": 24,
+          "cuts_per_old_cycle": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "return_times": {
+            "(0, 2)": 156,
+            "(0, 3)": 312,
+            "(1, 0)": 1560,
+            "(1, 1)": 1572,
+            "(1, 3)": 156,
+            "(1, 4)": 312,
+            "(1, 5)": 468,
+            "(1, 6)": 624,
+            "(1, 7)": 780,
+            "(1, 8)": 936,
+            "(1, 9)": 1092,
+            "(1, 10)": 1248,
+            "(1, 11)": 1404,
+            "(2, 1)": 1416,
+            "(2, 2)": 1572,
+            "(3, 2)": 1416,
+            "(4, 2)": 1260,
+            "(5, 2)": 1104,
+            "(6, 2)": 948,
+            "(7, 2)": 792,
+            "(8, 2)": 636,
+            "(9, 2)": 480,
+            "(10, 2)": 324,
+            "(11, 2)": 168
+          },
+          "N_cycles": [
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              [
+                11,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                5
+              ],
+              [
+                4,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                6
+              ],
+              [
+                5,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                7
+              ],
+              [
+                6,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                8
+              ],
+              [
+                7,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                9
+              ],
+              [
+                8,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                10
+              ],
+              [
+                9,
+                2
+              ]
+            ],
+            [
+              [
+                1,
+                11
+              ],
+              [
+                10,
+                2
+              ]
+            ]
+          ],
+          "product_cycle": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              9,
+              2
+            ],
+            [
+              1,
+              11
+            ],
+            [
+              11,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              8
+            ],
+            [
+              8,
+              2
+            ],
+            [
+              1,
+              10
+            ],
+            [
+              10,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "physical_terminal_lengths": [
+        [
+          248832
+        ],
+        [
+          248832
+        ],
+        [
+          248832
+        ],
+        [
+          248832
+        ],
+        [
+          248832
+        ]
+      ],
+      "full_terminal_colored_arc_observations": 1244160
+    }
+  ]
+}

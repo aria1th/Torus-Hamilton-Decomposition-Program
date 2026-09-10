@@ -1,0 +1,30 @@
+{
+  "all_passed": true,
+  "instances": 100,
+  "raw_J_is_not_pulledback_J_instances": 100,
+  "prefix_quotient_negative_control": {
+    "m": 3,
+    "swapped_prefix_sources": [
+      [
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        0
+      ]
+    ],
+    "cycle_lengths": [
+      2,
+      9,
+      9,
+      3,
+      4
+    ],
+    "correct_conclusion_failed": true
+  },
+  "random_seed": 571903,
+  "scope": "Abstract finite abelian permutation test; not additional physical torus cases."
+}

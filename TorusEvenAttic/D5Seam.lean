@@ -1,3 +1,4 @@
+-- STATUS: attic (D5 seam framework used only by Route E; parity-free but not on the even main path)
 import D5Odd.Cayley
 
 namespace D5Odd

@@ -1,0 +1,56 @@
+{
+  "manuscript_claim": "For every even m>=4 and every d>=2, D_d(m) has a Hamilton decomposition.",
+  "mathematical_proof_added": [
+    "chronological transversal splice",
+    "explicit terminal 2m-point cycles",
+    "self-contained ordinary D5 integration"
+  ],
+  "formal_kernel_run": false,
+  "new_high_dimensional_dense_replay": false,
+  "d5_finite_moduli": [
+    4,
+    6,
+    8,
+    10,
+    12
+  ],
+  "d5_chronological_checks": 60,
+  "d5_full_terminal_colored_arc_observations": 1952000,
+  "symbolic_endpoint_moduli": 127,
+  "small_entries_full_endpoints": [
+    [
+      4,
+      7
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      4,
+      9
+    ]
+  ],
+  "small_entries_prefix_only": [
+    [
+      6,
+      9
+    ],
+    [
+      8,
+      7
+    ],
+    [
+      8,
+      9
+    ]
+  ],
+  "small_entries_colored_arc_observations": 9073152,
+  "core_replay_colored_arc_observations": 2174096,
+  "normal_optimized_d5_reports_equal": true,
+  "normal_optimized_small_entry_reports_equal": true,
+  "pdf_pages": 27,
+  "pdflatex_unresolved_references": false,
+  "pdflatex_overfull_boxes": false,
+  "original_manuscript_sha256": "a073b6e3cff6f3c6de0545482e27f5786e4ad3c26f085d371c90f92450d8827f"
+}
