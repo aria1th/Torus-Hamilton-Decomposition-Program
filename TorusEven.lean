@@ -25,3 +25,8 @@ import TorusEven.D5.Endpoint
 import TorusEven.D5.Terminal
 import TorusEven.D5.PlaneChart
 import TorusEven.D5.Terminal1
+import TorusEven.D5.Endpoint1
+import TorusEven.D5.Terminal3
+import TorusEven.D5.Endpoint2
+import TorusEven.D5.Terminal4
+import TorusEven.D5

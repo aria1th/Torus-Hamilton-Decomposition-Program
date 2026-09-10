@@ -199,7 +199,7 @@ theorem all_dimensions_of_seeds_and_successor (C : ModulusClass)
 수락 기준: `theorem d3_even {m} (hm : Even m) (h4 : 4 ≤ m) : Shared.CayleyHamiltonDecomposition 3 m`,
 axiom은 표준 3개만.
 
-### E3. D_5(짝수) (`TorusEven/D5/`) — zip `formalization/INTERFACES.md` 1–4번
+### E3. D_5(짝수) (`TorusEven/D5/`) — **완료 2026-09-10** (`TorusEven.d5_even_large : D5EvenLargeGoal`, 표준 axiom만; 파일 대응은 docs/EVEN_AXIOM_LEDGER.md 참조. 아래는 원안)
 
 **E3-a. m=4 leaf.** 기존 `D5EvenRouteEM4FiniteTarget_unconditional`을
 `Shared.CayleyHamiltonDecomposition 5 4`로 잇는 adapter가 홀짝 무관인지 확인해 그대로

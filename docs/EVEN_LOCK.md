@@ -41,3 +41,10 @@ milestones close (see docs/EVEN_AXIOM_LEDGER.md once created).
 | Port changes | `TorusD3Even/Color1.lean`: 6 proof repairs for simp-normal-form drift (lines ~369-919); `TorusD3Odometer/Lift.lean`: inlined `iterate_add_mul_slicePoint` (the external `Shared/ReturnLift.lean` differs from ours); `TorusD3Even/TorusD3Even_Color1_patched.lean` not vendored (unused duplicate) |
 | Mathematical source | arXiv:2603.24708 (Park), Section 4 Route E, Appendix D (`m = 4` table) |
 | D_3(4) | `TorusEven/D3/Four.lean`, kernel `decide` (no native leaf), table transcribed from Appendix D and re-verified in Python |
+
+### Log (2026-09-10, E3 closed)
+
+- `lake build TorusEven`: success (8387 jobs).
+- `#print axioms TorusEven.d5_even_large`: `[propext, Classical.choice, Quot.sound]`.
+- `python3 scripts/check_even_isolation.py`: passed (29 main-path files, 4 attic files,
+  3 registered native leaves).

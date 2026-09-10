@@ -32,3 +32,23 @@ manuscript's anchored cyclic-star (`prop:anchor`). Both prove the same statement
 anchored version is still needed for E5 (agreement at the four anchor vertices).
 
 Manuscript ↔ Lean correspondence for the open goals is in `TorusEven/Goals.lean`.
+
+## 2026-09-10 (E3 closed: `D5EvenLargeGoal`)
+
+| Lean name | Status | Axioms |
+|---|---|---|
+| `TorusEven.d5_even_large : D5EvenLargeGoal` (D_5(m), even m ≥ 6, chronological transversal route) | unconditional | standard only (no native leaf; the integer certificates are kernel `decide`/`simp` on `LatticeData.lean`) |
+| `TorusEven.d5_even_uniform` / `even_dimension_five` (D_5(m), even m ≥ 4) | unconditional | standard + the 4 D_5(4) leaves |
+| `TorusEven.even_dimension_ten` (D_10(m), even m ≥ 4) | unconditional | same as `even_dimension_five` |
+| `TorusEven.even_dimension_fifteen` (D_15(m), even m ≥ 4) | unconditional | standard + 4 (D_5(4)) + 16 (D_3) native leaves |
+| `TorusEven.even_modulus_tori_all_dimensions_of_successor` | conditional on `D7EvenGoal`, `EvenSuccessorGoal` | standard + 4 + 16 native leaves |
+| `TorusEven.even_modulus_tori_all_dimensions_of_collar` | conditional on `EvenOddDegreeGoal` | standard + 4 + 16 native leaves |
+
+Route (files under `TorusEven/D5/`): `Chart` (root-flat chart of `D_5(m)`), `Schedule`
+(the ω-rule schedule, hash-checked against the Python checker at m = 6, 8), `Layers`,
+`Certificates`/`LatticeData`/`Lattice` (integer complement certificates), `Stage`/`Preterminal`
+(chronological stages: colours 0, 2 return as single cycles), `FirstReturn`/`Terminal`
+(source surgery, abstract terminal splice), `Endpoint`/`Endpoint1`/`Endpoint2` (the three
+terminal planes: supports `B_i`, partners `N_i`, the explicit `2m`-cycles of `N_i ∘ j_i`,
+evenness of `m` used in the parity ranges of `pos_i`), `Terminal1`/`Terminal3`/`Terminal4`
+(colours 1, 3, 4), `D5.lean` (assembly through `Chart.cayley_of_rootFlat`).
