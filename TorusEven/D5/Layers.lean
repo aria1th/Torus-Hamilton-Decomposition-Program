@@ -82,11 +82,12 @@ theorem suf_congr (L L' : ℕ → α → α) (k n : ℕ) (h : ∀ s, k ≤ s →
 
 /-- The chronological identity. -/
 theorem pre_change (L L' : ℕ → α → α) (t n : ℕ) (ht : t < n) (J : α → α)
-    (hL' : ∀ s, s ≠ t → L' s = L s) (hLt : L' t = L t ∘ J) (P : α ≃ α) (hP : ⇑P = pre L t) :
+    (hL' : ∀ s, s ≠ t → s < n → L' s = L s) (hLt : L' t = L t ∘ J) (P : α ≃ α)
+    (hP : ⇑P = pre L t) :
     pre L' n = pre L n ∘ (P.symm ∘ J ∘ P) := by
-  have hpre : pre L' t = pre L t := pre_congr L L' t (fun s hs => hL' s (by omega))
+  have hpre : pre L' t = pre L t := pre_congr L L' t (fun s hs => hL' s (by omega) (by omega))
   have hsuf : suf L' (t + 1) n = suf L (t + 1) n :=
-    suf_congr L L' (t + 1) n (fun s hs _ => hL' s (by omega))
+    suf_congr L L' (t + 1) n (fun s hs hs' => hL' s (by omega) hs')
   rw [pre_eq_suf_comp_pre L' (t + 1) n ht, pre_eq_suf_comp_pre L (t + 1) n ht, hsuf]
   funext x
   simp only [Function.comp, pre_succ, hLt, hpre]

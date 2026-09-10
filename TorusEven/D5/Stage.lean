@@ -85,7 +85,7 @@ theorem step (L L' : ℕ → V m → V m) (hL : ∀ s, Function.Bijective (L s))
   let S : Equiv.Perm (V m) := Equiv.ofBijective _ (Layers.pre_bijective L hL m)
   have hPeq : ⇑P = Layers.pre L t := rfl
   have hSeq : ⇑S = Layers.pre L m := rfl
-  have hchange := Layers.pre_change L L' t m ht (piecewiseAdd W z e) hL' hLt P hPeq
+  have hchange := Layers.pre_change L L' t m ht (piecewiseAdd W z e) (fun s hs _ => hL' s hs) hLt P hPeq
   intro x
   have hmain := chronological_transversal H W hHW S (by simpa [hSeq] using hS) P b
     (by simpa [hPeq] using hP) e he (addOrderOf e) rfl z x
