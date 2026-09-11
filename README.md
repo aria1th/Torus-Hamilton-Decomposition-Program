@@ -16,6 +16,13 @@ This repository is also a proof-audit workspace.  Some modules are finished
 theorem libraries, while the newest `RoundComposite` files expose the current
 paper-facing endpoint cuts for the all-dimensional theorem.
 
+The even-modulus extension has closed its D3 and D5 seeds. Its remaining work is
+relative collar closure and anchored entry in odd dimensions at least seven;
+the even all-dimensional endpoint is still conditional. See the
+[2026-09-11 preparation and manuscript map](docs/LEAN_PREPARATION_20260911.md)
+for the current boundary and next proof interfaces. The snapshot below describes
+the all-odd release.
+
 ## Current Status
 
 Snapshot: 2026-05-06.

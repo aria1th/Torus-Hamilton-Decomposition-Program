@@ -2,6 +2,11 @@
 
 Date: 2026-09-10.
 
+현재 재개 지점과 원고·Lean 대응은
+[2026-09-11 준비 문서](LEAN_PREPARATION_20260911.md)를 따른다. E0–E3는 완료되었고
+E4–E5가 남았다. 아래 단계별 원안의 환경 부재·coset 기계 부재·E3 예정 문장은
+최초 조사 시점의 기록이다. D3의 native leaf는 실제 조회 기준 14개다.
+
 입력 원고: `/local/angel/etc/paper/torus_integrated_proof.zip`
 (`even_directed_tori_integrated.tex`, SHA256 `846a1e5f…88e98`; 주정리: 모든 짝수
 m>=4, 모든 d>=2에서 D_d(m)의 Hamilton 분해). 번들의 다섯 Python 검사기는 2026-09-10에
@@ -268,7 +273,7 @@ m=4는 iterate 항등식 (38,59;30,47)을 `decide`로.
 | `PinnedSelection.lean` (F4) | spanning forest T-join, odd-degree multigraph의 ±1 divergence 방향화, filler 부등식, row 0/1/2 배치, 두 coherence | mathlib `SimpleGraph` Euler는 multigraph에 부적합. 간선 수 귀납으로 "모든 정점에서 `|in - out| ≤ 1`인 방향화 존재"를 직접 증명하는 것을 권장 |
 | `IncidenceParity.lean` (F5) | lem:inherit: `a' · #blocks = Σ deg`, 짝수성 재생, untouched 방향 보존, measure `Σ(a_i-1)` 감소 | |
 | `Closure.lean` | `thm:closure` 한 정리. 입력: collar state, 출력: 다음 collar state + 모든 필드 | |
-| `EvenDegree.lean` | `thm:even-dim`: 빈 palette 특수화. E1 dispatcher의 짝수 d와 **교차검증**(두 증명이 같은 타입을 닫음) | |
+| `EvenDegree.lean` | `thm:even-dim`: 빈 palette 특수화로 모든 짝수 d를 닫음. E1의 기존 product 결과와 겹치는 차원에서 교차검증; E1만으로 모든 짝수 d가 닫힌 것은 아님 | |
 
 수락 기준(zip F1–F5와 동일): 우측 합성 규약, unhit orbit 항, `m=2`/`active 2개`
 반례가 signature에서 배제됨, closure가 solver/reservoir 가정 없이 닫힘.
@@ -308,7 +313,10 @@ near core `(1,1,2)`+Hamilton shell(lem:nearcore, lem:shell), seed incidence
 3. **`Equiv.Perm` 곱 규약 혼동.** `ReturnLift`/`RootFlat`는 함수 합성(`foldl`)이고
    `Equiv.Perm`의 `*`는 `f * g = f ∘ g`. E3-b에서 `Sr`를 `S ∘ r`로 고정하고 lemma 이름에
    `_right`를 붙인다.
-4. **native_decide 신뢰 경계.** m=4 leaf 두 개와 Evidence에만 허용. 검사 스크립트가 강제.
+4. **native_decide 신뢰 경계.** 현재 등록 파일은 `D5Odd/EvenRouteEM4.lean`,
+   `D5Odd/EvenLambdaE.lean`, `TorusD3Even/Color2.lean`이다. D3의 m=6,8 leaf도
+   포함한다. 사용 위치 검사는 `scripts/check_even_isolation.py`, 실제 의존성은
+   최상위 `#print axioms`로 확인한다.
 5. **원격 브랜치 `route-e-v3-6-20260506` 재유입.** Attic ledger에 superseded로 기록하고
    병합하지 않는다.
 
