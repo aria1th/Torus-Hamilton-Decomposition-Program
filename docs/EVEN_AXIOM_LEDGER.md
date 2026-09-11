@@ -251,3 +251,27 @@ and [uniform proof record](STAR_UNIFORM_PROGRESS_20260911.md).
 E5 still requires the auxiliary shell, seed incidence, matched selection, and
 p-specific entry assembly. `EvenOddDegreeGoal` remains the global endpoint's
 only open hypothesis.
+
+## 2026-09-11 (E5 partial: auxiliary shell and actual seed)
+
+The manuscript shell is a Hamilton factorization for every p≥2 and m≥4; this part
+does not require even m. `Seed.factorization` superposes it with the near-core.
+For even m≥4, `Seed.labels` identifies the actual circuit columns with
+`Fin 4 ⊕ Fin (2*p)`, and `Seed.replacement_hamilton` proves Hamiltonicity of every
+colour after the anchored star replacement. `Seed.support_eq` identifies the
+explicit direction/defect table with actual orbital block support.
+
+CPU `lake build TorusEven` passed (8471 jobs), with no new-code warnings. Isolation
+passed: 113 main-path files, 4 attic files, 3 registered native files. All 87 new
+public declarations in
+[ShellAudit.lean](/fsx/angel/operations/torus-lean-shell-20260911/ShellAudit.lean)
+use standard axioms only. The even-degree theorem is still standard-only; the
+conditional global endpoint retains exactly its previous axiom set, including
+18 native leaves. See the
+[raw audit](/fsx/angel/operations/torus-lean-shell-20260911/axioms.log) and
+[shell/seed proof record](SHELL_PROGRESS_20260911.md).
+
+Seed incidence parity, matched selection, and p-specific entry assembly remain.
+The explicit support transport theorem does not assume or prove component parity;
+it allows subsequent component calculations to apply to the actual seed.
+`EvenOddDegreeGoal` remains open.

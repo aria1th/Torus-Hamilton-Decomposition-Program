@@ -92,6 +92,7 @@ Lean 4.30.0-rc2와 mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`을 사용�
 [검증 manifest](/fsx/angel/operations/torus-lean-star-nondiv-20260911/verification.json).
 Manifest에 소스 commit, CPU receipt, 이전 divisible 단계에서 이어지는 복구 bundle을 기록한다.
 
-다음은 [entry 경계](ENTRY_PROGRESS_20260911.md)의 auxiliary shell 구성과 Hamilton성,
-core와의 superposition, seed incidence parity다. 그 뒤 네 mate를 예약한 matched
-selection과 p=2 / p=3 / p≥4 entry를 조립해야 `EvenOddDegreeGoal`을 제거할 수 있다.
+후속 [shell과 seed 기록](SHELL_PROGRESS_20260911.md)에서 auxiliary shell 구성과
+Hamilton성, core와의 superposition을 완료했다. 남은 seed incidence parity, 네 mate를
+예약한 matched selection, p=2 / p=3 / p≥4 entry는 [E5 계획](E5_REMAINING_PLAN_20260911.md)을
+따른다. 이 입력들을 조립해야 `EvenOddDegreeGoal`을 제거할 수 있다.

@@ -5,6 +5,8 @@ Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있�
 완료 상태이며, 전체 차원 endpoint의 가정은 계속 `EvenOddDegreeGoal` 하나다.
 후속 구현에서 [cyclic-star와 대체 core의 Hamilton성](STAR_UNIFORM_PROGRESS_20260911.md)을
 모든 짝수 m≥4에서 닫았다.
+이어서 [auxiliary shell과 합성 seed](SHELL_PROGRESS_20260911.md)의 구성·Hamilton성,
+실제 회로 열과 명시적인 support 표 사이의 대응도 증명했다.
 
 ## 증명된 원고 대응
 
@@ -50,10 +52,13 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 
 ## 다음 증명
 
+구체적인 순서와 완료 조건은 [남은 E5 계획](E5_REMAINING_PLAN_20260911.md)을 따른다.
+
 Cyclic-star 대체 core는 이제 `Star.replacement_hamilton`으로 모든 짝수 m≥4에서
 Hamilton임을 보장한다. 다음 작업은 다음과 같다.
 
-1. Auxiliary shell 구성·Hamilton성, core와의 superposition, seed incidence parity.
+1. `Seed.support` 표의 성분별 짝수성을 증명하고 `Seed.evenComponents_iff`로 실제
+   orbital incidence에 전달한다. p=2,3의 작은 성분 분할도 포함한다.
 2. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
    정확한 quota와 child coherence, active 선택과 `anchorVoltage`의 일치.
 3. p=2, p=3의 구체적인 entry 및 p≥4의 일반 entry를 연결해 `EvenOddDegreeGoal` 제거.
