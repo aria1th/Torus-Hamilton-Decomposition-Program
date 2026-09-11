@@ -3,6 +3,7 @@
 E5의 near-core 보조정리와 네 anchor의 회로 대표성, active voltage의 unit/gap 조건을
 Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있다. E4 closure는
 완료 상태이며, 전체 차원 endpoint의 가정은 계속 `EvenOddDegreeGoal` 하나다.
+후속 cyclic-star 구현과 현재 귀환 증명 경계는 [star 진행 문서](STAR_PROGRESS_20260911.md)에 있다.
 
 ## 증명된 원고 대응
 
@@ -48,8 +49,9 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 
 ## 다음 증명
 
-1. Cyclic-star 대체 core의 factorization과 Hamilton성: `Rows.lean`에 방향 함수와
-   네 anchor의 일치는 있으나, 원고 `lem:star`와 부록의 귀환 순환성은 아직 없다.
+1. Cyclic-star 대체 core의 일반 Hamilton성: 유효한 factorization과 recolouring,
+   실제 2m점 귀환 순열로의 환원, m=4,6의 Hamilton성은 후속 구현에서 증명했다.
+   일반 귀환 표와 순환성의 남은 연결은 [star 기록](STAR_PROGRESS_20260911.md)을 따른다.
 2. Auxiliary shell 구성·Hamilton성, core와의 superposition, seed incidence parity.
 3. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
    정확한 quota와 child coherence, active 선택과 `anchorVoltage`의 일치.
@@ -59,6 +61,8 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 위의 구체적인 입력을 새 가정으로 포장하는 것으로 E5를 완료 처리하지 않는다.
 
 ## 검증과 복구
+
+아래는 near-core 단계의 검증 기록이며, 후속 Star 모듈의 검증은 위 문서에 별도로 기록한다.
 
 지정 CPU 노드에서 `lake build TorusEven` 통과(8432 jobs). 새 Entry와 변경된 Collar
 코드에 linter 경고가 없다. Isolation 검사 통과: main-path 74개, attic 4개, 등록된

@@ -163,3 +163,33 @@ and the conditional global endpoint retains the same 18 native leaves. See the
 
 E5 remains open: cyclic-star Hamiltonicity, the auxiliary shell, incidence and
 matched selection, and the p=2 / p=3 / p≥4 entry assembly are still required.
+
+## 2026-09-11 (E5 partial: cyclic-star factorization and return reduction)
+
+The manuscript's terminal row now defines an actual factorization and near-core
+recolouring for every m≥4. Its height return is proved to be trᵥP꜀, and for even
+m≥4 the colour-zero return has exactly as many circuits as the concrete marked
+return Φ=νP₀ on 2m points. The anchored construction is Hamilton for m=4,6.
+
+| Lean name (under `TorusEven.Entry.Star`) | Result | Axioms |
+|---|---|---|
+| `surgery_word`, `zeroPerm_apply`, `zeroPerm_orbit_card` | the displayed 2m-cycle realizes the actual star surgery | standard only |
+| `factorization`, `replacement`, `replacement_step` | terminal directions, quotas, and valid near-core replacement | standard only |
+| `oneSpecial_return`, `carry_sum`, `height_return` | uniform height return and both voltage formulas | standard only |
+| `voltage_meets_support`, `return_circuitCount` | no unhit translation circuits; exact reduction to Φ | standard only |
+| `hamilton_of_return`, `hamilton_of_markedReturn` | reductions with explicit concrete return hypotheses | standard only |
+| `hamilton_four`, `hamilton_six` | unconditional anchored cyclic-star Hamiltonicity at m=4,6 | standard only, kernel `decide` |
+| `InnerReturn.step_order`, `InnerReturn.hamilton` | explicit Γ=θ∘(+4) cyclic order for every q≥2 | standard only |
+
+CPU `lake build TorusEven` passed (8442 jobs); isolation passed with 84 main-path
+files. All 41 new declarations in
+[StarAudit.lean](/fsx/angel/operations/torus-lean-star-20260911/StarAudit.lean)
+use standard axioms only. The even-degree theorem remains standard-only, and the
+conditional global endpoint's axiom set is unchanged, including 18 native leaves.
+See the [raw audit](/fsx/angel/operations/torus-lean-star-20260911/axioms.log) and
+[star progress](STAR_PROGRESS_20260911.md).
+
+General cyclic-star Hamiltonicity is still open. In particular, the actual Φ-to-X
+first-return tables and the connection to the proved internal Γ cycle remain to
+be established. E5's shell, incidence, matched selection, and entry assembly are
+also still open; no new goal hypothesis has been added to the global endpoint.
