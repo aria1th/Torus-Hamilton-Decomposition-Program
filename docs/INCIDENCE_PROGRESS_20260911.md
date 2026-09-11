@@ -1,5 +1,8 @@
 # E5 seed의 실제 incidence parity
 
+후속 entry와 최종 조립은 [E5 완료 기록](E5_COMPLETION_20260911.md)에 있다.
+아래 완료 범위와 남은 작업은 이 문서의 단계별 검증 시점 기준이다.
+
 `Seed.incidence_even`은 모든 p≥2, 짝수 m≥4에서 합성 seed의 세 방향 모두에 대해
 실제 `blockSupport xChart`의 `EvenComponents`를 증명한다. 이 정리는 이미 완료된
 `Seed.replacement_hamilton`과 함께 entry 조립에 사용할 구체적인 입력이다.

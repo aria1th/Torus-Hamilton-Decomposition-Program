@@ -1,5 +1,8 @@
 # E5 auxiliary shell과 합성 seed
 
+후속 entry와 최종 조립은 [E5 완료 기록](E5_COMPLETION_20260911.md)에 있다.
+아래 완료 범위와 남은 작업은 이 문서의 단계별 검증 시점 기준이다.
+
 원고 `lem:shell`의 Hamilton factorization을 구성하고 near-core와 합성했다.
 `p≥2`, `m≥4`에서 모든 auxiliary 색이 Hamilton이다. 짝수 m에서는 seed의 회로 열이
 네 core 회로와 2p개 보조 색으로 식별되며, anchored star replacement 뒤의 모든 색이

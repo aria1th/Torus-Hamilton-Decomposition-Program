@@ -1,7 +1,7 @@
 # Torus Hamilton Decomposition Program
 
 Lean 4 formalization workspace for Hamilton decompositions of directed
-odd-modulus torus Cayley digraphs.
+torus Cayley digraphs.
 
 The main target is the directed basis Cayley digraph
 
@@ -9,28 +9,29 @@ The main target is the directed basis Cayley digraph
 Cay((ZMod m)^d, {e_0, ..., e_{d-1}})
 ```
 
-and the goal is to prove that, for every `d >= 2` and every odd `m >= 3`,
-its arcs decompose into `d` directed Hamilton cycles.
+`TorusAll.all_moduli_tori_all_dimensions` proves that, for every `d >= 2` and
+every `m >= 3`, its arcs decompose into `d` directed Hamilton cycles.
 
 This repository is also a proof-audit workspace.  Some modules are finished
 theorem libraries, while the newest `RoundComposite` files expose the current
 paper-facing endpoint cuts for the all-dimensional theorem.
 
-The even-modulus extension has closed its D3 and D5 seeds and relative collar
-closure. `TorusEven.even_degree_collar` proves all even dimensions `d ≥ 2` for
-every even modulus `m ≥ 4`, using standard axioms only. Anchored entry for odd
-dimensions at least seven remains open, so the even all-dimensional endpoint
-is still conditional. The
-[collar progress report](docs/COLLAR_PROGRESS_20260911.md) describes the state
-preservation, recolouring transport, and excess induction. The
-[preparation note](docs/LEAN_PREPARATION_20260911.md) maps the manuscript to the
-existing seeds. The snapshot below describes the all-odd release.
+The even-modulus construction is complete, including anchored entry in every
+odd dimension at least seven. `TorusEven.even_odd_degree` and the even-dimension
+collar theorem use standard axioms only. The final even endpoints retain the
+existing finite native leaves in the D3 and D5 seeds. The separate `TorusAll`
+module combines the even endpoint with the previous all-odd theorem.
+See the [completion and audit record](docs/E5_COMPLETION_20260911.md).
 
-## Current Status
+Build the final endpoints with `lake build TorusEven TorusAll` and check the even
+import boundary with `python3 scripts/check_even_isolation.py`. The release
+snapshot below describes the previous all-odd release.
+
+## Released all-odd snapshot
 
 Snapshot: 2026-05-06.
 
-Latest stable release:
+Release for this snapshot:
 [`0.0.3-allodd`](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.0.3-allodd).
 
 ```text

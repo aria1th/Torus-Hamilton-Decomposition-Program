@@ -1,17 +1,18 @@
 -- STATUS: main-path
 import TorusEven.Collar.Recolouring
+import TorusEven.Collar.Palette
 
 namespace TorusEven.Collar
 
-inductive SplitResolution {d m : ℕ} [NeZero m] :
+inductive SplitResolution {C : Type} [Fintype C] [DecidableEq C] {m : ℕ} [NeZero m] :
     {I : Type} → [Fintype I] → [DecidableEq I] →
-      MultitorusFactorization (Fin d) I m → ℕ → Prop where
+      MultitorusFactorization C I m → ℕ → Prop where
   | terminal {I : Type} [Fintype I] [DecidableEq I]
-      (F : MultitorusFactorization (Fin d) I m) (hw : ∀ i, F.width i = 1) :
+      (F : MultitorusFactorization C I m) (hw : ∀ i, F.width i = 1) :
       SplitResolution F 0
   | split {I Y : Type} [Fintype I] [DecidableEq I] [Fintype Y]
-      {F : MultitorusFactorization (Fin d) I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
-      {active : Finset (Fin d)} {i : I} (hc : CircuitConsistent F frame)
+      {F : MultitorusFactorization C I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
+      {active : Finset C} {i : I} (hc : CircuitConsistent F frame)
       (S : BlockSelection F frame i active) (hi : 2 ≤ F.width i) {n : ℕ}
       (tail : SplitResolution (S.factorization hc hi) n) : SplitResolution F (n + 1)
 
@@ -30,14 +31,15 @@ theorem RelativeCollarState.exists_split
   obtain ⟨S⟩ := h.selection hm i hi
   exact ⟨S, h.split S hi heven, fun R c => R.lift_circuitCount h S hi c⟩
 
-private theorem close_of_excess {d m : ℕ} [NeZero m] (hm : 4 ≤ m) (heven : Even m) (n : ℕ) :
+private theorem close_of_excess {C : Type} [Fintype C] [DecidableEq C] {m : ℕ} [NeZero m]
+    (hm : 4 ≤ m) (heven : Even m) (n : ℕ) :
     ∀ {I Y : Type} [Fintype I] [DecidableEq I] [Finite Y]
-      (F : MultitorusFactorization (Fin d) I m) (frame : Y × ZMod m ≃ (I → ZMod m))
-      (active : Finset (Fin d)) (U : Set (I → ZMod m)) [DecidablePred (· ∈ U)]
+      (F : MultitorusFactorization C I m) (frame : Y × ZMod m ≃ (I → ZMod m))
+      (active : Finset C) (U : Set (I → ZMod m)) [DecidablePred (· ∈ U)]
       (_h : RelativeCollarState F frame active U), F.excess = n →
       SplitResolution F n ∧ ∀ R : Recolouring F active U,
         (∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) →
-          Nonempty (Shared.CayleyDecomposition d m) := by
+          Nonempty (Shared.CayleyDecomposition (Fintype.card C) m) := by
   induction n using Nat.strong_induction_on with
   | h n ih =>
     intro I Y _ _ _ F frame active U _ h hn
@@ -45,7 +47,7 @@ private theorem close_of_excess {d m : ℕ} [NeZero m] (hm : 4 ≤ m) (heven : E
     by_cases hzero : n = 0
     · have hw := F.excess_zero_iff.mp (hn.trans hzero)
       refine ⟨hzero.symm ▸ SplitResolution.terminal F hw, ?_⟩
-      exact fun R hH => ⟨R.factorization.toCayleyOfUnitWidths hw hH⟩
+      exact fun R hH => ⟨R.factorization.toCayleyOfPalette hw hH⟩
     · have hnext : ∃ i, 2 ≤ F.width i := by
         by_contra! hnone
         have hw (i : I) : F.width i = 1 := by have := F.width_pos i; have := hnone i; omega
@@ -71,13 +73,24 @@ theorem RelativeCollarState.resolution {d m : ℕ} [NeZero m]
     SplitResolution F F.excess :=
   (close_of_excess hm heven F.excess F frame active U h rfl).1
 
+theorem RelativeCollarState.hamilton_decomposition_palette
+    {C : Type} [Fintype C] {m : ℕ} [NeZero m]
+    {I Y : Type} [Fintype I] [DecidableEq I] [Finite Y]
+    {F : MultitorusFactorization C I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
+    {active : Finset C} {U : Set (I → ZMod m)} [DecidablePred (· ∈ U)]
+    (h : RelativeCollarState F frame active U) (hm : 4 ≤ m) (heven : Even m)
+    (R : Recolouring F active U) (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
+    Nonempty (Shared.CayleyDecomposition (Fintype.card C) m) := by
+  classical
+  exact (close_of_excess hm heven F.excess F frame active U h rfl).2 R hH
+
 theorem RelativeCollarState.hamilton_decomposition {d m : ℕ} [NeZero m]
     {I Y : Type} [Fintype I] [DecidableEq I] [Finite Y]
     {F : MultitorusFactorization (Fin d) I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
     {active : Finset (Fin d)} {U : Set (I → ZMod m)} [DecidablePred (· ∈ U)]
     (h : RelativeCollarState F frame active U) (hm : 4 ≤ m) (heven : Even m)
     (R : Recolouring F active U) (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
-    Nonempty (Shared.CayleyDecomposition d m) :=
-  (close_of_excess hm heven F.excess F frame active U h rfl).2 R hH
+    Nonempty (Shared.CayleyDecomposition d m) := by
+  simpa only [Fintype.card_fin] using h.hamilton_decomposition_palette hm heven R hH
 
 end TorusEven.Collar

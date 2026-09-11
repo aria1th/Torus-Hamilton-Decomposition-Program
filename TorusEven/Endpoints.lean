@@ -1,8 +1,9 @@
--- STATUS: conditional (endpoint assembled from open goals; becomes main-path when all goals close)
+-- STATUS: main-path
 import TorusEven.D5Four
 import TorusEven.D3
 import TorusEven.D5
 import TorusEven.Collar.EvenDegree
+import TorusEven.Entry.OddDegree
 
 namespace TorusEven
 
@@ -20,8 +21,7 @@ theorem even_modulus_tori_all_dimensions_of_successor
     d3_even_uniform d5_even_uniform (fun h => h7 h.1 h.2)
     hSucc hd2 ⟨hm, hm4⟩
 
-/-- Assembly along the manuscript: even degrees by collar closure, seeds `3, 5`,
-and the remaining entry goal for odd `d ≥ 7`. -/
+/-- Parameterized assembly along the manuscript's collar route. -/
 theorem even_modulus_tori_all_dimensions_of_collar
     (hOdd : EvenOddDegreeGoal) :
     EvenModulusToriAllDimensionsGoal := by
@@ -34,6 +34,16 @@ theorem even_modulus_tori_all_dimensions_of_collar
     by_cases hd5 : d = 5
     · subst d; exact d5_even_uniform ⟨hm, hm4⟩
     exact hOdd hdOdd (by obtain ⟨b, hb⟩ := hdOdd; omega) ⟨hm, hm4⟩
+
+/-- Every dimension at least two and every even modulus at least four. -/
+theorem even_modulus_tori_all_dimensions_collar : EvenModulusToriAllDimensionsGoal :=
+  even_modulus_tori_all_dimensions_of_collar even_odd_degree
+
+/-- The same endpoint assembled with the parity-neutral dimension dispatcher. -/
+theorem even_modulus_tori_all_dimensions : EvenModulusToriAllDimensionsGoal := by
+  intro d m hd hm hm4
+  exact evenClass.uniform_of_seeds_and_odd_degree d3_even_uniform d5_even_uniform
+    even_odd_degree hd ⟨hm, hm4⟩
 
 /-- Unconditional: `D_3(m)`, `D_5(m)`, `D_6(m)`, `D_9(m)`, `D_10(m)`, `D_15(m)` for every even
 `m ≥ 4`. -/

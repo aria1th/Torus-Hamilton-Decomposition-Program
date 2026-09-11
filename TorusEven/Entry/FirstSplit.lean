@@ -47,6 +47,21 @@ end TorusEven.Collar
 
 namespace TorusEven.Collar
 
+theorem hamilton_decomposition_of_entry_palette
+    {C : Type} [Fintype C] [DecidableEq C] {m : ℕ} [NeZero m]
+    {I Y : Type} [Fintype I] [DecidableEq I] [Fintype Y]
+    {F : MultitorusFactorization C I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
+    {active : Finset C} {U : Set (I → ZMod m)} [DecidablePred (· ∈ U)]
+    (hc : CircuitConsistent F frame) (hm : 4 ≤ m) (heven : Even m)
+    (hA : F.ActiveSeparated active)
+    (hp : ∀ j, 2 ≤ F.width j → Incidence.EvenComponents (F.blockSupport frame j))
+    {i : I} (S : BlockSelection F frame i ∅) (hi : 2 ≤ F.width i)
+    (hs : ∀ c ∈ active, GapSupport (F.step c) U (splitVoltage S.sources c))
+    (R : Recolouring F active U) (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
+    Nonempty (Shared.CayleyDecomposition (Fintype.card C) m) :=
+  (BlockSelection.enters_collar hc S hi heven hA hp hs).hamilton_decomposition_palette hm heven
+    (R.split hc S hi hs) (R.split_hamilton hc S hi hs hH)
+
 theorem hamilton_decomposition_of_entry {d m : ℕ} [NeZero m]
     {I Y : Type} [Fintype I] [DecidableEq I] [Fintype Y]
     {F : MultitorusFactorization (Fin d) I m} {frame : Y × ZMod m ≃ (I → ZMod m)}

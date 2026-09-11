@@ -1,5 +1,8 @@
 # E5 matched selection
 
+후속 entry와 최종 조립은 [E5 완료 기록](E5_COMPLETION_20260911.md)에 있다.
+아래 완료 범위와 남은 작업은 이 문서의 단계별 검증 시점 기준이다.
+
 `Collar.Incidence.MatchedData.exists_selection`은 원고 `lem:matched`를 증명한다.
 지정된 서로 다른 anchor 블록과 eligible mate, active 사건 행, residual 성분마다
 짝수 개의 nonmate라는 조건에서 정확한 절반 quota, 모든 열의 ±1 carry, 양쪽

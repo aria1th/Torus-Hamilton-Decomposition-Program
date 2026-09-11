@@ -2,8 +2,9 @@
 
 **E4 relative collar closure와 모든 짝수 차원 specialization을 증명했다.**
 `TorusEven.even_degree_collar : EvenDegreeCollarGoal`은 모든 짝수 m≥4, 짝수 d≥2의
-Hamilton 분해를 주며 표준 axiom만 사용한다. E5 anchored entry는 남아 있다.
-따라서 모든 차원을 다루는 endpoint는 여전히 `EvenOddDegreeGoal`을 가정한다.
+Hamilton 분해를 주며 표준 axiom만 사용한다.
+후속 [E5 entry와 최종 조립](E5_COMPLETION_20260911.md)도 완료되어, 전체 차원
+endpoint의 추가 입력이 제거되었다.
 
 진입 import는 `TorusEven.Collar`이고 `lake build TorusEven`에 포함된다.
 원고는 `even_directed_tori_integrated.tex`의 `def:collar`, `thm:closure`, `thm:even-dim`이다.
@@ -93,7 +94,7 @@ incidence component의 열 수는 짝수 d다. Active palette와 U를 비우고 
 recolouring을 적용하면 closure로 모든 짝수 d≥2를 얻는다.
 
 `Endpoints.even_modulus_tori_all_dimensions_of_collar`의 짝수 차원 분기도 이 정리를
-직접 사용한다. 홀수 차원은 기존 D3/D5와 아직 가정인 `EvenOddDegreeGoal`에 의존한다.
+직접 사용한다. 홀수 차원은 기존 D3/D5와 이제 증명된 `even_odd_degree`를 사용한다.
 E5의 near-core, 네 anchor에서의 일치와 회로 대표성, active voltage의 unit/gap 조건은
 [entry 진행 문서](ENTRY_PROGRESS_20260911.md)의 범위까지 증명되었다. Cyclic-star와
 실제 near-core 대체의 Hamilton성도 [모든 짝수 m≥4](STAR_UNIFORM_PROGRESS_20260911.md)에서

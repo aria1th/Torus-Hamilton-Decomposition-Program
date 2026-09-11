@@ -1,9 +1,9 @@
-# E5 남은 형식화 계획
+# E5 실행 계획과 완료 상태
 
-목표는 원고 `thm:oddconstruction`을 `EvenOddDegreeGoal`로 증명하여 전체 짝수 법수
-endpoint의 마지막 가정을 제거하는 것이다. 출발 소스는 `6f16b8d`다. E4 closure,
+원고 `thm:oddconstruction`을 `even_odd_degree : EvenOddDegreeGoal`로 증명했다.
+전체 짝수 법수 endpoint의 마지막 입력을 제거했고, 모든 m≥3의 조립 정리도 추가했다. 출발 소스는 `6f16b8d`다. E4 closure,
 near-core, 네 anchor와 unit/gap voltage, 모든 짝수 m≥4의 cyclic-star Hamilton성은
-완료되었다. 아래 선언명은 새로 구현할 목표 이름이며, 기존 정리와 구분한다.
+완료되었다. 최종 결과와 검증은 [E5 완료 기록](E5_COMPLETION_20260911.md)을 따른다.
 
 ## 의존관계와 완료 기준
 
@@ -13,8 +13,8 @@ near-core, 네 anchor와 unit/gap voltage, 모든 짝수 m≥4의 cyclic-star Ha
 | 2 | `eq:seed-widths`, `eq:seed-columns` | core/shell의 실제 합성 `Seed.factorization`, 회로 열 전단사, anchored replacement Hamilton성 | 완료 |
 | 3 | `lem:seed-incidence`, `lem:small-seed`의 parity 결론 | 각 방향의 전체 orbital incidence가 성분별 짝수; p=2,3의 명시적 행 증서 포함 | 완료 |
 | 4 | `lem:matched` | 지정된 열의 parity join, 혼합 divergence, reserved-slot 선택의 quota·unit·양쪽 coherence | 완료 |
-| 5 | `lem:entry-components`, `lem:entry-seven`, `lem:entry-nine` | mate의 자격·단사성, 잔여 성분 계산, 실제 `BlockSelection`과 active voltage 일치 | 예정 |
-| 6 | `prop:entry`, `thm:oddconstruction` | entry state와 Hamilton recolouring, `even_odd_degree : EvenOddDegreeGoal`, 무조건부 전체 차원 endpoint | 예정 |
+| 5 | `lem:entry-components`, `lem:entry-seven`, `lem:entry-nine` | mate의 자격·단사성, 잔여 성분의 nonmate parity, 실제 `BlockSelection`과 active voltage 일치 | 완료 |
+| 6 | `prop:entry`, `thm:oddconstruction` | entry state와 Hamilton recolouring, `even_odd_degree : EvenOddDegreeGoal`, 무조건부 전체 차원 endpoint | 완료 |
 
 1→2→3과 4는 논리적으로 분리된다. 5에서 2·3·4를 결합하고, 6은 이미 증명한
 `Collar.hamilton_decomposition_of_entry`와 closure를 사용한다.
@@ -39,10 +39,10 @@ Matched selection은 기존 pinned 선택 정리의 가정을 강화하여 호�
 mate에 m−1을 주며, 나머지 pair/filler 행이 각 quota를 정확히 채우게 한다.
 Anchored 행의 사건 rank 0,1,2와 baseline rank 3을 써서 두 child의 coherence를 증명한다.
 
-p=2·3도 일반 matched selection을 적용하는 경로를 우선 확인한다. p=2는 모든 보조 색이
+p=2·3도 일반 matched selection으로 처리했다. p=2는 모든 보조 색이
 mate이므로 nonmate parity가 자명하고, p=3은 원고의 작은 seed mate 표를 사용하면
 nonmate B₁/B₂가 (h,w)=(0,1)에서 연결된다. 이 조건을 실제 residual support에서
-증명하면 별도의 selector 구현 없이 두 entry를 얻을 수 있다. p≥4에는 원고의 일반
+증명하여 별도의 selector 구현 없이 두 entry를 얻었다. p≥4에는 원고의 일반
 mate 표를 사용하고, residual 성분 안의 nonmate 짝짓기로 필요한 parity를 증명한다. 모든 경우에
 선택한 active source가 기존 `anchorVoltage`와 같음을 증명하여 `GapSupport`를 전달한다.
 
@@ -53,10 +53,15 @@ axiom을 검사한다. 새 `sorry`, author axiom, `native_decide`를 도입하�
 통합 시 `lake build TorusEven`, isolation, 소스 SHA256 일치를 확인한 뒤 focused commit과
 FSx bundle을 보존한다. 작업 중 추가 가정으로 미완료 명제를 감춘 정리는 완료로 세지 않는다.
 
-현재 검증된 경계는 [matched selection 기록](MATCHED_PROGRESS_20260911.md)이다.
+현재 증명 경계는 [E5 완료 기록](E5_COMPLETION_20260911.md)이다.
 3단계는 closure가 요구하는 `EvenComponents`를 같은 성분 안의 완전 짝짓기로 증명했다.
 원고의 더 강한 p≥4 연결성과 p=2,3의 정확한 연결성분 분류 전체는 이 완료 범위에
 포함하지 않는다. w 방향의 전체 연결성은 별도로 증명했다.
 작업 산출물은 `/fsx/angel/operations/torus-lean-shell-20260911/`와
 `/fsx/angel/operations/torus-lean-incidence-20260911/`,
-`/fsx/angel/operations/torus-lean-matched-20260911/`에 보존한다.
+`/fsx/angel/operations/torus-lean-matched-20260911/`,
+`/fsx/angel/operations/torus-lean-residual-20260911/`에 보존한다.
+
+5단계 역시 필요한 parity를 증명하며, 원고의 정확한 residual 성분 분류 전체를
+완료했다고 주장하지 않는다. 마지막 조립은 유한 palette에 일반화한 E4 closure를
+사용하며, `TorusAll`이 별도 import 경계에서 기존 홀수 v75 정리와 결합한다.

@@ -317,3 +317,43 @@ exactly its previous axiom set, including 18 native leaves. See
 
 The actual seed's mate eligibility, residual parity after deletion, active-voltage
 identification, and entry assembly remain. `EvenOddDegreeGoal` is still open.
+
+## 2026-09-11 (E5 and final assembly closed)
+
+`even_odd_degree : EvenOddDegreeGoal` is proved from the actual seed for every
+odd d≥7 and even m≥4. Mate eligibility, residual nonmate parity, coherent matched
+selection, actual block/source transport, and equality with `anchorVoltage` are
+all proved. The finite-palette generalization of closure supplies the endpoint.
+The p=2 and p=3 entries use the same matched-selection theorem after their small
+residual parity checks. No entry hypothesis is assumed by the final theorem.
+
+| Endpoint | Standard axioms | Native leaves |
+|---|---|---:|
+| `TorusEven.even_odd_degree`, `d7_even`, `even_successor` | `propext`, `Classical.choice`, `Quot.sound` | 0 |
+| `TorusEven.even_degree_collar` | standard only | 0 |
+| `TorusEven.even_modulus_tori_all_dimensions_collar` | standard + existing seed leaves | 18 |
+| `TorusEven.even_modulus_tori_all_dimensions` | standard + existing seed leaves | 18 |
+| existing `RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75` | standard + existing odd leaves | 88 |
+| `TorusAll.all_moduli_tori_all_dimensions` | standard + union of the even/odd leaves | 106 |
+
+The two even endpoints and all-moduli endpoint have no open-goal parameter.
+Their exact types are checked in
+[FinalAudit.lean](/fsx/angel/operations/torus-lean-residual-20260911/FinalAudit.lean).
+All 58 new declarations outside the three final assembly theorems are
+standard-only. The audit covers 68 declarations in total, including the 61 new
+public declarations and existing closure APIs. The two even axiom sets equal
+the previous conditional endpoint's set; the all-moduli set is exactly the
+union with the existing odd endpoint. No new native leaf, author axiom, or
+unproved proof term was introduced.
+
+CPU `lake build TorusEven TorusAll` passed (8559 jobs), with no new-code warnings.
+The updated default `lake build` also passed (8579 jobs).
+Isolation passed with 140 even main-path files. All 277 Lean source/configuration
+hashes match the CPU execution copy. See the
+[completion record](E5_COMPLETION_20260911.md),
+[raw audit](/fsx/angel/operations/torus-lean-residual-20260911/axioms.log), and
+[complete axiom lists](/fsx/angel/operations/torus-lean-residual-20260911/axiom-summary.json).
+
+The required main theorem path is closed. Stronger exact seed/residual component
+classifications are outside this parity-based proof; they are not assumed by any
+endpoint. Historical open-goal statements above record their respective checkpoints.

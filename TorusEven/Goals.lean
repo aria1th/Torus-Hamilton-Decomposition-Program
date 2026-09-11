@@ -1,14 +1,13 @@
--- STATUS: conditional (goal statements only; no proofs)
+-- STATUS: main-path
 import TorusEven.Dispatch
 
 /-!
 # Even-modulus proof obligations
 
-Each `Goal` below is a `Prop` naming one leaf of the plan in
-`docs/EVEN_MODULUS_FORMALIZATION_PLAN_20260910.md`.  A goal is discharged by a
-theorem of exactly this type in a `main-path` file; until then the endpoint in
-`TorusEven/Endpoints.lean` takes it as a hypothesis.  Manuscript references are to
-`even_directed_tori_integrated.tex`.
+Each `Goal` below names a theorem interface from
+`docs/EVEN_MODULUS_FORMALIZATION_PLAN_20260910.md`. The interfaces are discharged
+in `D3`, `D5`, `Collar.EvenDegree`, `Entry.OddDegree`, and `Endpoints`.
+Manuscript references are to `even_directed_tori_integrated.tex`.
 -/
 
 namespace TorusEven

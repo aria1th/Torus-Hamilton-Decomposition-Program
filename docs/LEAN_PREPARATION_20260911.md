@@ -3,7 +3,8 @@
 2026-09-11. 조사 기준은 `even-modulus`의
 `83064463d40a889ad30f1ce896a5ede1a5256fd9`이며, 조사 시작 시 작업 트리는 깨끗했다.
 
-후속 구현과 현재 재개 지점은 [Collar 진행 문서](COLLAR_PROGRESS_20260911.md)를 따른다.
+후속 구현은 E4·E5와 전체 법수 조립까지 완료되었다. 최신 결과와 검증은
+[E5 완료 기록](E5_COMPLETION_20260911.md)을 따른다.
 OneGap·상대 transport·physical split·incidence parity 보조정리가 추가되었다.
 아래의 `Collar/` 및 CPU Lean 환경 부재, 첫 독립 목표 등의 문장은 **준비 시점의 기록**이다.
 

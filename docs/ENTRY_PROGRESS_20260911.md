@@ -1,8 +1,9 @@
 # E5 anchored entry 진행
 
 E5의 near-core 보조정리와 네 anchor의 회로 대표성, active voltage의 unit/gap 조건을
-Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있다. E4 closure는
-완료 상태이며, 전체 차원 endpoint의 가정은 계속 `EvenOddDegreeGoal` 하나다.
+Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`도
+[E5 완료 기록](E5_COMPLETION_20260911.md)의 범위로 닫았다. 전체 차원 endpoint는
+추가 입력 없이 성립한다. 아래 near-core 설명과 검증은 해당 단계의 기록이다.
 후속 구현에서 [cyclic-star와 대체 core의 Hamilton성](STAR_UNIFORM_PROGRESS_20260911.md)을
 모든 짝수 m≥4에서 닫았다.
 이어서 [auxiliary shell과 합성 seed](SHELL_PROGRESS_20260911.md)의 구성·Hamilton성,
@@ -50,21 +51,14 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 `Collar.hamilton_decomposition_of_entry`가 위 데이터를 E4 closure와 연결한다.
 이 정리는 구체적인 selection과 Hamilton replacement를 입력받는 연결 정리다.
 현재 증명된 `anchorVoltage`가 전체 shell을 포함한 선택의 active 부분으로 실현된다는
-증명은 아래 matched selection 작업에 남아 있다.
+동치는 이제 `Seed.exists_blockSelection`으로 증명되었다.
 
-## 다음 증명
+## Entry 조립 완료
 
-구체적인 순서와 완료 조건은 [남은 E5 계획](E5_REMAINING_PLAN_20260911.md)을 따른다.
-
-Cyclic-star 대체 core는 이제 `Star.replacement_hamilton`으로 모든 짝수 m≥4에서
-Hamilton임을 보장한다. 다음 작업은 다음과 같다.
-
-1. 실제 seed의 mate 자격·단사성과 삭제 뒤 residual component의 parity를 증명하고,
-   일반 matched selection을 적용해 active 선택과 `anchorVoltage`의 일치를 확인.
-2. p=2, p=3의 구체적인 entry 및 p≥4의 일반 entry를 연결해 `EvenOddDegreeGoal` 제거.
-
-기존 Route E의 D3 Hamilton 정리는 이 cyclic-star row와 anchor 일치를 보장하지 않는다.
-위의 구체적인 입력을 새 가정으로 포장하는 것으로 E5를 완료 처리하지 않는다.
+[실행 계획](E5_REMAINING_PLAN_20260911.md)의 여섯 단계를 완료했다.
+실제 mate 삭제 후 parity, `BlockSelection`, active voltage 일치를 증명하여
+`Seed.hamilton_decomposition`과 `even_odd_degree`로 조립했다.
+세부 증명과 최신 audit는 [E5 완료 기록](E5_COMPLETION_20260911.md)을 따른다.
 
 ## 검증과 복구
 

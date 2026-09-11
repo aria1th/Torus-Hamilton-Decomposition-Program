@@ -1,7 +1,7 @@
 name = "TorusHamiltonDecompositionProgram"
 version = "0.1.0"
 keywords = ["lean4", "mathlib", "graph-theory", "hamiltonian-cycles", "cayley-digraphs"]
-defaultTargets = ["D5Odd", "D7Odd", "TorusEven"]
+defaultTargets = ["D5Odd", "D7Odd", "TorusEven", "TorusAll"]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -35,6 +35,10 @@ name = "RoundComposite"
 # Even-modulus main path (see docs/EVEN_MODULUS_FORMALIZATION_PLAN_20260910.md).
 [[lean_lib]]
 name = "TorusEven"
+
+# Final parity assembly; the even proof remains isolated from the odd core.
+[[lean_lib]]
+name = "TorusAll"
 
 # Retained but retired attempts (Route E and conditional adapters).  Compiles, is never imported
 # by a proof path, and is not a default target.
