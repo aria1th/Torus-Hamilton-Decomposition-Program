@@ -20,9 +20,10 @@ The even-modulus extension has closed its D3 and D5 seeds. Its remaining work is
 relative collar closure and anchored entry in odd dimensions at least seven;
 the even all-dimensional endpoint is still conditional. The
 [collar progress report](docs/COLLAR_PROGRESS_20260911.md) records the proved relative
-lifts, physical splits, and incidence parity lemmas, and the remaining selector
-and state assembly. The [preparation note](docs/LEAN_PREPARATION_20260911.md)
-maps the manuscript to the existing seeds. The snapshot below describes the all-odd release.
+lifts, physical splits, pinned coherent selection, and incidence parity, with
+full collar state assembly and induction still open. The
+[preparation note](docs/LEAN_PREPARATION_20260911.md) maps the manuscript to the
+existing seeds. The snapshot below describes the all-odd release.
 
 ## Current Status
 

@@ -79,5 +79,31 @@ also rechecks the existing conditional endpoint, whose 18 native axioms are unch
 | `TorusEven.Collar.Incidence.evenComponents_of_coherent_odd_columns`, `evenComponents_copied` | selected-child counting lemma and unsplit partition preservation | standard only |
 
 These are component lemmas, with their stated selection/unit/coherence hypotheses.
-The pinned selector existence theorem and complete collar state induction remain open;
-see [the implementation boundary](COLLAR_PROGRESS_20260911.md).
+At this audit, pinned selection and complete collar state induction were still open.
+Pinned selection is closed by the following entry; see the current
+[implementation boundary](COLLAR_PROGRESS_20260911.md).
+
+## 2026-09-11 (E4: pinned coherent selection proved)
+
+`pinnedSelection_iff` proves both directions of manuscript `thm:pinned`, with all
+columns included, exact half quotas, residues ±1, row-zero pinning, and coherence
+of each nonterminal child. The existence proof constructs its selection from
+component parity and the one-active-column condition.
+
+| Lean name (under `TorusEven.Collar`) | Result | Axioms |
+|---|---|---|
+| `Incidence.exists_parity_join` | even block degrees and odd column degrees | standard only |
+| `Multigraph.exists_odd_orientation` | signed divergence ±1, preserving edge identities | standard only |
+| `Incidence.exists_directed_pairs` | disjoint local pairs with column divergence ±1 | standard only |
+| `LocalPairs.exists_fillers`, `exists_event_bits`, `coherent_row`, `sum_rows` | quota, pinning, coherence, and modular sum construction | standard only |
+| `Incidence.exists_pinnedSelection`, `pinnedSelection_iff` | complete pinned selection theorem | standard only |
+| `Incidence.IsPinnedSelection.selected_evenComponents`, `complement_evenComponents` | parity for both nonterminal children at the row level | standard only |
+
+CPU `lake build TorusEven` and isolation checks passed. All 18 new declarations in
+[SelectorAudit.lean](/fsx/angel/operations/torus-lean-selector-20260911/SelectorAudit.lean)
+use only `propext`, `Classical.choice`, and `Quot.sound`; the existing global
+conditional endpoint retains its same 18 native axioms. See the
+[raw audit](/fsx/angel/operations/torus-lean-selector-20260911/axioms.log).
+
+Full relative collar state assembly and excess induction remain open, as does
+E5 anchored entry. This does not close E4 or the even all-dimensional endpoint.
