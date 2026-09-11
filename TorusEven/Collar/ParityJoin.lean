@@ -73,9 +73,11 @@ private theorem path_boundary (A : B → Finset Ω) {x y : Ω}
       linear_combination hm
 
 omit [Fintype Ω] in
-theorem exists_parity_join [Finite Ω] (A : B → Finset Ω) (hEven : EvenComponents A) :
+theorem exists_parity_join_on [Finite Ω] (A : B → Finset Ω) (target : Finset Ω)
+    (hEven : EvenOnComponents A target) :
     ∃ T : B → Finset Ω, (∀ b, T b ⊆ A b) ∧ (∀ b, Even (T b).card) ∧
-      ∀ x, Odd ((Finset.univ.filter (fun b => x ∈ T b)).card) := by
+      ∀ x, ((Finset.univ.filter (fun b => x ∈ T b)).card : ZMod 2) =
+        if x ∈ target then 1 else 0 := by
   classical
   letI := Fintype.ofFinite Ω
   let root : Component A → Ω := Quotient.out
@@ -83,18 +85,18 @@ theorem exists_parity_join [Finite Ω] (A : B → Finset Ω) (hEven : EvenCompon
   have hpath (x : Ω) : Relation.EqvGen (Adjacent A) x (root (componentOf A x)) :=
     (componentOf_eq A _ _).mp (hroot _).symm
   choose f hf hb hc using fun x => path_boundary A (hpath x)
-  let g : B → Ω → ZMod 2 := fun b z => ∑ x, f x b z
+  let g : B → Ω → ZMod 2 := fun b z => ∑ x ∈ target, f x b z
   have hg (b : B) (z : Ω) (hz : z ∉ A b) : g b z = 0 := by
     simp [g, hf _ b z hz]
   have hgb (b : B) : ∑ z, g b z = 0 := by
     simp only [g]
     rw [Finset.sum_comm]
     simp [hb]
-  have hgc (z : Ω) : ∑ b, g b z = 1 := by
+  have hgc (z : Ω) : ∑ b, g b z = if z ∈ target then 1 else 0 := by
     simp only [g]
     rw [Finset.sum_comm]
     simp only [hc, Finset.sum_add_distrib]
-    have hz : ∑ x, (if z = root (componentOf A x) then (1 : ZMod 2) else 0) = 0 := by
+    have hz : ∑ x ∈ target, (if z = root (componentOf A x) then (1 : ZMod 2) else 0) = 0 := by
       by_cases hr : root (componentOf A z) = z
       · have heq (x : Ω) : z = root (componentOf A x) ↔ componentOf A x = componentOf A z := by
           constructor
@@ -103,10 +105,7 @@ theorem exists_parity_join [Finite Ω] (A : B → Finset Ω) (hEven : EvenCompon
           · intro h
             rw [h, hr]
         simp only [heq]
-        have h := (hEven (componentOf A z)).natCast_zmod_two
-        simpa only [Nat.card_eq_fintype_card, Fintype.card_subtype,
-          Finset.card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, Finset.sum_filter,
-          apply_ite, Nat.cast_zero] using h
+        exact hEven.sum A (componentOf A z)
       · apply Finset.sum_eq_zero
         intro x _
         apply if_neg
@@ -128,9 +127,19 @@ theorem exists_parity_join [Finite Ω] (A : B → Finset Ω) (hEven : EvenCompon
     simpa only [Finset.card_eq_sum_ones, Nat.cast_sum, Nat.cast_one,
       Finset.sum_filter, apply_ite, Nat.cast_zero, hbit] using hgb b
   · intro z
-    apply ZMod.natCast_eq_one_iff_odd.mp
     simpa only [Finset.mem_filter, Finset.mem_univ, true_and,
       Finset.card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, Finset.sum_filter,
       apply_ite, Nat.cast_zero, hbit] using hgc z
+
+omit [Fintype Ω] in
+theorem exists_parity_join [Finite Ω] (A : B → Finset Ω) (hEven : EvenComponents A) :
+    ∃ T : B → Finset Ω, (∀ b, T b ⊆ A b) ∧ (∀ b, Even (T b).card) ∧
+      ∀ x, Odd ((Finset.univ.filter (fun b => x ∈ T b)).card) := by
+  classical
+  letI := Fintype.ofFinite Ω
+  obtain ⟨T, hT, hb, hc⟩ := exists_parity_join_on A Finset.univ
+    ((evenOnComponents_univ A).mpr hEven)
+  refine ⟨T, hT, hb, fun x => ZMod.natCast_eq_one_iff_odd.mp ?_⟩
+  simpa only [Finset.mem_univ, if_true] using hc x
 
 end TorusEven.Collar.Incidence

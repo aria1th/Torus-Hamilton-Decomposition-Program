@@ -58,6 +58,18 @@ theorem exists_fillers (active : Finset Ω) (hactive : (A ∩ active).card ≤ 1
     intro x hx ha
     exact (Finset.mem_sdiff.mp (hF hx)).2 ha
 
+omit [DecidableEq Ω] in
+theorem exists_fillers_of_quota (q : ℕ) (hlo : P.count ≤ q) (hhi : q + P.count ≤ A.card) :
+    ∃ F : Finset Ω, F ⊆ A ∧ Disjoint F P.support ∧ F.card + P.count = q := by
+  classical
+  have havail : q - P.count ≤ (A \ P.support).card := by
+    rw [Finset.card_sdiff_of_subset P.support_subset, P.card_support]
+    omega
+  obtain ⟨F, hF, hc⟩ := Finset.exists_subset_card_eq havail
+  refine ⟨F, ?_, ?_, by omega⟩
+  · exact hF.trans Finset.sdiff_subset
+  · exact Finset.disjoint_left.mpr (fun x hx hp => (Finset.mem_sdiff.mp (hF hx)).2 hp)
+
 theorem row_pinned {R : Type*} [DecidableEq R] (r₀ r₁ : R) (hne : r₀ ≠ r₁)
     (active F : Finset Ω) (hF : Disjoint F active) (event : Fin P.count → Bool)
     (hpin : ∀ p, P.endpoint p ∈ active → event p.1 = p.2) :

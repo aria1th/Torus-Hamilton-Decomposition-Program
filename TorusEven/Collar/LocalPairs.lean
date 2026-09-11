@@ -40,22 +40,23 @@ theorem support_subset : P.support ⊆ A := by
 theorem count_le : 2 * P.count ≤ A.card := by
   simpa using Finset.card_le_card P.support_subset
 
+def divergence [DecidableEq Ω] (x : Ω) : ℤ :=
+  ∑ i : Fin P.count, ((if P.endpoint (i, true) = x then 1 else 0) -
+    (if P.endpoint (i, false) = x then 1 else 0))
+
 end LocalPairs
 
 namespace Incidence
 
 variable {B Ω : Type*} [Fintype B] [Finite Ω] [DecidableEq Ω]
 
-theorem exists_directed_pairs (A : B → Finset Ω) (hEven : EvenComponents A) :
-    ∃ P : ∀ b, LocalPairs (A b), ∀ x,
-      (∑ b, ∑ i : Fin (P b).count,
-        ((if (P b).endpoint (i, true) = x then (1 : ℤ) else 0) -
-          (if (P b).endpoint (i, false) = x then 1 else 0))) = 1 ∨
-      (∑ b, ∑ i : Fin (P b).count,
-        ((if (P b).endpoint (i, true) = x then (1 : ℤ) else 0) -
-          (if (P b).endpoint (i, false) = x then 1 else 0))) = -1 := by
+theorem exists_directed_pairs_on (A : B → Finset Ω) (target : Finset Ω)
+    (hEven : EvenOnComponents A target) :
+    ∃ P : ∀ b, LocalPairs (A b),
+      (∀ x ∈ target, (∑ b, (P b).divergence x) = 1 ∨ (∑ b, (P b).divergence x) = -1) ∧
+      ∀ x ∉ target, (∑ b, (P b).divergence x) = 0 := by
   classical
-  obtain ⟨T, hT, heven, hodd⟩ := exists_parity_join A hEven
+  obtain ⟨T, hT, heven, hparity⟩ := exists_parity_join_on A target hEven
   choose n hn using heven
   have hcard (b : B) : Fintype.card (Fin (n b) × Bool) = Fintype.card (T b) := by
     simp [Fintype.card_prod, hn, mul_two]
@@ -80,8 +81,8 @@ theorem exists_directed_pairs (A : B → Finset Ω) (hEven : EvenComponents A) :
       _ = if x ∈ T b then 1 else 0 := by
         rw [Finset.sum_coe_sort (T b) (fun y => if y = x then (1 : ℕ) else 0)]
         simp
-  obtain ⟨u, w, hor, hdiv⟩ := Multigraph.exists_odd_orientation l r
-    (fun x => hdegree x ▸ hodd x)
+  obtain ⟨u, w, hor, hdiv, hzero⟩ := Multigraph.exists_mixed_orientation l r target
+    (fun x => by rw [hdegree]; exact hparity x)
   let flip (b : B) (i : Fin (n b)) : Bool := decide (u ⟨b, i⟩ ≠ l ⟨b, i⟩)
   let Q (b : B) := (P b).reverse (flip b)
   have hends (b : B) (i : Fin (n b)) :
@@ -96,9 +97,28 @@ theorem exists_directed_pairs (A : B → Finset Ω) (hEven : EvenComponents A) :
       simp only [Q, LocalPairs.reverse_endpoint, flip, hu, ne_eq, hne', not_false_eq_true,
         decide_true, if_true, Bool.not_false, Bool.not_true]
       exact ⟨rfl, hw.symm⟩
-  refine ⟨Q, fun x => ?_⟩
-  have h := hdiv x
-  simpa only [Multigraph.divergence, Fintype.sum_sigma, (hends _ _).1, (hends _ _).2] using h
+  refine ⟨Q, ?_, ?_⟩
+  · intro x hx
+    simpa only [LocalPairs.divergence, Multigraph.divergence, Fintype.sum_sigma,
+      (hends _ _).1, (hends _ _).2] using hdiv x hx
+  · intro x hx
+    simpa only [LocalPairs.divergence, Multigraph.divergence, Fintype.sum_sigma,
+      (hends _ _).1, (hends _ _).2] using hzero x hx
+
+theorem exists_directed_pairs (A : B → Finset Ω) (hEven : EvenComponents A) :
+    ∃ P : ∀ b, LocalPairs (A b), ∀ x,
+      (∑ b, ∑ i : Fin (P b).count,
+        ((if (P b).endpoint (i, true) = x then (1 : ℤ) else 0) -
+          (if (P b).endpoint (i, false) = x then 1 else 0))) = 1 ∨
+      (∑ b, ∑ i : Fin (P b).count,
+        ((if (P b).endpoint (i, true) = x then (1 : ℤ) else 0) -
+          (if (P b).endpoint (i, false) = x then 1 else 0))) = -1 := by
+  classical
+  letI := Fintype.ofFinite Ω
+  obtain ⟨P, hP, _⟩ := exists_directed_pairs_on A Finset.univ
+    ((evenOnComponents_univ A).mpr hEven)
+  refine ⟨P, fun x => ?_⟩
+  simpa only [LocalPairs.divergence] using hP x (Finset.mem_univ x)
 
 end Incidence
 

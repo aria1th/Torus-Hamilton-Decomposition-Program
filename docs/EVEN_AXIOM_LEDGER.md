@@ -296,3 +296,24 @@ previous axiom set, including 18 native leaves. See the
 
 Matched selection, residual parity after mate deletion, p-specific entry assembly,
 and discharge of `EvenOddDegreeGoal` remain.
+
+## 2026-09-11 (E5 partial: matched selection closed)
+
+`MatchedData.exists_selection` proves the manuscript matched-selection lemma
+from even nonmate counts in every residual component. The construction supplies
+exact half quotas, actual active count one at the designated source, auxiliary
+carry ±1, and coherence of both children whenever their width is at least two.
+The underlying parity join and orientation now allow a prescribed odd-column
+set; existing all-column APIs remain specializations.
+
+CPU `lake build TorusEven` passed (8485 jobs), with no new-code warnings. Isolation
+passed: 127 main-path files, 4 attic files, 3 registered native files. All 60 new
+public declarations use standard axioms only. The audit also checks the previous
+selection APIs and even-degree theorem; the conditional global endpoint retains
+exactly its previous axiom set, including 18 native leaves. See
+[MatchedAudit.lean](/fsx/angel/operations/torus-lean-matched-20260911/MatchedAudit.lean),
+[raw audit](/fsx/angel/operations/torus-lean-matched-20260911/axioms.log), and
+[matched-selection record](MATCHED_PROGRESS_20260911.md).
+
+The actual seed's mate eligibility, residual parity after deletion, active-voltage
+identification, and entry assembly remain. `EvenOddDegreeGoal` is still open.

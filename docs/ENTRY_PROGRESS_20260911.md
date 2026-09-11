@@ -7,7 +7,8 @@ Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있�
 모든 짝수 m≥4에서 닫았다.
 이어서 [auxiliary shell과 합성 seed](SHELL_PROGRESS_20260911.md)의 구성·Hamilton성,
 실제 회로 열과 명시적인 support 표 사이의 대응도 증명했다.
-이어 [모든 p≥2의 실제 seed incidence parity](INCIDENCE_PROGRESS_20260911.md)를 닫았다.
+이어 [모든 p≥2의 실제 seed incidence parity](INCIDENCE_PROGRESS_20260911.md)와
+[일반 matched selection](MATCHED_PROGRESS_20260911.md)을 닫았다.
 
 ## 증명된 원고 대응
 
@@ -58,8 +59,8 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 Cyclic-star 대체 core는 이제 `Star.replacement_hamilton`으로 모든 짝수 m≥4에서
 Hamilton임을 보장한다. 다음 작업은 다음과 같다.
 
-1. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
-   정확한 quota와 child coherence, active 선택과 `anchorVoltage`의 일치.
+1. 실제 seed의 mate 자격·단사성과 삭제 뒤 residual component의 parity를 증명하고,
+   일반 matched selection을 적용해 active 선택과 `anchorVoltage`의 일치를 확인.
 2. p=2, p=3의 구체적인 entry 및 p≥4의 일반 entry를 연결해 `EvenOddDegreeGoal` 제거.
 
 기존 Route E의 D3 Hamilton 정리는 이 cyclic-star row와 anchor 일치를 보장하지 않는다.

@@ -16,6 +16,29 @@ def componentOf (x : Ω) : Component A := Quotient.mk _ x
 
 def EvenComponents : Prop := ∀ q : Component A, Even (Nat.card {x // componentOf A x = q})
 
+def EvenOnComponents (target : Finset Ω) : Prop :=
+  ∀ q : Component A, Even (Nat.card {x // componentOf A x = q ∧ x ∈ target})
+
+@[simp] theorem evenOnComponents_univ [Fintype Ω] :
+    EvenOnComponents A Finset.univ ↔ EvenComponents A := by
+  simp [EvenOnComponents, EvenComponents]
+
+open scoped Classical in
+theorem EvenOnComponents.sum [Finite Ω] {target : Finset Ω}
+    (h : EvenOnComponents A target) (q : Component A) :
+    (∑ x ∈ target, if componentOf A x = q then (1 : ZMod 2) else 0) = 0 := by
+  classical
+  letI := Fintype.ofFinite Ω
+  have hc : Nat.card {x // componentOf A x = q ∧ x ∈ target} =
+      (target.filter (fun x => componentOf A x = q)).card := by
+    rw [Nat.card_eq_fintype_card, Fintype.card_subtype]
+    congr 1
+    ext x
+    simp [and_comm]
+  have he := (h q).natCast_zmod_two
+  simpa only [hc, Finset.card_eq_sum_ones, Nat.cast_sum, Nat.cast_one,
+    Finset.sum_filter, apply_ite, Nat.cast_zero] using he
+
 theorem same_component {b : B} {x y : Ω} (hx : x ∈ A b) (hy : y ∈ A b) :
     componentOf A x = componentOf A y := Quotient.sound (Relation.EqvGen.rel _ _ ⟨b, hx, hy⟩)
 

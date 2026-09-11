@@ -120,27 +120,36 @@ theorem exists_even_orientation [Finite V] (l r : E → V) (heven : ∀ v, Even 
   simp only [divergence, Finset.sum_sub_distrib, ht', hh', sub_self]
 
 omit [Fintype V] in
-theorem exists_odd_orientation [Finite V] (l r : E → V) (hodd : ∀ v, Odd (degree l r v)) :
+theorem exists_mixed_orientation [Finite V] (l r : E → V) (target : Finset V)
+    (hdegree : ∀ v, (degree l r v : ZMod 2) = if v ∈ target then 1 else 0) :
     ∃ u w : E → V, Reorients l r u w ∧
-      ∀ v, divergence u w v = 1 ∨ divergence u w v = -1 := by
+      (∀ v ∈ target, divergence u w v = 1 ∨ divergence u w v = -1) ∧
+      ∀ v ∉ target, divergence u w v = 0 := by
   classical
   letI := Fintype.ofFinite V
-  have hcard : Even (Fintype.card V) := by
+  have hcard : Even (Fintype.card target) := by
     apply ZMod.natCast_eq_zero_iff_even.mp
-    have hd (v : V) : (degree l r v : ZMod 2) = 1 := (hodd v).natCast_zmod_two
     have h := congrArg (fun n : ℕ => (n : ZMod 2)) (sum_degree l r)
     have htwo : (2 : ZMod 2) = 0 := by decide
-    simpa [Nat.cast_sum, hd, htwo] using h
-  let L : E ⊕ V → Option V := Sum.elim (fun e => some (l e)) some
-  let R : E ⊕ V → Option V := Sum.elim (fun e => some (r e)) (fun _ => none)
-  have hdeg (v : V) : degree L R (some v) = degree l r v + 1 := by
-    simp only [degree, Fintype.sum_sum_type]
-    simp [L, R, Finset.sum_add_distrib]
+    simpa [Nat.cast_sum, hdegree, htwo, Finset.sum_ite_mem] using h
+  let L : E ⊕ target → Option V := Sum.elim (fun e => some (l e)) (fun x => some x.val)
+  let R : E ⊕ target → Option V := Sum.elim (fun e => some (r e)) (fun _ => none)
+  have hdeg (v : V) : degree L R (some v) = degree l r v + if v ∈ target then 1 else 0 := by
+    have hs : (∑ x : target, if x.val = v then (1 : ℕ) else 0) =
+        if v ∈ target then 1 else 0 := by
+      rw [Finset.sum_coe_sort target (fun x => if x = v then (1 : ℕ) else 0)]
+      simp
+    simp only [degree, Fintype.sum_sum_type, L, R, Sum.elim_inl, Sum.elim_inr,
+      Option.some.injEq, reduceCtorEq, if_false, add_zero, hs]
   have heven : ∀ v, Even (degree L R v) := by
     intro v
     cases v with
     | none => simpa [degree, L, R, Fintype.sum_sum_type] using hcard
-    | some v => rw [hdeg]; exact (hodd v).add_odd (by decide)
+    | some v =>
+      apply ZMod.natCast_eq_zero_iff_even.mp
+      rw [hdeg, Nat.cast_add, hdegree]
+      by_cases hv : v ∈ target <;>
+        simp only [hv, if_true, if_false, Nat.cast_zero, Nat.cast_one] <;> decide
   obtain ⟨U, W, hor, hbal⟩ := exists_even_orientation L R heven
   have hu (e : E) : ∃ u, U (.inl e) = some u := by
     rcases hor (.inl e) with ⟨h, _⟩ | ⟨h, _⟩
@@ -152,36 +161,54 @@ theorem exists_odd_orientation [Finite V] (l r : E → V) (hodd : ∀ v, Odd (de
     · exact ⟨l e, h⟩
   choose u hu using hu
   choose w hw using hw
-  refine ⟨u, w, ?_, ?_⟩
-  · intro e
-    have h := hor (.inl e)
-    simpa [L, R, hu, hw] using h
-  · intro v
-    let hub : V → ℤ := fun x =>
-      (if W (.inr x) = some v then 1 else 0) - (if U (.inr x) = some v then 1 else 0)
-    have hhub : (∑ x, hub x) = hub v := by
-      apply Finset.sum_eq_single v
-      · intro x _ hx
-        rcases hor (.inr x) with ⟨hU, hW⟩ | ⟨hU, hW⟩ <;> simp [hub, hU, hW, L, R, hx]
-      · simp
+  let hub (v : V) (x : target) : ℤ :=
+    (if W (.inr x) = some v then 1 else 0) - (if U (.inr x) = some v then 1 else 0)
+  have hother (v : V) (x : target) (hx : x.val ≠ v) : hub v x = 0 := by
+    rcases hor (.inr x) with ⟨hU, hW⟩ | ⟨hU, hW⟩ <;> simp [hub, hU, hW, L, R, hx]
+  have htotal (v : V) : divergence u w v + ∑ x : target, hub v x = 0 := by
     have h := hbal (some v)
     change (∑ e, ((if W e = some v then (1 : ℤ) else 0) -
       (if U e = some v then 1 else 0))) = 0 at h
     rw [Fintype.sum_sum_type] at h
-    change (∑ e, ((if W (.inl e) = some v then (1 : ℤ) else 0) -
-      (if U (.inl e) = some v then 1 else 0))) + ∑ x, hub x = 0 at h
+    simpa only [hu, hw, Option.some.injEq] using h
+  refine ⟨u, w, ?_, ?_, ?_⟩
+  · intro e
+    have h := hor (.inl e)
+    simpa [L, R, hu, hw] using h
+  · intro v hv
+    let x : target := ⟨v, hv⟩
+    have hhub : (∑ y : target, hub v y) = hub v x := by
+      apply Finset.sum_eq_single x
+      · intro y _ hy
+        exact hother v y (fun he => hy (Subtype.ext he))
+      · simp
+    have h := htotal v
     rw [hhub] at h
-    simp only [hu, hw, Option.some.injEq] at h
-    change divergence u w v + hub v = 0 at h
-    rcases hor (.inr v) with ⟨hU, hW⟩ | ⟨hU, hW⟩
+    rcases hor (.inr x) with ⟨hU, hW⟩ | ⟨hU, hW⟩
     · left
-      have hv : hub v = -1 := by simp [hub, hU, hW, L, R]
+      have hv : hub v x = -1 := by simp [hub, hU, hW, L, R, x]
       rw [hv] at h
       omega
     · right
-      have hv : hub v = 1 := by simp [hub, hU, hW, L, R]
+      have hv : hub v x = 1 := by simp [hub, hU, hW, L, R, x]
       rw [hv] at h
       omega
+  · intro v hv
+    have hhub : (∑ x : target, hub v x) = 0 := by
+      apply Finset.sum_eq_zero
+      intro x _
+      exact hother v x (fun he => hv (he ▸ x.property))
+    simpa only [hhub, add_zero] using htotal v
+
+omit [Fintype V] in
+theorem exists_odd_orientation [Finite V] (l r : E → V) (hodd : ∀ v, Odd (degree l r v)) :
+    ∃ u w : E → V, Reorients l r u w ∧
+      ∀ v, divergence u w v = 1 ∨ divergence u w v = -1 := by
+  classical
+  letI := Fintype.ofFinite V
+  obtain ⟨u, w, hor, hdiv, _⟩ := exists_mixed_orientation l r Finset.univ (fun v => by
+    simpa only [Finset.mem_univ, if_true] using (hodd v).natCast_zmod_two)
+  exact ⟨u, w, hor, fun v => hdiv v (Finset.mem_univ v)⟩
 
 end Multigraph
 
