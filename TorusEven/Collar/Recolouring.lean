@@ -60,37 +60,43 @@ def factorization : MultitorusFactorization C I m where
     · simp only [dif_neg hx]
 
 variable {Y : Type*} [Fintype Y] {frame : Y × ZMod m ≃ (I → ZMod m)}
-variable (h : RelativeCollarState F frame active U)
-variable {i : I} (S : BlockSelection F frame i active) (hi : 2 ≤ F.width i)
+variable {reserved : Finset C} (hc : CircuitConsistent F frame)
+variable {i : I} (S : BlockSelection F frame i reserved) (hi : 2 ≤ F.width i)
+variable (hs : ∀ c ∈ active, GapSupport (F.step c) U (splitVoltage S.sources c))
 
-noncomputable def lift : Recolouring (S.factorization h.consistent hi) active (splitMarks U i) where
+noncomputable def split : Recolouring (S.factorization hc hi) active (splitMarks U i) where
   boundary c := splitBoundary U i (R.boundary c)
   routing u := R.routing ((splitMarkEquiv U i).symm u)
   routing_inactive u c hc := R.routing_inactive _ c hc
   head c u := by
     obtain ⟨u, rfl⟩ := (splitMarkEquiv U i).surjective u
     simp only [Equiv.symm_apply_apply, splitBoundary_apply, splitMarkEquiv_val]
-    by_cases hc : c ∈ active
+    by_cases ha : c ∈ active
     · have hz (d : C) (hd : d ∈ active) (v : U) : splitVoltage S.sources d v.val = 0 :=
-        voltage_zero_at_marks (F.step d) U _
-          (h.gapSupport d hd _ (S.pin h.consistent d hd)) v.property
+        voltage_zero_at_marks (F.step d) U _ (hs d hd) v.property
       have hsem := F.split_semiconj i S.sources (F.width i / 2) (by omega) (by omega)
-        (S.subset h.consistent) (S.card h.consistent)
+        (S.subset hc) (S.card hc)
       refine (hsem c ((R.boundary c u).val, 0)).symm.trans
         (Eq.trans ?_ (hsem (R.routing u c) (u.val, 0)))
-      simp only [Collar.lift_apply, hz c hc (R.boundary c u),
-        hz (R.routing u c) (R.routing_active u c hc) u, add_zero, R.head]
-    · rw [R.inactive c hc, R.routing_inactive u c hc]
+      simp only [Collar.lift_apply, hz c ha (R.boundary c u),
+        hz (R.routing u c) (R.routing_active u c ha) u, add_zero, R.head]
+    · rw [R.inactive c ha, R.routing_inactive u c ha]
       rfl
 
-theorem lift_circuitCount (c : C) :
-    circuitCount ((R.lift h S hi).factorization.step c) =
+theorem split_circuitCount (c : C) :
+    circuitCount ((R.split hc S hi hs).factorization.step c) =
       circuitCount (R.factorization.step c) := by
-  change circuitCount (patch ((S.factorization h.consistent hi).step c) (splitMarks U i)
+  change circuitCount (patch ((S.factorization hc hi).step c) (splitMarks U i)
     (splitBoundary U i (R.boundary c))) = circuitCount (patch (F.step c) U (R.boundary c))
-  by_cases hc : c ∈ active
-  · exact h.transport S hi c hc (R.boundary c)
-  · rw [R.inactive c hc]
+  by_cases ha : c ∈ active
+  · have hsem := F.split_semiconj i S.sources (F.width i / 2) (by omega) (by omega)
+      (S.subset hc) (S.card hc) c
+    exact (patch_circuitCount_congr (Collar.lift (F.step c) (splitVoltage S.sources c))
+      ((S.factorization hc hi).step c) (zeroSection U) (splitMarks U i)
+      (splitChart i) hsem (fun p => (mem_splitMarks U i p.1 p.2).symm)
+      (boundaryLift U (R.boundary c))).symm.trans
+        (relative_transport (F.step c) U _ (S.unit hc c) (hs c ha) (R.boundary c))
+  · rw [R.inactive c ha]
     have hnew : splitBoundary U i (Equiv.refl U) = Equiv.refl (splitMarks U i) := by
       apply Equiv.ext
       intro u
@@ -98,14 +104,29 @@ theorem lift_circuitCount (c : C) :
       exact splitBoundary_apply U i (Equiv.refl U) v
     rw [hnew, patch_refl, patch_refl]
     exact F.split_circuitCount i S.sources (F.width i / 2) (by omega) (by omega)
-      (S.subset h.consistent) (S.card h.consistent) c (S.unit h.consistent c)
+      (S.subset hc) (S.card hc) c (S.unit hc c)
 
-theorem lift_hamilton (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
-    ∀ c, Shared.IsSingleCycleMap ((R.lift h S hi).factorization.step c) := by
+theorem split_hamilton (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
+    ∀ c, Shared.IsSingleCycleMap ((R.split hc S hi hs).factorization.step c) := by
   intro c
   apply singleCycle_of_circuitCount_one
-  rw [R.lift_circuitCount h S hi c]
+  rw [R.split_circuitCount hc S hi hs c]
   exact circuitCount_one_of_singleCycle _ (hH c)
+
+variable (h : RelativeCollarState F frame active U) (S : BlockSelection F frame i active)
+variable (hi : 2 ≤ F.width i)
+
+noncomputable def lift : Recolouring (S.factorization h.consistent hi) active (splitMarks U i) :=
+  R.split h.consistent S hi (fun c ha => h.gapSupport c ha _ (S.pin h.consistent c ha))
+
+theorem lift_circuitCount (c : C) :
+    circuitCount ((R.lift h S hi).factorization.step c) =
+      circuitCount (R.factorization.step c) :=
+  R.split_circuitCount h.consistent S hi _ c
+
+theorem lift_hamilton (hH : ∀ c, Shared.IsSingleCycleMap (R.factorization.step c)) :
+    ∀ c, Shared.IsSingleCycleMap ((R.lift h S hi).factorization.step c) :=
+  R.split_hamilton h.consistent S hi _ hH
 
 end Recolouring
 

@@ -136,3 +136,30 @@ See the [raw audit](/fsx/angel/operations/torus-lean-closure-20260911/axioms.log
 [verification manifest](/fsx/angel/operations/torus-lean-closure-20260911/verification.json).
 
 The remaining manuscript obligation is E5: anchored entry for odd d≥7.
+
+## 2026-09-11 (E5 partial: near-core, four anchors, entry interface)
+
+The complete near-core lemma is now proved: the displayed directions define a
+factorization, colours 0 and 1 are Hamilton, and colour 2 has exactly two circuits
+of length m³/2 distinguished by the manuscript's defect expression. Fixed (h,w)
+blocks are circuit-consistent in both the y-fibre and x-row charts.
+
+| Lean name | Result | Axioms |
+|---|---|---|
+| `TorusEven.Entry.NearCore.factorization`, `hamilton`, `circuitCount` | physical near-core and exact colourwise circuit inventory | standard only |
+| `TorusEven.Entry.NearCore.orbit_defect_iff`, `orbit_card_two` | exact defect classes and lengths | standard only |
+| `TorusEven.Entry.anchor_agreement`, `anchorEquiv` | four-anchor agreement and bijection with actual circuit columns | standard only |
+| `TorusEven.Entry.anchorVoltage_single`, `anchorVoltage_unit`, `anchorVoltage_gapSupport` | one selected source on each active circuit, outside the replacement support | standard only |
+| `TorusEven.Collar.Recolouring.ofReplacement`, `split_circuitCount` | replacement adapter and first-split transport | standard only |
+| `TorusEven.Collar.BlockSelection.enters_collar`, `hamilton_decomposition_of_entry` | entry-to-closure implication with explicit selection and replacement inputs | standard only |
+
+CPU `lake build TorusEven` passed (8432 jobs); isolation passed with 74 main-path
+files. The 39 new declarations in
+[EntryAudit.lean](/fsx/angel/operations/torus-lean-entry-20260911/EntryAudit.lean)
+use standard axioms only. The existing even-degree theorem remains standard-only,
+and the conditional global endpoint retains the same 18 native leaves. See the
+[raw audit](/fsx/angel/operations/torus-lean-entry-20260911/axioms.log) and
+[entry boundary](ENTRY_PROGRESS_20260911.md).
+
+E5 remains open: cyclic-star Hamiltonicity, the auxiliary shell, incidence and
+matched selection, and the p=2 / p=3 / p≥4 entry assembly are still required.

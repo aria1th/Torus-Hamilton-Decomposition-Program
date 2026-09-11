@@ -4,7 +4,9 @@ Date: 2026-09-10.
 
 현재 재개 지점은 [collar 진행 문서](COLLAR_PROGRESS_20260911.md), 원고·Lean 대응은
 [2026-09-11 준비 문서](LEAN_PREPARATION_20260911.md)를 따른다. E0–E4는 완료되었고
-E5 anchored entry가 남았다. 아래 단계별 원안의 환경 부재·coset 기계 부재·E3 예정 문장은
+E5 anchored entry가 남았다. E5의 near-core와 anchor voltage는
+[entry 진행 문서](ENTRY_PROGRESS_20260911.md)에 정리한 범위까지 증명되었다.
+아래 단계별 원안의 환경 부재·coset 기계 부재·E3 예정 문장은
 최초 조사 시점의 기록이다. D3의 native leaf는 실제 조회 기준 14개다.
 
 입력 원고: `/local/angel/etc/paper/torus_integrated_proof.zip`

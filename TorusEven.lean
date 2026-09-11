@@ -4,6 +4,7 @@
 import TorusEven.Dispatch
 import TorusEven.Goals
 import TorusEven.Collar
+import TorusEven.Entry
 import TorusEven.D5Four
 import TorusEven.Endpoints
 import TorusEven.D5.ChronologicalTransversalGoal
