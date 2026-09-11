@@ -31,6 +31,28 @@ correspondence), the per-stage `#print axioms` artifacts are under
 and to the formalization is `docs/CONTRIBUTIONS.md`. The release snapshot below
 describes the previous all-odd release.
 
+## Released all-moduli snapshot
+
+Snapshot: 2026-09-11, tag `0.3.0-alleven`
+([release](https://github.com/aria1th/Torus-Hamilton-Decomposition-Program/releases/tag/0.3.0-alleven)).
+
+```text
+All m >= 3, all d >= 2          TorusAll.all_moduli_tori_all_dimensions
+│                               (standard axioms + 106 registered finite leaves)
+├─ odd m   (0.0.3-allodd)       RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75
+└─ even m  (this release)       TorusEven.even_modulus_tori_all_dimensions
+   │                            (standard axioms + 18 leaves: 4 in D_5(4), 14 in D_3)
+   ├─ d = 2, 2^k                 parity-neutral dispatcher
+   ├─ d = 3                      vendored Route-E odometer (14 leaves)
+   ├─ d = 5                      m = 4 leaf (4 leaves) + chronological transversal (m >= 6, standard only)
+   ├─ even d >= 2                relative collar closure, empty palette (standard only)
+   └─ odd d >= 7                 anchored entry + collar closure (standard only)
+```
+
+Release notes: `docs/RELEASE_NOTES_0.3.0-alleven.md`. Axiom ledger:
+`docs/EVEN_AXIOM_LEDGER.md`. Audit artifacts: `evidence/lean_audit_20260911/`.
+Contribution record: `docs/CONTRIBUTIONS.md`.
+
 ## Released all-odd snapshot
 
 Snapshot: 2026-05-06.

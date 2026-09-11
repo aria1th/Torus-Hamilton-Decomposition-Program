@@ -15,7 +15,7 @@ OneGap·상대 transport·physical split·incidence parity 보조정리가 추�
 
 ## 목표와 현재 경계
 
-입력은 [통합 원고](../../paper/torus_integrated_proof/even_directed_tori_integrated.tex)의
+입력은 통합 원고 `even_directed_tori_integrated.tex` (SHA256 `846a1e5f…88e98`, 저장소 밖 번들)의
 본문 §1–9 및 부록 A–B, `PROOF_STATUS_KO.md`, `formalization/INTERFACES.md`,
 보존된 형식화 계획과 검사기다. 현재 통합본이 역사적 supplement보다 우선한다.
 원고의 `thm:main`은 다음 문장이다.
