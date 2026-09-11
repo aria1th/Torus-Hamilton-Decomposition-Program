@@ -52,16 +52,14 @@ Isolation 통과: even main-path 140개, attic 4개, 등록된 native 파일 3�
 최종 조립 정리로, 짝수 두 경로의 native leaf는 기존과 같은 18개이고 모든 법수
 정리는 기존 홀수 경로 88개와 합쳐 106개다. 새 native leaf는 없다.
 
-추가 입력 없는 목표 타입 네 개도 Lean으로 확인했다. 유지 소스와 CPU 사본의
+추가 입력 없는 목표 타입 네 개도 Lean으로 확인했다. 유지 소스와 빌드 노드 사본의
 Lean 소스·설정 277개가 SHA256으로 일치한다. Lean 4.30.0-rc2,
 mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`과 기존 캐시를 사용했다.
 
-산출물은 `/fsx/angel/operations/torus-lean-residual-20260911/`에 있다:
-[전체 빌드](/fsx/angel/operations/torus-lean-residual-20260911/full-build.log),
-[기본 빌드](/fsx/angel/operations/torus-lean-residual-20260911/default-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-residual-20260911/FinalAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-residual-20260911/axioms.log),
-[axiom 목록과 개수](/fsx/angel/operations/torus-lean-residual-20260911/axiom-summary.json),
-[검증·복구 manifest](/fsx/angel/operations/torus-lean-residual-20260911/verification.json).
-Manifest에 최종 commit과 matched-selection commit `5e63262`에서 이어지는 검증된
-복구 bundle을 기록한다. 원격 push나 GitHub release는 수행하지 않았다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/residual/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/residual/FinalAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/residual/axioms.log),
+[axiom 목록과 개수](../evidence/lean_audit_20260911/residual/axiom-summary.json).
+빌드 노드와 유지 소스의 Lean 소스·설정 277개의 SHA256 일치는 `sources-sha256.json`으로
+확인한다. 실행 receipt와 recovery bundle은 저장소에 포함하지 않는다. 같은 audit를 유지 소스
+checkout에서 다시 실행한 결과는 `evidence/lean_audit_20260911/final-control-check/`에 있다.

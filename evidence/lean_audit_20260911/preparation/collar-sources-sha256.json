@@ -1,0 +1,22 @@
+{
+ "lean_version": "Lean (version 4.30.0-rc2, x86_64-unknown-linux-gnu, commit 3dc1a088b6d2d8eafe25a7cd7ec7b58d731bd7cc, Release)",
+ "mathlib_commit": "5450b53e5ddc75d46418fabb605edbf36bd0beb6",
+ "note": "Scrubbed from the execution-node receipt: only toolchain versions, timestamp and per-file SHA256 of the Lean sources that were built.",
+ "source_sha256": {
+  "TorusEven.lean": "9582c8f0031af2ce64434b5563352b80487a42eef2bfdfa2f8e96c15b4a80c7c",
+  "TorusEven/Collar.lean": "8d3665cdabe2f8839b8f0a0ce501db84682a273e3fe1d79b6fca91d1725d4759",
+  "TorusEven/Collar/BinarySplit.lean": "66b3a90f727ad63b84e66427268d791648ff784833e1ea35f64b485f0a93abe8",
+  "TorusEven/Collar/Circuits.lean": "716ee830c6d1f5175baba7fb231fa27d6f7e93054a1fecfe207518be4a37ea9d",
+  "TorusEven/Collar/FibreGap.lean": "40210b10d607b6e84af6e4d5ff86385e99a5b8aabed442e94f9bc1e7ca17a94f",
+  "TorusEven/Collar/FirstReturn.lean": "d944db968c65884016c69dec58171fc2f6a9c4c09f377b2be0c8e84bfe78f89e",
+  "TorusEven/Collar/Incidence.lean": "5522de253eafb18fe78267f04179c6777402aac2cc1c257f4cec9d8433b3e961",
+  "TorusEven/Collar/IncidenceParity.lean": "b62edd3a0c02e75c347f34d2749b7bc54313a4880e8b603a5af223f12cd573a4",
+  "TorusEven/Collar/Lift.lean": "83200e7f611395beb882ca6dbcdfaf21f41577b6d5aa9a6c8a8d30c68ac62709",
+  "TorusEven/Collar/Multitorus.lean": "de0c0335b68192d1d52388e4f6e52cbbfaa118b5754cc6a96d639831595f15ba",
+  "TorusEven/Collar/OneGap.lean": "b807faa6679cb068c234597b377228c2f4e2a137da7621f94dc5a9738acb68dc",
+  "TorusEven/Collar/OrbitLift.lean": "a3654a44e4be38e87f927e836d3733b702bcf2b0040b700b783e93e1c65e7f6b",
+  "TorusEven/Collar/RelativeLift.lean": "2e8809d38a6bec137ee7b171ac1ff4b9469ed6173c137152c06a2340b9637374",
+  "TorusEven/Collar/SourceSurgery.lean": "9b95bcd880db50f8cb663d07035734e4be6f3e50d883e6dc5ee725360f3b182c",
+  "TorusEven/Collar/Transport.lean": "cf86ce0cb744f471ece7548ed5f466e423a666a435f061722a18d74445d44441"
+ }
+}

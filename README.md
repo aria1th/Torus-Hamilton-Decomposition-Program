@@ -24,8 +24,12 @@ module combines the even endpoint with the previous all-odd theorem.
 See the [completion and audit record](docs/E5_COMPLETION_20260911.md).
 
 Build the final endpoints with `lake build TorusEven TorusAll` and check the even
-import boundary with `python3 scripts/check_even_isolation.py`. The release
-snapshot below describes the previous all-odd release.
+import boundary with `python3 scripts/check_even_isolation.py`. The axiom ledger is
+`docs/EVEN_AXIOM_LEDGER.md` (final section: release audit and manuscript-to-Lean
+correspondence), the per-stage `#print axioms` artifacts are under
+`evidence/lean_audit_20260911/`, and the record of who contributed what to the proof
+and to the formalization is `docs/CONTRIBUTIONS.md`. The release snapshot below
+describes the previous all-odd release.
 
 ## Released all-odd snapshot
 

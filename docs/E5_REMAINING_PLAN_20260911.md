@@ -51,16 +51,14 @@ mate 표를 사용하고, residual 성분 안의 nonmate 짝짓기로 필요한 
 각 완료 단계는 지정 CPU 사본에서 Lean을 컴파일하고, 기존 endpoint와 새 주요 정리의
 axiom을 검사한다. 새 `sorry`, author axiom, `native_decide`를 도입하지 않는다.
 통합 시 `lake build TorusEven`, isolation, 소스 SHA256 일치를 확인한 뒤 focused commit과
-FSx bundle을 보존한다. 작업 중 추가 가정으로 미완료 명제를 감춘 정리는 완료로 세지 않는다.
+audit 산출물을 보존한다. 작업 중 추가 가정으로 미완료 명제를 감춘 정리는 완료로 세지 않는다.
 
 현재 증명 경계는 [E5 완료 기록](E5_COMPLETION_20260911.md)이다.
 3단계는 closure가 요구하는 `EvenComponents`를 같은 성분 안의 완전 짝짓기로 증명했다.
 원고의 더 강한 p≥4 연결성과 p=2,3의 정확한 연결성분 분류 전체는 이 완료 범위에
 포함하지 않는다. w 방향의 전체 연결성은 별도로 증명했다.
-작업 산출물은 `/fsx/angel/operations/torus-lean-shell-20260911/`와
-`/fsx/angel/operations/torus-lean-incidence-20260911/`,
-`/fsx/angel/operations/torus-lean-matched-20260911/`,
-`/fsx/angel/operations/torus-lean-residual-20260911/`에 보존한다.
+작업 Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/`의 `shell`, `incidence`, `matched`,
+`residual` 디렉터리에 보존한다.
 
 5단계 역시 필요한 parity를 증명하며, 원고의 정확한 residual 성분 분류 전체를
 완료했다고 주장하지 않는다. 마지막 조립은 유한 palette에 일반화한 E4 closure를

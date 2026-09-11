@@ -1,0 +1,65 @@
+'TorusEven.Surgery.singleCycle_of_induced_orbits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.mem_support_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.natCast_eq_iff_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.hitTest_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.translation_ret_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.InnerReturn.theta_injective' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Star.InnerReturn.thetaPerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_x_low' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_x_middle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_x_high' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_y_axis' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_y_fixed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_y_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_y_end' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_cornerPlus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.nu_cornerMinus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_word' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_x_high' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_y_fixed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_low' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_middle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_four_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_high' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_penultimate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_last' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.psi_val' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.psi_inner_return' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.psi_meets_inner' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.psi_hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.return_x_table' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.psiIndex_succ' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_ret_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.y_meets_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_meets_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.phi_hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.Divisible.sum_return_times' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.return_hamilton_three_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.hamilton_three_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.replacement_hamilton_three_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.hamilton_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Star.hamilton_six' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorVoltage_gapSupport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

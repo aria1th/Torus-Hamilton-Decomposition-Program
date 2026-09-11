@@ -63,12 +63,9 @@ X를 만남을 증명한다. 따라서 `phi_hamilton`은 실제 Φ의 단일 순
 사용한다. 새 `sorry`, `admit`, author axiom, `native_decide`는 없다.
 기존 전체 차원 조건부 endpoint의 axiom 집합도 native leaf 18개를 포함해 그대로다.
 
-검증 산출물은 `/fsx/angel/operations/torus-lean-star-return-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-star-return-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-star-return-20260911/DivisibleAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-star-return-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-star-return-20260911/verification.json).
-Manifest에 소스 commit, CPU 소스 해시 일치, 이전 단계와 연결한 복구 bundle을 기록한다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/star-return/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/star-return/DivisibleAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/star-return/axioms.log).
 노드 경로와 도구 버전은 [이전 Star 기록](STAR_PROGRESS_20260911.md)과 같다.
 
 3∤m의 첫 교차점, 실제 X축 귀환 표와 순환성은 후속 uniform 단계에서 증명되었다.

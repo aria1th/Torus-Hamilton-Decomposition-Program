@@ -1,0 +1,96 @@
+@TorusEven.Collar.oneGap : ∀ {α : Type u_1} [inst : Fintype α] [inst_1 : DecidableEq α] {m : ℕ} [inst_2 : NeZero m]
+  (S : Equiv.Perm α) (U : Set α) [inst_3 : DecidablePred fun x => x ∈ U] (δ : α → ZMod m) (a : α),
+  Shared.IsSingleCycleMap ⇑S →
+    a ∈ U →
+      (∀ (x : α), δ x ≠ 0 → x ∈ TorusEven.Surgery.openGap S U a) →
+        IsUnit (∑ x, δ x) → TorusEven.Collar.OneGapConclusion S U δ a
+@TorusEven.Collar.relative_transport : ∀ {α : Type u_1} [inst : Fintype α] [inst_1 : DecidableEq α] {m : ℕ}
+  [inst_2 : NeZero m] (S : Equiv.Perm α) (U : Set α) [inst_3 : DecidablePred fun x => x ∈ U] (δ : α → ZMod m),
+  TorusEven.Collar.UnitCarry S δ →
+    TorusEven.Collar.GapSupport S U δ →
+      ∀ (r : Equiv.Perm ↑U),
+        TorusEven.Surgery.circuitCount
+            (TorusEven.Surgery.patch (TorusEven.Collar.lift S δ) (TorusEven.Collar.zeroSection U)
+              (TorusEven.Collar.boundaryLift U r)) =
+          TorusEven.Surgery.circuitCount (TorusEven.Surgery.patch S U r)
+@TorusEven.Collar.FibreGap.lift_preserves : ∀ {Y : Type u_1} [inst : Fintype Y] [inst_1 : DecidableEq Y] {m : ℕ}
+  [inst_2 : NeZero m] (S : Equiv.Perm (Y × ZMod m)) (U : Set (Y × ZMod m)) [inst_3 : DecidablePred fun x => x ∈ U]
+  (δ : Y × ZMod m → ZMod m),
+  TorusEven.Collar.FibreGap S U →
+    (∀ (y : Y), δ (y, 0) = 0) →
+      TorusEven.Collar.UnitCarry S δ →
+        TorusEven.Collar.FibreGap (TorusEven.Collar.lift S δ) (TorusEven.Collar.zeroSection U)
+@TorusEven.Collar.MultitorusFactorization.split : {C : Type u_1} →
+  {I : Type u_2} →
+    [inst : Fintype C] →
+      [DecidableEq C] →
+        [inst_2 : DecidableEq I] →
+          {m : ℕ} →
+            (F : TorusEven.Collar.MultitorusFactorization C I m) →
+              (i : I) →
+                (J : (I → ZMod m) → Finset C) →
+                  (b : ℕ) →
+                    0 < b →
+                      b < F.width i →
+                        (∀ (x : I → ZMod m), J x ⊆ F.users x i) →
+                          (∀ (x : I → ZMod m), (J x).card = b) → TorusEven.Collar.MultitorusFactorization C (Option I) m
+@TorusEven.Collar.Incidence.evenComponents_of_coherent_odd_columns : ∀ {B : Type u_1} {R : Type u_2} {Ω : Type u_3}
+  [inst : Fintype B] [inst_1 : Fintype R] [Nonempty R] [Finite Ω] [inst_4 : DecidableEq Ω] (J : B → R → Finset Ω),
+  (∀ (p : B × R), (J p.1 p.2).Nonempty) →
+    (∀ (b : B), TorusEven.Collar.Incidence.Coherent (J b)) →
+      ∀ (w : B → ℕ),
+        (∀ (b : B) (r : R), (J b r).card = w b) →
+          Even (Fintype.card R) →
+            (∀ (x : Ω), Odd {p | x ∈ J p.1 p.2}.card) → TorusEven.Collar.Incidence.EvenComponents fun p => J p.1 p.2
+'TorusEven.Surgery.sum_retTime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Surgery.patch_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.oneGap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.lift_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.relative_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.relative_transport_hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.FibreGap.lift_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.balancedSplit_width' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split_excess' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split_activeSeparated' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split_fibre_direction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split_fibre_circuit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.split_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.toCayleyOfUnitWidths' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_of_coherent_odd_columns' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_copied' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.odd_complement_columns' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.odd_of_unit_mod_even' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

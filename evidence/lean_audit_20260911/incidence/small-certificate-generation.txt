@@ -1,0 +1,1 @@
+Explicit BFS forests on the sixteen numeric row types; Lean checks every edge and pairing.

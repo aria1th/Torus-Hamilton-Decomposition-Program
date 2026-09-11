@@ -1,0 +1,12 @@
+# lake build TorusEven TorusAll (source checkout, 2026-09-11T15:40:06Z, HEAD 7e9fbd5)
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`
+Build completed successfully (8559 jobs).
+
+# python3 scripts/check_even_isolation.py
+even isolation check passed: 140 main-path files, 4 attic files, 3 registered native_decide leaves
+
+# lean --version
+Lean (version 4.30.0-rc2, x86_64-unknown-linux-gnu, commit 3dc1a088b6d2d8eafe25a7cd7ec7b58d731bd7cc, Release)
+# mathlib (lake-manifest.json)
+rev 5450b53e5ddc75d46418fabb605edbf36bd0beb6

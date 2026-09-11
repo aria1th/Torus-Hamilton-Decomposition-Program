@@ -53,10 +53,7 @@ mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`을 사용했고 기존 mathli
 노드 경로는 [entry 기록](ENTRY_PROGRESS_20260911.md)과 같다. CPU Git HEAD는 소스 식별에
 사용하지 않았다.
 
-검증 산출물은 `/fsx/angel/operations/torus-lean-shell-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-shell-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-shell-20260911/ShellAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-shell-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-shell-20260911/verification.json).
-Manifest에 소스 commit과 `6f16b8d`에서 이어지는 복구 bundle을 기록한다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/shell/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/shell/ShellAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/shell/axioms.log).
 남은 의존관계와 완료 조건은 [E5 실행 계획](E5_REMAINING_PLAN_20260911.md)을 따른다.

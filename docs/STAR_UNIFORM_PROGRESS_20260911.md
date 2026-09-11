@@ -85,12 +85,9 @@ native leaf 18개를 포함해 이전 axiom 집합을 그대로 유지한다.
 Lean 4.30.0-rc2와 mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`을 사용했으며,
 기존 mathlib 빌드 산출물을 재사용했다. 노드 경로는 [entry 기록](ENTRY_PROGRESS_20260911.md)과 같다.
 
-산출물은 `/fsx/angel/operations/torus-lean-star-nondiv-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-star-nondiv-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-star-nondiv-20260911/NondivAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-star-nondiv-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-star-nondiv-20260911/verification.json).
-Manifest에 소스 commit, CPU receipt, 이전 divisible 단계에서 이어지는 복구 bundle을 기록한다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/star-nondiv/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/star-nondiv/NondivAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/star-nondiv/axioms.log).
 
 후속 [shell과 seed 기록](SHELL_PROGRESS_20260911.md)에서 auxiliary shell 구성과
 Hamilton성, core와의 superposition을 완료했다. 남은 seed incidence parity, 네 mate를

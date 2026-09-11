@@ -48,3 +48,13 @@ milestones close (see docs/EVEN_AXIOM_LEDGER.md once created).
 - `#print axioms TorusEven.d5_even_large`: `[propext, Classical.choice, Quot.sound]`.
 - `python3 scripts/check_even_isolation.py`: passed (29 main-path files, 4 attic files,
   3 registered native leaves).
+
+### Log (2026-09-11, E4/E5 closed, release audit)
+
+- `lake build TorusEven TorusAll` on the source checkout at `7e9fbd5`: success (8559 jobs).
+- `#print axioms`: `even_odd_degree`, `even_degree_collar` standard only;
+  `even_modulus_tori_all_dimensions` standard + 18 leaves; `TorusAll.all_moduli_tori_all_dimensions`
+  standard + 106 leaves. Output in `evidence/lean_audit_20260911/final-control-check/`.
+- `python3 scripts/check_even_isolation.py`: passed (140 main-path files, 4 attic files,
+  3 registered native leaves).
+- Per-stage audit artifacts imported to `evidence/lean_audit_20260911/` (index in its README).

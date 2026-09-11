@@ -52,7 +52,6 @@ component의 짝수성과 pinned coherent selection의 존재가 동치임을 �
 `exists_pinnedSelection`의 구성에는 component parity와 블록당 active 열 ≤1이면
 충분하다. 선택은 정확한 절반 quota, 열별 합 ±1, row 0에서 active 제외, 양쪽
 nonterminal child의 coherence를 만족한다. 증명의 세부는
-[selector audit](/fsx/angel/operations/torus-lean-selector-20260911/verification.json)에 보존했다.
 
 `sourceSelection_orbit_sum`은 **각 실제 old 회로** 위의 voltage 합을 해당 열의 row
 선택 횟수와 동일시한다. 이를 unit carry에 연결한다. 새 incidence column degree에
@@ -112,16 +111,8 @@ matched selection, mate 삭제 뒤의 parity, p=2 / p=3 / p≥4 entry다.
 - 이번 주요 선언 24개의 axiom은 모두 `propext`, `Classical.choice`, `Quot.sound`의
   부분집합이다. 기존 전체 차원 조건부 endpoint의 native axiom은 18개로 동일하다.
 
-산출물은 `/fsx/angel/operations/torus-lean-closure-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-closure-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-closure-20260911/ClosureAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-closure-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-closure-20260911/verification.json).
-Manifest에 CPU와 유지 소스의 SHA256 일치, commit, 복구 bundle을 기록한다.
-
-유지 소스는 제어 노드 `/local/angel/etc/Torus-Hamilton-Decomposition-Program`이다.
-CPU `root@jcssh-hp.mewtant.io:31630`의 실행 사본은
-`/local/angel/lean-collar/Torus-Hamilton-Decomposition-Program`이다. 이 사본의 Git HEAD는
-동기화된 소스의 식별자가 아니므로 파일 hash로 검증한다. 도구체인은 같은 노드의
-`/local/angel/lean-collar/leanprover--lean4---v4.30.0-rc2/bin`, mathlib SHA는
-`5450b53e5ddc75d46418fabb605edbf36bd0beb6`이다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/closure/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/closure/ClosureAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/closure/axioms.log).
+빌드 노드의 Lean 소스와 유지 소스의 일치는 `sources-sha256.json`의 파일별 SHA256으로
+확인한다. 도구체인은 Lean 4.30.0-rc2, mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`이다.

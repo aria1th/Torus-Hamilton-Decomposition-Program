@@ -1,0 +1,328 @@
+'TorusEven.Collar.RelativeCollarState.hamilton_decomposition_palette' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]
+'TorusEven.even_modulus_tori_all_dimensions' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]
+'TorusEven.Collar.hamilton_decomposition_of_entry_palette' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusAll.all_moduli_tori_all_dimensions' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.Lambda1_cyclic._native.native_decide.ax_1_1,
+ D5Odd.Lambda1_latin._native.native_decide.ax_1_1,
+ D5Odd.fin5AddNat_four_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin5AddNat_three_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin81AddNat_one_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin81AddNat_reaches._native.native_decide.ax_1_1,
+ D5Odd.ge5_exact_of_feasible._native.native_decide.ax_1_1,
+ D5Odd.m3Rank_bijective._native.native_decide.ax_1_1,
+ D5Odd.m3Rank_step._native.native_decide.ax_1_1,
+ D5Odd.m3Schedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9,
+ D7Odd.Handoff.canonicalBase6s1Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s1_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s3Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s3_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s5Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s5_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBlockSchedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBlock_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_2,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_3,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_4,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_5,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_6,
+ D7Odd.Handoff.canonicalSchedule7_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalSchedule7_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.indexToSix3_stateIndex3._native.native_decide.ax_1_1,
+ D7Odd.Handoff.indexToSix5_stateIndex5._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallDir3_latin_six._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallDir5_latin_six._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank3Z_bijective._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank3Z_step._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallSchedule3_returnMap._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallSchedule5_returnMap._native.native_decide.ax_1_1,
+ D7Odd.Handoff.stateIndex3_indexToSix3._native.native_decide.ax_1_1,
+ D7Odd.Handoff.stateIndex5_indexToSix5._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_one._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_two._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_zero._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_four._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_one._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_three._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_two._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_zero._native.native_decide.ax_1_1,
+ RoundComposite.PrefixCount.qge2FourColumnCodeTable._native.native_decide.ax_1_1,
+ RoundComposite.PrefixCount.qge2SixDeltaTable._native.native_decide.ax_1_1]
+'TorusEven.Collar.MultitorusFactorization.repalette' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.MultitorusFactorization.toCayleyOfPalette' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.IsPinnedSelection.map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.evenOnComponents_of_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_odd_degree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.d7_even' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_successor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.hamilton_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.coreIndex' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.activeAt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.corePresent_iff_activeAt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.anchorBlockNat' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.anchorRowNat' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.blockRanks' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.anchorBlock' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.anchorRow' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.blockRanks_apply' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.anchor_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.activeAt_anchor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.mateIndex' depends on axioms: [propext]
+'TorusEven.Entry.Seed.mate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.auxiliaryNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.mem_auxiliaryNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.mate_eligible_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.auxiliary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.auxiliary_at_ranks' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.matched' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.matched_fullSupport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmateIndex' does not depend on any axioms
+'TorusEven.Entry.Seed.nonmateOrder' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.Seed.nonmateOrder_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmateOrder_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmateEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmatePairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmatePairs_val' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.nonmates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residualNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.mem_nonmates_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.matched_nonmates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residualNat_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residualComponent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_same_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_same_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_even_A' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_even_B' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_odd_A' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_odd_B' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_odd_connected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_pair_same' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residual_even' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.exists_matchedSelection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.residualWitness' does not depend on any axioms
+'TorusEven.Entry.Seed.mem_residualNat_of_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.labels_symm_left_fst' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.labels_symm_right_fst' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.exists_blockSelection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.SplitResolution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.resolution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.hamilton_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.hamilton_decomposition_of_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]
+'RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.Lambda1_cyclic._native.native_decide.ax_1_1,
+ D5Odd.Lambda1_latin._native.native_decide.ax_1_1,
+ D5Odd.fin5AddNat_four_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin5AddNat_three_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin81AddNat_one_bijective._native.native_decide.ax_1_1,
+ D5Odd.fin81AddNat_reaches._native.native_decide.ax_1_1,
+ D5Odd.ge5_exact_of_feasible._native.native_decide.ax_1_1,
+ D5Odd.m3Rank_bijective._native.native_decide.ax_1_1,
+ D5Odd.m3Rank_step._native.native_decide.ax_1_1,
+ D5Odd.m3Schedule_exact._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s1Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s1_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s3Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s3_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s5Schedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBase6s5_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBlockSchedule_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalBlock_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_2,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_3,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_4,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_5,
+ D7Odd.Handoff.canonicalDirOfRho_bijective._native.native_decide.ax_1_6,
+ D7Odd.Handoff.canonicalSchedule7_count._native.native_decide.ax_1_1,
+ D7Odd.Handoff.canonicalSchedule7_latin._native.native_decide.ax_1_1,
+ D7Odd.Handoff.indexToSix3_stateIndex3._native.native_decide.ax_1_1,
+ D7Odd.Handoff.indexToSix5_stateIndex5._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallDir3_latin_six._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallDir5_latin_six._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer3SelectorMapCert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallLayer5SelectorMapCert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank3Z_bijective._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank3Z_step._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert0_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert0_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert1_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert1_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert2_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert2_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert3_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert3_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert4_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert4_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert5_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert5_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert6_comm._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallRank5Cert6_ok._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallSchedule3_returnMap._native.native_decide.ax_1_1,
+ D7Odd.Handoff.smallSchedule5_returnMap._native.native_decide.ax_1_1,
+ D7Odd.Handoff.stateIndex3_indexToSix3._native.native_decide.ax_1_1,
+ D7Odd.Handoff.stateIndex5_indexToSix5._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_one._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_two._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin3_zero._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_four._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_one._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_three._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_two._native.native_decide.ax_1_1,
+ D7Odd.Handoff.zmodToFin5_zero._native.native_decide.ax_1_1,
+ RoundComposite.PrefixCount.qge2FourColumnCodeTable._native.native_decide.ax_1_1,
+ RoundComposite.PrefixCount.qge2SixDeltaTable._native.native_decide.ax_1_1]

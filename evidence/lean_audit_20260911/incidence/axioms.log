@@ -1,0 +1,70 @@
+'TorusEven.Collar.Incidence.evenComponents_of_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.coherent_same_component' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.coherent_of_map_subset' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.eq_root_of_descent' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.nearRowNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Shell.selectedNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Shell.directionNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Shell.mem_selectedNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.corePresentNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.supportNat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.eq_natCast_small' depends on axioms: [propext, Quot.sound]
+'TorusEven.Entry.nearRow_eq_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Shell.selected_eq_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Shell.direction_eq_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.corePresent_eq_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.support_eq_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.support_natCast' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.component' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.same_component_nat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.support_nonempty' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.coherent_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.same_height_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.endpoint_uses_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.auxiliary_pair_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.auxiliary_w' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.same_height_nat_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.core_zero_three_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.core_one_two_x' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.core_one_two_y' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.core_w' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.w_connected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.corePairOrder' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.corePairEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.PairIndex' does not depend on any axioms
+'TorusEven.Entry.Seed.columnPairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.column_pairs_same_xy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.evenComponents_ge_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.incidence_even_ge_four' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.evenComponents_all' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.incidence_even' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.NumericColor' does not depend on any axioms
+'TorusEven.Entry.Seed.numericSupport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.numberedPairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.SmallCertificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.SmallCertificate.evenComponents' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.smallTwo' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.smallThree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.Seed.replacement_hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

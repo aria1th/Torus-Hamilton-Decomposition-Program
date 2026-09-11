@@ -55,9 +55,6 @@ native leaf 18개를 포함해 그대로다.
 
 제어 노드와 CPU 사본의 소스 121개(root 포함)의 SHA256이 일치한다. Lean과 mathlib,
 노드 경로는 [shell 기록](SHELL_PROGRESS_20260911.md)과 같고 기존 mathlib 캐시를 사용했다.
-검증 산출물은 `/fsx/angel/operations/torus-lean-incidence-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-incidence-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-incidence-20260911/IncidenceAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-incidence-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-incidence-20260911/verification.json).
-Manifest에 소스 commit과 shell commit `72adf0d`에서 이어지는 복구 bundle을 기록한다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/incidence/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/incidence/IncidenceAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/incidence/axioms.log).

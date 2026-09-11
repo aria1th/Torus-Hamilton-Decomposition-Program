@@ -1,0 +1,76 @@
+@TorusEven.Collar.RelativeCollarState.exists_split : ∀ {C : Type u_1} {I : Type u_2} {Y : Type u_3} [inst : Fintype C]
+  [inst_1 : DecidableEq C] [inst_2 : Fintype I] [inst_3 : DecidableEq I] [inst_4 : Fintype Y] {m : ℕ}
+  [inst_5 : NeZero m] {F : TorusEven.Collar.MultitorusFactorization C I m} {frame : Y × ZMod m ≃ (I → ZMod m)}
+  {active : Finset C} {U : Set (I → ZMod m)} [inst_6 : DecidablePred fun x => x ∈ U]
+  (h : TorusEven.Collar.RelativeCollarState F frame active U),
+  4 ≤ m →
+    Even m →
+      ∀ (i : I) (hi : 2 ≤ F.width i),
+        ∃ S,
+          TorusEven.Collar.RelativeCollarState (S.factorization ⋯ hi) (TorusEven.Collar.splitChart i) active
+              (TorusEven.Collar.splitMarks U i) ∧
+            ∀ (R : TorusEven.Collar.Recolouring F active U) (c : C),
+              TorusEven.Surgery.circuitCount ((R.lift h S hi).factorization.step c) =
+                TorusEven.Surgery.circuitCount (R.factorization.step c)
+@TorusEven.Collar.RelativeCollarState.resolution : ∀ {d m : ℕ} [inst : NeZero m] {I Y : Type} [inst_1 : Fintype I]
+  [inst_2 : DecidableEq I] [Finite Y] {F : TorusEven.Collar.MultitorusFactorization (Fin d) I m}
+  {frame : Y × ZMod m ≃ (I → ZMod m)} {active : Finset (Fin d)} {U : Set (I → ZMod m)}
+  [inst_4 : DecidablePred fun x => x ∈ U],
+  TorusEven.Collar.RelativeCollarState F frame active U → 4 ≤ m → Even m → TorusEven.Collar.SplitResolution F F.excess
+@TorusEven.Collar.RelativeCollarState.hamilton_decomposition : ∀ {d m : ℕ} [inst : NeZero m] {I Y : Type}
+  [inst_1 : Fintype I] [inst_2 : DecidableEq I] [Finite Y] {F : TorusEven.Collar.MultitorusFactorization (Fin d) I m}
+  {frame : Y × ZMod m ≃ (I → ZMod m)} {active : Finset (Fin d)} {U : Set (I → ZMod m)}
+  [inst_4 : DecidablePred fun x => x ∈ U],
+  TorusEven.Collar.RelativeCollarState F frame active U →
+    4 ≤ m →
+      Even m →
+        ∀ (R : TorusEven.Collar.Recolouring F active U),
+          (∀ (c : Fin d), Shared.IsSingleCycleMap ⇑(R.factorization.step c)) → Nonempty (Shared.CayleyDecomposition d m)
+@TorusEven.even_degree_collar : TorusEven.EvenDegreeCollarGoal
+'TorusEven.Collar.Incidence.evenComponents_reindex' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_of_universal_block' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.CircuitConsistent.supportAt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.sourceSelection_orbit_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.sourceSelection_unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.sourceSelection_pin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.splitCircuitEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.split_orbit_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.BlockSelection.factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.BlockSelection.labels' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.BlockSelection.childSupport_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.BlockSelection.parity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.selection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Surgery.patch_semiconj' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.lift' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.lift_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.exists_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.resolution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.RelativeCollarState.hamilton_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.OneDirection.state' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

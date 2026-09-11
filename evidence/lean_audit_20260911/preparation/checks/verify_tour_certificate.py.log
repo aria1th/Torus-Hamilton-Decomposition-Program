@@ -1,0 +1,21 @@
+{
+  "vertices": 1024,
+  "colors": 5,
+  "hamilton_lengths": [
+    1024,
+    1024,
+    1024,
+    1024,
+    1024
+  ],
+  "positive_colored_arcs": 5120,
+  "all_passed": true,
+  "schedule_imported": false,
+  "formal_kernel_run": false,
+  "rejected_mutations": {
+    "short_tour": "wrong tour length",
+    "repeated_vertex": "tour is not a permutation of all vertices",
+    "non_arc_permutation": "not a positive coordinate arc",
+    "duplicate_color": "arc used by two colors"
+  }
+}

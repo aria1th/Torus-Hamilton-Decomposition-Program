@@ -40,13 +40,10 @@ main-path 127개, attic 4개, 등록된 native 파일 3개. 새 공개 선언 60
 표준 axiom만 사용한다. 조건부 전체 endpoint의 기존 native leaf 18개는 그대로다.
 Root를 포함한 소스 128개의 SHA256이 CPU 사본과 일치하며 컴파일 산출물도 회수했다.
 
-산출물은 `/fsx/angel/operations/torus-lean-matched-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-matched-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-matched-20260911/MatchedAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-matched-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-matched-20260911/verification.json).
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/matched/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/matched/MatchedAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/matched/axioms.log).
 Lean·mathlib와 실행 경로는 [shell 기록](SHELL_PROGRESS_20260911.md)과 같다.
-Manifest에 source commit과 incidence commit `e8a269c`에서 이어지는 복구 bundle을 기록한다.
 
 다음 작업은 실제 seed의 mate 자격·단사성, mate 삭제 뒤 residual parity,
 실제 `BlockSelection`과 `anchorVoltage`의 일치, entry와 closure 조립이다.

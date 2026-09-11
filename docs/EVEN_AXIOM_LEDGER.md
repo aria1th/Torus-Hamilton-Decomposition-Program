@@ -8,7 +8,7 @@ Rechecked on 2026-09-11 using the existing compiled artifacts at source commit
 `83064463d40a889ad30f1ce896a5ede1a5256fd9`; this was not a clean rebuild.
 The D3 count below is corrected from 16 to **14** (1 + 5 + 1 + 7), so the current
 conditional even endpoint has **18** native axioms, including the four D5(4)
-leaves. See the [raw output](/fsx/angel/operations/torus-lean-preparation-20260911/endpoint-audit.log)
+leaves. See the [raw output](../evidence/lean_audit_20260911/preparation/endpoint-audit.log)
 and [preparation note](LEAN_PREPARATION_20260911.md).
 
 ## 2026-09-10 (E0/E1 closed; E2-E5 open)
@@ -63,9 +63,9 @@ evenness of `m` used in the parity ranges of `pos_i`), `Terminal1`/`Terminal3`/`
 ## 2026-09-11 (E4 partial: relative lifts, physical splits, incidence parity)
 
 Built with `lake build TorusEven` on the CPU node and checked using
-[CollarAudit.lean](/fsx/angel/operations/torus-lean-preparation-20260911/CollarAudit.lean).
+[CollarAudit.lean](../evidence/lean_audit_20260911/preparation/CollarAudit.lean).
 All 19 new declarations in that audit use standard axioms only; there are no new native leaves.
-The [raw output](/fsx/angel/operations/torus-lean-preparation-20260911/collar-axioms.log)
+The [raw output](../evidence/lean_audit_20260911/preparation/collar-axioms.log)
 also rechecks the existing conditional endpoint, whose 18 native axioms are unchanged.
 
 | Lean name (namespace prefixes as shown) | Result | Axioms |
@@ -100,10 +100,10 @@ component parity and the one-active-column condition.
 | `Incidence.IsPinnedSelection.selected_evenComponents`, `complement_evenComponents` | parity for both nonterminal children at the row level | standard only |
 
 CPU `lake build TorusEven` and isolation checks passed. All 18 new declarations in
-[SelectorAudit.lean](/fsx/angel/operations/torus-lean-selector-20260911/SelectorAudit.lean)
+[SelectorAudit.lean](../evidence/lean_audit_20260911/selector/SelectorAudit.lean)
 use only `propext`, `Classical.choice`, and `Quot.sound`; the existing global
 conditional endpoint retains its same 18 native axioms. See the
-[raw audit](/fsx/angel/operations/torus-lean-selector-20260911/axioms.log).
+[raw audit](../evidence/lean_audit_20260911/selector/axioms.log).
 
 At this selector audit, full relative collar state assembly and excess induction
 were still open. They are closed by the following entry; E5 anchored entry remains open.
@@ -129,11 +129,10 @@ exactly `d − |I|` splits and transports a Hamilton recolouring to the Cayley e
 | `TorusEven.even_modulus_tori_all_dimensions_of_collar` | still conditional on `EvenOddDegreeGoal`; uses collar directly for even d | standard + the same 18 native leaves |
 
 CPU `lake build TorusEven` passed, with no new Collar linter warnings. All 24
-declarations in [ClosureAudit.lean](/fsx/angel/operations/torus-lean-closure-20260911/ClosureAudit.lean)
+declarations in [ClosureAudit.lean](../evidence/lean_audit_20260911/closure/ClosureAudit.lean)
 use standard axioms only. The existing global conditional endpoint retains its
 18 native axioms from D3 and D5(4); the new even-degree theorem uses none of them.
-See the [raw audit](/fsx/angel/operations/torus-lean-closure-20260911/axioms.log) and
-[verification manifest](/fsx/angel/operations/torus-lean-closure-20260911/verification.json).
+See the [raw audit](../evidence/lean_audit_20260911/closure/axioms.log) and
 
 The remaining manuscript obligation is E5: anchored entry for odd d≥7.
 
@@ -155,10 +154,10 @@ blocks are circuit-consistent in both the y-fibre and x-row charts.
 
 CPU `lake build TorusEven` passed (8432 jobs); isolation passed with 74 main-path
 files. The 39 new declarations in
-[EntryAudit.lean](/fsx/angel/operations/torus-lean-entry-20260911/EntryAudit.lean)
+[EntryAudit.lean](../evidence/lean_audit_20260911/entry/EntryAudit.lean)
 use standard axioms only. The existing even-degree theorem remains standard-only,
 and the conditional global endpoint retains the same 18 native leaves. See the
-[raw audit](/fsx/angel/operations/torus-lean-entry-20260911/axioms.log) and
+[raw audit](../evidence/lean_audit_20260911/entry/axioms.log) and
 [entry boundary](ENTRY_PROGRESS_20260911.md).
 
 E5 remains open: cyclic-star Hamiltonicity, the auxiliary shell, incidence and
@@ -183,10 +182,10 @@ return Φ=νP₀ on 2m points. The anchored construction is Hamilton for m=4,6.
 
 CPU `lake build TorusEven` passed (8442 jobs); isolation passed with 84 main-path
 files. All 41 new declarations in
-[StarAudit.lean](/fsx/angel/operations/torus-lean-star-20260911/StarAudit.lean)
+[StarAudit.lean](../evidence/lean_audit_20260911/star/StarAudit.lean)
 use standard axioms only. The even-degree theorem remains standard-only, and the
 conditional global endpoint's axiom set is unchanged, including 18 native leaves.
-See the [raw audit](/fsx/angel/operations/torus-lean-star-20260911/axioms.log) and
+See the [raw audit](../evidence/lean_audit_20260911/star/axioms.log) and
 [star progress](STAR_PROGRESS_20260911.md).
 
 General cyclic-star Hamiltonicity is still open. In particular, the actual Φ-to-X
@@ -211,10 +210,10 @@ uses the existing kernel `decide` theorem at m=6.
 
 CPU `lake build TorusEven` passed (8451 jobs), with no new Star warnings. Isolation
 passed with 93 main-path files. All 40 new declarations in
-[DivisibleAudit.lean](/fsx/angel/operations/torus-lean-star-return-20260911/DivisibleAudit.lean)
+[DivisibleAudit.lean](../evidence/lean_audit_20260911/star-return/DivisibleAudit.lean)
 use standard axioms only; the conditional global endpoint retains exactly its
 previous axiom set, including 18 native leaves. See the
-[raw audit](/fsx/angel/operations/torus-lean-star-return-20260911/axioms.log) and
+[raw audit](../evidence/lean_audit_20260911/star-return/axioms.log) and
 [proof boundary](STAR_DIVISIBLE_PROGRESS_20260911.md).
 
 At this audit the case 3∤m was still open. It is closed by the following uniform
@@ -242,10 +241,10 @@ with the previously proved divisible case.
 
 CPU `lake build TorusEven` passed (8460 jobs), with no new Star warnings. Isolation
 passed with 102 main-path files. All 83 new public declarations in
-[NondivAudit.lean](/fsx/angel/operations/torus-lean-star-nondiv-20260911/NondivAudit.lean)
+[NondivAudit.lean](../evidence/lean_audit_20260911/star-nondiv/NondivAudit.lean)
 use standard axioms only. The even-degree theorem remains standard-only, and the
 conditional global endpoint retains exactly its previous axiom set, including
-18 native leaves. See the [raw audit](/fsx/angel/operations/torus-lean-star-nondiv-20260911/axioms.log)
+18 native leaves. See the [raw audit](../evidence/lean_audit_20260911/star-nondiv/axioms.log)
 and [uniform proof record](STAR_UNIFORM_PROGRESS_20260911.md).
 
 E5 still requires the auxiliary shell, seed incidence, matched selection, and
@@ -264,11 +263,11 @@ explicit direction/defect table with actual orbital block support.
 CPU `lake build TorusEven` passed (8471 jobs), with no new-code warnings. Isolation
 passed: 113 main-path files, 4 attic files, 3 registered native files. All 87 new
 public declarations in
-[ShellAudit.lean](/fsx/angel/operations/torus-lean-shell-20260911/ShellAudit.lean)
+[ShellAudit.lean](../evidence/lean_audit_20260911/shell/ShellAudit.lean)
 use standard axioms only. The even-degree theorem is still standard-only; the
 conditional global endpoint retains exactly its previous axiom set, including
 18 native leaves. See the
-[raw audit](/fsx/angel/operations/torus-lean-shell-20260911/axioms.log) and
+[raw audit](../evidence/lean_audit_20260911/shell/axioms.log) and
 [shell/seed proof record](SHELL_PROGRESS_20260911.md).
 
 Seed incidence parity, matched selection, and p-specific entry assembly remain.
@@ -288,10 +287,10 @@ classification of connected components.
 CPU `lake build TorusEven` passed (8478 jobs), with no new-code warnings. Isolation
 passed: 120 main-path files, 4 attic files, 3 registered native files. All 47 new
 public declarations in
-[IncidenceAudit.lean](/fsx/angel/operations/torus-lean-incidence-20260911/IncidenceAudit.lean)
+[IncidenceAudit.lean](../evidence/lean_audit_20260911/incidence/IncidenceAudit.lean)
 use standard axioms only. The conditional global endpoint retains exactly its
 previous axiom set, including 18 native leaves. See the
-[raw audit](/fsx/angel/operations/torus-lean-incidence-20260911/axioms.log) and
+[raw audit](../evidence/lean_audit_20260911/incidence/axioms.log) and
 [incidence proof record](INCIDENCE_PROGRESS_20260911.md).
 
 Matched selection, residual parity after mate deletion, p-specific entry assembly,
@@ -311,8 +310,8 @@ passed: 127 main-path files, 4 attic files, 3 registered native files. All 60 ne
 public declarations use standard axioms only. The audit also checks the previous
 selection APIs and even-degree theorem; the conditional global endpoint retains
 exactly its previous axiom set, including 18 native leaves. See
-[MatchedAudit.lean](/fsx/angel/operations/torus-lean-matched-20260911/MatchedAudit.lean),
-[raw audit](/fsx/angel/operations/torus-lean-matched-20260911/axioms.log), and
+[MatchedAudit.lean](../evidence/lean_audit_20260911/matched/MatchedAudit.lean),
+[raw audit](../evidence/lean_audit_20260911/matched/axioms.log), and
 [matched-selection record](MATCHED_PROGRESS_20260911.md).
 
 The actual seed's mate eligibility, residual parity after deletion, active-voltage
@@ -338,7 +337,7 @@ residual parity checks. No entry hypothesis is assumed by the final theorem.
 
 The two even endpoints and all-moduli endpoint have no open-goal parameter.
 Their exact types are checked in
-[FinalAudit.lean](/fsx/angel/operations/torus-lean-residual-20260911/FinalAudit.lean).
+[FinalAudit.lean](../evidence/lean_audit_20260911/residual/FinalAudit.lean).
 All 58 new declarations outside the three final assembly theorems are
 standard-only. The audit covers 68 declarations in total, including the 61 new
 public declarations and existing closure APIs. The two even axiom sets equal
@@ -351,9 +350,65 @@ The updated default `lake build` also passed (8579 jobs).
 Isolation passed with 140 even main-path files. All 277 Lean source/configuration
 hashes match the CPU execution copy. See the
 [completion record](E5_COMPLETION_20260911.md),
-[raw audit](/fsx/angel/operations/torus-lean-residual-20260911/axioms.log), and
-[complete axiom lists](/fsx/angel/operations/torus-lean-residual-20260911/axiom-summary.json).
+[raw audit](../evidence/lean_audit_20260911/residual/axioms.log), and
+[complete axiom lists](../evidence/lean_audit_20260911/residual/axiom-summary.json).
 
 The required main theorem path is closed. Stronger exact seed/residual component
 classifications are outside this parity-based proof; they are not assumed by any
 endpoint. Historical open-goal statements above record their respective checkpoints.
+
+## 2026-09-11 (release audit on the source checkout)
+
+Re-run on the maintained source checkout at commit `7e9fbd5` (branch `even-modulus`),
+independently of the execution node that produced the stage audits above. The per-stage
+audit sources and outputs were imported into `evidence/lean_audit_20260911/` (machine
+receipts, recovery bundles and full build logs excluded); the 277 Lean source and
+configuration hashes recorded by the execution node match this checkout file by file.
+
+```
+lake build TorusEven TorusAll   : Build completed successfully (8559 jobs)
+scripts/check_even_isolation.py : passed (140 main-path files, 4 attic files, 3 registered leaves)
+lean --version                  : 4.30.0-rc2 (3dc1a088b6d2d8eafe25a7cd7ec7b58d731bd7cc)
+```
+
+Output: `evidence/lean_audit_20260911/final-control-check/axioms.log` (66 declarations,
+no errors, source `FinalAudit.lean` in the same directory).
+
+| Lean name | Statement | Axioms |
+|---|---|---|
+| `TorusEven.d5_even_large` | `D_5(m)`, even `m ≥ 6` | standard only |
+| `TorusEven.even_degree_collar` | `D_d(m)`, even `d ≥ 2`, even `m ≥ 4` (`thm:even-dim`) | standard only |
+| `TorusEven.even_odd_degree` | `D_d(m)`, odd `d ≥ 7`, even `m ≥ 4` (`thm:oddconstruction`) | standard only |
+| `TorusEven.Entry.Seed.hamilton_decomposition` | `D_{2p+3}(m)`, `p ≥ 2` (`prop:entry` with `lem:entry-seven/nine`) | standard only |
+| `TorusEven.even_modulus_tori_all_dimensions`, `_collar` | `∀ d ≥ 2, Even m, m ≥ 4 → Solved d m` (`thm:main`) | standard + 18 leaves (4 `D_5(4)`, 14 `D_3`) |
+| `TorusAll.all_moduli_tori_all_dimensions` | `∀ d ≥ 2, m ≥ 3 → CayleyHamiltonDecomposition d m` (`cor:all-moduli`) | standard + 106 leaves (18 even, 88 odd) |
+
+Manuscript ↔ Lean correspondence for the even route:
+
+| Manuscript | Lean |
+|---|---|
+| `lem:lift`, `lem:physical` | `Collar.lift_singleCycle`, `Collar.lift_circuitCount`, `Collar.splitChart`, `MultitorusFactorization.split`, `balancedSplit_width` |
+| `lem:surgery` | `Surgery.patch_circuitCount`, `Surgery.ret`, `Surgery.seg` |
+| `thm:pinned` | `Collar.Incidence.pinnedSelection_iff`, `exists_pinnedSelection` |
+| `lem:inherit` | `Collar.BlockSelection.parity`, `split_circuitConsistent` |
+| `thm:onegap` (additive case), `cor:additive` | `Collar.oneGap`, `OneGapConclusion` |
+| `prop:transport` | `Collar.relative_transport`, `Recolouring.lift_circuitCount` |
+| `def:collar`, `thm:closure` | `Collar.RelativeCollarState`, `exists_split`, `resolution`, `hamilton_decomposition` |
+| `thm:even-dim` | `even_degree_collar` |
+| `lem:nearcore`, `lem:shell` | `Entry.NearHamilton.hamilton`, `Entry.NearLengths.orbit_card_two`, `Entry.Shell.hamilton` |
+| `lem:star`, `prop:anchor`, `app:star` | `Entry.Star.Hamilton.return_hamilton` (cases `3 ∣ m`, `3 ∤ m`), `Entry.anchor_direction`, `anchor_outside` |
+| `lem:matched`, `lem:entry-components` (parity form) | `Entry.Seed.exists_matchedSelection`, `Seed.residual_even` |
+| `prop:entry`, `lem:entry-seven`, `lem:entry-nine`, `thm:oddconstruction` | `Entry.Seed.hamilton_decomposition`, `even_odd_degree` |
+| `lem:chronological`, `prop:d5-preterminal`, `lem:d5-endpoint`, `thm:d5large` | `Chronological.chronological_transversal`, `D5.orbits_c*`, `D5.Endpoint*`, `d5_even_large` |
+| `thm:d5` (m = 4 boundary) | `d5_even_four` (Route-E witness, 4 leaves), `d5_even_uniform` |
+| `prop:anchor`'s ordinary `D_3` input | `d3_even` (Route-E witness, 14 leaves) |
+| `thm:main`, `cor:all-moduli` | `even_modulus_tori_all_dimensions`, `TorusAll.all_moduli_tori_all_dimensions` |
+
+Not formalized, by design, and used by no endpoint: the permutation-valued form of
+`thm:onegap`; the manuscript's exact classification of seed and residual incidence
+components (a parity statement sufficient for the entry is proved instead); the
+manuscript's own `m = 4` tour certificate as a Lean leaf (the existing Route-E witness
+is used).
+
+Milestone tags: `0.1.0-even-smooth` (E3, `8306446`), `0.2.0-even-collar` (E4, `dd44c09`),
+`0.3.0-alleven` (E5/E6 release commit). Contribution record: `docs/CONTRIBUTIONS.md`.

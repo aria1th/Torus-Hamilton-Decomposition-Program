@@ -168,24 +168,23 @@ PinnedSelection은 그 다음 일반 엔진이며, E4의 첫 전체 결과는 �
 
 ## 재현 확인과 신뢰 범위
 
-원시 출력과 실행 명령은
-[/fsx/angel/operations/torus-lean-preparation-20260911](/fsx/angel/operations/torus-lean-preparation-20260911)에
+원시 출력은 `evidence/lean_audit_20260911/preparation/`에
 보존했다. toolchain은 기존 [EVEN_LOCK.md](EVEN_LOCK.md)와 일치한다:
 Lean `v4.30.0-rc2`, mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`.
 
 - 원본 zip SHA256: `29f11797cfab9c68f7f33dcca2d5458f4f976f4bbb2fd600a7e3347c47214885`.
 - 통합 TeX SHA256: `846a1e5f0a4ab5ea3511b312a3a8230210dc10e27f1483d1700445a670188e98`.
 - 추출한 35개 manifest 항목의 byte 수와 SHA256 모두 일치했다.
-- 제어 노드의 기존 `.olean`을 import하여 endpoint 타입과 axiom을 조회했다.
-  [EndpointAudit.lean](/fsx/angel/operations/torus-lean-preparation-20260911/EndpointAudit.lean),
-  [출력](/fsx/angel/operations/torus-lean-preparation-20260911/endpoint-audit.log),
-  [집계](/fsx/angel/operations/torus-lean-preparation-20260911/axiom-counts.json)를 보존했다.
+- 유지 소스의 기존 `.olean`을 import하여 endpoint 타입과 axiom을 조회했다.
+  [EndpointAudit.lean](../evidence/lean_audit_20260911/preparation/EndpointAudit.lean),
+  [출력](../evidence/lean_audit_20260911/preparation/endpoint-audit.log),
+  [집계](../evidence/lean_audit_20260911/preparation/axiom-counts.json)를 보존했다.
   D3의 native 의존은 **14개**, D5(4)는 **4개**, 조건부 even endpoint는 **18개**다.
   기존 ledger의 16/20개 표기를 수정했다. D5(m≥6)와 chronological theorem은 표준
   axiom만 사용하며, odd endpoint는 기존 88개다.
 - `python3 scripts/check_even_isolation.py` 통과: main-path 파일 29개,
   attic 파일 4개, 등록 native 사용 파일 3개. 등록 **파일 수**와 axiom 수는 다르다.
-- CPU 노드 `root@jcssh-hp.mewtant.io:31630`에서 다음 기존 검사기를 실행했다.
+- 별도의 CPU 노드에서 다음 기존 검사기를 실행했다.
   세 결과 모두 번들 리포트와 바이트 단위로 일치했다.
 
 | 검사 | 이번 재실행 범위 |
@@ -194,27 +193,20 @@ Lean `v4.30.0-rc2`, mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`.
 | `check_transversal_lemma.py` | 비선형 prefix 100개, quotient 가정을 뺀 실패 대조 |
 | `check_core_manuscript.py` | core 법수 19개, shell 12개, incidence 174개, 부록 귀환 99개 |
 
-[finite-replay.json](/fsx/angel/operations/torus-lean-preparation-20260911/finite-replay.json)에
-CPU host, Python 버전, 실제 명령과 결과 hash가 있다. dense small-entry와 전체 D5
+재실행 로그는 `evidence/lean_audit_20260911/preparation/checks/`에 있다. dense small-entry와 전체 D5
 integration은 이번에 다시 실행하지 않았다. 번들의 기존 E/C 증거이며 일반 정리의 K가
 아니다. 원고 m=4 tour의 Lean checker soundness도 아직 별도 작업이다. 현재 전체
 존재 정리 경로에는 이미 증명된 다른 D5(4) witness를 사용할 수 있다.
 
-CPU 노드는 SSH와 공유 FSx 접근이 가능하지만 확인한 PATH 및 `/root/.elan/bin`에는
-Lake가 없고 해당 `/local/angel/etc` checkout도 없다. 무거운 Lean 빌드에 앞서 그 노드에
-고정 toolchain과 source/cache를 준비해야 한다. 제어 노드의 경로를 그대로 가정하지
-않는다. `jcc-job-ops`는 지정 FSx 경로로 이미 설치되어 있고 제어 노드 JCC 조회도
-정상이었다.
-
 현재 모듈 구성을 바꾸지 않고 재조회하는 명령은 다음과 같다.
 
 ```bash
-cd /local/angel/etc/Torus-Hamilton-Decomposition-Program
-/root/.elan/bin/lake env lean /fsx/angel/operations/torus-lean-preparation-20260911/EndpointAudit.lean
+cd <repository root>
+lake env lean evidence/lean_audit_20260911/preparation/EndpointAudit.lean
 python3 scripts/check_even_isolation.py
 ```
 
-새 증명이 생겼을 때의 수락은 CPU 실행 checkout에서 해당 모듈의 `lake build`, 이어
+새 증명이 생겼을 때의 수락은 빌드 checkout에서 해당 모듈의 `lake build`, 이어
 `lake build TorusEven`과 최상위 `#print axioms`로 한다. 기본 Lake target에는 odd V75
 endpoint가 없으므로, 홀수 경로도 건드렸다면 `lake build RoundComposite.V75Endpoints`를
 명시해야 한다. 이번 문서 변경을 전체 Lean 재빌드로 보고하지 않는다.

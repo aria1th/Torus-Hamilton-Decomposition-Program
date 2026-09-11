@@ -9,7 +9,7 @@ d≥2를 다루며, `TorusAll.all_moduli_tori_all_dimensions`가 모든 m≥3을
 [실행 계획](E5_REMAINING_PLAN_20260911.md)에 완료 범위와 원고의 더 강한 성분
 분류를 주장하지 않는 한계를 기록했다. 아래 단계별 원안은 최초 조사 시점의 기록이다.
 
-입력 원고: `/local/angel/etc/paper/torus_integrated_proof.zip`
+입력 원고: `torus_integrated_proof.zip` (SHA256 `29f11797…4885`; 검사기와 리포트는 `evidence/even_d5/`)
 (`even_directed_tori_integrated.tex`, SHA256 `846a1e5f…88e98`; 주정리: 모든 짝수
 m>=4, 모든 d>=2에서 D_d(m)의 Hamilton 분해). 번들의 다섯 Python 검사기는 2026-09-10에
 이 저장소 옆 환경에서 재실행되어 리포트가 바이트 단위로 재현되었다. 이 문서는 그
@@ -262,7 +262,7 @@ m=4는 iterate 항등식 (38,59;30,47)을 `decide`로.
 
 수락 기준: m>=6 증명에 유한 m 검사가 인용되지 않음. `native_decide`는 m=4 leaf에만.
 
-### E4. Relative collar closure (`TorusEven/Collar/`) — zip F1–F5
+### E4. Relative collar closure (`TorusEven/Collar/`) — **완료 2026-09-11** (`TorusEven.even_degree_collar`, `Collar.RelativeCollarState.hamilton_decomposition`; docs/COLLAR_PROGRESS_20260911.md. 아래는 원안)
 
 원고 §3–4. 홀수 core를 대체하는 새 엔진. 모듈 순서는 zip 계획을 따르되 각 모듈을
 독립 파일과 독립 `Goal`로 두어 실패 시 파일 단위로 Attic 이동이 가능하게 한다.
@@ -280,7 +280,7 @@ m=4는 iterate 항등식 (38,59;30,47)을 `decide`로.
 수락 기준(zip F1–F5와 동일): 우측 합성 규약, unhit orbit 항, `m=2`/`active 2개`
 반례가 signature에서 배제됨, closure가 solver/reservoir 가정 없이 닫힘.
 
-### E5. Entry (`TorusEven/Entry/`) — zip F6
+### E5. Entry (`TorusEven/Entry/`) — **완료 2026-09-11** (`TorusEven.even_odd_degree : EvenOddDegreeGoal`; docs/E5_COMPLETION_20260911.md. 아래는 원안)
 
 near core `(1,1,2)`+Hamilton shell(lem:nearcore, lem:shell), seed incidence
 (lem:seed-incidence, lem:small-seed), anchored core와 네 `Q_m` 점 일치(E2의 방향표
@@ -292,7 +292,7 @@ near core `(1,1,2)`+Hamilton shell(lem:nearcore, lem:shell), seed incidence
 가 아니라 원고 방식의 직접 정리 `odd_degree_ge7 : Odd d → 7 ≤ d → …`. E1의 dispatcher
 에는 `hSucc` 대신 이 직접 정리를 꽂는 두 번째 조립 경로를 둔다(둘 다 유지).
 
-### E6. 최종 조립과 ledger
+### E6. 최종 조립과 ledger — **완료 2026-09-11** (`even_modulus_tori_all_dimensions`, `TorusAll.all_moduli_tori_all_dimensions`; docs/EVEN_AXIOM_LEDGER.md 최종 절)
 
 - `TorusEven/Endpoints.lean`: `even_modulus_tori_all_dimensions`(E1 경로)와
   `even_modulus_tori_all_dimensions_collar`(원고 경로). 둘의 타입이 같음을 `example`로.

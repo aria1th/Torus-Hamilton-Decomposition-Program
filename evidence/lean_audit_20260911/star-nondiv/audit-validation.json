@@ -1,0 +1,11 @@
+{
+  "cpu_source_hashes_match": true,
+  "matched_source_files": 103,
+  "new_public_declarations": 83,
+  "new_standard_only": true,
+  "even_degree_standard_only": true,
+  "global_native_leaves": 18,
+  "global_axiom_set_unchanged_from_divisible": true,
+  "build_jobs": 8460,
+  "new_star_warnings": 0
+}

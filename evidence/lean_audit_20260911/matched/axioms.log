@@ -1,0 +1,135 @@
+'TorusEven.Collar.Multigraph.degree' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Multigraph.sum_degree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_half_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.Reorients' does not depend on any axioms
+'TorusEven.Collar.Multigraph.divergence' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_even_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_mixed_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_odd_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.Adjacent' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.Component' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.componentOf' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.componentOf_eq' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.EvenComponents' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.EvenOnComponents' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.evenOnComponents_univ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.EvenOnComponents.sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.same_component' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_of_universal_block' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.blockComponent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.component_eq_block' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.Coherent' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.coherent_blockComponent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.copied_component_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_copied' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.LocalPairs.reverse' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.reverse_endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.support' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.mem_support' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.support_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.card_support' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.count_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.divergence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_directed_pairs_on' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_directed_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.evenComponents_of_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_parity_join_on' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_parity_join' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.exists_event_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.exists_fillers' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.exists_fillers_of_quota' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.row_pinned' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.pattern_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.active_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.sum_mate_indicator' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.auxiliary_sum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.auxiliary_carry' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.row_coherent_none' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.selected_coherent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.complement_coherent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.query' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.query_some' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.query_anchor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.query_none' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.active_of_query' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.eligible_of_query' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.mates' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.mem_mates' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.nonmates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.mem_nonmates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.quota' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.residual_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.mate_not_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.residual_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.quota_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.fullSupport' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.card_fullSupport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.pattern' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.mem_pattern_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.sum_query' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.pattern_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.pattern_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.fullSupport_some' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.complement_pattern' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.rowsOfPairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.rowsOfPairs_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.event' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.row_subset' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.row_card' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.ResidualRows.row_baseline' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.MatchedData.exists_selection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.switchedRow' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.switchedRow_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.card_switchedRow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.complement_switchedRow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.coherent_switchedRow' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.coherent_insert' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.fourRanks' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.fourRanks_zero' depends on axioms: [propext, Quot.sound]
+'TorusEven.Collar.sum_switchedRows' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_pinnedSelection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

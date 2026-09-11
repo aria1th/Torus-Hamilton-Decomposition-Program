@@ -71,9 +71,6 @@ Q를 만남을 증명하여 surgery 정리의 unhit 회로 항을 0으로 만든
 같다. CPU에서 검사한 Lean 소스 85개(root 포함)의 SHA256이 유지 소스와 모두 일치한다.
 이번 빌드는 기존 mathlib 산출물을 재사용했다.
 
-검증 산출물은 `/fsx/angel/operations/torus-lean-star-20260911/`에 보존한다:
-[빌드 로그](/fsx/angel/operations/torus-lean-star-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-star-20260911/StarAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-star-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-star-20260911/verification.json).
-Manifest가 유지 소스 commit, CPU receipt, 복구 bundle과 이전 entry bundle을 연결한다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/star/`에 보존한다:
+[audit 소스](../evidence/lean_audit_20260911/star/StarAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/star/axioms.log).

@@ -72,15 +72,8 @@ native 사용 파일 3개. 새 코드에는 `sorry`, `admit`, author axiom, `nat
 부분집합이다. 기존 `even_degree_collar`도 표준 axiom만 사용하며, 전체 차원 조건부
 endpoint의 native axiom 18개는 그대로다.
 
-산출물은 `/fsx/angel/operations/torus-lean-entry-20260911/`에 있다:
-[빌드 로그](/fsx/angel/operations/torus-lean-entry-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-entry-20260911/EntryAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-entry-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-entry-20260911/verification.json).
-Manifest에 유지 소스 commit, CPU 소스 hash 일치, 복구 bundle을 기록한다.
-
-유지 소스는 제어 노드 `/local/angel/etc/Torus-Hamilton-Decomposition-Program`이다.
-CPU 실행 사본은 `root@jcssh-hp.mewtant.io:31630`의
-`/local/angel/lean-collar/Torus-Hamilton-Decomposition-Program`이다.
-CPU Git HEAD 대신 소스 SHA256으로 빌드 대상을 확인한다. Lean 4.30.0-rc2와 mathlib
-`5450b53e5ddc75d46418fabb605edbf36bd0beb6`을 사용했다.
+Audit 소스와 axiom 출력은 `evidence/lean_audit_20260911/entry/`에 있다:
+[audit 소스](../evidence/lean_audit_20260911/entry/EntryAudit.lean),
+[axiom 출력](../evidence/lean_audit_20260911/entry/axioms.log).
+빌드 노드의 Lean 소스와 유지 소스의 일치는 `sources-sha256.json`의 파일별 SHA256으로
+확인한다. Lean 4.30.0-rc2와 mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`을 사용했다.

@@ -1,0 +1,67 @@
+@TorusEven.Collar.Incidence.exists_pinnedSelection : ∀ {B : Type u_1} {Ω : Type u_2} [inst : Fintype B]
+  [inst_1 : DecidableEq Ω] {m : ℕ} [inst_2 : NeZero m] [Finite Ω] (A : B → Finset Ω) (active : Finset Ω),
+  4 ≤ m →
+    (∀ (b : B), (A b ∩ active).card ≤ 1) →
+      TorusEven.Collar.Incidence.EvenComponents A → ∃ J, TorusEven.Collar.Incidence.IsPinnedSelection A active J
+@TorusEven.Collar.Incidence.pinnedSelection_iff : ∀ {B : Type u_1} {Ω : Type u_2} [inst : Fintype B]
+  [inst_1 : DecidableEq Ω] {m : ℕ} [inst_2 : NeZero m] [Finite Ω] (A : B → Finset Ω) (active : Finset Ω),
+  4 ≤ m →
+    Even m →
+      (∀ (b : B), 2 ≤ (A b).card) →
+        (∀ (b : B), (A b ∩ active).card ≤ 1) →
+          (TorusEven.Collar.Incidence.EvenComponents A ↔ ∃ J, TorusEven.Collar.Incidence.IsPinnedSelection A active J)
+@TorusEven.Collar.Incidence.IsPinnedSelection.selected_evenComponents : ∀ {B : Type u_1} {Ω : Type u_2}
+  [inst : Fintype B] [inst_1 : DecidableEq Ω] {m : ℕ} [inst_2 : NeZero m] [Finite Ω] {A : B → Finset Ω}
+  {active : Finset Ω} {J : B → ZMod m → Finset Ω},
+  TorusEven.Collar.Incidence.IsPinnedSelection A active J →
+    Even m → (∀ (b : B), 2 ≤ (A b).card / 2) → TorusEven.Collar.Incidence.EvenComponents fun p => J p.1 p.2
+@TorusEven.Collar.Incidence.IsPinnedSelection.complement_evenComponents : ∀ {B : Type u_1} {Ω : Type u_2}
+  [inst : Fintype B] [inst_1 : DecidableEq Ω] {m : ℕ} [inst_2 : NeZero m] [Finite Ω] {A : B → Finset Ω}
+  {active : Finset Ω} {J : B → ZMod m → Finset Ω},
+  TorusEven.Collar.Incidence.IsPinnedSelection A active J →
+    Even m →
+      (∀ (b : B), 2 ≤ (A b).card - (A b).card / 2) →
+        TorusEven.Collar.Incidence.EvenComponents fun p => A p.1 \ J p.1 p.2
+'TorusEven.Collar.Incidence.evenComponents_of_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_parity_join' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_half_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_even_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Multigraph.exists_odd_orientation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_directed_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.sum_rows' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.coherent_row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.complement_row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.exists_event_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.exists_fillers' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.LocalPairs.row_pinned' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.exists_pinnedSelection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.IsPinnedSelection.column_unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.IsPinnedSelection.evenComponents' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.pinnedSelection_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Incidence.IsPinnedSelection.selected_evenComponents' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.Collar.Incidence.IsPinnedSelection.complement_evenComponents' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]

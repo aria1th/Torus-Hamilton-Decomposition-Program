@@ -1,0 +1,12 @@
+import TorusEven
+import RoundComposite.V75Endpoints
+#print TorusEven.EvenModulusToriAllDimensionsGoal
+#print TorusEven.ModulusClass.OddDegreeClosure
+#check TorusEven.even_modulus_tori_all_dimensions_of_collar
+#print axioms TorusEven.Chronological.chronological_transversal
+#print axioms TorusEven.d5_even_large
+#print axioms TorusEven.d3_even_four
+#print axioms TorusEven.d3_even
+#print axioms TorusEven.d5_even_four
+#print axioms TorusEven.even_modulus_tori_all_dimensions_of_collar
+#print axioms RoundComposite.Concrete.odd_modulus_tori_all_dimensions_v75

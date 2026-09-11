@@ -1,0 +1,61 @@
+'TorusEven.Surgery.exists_openGap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Surgery.supported_perm_mem_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.singleVoltage_of_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.unitCarry_of_singleCycle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.SingleVoltage.unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.gapSupport_of_single_source' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.ofReplacement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.ofReplacement_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.split_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.Recolouring.split_hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.BlockSelection.enters_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Collar.hamilton_decomposition_of_entry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchor_agreement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.heightLift_return' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.heightLift_retTime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.heightLift_retPerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.heightLift_section_orbit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.heightLift_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.negTwo_orbit_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.negTwo_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.hamilton' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.yVoltage_two_single' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.consistent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.circuitLabel_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.baseDefect_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.orbit_defect_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.NearCore.orbit_card_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchor_outside' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchor_direction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.xChart_consistent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorLabel_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorVoltage_single' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorVoltage_unit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.Entry.anchorVoltage_gapSupport' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_degree_collar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'TorusEven.even_modulus_tori_all_dimensions_of_collar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ D5Odd.m4RankZ_bijective._native.native_decide.ax_1_1,
+ D5Odd.m4RankZ_step._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_exact._native.native_decide.ax_1_1,
+ D5Odd.m4RouteESchedule_latin._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_four_m6._native.native_decide.ax_1_1,
+ TorusD3Even.firstReturn_six_m8._native.native_decide.ax_1_1,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_four_m6._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_10,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_4,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_5,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_6,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_7,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_8,
+ TorusD3Even.hfirst_six_m8._native.native_decide.ax_1_9]
