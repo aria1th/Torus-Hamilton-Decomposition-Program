@@ -59,3 +59,25 @@ Route (files under `TorusEven/D5/`): `Chart` (root-flat chart of `D_5(m)`), `Sch
 terminal planes: supports `B_i`, partners `N_i`, the explicit `2m`-cycles of `N_i ∘ j_i`,
 evenness of `m` used in the parity ranges of `pos_i`), `Terminal1`/`Terminal3`/`Terminal4`
 (colours 1, 3, 4), `D5.lean` (assembly through `Chart.cayley_of_rootFlat`).
+
+## 2026-09-11 (E4 partial: relative lifts, physical splits, incidence parity)
+
+Built with `lake build TorusEven` on the CPU node and checked using
+[CollarAudit.lean](/fsx/angel/operations/torus-lean-preparation-20260911/CollarAudit.lean).
+All 19 new declarations in that audit use standard axioms only; there are no new native leaves.
+The [raw output](/fsx/angel/operations/torus-lean-preparation-20260911/collar-axioms.log)
+also rechecks the existing conditional endpoint, whose 18 native axioms are unchanged.
+
+| Lean name (namespace prefixes as shown) | Result | Axioms |
+|---|---|---|
+| `TorusEven.Surgery.patch_circuitCount` | return-circuit count plus the unhit-circuit term | standard only |
+| `TorusEven.Collar.oneGap` | additive first return, exact roofs, renewal | standard only |
+| `TorusEven.Collar.relative_transport`, `relative_transport_hamilton` | circuit count and Hamiltonicity under source surgery | standard only |
+| `TorusEven.Collar.FibreGap.lift_preserves` | renewal from pinning and unit carry | standard only |
+| `TorusEven.Collar.MultitorusFactorization.split`, `split_excess`, `split_circuitCount` | physical splitting, exact excess decrease, circuit correspondence | standard only |
+| `TorusEven.Collar.MultitorusFactorization.toCayleyOfUnitWidths` | terminal factorization adapter | standard only |
+| `TorusEven.Collar.Incidence.evenComponents_of_coherent_odd_columns`, `evenComponents_copied` | selected-child counting lemma and unsplit partition preservation | standard only |
+
+These are component lemmas, with their stated selection/unit/coherence hypotheses.
+The pinned selector existence theorem and complete collar state induction remain open;
+see [the implementation boundary](COLLAR_PROGRESS_20260911.md).

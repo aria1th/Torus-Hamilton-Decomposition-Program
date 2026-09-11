@@ -3,6 +3,10 @@
 2026-09-11. 조사 기준은 `even-modulus`의
 `83064463d40a889ad30f1ce896a5ede1a5256fd9`이며, 조사 시작 시 작업 트리는 깨끗했다.
 
+후속 구현과 현재 재개 지점은 [Collar 진행 문서](COLLAR_PROGRESS_20260911.md)를 따른다.
+OneGap·상대 transport·physical split·incidence parity 보조정리가 추가되었다.
+아래의 `Collar/` 및 CPU Lean 환경 부재, 첫 독립 목표 등의 문장은 **준비 시점의 기록**이다.
+
 **다음 작업은 E4의 relative collar와 E5의 anchored entry다.** E0–E3를 다시
 시작할 필요는 없다. 홀수 법수 전체 정리, 짝수 D3, 짝수 D5는 기존 결과를
 재사용한다. 짝수 법수 전체 정리는 아직 `EvenOddDegreeGoal`을 가정한다.

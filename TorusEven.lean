@@ -3,6 +3,7 @@
 -- (enforced by scripts/check_even_isolation.py).
 import TorusEven.Dispatch
 import TorusEven.Goals
+import TorusEven.Collar
 import TorusEven.D5Four
 import TorusEven.Endpoints
 import TorusEven.D5.ChronologicalTransversalGoal
