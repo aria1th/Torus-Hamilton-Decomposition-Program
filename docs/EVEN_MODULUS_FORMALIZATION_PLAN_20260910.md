@@ -8,7 +8,8 @@ E5 anchored entry가 남았다. E5의 near-core와 anchor voltage는
 [entry 진행 문서](ENTRY_PROGRESS_20260911.md)에 정리한 범위까지 증명되었다.
 [Cyclic-star와 실제 near-core 대체](STAR_UNIFORM_PROGRESS_20260911.md)의 Hamilton성은
 모든 짝수 m≥4에서 증명되었다. [Auxiliary shell과 합성 seed](SHELL_PROGRESS_20260911.md)의
-구성·Hamilton성도 완료했다. 남은 seed incidence, matched selection과 p별 entry는
+구성·Hamilton성과 [실제 seed incidence parity](INCIDENCE_PROGRESS_20260911.md)도 완료했다.
+남은 matched selection과 p별 entry는
 [E5 실행 계획](E5_REMAINING_PLAN_20260911.md)을 따른다.
 아래 단계별 원안의 환경 부재·coset 기계 부재·E3 예정 문장은
 최초 조사 시점의 기록이다. D3의 native leaf는 실제 조회 기준 14개다.

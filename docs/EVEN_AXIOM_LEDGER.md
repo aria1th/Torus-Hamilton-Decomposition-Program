@@ -275,3 +275,24 @@ Seed incidence parity, matched selection, and p-specific entry assembly remain.
 The explicit support transport theorem does not assume or prove component parity;
 it allows subsequent component calculations to apply to the actual seed.
 `EvenOddDegreeGoal` remains open.
+
+## 2026-09-11 (E5 partial: actual seed incidence parity closed)
+
+`Seed.incidence_even` proves componentwise evenness for the actual three orbital
+block-support graphs, for every p≥2 and even m≥4. Generic p uses a complete pairing
+inside components; p=2,3 use explicit finite row forests checked by kernel `decide`.
+The symbolic natural-row correspondence transfers those forests to arbitrary m≥4.
+The result is the parity consequence needed by closure, not the manuscript's full
+classification of connected components.
+
+CPU `lake build TorusEven` passed (8478 jobs), with no new-code warnings. Isolation
+passed: 120 main-path files, 4 attic files, 3 registered native files. All 47 new
+public declarations in
+[IncidenceAudit.lean](/fsx/angel/operations/torus-lean-incidence-20260911/IncidenceAudit.lean)
+use standard axioms only. The conditional global endpoint retains exactly its
+previous axiom set, including 18 native leaves. See the
+[raw audit](/fsx/angel/operations/torus-lean-incidence-20260911/axioms.log) and
+[incidence proof record](INCIDENCE_PROGRESS_20260911.md).
+
+Matched selection, residual parity after mate deletion, p-specific entry assembly,
+and discharge of `EvenOddDegreeGoal` remain.

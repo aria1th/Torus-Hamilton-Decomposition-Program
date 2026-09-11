@@ -97,8 +97,9 @@ recolouring을 적용하면 closure로 모든 짝수 d≥2를 얻는다.
 E5의 near-core, 네 anchor에서의 일치와 회로 대표성, active voltage의 unit/gap 조건은
 [entry 진행 문서](ENTRY_PROGRESS_20260911.md)의 범위까지 증명되었다. Cyclic-star와
 실제 near-core 대체의 Hamilton성도 [모든 짝수 m≥4](STAR_UNIFORM_PROGRESS_20260911.md)에서
-닫혔다. [Shell과 합성 seed](SHELL_PROGRESS_20260911.md)도 구성되었고, 남은 작업은
-seed incidence parity, matched selection, p=2 / p=3 / p≥4 entry다.
+닫혔다. [Shell과 합성 seed](SHELL_PROGRESS_20260911.md), 모든 p≥2의
+[seed incidence parity](INCIDENCE_PROGRESS_20260911.md)도 완료했다. 남은 작업은
+matched selection, mate 삭제 뒤의 parity, p=2 / p=3 / p≥4 entry다.
 기존 Route E의 D3 Hamilton 분해만으로 anchored agreement를 대체할 수는 없다.
 
 ## 검증과 보존

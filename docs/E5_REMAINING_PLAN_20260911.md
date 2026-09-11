@@ -11,7 +11,7 @@ near-core, 네 anchor와 unit/gap voltage, 모든 짝수 m≥4의 cyclic-star Ha
 |---|---|---|---|
 | 1 | `eq:shell-W`, `tab:shellpairs`, `lem:shell` | `Shell.factorization`, `Shell.hamilton`, `(h,w)` 블록 일관성 | 완료 |
 | 2 | `eq:seed-widths`, `eq:seed-columns` | core/shell의 실제 합성 `Seed.factorization`, 회로 열 전단사, anchored replacement Hamilton성 | 완료 |
-| 3 | `lem:seed-incidence`, `lem:small-seed` | 각 방향의 전체 orbital incidence가 성분별 짝수; p=2,3의 명시적 분할 포함 | 진행: 실제 support 표와 parity 전달 완료 |
+| 3 | `lem:seed-incidence`, `lem:small-seed`의 parity 결론 | 각 방향의 전체 orbital incidence가 성분별 짝수; p=2,3의 명시적 행 증서 포함 | 완료 |
 | 4 | `lem:matched` | 지정된 열의 parity join, 혼합 divergence, reserved-slot 선택의 quota·unit·양쪽 coherence | 예정 |
 | 5 | `lem:entry-components`, `lem:entry-seven`, `lem:entry-nine` | mate의 자격·단사성, 잔여 성분 계산, 실제 `BlockSelection`과 active voltage 일치 | 예정 |
 | 6 | `prop:entry`, `thm:oddconstruction` | entry state와 Hamilton recolouring, `even_odd_degree : EvenOddDegreeGoal`, 무조건부 전체 차원 endpoint | 예정 |
@@ -50,5 +50,9 @@ axiom을 검사한다. 새 `sorry`, author axiom, `native_decide`를 도입하�
 통합 시 `lake build TorusEven`, isolation, 소스 SHA256 일치를 확인한 뒤 focused commit과
 FSx bundle을 보존한다. 작업 중 추가 가정으로 미완료 명제를 감춘 정리는 완료로 세지 않는다.
 
-현재 검증된 경계는 [shell과 seed 기록](SHELL_PROGRESS_20260911.md)이다.
-이번 shell 작업 산출물은 `/fsx/angel/operations/torus-lean-shell-20260911/`에 보존한다.
+현재 검증된 경계는 [seed incidence 기록](INCIDENCE_PROGRESS_20260911.md)이다.
+3단계는 closure가 요구하는 `EvenComponents`를 같은 성분 안의 완전 짝짓기로 증명했다.
+원고의 더 강한 p≥4 연결성과 p=2,3의 정확한 연결성분 분류 전체는 이 완료 범위에
+포함하지 않는다. w 방향의 전체 연결성은 별도로 증명했다.
+작업 산출물은 `/fsx/angel/operations/torus-lean-shell-20260911/`와
+`/fsx/angel/operations/torus-lean-incidence-20260911/`에 보존한다.

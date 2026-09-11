@@ -4,6 +4,8 @@
 `p≥2`, `m≥4`에서 모든 auxiliary 색이 Hamilton이다. 짝수 m에서는 seed의 회로 열이
 네 core 회로와 2p개 보조 색으로 식별되며, anchored star replacement 뒤의 모든 색이
 Hamilton이다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있다.
+후속 [incidence 기록](INCIDENCE_PROGRESS_20260911.md)에서 실제 seed의 성분별 짝수성도
+모든 p≥2, 짝수 m≥4에 대해 증명했다. 아래는 shell 단계 당시의 검증 경계다.
 
 ## 증명된 결과
 
