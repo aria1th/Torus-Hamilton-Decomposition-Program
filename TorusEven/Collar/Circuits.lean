@@ -155,6 +155,9 @@ theorem orbit_equiv_iff (T : Equiv.Perm β) (e : α ≃ β) (he : Semiconj e S T
 noncomputable def circuitEquiv (T : Equiv.Perm β) (e : α ≃ β) (he : Semiconj e S T) :
     Circuit S ≃ Circuit T := Quotient.congr e (fun x y => (orbit_equiv_iff S T e he x y).symm)
 
+@[simp] theorem circuitEquiv_apply (T : Equiv.Perm β) (e : α ≃ β) (he : Semiconj e S T) (x : α) :
+    circuitEquiv S T e he (circuitOf S x) = circuitOf T (e x) := rfl
+
 theorem circuitCount_congr (T : Equiv.Perm β) (e : α ≃ β) (he : Semiconj e S T) :
     circuitCount S = circuitCount T := Nat.card_congr (circuitEquiv S T e he)
 

@@ -2,3 +2,4 @@
 import TorusEven.Collar.FibreGap
 import TorusEven.Collar.BinarySplit
 import TorusEven.Collar.PinnedSelection
+import TorusEven.Collar.EvenDegree

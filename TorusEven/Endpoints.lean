@@ -2,6 +2,7 @@
 import TorusEven.D5Four
 import TorusEven.D3
 import TorusEven.D5
+import TorusEven.Collar.EvenDegree
 
 namespace TorusEven
 
@@ -19,14 +20,20 @@ theorem even_modulus_tori_all_dimensions_of_successor
     d3_even_uniform d5_even_uniform (fun h => h7 h.1 h.2)
     hSucc hd2 ⟨hm, hm4⟩
 
-/-- Assembly along the manuscript: seed `5` and the collar route for odd `d ≥ 7`
-(`d = 2, 3` are closed). -/
+/-- Assembly along the manuscript: even degrees by collar closure, seeds `3, 5`,
+and the remaining entry goal for odd `d ≥ 7`. -/
 theorem even_modulus_tori_all_dimensions_of_collar
     (hOdd : EvenOddDegreeGoal) :
     EvenModulusToriAllDimensionsGoal := by
   intro d m hd2 hm hm4
-  exact evenClass.uniform_of_seeds_and_odd_degree
-    d3_even_uniform d5_even_uniform hOdd hd2 ⟨hm, hm4⟩
+  by_cases hdEven : Even d
+  · exact even_degree_collar hdEven hd2 hm hm4
+  · have hdOdd : Odd d := Nat.not_even_iff_odd.mp hdEven
+    by_cases hd3 : d = 3
+    · subst d; exact d3_even_uniform ⟨hm, hm4⟩
+    by_cases hd5 : d = 5
+    · subst d; exact d5_even_uniform ⟨hm, hm4⟩
+    exact hOdd hdOdd (by obtain ⟨b, hb⟩ := hdOdd; omega) ⟨hm, hm4⟩
 
 /-- Unconditional: `D_3(m)`, `D_5(m)`, `D_6(m)`, `D_9(m)`, `D_10(m)`, `D_15(m)` for every even
 `m ≥ 4`. -/

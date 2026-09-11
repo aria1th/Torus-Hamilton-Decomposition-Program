@@ -105,5 +105,34 @@ use only `propext`, `Classical.choice`, and `Quot.sound`; the existing global
 conditional endpoint retains its same 18 native axioms. See the
 [raw audit](/fsx/angel/operations/torus-lean-selector-20260911/axioms.log).
 
-Full relative collar state assembly and excess induction remain open, as does
-E5 anchored entry. This does not close E4 or the even all-dimensional endpoint.
+At this selector audit, full relative collar state assembly and excess induction
+were still open. They are closed by the following entry; E5 anchored entry remains open.
+
+## 2026-09-11 (E4 closed: relative collar closure and every even dimension)
+
+The source selector now supplies the physical split's quota, unit carry, pinning,
+and full-column parity. `RelativeCollarState.exists_split` constructs a balanced
+split preserving all state fields and every valid active recolouring's colourwise
+circuit counts. Excess induction supplies an explicit `SplitResolution` with
+exactly `d − |I|` splits and transports a Hamilton recolouring to the Cayley endpoint.
+
+| Lean name (under `TorusEven.Collar`, except the final two rows) | Result | Axioms |
+|---|---|---|
+| `sourceSelection_orbit_sum`, `sourceSelection_unit` | row-column totals equal actual orbit voltage sums; each carry is a unit | standard only |
+| `splitCircuitEquiv`, `BlockSelection.childSupport_mem`, `BlockSelection.parity` | physical circuit correspondence and all child incidence conditions | standard only |
+| `RelativeCollarState.selection`, `split`, `transport` | selection exists, the full state renews, marked surgery preserves counts | standard only |
+| `Recolouring.factorization`, `lift`, `lift_circuitCount` | valid head routing and quotas, colourwise count preservation | standard only |
+| `RelativeCollarState.exists_split` | relative splitting theorem, uniform over valid recolourings | standard only |
+| `RelativeCollarState.resolution`, `hamilton_decomposition` | exact split count and Hamilton endpoint by excess induction | standard only |
+| `OneDirection.state` | empty-active one-coordinate seed with d circuit columns | standard only |
+| `TorusEven.even_degree_collar : EvenDegreeCollarGoal` | every even d≥2, even m≥4, with no odd-degree hypothesis | standard only |
+| `TorusEven.even_modulus_tori_all_dimensions_of_collar` | still conditional on `EvenOddDegreeGoal`; uses collar directly for even d | standard + the same 18 native leaves |
+
+CPU `lake build TorusEven` passed, with no new Collar linter warnings. All 24
+declarations in [ClosureAudit.lean](/fsx/angel/operations/torus-lean-closure-20260911/ClosureAudit.lean)
+use standard axioms only. The existing global conditional endpoint retains its
+18 native axioms from D3 and D5(4); the new even-degree theorem uses none of them.
+See the [raw audit](/fsx/angel/operations/torus-lean-closure-20260911/axioms.log) and
+[verification manifest](/fsx/angel/operations/torus-lean-closure-20260911/verification.json).
+
+The remaining manuscript obligation is E5: anchored entry for odd d≥7.

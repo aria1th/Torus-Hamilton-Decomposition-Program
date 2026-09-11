@@ -1,159 +1,121 @@
 # Collar 형식화 진행 — 2026-09-11
 
-E4의 relative lift, physical split, pinned coherent selection, incidence parity를 구현했다.
-**원고 `thm:pinned`의 양방향 증명은 완료했고, 전체 collar 상태의 조립·귀납이 남았다.**
-따라서 `thm:closure`, 모든 짝수 차원 specialization, `EvenOddDegreeGoal`의 완료를
-선언하지 않는다. E5의 anchored entry도 별도 작업으로 남는다.
+**E4 relative collar closure와 모든 짝수 차원 specialization을 증명했다.**
+`TorusEven.even_degree_collar : EvenDegreeCollarGoal`은 모든 짝수 m≥4, 짝수 d≥2의
+Hamilton 분해를 주며 표준 axiom만 사용한다. E5 anchored entry는 남아 있다.
+따라서 모든 차원을 다루는 endpoint는 여전히 `EvenOddDegreeGoal`을 가정한다.
 
-진입 import는 `TorusEven.Collar`이며 `TorusEven`의 기본 빌드에 포함된다.
-원고와 기존 endpoint의 대응은 [준비 문서](LEAN_PREPARATION_20260911.md)를 따른다.
+진입 import는 `TorusEven.Collar`이고 `lake build TorusEven`에 포함된다.
+원고는 `even_directed_tori_integrated.tex`의 `def:collar`, `thm:closure`, `thm:even-dim`이다.
+기존 seed와의 대응은 [준비 문서](LEAN_PREPARATION_20260911.md)를 따른다.
 
-## 증명된 인터페이스
+## 상태와 closure 인터페이스
 
 | 파일 | 주요 결과 |
 |---|---|
-| [FirstReturn](../TorusEven/Collar/FirstReturn.lean) | 끝점을 제외한 `openGap`, 구간 분할 equiv, return permutation, 귀환 시간의 합, semiconjugacy 아래 귀환 보존 |
-| [OneGap](../TorusEven/Collar/OneGap.lean) | `oneGap`: 단일 순환, 모든 marked first return, 정확한 roof, nonzero fibre의 renewal |
-| [Circuits](../TorusEven/Collar/Circuits.lean), [SourceSurgery](../TorusEven/Collar/SourceSurgery.lean) | 실제 orbit quotient로 회로를 세며, `patch_circuitCount`에 unmarked 회로 항을 포함 |
-| [Lift](../TorusEven/Collar/Lift.lean), [OrbitLift](../TorusEven/Collar/OrbitLift.lean) | 회로별 unit carry에 따른 lift의 회로 대응과 회로 수 보존 |
-| [Transport](../TorusEven/Collar/Transport.lean), [RelativeLift](../TorusEven/Collar/RelativeLift.lean) | 여러 old circuit에 대한 `relative_transport`, Hamilton 보존, 회로별 renewal |
-| [FibreGap](../TorusEven/Collar/FibreGap.lean) | 기존 fibre gap와 row 0 pinning에서 새 fibre gap를 재생하는 `FibreGap.lift_preserves` |
-| [Multitorus](../TorusEven/Collar/Multitorus.lean) | 양의 폭·successor permutation·방향별 quota, 좌표 재색인, 폭 1일 때 기존 `CayleyDecomposition`으로 변환 |
-| [BinarySplit](../TorusEven/Collar/BinarySplit.lean) | 실제 양의 좌표 분할, balanced child 폭, active 분리, fibre별 방향·회로 일치, excess의 정확한 감소 |
-| [Incidence](../TorusEven/Collar/Incidence.lean), [IncidenceParity](../TorusEven/Collar/IncidenceParity.lean) | full-column component, coherence에서 child parity 도출, complement의 홀수 degree, unsplit block 복제의 component 보존 |
-| [ParityJoin](../TorusEven/Collar/ParityJoin.lean) | `exists_parity_join`: 짝수 component에서 block-even/column-odd incidence 선택 구성 |
-| [BalancedOrientation](../TorusEven/Collar/BalancedOrientation.lean), [LocalPairs](../TorusEven/Collar/LocalPairs.lean) | 간선 식별자를 유지한 방향화와 블록별 disjoint directed pairs; 열별 divergence ±1 |
-| [PairRows](../TorusEven/Collar/PairRows.lean), [PinnedRows](../TorusEven/Collar/PinnedRows.lean) | 정확한 row 크기·modular sum·complement 표현·양쪽 coherence·active pinning |
-| [PinnedSelection](../TorusEven/Collar/PinnedSelection.lean) | `pinnedSelection_iff`: 원고 선택 정리의 동치, `column_unit`, 양쪽 nonterminal child의 parity |
+| [CircuitBlocks](../TorusEven/Collar/CircuitBlocks.lean) | 전체 colour–circuit 열 `Σ c, Circuit (F.step c)`, fibre별 support, active 열의 분리 |
+| [SourceSelection](../TorusEven/Collar/SourceSelection.lean) | row 선택을 실제 source 선택으로 변환하고 정확한 quota·회로별 voltage 합·zero-row pinning 증명 |
+| [SplitIncidence](../TorusEven/Collar/SplitIncidence.lean), [IncidenceTransport](../TorusEven/Collar/IncidenceTransport.lean) | 실제 split 전후 회로 label 동치, orbit 대응, incidence component의 재색인 |
+| [SelectedSplit](../TorusEven/Collar/SelectedSplit.lean) | 선택된 balanced split의 factorization, 새 fibre consistency, 두 child와 unsplit 방향의 parity |
+| [RelativeState](../TorusEven/Collar/RelativeState.lean) | `RelativeCollarState`, selector 존재, 네 상태 조건 보존, active source surgery의 회로 수 보존 |
+| [MarkedEquiv](../TorusEven/Collar/MarkedEquiv.lean), [Recolouring](../TorusEven/Collar/Recolouring.lean) | 표시점 동치 아래 patch 전달, 유효한 recolouring의 quota와 head 보존, 모든 색의 회로 수 보존 |
+| [Closure](../TorusEven/Collar/Closure.lean) | `exists_split`, 정확한 횟수의 `resolution`, `hamilton_decomposition` |
+| [EvenDegree](../TorusEven/Collar/EvenDegree.lean) | 빈 active palette 초기 상태와 `even_degree_collar` |
 
-## Pinned coherent selection
+`RelativeCollarState F frame active U`는 다음 네 조건을 묶는다.
 
-`pinnedSelection_iff`의 가정은 유한 B와 Ω, 짝수 m≥4, 각 support Aᵦ의 크기 ≥2,
-그리고 `card (Aᵦ ∩ active) ≤ 1`이다. Ω 전체의 각 incidence component가 짝수 크기인
-것과 다음 선택 J의 존재가 동치다.
+1. `frame : Y × ZMod m ≃ X`의 각 fibre에서 색별 방향과 실제 회로 label이 일정하다.
+2. 각 source에서 한 방향을 쓰는 active 색은 최대 하나다.
+3. U는 old zero row에 놓이고, U를 만나는 각 active 회로의 nonzero-row 정점들은
+   하나의 open U-gap 안에 있다.
+4. 폭이 2 이상인 각 방향에서 full-column incidence component의 열 수가 짝수다.
 
-```text
-Jᵦ,t ⊆ Aᵦ,             |Jᵦ,t| = floor(|Aᵦ|/2)
-Σᵦ,t 1[x ∈ Jᵦ,t] = ±1  in ZMod m
-Jᵦ,0 ∩ active = ∅
-selected / complementary rows are coherent when their quota is at least 2
-```
+Frame은 정점 집합의 동치이며 원래 물리 좌표 하나일 필요가 없다. 회로는 실제 orbit의
+quotient이고, incidence는 support 밖의 고립 열까지 포함한다.
 
-`exists_pinnedSelection`은 이 J를 실제로 구성한다. 이 방향에는 m의 짝수성이나
-support 크기 ≥2가 필요하지 않아서, 해당 두 가정은 동치 정리에만 붙어 있다.
-`IsPinnedSelection`의 성질을 추가 가정으로 넘겨 존재 정리를 대체하지 않는다.
+`RelativeCollarState.exists_split`은 m≥4가 짝수일 때 폭이 2 이상인 **어느 방향에나**
+balanced selection이 존재함을 증명한다. 결과는 네 상태 조건을 모두 만족하며, 같은
+선택이 **모든** 유효한 active recolouring의 색별 회로 수를 보존한다. 다음 split의
+존재, coherence, unit carry, 새 gap 또는 parity를 추가 가정으로 받지 않는다.
 
-Parity join은 같은 component의 열을 잇는 경로의 경계를 ZMod 2에서 합하여 만든다.
-대표 열에 모이는 항은 component 크기의 짝수성으로 소거된다. 각 블록의 선택된
-incidence를 `Fin n × Bool`과 대응시켜 중복 없는 local pairs를 만든다.
-방향화에서는 원고의 Euler circuit 구성 대신, Hall의 정리로 각 정점의 절반 차수만큼
-간선을 배정한다. 열마다 허브 간선을 하나 추가하고 균형 방향화한 뒤 제거하면
-원래 열의 divergence는 ±1이다. 평행 간선은 서로 다른 식별자로 유지된다.
+`SplitResolution F k`는 k번의 balanced physical split 뒤에 모든 폭이 1인 상태에
+도달하는 귀납적 증거다. `RelativeCollarState.resolution`의 인덱스는 정확히
+`F.excess = Σᵢ(aᵢ−1) = d−|I|`다. `hamilton_decomposition`은 같은 excess 귀납으로
+입력 recolouring의 Hamilton성을 전달하고 최종 좌표를 `Fin d`로 재색인하여
+`Shared.CayleyDecomposition d m`을 얻는다.
 
-각 directed pair의 common endpoint는 m−1개 row, rare endpoint는 한 row에 놓는다.
-Filler는 active 열을 피해서 채우며, rare event를 row 0/1에 배치하고 row 2를
-기준으로 연결성을 증명한다. Complement도 같은 pair의 반대 endpoint를 택하는
-row라는 등식을 사용한다. 따라서 선택과 여집합의 coherence를 모두 얻는다.
+## 선택에서 실제 split까지
 
-`IsPinnedSelection.selected_evenComponents`와 `complement_evenComponents`는 각
-child의 폭이 모든 블록에서 ≥2일 때 기존 incidence counting 정리에 연결된다.
-이는 row 선택 단계의 parity 보존까지 완성한다. 실제 colour–circuit labels와
-physical split의 fibre blocks로 옮기는 작업은 아래 state 조립에 남아 있다.
+앞서 증명한 `Incidence.pinnedSelection_iff`는 짝수 m≥4와 support 크기 ≥2에서
+component의 짝수성과 pinned coherent selection의 존재가 동치임을 보인다.
+`exists_pinnedSelection`의 구성에는 component parity와 블록당 active 열 ≤1이면
+충분하다. 선택은 정확한 절반 quota, 열별 합 ±1, row 0에서 active 제외, 양쪽
+nonterminal child의 coherence를 만족한다. 증명의 세부는
+[selector audit](/fsx/angel/operations/torus-lean-selector-20260911/verification.json)에 보존했다.
 
-## Relative lift의 정확한 범위
+`sourceSelection_orbit_sum`은 **각 실제 old 회로** 위의 voltage 합을 해당 열의 row
+선택 횟수와 동일시한다. 이를 unit carry에 연결한다. 새 incidence column degree에
+fibre 수를 다시 곱하지 않는다. `splitLabelEquiv`와 `childSupport_mem`으로 selected,
+complementary, copied support를 실제 physical split의 full-column support에 옮긴다.
 
-`oneGap`의 입력은 유한 타입 위의 단일 순환 `S`, 비어 있지 않은 `U`, `a ∈ U`,
-`δ`의 nonzero support가 `a`의 open gap에 있다는 조건, 그리고 unit total이다.
-법수에는 `[NeZero m]`만 필요하다. 결론은
+Physical chart는 `(x,t) ↦ (…,xᵢ−t,…,t)`이고 child 폭은
+`aᵢ−floor(aᵢ/2), floor(aᵢ/2)`다. 기존 `split_excess`가 정확히 1의 감소를 보장한다.
+Old row 0 pinning과 상태의 gap 조건에서 `GapSupport`를 얻고, `relative_renewal`로
+새 nonzero fibre가 하나의 enlarged open gap에 놓임을 증명한다.
 
-```text
-ret_lift(u,0) = (ret_old(u),0)
-roof_lift(u,0) = roof_old(u) + if u=a then (m-1)·|X| else 0
-t ≠ 0  ⇒  (x,t) ∈ openGap_lift(a,0)
-```
+## Recolouring과 보존량
 
-일반 gap의 귀환을 먼저 계산한다. 첫 귀환은 유한 집합의 permutation이므로
-지정점 밖에서의 일치가 지정점에서의 일치도 강제한다. 구간 분할로 귀환 시간의 합이
-전체 정점 수임을 증명하고, 이를 통해 지정 roof와 renewal을 얻는다.
-
-`UnitCarry S δ`는 **각 실제 old orbit**의 합이 unit임을 요구한다.
-`GapSupport S U δ`는 U를 만나는 각 old orbit에서 nonzero voltage를 하나의
-open gap에 제한한다. 이 두 입력으로 `relative_transport`는 임의의 `r : Equiv.Perm U`에 대해
+`Recolouring`은 색별 `boundary : C → Perm U`와 표시점별 `routing : U → Perm C`로
+주어진다. Routing은 inactive 색을 고정하며, 다음 head 등식을 만족해야 한다.
 
 ```text
-circuitCount(patch(lift S δ, U×{0}, boundaryLift r))
-  = circuitCount(patch(S,U,r))
+F.step c (boundary c u) = F.step (routing u c) u
 ```
 
-를 증명한다. `patch`의 합성 순서는 `S ∘ r`이다. `boundaryLift`는 U의 zero-section
-복사본 하나에서만 r을 적용한다. `patch_lift_at_mark`는 voltage가 U에서 0이면
-패치된 head가 원래 head의 zero-section 복사본임을 보인다.
+이 조건으로 `Recolouring.factorization`은 표시점에서도 방향별 quota를 유지한다.
+선택된 voltage가 active 표시점에서 0이므로 같은 head 등식이 split 뒤에도 성립한다.
+`Recolouring.lift_circuitCount`는 active와 inactive를 모두 포함한 각 색에 대해
 
-회로 수 공식은 `circuitCount(retPerm) + Nat.card(UnhitCircuit)`이다. U가 모든
-회로를 만난다는 추가 가정이 없으며, 빈 U와 고정점 회로도 포함한다. 패치 후 개별
-회로 길이가 모두 m배가 된다는 주장은 하지 않는다.
+```text
+circuitCount(lifted recolouring) = circuitCount(old recolouring)
+```
 
-`FibreGap`는 원고 collar 상태의 **조건 (iii)**에 해당한다. 완전한 collar state는
-아니다. `FibreGap.lift_preserves`는 row 0 pinning과 unit carry에서 새 조건 (iii)을
-증명한다. 다음 gap의 존재를 별도 입력으로 받지 않는다.
+를 증명한다. 표시점은 `U×{0}` 한 복사본으로 전달한다. Patch의 합성 순서는 `S ∘ r`이다.
+U를 만나지 않는 회로도 회로 수 공식에 포함하며, 빈 U도 허용한다. 패치된 각 회로의
+길이가 일률적으로 m배가 된다는 주장은 없다. 기존 one-gap 정리는 첫 귀환과 정확한
+roof 갱신을 함께 제공한다.
 
-## Physical split과 parity의 경계
+## 짝수 차원 specialization과 남은 작업
 
-`MultitorusFactorization.split`은 실제 source 선택 `J x`를 입력받는다.
-`J x`가 parent 방향의 사용자 집합에 포함되고 크기가 b일 때, 합좌표 chart
-`(x,t) ↦ (…,xᵢ−t,…,t)`에서 두 child 폭은 `aᵢ−b,b`다. 역함수를 가진 successor와
-모든 방향별 quota를 함께 구성한다. `balancedSplit`은 b를 `aᵢ/2`로 잡는다.
-Active palette에서 방향 함수가 injective라는 조건도 보존한다.
+`OneDirection.factorization`은 `T_m(d)`에서 각 색에 하나의 positive m-cycle을 준다.
+전체 정점 집합이 한 fibre이고, circuit label 집합은 `Fin d`와 동치다. 따라서 유일한
+incidence component의 열 수는 짝수 d다. Active palette와 U를 비우고 identity
+recolouring을 적용하면 closure로 모든 짝수 d≥2를 얻는다.
 
-Unit carry가 있으면 `split_circuit_iff`가 old circuit과 physical child circuit의
-대응을 증명한다. 따라서 새 fibre를 따라 방향과 실제 회로 label이 모두 일정하다.
-폭의 합은 색 수이며 `excess = Σ(aᵢ−1) = |C|−|I|`다.
-`split_excess`는 매 split마다 정확히 1 감소함을, `excess_zero_iff`는 0일 때 모든
-폭이 1임을 증명한다. **d−n개의 split을 선택할 수 있다는 존재 정리는 아직 아니다.**
+`Endpoints.even_modulus_tori_all_dimensions_of_collar`의 짝수 차원 분기도 이 정리를
+직접 사용한다. 홀수 차원은 기존 D3/D5와 아직 가정인 `EvenOddDegreeGoal`에 의존한다.
+다음 작업은 E5의 near-core/shell, 네 anchor에서의 일치, p=2 / p=3 / p≥4 entry다.
+기존 Route E의 D3 Hamilton 분해만으로 anchored agreement를 대체할 수는 없다.
 
-Incidence component는 Ω 전체의 quotient이므로 support 밖의 고립 열도 남는다.
-`evenComponents_of_coherent_odd_columns`의 입력은 이미 주어진 row 선택 J,
-row별 일정한 quota, nonempty/coherent row family, 짝수 row 수, 홀수 column degree다.
-Coherence로 한 old block의 모든 row가 같은 component에 속함을 보이고,
-ZMod 2에서 incidence를 이중 계수한다. Column degree에 fibre 수를 다시 곱하지 않는다.
-`odd_complement_columns`와 `evenComponents_copied`는 각각 다른 child와 unsplit 방향의
-보존에 사용할 수 있다. 실제 multitorus의 full colour–circuit Ω와 선택 J를 이 API에
-연결하는 작업은 전체 state 조립에 남아 있다.
+## 검증과 보존
 
-## 남은 E4 작업
+- 지정 CPU 노드에서 `lake build TorusEven` 통과. 새 모듈과 의존 경로를 빌드했으며
+  mathlib 전체의 clean rebuild는 아니다. 새 Collar 코드에 linter 경고가 없다.
+- Isolation 검사 통과: main-path 59개, attic 4개, 등록된 native 사용 파일 3개.
+  새 코드에 `sorry`, `admit`, author axiom, `native_decide`가 없다.
+- 이번 주요 선언 24개의 axiom은 모두 `propext`, `Classical.choice`, `Quot.sound`의
+  부분집합이다. 기존 전체 차원 조건부 endpoint의 native axiom은 18개로 동일하다.
 
-1. **RelativeCollarState 조립.** 실제 factorization, fibre chart, active palette,
-   full colour–circuit labels, 표시점 및 incidence 조건을 통합한다. Selector의 출력이
-   위 physical/relative/parity 정리의 입력을 만족함을 증명한다.
-2. **전체 귀납.** 다음 split의 존재를 추가 가정으로 받지 않고 excess에 대해 귀납한다.
-   마지막 recolouring의 quota와 Hamiltonicity를 기존 Cayley endpoint로 내보내고,
-   빈 active palette로 모든 짝수 차원을 닫는다.
+산출물은 `/fsx/angel/operations/torus-lean-closure-20260911/`에 있다:
+[빌드 로그](/fsx/angel/operations/torus-lean-closure-20260911/full-build.log),
+[audit 소스](/fsx/angel/operations/torus-lean-closure-20260911/ClosureAudit.lean),
+[axiom 출력](/fsx/angel/operations/torus-lean-closure-20260911/axioms.log),
+[검증 manifest](/fsx/angel/operations/torus-lean-closure-20260911/verification.json).
+Manifest에 CPU와 유지 소스의 SHA256 일치, commit, 복구 bundle을 기록한다.
 
-Selector의 존재와 relative/physical 보조정리는 증명됐지만, 이들을 실제 collar state에
-함께 적용하는 closure 정리는 아직 없다. `ClosedUnderSplit` 같은 가정을 새로 두고
-이를 E4 완료로 바꾸지 않았다.
-
-## 검증과 실행 환경
-
-- CPU 노드에서 `lake build TorusEven` 통과. 새 모듈과 해당 의존 경로를 빌드했으며,
-  mathlib 전체의 clean rebuild는 아니다. 새 Collar 모듈의 linter 경고는 없다.
-- `scripts/check_even_isolation.py` 통과: main-path 49개, attic 4개,
-  기존 native 사용 파일 3개. 새 코드에 `sorry`, `admit`, author axiom, `native_decide` 없음.
-- 이번 selector 주요 선언 18개의 `#print axioms`가 모두 `propext`, `Classical.choice`,
-  `Quot.sound`의 부분집합이다. 앞선 relative/physical audit의 19개 선언도 표준 axiom만
-  사용했다. 기존 조건부 even endpoint의 native axiom은 18개로 동일하다.
-- CPU와 유지 소스의 Collar 관련 Lean 파일 21개가 SHA256으로 일치한다.
-
-현재 산출물은 `/fsx/angel/operations/torus-lean-selector-20260911/`의
-[빌드 로그](/fsx/angel/operations/torus-lean-selector-20260911/full-build.log),
-[audit 소스](/fsx/angel/operations/torus-lean-selector-20260911/SelectorAudit.lean),
-[axiom 출력](/fsx/angel/operations/torus-lean-selector-20260911/axioms.log),
-[검증 manifest](/fsx/angel/operations/torus-lean-selector-20260911/verification.json)에 있다.
-앞선 relative/physical audit은
-[기존 manifest](/fsx/angel/operations/torus-lean-preparation-20260911/collar-verification.json)에 보존한다.
-
-유지하는 소스는 제어 노드의 `/local/angel/etc/Torus-Hamilton-Decomposition-Program`이다.
-CPU 노드 `root@jcssh-hp.mewtant.io:31630`에는 실행용 소스·캐시를
-`/local/angel/lean-collar/Torus-Hamilton-Decomposition-Program`에 준비했다.
-도구체인은 같은 노드의 `/local/angel/lean-collar/leanprover--lean4---v4.30.0-rc2/bin`이다.
-고정 mathlib SHA는 `5450b53e5ddc75d46418fabb605edbf36bd0beb6`이다.
+유지 소스는 제어 노드 `/local/angel/etc/Torus-Hamilton-Decomposition-Program`이다.
+CPU `root@jcssh-hp.mewtant.io:31630`의 실행 사본은
+`/local/angel/lean-collar/Torus-Hamilton-Decomposition-Program`이다. 이 사본의 Git HEAD는
+동기화된 소스의 식별자가 아니므로 파일 hash로 검증한다. 도구체인은 같은 노드의
+`/local/angel/lean-collar/leanprover--lean4---v4.30.0-rc2/bin`, mathlib SHA는
+`5450b53e5ddc75d46418fabb605edbf36bd0beb6`이다.

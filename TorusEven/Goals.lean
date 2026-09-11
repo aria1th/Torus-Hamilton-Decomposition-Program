@@ -32,7 +32,7 @@ def EvenSuccessorGoal : Prop := evenClass.SuccessorClosure
 def EvenOddDegreeGoal : Prop := evenClass.OddDegreeClosure
 
 /-- E4 special case: manuscript Theorem `thm:even-dim`, every even `d ≥ 2` via the empty palette.
-This duplicates what the product dispatcher already gives and serves as a cross-check. -/
+Discharged by `even_degree_collar`, independently of the odd-degree entry goal. -/
 def EvenDegreeCollarGoal : Prop :=
   ∀ {d m : Nat}, Even d → 2 ≤ d → Even m → 4 ≤ m → Solved d m
 

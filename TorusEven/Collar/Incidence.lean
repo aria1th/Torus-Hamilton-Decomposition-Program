@@ -19,6 +19,15 @@ def EvenComponents : Prop := ∀ q : Component A, Even (Nat.card {x // component
 theorem same_component {b : B} {x y : Ω} (hx : x ∈ A b) (hy : y ∈ A b) :
     componentOf A x = componentOf A y := Quotient.sound (Relation.EqvGen.rel _ _ ⟨b, hx, hy⟩)
 
+theorem evenComponents_of_universal_block [Fintype Ω] (b : B) (hb : ∀ x, x ∈ A b)
+    (hcard : Even (Fintype.card Ω)) : EvenComponents A := by
+  intro q
+  induction q using Quotient.inductionOn with | _ x =>
+    have h (y : Ω) := same_component A (hb y) (hb x)
+    have hc : Nat.card {y // componentOf A y = componentOf A x} = Fintype.card Ω :=
+      (Nat.card_congr (Equiv.subtypeUnivEquiv h)).trans Nat.card_eq_fintype_card
+    exact hc.symm ▸ hcard
+
 noncomputable def blockComponent (hne : ∀ b, (A b).Nonempty) (b : B) : Component A :=
   componentOf A (hne b).choose
 

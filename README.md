@@ -16,12 +16,13 @@ This repository is also a proof-audit workspace.  Some modules are finished
 theorem libraries, while the newest `RoundComposite` files expose the current
 paper-facing endpoint cuts for the all-dimensional theorem.
 
-The even-modulus extension has closed its D3 and D5 seeds. Its remaining work is
-relative collar closure and anchored entry in odd dimensions at least seven;
-the even all-dimensional endpoint is still conditional. The
-[collar progress report](docs/COLLAR_PROGRESS_20260911.md) records the proved relative
-lifts, physical splits, pinned coherent selection, and incidence parity, with
-full collar state assembly and induction still open. The
+The even-modulus extension has closed its D3 and D5 seeds and relative collar
+closure. `TorusEven.even_degree_collar` proves all even dimensions `d ≥ 2` for
+every even modulus `m ≥ 4`, using standard axioms only. Anchored entry for odd
+dimensions at least seven remains open, so the even all-dimensional endpoint
+is still conditional. The
+[collar progress report](docs/COLLAR_PROGRESS_20260911.md) describes the state
+preservation, recolouring transport, and excess induction. The
 [preparation note](docs/LEAN_PREPARATION_20260911.md) maps the manuscript to the
 existing seeds. The snapshot below describes the all-odd release.
 
