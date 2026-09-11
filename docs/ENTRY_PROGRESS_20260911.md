@@ -51,7 +51,8 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 
 1. Cyclic-star 대체 core의 일반 Hamilton성: 유효한 factorization과 recolouring,
    실제 2m점 귀환 순열로의 환원, m=4,6의 Hamilton성은 후속 구현에서 증명했다.
-   일반 귀환 표와 순환성의 남은 연결은 [star 기록](STAR_PROGRESS_20260911.md)을 따른다.
+   이어 [3∣m인 모든 짝수 법수](STAR_DIVISIBLE_PROGRESS_20260911.md)의 Hamilton성을 닫았다.
+   3∤m의 일반 귀환 표와 순환성 연결이 남아 있다.
 2. Auxiliary shell 구성·Hamilton성, core와의 superposition, seed incidence parity.
 3. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
    정확한 quota와 child coherence, active 선택과 `anchorVoltage`의 일치.

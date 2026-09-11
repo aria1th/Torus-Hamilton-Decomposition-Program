@@ -193,3 +193,29 @@ General cyclic-star Hamiltonicity is still open. In particular, the actual Φ-to
 first-return tables and the connection to the proved internal Γ cycle remain to
 be established. E5's shell, incidence, matched selection, and entry assembly are
 also still open; no new goal hypothesis has been added to the global endpoint.
+
+## 2026-09-11 (E5 partial: anchored cyclic-star closed when 3 divides m)
+
+The actual anchored cyclic-star factorization and near-core replacement are now
+Hamilton for every even m≥4 with 3∣m. The proof is symbolic for m=6q, q≥2, and
+uses the existing kernel `decide` theorem at m=6.
+
+| Lean name | Result | Axioms |
+|---|---|---|
+| `TorusEven.Entry.Star.Divisible.return_x_table`, `phi_ret_x` | actual first-return times and Ψ=θβ on X labels | standard only |
+| `TorusEven.Entry.Star.Divisible.psi_inner_return`, `psi_hamilton` | connection to Γ and cyclicity of Ψ | standard only |
+| `TorusEven.Entry.Star.Divisible.phi_meets_x`, `phi_hamilton`, `sum_return_times` | every marked orbit meets X; Φ is cyclic; return-time sum 2m | standard only |
+| `TorusEven.Entry.Star.return_hamilton_three_dvd` | actual colour-zero plane return is Hamilton | standard only |
+| `TorusEven.Entry.Star.hamilton_three_dvd`, `replacement_hamilton_three_dvd` | anchored factorization and replacement are Hamilton in all three colours | standard only |
+| `TorusEven.Surgery.singleCycle_of_induced_orbits` | variable-time return-orbit assembly | standard only |
+
+CPU `lake build TorusEven` passed (8451 jobs), with no new Star warnings. Isolation
+passed with 93 main-path files. All 40 new declarations in
+[DivisibleAudit.lean](/fsx/angel/operations/torus-lean-star-return-20260911/DivisibleAudit.lean)
+use standard axioms only; the conditional global endpoint retains exactly its
+previous axiom set, including 18 native leaves. See the
+[raw audit](/fsx/angel/operations/torus-lean-star-return-20260911/axioms.log) and
+[proof boundary](STAR_DIVISIBLE_PROGRESS_20260911.md).
+
+The general cyclic-star case 3∤m remains open, followed by E5's shell, seed
+incidence, matched selection, and entry assembly. `EvenOddDegreeGoal` is unchanged.

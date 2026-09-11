@@ -48,6 +48,18 @@ theorem thetaIndex_lt (i : Fin (2 * q + 1)) : thetaIndex q i.val < 2 * q + 1 := 
 def theta (i : Fin (2 * q + 1)) : Fin (2 * q + 1) :=
   ⟨thetaIndex q i.val, thetaIndex_lt q hq i⟩
 
+theorem theta_injective : Function.Injective (theta q hq) := by
+  intro i j h
+  have he := congrArg Fin.val h
+  apply Fin.ext
+  change thetaIndex q i.val = thetaIndex q j.val at he
+  unfold thetaIndex at he
+  split_ifs at he <;> have := i.isLt <;> have := j.isLt <;> omega
+
+noncomputable def thetaPerm : Equiv.Perm (Fin (2 * q + 1)) :=
+  Equiv.ofBijective (theta q hq)
+    ⟨theta_injective q hq, Finite.surjective_of_injective (theta_injective q hq)⟩
+
 theorem shiftIndex_eq (i : Fin (2 * q + 1)) : shiftIndex q i.val = (i.val + 4) % (2 * q + 1) := by
   unfold shiftIndex
   split_ifs with h

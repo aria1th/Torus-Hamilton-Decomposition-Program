@@ -7,7 +7,8 @@ Date: 2026-09-10.
 E5 anchored entry가 남았다. E5의 near-core와 anchor voltage는
 [entry 진행 문서](ENTRY_PROGRESS_20260911.md)에 정리한 범위까지 증명되었다.
 현재 작업은 [cyclic-star 귀환 증명](STAR_PROGRESS_20260911.md)이다. Factorization과
-실제 표시점 귀환 환원, m=4,6은 증명되었고 일반 짝수 m의 Hamilton성은 남아 있다.
+표시점 귀환 환원, m=4 및 [3∣m인 모든 짝수 법수](STAR_DIVISIBLE_PROGRESS_20260911.md)는
+증명되었고 3∤m의 일반 Hamilton성이 남아 있다.
 아래 단계별 원안의 환경 부재·coset 기계 부재·E3 예정 문장은
 최초 조사 시점의 기록이다. D3의 native leaf는 실제 조회 기준 14개다.
 
