@@ -1,5 +1,6 @@
 -- STATUS: main-path
 import TorusEven.Collar.Circuits
+import Shared.RankCycle
 
 namespace TorusEven.Surgery
 
@@ -22,5 +23,16 @@ theorem singleCycle_of_induced_orbits {α β : Type*} [Finite α]
   have huv : e v ∈ orbitSet S (e u) := hn ▸ hi u n
   have hb := mem_orbitSet_symm S.injective hv
   rwa [orbitSet_eq_of_mem S.injective huv, orbitSet_eq_of_mem S.injective hu] at hb
+
+theorem singleCycle_of_cyclic_order {α : Type*} {n : ℕ} (hn : 0 < n)
+    (e : Fin n ≃ α) (S : α → α)
+    (hs : ∀ i, S (e i) = e (finRotate n i)) : Shared.IsSingleCycleMap S := by
+  letI : NeZero n := ⟨by omega⟩
+  apply Shared.single_cycle_of_zmod_rank_equiv S (e.symm.trans (ZMod.finEquiv n).toEquiv)
+  intro x
+  obtain ⟨i, rfl⟩ := e.surjective x
+  rw [hs]
+  change (ZMod.finEquiv n) (e.symm (e (finRotate n i))) = (ZMod.finEquiv n) (e.symm (e i)) + 1
+  simp only [Equiv.symm_apply_apply, finRotate_apply, map_add, map_one]
 
 end TorusEven.Surgery

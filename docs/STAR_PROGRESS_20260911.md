@@ -1,11 +1,11 @@
 # E5 cyclic-star 진행
 
-원고의 anchored cyclic-star 방향표가 실제 factorization과 near-core recolouring을
-정의함을 모든 m≥4에서 증명했다. Hamilton성은 실제 2m개 표시점의 귀환 순열로
-환원했고, m=4,6은 커널 `decide`로 닫았다. 일반 짝수 m의 cyclic-star Hamilton성과
-E5 전체는 아직 열려 있다.
-후속 구현에서 **3∣m인 모든 짝수 법수의 Hamilton성**을 닫았다.
-현재 증명 범위와 재개 지점은 [divisible-case 기록](STAR_DIVISIBLE_PROGRESS_20260911.md)을 따른다.
+원고의 anchored cyclic-star와 실제 near-core 대체의 Hamilton성을 **모든 짝수 m≥4**에서
+증명했다. 현재 결론과 검증은 [uniform 정리 기록](STAR_UNIFORM_PROGRESS_20260911.md)에 있다.
+E5의 shell, seed incidence, matched selection, p별 entry 조립은 남아 있다.
+
+아래는 최초 factorization·귀환 환원 단계의 설명과 검증 기록이다. 그 뒤
+[3∣m인 경우](STAR_DIVISIBLE_PROGRESS_20260911.md)와 3∤m인 경우를 모두 닫았다.
 
 ## 원고와 Lean 대응
 
@@ -48,21 +48,16 @@ translation의 `retPerm`으로 `markedReturn`을 정의한다. 모든 translatio
 Q를 만남을 증명하여 surgery 정리의 unhit 회로 항을 0으로 만든다. 이에 따라
 `hamilton_of_markedReturn`의 남은 가정은 이 구체적인 2m점 permutation의 순환성이다.
 
-## 다음 증명 경계
+## 현재 증명 경계
 
-1. 3∤m인 경우의 실제 `markedReturn`에서 X₁,…,Xₘ₋₁로의 첫 귀환 Ψ와 시간을 증명한다.
-   원고 `eq:star-table-nondiv`의 최소 양의 hitting time과 중간 X 방문 부재를 연결한다.
-2. 이 경우의 Ψ=θβ 순환성을 두 합동류로 나누어 증명한다.
-   3∣m의 실제 귀환 표, Ψ와 `InnerReturn.step`의 연결, 전체 Hamilton성은 후속 구현에서 닫혔다.
-3. 두 경우를 조립해 모든 짝수 m의 cyclic-star를 닫고, E5의 shell, seed incidence,
-   matched selection, p별 entry 조립을 진행한다.
-
-유한 법수 결과를 일반 법수로 외삽하지 않았고, 기존 Route E의 D3 Hamilton 정리로
-anchored 구성의 증명을 대신하지 않았다. `EvenOddDegreeGoal`은 계속 남아 있다.
+`hamilton`과 `replacement_hamilton`은 짝수 m≥4만으로 세 색의 Hamilton성을 준다.
+실제 귀환 표, 최소 양의 귀환시간, 모든 궤도의 표시 집합 교차까지 증명했다.
+다음은 E5의 shell, seed incidence, matched selection, p별 entry 조립이다.
+`EvenOddDegreeGoal`은 계속 남아 있다.
 
 ## 검증과 복구
 
-아래는 최초 Star 단계의 검증 기록이다. 후속 3∣m 증명의 검증은 위 문서에 기록한다.
+아래는 최초 Star 단계의 검증 기록이다. 후속 전체 짝수 법수 증명의 검증은 위 문서에 기록한다.
 
 지정 CPU 노드에서 `lake build TorusEven` 통과(8442 jobs). 새 Star 코드의 linter
 경고는 없다. Isolation 검사도 통과했다: main-path 84개, attic 4개, 등록된 native

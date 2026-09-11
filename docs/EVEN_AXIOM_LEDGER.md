@@ -217,5 +217,37 @@ previous axiom set, including 18 native leaves. See the
 [raw audit](/fsx/angel/operations/torus-lean-star-return-20260911/axioms.log) and
 [proof boundary](STAR_DIVISIBLE_PROGRESS_20260911.md).
 
-The general cyclic-star case 3∤m remains open, followed by E5's shell, seed
-incidence, matched selection, and entry assembly. `EvenOddDegreeGoal` is unchanged.
+At this audit the case 3∤m was still open. It is closed by the following uniform
+result; E5's shell, seed incidence, matched selection, and entry assembly remain.
+`EvenOddDegreeGoal` is unchanged.
+
+## 2026-09-11 (E5 partial: anchored cyclic-star closed for every even modulus)
+
+The concrete terminal-row factorization and actual near-core replacement are
+Hamilton in all three colours for every even m≥4. No additional return-map or
+certificate hypothesis is assumed. The new case 3∤m is symbolic for m=2k, k≥4;
+m=4 uses the existing kernel `decide` proof. The uniform theorem combines this
+with the previously proved divisible case.
+
+| Lean name | Result | Axioms |
+|---|---|---|
+| `TorusEven.Entry.Star.translation_ret_neg_two_nat` | actual first Q return from bounded natural-coordinate hitting tests | standard only |
+| `TorusEven.Entry.Star.Nondivisible.return_x_table`, `phi_ret_x` | actual Φ-to-X first-return table and least positive times | standard only |
+| `TorusEven.Entry.Star.Nondivisible.chi_order`, `chi_hamilton` | explicit cyclic order for both nonzero residues modulo 3 | standard only |
+| `TorusEven.Entry.Star.Nondivisible.lower_step`, `psi_meets_lower`, `psi_hamilton` | 2/3-step connection to χ and Hamiltonicity of Ψ | standard only |
+| `TorusEven.Entry.Star.Nondivisible.phi_meets_x`, `phi_hamilton`, `sum_return_times` | all marked orbits meet X; Φ is cyclic; total return time 2m | standard only |
+| `TorusEven.Entry.Star.return_hamilton_three_not_dvd` | actual colour-zero plane return for 3∤m | standard only |
+| `TorusEven.Entry.Star.return_hamilton`, `hamilton`, `replacement_hamilton` | uniform plane return, anchored factorization, and replacement Hamiltonicity | standard only |
+| `TorusEven.Surgery.singleCycle_of_cyclic_order` | Hamiltonicity from an explicit finite cyclic order | standard only |
+
+CPU `lake build TorusEven` passed (8460 jobs), with no new Star warnings. Isolation
+passed with 102 main-path files. All 83 new public declarations in
+[NondivAudit.lean](/fsx/angel/operations/torus-lean-star-nondiv-20260911/NondivAudit.lean)
+use standard axioms only. The even-degree theorem remains standard-only, and the
+conditional global endpoint retains exactly its previous axiom set, including
+18 native leaves. See the [raw audit](/fsx/angel/operations/torus-lean-star-nondiv-20260911/axioms.log)
+and [uniform proof record](STAR_UNIFORM_PROGRESS_20260911.md).
+
+E5 still requires the auxiliary shell, seed incidence, matched selection, and
+p-specific entry assembly. `EvenOddDegreeGoal` remains the global endpoint's
+only open hypothesis.

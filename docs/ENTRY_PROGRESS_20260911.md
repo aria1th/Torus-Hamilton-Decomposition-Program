@@ -3,7 +3,8 @@
 E5의 near-core 보조정리와 네 anchor의 회로 대표성, active voltage의 unit/gap 조건을
 Lean으로 증명했다. E5 전체와 `EvenOddDegreeGoal`은 아직 열려 있다. E4 closure는
 완료 상태이며, 전체 차원 endpoint의 가정은 계속 `EvenOddDegreeGoal` 하나다.
-후속 cyclic-star 구현과 현재 귀환 증명 경계는 [star 진행 문서](STAR_PROGRESS_20260911.md)에 있다.
+후속 구현에서 [cyclic-star와 대체 core의 Hamilton성](STAR_UNIFORM_PROGRESS_20260911.md)을
+모든 짝수 m≥4에서 닫았다.
 
 ## 증명된 원고 대응
 
@@ -49,14 +50,13 @@ entry에서 active anchor를 선택할 수 있다. 기존 상태가 이미 colla
 
 ## 다음 증명
 
-1. Cyclic-star 대체 core의 일반 Hamilton성: 유효한 factorization과 recolouring,
-   실제 2m점 귀환 순열로의 환원, m=4,6의 Hamilton성은 후속 구현에서 증명했다.
-   이어 [3∣m인 모든 짝수 법수](STAR_DIVISIBLE_PROGRESS_20260911.md)의 Hamilton성을 닫았다.
-   3∤m의 일반 귀환 표와 순환성 연결이 남아 있다.
-2. Auxiliary shell 구성·Hamilton성, core와의 superposition, seed incidence parity.
-3. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
+Cyclic-star 대체 core는 이제 `Star.replacement_hamilton`으로 모든 짝수 m≥4에서
+Hamilton임을 보장한다. 다음 작업은 다음과 같다.
+
+1. Auxiliary shell 구성·Hamilton성, core와의 superposition, seed incidence parity.
+2. 네 mate를 예약한 matched selection: residual component의 parity, 혼합 divergence,
    정확한 quota와 child coherence, active 선택과 `anchorVoltage`의 일치.
-4. p=2, p=3의 구체적인 entry 및 p≥4의 일반 entry를 연결해 `EvenOddDegreeGoal` 제거.
+3. p=2, p=3의 구체적인 entry 및 p≥4의 일반 entry를 연결해 `EvenOddDegreeGoal` 제거.
 
 기존 Route E의 D3 Hamilton 정리는 이 cyclic-star row와 anchor 일치를 보장하지 않는다.
 위의 구체적인 입력을 새 가정으로 포장하는 것으로 E5를 완료 처리하지 않는다.

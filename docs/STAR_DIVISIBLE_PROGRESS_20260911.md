@@ -3,7 +3,8 @@
 모든 짝수 m≥4 중 3∣m인 경우, 원고의 anchored cyclic-star와 실제 near-core 대체
 recolouring의 세 색이 모두 Hamilton임을 증명했다. 일반 법수 부분은 m=6q, q≥2에서
 기호적으로 증명하며, m=6은 앞서 증명한 커널 `decide` 결과를 사용한다.
-E5에서 cyclic-star의 남은 경우는 3∤m인 일반 법수다(m=4는 이미 증명됨).
+이후 3∤m인 경우도 닫아 [모든 짝수 법수 정리](STAR_UNIFORM_PROGRESS_20260911.md)로
+조립했다. 아래는 3∣m 단계의 증명과 검증 기록이다.
 
 ## 닫힌 정리
 
@@ -70,6 +71,5 @@ X를 만남을 증명한다. 따라서 `phi_hamilton`은 실제 Φ의 단일 순
 Manifest에 소스 commit, CPU 소스 해시 일치, 이전 단계와 연결한 복구 bundle을 기록한다.
 노드 경로와 도구 버전은 [이전 Star 기록](STAR_PROGRESS_20260911.md)과 같다.
 
-다음은 3∤m, m=2k인 경우의 tr₍₁,₋₂₎ 첫 교차점과 `eq:star-table-nondiv`를 증명하고,
-k mod 3에 따른 Ψ=θβ의 순환성을 연결하는 작업이다. 이 경우를 닫은 뒤에도 E5의
-shell, seed incidence, matched selection, p별 entry 조립과 `EvenOddDegreeGoal`은 남는다.
+3∤m의 첫 교차점, 실제 X축 귀환 표와 순환성은 후속 uniform 단계에서 증명되었다.
+E5의 shell, seed incidence, matched selection, p별 entry 조립과 `EvenOddDegreeGoal`은 남는다.

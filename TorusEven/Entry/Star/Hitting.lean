@@ -80,4 +80,32 @@ theorem translation_ret_nat (hm : 2 ≤ m) (d a b n : ℕ)
       exact hf k hk hkn)
   simp only [ret, ht, translation_iterate_nat]
 
+omit [NeZero m] in
+theorem translation_iterate_neg_two_nat (a b k : ℕ) (hk : k ≤ m) :
+    (Equiv.addRight (1, (-2 : ZMod m)))^[k] ((a : ZMod m), (b : ZMod m)) =
+      (((a + k : ℕ) : ZMod m), ((b + 2 * m - 2 * k : ℕ) : ZMod m)) := by
+  change ((fun p : Plane m => p + (1, (-2 : ZMod m)))^[k] _) = _
+  rw [add_right_iterate_apply, nsmul_eq_mul]
+  apply Prod.ext
+  · simp
+  · simp only [Prod.snd_add, Prod.snd_mul, Prod.snd_natCast,
+      Nat.cast_sub (by omega : 2 * k ≤ b + 2 * m), Nat.cast_add, Nat.cast_mul,
+      ZMod.natCast_self, Nat.cast_ofNat, mul_zero, add_zero]
+    ring
+
+theorem translation_ret_neg_two_nat (hm : 2 ≤ m) (a b n : ℕ)
+    (hu : ((a : ZMod m), (b : ZMod m)) ∈ support m)
+    (ha : a < m) (hb : b < m) (hn : 0 < n) (hnm : n ≤ m)
+    (hh : hitTest m (a + n) (b + 2 * m - 2 * n))
+    (hf : ∀ k, 0 < k → k < n → ¬ hitTest m (a + k) (b + 2 * m - 2 * k)) :
+    ret (Equiv.addRight (1, (-2 : ZMod m))) (support m) ((a : ZMod m), (b : ZMod m)) =
+      (((a + n : ℕ) : ZMod m), ((b + 2 * m - 2 * n : ℕ) : ZMod m)) := by
+  have ht := retTime_eq_of_first (Equiv.addRight (1, (-2 : ZMod m))) (support m) hu hn
+    (by rw [translation_iterate_neg_two_nat _ _ _ hnm]
+        exact (hitTest_iff hm (by omega) (by omega)).mpr hh) (by
+      intro k hk hkn
+      rw [translation_iterate_neg_two_nat _ _ _ (by omega), hitTest_iff hm (by omega) (by omega)]
+      exact hf k hk hkn)
+  simp only [ret, ht, translation_iterate_neg_two_nat _ _ _ hnm]
+
 end TorusEven.Entry.Star
